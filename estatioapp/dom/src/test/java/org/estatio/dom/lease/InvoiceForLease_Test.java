@@ -31,12 +31,12 @@ import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.communicationchannel.CommunicationChannelForTesting;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-public class Invoice_Test {
+public class InvoiceForLease_Test {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -51,7 +51,7 @@ public class Invoice_Test {
                     .withFixture(pojos(BankMandate.class))
                     .withFixture(pojos(ApplicationTenancy.class))
                     .withFixture(pojos(CommunicationChannel.class, CommunicationChannelForTesting.class))
-                    .exercise(new Invoice());
+                    .exercise(new InvoiceForLease());
         }
 
 

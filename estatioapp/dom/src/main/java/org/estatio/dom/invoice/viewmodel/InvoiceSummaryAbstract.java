@@ -37,13 +37,15 @@ import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.roles.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 
     public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
-            mixin(Invoice._approve.class, invoice).doApprove();
+            mixin(InvoiceForLease._approve.class, invoice).doApprove();
         }
         return this;
     }
@@ -51,7 +53,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public Object collectAll() {
         for (Invoice invoice : getInvoices()) {
-            mixin(Invoice._collect.class, invoice).doCollect();
+            mixin(InvoiceForLease._collect.class, invoice).doCollect();
         }
         return this;
     }
@@ -59,7 +61,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object invoiceAll(final LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            wrap(mixin(Invoice._invoice.class, invoice)).$$(invoiceDate);
+            wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoiceDate);
         }
         return this;
     }
@@ -79,7 +81,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public InvoiceSummaryAbstract saveAllAsHistoric() {
         for (Invoice invoice : getInvoices()) {
-            mixin(Invoice._saveAsHistoric.class, invoice). $$();
+            mixin(InvoiceForLease._saveAsHistoric.class, invoice). $$();
         }
         return this;
     }
@@ -89,7 +91,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     }
 
     @CollectionLayout(defaultView = "table")
-    public abstract List<Invoice> getInvoices();
+    public abstract List<InvoiceForLease> getInvoices();
 
 
     private <T> T wrap(final T mixin) {
@@ -100,6 +102,9 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
         return factoryService.mixin(mixinClass, mixedIn);
     }
 
+
+    @Inject
+    protected InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     protected InvoiceRepository invoiceRepository;

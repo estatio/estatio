@@ -44,7 +44,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
@@ -153,7 +152,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     @Programmatic
     public String calculateAndInvoice(InvoiceCalculationParameters parameters) {
         String lastInteractionId = null;
-        invoiceRepository.removeRuns(parameters);
+        invoiceForLeaseRepository.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
             final List<Lease> leases = parameters.leases();
@@ -351,7 +350,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     EstatioSettingsService estatioSettingsService;
 
     @Inject
-    private InvoiceRepository invoiceRepository;
+    private InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;

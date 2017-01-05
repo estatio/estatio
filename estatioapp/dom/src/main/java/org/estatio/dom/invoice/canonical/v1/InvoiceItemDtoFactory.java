@@ -10,16 +10,17 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoFactoryAbstract;
-import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.canonical.DtoMappingHelper;
+import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -71,28 +72,35 @@ public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
         dto.setEffectiveStartDate(asXMLGregorianCalendar(item.getEffectiveStartDate()));
         dto.setEffectiveEndDate(asXMLGregorianCalendar(item.getEffectiveEndDate()));
 
-        final Lease leaseIfAny = item.getInvoice().getLease();
-        if(leaseIfAny != null) {
-            final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
-            if (!occupancies.isEmpty()) {
-//                final Optional<Occupancy> occupancyIfAny =
-//                        occupancies.stream().filter(x -> x.getInterval().overlaps(item.getEffectiveInterval())).findFirst();
-                final Optional<Occupancy> occupancyIfAny =
-                        Optional.ofNullable(occupancies.first());
-                if (occupancyIfAny.isPresent()) {
-                    final Occupancy occupancy = occupancyIfAny.orElse(occupancies.last());
-                    final Brand brand = occupancy.getBrand();
-                    dto.setOccupancyBrand(brand == null ? null : brand.getName());
-                    if (dto.getFixedAssetReference()== null) {
-                        // the unit was not retrieved through the invoice item, so get it from the occupancy then.
-                        dto.setFixedAssetReference(occupancy.getUnit().getReference());
-                        dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+        if (item  instanceof InvoiceItemForLease) {
+            final InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) item;
+
+            final InvoiceForLease invoice =
+                    (InvoiceForLease)invoiceItemForLease.getInvoice();
+            final Lease leaseIfAny = invoice.getLease();
+            if(leaseIfAny != null) {
+                final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
+                if (!occupancies.isEmpty()) {
+                    //                final Optional<Occupancy> occupancyIfAny =
+                    //                        occupancies.stream().filter(x -> x.getInterval().overlaps(item.getEffectiveInterval())).findFirst();
+                    final Optional<Occupancy> occupancyIfAny =
+                            Optional.ofNullable(occupancies.first());
+                    if (occupancyIfAny.isPresent()) {
+                        final Occupancy occupancy = occupancyIfAny.orElse(occupancies.last());
+                        final Brand brand = occupancy.getBrand();
+                        dto.setOccupancyBrand(brand == null ? null : brand.getName());
+                        if (dto.getFixedAssetReference()== null) {
+                            // the unit was not retrieved through the invoice item, so get it from the occupancy then.
+                            dto.setFixedAssetReference(occupancy.getUnit().getReference());
+                            dto.setFixedAssetExternalReference(occupancy.getUnit().getExternalReference());
+                        }
+                    } else {
+                        //                    throw new IllegalArgumentException("Invoice has an effective date range outside the scope of the occupanies");
+                        throw new IllegalArgumentException("No Occupancy Found");
                     }
-                } else {
-//                    throw new IllegalArgumentException("Invoice has an effective date range outside the scope of the occupanies");
-                    throw new IllegalArgumentException("No Occupancy Found");
                 }
             }
+
         }
         return dto;
     }

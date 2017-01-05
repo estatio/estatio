@@ -48,8 +48,8 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -189,7 +189,7 @@ public class LeaseTerm_Test {
         public void invoicedValueFor_ok() throws Exception {
             LocalDateInterval interval = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
             LeaseTermForTesting term = new LeaseTermForTesting();
-            Invoice invoice = new Invoice();
+            InvoiceForLease invoice = new InvoiceForLease();
             invoice.setStatus(InvoiceStatus.APPROVED);
             InvoiceItemForLease item1 = new InvoiceItemForLease();
 

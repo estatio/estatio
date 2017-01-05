@@ -104,7 +104,8 @@ import lombok.Setter;
 
 })
 @DomainObject(editing = Editing.DISABLED)
-public class InvoiceItemForLease extends InvoiceItem {
+public class InvoiceItemForLease
+        extends InvoiceItem<InvoiceItemForLease> {
 
     public String title() {
         return TitleBuilder.start()
@@ -157,15 +158,12 @@ public class InvoiceItemForLease extends InvoiceItem {
     };
 
     @Override
-    public int compareTo(final InvoiceItem other) {
+    public int compareTo(final InvoiceItemForLease other) {
         int compare = super.compareTo(other);
         if (compare != 0) {
             return compare;
         }
-        if (other instanceof InvoiceItemForLease) {
-            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) other);
-        }
-        return getClass().getName().compareTo(other.getClass().getName());
+        return ORDERING_BY_LEASE_TERM.compare(this, other);
     }
 
     @Inject

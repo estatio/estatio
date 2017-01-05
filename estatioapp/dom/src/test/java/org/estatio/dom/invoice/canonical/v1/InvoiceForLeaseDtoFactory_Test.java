@@ -11,22 +11,22 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.canonical.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.PaymentMethod;
-import org.estatio.canonical.DtoMappingHelper;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
-import org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceDtoFactory_Test {
+public class InvoiceForLeaseDtoFactory_Test {
 
-    private Invoice invoice;
-    private InvoiceDtoFactory invoiceDtoFactory;
+    private InvoiceForLease invoice;
+    private InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -36,8 +36,8 @@ public class InvoiceDtoFactory_Test {
 
     @Before
     public void setUp() throws Exception {
-        invoiceDtoFactory = new InvoiceDtoFactory();
-        invoiceDtoFactory.mappingHelper = mockMappingHelper;
+        invoiceForLeaseDtoFactory = new InvoiceForLeaseDtoFactory();
+        invoiceForLeaseDtoFactory.mappingHelper = mockMappingHelper;
 
         context.checking(new Expectations() {{
             ignoring(mockMappingHelper);
@@ -48,7 +48,7 @@ public class InvoiceDtoFactory_Test {
     public void happy_case() throws Exception {
 
         // given
-        invoice = new Invoice();
+        invoice = new InvoiceForLease();
         invoice.setInvoiceDate(new LocalDate(2016,1,1));
         invoice.setPaymentMethod(org.estatio.dom.invoice.PaymentMethod.DIRECT_DEBIT);
 
@@ -58,7 +58,7 @@ public class InvoiceDtoFactory_Test {
         invoice.getItems().add(newItem(invoice, "100.00", "200.00", "300.00"));
 
         // when
-        final InvoiceDto invoiceDto = invoiceDtoFactory.newDto(invoice);
+        final InvoiceDto invoiceDto = invoiceForLeaseDtoFactory.newDto(invoice);
 
         // then
         assertThat(invoiceDto.getNetAmount()).isEqualTo(new BigDecimal("111.11"));

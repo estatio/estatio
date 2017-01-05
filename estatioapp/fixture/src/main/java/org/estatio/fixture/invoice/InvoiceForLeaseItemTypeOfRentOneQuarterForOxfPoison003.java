@@ -24,10 +24,10 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
@@ -36,8 +36,8 @@ import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
-import static org.incode.module.base.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
+import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends InvoiceAbstract {
 
@@ -76,7 +76,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
 
         final LocalDate startDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoiceAndNumerator(
+        final InvoiceForLease invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,

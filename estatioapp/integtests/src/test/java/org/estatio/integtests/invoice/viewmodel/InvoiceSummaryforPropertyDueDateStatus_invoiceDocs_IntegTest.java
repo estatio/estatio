@@ -54,6 +54,7 @@ import org.estatio.dom.invoice.viewmodel.dnc.DocAndCommForInvoiceDoc_documentSta
 import org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_invoiceDocs;
 import org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_prepareInvoiceDocs;
 import org.estatio.dom.invoice.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixturescripts.SeedDocumentAndCommsFixture;
@@ -239,8 +240,8 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
     }
 
     void approveAndInvoice(final Invoice invoice) {
-        wrap(mixin(Invoice._approve.class, invoice)).$$();
-        wrap(mixin(Invoice._invoice.class, invoice)).$$(invoice.getDueDate().minusDays(1));
+        wrap(mixin(InvoiceForLease._approve.class, invoice)).$$();
+        wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoice.getDueDate().minusDays(1));
     }
     //endregion
 

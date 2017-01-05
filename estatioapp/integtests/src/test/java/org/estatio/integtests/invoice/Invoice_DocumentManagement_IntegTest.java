@@ -63,7 +63,6 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoice_overrideSendTo;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.invoice.dnc.Invoice_attachReceipt;
 import org.estatio.dom.invoice.dnc.Invoice_createAndAttachDocument;
@@ -83,6 +82,9 @@ import org.estatio.dom.invoice.viewmodel.dnc.Invoice_invoiceDocs;
 import org.estatio.dom.invoice.viewmodel.dnc.Invoice_preliminaryLetters;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease_overrideSendTo;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -779,12 +781,12 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     //region > helpers
 
-    private List<Invoice> findMatchingInvoices(
+    private List<InvoiceForLease> findMatchingInvoices(
             final Party seller,
             final Party buyer,
             final Lease lease,
             final LocalDate invoiceStartDate, final InvoiceStatus invoiceStatus) {
-        return invoiceRepository.findMatchingInvoices(
+        return invoiceForLeaseRepository.findMatchingInvoices(
                 seller, buyer, PaymentMethod.DIRECT_DEBIT,
                 lease, invoiceStatus,
                 invoiceStartDate);
@@ -804,7 +806,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
         final LocalDate invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003
                 .startDateFor(lease);
 
-        List<Invoice> matchingInvoices = findMatchingInvoices(seller, buyer, lease, invoiceStartDate, invoiceStatus);
+        List<InvoiceForLease> matchingInvoices = findMatchingInvoices(seller, buyer, lease, invoiceStartDate, invoiceStatus);
         assertThat(matchingInvoices.size()).isLessThanOrEqualTo(1);
         return matchingInvoices.isEmpty() ? null : matchingInvoices.get(0);
     }
@@ -836,8 +838,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
     void approveAndInvoice(final Invoice invoice) {
-        wrap(mixin(Invoice._approve.class, invoice)).$$();
-        wrap(mixin(Invoice._invoice.class, invoice)).$$(invoice.getDueDate().minusDays(1));
+        wrap(mixin(InvoiceForLease._approve.class, invoice)).$$();
+        wrap(mixin(InvoiceForLease._invoice.class, invoice)).$$(invoice.getDueDate().minusDays(1));
     }
 
     Document prelimLetterOf(final Invoice invoice) {
@@ -908,7 +910,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
         }
 
         final List<CommunicationChannel> communicationChannels =
-                mixin(Invoice_overrideSendTo.class, invoice).choices0$$();
+                mixin(InvoiceForLease_overrideSendTo.class, invoice).choices0$$();
         final Optional<CommunicationChannel> commChannelIfAny =
                 communicationChannels.stream()
                         .filter(x -> communicationChannelClass.isAssignableFrom(x.getClass()))
@@ -919,7 +921,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
         }
 
         final CommunicationChannel communicationChannel = commChannelIfAny.get();
-        wrap(mixin(Invoice_overrideSendTo.class, invoice)).$$(communicationChannel);
+        wrap(mixin(InvoiceForLease_overrideSendTo.class, invoice)).$$(communicationChannel);
         return communicationChannelClass.cast(communicationChannel);
     }
 
@@ -933,6 +935,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     @Inject
     InvoiceRepository invoiceRepository;
+    @Inject
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
     @Inject
     PartyRepository partyRepository;
     @Inject

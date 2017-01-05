@@ -38,8 +38,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
@@ -156,8 +156,9 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     // //////////////////////////////////////
 
     @CollectionLayout(defaultView = "table")
-    public List<Invoice> getInvoices() {
-        return invoiceRepository.findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
+    public List<InvoiceForLease> getInvoices() {
+        return invoiceForLeaseRepository
+                .findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
     }
 
     // //////////////////////////////////////

@@ -36,16 +36,19 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
+import org.incode.module.base.integtests.VT;
+
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -55,7 +58,6 @@ import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -117,6 +119,9 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
             @Inject
             private InvoiceRepository invoiceRepository;
 
+            @Inject
+            private InvoiceForLeaseRepository invoiceForLeaseRepository;
+
             private Lease lease;
             private LeaseItem leaseTopModelRentItem;
 
@@ -175,7 +180,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                Assert.assertThat(invoiceRepository.findByLease(lease), not(empty()));
+                Assert.assertThat(invoiceForLeaseRepository.findByLease(lease), not(empty()));
 
                 // then
                 expectedExceptions.expect(DisabledException.class);
@@ -215,7 +220,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
 
                 // and given
-                assertThat(invoiceRepository.findByLease(lease), empty());
+                assertThat(invoiceForLeaseRepository.findByLease(lease), empty());
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);
@@ -254,7 +259,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.ANNUAL));
 
                 // and given
-                assertThat(invoiceRepository.findByLease(lease), not(empty()));
+                assertThat(invoiceForLeaseRepository.findByLease(lease), not(empty()));
 
                 // when
                 final LocalDate newStartDate = leaseTerm.getStartDate().minusMonths(1);

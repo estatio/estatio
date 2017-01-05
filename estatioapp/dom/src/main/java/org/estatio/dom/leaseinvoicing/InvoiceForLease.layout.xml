@@ -38,6 +38,7 @@
                             </ns2:fieldSet>
                             <ns2:fieldSet name="RelatedTo" id="relatedTo">
                                 <ns2:property id="fixedAsset"/>
+                                <ns2:property id="lease"/>
                             </ns2:fieldSet>
                         </col>
                         <col span="4">

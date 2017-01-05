@@ -34,6 +34,7 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 
 import lombok.Data;
@@ -56,7 +57,7 @@ public class FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover
                     String.format("Document must be a prelim letter or invoice note (provided document' type is '%s')", docTypeRef));
         }
 
-        final Invoice invoice = paperclipRepository.paperclipAttaches(prelimLetterOrInvoiceNoteDoc, Invoice.class);
+        final InvoiceForLease invoice = paperclipRepository.paperclipAttaches(prelimLetterOrInvoiceNoteDoc, InvoiceForLease.class);
 
         final DataModel dataModel = new DataModel();
         dataModel.setInvoice(invoice);

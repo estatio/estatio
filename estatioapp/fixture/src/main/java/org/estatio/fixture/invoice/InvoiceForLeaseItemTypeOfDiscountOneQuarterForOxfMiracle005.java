@@ -24,10 +24,10 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
@@ -35,8 +35,8 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForMiracleGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 
-import static org.incode.module.base.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
+import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
@@ -72,7 +72,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
         final LocalDate invoiceStartDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoiceAndNumerator(
+        final InvoiceForLease invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease,
                 PARTY_REF_SELLER,

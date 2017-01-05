@@ -42,6 +42,7 @@ import org.estatio.dom.leaseinvoicing.InvoiceCalculationParameters;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
 import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -147,7 +148,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
         for (Invoice invoice : invoiceRepository.findByStatus(InvoiceStatus.NEW)) {
-            factoryService.mixin(Invoice._saveAsHistoric.class, invoice).$$();
+            factoryService.mixin(InvoiceForLease._saveAsHistoric.class, invoice).$$();
             executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);
         }
         return executionContext;

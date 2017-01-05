@@ -24,10 +24,10 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
@@ -35,8 +35,8 @@ import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.OrganisationForPoisonNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKal;
 
-import static org.incode.module.base.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
+import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
@@ -74,7 +74,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
         // simply within the lease's start/end date
         final LocalDate startDate = startDateFor(lease);
 
-        final Invoice invoice = createInvoiceAndNumerator(
+        final InvoiceForLease invoice = createInvoiceAndNumerator(
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,

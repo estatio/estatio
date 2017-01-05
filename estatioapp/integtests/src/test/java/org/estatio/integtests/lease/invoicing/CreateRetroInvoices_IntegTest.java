@@ -36,6 +36,7 @@ import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -43,7 +44,8 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -71,6 +73,9 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
     InvoiceRepository invoiceRepository;
 
     @Inject
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
+
+    @Inject
     PropertyRepository propertyRepository;
 
     @Inject
@@ -94,7 +99,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
         createRetroInvoices = new CreateRetroInvoices() {
             {
                 leaseRepository = CreateRetroInvoices_IntegTest.this.leaseRepository;
-                invoiceRepository = CreateRetroInvoices_IntegTest.this.invoiceRepository;
+                invoiceForLeaseRepository = CreateRetroInvoices_IntegTest.this.invoiceForLeaseRepository;
                 propertyRepository = CreateRetroInvoices_IntegTest.this.propertyRepository;
                 invoiceCalculationService = CreateRetroInvoices_IntegTest.this.invoiceCalculationService;
                 factoryService = CreateRetroInvoices_IntegTest.this.factoryService;
@@ -128,7 +133,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
             createRetroInvoices.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
             // then
-            assertThat(invoiceRepository.findByLease(lease).size(), is(10));
+            assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(10));
 
             // and given
             lease.terminate(VT.ld(2013, 10, 1));
@@ -137,7 +142,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
             invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
 
             // then
-            List<Invoice> invoicesList = invoiceRepository.findByLease(lease);
+            List<InvoiceForLease> invoicesList = invoiceForLeaseRepository.findByLease(lease);
             assertThat(invoicesList.size(), is(11));
             Invoice invoice = invoicesList.get(10);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));

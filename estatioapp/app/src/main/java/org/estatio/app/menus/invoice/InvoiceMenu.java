@@ -37,11 +37,9 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
@@ -57,6 +55,8 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -87,7 +87,7 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
         final ApplicationTenancy propertySellerTenancy =
                 estatioApplicationTenancyRepositoryForLease.findOrCreateTenancyFor(propertyIfAny, seller);
 
-        return invoiceRepository.newInvoice(propertySellerTenancy,
+        return invoiceForLeaseRepository.newInvoice(propertySellerTenancy,
                 seller,
                 buyer,
                 paymentMethod==null ? lease.defaultPaymentMethod() : paymentMethod,
@@ -123,16 +123,16 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<Invoice> findInvoices(
+    public List<InvoiceForLease> findInvoices(
             final FixedAsset fixedAsset,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate dueDate,
             final InvoiceStatus status) {
         if (status == null) {
-            return invoiceRepository.findByFixedAssetAndDueDate(fixedAsset, dueDate);
+            return invoiceForLeaseRepository.findByFixedAssetAndDueDate(fixedAsset, dueDate);
         } else if (dueDate == null) {
-            return invoiceRepository.findByFixedAssetAndStatus(fixedAsset, status);
+            return invoiceForLeaseRepository.findByFixedAssetAndStatus(fixedAsset, status);
         } else {
-            return invoiceRepository.findByFixedAssetAndDueDateAndStatus(fixedAsset, dueDate, status);
+            return invoiceForLeaseRepository.findByFixedAssetAndDueDateAndStatus(fixedAsset, dueDate, status);
         }
     }
 
@@ -165,31 +165,28 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
-    public List<Invoice> allInvoices() {
-        return invoiceRepository.allInvoices();
+    public List<Invoice<?>> allInvoices() {
+        return (List)invoiceRepository.allInvoices();
     }
 
 
     @Inject
-    private InvoiceSummaryForPropertyInvoiceDateRepository invoiceSummaryForPropertyInvoiceDateRepository;
+    InvoiceSummaryForPropertyInvoiceDateRepository invoiceSummaryForPropertyInvoiceDateRepository;
 
     @Inject
-    private InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
+    InvoiceSummaryForPropertyDueDateStatusRepository invoiceSummaryForPropertyDueDateStatusRepository;
 
     @Inject
-    private InvoiceSummaryForInvoiceRunRepository invoiceSummaryForInvoiceRunRepository;
+    InvoiceSummaryForInvoiceRunRepository invoiceSummaryForInvoiceRunRepository;
 
     @Inject
-    private InvoiceRepository invoiceRepository;
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
-    private EstatioApplicationTenancyRepository estatioApplicationTenancyRepository;
+    InvoiceRepository invoiceRepository;
 
     @Inject
-    private MeService meService;
-
-    @Inject
-    private ClockService clockService;
+    ClockService clockService;
 
     @Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepositoryForLease;

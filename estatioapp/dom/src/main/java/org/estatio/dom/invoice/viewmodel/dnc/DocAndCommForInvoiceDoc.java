@@ -28,7 +28,7 @@ public class DocAndCommForInvoiceDoc extends DocAndCommAbstract<DocAndCommForInv
     public DocAndCommForInvoiceDoc() {
     }
 
-    public DocAndCommForInvoiceDoc(final Invoice invoice) {
+    public DocAndCommForInvoiceDoc(final Invoice<?> invoice) {
         super(invoice);
     }
 

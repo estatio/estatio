@@ -10,39 +10,39 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.DtoFactoryAbstract;
+import org.estatio.canonical.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
-import org.estatio.canonical.DtoMappingHelper;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class InvoiceDtoFactory extends DtoFactoryAbstract {
+public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
 
     private final InvoiceItemDtoFactory invoiceItemDtoFactory = new InvoiceItemDtoFactory();
 
     @Programmatic
-    public InvoiceDto newDto(final Invoice invoice) {
+    public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
         InvoiceDto dto = new InvoiceDto();
 
-        dto.setSelf(mappingHelper.oidDtoFor(invoice));
-        dto.setAtPath(invoice.getApplicationTenancyPath());
-        dto.setBuyerParty(mappingHelper.oidDtoFor(invoice.getBuyer()));
-        dto.setSellerParty(mappingHelper.oidDtoFor(invoice.getSeller()));
+        dto.setSelf(mappingHelper.oidDtoFor(invoiceForLease));
+        dto.setAtPath(invoiceForLease.getApplicationTenancyPath());
+        dto.setBuyerParty(mappingHelper.oidDtoFor(invoiceForLease.getBuyer()));
+        dto.setSellerParty(mappingHelper.oidDtoFor(invoiceForLease.getSeller()));
 
-        dto.setDueDate(asXMLGregorianCalendar(invoice.getDueDate()));
-        dto.setInvoiceDate(asXMLGregorianCalendar(invoice.getInvoiceDate()));
-        dto.setInvoiceNumber(invoice.getInvoiceNumber());
-        dto.setPaymentMethod(toDto(invoice.getPaymentMethod()));
-        dto.setCollectionNumber(invoice.getCollectionNumber());
+        dto.setDueDate(asXMLGregorianCalendar(invoiceForLease.getDueDate()));
+        dto.setInvoiceDate(asXMLGregorianCalendar(invoiceForLease.getInvoiceDate()));
+        dto.setInvoiceNumber(invoiceForLease.getInvoiceNumber());
+        dto.setPaymentMethod(toDto(invoiceForLease.getPaymentMethod()));
+        dto.setCollectionNumber(invoiceForLease.getCollectionNumber());
 
-        final Lease lease = invoice.getLease();
+        final Lease lease = invoiceForLease.getLease();
         if (lease != null){
             dto.setAgreementReference(lease.getReference());
             final BankMandate paidBy = lease.getPaidBy();
@@ -52,17 +52,17 @@ public class InvoiceDtoFactory extends DtoFactoryAbstract {
             }
         }
 
-        final Optional<FixedAsset> fixedAssetIfAny = Optional.ofNullable(invoice.getFixedAsset());
+        final Optional<FixedAsset> fixedAssetIfAny = Optional.ofNullable(invoiceForLease.getFixedAsset());
         if (fixedAssetIfAny.isPresent()) {
             final FixedAsset fixedAsset = fixedAssetIfAny.get();
             dto.setFixedAssetReference(fixedAsset.getReference());
             dto.setFixedAssetExternalReference(fixedAsset.getExternalReference());
 
             // there should be only one
-            dto.setSellerBankAccount(mappingHelper.oidDtoFor(invoice.getSellerBankAccount()));
+            dto.setSellerBankAccount(mappingHelper.oidDtoFor(invoiceForLease.getSellerBankAccount()));
         }
 
-        invoice.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemDtoFactory.newDto(item)));
+        invoiceForLease.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemDtoFactory.newDto(item)));
 
         dto.setNetAmount(dto.getItems().stream()
                             .map(InvoiceItemDto::getNetAmount)

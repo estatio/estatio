@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.dom.leaseinvoicing;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -44,6 +44,10 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.NumeratorForCollectionRepository;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.numerator.dom.impl.Numerator;
 
@@ -54,7 +58,7 @@ public class Invoice_Test {
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
-    Invoice invoice;
+    InvoiceForLease invoice;
 
     Numerator numerator;
 
@@ -124,7 +128,7 @@ public class Invoice_Test {
         context.checking(new Expectations() {
             {
                 allowing(mockInvoiceRepository).findByInvoiceNumber(with(any(String.class)));
-                will(returnValue(Arrays.asList(new Invoice() {
+                will(returnValue(Arrays.asList(new InvoiceForLease() {
                     @Override
                     public String getInvoiceNumber() {
                         return invoiceNumber;
@@ -143,8 +147,8 @@ public class Invoice_Test {
         });
     }
 
-    Invoice createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
-        final Invoice invoice = new Invoice() {
+    InvoiceForLease createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
+        final InvoiceForLease invoice = new InvoiceForLease() {
             @Override
             public FixedAsset getFixedAsset() {
                 return fixedAsset;
@@ -171,7 +175,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             // when
-            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
@@ -198,7 +202,7 @@ public class Invoice_Test {
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
             // when
-            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             assertThat(invoice_invoice.disable$$(null)).isEqualTo("Invoice number already assigned");
             invoice_invoice.$$(mockClockService.now());
 
@@ -212,7 +216,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             // when
-            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
             assertThat(invoice_invoice.disable$$(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
@@ -227,7 +231,7 @@ public class Invoice_Test {
             allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-            final Invoice._invoice invoice_invoice = new Invoice._invoice(this.invoice);
+            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
             // when
@@ -241,8 +245,8 @@ public class Invoice_Test {
 
     public static class Collect extends Invoice_Test {
 
-        private Invoice createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
-            final Invoice invoice = new Invoice() {
+        private InvoiceForLease createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
+            final InvoiceForLease invoice = new InvoiceForLease() {
 
                 @Override
                 public PaymentMethod getPaymentMethod() {
@@ -289,7 +293,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(lease);
 
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorRepository;
 
 
@@ -307,7 +311,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
@@ -325,7 +329,7 @@ public class Invoice_Test {
 
             invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             assertThat(invoice_collect.hide$$()).isFalse();
             assertThat(invoice_collect.disable$$()).isEqualTo("Collection number already assigned");
             invoice_collect.doCollect();
@@ -339,7 +343,7 @@ public class Invoice_Test {
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
@@ -356,7 +360,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
 
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorRepository;
 
             assertThat(invoice_collect.hide$$()).isTrue();
@@ -376,7 +380,7 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
             // then
-            final Invoice._collect invoice_collect = new Invoice._collect(invoice);
+            final InvoiceForLease._collect invoice_collect = new InvoiceForLease._collect(invoice);
             invoice_collect.numeratorRepository = mockNumeratorRepository;
 
             assertThat(invoice_collect.hide$$()).isFalse();
@@ -391,11 +395,11 @@ public class Invoice_Test {
 
     }
 
-    public static class CompareTo extends ComparableContractTest_compareTo<Invoice> {
+    public static class CompareTo extends ComparableContractTest_compareTo<InvoiceForLease> {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected List<List<Invoice>> orderedTuples() {
+        protected List<List<InvoiceForLease>> orderedTuples() {
             return listOf(listOf(
                     newInvoice(null),
                     newInvoice("0000123"),
@@ -403,8 +407,8 @@ public class Invoice_Test {
                     newInvoice("0000124")));
         }
 
-        private Invoice newInvoice(String number) {
-            final Invoice inv = new Invoice();
+        private InvoiceForLease newInvoice(String number) {
+            final InvoiceForLease inv = new InvoiceForLease();
             inv.setInvoiceNumber(number);
             return inv;
         }
@@ -412,11 +416,11 @@ public class Invoice_Test {
 
     public static class ValidInvoiceDate extends Invoice_Test {
 
-        Invoice._invoice invoice_invoice;
+        InvoiceForLease._invoice invoice_invoice;
 
         @Before
         public void setUp() throws Exception {
-            invoice = new Invoice() {
+            invoice = new InvoiceForLease() {
                 @Override public ApplicationTenancy getApplicationTenancy() {
                     return new ApplicationTenancy();
                 }
@@ -434,7 +438,7 @@ public class Invoice_Test {
             applicationTenancy = new ApplicationTenancy();
             applicationTenancy.setPath("/");
 
-            invoice_invoice = new Invoice._invoice(this.invoice);
+            invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.invoiceRepository = mockInvoiceRepository;
         }
@@ -472,10 +476,10 @@ public class Invoice_Test {
         @Test
         public void disabled_when_immutable() throws Exception {
             //Given
-            Invoice invoice = new Invoice();
+            InvoiceForLease invoice = new InvoiceForLease();
             invoice.setStatus(InvoiceStatus.INVOICED);
             // When, Then
-            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            final InvoiceForLease._newItem invoice_newItem = new InvoiceForLease._newItem(invoice);
             assertThat(invoice_newItem.disable$$(null, null, null, null, null)).isNotNull();
         }
     }
@@ -486,9 +490,9 @@ public class Invoice_Test {
         public void giveWarningForEmptyDates() throws Exception {
 
             //Given
-            Invoice invoice = new Invoice();
+            InvoiceForLease invoice = new InvoiceForLease();
 
-            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            final InvoiceForLease._newItem invoice_newItem = new InvoiceForLease._newItem(invoice);
             invoice_newItem.messageService = mockMessageService;
 
             // expect
@@ -509,9 +513,9 @@ public class Invoice_Test {
         public void giveWarningForEmptyStartDate() throws Exception {
 
             //Given
-            Invoice invoice = new Invoice();
+            InvoiceForLease invoice = new InvoiceForLease();
 
-            final Invoice._newItem invoice_newItem = new Invoice._newItem(invoice);
+            final InvoiceForLease._newItem invoice_newItem = new InvoiceForLease._newItem(invoice);
             invoice_newItem.messageService = mockMessageService;
 
             // expect

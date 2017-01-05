@@ -29,10 +29,11 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -110,7 +111,7 @@ public class InvoiceImportLine implements Importable {
         PaymentMethod paymentMethod = fetchPaymentMethod(getPaymentMethod());
         String atPath = lease.getApplicationTenancyPath().concat("/").concat(lease.getPrimaryParty().getReference());
         ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(atPath);
-        Invoice invoice = invoiceRepository.newInvoice(applicationTenancy,
+        Invoice invoice = invoiceForLeaseRepository.newInvoice(applicationTenancy,
                 lease.getPrimaryParty(),
                 lease.getSecondaryParty(),
                 paymentMethod,
@@ -118,7 +119,7 @@ public class InvoiceImportLine implements Importable {
                 getDueDate(),
                 lease, null);
 
-        InvoiceItem invoiceItem = factoryService.mixin(Invoice._newItem.class, invoice).$$(fetchCharge(getItemChargeReference()), BigDecimal.ONE, getItemNetAmount(), getItemStartDate(), getItemEndDate());
+        InvoiceItem invoiceItem = factoryService.mixin(InvoiceForLease._newItem.class, invoice).$$(fetchCharge(getItemChargeReference()), BigDecimal.ONE, getItemNetAmount(), getItemStartDate(), getItemEndDate());
         if (getItemDescription() != null) {
             invoiceItem.setDescription(getItemDescription());
         }
@@ -164,7 +165,7 @@ public class InvoiceImportLine implements Importable {
     private LeaseRepository leaseRepository;
 
     @Inject
-    private InvoiceRepository invoiceRepository;
+    private InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     private ApplicationTenancyRepository applicationTenancyRepository;

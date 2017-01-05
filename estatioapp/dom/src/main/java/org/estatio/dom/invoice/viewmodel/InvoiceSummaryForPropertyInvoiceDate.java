@@ -37,8 +37,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
@@ -154,14 +153,13 @@ public class InvoiceSummaryForPropertyInvoiceDate extends InvoiceSummaryAbstract
     // //////////////////////////////////////
 
     @CollectionLayout(defaultView = "table")
-    public List<Invoice> getInvoices() {
-        return invoiceRepository.findByApplicationTenancyPathAndSellerAndInvoiceDate(getAtPath(), getSeller(), getInvoiceDate());
+    public List<InvoiceForLease> getInvoices() {
+        return invoiceForLeaseRepository
+                .findByApplicationTenancyPathAndSellerAndInvoiceDate(getAtPath(), getSeller(), getInvoiceDate());
     }
 
     // //////////////////////////////////////
 
-    @Inject
-    PropertyRepository propertyRepository;
 
     @Inject
     PartyRepository partyRepository;

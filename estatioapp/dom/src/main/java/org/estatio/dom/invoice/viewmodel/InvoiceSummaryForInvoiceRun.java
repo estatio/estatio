@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -147,8 +147,8 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
     // //////////////////////////////////////
 
     @CollectionLayout(render = RenderType.EAGERLY)
-    public List<Invoice> getInvoices() {
-        return invoiceRepository.findByRunIdAndApplicationTenancyPath(runId, getAtPath());
+    public List<InvoiceForLease> getInvoices() {
+        return invoiceForLeaseRepository.findByRunIdAndApplicationTenancyPath(runId, getAtPath());
     }
 
 }

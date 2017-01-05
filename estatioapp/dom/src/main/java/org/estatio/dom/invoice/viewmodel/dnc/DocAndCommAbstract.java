@@ -71,11 +71,11 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
     public static class Factory {
 
         public static interface DncProvider<T extends DocAndCommAbstract<T>> {
-            T instantiate(Invoice invoice);
+            T instantiate(Invoice<?> invoice);
         }
 
         <T extends DocAndCommAbstract<T>>  List<T> documentsAndCommunicationsFor(
-                final List<Invoice> invoices,
+                final List<Invoice<?>> invoices,
                 final DncProvider<T> provider) {
             return Lists.newArrayList(
                     invoices.stream()
@@ -85,7 +85,7 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
         }
 
         <T extends DocAndCommAbstract<T>> List<T> documentsAndCommunicationsFor(
-                final Invoice invoice,
+                final Invoice<?> invoice,
                 final DncProvider<T> provider) {
             return documentsAndCommunicationsFor(Collections.singletonList(invoice), provider);
         }

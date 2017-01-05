@@ -49,6 +49,8 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -74,6 +76,9 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
 
     @Inject
     InvoiceRepository invoiceRepository;
+
+    @Inject
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     NumeratorForCollectionMenu estatioNumeratorRepository;
@@ -133,7 +138,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
 
             propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
 
-            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
+            InvoiceForLease invoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller,
                     buyer,
@@ -265,18 +270,18 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             final Lease lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
             final LocalDate startDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
 
-            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
+            InvoiceForLease invoiceForLease = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, startDate, null);
-            invoice.setRunId(runId);
-            Assert.assertNotNull(invoice);
+            invoiceForLease.setRunId(runId);
+            Assert.assertNotNull(invoiceForLease);
         }
 
         @Test
         public void byRunId() {
             // when
-            List<Invoice> result = invoiceRepository.findInvoicesByRunId(runId);
+            List<InvoiceForLease> result = invoiceForLeaseRepository.findInvoicesByRunId(runId);
 
             // then
             assertThat(result.size(), is(1));
@@ -319,7 +324,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             // given
             Assert.assertThat(invoiceRepository.allInvoices().isEmpty(), is(true));
             // when
-            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
+            InvoiceForLease invoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);
@@ -331,12 +336,12 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
         @Test
         public void whenExist() {
             // given
-            Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
+            InvoiceForLease invoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);
             // when
-            Invoice invoice2 = invoiceRepository.findOrCreateMatchingInvoice(
+            InvoiceForLease invoice2 = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
                     seller, buyer, PaymentMethod.DIRECT_DEBIT, lease,
                     InvoiceStatus.NEW, invoiceStartDate, null);

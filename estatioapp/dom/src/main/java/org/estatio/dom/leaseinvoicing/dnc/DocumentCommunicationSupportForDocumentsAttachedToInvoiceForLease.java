@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.dnc;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,27 +26,27 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.spi.CommHeaderAbstract;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
 import org.incode.module.communications.dom.spi.CommHeaderForPrint;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implements DocumentCommunicationSupport {
+public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease implements DocumentCommunicationSupport {
 
     @Override
     public DocumentType emailCoverNoteDocumentTypeFor(final Document document) {
@@ -97,8 +97,8 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implement
         final List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
         for (final Paperclip paperclip : paperclips) {
             final Object attachedTo = paperclip.getAttachedTo();
-            if(attachedTo instanceof Invoice) {
-                final Invoice invoice = (Invoice) attachedTo;
+            if(attachedTo instanceof InvoiceForLease) {
+                final InvoiceForLease invoice = (InvoiceForLease) attachedTo;
                 addTo(invoice, header, channelType);
             }
         }
@@ -108,7 +108,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implement
     }
 
     private <T extends CommunicationChannel> void addTo(
-            final Invoice invoice,
+            final InvoiceForLease invoice,
             final CommHeaderAbstract<T> header,
             final CommunicationChannelType channelType) {
 
@@ -138,8 +138,6 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoice implement
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
-
-    @Inject DocumentTemplateRepository documentTemplateRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;

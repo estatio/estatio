@@ -33,6 +33,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.integtests.VT;
+
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
@@ -43,11 +46,12 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
-import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -65,7 +69,6 @@ import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -74,6 +77,8 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     InvoiceRepository invoiceRepository;
+    @Inject
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
     @Inject
     PartyRepository partyRepository;
     @Inject
@@ -123,13 +128,13 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
+            InvoiceForLease invoice = invoiceForLeaseRepository.newInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
 
             // when
-            mixin(Invoice._newItem.class, invoice).$$(charge, VT.bd(1), VT.bd("10000.123"), null, null);
+            mixin(InvoiceForLease._newItem.class, invoice).$$(charge, VT.bd(1), VT.bd("10000.123"), null, null);
 
             // then
-            Invoice foundInvoice = invoiceRepository.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
+            InvoiceForLease foundInvoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
             assertThat(foundInvoice.getNetAmount(), is(VT.bd("10000.123")));
 
             // and also
@@ -186,7 +191,7 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            List<Invoice> matchingInvoices = findMatchingInvoices(seller, buyer, lease);
+            List<InvoiceForLease> matchingInvoices = findMatchingInvoices(seller, buyer, lease);
             Assert.assertThat(matchingInvoices.size(), Is.is(1));
             Invoice invoice = matchingInvoices.get(0);
             // when
@@ -196,8 +201,8 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
             Assert.assertThat(matchingInvoices.size(), Is.is(0));
         }
 
-        private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-            return invoiceRepository.findMatchingInvoices(
+        private List<InvoiceForLease> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
+            return invoiceForLeaseRepository.findMatchingInvoices(
                     seller, buyer, PaymentMethod.DIRECT_DEBIT,
                     lease, InvoiceStatus.NEW,
                     invoiceStartDate);

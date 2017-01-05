@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_downloadAbstract<T extends DocAndCommAbstract<T>>  {
@@ -44,7 +45,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_downloadAbstract<T 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public List<T> $$() {
-        return docAndCommFactory.documentsAndCommunicationsFor(invoiceSummary.getInvoices(), provider);
+        final List<Invoice<?>> invoices = (List)invoiceSummary.getInvoices();
+        return docAndCommFactory.documentsAndCommunicationsFor(invoices, provider);
     }
 
     @Inject

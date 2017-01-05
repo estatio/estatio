@@ -29,6 +29,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Organisation;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 
@@ -53,7 +54,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
     Lease mockLease;
 
     DocumentType stubDocumentType;
-    Invoice stubInvoice;
+    InvoiceForLease stubInvoice;
     Organisation stubBuyer;
     Property stubProperty;
     Unit stubUnit;
@@ -68,7 +69,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
     public void setUp() throws Exception {
         stubDocumentType = new DocumentType(Constants.DOC_TYPE_REF_PRELIM, "Prelim letter");
 
-        stubInvoice = new Invoice();
+        stubInvoice = new InvoiceForLease();
         stubInvoice.setDueDate(new LocalDate(2016,11,1));
         stubBuyer = new Organisation();
         stubBuyer.setName("Buyer-1");

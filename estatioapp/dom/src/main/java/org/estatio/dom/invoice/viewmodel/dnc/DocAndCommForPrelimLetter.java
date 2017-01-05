@@ -28,7 +28,7 @@ public class DocAndCommForPrelimLetter extends DocAndCommAbstract<DocAndCommForP
     public DocAndCommForPrelimLetter() {
     }
 
-    public DocAndCommForPrelimLetter(final Invoice invoice) {
+    public DocAndCommForPrelimLetter(final Invoice<?> invoice) {
         super(invoice);
     }
 

@@ -33,16 +33,16 @@ import org.apache.isis.applib.conmap.ContentMappingService;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
-import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
-import org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
-import org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory;
-import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
-import org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory;
 import org.estatio.canonical.party.PartyDtoFactory;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
+import org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
+import org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
+import org.estatio.dom.invoice.canonical.v1.InvoiceForLeaseDtoFactory;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -74,8 +74,8 @@ public class EstatioContentMappingService implements ContentMappingService {
         if(object instanceof BankMandate) {
             return bankMandateDtoFactory.newDto((BankMandate)object);
         }
-        if(object instanceof Invoice) {
-            return invoiceDtoFactory.newDto((Invoice)object);
+        if(object instanceof InvoiceForLease) {
+            return invoiceForLeaseDtoFactory.newDto((InvoiceForLease)object);
         }
         if(object instanceof PostalAddress) {
             return postalAddressDtoFactory.newDto((PostalAddress)object);
@@ -109,7 +109,7 @@ public class EstatioContentMappingService implements ContentMappingService {
     PartyDtoFactory partyDtoFactory;
 
     @javax.inject.Inject
-    InvoiceDtoFactory invoiceDtoFactory;
+    InvoiceForLeaseDtoFactory invoiceForLeaseDtoFactory;
 
     @javax.inject.Inject
     PostalAddressDtoFactory postalAddressDtoFactory;

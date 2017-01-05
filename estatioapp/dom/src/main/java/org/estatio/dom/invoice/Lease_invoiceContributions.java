@@ -12,17 +12,19 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class Lease_invoiceContributions {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> invoices(final Lease lease) {
+    public List<InvoiceForLease> invoices(final Lease lease) {
         return invoiceRepository.findByLease(lease);
     }
 
     @Inject
-    InvoiceRepository invoiceRepository;
+    InvoiceForLeaseRepository invoiceRepository;
 
 }

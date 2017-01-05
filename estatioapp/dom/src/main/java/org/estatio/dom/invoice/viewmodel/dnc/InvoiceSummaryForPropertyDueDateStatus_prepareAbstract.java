@@ -37,6 +37,7 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.dnc.Invoice_createAndAttachDocumentAndScheduleRender;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
@@ -49,7 +50,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract ext
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public InvoiceSummaryForPropertyDueDateStatus $$() throws IOException {
-        final List<Invoice> invoices = invoicesToPrepare();
+        final List<InvoiceForLease> invoices = invoicesToPrepare();
         for (Invoice invoice : invoices) {
             final DocumentTemplate documentTemplate = documentTemplateFor(invoice);
             factoryService.mixin(Invoice_createAndAttachDocumentAndScheduleRender.class, invoice).$$(documentTemplate);
@@ -61,7 +62,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract ext
         return invoicesToPrepare().isEmpty()? "No invoices available to be prepared": null;
     }
 
-    private List<Invoice> invoicesToPrepare() {
+    private List<InvoiceForLease> invoicesToPrepare() {
         return FluentIterable.from(invoiceSummary.getInvoices()).filter(filter()).toList();
     }
 

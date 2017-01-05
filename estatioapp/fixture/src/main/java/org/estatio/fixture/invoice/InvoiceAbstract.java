@@ -35,8 +35,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
@@ -44,6 +42,8 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Party;
@@ -58,7 +58,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected Invoice createInvoiceAndNumerator(
+    protected InvoiceForLease createInvoiceAndNumerator(
             final ApplicationTenancy applicationTenancy,
             Lease lease,
             String sellerStr,
@@ -73,7 +73,8 @@ public abstract class InvoiceAbstract extends FixtureScript {
 
         final String interactionId = null;
 
-        final Invoice invoice = invoiceRepository.newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
+        final InvoiceForLease invoice = invoiceForLeaseRepository
+                .newInvoice(applicationTenancy, seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
         final Property property = lease.getProperty();
@@ -84,7 +85,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
     }
 
     protected void createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-            final Invoice invoice, final LeaseItemType leaseItemType,
+            final InvoiceForLease invoice, final LeaseItemType leaseItemType,
             final LocalDate startDate, final LocalDateInterval interval,
             final ExecutionContext executionContext) {
 
@@ -109,7 +110,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
     private CurrencyRepository currencyRepository;
 
     @Inject
-    private InvoiceRepository invoiceRepository;
+    private InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;

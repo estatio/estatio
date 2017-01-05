@@ -94,9 +94,9 @@ import lombok.Setter;
         column = "version")
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem
-        extends UdoDomainObject2<InvoiceItem>
-        implements WithInterval<InvoiceItem>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
+public abstract class InvoiceItem<T extends InvoiceItem<T>>
+        extends UdoDomainObject2<T>
+        implements WithInterval<T>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
     public InvoiceItem() {
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
@@ -138,7 +138,7 @@ public abstract class InvoiceItem
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
-    private Invoice invoice;
+    private Invoice<?> invoice;
 
     // //////////////////////////////////////
 

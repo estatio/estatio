@@ -17,7 +17,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.dom.leaseinvoicing;
 
 import java.util.List;
 
@@ -27,25 +27,26 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.base.dom.Dflt;
-
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+
 import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.LeaseConstants;
 
 @Mixin
-public class Invoice_overrideSendTo {
+public class InvoiceForLease_overrideSendTo {
 
-    private final Invoice invoice;
+    private final InvoiceForLease invoiceForLease;
 
-    public Invoice_overrideSendTo(final Invoice invoice) {
-        this.invoice = invoice;
+    public InvoiceForLease_overrideSendTo(final InvoiceForLease invoiceForLease) {
+        this.invoiceForLease = invoiceForLease;
     }
 
     @Action()
     public Invoice $$(final CommunicationChannel communicationChannel) {
-        invoice.setSendTo(communicationChannel);
-        return invoice;
+        invoiceForLease.setSendTo(communicationChannel);
+        return invoiceForLease;
     }
 
     public CommunicationChannel default0$$() {
@@ -53,7 +54,7 @@ public class Invoice_overrideSendTo {
     }
     public List<CommunicationChannel> choices0$$() {
         return locator.onFile(
-                invoice.getLease(),
+                invoiceForLease.getLease(),
                 LeaseConstants.ART_TENANT,
                 CommunicationChannelType.EMAIL_ADDRESS, CommunicationChannelType.POSTAL_ADDRESS);
     }

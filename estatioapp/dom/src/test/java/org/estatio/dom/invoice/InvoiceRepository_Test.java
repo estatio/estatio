@@ -39,12 +39,15 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,6 +56,8 @@ public class InvoiceRepository_Test {
     FinderInteraction finderInteraction;
 
     InvoiceRepository invoiceRepository;
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
+
     NumeratorForCollectionRepository estatioNumeratorRepository;
 
     Party seller;
@@ -97,6 +102,9 @@ public class InvoiceRepository_Test {
                 return null;
             }
         };
+        invoiceForLeaseRepository = new InvoiceForLeaseRepository() {
+
+        };
 
         estatioNumeratorRepository = new NumeratorForCollectionRepository();
     }
@@ -106,7 +114,7 @@ public class InvoiceRepository_Test {
         @Test
         public void happyCase() {
 
-            invoiceRepository.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+            invoiceForLeaseRepository.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
             assertThat(finderInteraction.getResultType()).isEqualTo(Invoice.class);
@@ -125,37 +133,37 @@ public class InvoiceRepository_Test {
         @Test
         public void whenMany_returnsFirst() {
 
-            final Invoice invoice1 = new Invoice();
-            final Invoice invoice2 = new Invoice();
-            final Invoice invoice3 = new Invoice();
+            final InvoiceForLease invoice1 = new InvoiceForLease();
+            final InvoiceForLease invoice2 = new InvoiceForLease();
+            final InvoiceForLease invoice3 = new InvoiceForLease();
 
-            invoiceRepository = new InvoiceRepository() {
+            invoiceForLeaseRepository = new InvoiceForLeaseRepository() {
                 @Override
                 @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
-                public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+                public List<InvoiceForLease> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                     return Arrays.asList(invoice1, invoice2, invoice3);
                 }
             };
 
-            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null)).isEqualTo(invoice1);
+            assertThat(invoiceForLeaseRepository.findMatchingInvoice(null, null, null, null, null, null)).isEqualTo(invoice1);
         }
 
         @Test
         public void whenEmpty_returnsNull() {
 
-            invoiceRepository = new InvoiceRepository() {
+            invoiceForLeaseRepository = new InvoiceForLeaseRepository() {
                 @Override
                 @Action(hidden = Where.EVERYWHERE, semantics = SemanticsOf.SAFE)
-                public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
-                    return Arrays.<Invoice>asList();
+                public List<InvoiceForLease> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+                    return Arrays.<InvoiceForLease>asList();
                 }
 
                 @Override
-                public Invoice newInvoice(final ApplicationTenancy applicationTenancy, Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease, String interactionId) {
+                public InvoiceForLease newInvoice(final ApplicationTenancy applicationTenancy, Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease, String interactionId) {
                     return null;
                 }
             };
-            assertThat(invoiceRepository.findMatchingInvoice(null, null, null, null, null, null)).isNull();
+            assertThat(invoiceForLeaseRepository.findMatchingInvoice(null, null, null, null, null, null)).isNull();
         }
 
     }

@@ -33,17 +33,16 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Occupancy;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {
@@ -62,7 +61,7 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
             final LocalDate dueDate,
             final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
-        Invoice invoice = invoiceRepository.findOrCreateMatchingInvoice(
+        InvoiceForLease invoice = invoiceRepository.findOrCreateMatchingInvoice(
                 leaseTerm.getApplicationTenancy(),
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
@@ -208,6 +207,6 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
     // //////////////////////////////////////
 
     @Inject
-    private InvoiceRepository invoiceRepository;
+    private InvoiceForLeaseRepository invoiceRepository;
 
 }

@@ -34,6 +34,7 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 
 import lombok.Data;
 
@@ -63,8 +64,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendAbstract extend
 
     private List<InvoiceAndDocument> invoiceAndDocumentsToSend(Predicate<InvoiceAndDocument> filter) {
         final List<InvoiceAndDocument> invoiceAndDocuments = Lists.newArrayList();
-        final List<Invoice> invoices = invoiceSummary.getInvoices();
-        for (Invoice invoice : invoices) {
+        final List<InvoiceForLease> invoices = invoiceSummary.getInvoices();
+        for (InvoiceForLease invoice : invoices) {
             appendTuplesToSend(invoice, filter, invoiceAndDocuments);
         }
         return invoiceAndDocuments;

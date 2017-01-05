@@ -9,11 +9,11 @@ import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +49,7 @@ public class InvoiceItemDtoFactory_Test {
         Lease lease = new Lease();
         lease.getOccupancies().add(occupancy);
 
-        Invoice invoice = new Invoice();
+        InvoiceForLease invoice = new InvoiceForLease();
         invoice.setLease(lease);
 
         invoiceItem = new InvoiceItemForLease();

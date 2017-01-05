@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.dom.leaseinvoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,7 +34,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,11 +54,11 @@ public class InvoiceItem_Test {
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(Invoice.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new InvoiceItemForTesting());
+                    .exercise(new InvoiceItemForLease());
         }
     }
 
-    public static class CompareTo extends ComparableContractTest_compareTo<InvoiceItem> {
+    public static class CompareTo extends ComparableContractTest_compareTo<InvoiceItemForLease> {
 
         private Invoice inv1;
         private Invoice inv2;
@@ -65,8 +68,8 @@ public class InvoiceItem_Test {
 
         @Before
         public void setUpParentInvoices() throws Exception {
-            inv1 = new Invoice();
-            inv2 = new Invoice();
+            inv1 = new InvoiceForLease();
+            inv2 = new InvoiceForLease();
 
             inv1.setInvoiceNumber("000001");
             inv2.setInvoiceNumber("000002");
@@ -80,7 +83,7 @@ public class InvoiceItem_Test {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected List<List<InvoiceItem>> orderedTuples() {
+        protected List<List<InvoiceItemForLease>> orderedTuples() {
             return listOf(
                     listOf(
                             newInvoiceItem(null, null, null, null),
@@ -108,12 +111,12 @@ public class InvoiceItem_Test {
                     ));
         }
 
-        private InvoiceItem newInvoiceItem(
+        private InvoiceItemForLease newInvoiceItem(
                 Invoice invoice,
                 LocalDate startDate,
                 Charge charge,
                 String description) {
-            final InvoiceItem ii = new InvoiceItemForTesting();
+            final InvoiceItemForLease ii = new InvoiceItemForLease();
             ii.setInvoice(invoice);
             ii.setStartDate(startDate);
             ii.setCharge(charge);

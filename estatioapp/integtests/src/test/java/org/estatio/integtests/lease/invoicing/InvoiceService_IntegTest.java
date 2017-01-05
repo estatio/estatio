@@ -40,6 +40,7 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -47,9 +48,10 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
+import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -82,6 +84,9 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     InvoiceRepository invoiceRepository;
+
+    @Inject
+    InvoiceForLeaseRepository invoiceForLeaseRepository;
 
     @Inject
     InvoiceMenu invoiceMenu;
@@ -158,7 +163,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             assertThat(last.getBaseValue(), is(VT.bd(150000).setScale(2)));
             assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
             assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
-            assertThat(invoiceRepository.findByLease(lease).size(), is(0));
+            assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(0));
             assertThat(dItem.getTerms().last().getEffectiveValue(), is(VT.bd(75000).setScale(2)));
             assertThat(rfItem.getTerms().last().getEffectiveValue(), is(VT.bd(2250).setScale(2)));
         }
@@ -174,16 +179,16 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             approveInvoicesFor(lease);
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
             assertThat(totalApprovedOrInvoicedForItem(sItem), is(VT.bd("18103.26")));
-            assertThat(invoiceRepository.findByLease(lease).size(), is(1));
+            assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(1));
         }
 
         public void step3_approveInvoice() throws Exception {
-            final List<Invoice> allInvoices = invoiceMenu.allInvoices();
+            final List<Invoice<?>> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
 
-            mixin(Invoice._approve.class, invoice).$$();
-            mixin(Invoice._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
+            mixin(InvoiceForLease._approve.class, invoice).$$();
+            mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
 
             assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
@@ -213,7 +218,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             invoiceService.calculate(lease, InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
             // (156750 - 150000) / = 1687.5 added
             approveInvoicesFor(lease);
-            assertThat(invoiceRepository.findByLease(lease).size(), is(2));
+            assertThat(invoiceForLeaseRepository.findByLease(lease).size(), is(2));
             assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48").add(VT.bd("1687.50"))));
         }
 
@@ -236,8 +241,8 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
         }
 
         private void approveInvoicesFor(final Lease lease) {
-            for (final Invoice invoice : invoiceRepository.findByLease(lease)) {
-                mixin(Invoice._approve.class, invoice).$$();
+            for (final Invoice invoice : invoiceForLeaseRepository.findByLease(lease)) {
+                mixin(InvoiceForLease._approve.class, invoice).$$();
             }
         }
     }
