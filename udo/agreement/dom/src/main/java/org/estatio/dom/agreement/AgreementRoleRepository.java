@@ -25,9 +25,10 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

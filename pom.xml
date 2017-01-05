@@ -404,18 +404,31 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-partyagreement</artifactId>
+                <artifactId>udo-dom-party</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-dom-partyagreement</artifactId>
+                <artifactId>udo-dom-party</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
 
             <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-agreement</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-agreement</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+			<dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-currency</artifactId>
                 <version>${project.version}</version>
@@ -598,7 +611,8 @@ language governing permissions and limitations under the License.
         <module>udo/link/dom</module>
         <module>udo/project/dom</module>
         <module>udo/settings/dom</module>
-        <module>udo/partyagreement/dom</module>
+        <module>udo/party/dom</module>
+        <module>udo/agreement/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
         <module>estatioapp/dom</module>

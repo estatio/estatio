@@ -82,7 +82,8 @@
             </activation>
             <modules>
                 <module>../estatio/udo/event/dom</module>
-                <module>../estatio/udo/partyagreement/dom</module>
+                <module>../estatio/udo/party/dom</module>
+                <module>../estatio/udo/agreement/dom</module>
                 <module>../estatio/udo/project/dom</module>
                 <module>../estatio/udo/index/dom</module>
                 <module>../estatio/udo/currency/dom</module>

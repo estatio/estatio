@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.party;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -35,7 +32,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -44,8 +40,6 @@ import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -95,7 +89,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Party
         extends UdoDomainObject2<Party>
-        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, AgreementRoleHolder {
+        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
         super("name");
@@ -127,22 +121,6 @@ public abstract class Party
     public String disableName() {
         return null;
     }
-
-    // //////////////////////////////////////
-
-    @Property(hidden = Where.EVERYWHERE)
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    @Getter @Setter
-    private SortedSet<AgreementRole> agreements = new TreeSet<>();
-
-    // //////////////////////////////////////
-
-    @Property(hidden = Where.EVERYWHERE)
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    @Getter @Setter
-    private SortedSet<PartyRegistration> registrations = new TreeSet<>();
-
-    // //////////////////////////////////////
 
     public static class RemoveEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;

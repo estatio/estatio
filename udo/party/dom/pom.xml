@@ -24,12 +24,12 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-project</artifactId>
+    <artifactId>udo-dom-party</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) UDO DOM - Project</name>
+    <name>Estatio (Open Source) UDO DOM - Party</name>
     <description>
-        UDO Project DOM
+        UDO Party DOM
     </description>
 
 
@@ -83,19 +83,29 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.incode.estatio</groupId>
+            <artifactId>estatio-canonical</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
+            <artifactId>udo-dom-numerator</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-agreement</artifactId>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
         </dependency>
 
         <!-- testing -->
@@ -113,12 +123,6 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 
