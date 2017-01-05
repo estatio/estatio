@@ -25,6 +25,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -70,7 +71,11 @@ import org.estatio.numerator.dom.impl.Numerator;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: need to add in additional JDO annotations
+@javax.jdo.annotations.PersistenceCapable(
+        schema = "dbo"    // Isis' ObjectSpecId inferred from @Discriminator
+)
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("InvoiceForLease")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -162,7 +167,7 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.invoice.Invoice"
+        objectType = "org.estatio.dom.invoice.Invoice" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class InvoiceForLease
