@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 
 @DomainService(repositoryFor = InvoiceItem.class, nature = NatureOfService.DOMAIN)
 public class InvoiceItemRepository extends UdoDomainRepositoryAndFactory<InvoiceItem> {

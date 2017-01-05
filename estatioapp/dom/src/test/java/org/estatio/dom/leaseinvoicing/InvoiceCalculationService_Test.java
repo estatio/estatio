@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.leaseinvoicing;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -50,7 +50,6 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.lease.LeaseTermValueType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRateRepository;
@@ -66,7 +65,7 @@ public class InvoiceCalculationService_Test {
 
         InvoiceCalculationService ic;
 
-        List<CalculationResult> calculateDueDateRange(
+        List<InvoiceCalculationService.CalculationResult> calculateDueDateRange(
                 final LeaseTerm leaseTerm,
                 final LocalDate startDueDate,
                 final LocalDate nextDueDate,
@@ -75,14 +74,14 @@ public class InvoiceCalculationService_Test {
             return calculateDueDateRange(leaseTerm, startDueDate, nextDueDate, leaseTerm.getLeaseItem().getInvoicingFrequency(), values);
         }
 
-        List<CalculationResult> calculateDueDateRange(
+        List<InvoiceCalculationService.CalculationResult> calculateDueDateRange(
                 final LeaseTerm leaseTerm,
                 final LocalDate startDueDate,
                 final LocalDate nextDueDate,
                 final InvoicingFrequency invoicingFrequency,
                 final Double... values
         ) {
-            List<CalculationResult> results = ic.calculateDueDateRange(
+            List<InvoiceCalculationService.CalculationResult> results = ic.calculateDueDateRange(
                     leaseTerm,
                     InvoiceCalculationParameters.builder()
                             .leaseTerm(leaseTerm)
@@ -308,14 +307,14 @@ public class InvoiceCalculationService_Test {
                         0.00, 0.00);
             }
 
-            List<CalculationResult> calculateDueDateRange(
+            List<InvoiceCalculationService.CalculationResult> calculateDueDateRange(
                     final LeaseTerm leaseTerm,
                     final LocalDate startDueDate,
                     final LocalDate nextDueDate,
                     final InvoicingFrequency invoicingFrequency,
                     final Double... values
             ) {
-                final List<CalculationResult> calculationResults = super.calculateDueDateRange(leaseTerm, startDueDate, nextDueDate, invoicingFrequency, values);
+                final List<InvoiceCalculationService.CalculationResult> calculationResults = super.calculateDueDateRange(leaseTerm, startDueDate, nextDueDate, invoicingFrequency, values);
 
                 // REVIEW: this assertion done here because fails in some cases for the epoch case, below
                 assertThat(calculationResults).hasSize(values.length);
@@ -456,12 +455,12 @@ public class InvoiceCalculationService_Test {
             LeaseItem item = new LeaseItem(lease, invoicingFrequency);
             LeaseTerm term = new LeaseTermForTesting(item, LocalDateInterval.parseString(termInterval), new BigDecimal(termValue));
 
-            final List<CalculationResult> calculationResults = ic.calculateDateRange(term, LocalDateInterval.parseString(caluculationInterval), new LocalDate(dueDate));
+            final List<InvoiceCalculationService.CalculationResult> calculationResults = ic.calculateDateRange(term, LocalDateInterval.parseString(caluculationInterval), new LocalDate(dueDate));
 
             compareResults(calculationResults, results);
         }
 
-        private void compareResults(List<CalculationResult> results, Double... value) {
+        private void compareResults(List<InvoiceCalculationService.CalculationResult> results, Double... value) {
             assertThat(results).hasSize(value.length);
             Arrays.asList(value);
 
@@ -527,7 +526,7 @@ public class InvoiceCalculationService_Test {
             LocalDate dueDateForCalculation = dueDateBeforeEpochDate;
 
             //when
-            List<CalculationResult> calculationResults = ic.calculateTerm(depositTerm, intervals, dueDateForCalculation);
+            List<InvoiceCalculationService.CalculationResult> calculationResults = ic.calculateTerm(depositTerm, intervals, dueDateForCalculation);
 
             // then
             assertThat(calculationResults.size()).isEqualTo(1);

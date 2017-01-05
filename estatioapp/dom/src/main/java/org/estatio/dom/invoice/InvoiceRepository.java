@@ -41,7 +41,7 @@ import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationParameters;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Invoice.class)

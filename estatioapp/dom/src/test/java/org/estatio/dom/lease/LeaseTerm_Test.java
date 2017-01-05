@@ -50,7 +50,7 @@ import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTes
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;

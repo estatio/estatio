@@ -24,10 +24,10 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationParameters;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
+import org.estatio.dom.leaseinvoicing.InvoiceRunType;
 
 import static org.incode.module.base.integtests.VT.ld;
 

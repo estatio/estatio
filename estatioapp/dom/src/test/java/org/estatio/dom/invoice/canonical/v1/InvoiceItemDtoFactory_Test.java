@@ -10,10 +10,9 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.canonical.v1.InvoiceItemDtoFactory;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
 

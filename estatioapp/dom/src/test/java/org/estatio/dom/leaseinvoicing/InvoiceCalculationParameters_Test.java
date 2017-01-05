@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.leaseinvoicing;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;

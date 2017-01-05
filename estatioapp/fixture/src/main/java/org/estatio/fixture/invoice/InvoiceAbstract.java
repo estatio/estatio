@@ -44,8 +44,8 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 

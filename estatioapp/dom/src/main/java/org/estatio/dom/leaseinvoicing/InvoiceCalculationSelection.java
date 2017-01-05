@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.leaseinvoicing;
 
 import java.util.Arrays;
 import java.util.List;

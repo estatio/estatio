@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.leaseinvoicing;
 
 import java.math.BigDecimal;
 

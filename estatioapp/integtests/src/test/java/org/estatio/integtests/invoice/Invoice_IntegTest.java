@@ -45,7 +45,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;

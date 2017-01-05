@@ -18,10 +18,10 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationParameters;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
+import org.estatio.dom.leaseinvoicing.InvoiceRunType;
 
 @DomainService(nature = NatureOfService.VIEW)
 @DomainServiceLayout(

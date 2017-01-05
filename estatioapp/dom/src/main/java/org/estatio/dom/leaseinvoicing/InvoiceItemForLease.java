@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.leaseinvoicing;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -54,25 +54,25 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease")
+@javax.jdo.annotations.Discriminator("InvoiceItemForLease")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTerm", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInterval", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndIntervalAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate " +
@@ -80,19 +80,19 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm.leaseItem.lease == :lease " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm.leaseItem == :leaseItem " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "FROM InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& invoice.status == :invoiceStatus")
 })

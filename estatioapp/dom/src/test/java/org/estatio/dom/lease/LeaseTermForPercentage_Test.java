@@ -35,7 +35,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
