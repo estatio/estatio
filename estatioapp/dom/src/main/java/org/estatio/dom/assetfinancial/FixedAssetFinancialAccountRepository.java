@@ -16,20 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.financial;
+package org.estatio.dom.assetfinancial;
 
 import java.util.List;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

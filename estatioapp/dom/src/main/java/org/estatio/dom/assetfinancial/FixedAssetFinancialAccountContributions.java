@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.asset.financial;
+package org.estatio.dom.assetfinancial;
 
 import java.util.List;
 

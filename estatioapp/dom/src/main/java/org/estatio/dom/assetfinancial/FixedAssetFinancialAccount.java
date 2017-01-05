@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.financial;
+package org.estatio.dom.assetfinancial;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Unique;
@@ -58,23 +58,23 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByFixedAsset", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.financial.FixedAssetFinancialAccount "
+                        + "FROM FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.financial.FixedAssetFinancialAccount "
+                        + "FROM FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset "
                         + "&& financialAccount == :financialAccount"),
         @javax.jdo.annotations.Query(
                 name = "findByFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.financial.FixedAssetFinancialAccount "
+                        + "FROM FixedAssetFinancialAccount "
                         + "WHERE financialAccount == :financialAccount")
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
 @DomainObject(
-        objectType = "org.estatio.dom.asset.financial.FixedAssetFinancialAccount"
+        objectType = "FixedAssetFinancialAccount"
 )
 public class FixedAssetFinancialAccount
         extends UdoDomainObject2<FixedAssetFinancialAccount>

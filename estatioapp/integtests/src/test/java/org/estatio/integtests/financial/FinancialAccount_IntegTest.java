@@ -35,8 +35,8 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
+import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
+import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;

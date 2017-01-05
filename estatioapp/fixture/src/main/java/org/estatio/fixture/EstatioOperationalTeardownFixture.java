@@ -43,7 +43,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccount;
+import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.bankmandate.BankMandate;

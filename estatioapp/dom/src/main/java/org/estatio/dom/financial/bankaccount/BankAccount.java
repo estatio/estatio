@@ -39,7 +39,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccountRepository;
+import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
