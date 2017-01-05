@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial.contributed;
+package org.estatio.dom.bankmandate.contributed;
 
 import java.util.Collection;
 

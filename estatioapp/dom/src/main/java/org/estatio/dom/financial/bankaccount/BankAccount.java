@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.financial.bankaccount;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -39,7 +38,6 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -160,13 +158,6 @@ public class BankAccount
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
     }
-
-    @Inject
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
-
-    @Inject
-    BankAccountRepository bankAccountRepository;
-
 
 
     public static class AccountNumberType {

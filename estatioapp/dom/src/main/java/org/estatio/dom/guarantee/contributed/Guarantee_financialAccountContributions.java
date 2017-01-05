@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial.contributed;
+package org.estatio.dom.guarantee.contributed;
 
 import java.math.BigDecimal;
 import java.util.List;
