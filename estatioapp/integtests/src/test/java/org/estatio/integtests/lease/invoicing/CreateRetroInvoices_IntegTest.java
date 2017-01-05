@@ -43,7 +43,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationService;
-import org.estatio.dom.leaseinvoicing.InvoiceRunType;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;

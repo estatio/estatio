@@ -45,6 +45,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;

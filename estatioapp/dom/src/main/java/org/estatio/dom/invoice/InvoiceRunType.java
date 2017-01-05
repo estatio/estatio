@@ -1,4 +1,4 @@
-package org.estatio.dom.leaseinvoicing;
+package org.estatio.dom.invoice;
 
 import org.incode.module.base.dom.utils.StringUtils;
 

@@ -49,7 +49,7 @@ import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.leaseinvoicing.InvoiceRunType;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;

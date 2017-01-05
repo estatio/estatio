@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;

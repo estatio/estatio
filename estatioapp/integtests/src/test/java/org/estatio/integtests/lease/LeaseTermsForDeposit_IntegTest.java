@@ -36,7 +36,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationSelection;
-import org.estatio.dom.leaseinvoicing.InvoiceRunType;
+import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
