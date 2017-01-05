@@ -64,7 +64,6 @@ import org.estatio.dom.budgeting.DistributionService;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
-import org.estatio.dom.lease.OccupancyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -326,9 +325,14 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
             if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
                 return false;
             }
-            if (occupancyRepository.occupanciesByUnitAndInterval(item.getUnit(), getBudget().getInterval()).isEmpty()) {
-                return false;
-            }
+
+            // previously we had this code, but no longer sure if it makes any sense...
+//            final Unit unit = item.getUnit();
+//            final LocalDateInterval interval = getBudget().getInterval();
+//            if (occupancyRepository.occupanciesByUnitAndInterval(unit, interval).isEmpty()) {
+//                return false;
+//            }
+
         }
         return true;
     }
@@ -363,13 +367,10 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
     UnitRepository unitRepository;
 
     @Inject
-    private KeyTableRepository keyTableRepository;
+    KeyTableRepository keyTableRepository;
 
     @Inject
-    private KeyItemRepository keyItemRepository;
-
-    @Inject
-    private OccupancyRepository occupancyRepository;
+    KeyItemRepository keyItemRepository;
 
 
 }

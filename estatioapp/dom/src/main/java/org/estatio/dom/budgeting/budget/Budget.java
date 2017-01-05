@@ -74,7 +74,6 @@ import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.OccupancyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -348,9 +347,6 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private BudgetRepository budgetRepository;
-
-    @Inject
-    private OccupancyRepository occupancyRepository;
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;

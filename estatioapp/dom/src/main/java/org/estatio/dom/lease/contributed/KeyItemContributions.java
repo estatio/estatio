@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.dom.budgeting.keyitem;
+package org.estatio.dom.lease.contributed;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 
