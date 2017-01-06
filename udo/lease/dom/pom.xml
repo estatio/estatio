@@ -87,6 +87,37 @@ language governing permissions and limitations under the License.
             <artifactId>udo-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-assetfinancial</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-invoice</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-settings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.pdfbox</groupId>
+            <artifactId>isis-module-pdfbox-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+        </dependency>
+
+
         <!-- testing -->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
@@ -101,6 +132,15 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-unittestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-invoice</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        -->
 
     </dependencies>
 
