@@ -87,6 +87,16 @@ language governing permissions and limitations under the License.
             <artifactId>udo-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-financial</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-lease</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
