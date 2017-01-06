@@ -144,6 +144,11 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-bankmandate</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
             <artifactId>udo-dom-currency</artifactId>
         </dependency>
 

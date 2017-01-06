@@ -365,6 +365,19 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-bankmandate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>udo-dom-bankmandate</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>udo-dom-budget</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -709,6 +722,7 @@ language governing permissions and limitations under the License.
         <module>udo/agreement/dom</module>
         <module>udo/asset/dom</module>
         <module>udo/assetfinancial/dom</module>
+        <module>udo/bankmandate/dom</module>
         <module>udo/budget/dom</module>
         <module>udo/budgetassignment/dom</module>
         <module>udo/charge/dom</module>
