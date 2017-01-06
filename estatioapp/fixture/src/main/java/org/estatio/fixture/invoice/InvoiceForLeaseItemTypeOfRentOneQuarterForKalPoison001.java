@@ -27,7 +27,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;

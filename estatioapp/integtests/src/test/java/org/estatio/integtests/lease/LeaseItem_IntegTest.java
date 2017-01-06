@@ -50,7 +50,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceItemForLeaseRepository;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;

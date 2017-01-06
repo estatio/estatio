@@ -47,16 +47,16 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceForLeaseRepository;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

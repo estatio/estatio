@@ -64,9 +64,9 @@ import org.incode.module.base.dom.with.WithSequence;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.invoice.InvoiceSource;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;

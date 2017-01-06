@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 
 import lombok.Getter;
 import lombok.Setter;

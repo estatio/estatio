@@ -29,7 +29,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.party.Organisation;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 

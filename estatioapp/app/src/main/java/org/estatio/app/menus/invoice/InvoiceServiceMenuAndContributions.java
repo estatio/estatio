@@ -14,13 +14,13 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.invoice.InvoiceRunType;
 
 @DomainService(nature = NatureOfService.VIEW)

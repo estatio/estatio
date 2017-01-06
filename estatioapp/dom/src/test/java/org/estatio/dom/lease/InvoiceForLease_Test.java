@@ -32,7 +32,7 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.communicationchannel.CommunicationChannelForTesting;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
