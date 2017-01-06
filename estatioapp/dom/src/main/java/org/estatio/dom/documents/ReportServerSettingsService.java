@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.appsettings;
+package org.estatio.dom.documents;
 
 import java.util.Map;
 
@@ -31,10 +31,10 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
+public class ReportServerSettingsService extends UdoDomainService<ReportServerSettingsService> {
 
-    public EstatioSettingsService() {
-        super(EstatioSettingsService.class);
+    public ReportServerSettingsService() {
+        super(ReportServerSettingsService.class);
     }
 
     public final static String REPORT_SERVER_CONFIG_PROPERTY_KEY = "estatio.application.reportServerBaseUrl";

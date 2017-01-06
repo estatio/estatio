@@ -31,7 +31,7 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Ro
 
 import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.documents.ReportServerSettingsService;
 
 @Mixin
 public class Object_links {
@@ -50,7 +50,7 @@ public class Object_links {
         final Root root = new Root(domainObject){
             @SuppressWarnings("unused")
             public String getReportServerBaseUrl() {
-                return estatioSettingsService.fetchReportServerBaseUrl();
+                return reportServerSettingsService.fetchReportServerBaseUrl();
             }
         };
         final String urlStr = stringInterpolator.interpolate(root, link.getUrlTemplate());
@@ -75,7 +75,7 @@ public class Object_links {
     private LinkRepository linkRepository;
     
     @javax.inject.Inject
-    private EstatioSettingsService estatioSettingsService;
+    private ReportServerSettingsService reportServerSettingsService;
 
     //endregion
 

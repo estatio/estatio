@@ -23,7 +23,7 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.documents.ReportServerSettingsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 /**
@@ -42,13 +42,13 @@ public abstract class StringInterpolatorToSsrsUrlAbstract<T> extends
             final DocumentTemplate documentTemplate,
             final T domainObject) {
 
-        final String baseUrl = estatioSettingsService.fetchReportServerBaseUrl();
+        final String baseUrl = reportServerSettingsService.fetchReportServerBaseUrl();
 
         return new DataModel(domainObject, baseUrl);
     }
 
     @javax.inject.Inject
-    EstatioSettingsService estatioSettingsService;
+    ReportServerSettingsService reportServerSettingsService;
 
 
     /**

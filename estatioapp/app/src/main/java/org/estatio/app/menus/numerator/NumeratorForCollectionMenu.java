@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.documents.ReportServerSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
@@ -115,6 +115,6 @@ public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCol
     NumeratorForCollectionRepository numeratorRepository;
 
     @javax.inject.Inject
-    EstatioSettingsService settings;
+    ReportServerSettingsService settings;
 
 }
