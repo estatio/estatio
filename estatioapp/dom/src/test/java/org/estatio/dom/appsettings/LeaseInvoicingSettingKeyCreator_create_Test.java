@@ -18,10 +18,10 @@
  */
 package org.estatio.dom.appsettings;
 
-public class ApplicationSettingKeyCreator_create_Test extends ApplicationSettingCreator_Test.Instantiate {
+public class LeaseInvoicingSettingKeyCreator_create_Test extends ApplicationSettingCreator_Test.Instantiate {
 
-    public ApplicationSettingKeyCreator_create_Test() {
-        super(ApplicationSettingKey.values());
+    public LeaseInvoicingSettingKeyCreator_create_Test() {
+        super(LeaseInvoicingSettingKey.values());
     }
 
 }

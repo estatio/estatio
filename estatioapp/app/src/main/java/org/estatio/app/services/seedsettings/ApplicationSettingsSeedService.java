@@ -24,13 +24,12 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.domsettings.ApplicationSettingCreator;
-import org.estatio.dom.appsettings.ApplicationSettingKey;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 /**
@@ -50,7 +49,7 @@ public class ApplicationSettingsSeedService extends UdoDomainService<Application
     }
 
     private void installDefaultsIfRequired() {
-        createSettingsIfRequired(ApplicationSettingKey.values());
+        createSettingsIfRequired(LeaseInvoicingSettingKey.values());
         createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
     }
 

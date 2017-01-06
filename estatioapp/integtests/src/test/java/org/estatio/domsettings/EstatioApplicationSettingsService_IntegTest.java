@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
-import org.estatio.dom.appsettings.ApplicationSettingKey;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +62,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
         @Test
         public void happyCase() throws Exception {
             // Given
-            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
+            final LeaseInvoicingSettingKey key = LeaseInvoicingSettingKey.epochDate;
             // when
             final ApplicationSetting applicationSetting = ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
             // Then
@@ -72,7 +72,7 @@ public class EstatioApplicationSettingsService_IntegTest extends EstatioIntegrat
         @Test
         public void updated() throws Exception {
             // given
-            final ApplicationSettingKey key = ApplicationSettingKey.epochDate;
+            final LeaseInvoicingSettingKey key = LeaseInvoicingSettingKey.epochDate;
             // when
             final ApplicationSettingForEstatio applicationSetting = (ApplicationSettingForEstatio) ApplicationSettingCreator.Helper.find(key, applicationSettingsServiceForEstatio);
             final LocalDate localDate = new LocalDate(2010, 1, 1);

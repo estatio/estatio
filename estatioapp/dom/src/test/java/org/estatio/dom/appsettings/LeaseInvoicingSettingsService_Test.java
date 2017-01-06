@@ -38,9 +38,9 @@ import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EstatioSettingsService_Test {
+public class LeaseInvoicingSettingsService_Test {
 
-    public static class EstatioSettingsServiceForTesting extends EstatioSettingsService {
+    public static class EstatioSettingsServiceForTesting extends LeaseInvoicingSettingsService {
 
         @Override
         public String getId() {
@@ -99,7 +99,7 @@ public class EstatioSettingsService_Test {
         final LocalDate date = new LocalDate(2013, 4, 1);
         context.checking(new Expectations() {
             {
-                oneOf(mockApplicationSettingsService).find(ApplicationSettingKey.epochDate);
+                oneOf(mockApplicationSettingsService).find(LeaseInvoicingSettingKey.epochDate);
                 will(returnValue(new ApplicationSettingForTesting(date.toString(SettingAbstract.DATE_FORMATTER), SettingType.LOCAL_DATE)));
             }
         });
@@ -111,7 +111,7 @@ public class EstatioSettingsService_Test {
     public void whenNull() {
         context.checking(new Expectations() {
             {
-                oneOf(mockApplicationSettingsService).find(ApplicationSettingKey.epochDate);
+                oneOf(mockApplicationSettingsService).find(LeaseInvoicingSettingKey.epochDate);
                 will(returnValue(null));
             }
         });

@@ -42,7 +42,7 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -134,7 +134,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     private LocalDate systemEpochDate() {
-        return estatioSettingsService == null ? new LocalDate(1980, 1, 1) : estatioSettingsService.fetchEpochDate();
+        return leaseInvoicingSettingsService == null ? new LocalDate(1980, 1, 1) : leaseInvoicingSettingsService.fetchEpochDate();
     }
 
     private String interactionId;
@@ -347,7 +347,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     // //////////////////////////////////////
 
     @Inject
-    EstatioSettingsService estatioSettingsService;
+    LeaseInvoicingSettingsService leaseInvoicingSettingsService;
 
     @Inject
     private InvoiceForLeaseRepository invoiceForLeaseRepository;

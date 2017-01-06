@@ -39,7 +39,7 @@ import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -123,7 +123,7 @@ public class InvoiceCalculationService_Test {
         AgreementTypeRepository mockAgreementTypeRepository;
 
         @Mock
-        EstatioSettingsService mockSettings;
+        LeaseInvoicingSettingsService mockSettings;
 
         InvoiceItemForLease invoiceItemForLease;
 
@@ -179,7 +179,7 @@ public class InvoiceCalculationService_Test {
             invoiceItemForLease.agreementTypeRepository = mockAgreementTypeRepository;
 
             ic = new InvoiceCalculationService();
-            ic.estatioSettingsService = mockSettings;
+            ic.leaseInvoicingSettingsService = mockSettings;
         }
 
         public static class Regular extends CalculateDueDateRange {
@@ -420,12 +420,12 @@ public class InvoiceCalculationService_Test {
         InvoiceCalculationService ic;
 
         @Mock
-        EstatioSettingsService mockSettings;
+        LeaseInvoicingSettingsService mockSettings;
 
         @Before
         public void setUp() throws Exception {
             ic = new InvoiceCalculationService();
-            ic.estatioSettingsService = mockSettings;
+            ic.leaseInvoicingSettingsService = mockSettings;
 
             context.checking(new Expectations() {
                 {
@@ -482,12 +482,12 @@ public class InvoiceCalculationService_Test {
         LocalDate epochDate = new LocalDate(2013, 1, 1);
 
         @Mock
-        EstatioSettingsService mockSettings;
+        LeaseInvoicingSettingsService mockSettings;
 
         @Before
         public void setUp() throws Exception {
             ic = new InvoiceCalculationService();
-            ic.estatioSettingsService = mockSettings;
+            ic.leaseInvoicingSettingsService = mockSettings;
 
             context.checking(new Expectations() {
                 {
@@ -502,9 +502,9 @@ public class InvoiceCalculationService_Test {
         public void depositTerm_Should_Have_No_MockValue() throws Exception {
 
             //given
-            LocalDate startDateBeforeEpochDate = new LocalDate(2000,01,01);
-            LocalDate endDateBeforeEpochDate = new LocalDate(2000,03,31);
-            LocalDate dueDateBeforeEpochDate = new LocalDate(2000,04,01);
+            LocalDate startDateBeforeEpochDate = new LocalDate(2000, 1, 1);
+            LocalDate endDateBeforeEpochDate = new LocalDate(2000, 3,31);
+            LocalDate dueDateBeforeEpochDate = new LocalDate(2000, 4, 8);
 
             LeaseItem depositItem = new LeaseItem();
             depositItem.setType(LeaseItemType.DEPOSIT);

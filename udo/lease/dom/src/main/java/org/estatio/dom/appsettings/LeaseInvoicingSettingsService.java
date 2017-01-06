@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.appsettings;
 
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -39,36 +36,25 @@ import org.estatio.domsettings.ApplicationSettingForEstatio;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 
 /**
- * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch
+ * Estatio-specific settings (eg {@link LeaseInvoicingSettingKey#epochDate epoch
  * date}.
  * <p/>
  * <p/>
  * Delegates to injected {@link ApplicationSettingsServiceForEstatio application
  * settings service} to actually do the persistence. Also ensures that any
- * {@link ApplicationSettingKey defaults for keys} have been installed if
+ * {@link LeaseInvoicingSettingKey defaults for keys} have been installed if
  * required.
  */
 @DomainService(nature = NatureOfService.DOMAIN)
-public class EstatioSettingsService extends UdoDomainService<EstatioSettingsService> {
+public class LeaseInvoicingSettingsService extends UdoDomainService<LeaseInvoicingSettingsService> {
 
-    public EstatioSettingsService() {
-        super(EstatioSettingsService.class);
+    public LeaseInvoicingSettingsService() {
+        super(LeaseInvoicingSettingsService.class);
     }
 
-    public final static String REPORT_SERVER_CONFIG_PROPERTY_KEY = "estatio.application.reportServerBaseUrl";
-    public final static String REPORT_SERVER_CONFIG_PROPERTY_DEFAULT = "http://www.pdfpdf.com/samples/Sample5.PDF?name=";
 
     // //////////////////////////////////////
 
-
-    @PostConstruct
-    public void init(final Map<String,String> properties) {
-        String reportServerUrl = properties.get(REPORT_SERVER_CONFIG_PROPERTY_KEY);
-        if(reportServerUrl == null) {
-            reportServerUrl = REPORT_SERVER_CONFIG_PROPERTY_DEFAULT;
-        }
-        this.cachedReportServerBaseUrl = reportServerUrl;
-    }
 
     @Programmatic
     public Currency systemCurrency() {
@@ -76,18 +62,19 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
         return currencyRepository.findCurrency("EUR");
     }
 
+
     // //////////////////////////////////////
 
     private LocalDate cachedEpochDate;
 
     /**
-     * @see ApplicationSettingKey#epochDate
+     * @see LeaseInvoicingSettingKey#epochDate
      */
     @Programmatic
     public LocalDate fetchEpochDate() {
         if (cachedEpochDate == null) {
             // getApplicationSettings().installDefaultsIfRequired();
-            final ApplicationSetting epochDate = applicationSettingsService.find(ApplicationSettingKey.epochDate);
+            final ApplicationSetting epochDate = applicationSettingsService.find(LeaseInvoicingSettingKey.epochDate);
             if (epochDate != null) {
                 cachedEpochDate = epochDate.valueAsLocalDate();
             }
@@ -96,13 +83,14 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
     }
 
     /**
-     * @see ApplicationSettingKey#epochDate
+     * @see LeaseInvoicingSettingKey#epochDate
      */
     @Programmatic
     public void updateEpochDate(
             final LocalDate newEpochDate) {
         // getApplicationSettings().installDefaultsIfRequired();
-        final ApplicationSettingForEstatio setting = (ApplicationSettingForEstatio) applicationSettingsService.find(ApplicationSettingKey.epochDate);
+        final ApplicationSettingForEstatio setting = (ApplicationSettingForEstatio) applicationSettingsService.find(
+                LeaseInvoicingSettingKey.epochDate);
         if (setting != null) {
             if (newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
@@ -111,20 +99,13 @@ public class EstatioSettingsService extends UdoDomainService<EstatioSettingsServ
             }
         } else {
             if (newEpochDate != null) {
-                applicationSettingsService.newLocalDate(ApplicationSettingCreator.Helper.getKey(ApplicationSettingKey.epochDate), "Cutover date to Estatio", newEpochDate);
+                applicationSettingsService.newLocalDate(ApplicationSettingCreator.Helper.getKey(
+                        LeaseInvoicingSettingKey.epochDate), "Cutover date to Estatio", newEpochDate);
             } // else no-op
         }
         cachedEpochDate = null;
     }
 
-    // //////////////////////////////////////
-
-    private String cachedReportServerBaseUrl;
-
-    @Programmatic
-    public String fetchReportServerBaseUrl() {
-        return cachedReportServerBaseUrl;
-    }
 
     // //////////////////////////////////////
 

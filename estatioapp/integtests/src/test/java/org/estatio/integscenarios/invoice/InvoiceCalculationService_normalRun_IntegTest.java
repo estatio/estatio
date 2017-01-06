@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -76,7 +76,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
     private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
     @Inject
-    private EstatioSettingsService estatioSettingsService;
+    private LeaseInvoicingSettingsService leaseInvoicingSettingsService;
 
     @Inject
     private IsisJdoSupport isisJdoSupport;
@@ -156,7 +156,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
     // scenario: invoiceItemsForRentCreated
     public void t14b_invoiceItemsForRentCreated() throws Exception {
 
-        estatioSettingsService.updateEpochDate(null);
+        leaseInvoicingSettingsService.updateEpochDate(null);
 
         LeaseTerm leaseTopModelRentTerm0 = (LeaseTerm) leaseTopModelRentItem.getTerms().first();
         // full term
@@ -164,11 +164,11 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         // invoice after effective date
         calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-02", "2010-10-01/2011-01-01", 5050.00, false);
         // invoice after effective date with mock
-        estatioSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
 
         calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-2", "2010-10-01/2011-01-01", 50.00, true);
 
-        estatioSettingsService.updateEpochDate(null);
+        leaseInvoicingSettingsService.updateEpochDate(null);
 
         // TODO: without this code there will be 4 items in the set
         isisJdoSupport.refresh(leaseTopModelRentTerm0);
@@ -179,7 +179,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
     // scenario: invoiceItemsForServiceChargeCreated
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
 
-        estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
 
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         leaseTopModelServiceChargeTerm0.approve();
@@ -193,7 +193,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
     }
 
     public void t15_invoiceItemsForServiceChargeCreatedWithEpochDate() throws Exception {
-        estatioSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
 
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
@@ -202,7 +202,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
 
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00, true);
         // reconcile without mock
-        estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
+        leaseInvoicingSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
     }
 
     public void t16_bulkLeaseCalculate() throws Exception {

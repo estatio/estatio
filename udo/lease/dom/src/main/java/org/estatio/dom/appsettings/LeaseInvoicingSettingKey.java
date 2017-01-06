@@ -24,7 +24,7 @@ import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 
 import org.estatio.domsettings.ApplicationSettingCreator;
 
-public enum ApplicationSettingKey implements ApplicationSettingCreator {
+public enum LeaseInvoicingSettingKey implements ApplicationSettingCreator {
     
     /**
      * The 'beginning of time' so far as Estatio is concerned.
@@ -48,7 +48,7 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
         return "org.estatio.domsettings";
     }
     
-    private ApplicationSettingKey(final Class<?> dataType, final String description, final Object defaultValue) {
+    private LeaseInvoicingSettingKey(final Class<?> dataType, final String description, final Object defaultValue) {
         this.dataType = dataType;
         this.description = description;
         this.defaultValue = defaultValue;

@@ -33,7 +33,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.appsettings.EstatioSettingsService;
+import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
@@ -115,7 +115,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         final List<InvoiceForLease> invoices = findMatchingInvoices(
                 seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         if (invoices == null || invoices.size() == 0) {
-            return newInvoice(applicationTenancy, seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease, interactionId);
+            return newInvoice(applicationTenancy, seller, buyer, paymentMethod, settingsService.systemCurrency(), dueDate, lease, interactionId);
         }
         return invoices.get(0);
     }
@@ -270,6 +270,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
 
 
     @javax.inject.Inject
-    EstatioSettingsService settings;
+    LeaseInvoicingSettingsService settingsService;
 
 }

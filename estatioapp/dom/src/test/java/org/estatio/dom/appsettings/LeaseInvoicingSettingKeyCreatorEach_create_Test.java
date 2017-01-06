@@ -26,7 +26,7 @@ import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.estatio.domsettings.ApplicationSettingCreator;
 
 
-public class ApplicationSettingKeyCreatorEach_create_Test extends ApplicationSettingCreator_Test.Instantiate {
+public class LeaseInvoicingSettingKeyCreatorEach_create_Test extends ApplicationSettingCreator_Test.Instantiate {
 
     static enum DummyApplicationSettingKey implements ApplicationSettingCreator {
         someDate(LocalDate.class, "Some date", new LocalDate(2013,4,1)),
@@ -71,7 +71,7 @@ public class ApplicationSettingKeyCreatorEach_create_Test extends ApplicationSet
         }
     }
     
-    public ApplicationSettingKeyCreatorEach_create_Test() {
+    public LeaseInvoicingSettingKeyCreatorEach_create_Test() {
         super(DummyApplicationSettingKey.values());
     }
     
