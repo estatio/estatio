@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,68 +16,38 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.viewmodel.dnc;
 
-import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.title.TitleService;
 
-import org.incode.module.document.dom.DocumentModule;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.DocumentTemplateRepository;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
-import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
-import org.incode.module.document.dom.services.DocumentCreatorService;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.leaseinvoicing.viewmodel.dnc.DocAndCommAbstract_abstract;
-import org.estatio.dom.leaseinvoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_actionAbstract;
+import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
-public abstract class Invoice_prepareAbstract {
+public abstract class InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
-    final Invoice invoice;
+    final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
     final String documentTypeReference;
 
-    public Invoice_prepareAbstract(final Invoice invoice, final String documentTypeReference) {
-        this.invoice = invoice;
+    public InvoiceSummaryForPropertyDueDateStatus_actionAbstract(
+            final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
+            final String documentTypeReference) {
+        this.invoiceSummary = invoiceSummary;
         this.documentTypeReference = documentTypeReference;
-    }
-
-    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<T_createAndAttachDocumentAndRender> {}
-
-    @Action(
-            domainEvent = ActionDomainEvent.class,
-            semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE
-    )
-    @ActionLayout(
-            contributed = Contributed.AS_ACTION
-    )
-    public Invoice $$() throws IOException {
-
-        final DocumentTemplate template = documentTemplateFor(invoice);
-        final Document document =
-                documentCreatorService.createDocumentAndAttachPaperclips(invoice, template);
-
-        document.render(template, invoice);
-
-        return invoice;
-    }
-
-    public String disable$$() {
-        return documentTemplateFor(invoice) == null
-                ? String.format("Could not locate a DocumentTemplate for %s for invoice %s",
-                                titleService.titleOf(getDocumentType()),
-                                titleService.titleOf(invoice))
-                : null;
     }
 
     DocumentType getDocumentType() {
@@ -88,8 +57,23 @@ public abstract class Invoice_prepareAbstract {
                 "getDocumentType", documentTypeReference);
     }
 
+    Document findMostRecentAttachedTo(final Invoice invoice, final DocumentType documentType) {
+        final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoice);
+        for (Paperclip paperclip : paperclips) {
+            final DocumentAbstract documentAbstract = paperclip.getDocument();
+            if (!(documentAbstract instanceof Document)) {
+                continue;
+            }
+            final Document document = (Document) documentAbstract;
+            if(document.getType() == documentType) {
+                return document;
+            }
+        }
+        return null;
+    }
+
     DocumentTemplate documentTemplateFor(final Invoice invoice) {
-        return queryResultsCache.execute(
+        final DocumentTemplate documentTemplate = queryResultsCache.execute(
                 () -> documentTemplateRepository
                         .findFirstByTypeAndApplicableToAtPath(
                                 getDocumentType(),
@@ -98,23 +82,33 @@ public abstract class Invoice_prepareAbstract {
                 "findFirstByTypeAndApplicableToAtPath",
                 getDocumentType(), invoice
         );
+        // best to fail fast...
+        if(documentTemplate == null) {
+            throw new ApplicationException(String.format(
+                    "Could not locate a DocumentTemplate for %s for invoice %s",
+                    titleService.titleOf(getDocumentType()),
+                    titleService.titleOf(invoice)));
+        }
+        return documentTemplate;
     }
 
-    //region > injected services
+
+
     @Inject
     TitleService titleService;
 
     @Inject
-    DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    DocumentCreatorService documentCreatorService;
+    PaperclipRepository paperclipRepository;
 
     @Inject
     QueryResultsCache queryResultsCache;
 
     @Inject
+    DocumentTypeRepository documentTypeRepository;
+
+    @Inject
     DocumentTemplateRepository documentTemplateRepository;
-    //endregion
+
+
 
 }

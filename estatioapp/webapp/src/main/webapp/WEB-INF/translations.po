@@ -218,7 +218,7 @@ msgid "All Actions"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allApprovedInvoices()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allApprovedInvoices()
 msgid "All Approved Invoices"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgid "All Invoice Items"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun#allInvoiceRuns()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForInvoiceRun#allInvoiceRuns()
 msgid "All Invoice Runs"
 msgstr ""
 
@@ -318,12 +318,12 @@ msgid "All Invoices"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate#allInvoicesByPropertyDueDate()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDate#allInvoicesByPropertyDueDate()
 msgid "All Invoices By Property Due Date"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allInvoicesByPropertyDueDateStatus()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allInvoicesByPropertyDueDateStatus()
 msgid "All Invoices By Property Due Date Status"
 msgstr ""
 
@@ -353,7 +353,7 @@ msgid "All Leases"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allNewInvoices()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDateStatus#allNewInvoices()
 msgid "All New Invoices"
 msgstr ""
 
@@ -486,10 +486,10 @@ msgid "Approve"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#approveAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#approveAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#approveAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#approveAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#approveAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#approveAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#approveAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#approveAll()
 msgid "Approve All"
 msgstr ""
 
@@ -504,14 +504,14 @@ msgstr ""
 #: org.estatio.dom.asset.registration.LandRegister#remove(java.lang.Boolean)
 #: org.estatio.dom.invoice.Invoice#collect(java.lang.Boolean)
 #: org.estatio.dom.invoice.Invoice#invoice(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#collectAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#collectAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#collectAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#collectAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#collectAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#collectAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#collectAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#collectAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
 #: org.estatio.dom.lease.Lease#assign(java.lang.String,java.lang.String,org.estatio.dom.party.Party,org.joda.time.LocalDate,java.lang.Boolean)
 #: org.estatio.dom.lease.Lease#remove(java.lang.Boolean)
 #: org.estatio.dom.lease.Lease#renew(java.lang.String,java.lang.String,org.joda.time.LocalDate,org.joda.time.LocalDate,java.lang.Boolean)
@@ -925,10 +925,10 @@ msgid "Collect"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#collectAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#collectAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#collectAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#collectAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#collectAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#collectAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#collectAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#collectAll()
 msgid "Collect All"
 msgstr ""
 
@@ -963,14 +963,14 @@ msgid "Comune catastale"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#removeAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#zapAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#removeAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#zapAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#removeAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#zapAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#removeAll(java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#zapAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#removeAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#zapAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#removeAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#zapAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#removeAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#zapAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#removeAll(java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#zapAll(java.lang.Boolean)
 msgid "Confirm"
 msgstr ""
 
@@ -1989,18 +1989,18 @@ msgid "Invoice"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#invoiceAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#invoiceAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll()
 msgid "Invoice All"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#invoiceAll(org.joda.time.LocalDate,java.lang.Boolean)
 msgid "Invoice Date"
 msgstr ""
 
@@ -2025,9 +2025,9 @@ msgstr ""
 #: org.estatio.dom.invoice.InvoiceItems
 #: org.estatio.dom.invoice.Invoices
 #: org.estatio.dom.invoice.Invoices#findInvoices()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForInvoiceRun
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDate
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummariesForPropertyDueDateStatus
 #: org.estatio.dom.lease.Lease#findInvoices()
 #: org.estatio.dom.lease.invoicing.InvoiceService
 #: org.estatio.dom.party.Organisation#findInvoices()
@@ -3306,10 +3306,10 @@ msgid "Remove"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#removeAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#removeAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#removeAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#removeAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#removeAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#removeAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#removeAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#removeAll()
 msgid "Remove All"
 msgstr ""
 
@@ -3414,9 +3414,9 @@ msgstr ""
 #: org.estatio.dom.index.IndexValue#openLink()
 #: org.estatio.dom.invoice.Invoice#openLink()
 #: org.estatio.dom.invoice.InvoiceItem#openLink()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#openLink()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#openLink()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#openLink()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#openLink()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#openLink()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#openLink()
 #: org.estatio.dom.lease.Lease#openLink()
 #: org.estatio.dom.lease.LeaseItem#openLink()
 #: org.estatio.dom.lease.LeaseTerm#openLink()
@@ -4096,7 +4096,7 @@ msgid "Unique reference code for this asset"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#reference
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#reference
 msgid "Unique reference code for this property"
 msgstr ""
 
@@ -4602,10 +4602,10 @@ msgid "Within"
 msgstr ""
 
 
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryAbstract#zapAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun#zapAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate#zapAll()
-#: org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus#zapAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryAbstract#zapAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun#zapAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDate#zapAll()
+#: org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus#zapAll()
 msgid "Zap All"
 msgstr ""
 

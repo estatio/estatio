@@ -14,8 +14,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRun;
+import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.leaseinvoicing.InvoiceCalculationParameters;

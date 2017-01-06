@@ -62,7 +62,6 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.lease.InvoiceConstants;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;

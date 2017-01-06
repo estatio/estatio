@@ -16,27 +16,32 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.viewmodel.dnc;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
+import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
-import org.estatio.dom.leaseinvoicing.viewmodel.dnc.DocAndCommAbstract_abstract;
 
-public abstract class Invoice_sendPrelimLetterOrInvoiceDocAbstract extends Invoice_sendAbstract {
+public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T>> {
 
+    final T docAndComm;
     private final String documentTypeReference;
 
-    public Invoice_sendPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
-        super(invoice);
+    public DocAndCommAbstract_abstract(final T docAndComm, final String documentTypeReference) {
+        this.docAndComm = docAndComm;
         this.documentTypeReference = documentTypeReference;
+    }
+
+    Invoice getInvoice() {
+        return docAndComm.getInvoice();
     }
 
     DocumentType getDocumentType() {
@@ -46,9 +51,12 @@ public abstract class Invoice_sendPrelimLetterOrInvoiceDocAbstract extends Invoi
                 "getDocumentType", documentTypeReference);
     }
 
-    Document findDocument() {
-        final Document document = invoiceDocAndCommService.findDocument(invoice, getDocumentType());
-        return document;
+    Document getDocument() {
+        return invoiceDocAndCommService.findDocument(getInvoice(), getDocumentType());
+    }
+
+    Communication getCommunication() {
+        return invoiceDocAndCommService.findCommunication(getInvoice(), getDocumentType());
     }
 
 
@@ -60,6 +68,4 @@ public abstract class Invoice_sendPrelimLetterOrInvoiceDocAbstract extends Invoi
 
     @Inject
     InvoiceDocAndCommService invoiceDocAndCommService;
-
-
 }

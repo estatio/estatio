@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,15 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.documents.binders;
+package org.estatio.dom.invoice;
 
-import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import java.math.BigDecimal;
 
-public class StringInterpolatorToSsrsUrlOfInvoiceSummary
-        extends StringInterpolatorToSsrsUrlAbstract<InvoiceSummaryForPropertyDueDateStatus> {
+public final class InvoiceConstants {
 
-    public StringInterpolatorToSsrsUrlOfInvoiceSummary() {
-        super(InvoiceSummaryForPropertyDueDateStatus.class);
-    }
+    private InvoiceConstants() {}
+
+    public static final BigDecimal PERCENTAGE_DIVISOR = BigDecimal.valueOf(100);
+
 
 }

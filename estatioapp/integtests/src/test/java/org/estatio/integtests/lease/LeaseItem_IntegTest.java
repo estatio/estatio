@@ -41,7 +41,6 @@ import org.incode.module.base.integtests.VT;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.InvoiceItemRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -51,6 +50,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.leaseinvoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
@@ -204,7 +204,7 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
         public ExpectedException thrown = ExpectedException.none();
 
         @Inject
-        private InvoiceItemRepository invoiceItemRepository;
+        private InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
         @Test
         public void happyCase() throws Exception {

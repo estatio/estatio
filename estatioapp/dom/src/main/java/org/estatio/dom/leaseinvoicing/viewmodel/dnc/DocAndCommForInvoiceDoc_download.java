@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,15 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.documents.binders;
+package org.estatio.dom.leaseinvoicing.viewmodel.dnc;
 
-import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.apache.isis.applib.annotation.Mixin;
 
-public class StringInterpolatorToSsrsUrlOfInvoiceSummary
-        extends StringInterpolatorToSsrsUrlAbstract<InvoiceSummaryForPropertyDueDateStatus> {
+import org.estatio.dom.invoice.Constants;
 
-    public StringInterpolatorToSsrsUrlOfInvoiceSummary() {
-        super(InvoiceSummaryForPropertyDueDateStatus.class);
+@Mixin
+public class DocAndCommForInvoiceDoc_download extends DocAndCommAbstract_download<DocAndCommForInvoiceDoc> {
+
+    public DocAndCommForInvoiceDoc_download(final DocAndCommForInvoiceDoc docAndComm) {
+        super(docAndComm, Constants.DOC_TYPE_REF_INVOICE, "Merged Invoice Notes.pdf");
     }
 
 }

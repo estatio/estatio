@@ -60,7 +60,6 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceItemRepository;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.NumeratorForCollectionRepository;
@@ -222,7 +221,7 @@ public class InvoiceForLease
                 final BigDecimal netAmount,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-            InvoiceItem invoiceItem = invoiceItemRepository.newInvoiceItem(invoice, invoice.getDueDate());
+            InvoiceItem invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
             invoiceItem.setQuantity(quantity);
             invoiceItem.setCharge(charge);
             invoiceItem.setDescription(charge.getDescription());
@@ -276,7 +275,7 @@ public class InvoiceForLease
         }
 
         @javax.inject.Inject
-        InvoiceItemRepository invoiceItemRepository;
+        InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
         @javax.inject.Inject
         MessageService messageService;

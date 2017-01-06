@@ -27,11 +27,9 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -54,24 +52,36 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
     // //////////////////////////////////////
 
     @Programmatic
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public InvoiceItemForLease newInvoiceItem(
+            final InvoiceForLease invoice,
+            final LocalDate dueDate) {
+
+        final InvoiceItemForLease invoiceItem = newItem(invoice, dueDate);
+
+        invoiceItem.setUuid(java.util.UUID.randomUUID().toString());
+        persistIfNotAlready(invoiceItem);
+        return invoiceItem;
+    }
+
+    @Programmatic
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
             final LocalDate dueDate,
             final String interactionId) {
-        Lease lease = leaseTerm.getLeaseItem().getLease();
-        InvoiceForLease invoice = invoiceRepository.findOrCreateMatchingInvoice(
+
+        final Lease lease = leaseTerm.getLeaseItem().getLease();
+        final InvoiceForLease invoice = invoiceRepository.findOrCreateMatchingInvoice(
                 leaseTerm.getApplicationTenancy(),
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
                 InvoiceStatus.NEW,
                 dueDate, interactionId);
-        InvoiceItemForLease invoiceItem = newTransientInstance();
-        invoiceItem.setInvoice(invoice);
+
+        final InvoiceItemForLease invoiceItem = newItem(invoice, dueDate);
+
         invoiceItem.setStartDate(interval.startDate());
         invoiceItem.setEndDate(interval.endDate());
-        invoiceItem.setDueDate(dueDate);
         invoiceItem.setLeaseTerm(leaseTerm);
 
         // redundantly persist, these are immutable
@@ -82,6 +92,13 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
         invoiceItem.setFixedAsset(unit);
 
         persistIfNotAlready(invoiceItem);
+        return invoiceItem;
+    }
+
+    private InvoiceItemForLease newItem(final InvoiceForLease invoice, final LocalDate dueDate) {
+        InvoiceItemForLease invoiceItem = newTransientInstance();
+        invoiceItem.setInvoice(invoice);
+        invoiceItem.setDueDate(dueDate);
         return invoiceItem;
     }
 
