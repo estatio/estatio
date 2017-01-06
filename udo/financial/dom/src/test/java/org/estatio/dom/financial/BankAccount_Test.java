@@ -23,11 +23,11 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.Property;
+
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -46,7 +46,6 @@ public class BankAccount_Test {
             newPojoTester()
                     .withFixture(pojos(Country.class))
                     .withFixture(pojos(Party.class, PartyForTesting.class))
-                    .withFixture(pojos(Property.class))
                     .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new BankAccount());
         }
