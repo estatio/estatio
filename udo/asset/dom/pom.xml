@@ -87,6 +87,37 @@ language governing permissions and limitations under the License.
             <artifactId>udo-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-party</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
