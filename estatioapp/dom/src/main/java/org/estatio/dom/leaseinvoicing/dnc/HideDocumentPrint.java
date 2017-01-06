@@ -16,19 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.dnc;
 
-import org.apache.isis.applib.annotation.Mixin;
+import com.google.common.eventbus.Subscribe;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 
-@Mixin
-public class Invoice_emailInvoiceDoc extends Invoice_emailPrelimLetterOrInvoiceDocAbstract {
+import org.incode.module.communications.dom.mixins.Document_print;
 
-    public Invoice_emailInvoiceDoc(final Invoice invoice) {
-        super(invoice, Constants.DOC_TYPE_REF_INVOICE);
+@DomainService(nature = NatureOfService.DOMAIN)
+public class HideDocumentPrint extends AbstractSubscriber {
+
+    @Subscribe
+    public void on(Document_print.ActionDomainEvent ev) {
+        switch (ev.getEventPhase()) {
+        case HIDE:
+            ev.hide();
+            break;
+        }
     }
-
 
 }

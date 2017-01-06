@@ -16,31 +16,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
-
-import javax.inject.Inject;
+package org.estatio.dom.leaseinvoicing.dnc;
 
 import com.google.common.eventbus.Subscribe;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.communications.dom.mixins.Document_print;
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
-
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.incode.module.communications.dom.mixins.Document_email;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class HideDocumentPrint extends AbstractSubscriber {
+public class HideDocumentEmail extends AbstractSubscriber {
 
     @Subscribe
-    public void on(Document_print.ActionDomainEvent ev) {
+    public void on(Document_email.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case HIDE:
             ev.hide();

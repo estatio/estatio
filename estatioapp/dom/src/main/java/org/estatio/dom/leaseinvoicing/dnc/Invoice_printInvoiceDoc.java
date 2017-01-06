@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,38 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.dnc;
 
-import java.io.IOException;
-
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 
 @Mixin
-public class Invoice_prepareInvoiceDoc extends Invoice_prepareAbstract{
+public class Invoice_printInvoiceDoc extends Invoice_printPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_prepareInvoiceDoc(final Invoice invoice) {
+    public Invoice_printInvoiceDoc(final Invoice invoice) {
         super(invoice, Constants.DOC_TYPE_REF_INVOICE);
-    }
-
-
-    @MemberOrder(name = "invoiceDocs", sequence = "2")
-    public Invoice $$() throws IOException {
-        return super.$$();
-    }
-
-    @Override public String disable$$() {
-        final String reasonIfAny = super.disable$$();
-        if(reasonIfAny != null) {
-            return reasonIfAny;
-        }
-        if(Invoice.Predicates.isChangeable().apply(invoice)) {
-            return "Invoice must be approved/invoiced first";
-        }
-        return null;
     }
 
 }

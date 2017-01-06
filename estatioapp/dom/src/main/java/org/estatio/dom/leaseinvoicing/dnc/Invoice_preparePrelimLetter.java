@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,18 +17,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.dnc;
 
+import java.io.IOException;
+
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 
 @Mixin
-public class Invoice_printPrelimLetter extends Invoice_printPrelimLetterOrInvoiceDocAbstract {
+public class Invoice_preparePrelimLetter extends Invoice_prepareAbstract{
 
-    public Invoice_printPrelimLetter(final Invoice invoice) {
+    public Invoice_preparePrelimLetter(final Invoice invoice) {
         super(invoice, Constants.DOC_TYPE_REF_PRELIM);
+    }
+
+    @MemberOrder(name = "preliminaryLetters", sequence = "2")
+    public Invoice $$() throws IOException {
+        return super.$$();
     }
 
 

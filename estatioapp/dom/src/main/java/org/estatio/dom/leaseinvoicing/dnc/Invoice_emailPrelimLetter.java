@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.dnc;
+package org.estatio.dom.leaseinvoicing.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
@@ -24,10 +24,11 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 
 @Mixin
-public class Invoice_printInvoiceDoc extends Invoice_printPrelimLetterOrInvoiceDocAbstract {
+public class Invoice_emailPrelimLetter extends Invoice_emailPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_printInvoiceDoc(final Invoice invoice) {
-        super(invoice, Constants.DOC_TYPE_REF_INVOICE);
+    public Invoice_emailPrelimLetter(final Invoice invoice) {
+        super(invoice, Constants.DOC_TYPE_REF_PRELIM);
     }
+
 
 }
