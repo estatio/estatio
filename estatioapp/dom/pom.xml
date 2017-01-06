@@ -249,6 +249,14 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <!-- requires FixedAssetForTesting -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-asset</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
         <!-- requires PartyForTesting -->
         <dependency>
             <groupId>org.estatio</groupId>
