@@ -27,7 +27,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;

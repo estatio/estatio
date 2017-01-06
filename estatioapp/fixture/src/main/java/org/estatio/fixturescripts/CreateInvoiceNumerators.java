@@ -32,7 +32,7 @@ import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.leaseinvoicing.NumeratorForCollectionRepository;
+import org.estatio.dom.lease.leaseinvoicing.NumeratorForCollectionRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.numerator.dom.impl.Numerator;
 

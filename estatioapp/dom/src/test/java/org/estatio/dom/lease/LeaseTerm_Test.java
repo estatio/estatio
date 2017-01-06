@@ -49,8 +49,8 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.leaseinvoicing.InvoiceForLease;
-import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.leaseinvoicing.InvoiceForLease;
+import org.estatio.dom.lease.leaseinvoicing.InvoiceItemForLease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;

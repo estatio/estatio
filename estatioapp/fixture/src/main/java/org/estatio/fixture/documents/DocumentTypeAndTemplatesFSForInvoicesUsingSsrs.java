@@ -49,7 +49,7 @@ import org.estatio.dom.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceD
 import org.estatio.dom.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.lease.leaseinvoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
