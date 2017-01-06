@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice.canonical.v1;
+package org.estatio.dom.leaseinvoicing.canonical.v1;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -25,7 +25,7 @@ import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 )
 public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
 
-    private final InvoiceItemDtoFactory invoiceItemDtoFactory = new InvoiceItemDtoFactory();
+    private final InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory = new InvoiceItemForLeaseDtoFactory();
 
     @Programmatic
     public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
@@ -62,7 +62,7 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
             dto.setSellerBankAccount(mappingHelper.oidDtoFor(invoiceForLease.getSellerBankAccount()));
         }
 
-        invoiceForLease.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemDtoFactory.newDto(item)));
+        invoiceForLease.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemForLeaseDtoFactory.newDto(item)));
 
         dto.setNetAmount(dto.getItems().stream()
                             .map(InvoiceItemDto::getNetAmount)

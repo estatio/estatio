@@ -62,7 +62,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.InvoiceConstants;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
@@ -344,7 +344,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         if (net == null || percentage == null) {
             return BigDecimal.ZERO;
         }
-        BigDecimal rate = percentage.divide(LeaseConstants.PERCENTAGE_DIVISOR);
+        BigDecimal rate = percentage.divide(InvoiceConstants.PERCENTAGE_DIVISOR);
         return net.multiply(rate).setScale(2, RoundingMode.HALF_UP);
     }
 

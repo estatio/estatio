@@ -66,12 +66,12 @@ public class TurnoverRentRuleHelper {
             BigDecimal base = BigDecimal.ZERO;
             if (i == rules.length - 1) {
                 // the last or single item
-                percentage = new BigDecimal(rules[i]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+                percentage = new BigDecimal(rules[i]).divide(InvoiceConstants.PERCENTAGE_DIVISOR);
                 if (turnover.compareTo(prevCap) > 0) {
                     base = turnover.subtract(prevCap);
                 }
             } else {
-                percentage = new BigDecimal(rules[i + 1]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+                percentage = new BigDecimal(rules[i + 1]).divide(InvoiceConstants.PERCENTAGE_DIVISOR);
                 cap = new BigDecimal(rules[i]);
                 if (turnover.compareTo(cap) > 0) {
                     base = cap.subtract(prevCap);

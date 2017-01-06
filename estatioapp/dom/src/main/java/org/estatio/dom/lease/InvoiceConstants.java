@@ -20,17 +20,11 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-public final class LeaseConstants {
+public final class InvoiceConstants {
 
-    private LeaseConstants() {}
-    
-    public final static String AT_LEASE = "Lease";
-    
-    public final static String ART_LANDLORD = "Landlord"; 
-    public final static String ART_TENANT = "Tenant";
-    public final static String ART_MANAGER = "Manager";
+    private InvoiceConstants() {}
 
-    public final static String ARCCT_INVOICE_ADDRESS = "Invoice Address";
-    public final static String ARCCT_ADMINISTRATION_ADDRESS = "Administration Address";
+    public static final BigDecimal PERCENTAGE_DIVISOR = BigDecimal.valueOf(100);
+
 
 }

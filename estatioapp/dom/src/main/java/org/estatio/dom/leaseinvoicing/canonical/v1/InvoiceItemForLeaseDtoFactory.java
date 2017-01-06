@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice.canonical.v1;
+package org.estatio.dom.leaseinvoicing.canonical.v1;
 
 import java.util.Optional;
 import java.util.SortedSet;
@@ -26,7 +26,7 @@ import org.estatio.dom.tax.Tax;
 @DomainService(
         nature = NatureOfService.DOMAIN
 )
-public class InvoiceItemDtoFactory extends DtoFactoryAbstract {
+public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
 
     @Programmatic
     public InvoiceItemDto newDto(final InvoiceItem item) {

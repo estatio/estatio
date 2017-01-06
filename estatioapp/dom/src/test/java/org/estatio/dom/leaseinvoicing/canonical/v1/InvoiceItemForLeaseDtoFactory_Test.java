@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice.canonical.v1;
+package org.estatio.dom.leaseinvoicing.canonical.v1;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -14,11 +14,12 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.leaseinvoicing.InvoiceForLease;
 import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
+import org.estatio.dom.leaseinvoicing.canonical.v1.InvoiceItemForLeaseDtoFactory;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceItemDtoFactory_Test {
+public class InvoiceItemForLeaseDtoFactory_Test {
 
     private InvoiceItemForLease invoiceItem;
 
@@ -65,7 +66,7 @@ public class InvoiceItemDtoFactory_Test {
         //Given
         invoiceItem.setEffectiveStartDate(new LocalDate(2014, 1, 1));
         // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemDtoFactory().newDto(invoiceItem);
+        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
     }
 
     @Test
@@ -73,7 +74,7 @@ public class InvoiceItemDtoFactory_Test {
         //Given
         invoiceItem.setEffectiveStartDate(new LocalDate(2013, 10, 1));
         // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemDtoFactory().newDto(invoiceItem);
+        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
         // Then
         assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("UN");
         assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
@@ -87,7 +88,7 @@ public class InvoiceItemDtoFactory_Test {
         unitOnItem.setReference("XXX");
         invoiceItem.setFixedAsset(unitOnItem);
         // When
-        InvoiceItemDto invoiceItemDto = new InvoiceItemDtoFactory().newDto(invoiceItem);
+        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
         // Then
         assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("XXX");
         assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
