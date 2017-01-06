@@ -87,6 +87,21 @@ language governing permissions and limitations under the License.
             <artifactId>udo-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-budget</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-lease</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.excel</groupId>
+            <artifactId>isis-module-excel-dom</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
