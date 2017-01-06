@@ -62,7 +62,6 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
@@ -506,5 +505,9 @@ public class InvoiceForLease
 
     @javax.inject.Inject
     FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+
+    @javax.inject.Inject
+    NumeratorForCollectionRepository numeratorRepository;
+
 
 }

@@ -20,12 +20,9 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -50,17 +47,13 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -71,20 +64,9 @@ import org.incode.module.document.dom.types.AtPathType;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.leaseinvoicing.InvoiceForLease;
-import org.estatio.dom.leaseinvoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.roles.EstatioRole;
-import org.estatio.numerator.dom.impl.Numerator;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -375,20 +357,8 @@ public abstract class Invoice<T extends Invoice<T>>
     // //////////////////////////////////////
 
 
-    /**
-     * Derived from the {@link #getLease() lease}, but safe to persist since
-     * business rule states that all invoice items that are paid by
-     * {@link BankMandate} (as opposed to simply by bank transfer) will be for
-     * the same bank mandate.
-     *
-     * <p>
-     * Another reason for persisting this is that it allows eager validation
-     * when attaching additional {@link InvoiceItem}s to an invoice, to check
-     * that they relate to the same bank mandate (if they are to be paid by bank
-     * mandate).
-     */
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
-    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
+    @Property(hidden = Where.ALL_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "true", name = "paidByBankMandateId")
     @Getter @Setter
     private BankMandate paidBy;
 
@@ -434,13 +404,6 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
-    @javax.inject.Inject
-    public // TODO: make less visible
-    NumeratorForCollectionRepository numeratorRepository;
-
-    @javax.inject.Inject
-    public // TODO: make less visible
-    InvoiceRepository invoiceRepository;
 
 
     public static class Predicates {

@@ -35,7 +35,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
-import org.estatio.dom.invoice.NumeratorForCollectionRepository;
+import org.estatio.dom.leaseinvoicing.NumeratorForCollectionRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;

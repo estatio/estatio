@@ -46,7 +46,6 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.NumeratorForCollectionRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.numerator.dom.impl.Numerator;
@@ -160,7 +159,6 @@ public class Invoice_Test {
         };
         invoice.setStatus(invoiceStatus);
         invoice.setContainer(mockContainer);
-        invoice.invoiceRepository = mockInvoiceRepository;
         invoice.numeratorRepository = mockNumeratorRepository;
         invoice.clockService = mockClockService;
         return invoice;
@@ -263,7 +261,6 @@ public class Invoice_Test {
                 }
             };
             invoice.setContainer(mockContainer);
-            invoice.invoiceRepository = mockInvoiceRepository;
             invoice.numeratorRepository = mockNumeratorRepository;
             return invoice;
         }
@@ -428,7 +425,6 @@ public class Invoice_Test {
                 ;
             };
             invoice.setDueDate(new LocalDate(2012, 2, 2));
-            invoice.invoiceRepository = mockInvoiceRepository;
             invoice.numeratorRepository = mockNumeratorRepository;
             invoice.setFixedAsset(invoiceProperty);
 

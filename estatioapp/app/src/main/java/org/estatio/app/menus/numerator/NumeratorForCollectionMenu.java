@@ -33,7 +33,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.NumeratorForCollectionRepository;
+import org.estatio.dom.leaseinvoicing.NumeratorForCollectionRepository;
 import org.estatio.numerator.dom.impl.Numerator;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
