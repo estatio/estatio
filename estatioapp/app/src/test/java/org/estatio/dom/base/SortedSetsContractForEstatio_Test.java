@@ -21,9 +21,9 @@ package org.estatio.dom.base;
 import org.apache.isis.core.unittestsupport.sortedsets.SortedSetsContractTestAbstract;
 
 
-public class SortedSetsContract_Test extends SortedSetsContractTestAbstract {
+public class SortedSetsContractForEstatio_Test extends SortedSetsContractTestAbstract {
 
-    public SortedSetsContract_Test() {
+    public SortedSetsContractForEstatio_Test() {
         super("org.estatio.dom");
         withLoggingTo(System.out);
     }

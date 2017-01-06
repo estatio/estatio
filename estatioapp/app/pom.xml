@@ -181,6 +181,14 @@ language governing permissions and limitations under the License.
             <version>0.3m</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
@@ -205,10 +213,36 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+
+        <!-- requires FixedAssetForTesting -->
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <optional>true</optional>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-asset</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- requires PartyForTesting -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-party</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-agreement</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-lease</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
