@@ -102,7 +102,6 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-communications-dom</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.incode.module.country</groupId>
             <artifactId>incode-module-country-dom</artifactId>

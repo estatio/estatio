@@ -87,6 +87,21 @@ language governing permissions and limitations under the License.
             <artifactId>udo-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.incode.estatio</groupId>
+            <artifactId>estatio-canonical</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-party</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
