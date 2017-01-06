@@ -27,9 +27,9 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-event</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) UDO DOM - Event</name>
+    <name>Estatio (Open Source) Module - Event</name>
     <description>
-        UDO Event DOM
+        Estatio Event Module
     </description>
 
 

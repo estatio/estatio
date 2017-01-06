@@ -27,9 +27,9 @@ language governing permissions and limitations under the License.
     <artifactId>udo-base</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) UDO Base</name>
+    <name>Estatio (Open Source) Module - Base</name>
     <description>
-        Base concepts for UDO domain object model.
+        Estatio base concepts for all modules
     </description>
 
 

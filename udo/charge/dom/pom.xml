@@ -27,9 +27,9 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-charge</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) UDO DOM - Charge</name>
+    <name>Estatio (Open Source) Module - Charge</name>
     <description>
-        UDO Charge DOM
+        Estatio Charge Module
     </description>
 
 

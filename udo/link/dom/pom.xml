@@ -27,9 +27,9 @@ language governing permissions and limitations under the License.
     <artifactId>udo-dom-link</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) UDO DOM - Link</name>
+    <name>Estatio (Open Source) Module - Link</name>
     <description>
-        UDO Link DOM
+        Estatio Link Module
     </description>
 
     <build>
