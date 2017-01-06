@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communications;
+package org.estatio.dom.lease.invoicing;
 
 import java.util.Arrays;
 import java.util.List;

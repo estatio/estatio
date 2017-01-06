@@ -93,6 +93,26 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-event</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-index</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-invoice</artifactId>
         </dependency>

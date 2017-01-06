@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.dom.lease.contributed;
+package org.estatio.dom.budgeting;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import org.estatio.dom.lease.OccupancyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 @DomainServiceLayout()
-public class KeyItemContributions {
+public class KeyItem_occupancies {
 
     // //////////////////////////////////////
 

@@ -29,12 +29,12 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.invoice.Invoice;
 
 public abstract class Invoice_emailPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
@@ -43,11 +43,11 @@ public abstract class Invoice_emailPrelimLetterOrInvoiceDocAbstract extends Invo
         super(invoice, documentTypeReference);
     }
 
-    public static class ActionDomainEvent extends EstatioDomainModule.ActionDomainEvent<Invoice_emailPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_emailPrelimLetterOrInvoiceDocAbstract> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
-            domainEvent = ActionDomainEvent.class
+            domainEvent = DomainEvent.class
     )
     @ActionLayout(
             contributed = Contributed.AS_ACTION

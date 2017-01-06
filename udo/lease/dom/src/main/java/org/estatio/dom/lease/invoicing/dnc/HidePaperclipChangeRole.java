@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.documents;
+package org.estatio.dom.lease.invoicing.dnc;
 
 import com.google.common.eventbus.Subscribe;
 

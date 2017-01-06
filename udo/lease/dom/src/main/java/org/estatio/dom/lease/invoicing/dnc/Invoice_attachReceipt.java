@@ -44,7 +44,6 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.documents.PaperclipRoleNames;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;

@@ -27,13 +27,13 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.invoice.Invoice;
 
 /**
@@ -45,11 +45,11 @@ public abstract class Invoice_printPrelimLetterOrInvoiceDocAbstract extends Invo
         super(invoice, documentTypeReference);
     }
 
-    public static class ActionDomainEvent extends EstatioDomainModule.ActionDomainEvent<Invoice_printPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_printPrelimLetterOrInvoiceDocAbstract> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
-            domainEvent = ActionDomainEvent.class
+            domainEvent = DomainEvent.class
     )
     @ActionLayout(
             contributed = Contributed.AS_ACTION

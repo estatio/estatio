@@ -42,7 +42,6 @@ import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.documents.PaperclipRoleNames;
 import org.estatio.dom.invoice.Invoice;
 
 public abstract class Invoice_sendAbstract {

@@ -31,7 +31,7 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.documents.PaperclipRoleNames;
+import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
 import org.estatio.dom.invoice.Invoice;
 
 public class ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts extends

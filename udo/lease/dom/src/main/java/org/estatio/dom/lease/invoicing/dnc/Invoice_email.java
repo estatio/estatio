@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.email.EmailService;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
@@ -49,7 +50,6 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 
@@ -63,11 +63,11 @@ public class Invoice_email extends Invoice_sendAbstract {
         super(invoice);
     }
 
-    public static class ActionDomainEvent extends EstatioDomainModule.ActionDomainEvent<Invoice_email> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_email> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
-            domainEvent = ActionDomainEvent.class
+            domainEvent = DomainEvent.class
     )
     @ActionLayout(
             cssClassFa = "at",

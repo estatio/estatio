@@ -58,7 +58,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.documents.PaperclipRoleNames;
+import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;

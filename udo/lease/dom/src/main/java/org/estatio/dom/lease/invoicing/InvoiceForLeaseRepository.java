@@ -35,7 +35,6 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.appsettings.EstatioSettingsService;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.communications.AgreementCommunicationChannelLocator;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
