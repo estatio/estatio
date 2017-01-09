@@ -25,11 +25,10 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Organisation;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 
@@ -88,7 +87,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
 
         // expect
         context.checking(new Expectations() {{
-            allowing(mockPaperclipRepository).paperclipAttaches(mockDocument, Invoice.class);
+            allowing(mockPaperclipRepository).paperclipAttaches(mockDocument, InvoiceForLease.class);
             will(returnValue(stubInvoice));
 
             allowing(mockLease).getProperty();
