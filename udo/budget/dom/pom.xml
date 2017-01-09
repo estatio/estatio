@@ -89,7 +89,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-asset</artifactId>
+            <artifactId>estatio-dom-asset</artifactId>
         </dependency>
 
         <dependency>

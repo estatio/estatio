@@ -89,7 +89,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-assetfinancial</artifactId>
+            <artifactId>estatio-dom-assetfinancial</artifactId>
         </dependency>
 
         <dependency>
@@ -160,13 +160,13 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-asset</artifactId>
+            <artifactId>estatio-dom-asset</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-agreement</artifactId>
+            <artifactId>estatio-dom-agreement</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

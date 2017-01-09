@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-assetfinancial</artifactId>
+    <artifactId>estatio-dom-assetfinancial</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Asset Financial</name>
@@ -89,7 +89,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-asset</artifactId>
+            <artifactId>estatio-dom-asset</artifactId>
         </dependency>
 
         <dependency>

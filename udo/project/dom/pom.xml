@@ -95,7 +95,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-agreement</artifactId>
+            <artifactId>estatio-dom-agreement</artifactId>
         </dependency>
 
         <!-- testing -->
