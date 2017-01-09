@@ -99,7 +99,23 @@ public class InvoiceRepository_Test {
             }
         };
         invoiceForLeaseRepository = new InvoiceForLeaseRepository() {
+            @Override
+            protected <T> T firstMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
 
+            @Override
+            protected List<InvoiceForLease> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+
+            @Override
+            protected <T> List<T> allMatches(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
+                return null;
+            }
         };
 
         estatioNumeratorRepository = new NumeratorForCollectionRepository();
@@ -113,7 +129,7 @@ public class InvoiceRepository_Test {
             invoiceForLeaseRepository.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Invoice.class);
+            assertThat(finderInteraction.getResultType()).isEqualTo(InvoiceForLease.class);
             assertThat(finderInteraction.getQueryName()).isEqualTo("findMatchingInvoices");
             assertThat(finderInteraction.getArgumentsByParameterName().get("buyer")).isEqualTo((Object) buyer);
             assertThat(finderInteraction.getArgumentsByParameterName().get("seller")).isEqualTo((Object) seller);

@@ -33,6 +33,7 @@ language governing permissions and limitations under the License.
     </description>
 
     <properties>
+        <!--<isis-maven-plugin.validate.appManifest>org.estatio.dom.EstatioDomManifest</isis-maven-plugin.validate.appManifest>-->
     </properties>
 
     <build>
@@ -64,6 +65,10 @@ language governing permissions and limitations under the License.
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
                         </mixin>
+                        <!--<mixin>-->
+                            <!--<groupId>com.danhaywood.mavenmixin</groupId>-->
+                            <!--<artifactId>isisvalidate</artifactId>-->
+                        <!--</mixin>-->
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
@@ -99,6 +104,116 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-document</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-agreement</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-asset</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-assetfinancial</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-bankmandate</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-base</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-budget</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-budgetassignment</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.estatio</groupId>
+            <artifactId>estatio-canonical</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-charge</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.country</groupId>
+            <artifactId>incode-module-country-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-currency</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-event</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-financial</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-guarantee</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-index</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-invoice</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-lease</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-link</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-numerator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-project</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-settings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
             <artifactId>udo-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
@@ -119,10 +234,38 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-fixture</artifactId>
         </dependency>
 
+        <!-- incode modules -->
+
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
+        </dependency>
+
         <!-- isis modules -->
+        <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.excel</groupId>
+            <artifactId>isis-module-excel-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.isisaddons.module.settings</groupId>
             <artifactId>isis-module-settings-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.pdfbox</groupId>
+            <artifactId>isis-module-pdfbox-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.security</groupId>
@@ -133,8 +276,9 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-sessionlogger-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
+            <!--<version>${isis-module-stringinterpolator.version}</version>-->
         </dependency>
 
         <!-- isis addons (wicket cpts) -->
@@ -152,14 +296,14 @@ language governing permissions and limitations under the License.
         </dependency>
 
 
-        <!--
-        required in order to specify StringInterpolatorModule (transitive sub-module)
-        as a module containing services
-        -->
-        <dependency>
-            <groupId>org.isisaddons.module.stringinterpolator</groupId>
-            <artifactId>isis-module-stringinterpolator-dom</artifactId>
-        </dependency>
+        <!--&lt;!&ndash;-->
+        <!--required in order to specify StringInterpolatorModule (transitive sub-module)-->
+        <!--as a module containing services-->
+        <!--&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.isisaddons.module.stringinterpolator</groupId>-->
+            <!--<artifactId>isis-module-stringinterpolator-dom</artifactId>-->
+        <!--</dependency>-->
 
         <!--
         required in order to specify XDocReportModule (transitive sub-module)

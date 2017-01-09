@@ -77,16 +77,6 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-app</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-security</artifactId>
         </dependency>
@@ -109,14 +99,29 @@ language governing permissions and limitations under the License.
             <artifactId>isis-metamodel-paraname8-dom</artifactId>
         </dependency>
 
-
-        <!-- testing -->
+        <!--<dependency>-->
+            <!--<groupId>com.danhaywood.mavendeps</groupId>-->
+            <!--<artifactId>isistesting</artifactId>-->
+            <!--<version>${mavendeps-isistesting.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-dom</artifactId>
+            <version>${isis-module-command.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.integtestsupport</groupId>
+            <artifactId>incode-module-integtestsupport-dom</artifactId>
+            <version>${incode-module-integtestsupport.version}</version>
         </dependency>
 
         <dependency>
@@ -147,7 +152,10 @@ language governing permissions and limitations under the License.
             <artifactId>totallylazy</artifactId>  
             <version>991</version>  
         </dependency>
-
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-app</artifactId>
+        </dependency>
 
     </dependencies>
 

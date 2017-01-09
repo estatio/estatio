@@ -24,18 +24,16 @@ language governing permissions and limitations under the License.
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom</artifactId>
+    <artifactId>estatio-dom-document</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) DOM &amp; Services</name>
+    <name>Estatio (Open Source) dom document</name>
     <description>
-        Estatio DOM and Services
+        settings and glue for incode module document
     </description>
 
     <properties>
-        <incode-module-communications.version>1.13.0-SNAPSHOT</incode-module-communications.version>
-
-        <isis-maven-plugin.validate.appManifest>org.estatio.dom.EstatioDomManifest</isis-maven-plugin.validate.appManifest>
+        <!--<incode-module-communications.version>1.13.0-SNAPSHOT</incode-module-communications.version>-->
     </properties>
 
     <build>
@@ -73,10 +71,6 @@ language governing permissions and limitations under the License.
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
-                            <artifactId>isisvalidate</artifactId>
-                        </mixin>
-                        <mixin>
-                            <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
                         </mixin>
                         <mixin>
@@ -92,107 +86,13 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
-            <groupId>org.incode.estatio</groupId>
-            <artifactId>estatio-canonical</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-link</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-event</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-settings</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-index</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-charge</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-agreement</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-bankmandate</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-project</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-asset</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-assetfinancial</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budget</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budgetassignment</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-guarantee</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-financial</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-invoice</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>udo-dom-lease</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
         </dependency>
 
         <dependency>
@@ -201,16 +101,10 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.isisaddons.module.pdfbox</groupId>
-            <artifactId>isis-module-pdfbox-dom</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
             <version>${isis-module-stringinterpolator.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.jdom</groupId>
@@ -218,38 +112,10 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.module.command</groupId>
-            <artifactId>isis-module-command-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.settings</groupId>
-            <artifactId>isis-module-settings-dom</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
-
-
+        
     </dependencies>
 
 </project>

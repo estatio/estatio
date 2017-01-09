@@ -73,9 +73,30 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom</artifactId>
+            <artifactId>estatio-dom-document</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-budgetassignment</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-guarantee</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-lease</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-link</artifactId>
         </dependency>
 
         <dependency>
@@ -83,6 +104,15 @@ language governing permissions and limitations under the License.
             <artifactId>udo-dom-numerator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>udo-dom-project</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-dom</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.incode.module.docrendering</groupId>
             <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>

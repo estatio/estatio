@@ -583,24 +583,20 @@ language governing permissions and limitations under the License.
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
-
-
-
-            <!-- EstatioApp modules -->
+            
+            <!-- Estatio modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom</artifactId>
+                <artifactId>estatio-app</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom</artifactId>
+                <artifactId>estatio-app</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
-
-            <!-- EstatioApp modules -->
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -621,18 +617,10 @@ language governing permissions and limitations under the License.
                 <version>${estatio-canonical.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-app</artifactId>
+                <artifactId>estatio-dom-document</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-app</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
             </dependency>
 
             <dependency>

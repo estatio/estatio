@@ -76,9 +76,10 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-dom</artifactId>
+            <artifactId>estatio-fixture</artifactId>
         </dependency>
 
         <!-- testing -->

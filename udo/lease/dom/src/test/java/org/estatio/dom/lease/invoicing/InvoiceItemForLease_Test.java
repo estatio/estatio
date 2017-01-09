@@ -32,10 +32,12 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceForTesting;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
@@ -45,7 +47,8 @@ import org.estatio.dom.tax.TaxRateRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceItemForLease_Test {
+public class
+InvoiceItemForLease_Test {
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
@@ -53,7 +56,7 @@ public class InvoiceItemForLease_Test {
             newPojoTester()
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(Charge.class))
-                    .withFixture(pojos(Invoice.class))
+                    .withFixture(pojos(Invoice.class, InvoiceForTesting.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
                     .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
                     .withFixture(pojos(Lease.class))
