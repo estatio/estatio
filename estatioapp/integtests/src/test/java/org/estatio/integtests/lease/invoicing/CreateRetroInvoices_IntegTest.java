@@ -100,6 +100,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
             {
                 leaseRepository = CreateRetroInvoices_IntegTest.this.leaseRepository;
                 invoiceForLeaseRepository = CreateRetroInvoices_IntegTest.this.invoiceForLeaseRepository;
+                invoiceRepository = CreateRetroInvoices_IntegTest.this.invoiceRepository;
                 propertyRepository = CreateRetroInvoices_IntegTest.this.propertyRepository;
                 invoiceCalculationService = CreateRetroInvoices_IntegTest.this.invoiceCalculationService;
                 factoryService = CreateRetroInvoices_IntegTest.this.factoryService;
