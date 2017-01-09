@@ -33,7 +33,7 @@ language governing permissions and limitations under the License.
     </description>
 
     <properties>
-        <!--<isis-maven-plugin.validate.appManifest>org.estatio.dom.EstatioDomManifest</isis-maven-plugin.validate.appManifest>-->
+        <isis-maven-plugin.validate.appManifest>org.estatio.dom.EstatioDomManifest</isis-maven-plugin.validate.appManifest>
     </properties>
 
     <build>
@@ -65,10 +65,10 @@ language governing permissions and limitations under the License.
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
                         </mixin>
-                        <!--<mixin>-->
-                            <!--<groupId>com.danhaywood.mavenmixin</groupId>-->
-                            <!--<artifactId>isisvalidate</artifactId>-->
-                        <!--</mixin>-->
+                        <mixin>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>isisvalidate</artifactId>
+                        </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
