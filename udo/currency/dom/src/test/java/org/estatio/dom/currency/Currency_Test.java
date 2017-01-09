@@ -20,8 +20,6 @@ package org.estatio.dom.currency;
 
 import org.junit.Test;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 public class Currency_Test {
@@ -31,7 +29,6 @@ public class Currency_Test {
         @Test
         public void test() {
             newPojoTester()
-                    .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Currency());
         }
     }

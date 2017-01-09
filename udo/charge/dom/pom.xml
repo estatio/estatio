@@ -84,7 +84,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-tax</artifactId>
+            <artifactId>estatio-dom-tax</artifactId>
         </dependency>
 
         <!-- testing -->
