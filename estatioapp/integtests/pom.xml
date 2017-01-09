@@ -98,12 +98,7 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.metamodel.paraname8</groupId>
             <artifactId>isis-metamodel-paraname8-dom</artifactId>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.danhaywood.mavendeps</groupId>-->
-            <!--<artifactId>isistesting</artifactId>-->
-            <!--<version>${mavendeps-isistesting.version}</version>-->
-        <!--</dependency>-->
+        
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
