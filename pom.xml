@@ -313,12 +313,12 @@ language governing permissions and limitations under the License.
             <!-- UDO modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-base</artifactId>
+                <artifactId>estatio-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>udo-base</artifactId>
+                <artifactId>estatio-base</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>

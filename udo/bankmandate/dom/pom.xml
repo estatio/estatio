@@ -90,7 +90,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
+            <artifactId>estatio-base</artifactId>
         </dependency>
 
         <dependency>

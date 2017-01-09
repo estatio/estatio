@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-base</artifactId>
+    <artifactId>estatio-base</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Base</name>

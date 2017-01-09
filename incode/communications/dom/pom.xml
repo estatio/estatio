@@ -193,7 +193,7 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
             -->
             <dependency>
                 <groupId>org.estatio</groupId>
-                <artifactId>udo-base</artifactId>
+                <artifactId>estatio-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -304,7 +304,7 @@ Failed to execute goal org.apache.isis.tool:isis-maven-plugin:1.13.0:validate (d
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-base</artifactId>
+            <artifactId>estatio-base</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
