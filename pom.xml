@@ -310,7 +310,7 @@ language governing permissions and limitations under the License.
                 <version>${isis-wicket-excel.version}</version>
             </dependency>
 
-            <!-- UDO modules -->
+            <!-- Estatio modules -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-base</artifactId>
@@ -423,6 +423,19 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-currency</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-document</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -579,19 +592,6 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-tax</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -736,7 +736,7 @@ language governing permissions and limitations under the License.
         <module>udo/tax/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
-        <module>estatioapp/dom</module>
+        <module>estatioapp/dom/document</module>
         <module>estatioapp/fixture</module>
         <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>
