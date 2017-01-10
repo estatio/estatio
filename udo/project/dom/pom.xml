@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-project</artifactId>
+    <artifactId>estatio-dom-project</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Project</name>
@@ -90,7 +90,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
+            <artifactId>estatio-dom-currency</artifactId>
         </dependency>
 
         <dependency>
@@ -115,7 +115,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
+            <artifactId>estatio-dom-party</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

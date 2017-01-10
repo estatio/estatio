@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-lease</artifactId>
+    <artifactId>estatio-dom-lease</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Lease</name>
@@ -94,7 +94,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-charge</artifactId>
+            <artifactId>estatio-dom-charge</artifactId>
         </dependency>
 
         <dependency>
@@ -109,22 +109,22 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-event</artifactId>
+            <artifactId>estatio-dom-event</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-index</artifactId>
+            <artifactId>estatio-dom-index</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-invoice</artifactId>
+            <artifactId>estatio-dom-invoice</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-settings</artifactId>
+            <artifactId>estatio-dom-settings</artifactId>
         </dependency>
 
         <dependency>
@@ -134,7 +134,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
+            <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
 
         <dependency>
@@ -172,13 +172,13 @@ language governing permissions and limitations under the License.
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-invoice</artifactId>
+            <artifactId>estatio-dom-invoice</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
+            <artifactId>estatio-dom-party</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

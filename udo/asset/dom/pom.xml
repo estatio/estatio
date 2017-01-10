@@ -89,7 +89,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
+            <artifactId>estatio-dom-party</artifactId>
         </dependency>
 
         <dependency>
@@ -134,7 +134,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
+            <artifactId>estatio-dom-party</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

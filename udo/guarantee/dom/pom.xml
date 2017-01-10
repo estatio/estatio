@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-guarantee</artifactId>
+    <artifactId>estatio-dom-guarantee</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Guarantee</name>
@@ -89,12 +89,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-financial</artifactId>
+            <artifactId>estatio-dom-financial</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
         <!-- testing -->

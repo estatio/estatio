@@ -81,32 +81,32 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budgetassignment</artifactId>
+            <artifactId>estatio-dom-budgetassignment</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-guarantee</artifactId>
+            <artifactId>estatio-dom-guarantee</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-link</artifactId>
+            <artifactId>estatio-dom-link</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
+            <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-project</artifactId>
+            <artifactId>estatio-dom-project</artifactId>
         </dependency>
 
         <dependency>
@@ -170,7 +170,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
+            <artifactId>estatio-dom-numerator</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

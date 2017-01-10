@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-budgetassignment</artifactId>
+    <artifactId>estatio-dom-budgetassignment</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Budget Assignment</name>
@@ -89,12 +89,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budget</artifactId>
+            <artifactId>estatio-dom-budget</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
         <dependency>

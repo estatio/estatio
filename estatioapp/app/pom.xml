@@ -124,7 +124,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-bankmandate</artifactId>
+            <artifactId>estatio-dom-bankmandate</artifactId>
         </dependency>
 
         <dependency>
@@ -134,12 +134,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budget</artifactId>
+            <artifactId>estatio-dom-budget</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-budgetassignment</artifactId>
+            <artifactId>estatio-dom-budgetassignment</artifactId>
         </dependency>
 
         <dependency>
@@ -149,7 +149,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-charge</artifactId>
+            <artifactId>estatio-dom-charge</artifactId>
         </dependency>
 
         <dependency>
@@ -159,57 +159,57 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-currency</artifactId>
+            <artifactId>estatio-dom-currency</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-event</artifactId>
+            <artifactId>estatio-dom-event</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-financial</artifactId>
+            <artifactId>estatio-dom-financial</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-guarantee</artifactId>
+            <artifactId>estatio-dom-guarantee</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-index</artifactId>
+            <artifactId>estatio-dom-index</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-invoice</artifactId>
+            <artifactId>estatio-dom-invoice</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-link</artifactId>
+            <artifactId>estatio-dom-link</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
+            <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-project</artifactId>
+            <artifactId>estatio-dom-project</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-settings</artifactId>
+            <artifactId>estatio-dom-settings</artifactId>
         </dependency>
 
         <dependency>
@@ -369,7 +369,7 @@ language governing permissions and limitations under the License.
         <!-- requires PartyForTesting -->
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-party</artifactId>
+            <artifactId>estatio-dom-party</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -384,7 +384,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

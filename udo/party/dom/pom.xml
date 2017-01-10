@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-party</artifactId>
+    <artifactId>estatio-dom-party</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Party</name>
@@ -95,7 +95,7 @@ language governing permissions and limitations under the License.
         </dependency>
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-numerator</artifactId>
+            <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
 
         <dependency>

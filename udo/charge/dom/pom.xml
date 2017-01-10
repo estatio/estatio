@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-charge</artifactId>
+    <artifactId>estatio-dom-charge</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Charge</name>

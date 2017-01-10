@@ -87,12 +87,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-invoice</artifactId>
+            <artifactId>estatio-dom-invoice</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>udo-dom-lease</artifactId>
+            <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
         <dependency>
@@ -115,7 +115,7 @@ language governing permissions and limitations under the License.
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        
+
     </dependencies>
 
 </project>

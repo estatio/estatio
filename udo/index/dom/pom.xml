@@ -24,7 +24,7 @@ language governing permissions and limitations under the License.
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>udo-dom-index</artifactId>
+    <artifactId>estatio-dom-index</artifactId>
     <packaging>jar</packaging>
     
     <name>Estatio (Open Source) Module - Index</name>
