@@ -733,10 +733,10 @@ language governing permissions and limitations under the License.
         <module>udo/project/dom</module>
         <module>udo/numerator/dom</module>
         <module>udo/settings/dom</module>
-        <module>udo/tax/dom</module>
+        <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
-        <module>estatioapp/dom/document</module>
+        <module>estatioapp/module/document/dom</module>
         <module>estatioapp/fixture</module>
         <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>

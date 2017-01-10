@@ -87,13 +87,13 @@
                 <module>../../../github/estatio/estatio/udo/project/dom</module>
                 <module>../../../github/estatio/estatio/udo/index/dom</module>
                 <module>../../../github/estatio/estatio/udo/currency/dom</module>
-                <module>../../../github/estatio/estatio/udo/tax/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/tax/dom</module>
                 <module>../../../github/estatio/estatio/udo/charge/dom</module>
                 <module>../../../github/estatio/estatio/udo/numerator/dom</module>
                 <module>../../../github/estatio/estatio/udo/link/dom</module>
                 <module>../../../github/estatio/estatio/udo/settings/dom</module>
                 <module>../../../github/estatio/estatio/incode/communications/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/dom/document</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/document/dom</module>
             </modules>
         </profile>
     </profiles>
