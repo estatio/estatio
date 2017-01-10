@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.documents.binders;
+package org.estatio.dom.document.documents.binders;
 
 import java.util.Collections;
 import java.util.List;

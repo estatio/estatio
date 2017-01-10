@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,28 +17,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.documents.binders;
+package org.estatio.dom.document.documents.binders;
 
 import java.util.Collections;
 import java.util.List;
 
+import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.invoice.Invoice;
+public class AttachToNone
+        extends AttachmentAdvisorAbstract<Object> {
 
-public class ForPrelimLetterOfInvoiceAttachToSame extends AttachmentAdvisorAbstract<Invoice> {
-
-    public ForPrelimLetterOfInvoiceAttachToSame() {
-        super(Invoice.class);
+    public AttachToNone() {
+        super(Object.class);
     }
 
     @Override
-    protected List<PaperclipSpec> doAdvise(
+    protected List<AttachmentAdvisor.PaperclipSpec> doAdvise(
             final DocumentTemplate documentTemplate,
-            final Invoice invoice) {
+            final Object domainObject) {
 
-        return Collections.singletonList(new PaperclipSpec(null, invoice));
+        return Collections.emptyList();
     }
 
 }

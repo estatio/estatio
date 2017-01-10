@@ -20,7 +20,7 @@ package org.estatio.fixture.documents.demo;
 import org.incode.module.document.dom.impl.docs.DocumentNature;
 import org.incode.module.document.fixture.RenderingStrategyFSAbstract;
 
-import org.estatio.dom.documents.renderers.RendererForSvg;
+import org.estatio.dom.document.documents.renderers.RendererForSvg;
 
 public class RenderingStrategyFSForSvg extends RenderingStrategyFSAbstract {
 

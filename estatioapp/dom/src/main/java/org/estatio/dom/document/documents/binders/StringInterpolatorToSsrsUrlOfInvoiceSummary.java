@@ -17,7 +17,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.documents.binders;
+package org.estatio.dom.document.documents.binders;
 
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
