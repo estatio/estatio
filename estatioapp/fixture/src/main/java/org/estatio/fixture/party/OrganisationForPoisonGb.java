@@ -18,10 +18,7 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.dom.party.Party;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
-
-import lombok.Getter;
 
 public class OrganisationForPoisonGb extends OrganisationAbstract {
 

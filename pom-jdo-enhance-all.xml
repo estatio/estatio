@@ -81,19 +81,28 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>../../../github/estatio/estatio/udo/event/dom</module>
-                <module>../../../github/estatio/estatio/udo/party/dom</module>
-                <module>../../../github/estatio/estatio/udo/agreement/dom</module>
-                <module>../../../github/estatio/estatio/udo/project/dom</module>
-                <module>../../../github/estatio/estatio/udo/index/dom</module>
-                <module>../../../github/estatio/estatio/udo/currency/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/tax/dom</module>
-                <module>../../../github/estatio/estatio/udo/charge/dom</module>
-                <module>../../../github/estatio/estatio/udo/numerator/dom</module>
-                <module>../../../github/estatio/estatio/udo/link/dom</module>
-                <module>../../../github/estatio/estatio/udo/settings/dom</module>
-                <module>../../../github/estatio/estatio/incode/communications/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/agreement/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/asset/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/assetfinancial/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/bankmandate/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/budget/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/budgetassignment/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/charge/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/currency/dom</module>
                 <module>../../../github/estatio/estatio/estatioapp/module/document/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/event/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/financial/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/guarantee/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/index/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/invoice/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/lease/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/link/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/party/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/project/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/numerator/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/settings/dom</module>
+                <module>../../../github/estatio/estatio/estatioapp/module/tax/dom</module>
+                <module>../../../github/estatio/estatio/incode/communications/dom</module>
             </modules>
         </profile>
     </profiles>

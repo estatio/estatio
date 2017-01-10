@@ -712,31 +712,31 @@ language governing permissions and limitations under the License.
     </dependencyManagement>
 
     <modules>
-        <module>udo/base/dom</module>
+        <module>estatioapp/module/base/dom</module>
         <module>incode/communications/dom</module>
-        <module>udo/agreement/dom</module>
-        <module>udo/asset/dom</module>
-        <module>udo/assetfinancial/dom</module>
-        <module>udo/bankmandate/dom</module>
-        <module>udo/budget/dom</module>
-        <module>udo/budgetassignment/dom</module>
-        <module>udo/charge/dom</module>
-        <module>udo/currency/dom</module>
-        <module>udo/event/dom</module>
-        <module>udo/financial/dom</module>
-        <module>udo/guarantee/dom</module>
-        <module>udo/index/dom</module>
-        <module>udo/invoice/dom</module>
-        <module>udo/lease/dom</module>
-        <module>udo/link/dom</module>
-        <module>udo/party/dom</module>
-        <module>udo/project/dom</module>
-        <module>udo/numerator/dom</module>
-        <module>udo/settings/dom</module>
+        <module>estatioapp/module/agreement/dom</module>
+        <module>estatioapp/module/asset/dom</module>
+        <module>estatioapp/module/assetfinancial/dom</module>
+        <module>estatioapp/module/bankmandate/dom</module>
+        <module>estatioapp/module/budget/dom</module>
+        <module>estatioapp/module/budgetassignment/dom</module>
+        <module>estatioapp/module/charge/dom</module>
+        <module>estatioapp/module/currency/dom</module>
+        <module>estatioapp/module/document/dom</module>
+        <module>estatioapp/module/event/dom</module>
+        <module>estatioapp/module/financial/dom</module>
+        <module>estatioapp/module/guarantee/dom</module>
+        <module>estatioapp/module/index/dom</module>
+        <module>estatioapp/module/invoice/dom</module>
+        <module>estatioapp/module/lease/dom</module>
+        <module>estatioapp/module/link/dom</module>
+        <module>estatioapp/module/party/dom</module>
+        <module>estatioapp/module/project/dom</module>
+        <module>estatioapp/module/numerator/dom</module>
+        <module>estatioapp/module/settings/dom</module>
         <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/impmgr</module>
-        <module>estatioapp/module/document/dom</module>
         <module>estatioapp/fixture</module>
         <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>

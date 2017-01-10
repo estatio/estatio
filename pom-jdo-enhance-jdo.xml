@@ -81,19 +81,28 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>../estatio/udo/event/dom</module>
-                <module>../estatio/udo/party/dom</module>
-                <module>../estatio/udo/agreement/dom</module>
-                <module>../estatio/udo/project/dom</module>
-                <module>../estatio/udo/index/dom</module>
-                <module>../estatio/udo/currency/dom</module>
-                <module>../estatio/estatioapp/module/tax/dom</module>
-                <module>../estatio/udo/charge/dom</module>
-                <module>../estatio/udo/numerator/dom</module>
-                <module>../estatio/udo/link/dom</module>
-                <module>../estatio/udo/settings/dom</module>
-                <module>../estatio/incode/communications/dom</module>
+                <module>../estatio/estatioapp/module/agreement/dom</module>
+                <module>../estatio/estatioapp/module/asset/dom</module>
+                <module>../estatio/estatioapp/module/assetfinancial/dom</module>
+                <module>../estatio/estatioapp/module/bankmandate/dom</module>
+                <module>../estatio/estatioapp/module/budget/dom</module>
+                <module>../estatio/estatioapp/module/budgetassignment/dom</module>
+                <module>../estatio/estatioapp/module/charge/dom</module>
+                <module>../estatio/estatioapp/module/currency/dom</module>
                 <module>../estatio/estatioapp/module/document/dom</module>
+                <module>../estatio/estatioapp/module/event/dom</module>
+                <module>../estatio/estatioapp/module/financial/dom</module>
+                <module>../estatio/estatioapp/module/guarantee/dom</module>
+                <module>../estatio/estatioapp/module/index/dom</module>
+                <module>../estatio/estatioapp/module/invoice/dom</module>
+                <module>../estatio/estatioapp/module/lease/dom</module>
+                <module>../estatio/estatioapp/module/link/dom</module>
+                <module>../estatio/estatioapp/module/party/dom</module>
+                <module>../estatio/estatioapp/module/project/dom</module>
+                <module>../estatio/estatioapp/module/numerator/dom</module>
+                <module>../estatio/estatioapp/module/settings/dom</module>
+                <module>../estatio/estatioapp/module/tax/dom</module>
+                <module>../estatio/incode/communications/dom</module>
             </modules>
         </profile>
     </profiles>

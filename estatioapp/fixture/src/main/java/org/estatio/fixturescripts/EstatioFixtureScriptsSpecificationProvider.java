@@ -18,29 +18,10 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.fixturescripts.FixtureResult;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecification;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider;
-
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.Lease;
-import org.estatio.fixture.EstatioFixtureModule;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class EstatioFixtureScriptsSpecificationProvider implements FixtureScriptsSpecificationProvider {

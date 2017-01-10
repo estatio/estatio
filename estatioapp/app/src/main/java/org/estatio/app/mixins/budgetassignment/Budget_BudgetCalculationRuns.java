@@ -13,7 +13,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.lease.Lease;
 
 @Mixin
 public class Budget_BudgetCalculationRuns {
