@@ -93,7 +93,7 @@
                 <module>../estatio/udo/link/dom</module>
                 <module>../estatio/udo/settings/dom</module>
                 <module>../estatio/incode/communications/dom</module>
-                <module>../estatio/estatioapp/dom</module>
+                <module>../estatio/estatioapp/dom/document</module>
             </modules>
         </profile>
     </profiles>
