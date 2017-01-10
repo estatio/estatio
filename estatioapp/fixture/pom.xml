@@ -75,7 +75,7 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-document</artifactId>
         </dependency>
 
@@ -174,7 +174,6 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
 
 
     </dependencies>
