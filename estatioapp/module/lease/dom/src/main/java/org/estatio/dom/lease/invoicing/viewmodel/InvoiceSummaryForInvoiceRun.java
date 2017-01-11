@@ -30,9 +30,9 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -103,17 +103,10 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     // //////////////////////////////////////
 
+    @Getter @Setter
     private String atPath;
-
-    @Property(hidden = Where.EVERYWHERE)
-    public String getAtPath() {
-        return atPath;
-    }
-
-    public void setAtPath(final String atPath) {
-        this.atPath = atPath;
-    }
-
+    
+    @Programmatic
     public ApplicationTenancy getApplicationTenancy(){
         return applicationTenancyRepository.findByPath(getAtPath());
     }
@@ -146,7 +139,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     // //////////////////////////////////////
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
         return invoiceForLeaseRepository.findByRunIdAndApplicationTenancyPath(runId, getAtPath());
     }

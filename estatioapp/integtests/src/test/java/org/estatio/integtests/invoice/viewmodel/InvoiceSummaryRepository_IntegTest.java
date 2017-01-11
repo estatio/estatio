@@ -109,7 +109,9 @@ public class InvoiceSummaryRepository_IntegTest extends EstatioIntegrationTest {
 
             //when, then
             final List<InvoiceSummaryForInvoiceRun> invoiceSummaryForInvoiceRuns = invoiceSummaryForInvoiceRunRepository.allInvoiceRuns();
-            assertThat(invoiceSummaryForInvoiceRunRepository.findByRunId(interactionId).getRunId()).isEqualTo(interactionId);
+            final InvoiceSummaryForInvoiceRun invoiceSummary = invoiceSummaryForInvoiceRunRepository.findByRunId(interactionId);
+            assertThat(invoiceSummary.getRunId()).isEqualTo(interactionId);
+            assertThat(invoiceSummary.getAtPath()).isEqualTo(lease.getApplicationTenancy().getPath());
         }
     }
 

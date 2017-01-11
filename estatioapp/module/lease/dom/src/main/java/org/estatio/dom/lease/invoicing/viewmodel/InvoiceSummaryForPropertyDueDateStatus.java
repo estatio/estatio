@@ -87,7 +87,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
                         "WHERE " +
                         "status == :status ")
 })

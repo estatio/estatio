@@ -82,12 +82,12 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "all", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDate " +
                         "ORDER BY invoiceDate DESCENDING, atPath "),
         @javax.jdo.annotations.Query(
                 name = "byInvoiceDate", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyInvoiceDate " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDate " +
                         "WHERE invoiceDate >= :date " +
                         "ORDER BY invoiceDate DESCENDING, atPath ")
 })
