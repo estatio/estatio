@@ -84,7 +84,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByRunId", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun " +
                         "WHERE " +
                         "runId == :runId ")
 })
