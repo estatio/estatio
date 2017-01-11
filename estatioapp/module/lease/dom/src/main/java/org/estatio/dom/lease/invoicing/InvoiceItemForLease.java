@@ -60,19 +60,19 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTerm", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInterval", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndIntervalAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate " +
@@ -80,19 +80,19 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm.leaseItem.lease == :lease " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm.leaseItem == :leaseItem " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM InvoiceItemForLease " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& invoice.status == :invoiceStatus")
 })
