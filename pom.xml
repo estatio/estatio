@@ -94,9 +94,7 @@ language governing permissions and limitations under the License.
         <incode-module-unittestsupport.version>1.13.3</incode-module-unittestsupport.version>
         <incode-module-integtestsupport.version>1.13.0</incode-module-integtestsupport.version>
 
-        <!-- TODO: change when this is moved out (EST-866) -->
-        <incode-module-communication.version>${project.version}</incode-module-communication.version>
-
+        <incode-module-communications.version>1.13.0</incode-module-communications.version>
 
         <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
         <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
@@ -191,12 +189,12 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>${project.version}</version>
+                <version>${incode-module-communications.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
-                <version>${project.version}</version>
+                <version>${incode-module-communications.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -713,7 +711,6 @@ language governing permissions and limitations under the License.
 
     <modules>
         <module>estatioapp/module/base/dom</module>
-        <module>incode/communications/dom</module>
         <module>estatioapp/module/agreement/dom</module>
         <module>estatioapp/module/asset/dom</module>
         <module>estatioapp/module/assetfinancial/dom</module>

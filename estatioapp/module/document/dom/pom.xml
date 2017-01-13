@@ -32,10 +32,6 @@ language governing permissions and limitations under the License.
         settings and glue for incode module document
     </description>
 
-    <properties>
-        <!--<incode-module-communications.version>1.13.0-SNAPSHOT</incode-module-communications.version>-->
-    </properties>
-
     <build>
         <resources>
             <resource>
@@ -103,7 +99,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
-            <version>${isis-module-stringinterpolator.version}</version>
         </dependency>
 
         <dependency>
