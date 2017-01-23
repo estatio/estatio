@@ -113,7 +113,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             assertThat(newLease.getStartDate()).isEqualTo(lease.getStartDate());
             assertThat(newLease.getEndDate()).isEqualTo(lease.getEndDate());
             assertThat(newLease.getTenancyStartDate()).isEqualTo(newStartDate);
-            assertThat(newLease.getTenancyEndDate()).isEqualTo(lease.getEndDate());
+            assertThat(newLease.getTenancyEndDate()).isNull();
             assertThat(newLease.getPrimaryParty()).isEqualTo(lease.getPrimaryParty());
             assertThat(newLease.getSecondaryParty()).isEqualTo(newParty);
             assertThat(newLease.getItems().size()).isEqualTo(lease.getItems().size());
