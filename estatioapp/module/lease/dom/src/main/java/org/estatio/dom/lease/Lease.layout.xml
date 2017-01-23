@@ -123,12 +123,12 @@
                 <ns2:action id="newGuarantee"/>
             </ns2:collection>
             <ns2:collection id="BudgetOverrides">
-                <ns2:action id="NewForfaitOverride"/>
-                <ns2:action id="NewCeilingOverride"/>
-                <ns2:action id="NewFixedOverride"/>
+                <ns2:action id="newForfaitOverride"/>
+                <ns2:action id="newCeilingOverride"/>
+                <ns2:action id="newFixedOverride"/>
             </ns2:collection>
             <ns2:collection id="BudgetCalculationRuns">
-                <ns2:action id="DownloadBudgetCalculationsForLease"/>
+                <ns2:action id="downloadBudgetCalculationsForLease"/>
             </ns2:collection>
         </col>
     </row>
