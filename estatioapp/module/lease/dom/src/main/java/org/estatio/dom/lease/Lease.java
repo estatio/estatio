@@ -874,8 +874,8 @@ public class Lease
             final Party tenant,
             final LocalDate tenancyStartDate
     ) {
-        Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, getEndDate());
-        this.terminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate());
+        Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null);
+        this.terminate(LocalDateInterval.endDateFromStartDate(tenancyStartDate));
         return newLease;
     }
 
