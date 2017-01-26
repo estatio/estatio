@@ -102,7 +102,6 @@
                 <module>../estatio/estatioapp/module/numerator/dom</module>
                 <module>../estatio/estatioapp/module/settings/dom</module>
                 <module>../estatio/estatioapp/module/tax/dom</module>
-                <module>../estatio/incode/communications/dom</module>
             </modules>
         </profile>
     </profiles>

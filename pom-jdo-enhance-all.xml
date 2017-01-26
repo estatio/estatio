@@ -102,7 +102,6 @@
                 <module>../../../github/estatio/estatio/estatioapp/module/numerator/dom</module>
                 <module>../../../github/estatio/estatio/estatioapp/module/settings/dom</module>
                 <module>../../../github/estatio/estatio/estatioapp/module/tax/dom</module>
-                <module>../../../github/estatio/estatio/incode/communications/dom</module>
             </modules>
         </profile>
     </profiles>

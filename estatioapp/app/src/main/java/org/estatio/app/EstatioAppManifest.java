@@ -151,8 +151,8 @@ public class EstatioAppManifest implements AppManifest {
                     org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory.class,
                     org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory.class,
                     org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory.class,
-                    org.estatio.dom.invoice.canonical.v1.InvoiceDtoFactory.class,
-                    org.estatio.dom.invoice.canonical.v1.InvoiceItemDtoFactory.class
+                    org.estatio.dom.lease.invoicing.canonical.v1.InvoiceForLeaseDtoFactory.class,
+                    org.estatio.dom.lease.invoicing.canonical.v1.InvoiceItemForLeaseDtoFactory.class
                 )
         );
         return additionalServices;
