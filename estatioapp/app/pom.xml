@@ -278,7 +278,10 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.stringinterpolator</groupId>
             <artifactId>isis-module-stringinterpolator-dom</artifactId>
-            <!--<version>${isis-module-stringinterpolator.version}</version>-->
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.togglz</groupId>
+            <artifactId>isis-module-togglz-glue</artifactId>
         </dependency>
 
         <!-- isis addons (wicket cpts) -->

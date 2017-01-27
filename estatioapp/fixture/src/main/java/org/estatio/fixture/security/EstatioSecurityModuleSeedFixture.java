@@ -19,6 +19,7 @@ package org.estatio.fixture.security;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
+import org.isisaddons.module.togglz.glue.seed.TogglzModuleAdminRole;
 
 import org.estatio.fixture.security.perms.EstatioAdminRoleAndPermissions;
 import org.estatio.fixture.security.perms.EstatioRolesAndPermissions;
@@ -37,6 +38,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForSe;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForSeOther;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.fixture.security.userrole.EstatioAdmin_Has_IsisSecurityModuleAdminRole;
+import org.estatio.fixture.security.userrole.EstatioAdmin_Has_TogglzAdminRole;
 import org.estatio.fixture.security.userrole.EstatioUserInFrance_Has_IsisSecurityModuleRegularRole;
 import org.estatio.fixture.security.userrole.EstatioUserInItaly_Has_IsisSecurityModuleRegularRole;
 import org.estatio.fixture.security.userrole.EstatioUserInNetherlands_Has_IsisSecurityModuleRegularRole;
@@ -82,6 +84,8 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
         executionContext.executeChild(this, new EstatioUserInNetherlands());
         executionContext.executeChild(this, new EstatioUserInSweden());
 
+        executionContext.executeChild(this, new TogglzModuleAdminRole());
+
         // perms (role/features)
         executionContext.executeChild(this, new EstatioUserRoleAndPermissions());
         executionContext.executeChild(this, new EstatioUser());
@@ -89,6 +93,7 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
 
         // user/role (users with global app tenancy)
         executionContext.executeChild(this, new EstatioAdmin_Has_EstatioAdminRole());
+        executionContext.executeChild(this, new EstatioAdmin_Has_TogglzAdminRole());
         executionContext.executeChild(this, new EstatioAdmin_Has_IsisSecurityModuleAdminRole());
 
         executionContext.executeChild(this, new EstatioUser_Has_EstatioPoweruserRole());

@@ -77,6 +77,7 @@ language governing permissions and limitations under the License.
 
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
         <isis-module-xdocreport.version>1.13.0</isis-module-xdocreport.version>
+        <isis-module-togglz.version>1.13.1</isis-module-togglz.version>
 
         <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
 
@@ -115,6 +116,7 @@ language governing permissions and limitations under the License.
         <javafaker.version>0.5</javafaker.version>
         <assertj-guava.version>3.1.0</assertj-guava.version>
 
+        <togglz.version>2.1.0.Final</togglz.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -183,6 +185,26 @@ language governing permissions and limitations under the License.
                 <groupId>org.isisaddons.metamodel.paraname8</groupId>
                 <artifactId>isis-metamodel-paraname8-dom</artifactId>
                 <version>${isis-metamodel-paraname8.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.isisaddons.module.togglz</groupId>
+                <artifactId>isis-module-togglz-glue</artifactId>
+                <version>${isis-module-togglz.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-core</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-junit</artifactId>
+                <version>${togglz.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- TODO: update version when move out to separate module -->

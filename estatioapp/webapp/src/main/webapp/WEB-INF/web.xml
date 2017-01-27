@@ -43,6 +43,33 @@ language governing permissions and limitations under the License.
     </filter-mapping>
 
 
+    <!-- bootstrap Togglz -->
+    <context-param>
+        <param-name>org.togglz.FEATURE_MANAGER_PROVIDED</param-name>
+        <!-- prevent the filter from bootstrapping
+              so is done lazily later once Isis has itself bootstrapped -->
+        <param-value>true</param-value>
+    </context-param>
+    <filter>
+        <filter-name>TogglzFilter</filter-name>
+        <filter-class>org.togglz.servlet.TogglzFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>TogglzFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <servlet>
+        <servlet-name>TogglzConsoleServlet</servlet-name>
+        <servlet-class>org.togglz.console.TogglzConsoleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TogglzConsoleServlet</servlet-name>
+        <url-pattern>/togglz/*</url-pattern>
+    </servlet-mapping>
+
+
 	<!-- which configuration directory to read overloaded property files from -->
     <!-- 
     Normally configuration like this should be done from outside your web 

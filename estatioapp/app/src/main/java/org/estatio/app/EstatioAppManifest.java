@@ -99,6 +99,7 @@ public class EstatioAppManifest implements AppManifest {
 
                         SecurityModule.class,
                         org.isisaddons.module.command.CommandModule.class,
+                        org.isisaddons.module.togglz.TogglzModule.class,
 
                         EstatioAppModule.class
                 )

@@ -141,6 +141,11 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>  
             <groupId>com.googlecode.totallylazy</groupId>  

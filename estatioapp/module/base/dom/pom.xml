@@ -103,6 +103,11 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-base-dom</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-core</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
