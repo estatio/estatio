@@ -86,7 +86,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
 
             // when
-            invoiceService.calculate(
+            invoiceService.calculateLegacy(
                     topmodelLease,
                     InvoiceRunType.NORMAL_RUN,
                     InvoiceCalculationSelection.ONLY_DEPOSIT,
@@ -97,7 +97,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             Assertions.assertThat(invoiceForLeaseRepository.findByLease(topmodelLease).get(0).getNetAmount()).isEqualTo(new BigDecimal("10000.00"));
 
             // and when (after couple of indexations of rent items)
-            invoiceService.calculate(
+            invoiceService.calculateLegacy(
                     topmodelLease,
                     InvoiceRunType.NORMAL_RUN,
                     InvoiceCalculationSelection.ONLY_DEPOSIT,
@@ -112,7 +112,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             final Invoice invoice = invoiceForLeaseRepository.findByLease(topmodelLease).get(0);
             mixin(InvoiceForLease._approve.class, invoice).$$();
 
-            invoiceService.calculate(
+            invoiceService.calculateLegacy(
                     topmodelLease,
                     InvoiceRunType.NORMAL_RUN,
                     InvoiceCalculationSelection.ONLY_DEPOSIT,
@@ -128,7 +128,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             final Invoice invoice1 = invoiceForLeaseRepository.findByLease(topmodelLease).get(1);
             mixin(InvoiceForLease._approve.class, invoice1).$$();
 
-            invoiceService.calculate(
+            invoiceService.calculateLegacy(
                     topmodelLease,
                     InvoiceRunType.RETRO_RUN,
                     InvoiceCalculationSelection.ONLY_DEPOSIT,

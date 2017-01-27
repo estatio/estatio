@@ -36,7 +36,7 @@ public class InvoiceServiceMenuAndContributions_Test {
         assertThat(lease.getProperty()).isNull();
 
         // then
-        assertThat(invoiceService.disableCalculate(lease, null, null, null, null, null)).isEqualTo("Please set occupancy first");
+        assertThat(invoiceService.disableCalculateLegacy(lease, null, null, null, null, null)).isEqualTo("Please set occupancy first");
 
     }
 

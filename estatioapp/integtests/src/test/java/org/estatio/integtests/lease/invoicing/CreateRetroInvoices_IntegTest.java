@@ -140,7 +140,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
             lease.terminate(VT.ld(2013, 10, 1));
 
             // when
-            invoiceService.calculate(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
+            invoiceService.calculateLegacy(lease, InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.ALL_RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
 
             // then
             List<InvoiceForLease> invoicesList = invoiceForLeaseRepository.findByLease(lease);
