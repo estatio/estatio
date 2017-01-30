@@ -182,15 +182,8 @@ public class EstatioAppManifest implements AppManifest {
             Arrays.asList(
                 CalendarService.class, // TODO: instead, should have a module for this
                 org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
-                    org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class,
-                    org.estatio.dom.party.canonical.v1.PartyDtoFactory.class,
-                    org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory.class,
-                    org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory.class,
-                    org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory.class,
-                    org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory.class,
-                    org.estatio.dom.lease.invoicing.canonical.v1.InvoiceForLeaseDtoFactory.class,
-                    org.estatio.dom.lease.invoicing.canonical.v1.InvoiceItemForLeaseDtoFactory.class
-                )
+                org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
+            )
         );
         return additionalServices;
     }
