@@ -31,11 +31,19 @@ import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 )
 public class EstatioApplicationTenancyRepositoryForCountry {
 
+    // called by fixtures for tax and charge
     public List<ApplicationTenancy> allCountryTenancies() {
         return Lists.newArrayList(Iterables.filter(allTenancies(), Predicates.isCountry()));
     }
 
-
+    // called in lots of places...
+    // - BrandRepository, BrandMenu
+    // - TaxMenu
+    // - OrganisationMenu, OrganisationRepository, PersonRepository,
+    // - IndexMenu, IndexValuesMaintenanceMenu
+    // - EstatioApplicationTenancyRepositoryForProperty
+    // - NumeratorForOrganisationAbstract
+    // - ProgramRepository
     public ApplicationTenancy findOrCreateTenancyFor(final Country countryIfAny) {
         if(countryIfAny == null) {
             return findOrCreateTenancyForGlobal();
@@ -51,20 +59,21 @@ public class EstatioApplicationTenancyRepositoryForCountry {
     }
 
 
-    public List<ApplicationTenancy> countryTenanciesFor(final ApplicationTenancy tenancy) {
+    List<ApplicationTenancy> countryTenanciesFor(final ApplicationTenancy tenancy) {
         return Lists.newArrayList(Iterables.filter(
                 allTenancies(), Predicates.isCountryTenancyFor(tenancy)));
     }
 
-    public List<ApplicationTenancy> globalOrCountryTenanciesFor(final ApplicationTenancy tenancy) {
+    private List<ApplicationTenancy> globalOrCountryTenanciesFor(final ApplicationTenancy tenancy) {
         return Lists.newArrayList(Iterables.filter(
                 allTenancies(), Predicates.isGlobalOrCountryTenancyFor(tenancy)));
     }
 
-    public List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(final ApplicationTenancy tenancy) {
+    List<ApplicationTenancy> countryTenanciesIncludeGlobalIfTenancyIsGlobalFor(final ApplicationTenancy tenancy) {
         return tenancy.getName() == "Global" ? globalOrCountryTenanciesFor(tenancy) : countryTenanciesFor(tenancy);
     }
 
+    // called by BrandRepository only
     public ApplicationTenancy findCountryTenancyFor(final ApplicationTenancy applicationTenancy){
         ApplicationTenancy result = applicationTenancy;
         while (
@@ -86,13 +95,13 @@ public class EstatioApplicationTenancyRepositoryForCountry {
         return applicationTenancies.allTenancies();
     }
 
+    // called by EstatioApplicationTenancyRepositoryForProperty
     @Programmatic
     public String pathFor(final Country country) {
         return String.format("/%s", country.getReference());
     }
 
-    @Programmatic
-    public ApplicationTenancy findOrCreateTenancyForGlobal() {
+    ApplicationTenancy findOrCreateTenancyForGlobal() {
         return applicationTenancies.findByPath("/");
     }
 
