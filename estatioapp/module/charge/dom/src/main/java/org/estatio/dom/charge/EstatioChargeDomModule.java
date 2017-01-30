@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings;
+package org.estatio.dom.charge;
 
-public final class EstatioDomainSettingsModule {
+// TODO: eventually this should move to org.estatio.charge, and be renamed to EstatioChargeModule (no "Dom" part)
+public final class EstatioChargeDomModule {
 
-    private EstatioDomainSettingsModule(){}
-
+    private EstatioChargeDomModule(){}
 
 }

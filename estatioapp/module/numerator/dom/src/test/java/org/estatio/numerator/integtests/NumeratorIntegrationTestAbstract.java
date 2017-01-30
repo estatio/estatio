@@ -44,7 +44,7 @@ import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.integtestsupport.dom.IncodeIntegrationTestAbstract;
 
-import org.estatio.numerator.dom.NumeratorDomModule;
+import org.estatio.numerator.EstatioNumeratorModule;
 import org.estatio.numerator.dom.impl.NumeratorRepository;
 import org.estatio.numerator.fixture.NumeratorFixtureModule;
 
@@ -71,7 +71,7 @@ public abstract class NumeratorIntegrationTestAbstract extends IncodeIntegration
 
                         @Override public List<Class<?>> getModules() {
                             final List<Class<?>> modules = Lists.newArrayList();
-                            modules.add(NumeratorDomModule.class);
+                            modules.add(EstatioNumeratorModule.class);
                             modules.add(NumeratorFixtureModule.class);
                             modules.add(SecurityModule.class);
                             return modules;

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.dom;
+package org.estatio.numerator;
 
-public class NumeratorDomModule {}
+public class EstatioNumeratorModule {}
 

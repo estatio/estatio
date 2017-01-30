@@ -16,15 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domlink;
+package org.estatio.dom.invoice;
 
-import java.util.List;
+// TODO: eventually this should move to org.estatio.invoice, and be renamed to EstatioInvoiceModule (no "Dom" part)
+public final class EstatioInvoiceDomModule {
 
-import org.apache.isis.applib.Identifier;
-
-public final class EstatioDomainLinkModule {
-
-    private EstatioDomainLinkModule(){}
-
+    private EstatioInvoiceDomModule(){}
 
 }
