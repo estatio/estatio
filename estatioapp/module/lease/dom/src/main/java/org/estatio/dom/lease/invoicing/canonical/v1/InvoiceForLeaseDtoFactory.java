@@ -9,8 +9,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.canonical.DtoFactoryAbstract;
-import org.estatio.canonical.DtoMappingHelper;
+import org.estatio.dom.dto.DtoFactoryAbstract;
+import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.FixedAsset;

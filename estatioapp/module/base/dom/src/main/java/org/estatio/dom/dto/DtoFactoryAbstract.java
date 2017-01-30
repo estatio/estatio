@@ -1,4 +1,4 @@
-package org.estatio.canonical;
+package org.estatio.dom.dto;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;

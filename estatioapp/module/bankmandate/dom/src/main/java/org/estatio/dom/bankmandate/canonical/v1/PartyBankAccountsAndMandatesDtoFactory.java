@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.canonical.DtoFactoryAbstract;
+import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
 import org.estatio.canonical.financial.v1.BankAccountDto;

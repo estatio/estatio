@@ -146,8 +146,8 @@ public class EstatioAppManifest implements AppManifest {
                 CalendarService.class, // TODO: instead, should have a module for this
                 org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
                     org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class,
-                    org.estatio.canonical.DtoMappingHelper.class,
-                    org.estatio.canonical.party.PartyDtoFactory.class,
+                    org.estatio.dom.dto.DtoMappingHelper.class,
+                    org.estatio.dom.party.canonical.v1.PartyDtoFactory.class,
                     org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory.class,
                     org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory.class,
                     org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory.class,

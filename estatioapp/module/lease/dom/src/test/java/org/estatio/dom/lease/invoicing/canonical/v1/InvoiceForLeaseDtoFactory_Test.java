@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.canonical.DtoMappingHelper;
+import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.PaymentMethod;
 import org.estatio.dom.charge.Charge;

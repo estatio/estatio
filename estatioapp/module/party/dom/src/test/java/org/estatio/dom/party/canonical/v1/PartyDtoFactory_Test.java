@@ -1,4 +1,4 @@
-package org.estatio.canonical.party;
+package org.estatio.dom.party.canonical.v1;
 
 import java.util.Collections;
 
@@ -15,10 +15,11 @@ import org.apache.isis.schema.common.v1.OidDto;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.canonical.DtoMappingHelper;
+import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.canonical.v1.PartyDtoFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
