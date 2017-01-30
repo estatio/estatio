@@ -24,6 +24,7 @@ import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorD
 import org.incode.module.document.dom.DocumentModule;
 
 import org.estatio.dom.EstatioDomainModule;
+import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.domlink.EstatioDomainLinkModule;
 import org.estatio.domsettings.EstatioDomainSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
@@ -83,6 +84,8 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioDomainModule.class,
                         EstatioDomainLinkModule.class,
                         EstatioDomainSettingsModule.class,
+
+                        EstatioBaseDtoModule.class,
 
                         NumeratorDomModule.class,
 
@@ -146,7 +149,6 @@ public class EstatioAppManifest implements AppManifest {
                 CalendarService.class, // TODO: instead, should have a module for this
                 org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
                     org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class,
-                    org.estatio.dom.dto.DtoMappingHelper.class,
                     org.estatio.dom.party.canonical.v1.PartyDtoFactory.class,
                     org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory.class,
                     org.estatio.dom.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory.class,
