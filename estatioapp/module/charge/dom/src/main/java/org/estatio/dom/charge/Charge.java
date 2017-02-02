@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -35,10 +36,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
-
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithNameUnique;
 import org.incode.module.base.dom.with.WithReferenceUnique;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.tax.Tax;
@@ -109,6 +110,25 @@ public class Charge
     @Property(regexPattern = ReferenceType.Meta.REGEX, editing = Editing.DISABLED)
     @Getter @Setter
     private String reference;
+
+    @Programmatic
+    public String getReference4() {
+        return reference != null
+                ? reference.length() >= 4
+                    ? reference.substring(0, 4)
+                    : reference
+                : null;
+    }
+
+    @Programmatic
+    public Integer getReference4i() {
+        final String reference4 = getReference4();
+        try {
+            return reference4 != null ? Integer.parseInt(reference4) : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
     // //////////////////////////////////////
 

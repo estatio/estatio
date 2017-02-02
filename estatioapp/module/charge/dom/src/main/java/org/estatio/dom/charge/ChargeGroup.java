@@ -28,6 +28,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -37,10 +38,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
-
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -104,6 +105,15 @@ public class ChargeGroup
     @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
+
+    @Programmatic
+    public String getReference4() {
+        return reference != null
+                ? reference.length() >= 4
+                    ? reference.substring(0, 4)
+                    : reference
+                : null;
+    }
 
     // //////////////////////////////////////
 

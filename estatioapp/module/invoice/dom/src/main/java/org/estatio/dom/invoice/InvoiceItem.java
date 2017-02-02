@@ -213,8 +213,12 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(typicalLength = DescriptionType.Meta.TYPICAL_LEN, multiLine = DescriptionType.Meta.MULTI_LINE)
-    @Getter @Setter
+    @Getter
     private String description;
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
