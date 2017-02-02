@@ -1,0 +1,4 @@
+<#if adjustment ><#if
+    charge.group.reference == "S" &&
+    (dueDate > startDate)
+>Conguaglio: <#else>Adeguamento: </#if></#if>${charge.description}<#if startDate??> dal ${effectiveStartDate} al ${effectiveEndDate}</#if>
