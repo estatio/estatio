@@ -42,9 +42,19 @@ public class InvoiceDescriptionService extends UdoDomainService<InvoiceDescripti
 
     @Programmatic
     public void update(InvoiceItemForLease invoiceItem)  {
+        final String description = render(invoiceItem);
+        invoiceItem.setDescription(description);
+    }
+
+    @Programmatic
+    public void update(final InvoiceForLease invoice) {
+        final String description = render(invoice);
+        invoice.setDescription(description);
+    }
+
+    private String render(final Object invoiceItem) {
         try {
-            final String description = docFragmentService.render(invoiceItem, "description");
-            invoiceItem.setDescription(description);
+            return docFragmentService.render(invoiceItem, "description");
         } catch (IOException | TemplateException e) {
             throw new ApplicationException(e);
         }

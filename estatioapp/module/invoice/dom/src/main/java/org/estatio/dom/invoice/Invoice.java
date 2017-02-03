@@ -210,6 +210,11 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private LocalDate dueDate;
 
+    @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    @Getter @Setter
+    private String description;
+
     @Mixin
     public static class _changeDueDate {
 
@@ -434,4 +439,21 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
     }
+
+
+    public static class DescriptionType {
+
+        private DescriptionType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
+            public static final int MULTI_LINE = org.incode.module.base.dom.types.DescriptionType.Meta.MULTI_LINE;
+
+            private Meta() {}
+
+        }
+
+    }
+
 }
