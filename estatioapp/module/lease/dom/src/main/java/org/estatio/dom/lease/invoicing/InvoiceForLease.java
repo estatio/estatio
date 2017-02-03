@@ -401,7 +401,7 @@ public class InvoiceForLease
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$(final LocalDate invoiceDate) {
 
-            if (disable$$(invoiceDate) != null) {
+            if (disable$$() != null) {
                 return invoiceForLease; // Safeguard to do nothing when called without a wrapper.
             }
 
@@ -417,7 +417,7 @@ public class InvoiceForLease
             return invoiceForLease;
         }
 
-        public String disable$$(final LocalDate invoiceDate) {
+        public String disable$$() {
             if (invoiceForLease.getInvoiceNumber() != null) {
                 return "Invoice number already assigned";
             }
