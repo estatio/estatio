@@ -105,6 +105,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PropertyForCARTEST());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
+        executionContext.executeChild(this, new CreateInvoiceNumerators());
+
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();
 
