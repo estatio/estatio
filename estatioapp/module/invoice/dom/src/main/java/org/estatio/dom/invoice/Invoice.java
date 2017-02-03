@@ -81,7 +81,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.invoice.Invoice"
+        value = "org.estatio.dom.invoice.InvoiceAbstract" // dummy value required because the InvoiceForLease subclass uses this class' FQCN (for backward compatibility; see EST-1084)
 )
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
@@ -119,8 +119,7 @@ import lombok.Setter;
                 members = { "sendTo" })
 })
 @DomainObject(
-        editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.invoice.Invoice"
+        editing = Editing.DISABLED
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Invoice<T extends Invoice<T>>
