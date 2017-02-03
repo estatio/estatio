@@ -54,7 +54,11 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.lease.invoicing.InvoiceItemForLease")
+@javax.jdo.annotations.Discriminator(
+        "org.estatio.dom.invoice.InvoiceItem" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
+        // (would rather use "lease.InvoiceItemForLease", but @Discriminator currently takes precedence over @DomainObject#objectType); see EST-1084
+
+)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -103,7 +107,10 @@ import lombok.Setter;
                 members = { "leaseTerm", "startDate", "endDate" }),
 
 })
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED
+        // objectType inferred from @Discriminator
+)
 public class InvoiceItemForLease
         extends InvoiceItem<InvoiceItemForLease> {
 

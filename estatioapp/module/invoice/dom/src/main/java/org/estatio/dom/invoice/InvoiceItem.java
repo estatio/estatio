@@ -82,8 +82,8 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
-        column = "discriminator",
-        value = "org.estatio.dom.invoice.InvoiceItem"
+        column = "discriminator"
+        // no value specified, this is an abstract class
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
@@ -91,7 +91,10 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.dom.invoice.InvoiceItemAbstract" // dummy value required because the InvoiceForLease subclass uses this class' FQCN (for backward compatibility; see EST-1084)
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem<T extends InvoiceItem<T>>
         extends UdoDomainObject2<T>
