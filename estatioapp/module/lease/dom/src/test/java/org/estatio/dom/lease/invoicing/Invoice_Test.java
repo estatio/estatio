@@ -186,7 +186,7 @@ public class Invoice_Test {
                 oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
             }});
 
-            assertThat(invoice_invoice.disable$$(null)).isNull();
+            assertThat(invoice_invoice.disable$$()).isNull();
             invoice_invoice.$$(mockClockService.now());
 
             assertThat(this.invoice.getInvoiceNumber()).isEqualTo("XXX-00011");
@@ -201,7 +201,7 @@ public class Invoice_Test {
 
             // when
             final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
-            assertThat(invoice_invoice.disable$$(null)).isEqualTo("Invoice number already assigned");
+            assertThat(invoice_invoice.disable$$()).isEqualTo("Invoice number already assigned");
             invoice_invoice.$$(mockClockService.now());
 
             assertThat(invoice.getInvoiceNumber()).isEqualTo("SOME-INVOICE-NUMBER");
@@ -217,7 +217,7 @@ public class Invoice_Test {
             final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
-            assertThat(invoice_invoice.disable$$(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+            assertThat(invoice_invoice.disable$$()).isEqualTo("No 'invoice number' numerator found for invoice's property");
 
             invoice_invoice.$$(mockClockService.now());
             assertThat(invoice.getInvoiceNumber()).isNull();
@@ -233,7 +233,7 @@ public class Invoice_Test {
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
 
             // when
-            assertThat(invoice_invoice.disable$$(null)).isEqualTo("No 'invoice number' numerator found for invoice's property");
+            assertThat(invoice_invoice.disable$$()).isEqualTo("No 'invoice number' numerator found for invoice's property");
 
             invoice_invoice.$$(mockClockService.now());
             assertThat(invoice.getInvoiceNumber()).isNull();
