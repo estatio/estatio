@@ -211,11 +211,21 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
+    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
     @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
 
+    public String disableDescription() {
+        if (getInvoice().isImmutable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
 
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
         setDescription(description);
@@ -228,10 +238,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     public String disableChangeDescription(
             final String description) {
-        if (getInvoice().isImmutable()) {
-            return "Invoice can't be changed";
-        }
-        return null;
+        return disableDescription();
     }
 
     // //////////////////////////////////////
