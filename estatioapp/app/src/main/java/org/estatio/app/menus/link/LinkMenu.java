@@ -16,7 +16,11 @@ import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(named = "Administration", menuBar = DomainServiceLayout.MenuBar.SECONDARY)
+@DomainServiceLayout(
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.17"
+)
 public class LinkMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
