@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -54,6 +55,8 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
+
+import freemarker.template.TemplateException;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
@@ -324,7 +327,6 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     LeaseItem leaseItem = leaseTerm.getLeaseItem();
                     Charge charge = leaseItem.getCharge();
                     invoiceItem.setCharge(charge);
-                    invoiceItem.setDescription(charge.getDescription());
                     invoiceItem.setDueDate(parameters.invoiceDueDate());
                     invoiceItem.setStartDate(result.invoicingInterval().startDate());
                     invoiceItem.setEndDate(result.invoicingInterval().endDate());
@@ -337,6 +339,9 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     invoiceItem.setEffectiveEndDate(intervalToUse.endDate());
 
                     invoiceItem.setTax(leaseItem.getEffectiveTax());
+
+                    invoiceDescriptionService.update(invoiceItem);
+
                     invoiceItem.verify();
                     invoiceItem.setAdjustment(adjustment);
                 }
@@ -345,6 +350,9 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     }
 
     // //////////////////////////////////////
+
+    @javax.inject.Inject
+    InvoiceDescriptionService invoiceDescriptionService;
 
     @Inject
     LeaseInvoicingSettingsService leaseInvoicingSettingsService;

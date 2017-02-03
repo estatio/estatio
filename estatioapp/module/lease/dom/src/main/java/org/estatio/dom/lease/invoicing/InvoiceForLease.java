@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
+import freemarker.template.TemplateException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -223,14 +225,18 @@ public class InvoiceForLease
                 final BigDecimal netAmount,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-            InvoiceItem invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
+
+            InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
+
             invoiceItem.setQuantity(quantity);
             invoiceItem.setCharge(charge);
-            invoiceItem.setDescription(charge.getDescription());
             invoiceItem.setTax(charge.getTax());
             invoiceItem.setNetAmount(netAmount);
             invoiceItem.setStartDate(startDate);
             invoiceItem.setEndDate(endDate);
+
+            invoiceDescriptionService.update(invoiceItem);
+
             invoiceItem.verify();
             // TODO: we need to create a new subclass InvoiceForLease but that
             // requires a database change so this is quick fix
@@ -275,6 +281,9 @@ public class InvoiceForLease
                 final LocalDate endDate){
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
+
+        @javax.inject.Inject
+        InvoiceDescriptionService invoiceDescriptionService;
 
         @javax.inject.Inject
         InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
