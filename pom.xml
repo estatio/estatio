@@ -316,6 +316,11 @@ language governing permissions and limitations under the License.
                 <artifactId>incode-module-integtestsupport-dom</artifactId>
                 <version>${incode-module-integtestsupport.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.incode.module.fixturesupport</groupId>
+                <artifactId>incode-module-fixturesupport-dom</artifactId>
+                <version>${incode-module-fixturesupport.version}</version>
+            </dependency>
 
 
             <!-- required for the dataModel implementations used by docrendering-stringinterpolator -->
