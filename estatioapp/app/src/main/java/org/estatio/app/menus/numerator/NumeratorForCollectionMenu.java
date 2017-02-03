@@ -38,9 +38,9 @@ import org.estatio.numerator.dom.impl.Numerator;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Administration",
-        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
-        menuOrder = "120.2")
+        named = "Other",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "80.15")
 public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCollectionMenu> {
 
     public NumeratorForCollectionMenu() {
