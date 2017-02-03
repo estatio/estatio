@@ -211,9 +211,35 @@ public abstract class Invoice<T extends Invoice<T>>
     private LocalDate dueDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
+    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
+
+    public String disableDescription() {
+        if (isImmutable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Invoice changeDescription(
+            final @ParameterLayout(multiLine = 3) String description) {
+        setDescription(description);
+        return this;
+    }
+
+    public String default0ChangeDescription() {
+        return getDescription();
+    }
+
+    public String disableChangeDescription(
+            final String description) {
+        return disableDescription();
+    }
+
 
     @Mixin
     public static class _changeDueDate {
