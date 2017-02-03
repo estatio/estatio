@@ -41,9 +41,9 @@ import org.estatio.dom.UdoDomainService;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Documents",
+        named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "77.2")
+        menuOrder = "80.11")
 public class DocumentTypeMenu extends UdoDomainService<DocumentTypeMenu> {
 
     public DocumentTypeMenu() {
