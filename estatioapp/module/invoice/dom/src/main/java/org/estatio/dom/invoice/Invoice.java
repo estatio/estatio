@@ -80,8 +80,8 @@ import lombok.Setter;
         column = "id")
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
-        column = "discriminator"
-        // no value specified, this is an abstract class
+        column = "discriminator",
+        value = "org.estatio.dom.invoice.InvoiceAbstract" // dummy value required because the InvoiceForLease subclass uses this class' FQCN (for backward compatibility; see EST-1084)
 )
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
