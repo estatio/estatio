@@ -1,11 +1,7 @@
 package org.estatio.dom.lease.invoicing.description;
 
-import java.io.IOException;
-
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
 
-import org.apache.commons.io.Charsets;
 import org.assertj.core.api.Assertions;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -25,6 +21,7 @@ import org.incode.module.unittestsupport.dom.reflect.ReflectUtils;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.lease.fixture.seed.DocFragmentData;
 
 public class InvoiceItemForLease_Description_Test {
 
@@ -78,7 +75,7 @@ public class InvoiceItemForLease_Description_Test {
         public void setUp() throws Exception {
             super.setUp();
 
-            templateText = read("InvoiceItem_description_ITA.docFragment.txt");
+            templateText = DocFragmentData.read("InvoiceItem_description_ITA.docFragment.txt");
         }
 
         @Test
@@ -198,7 +195,7 @@ public class InvoiceItemForLease_Description_Test {
         public void setUp() throws Exception {
             super.setUp();
 
-            templateText = read("InvoiceItem_description_FRA.docFragment.txt");
+            templateText = DocFragmentData.read("InvoiceItem_description_FRA.docFragment.txt");
         }
 
         @Test
@@ -293,11 +290,5 @@ public class InvoiceItemForLease_Description_Test {
         }
 
     }
-
-
-    String read(final String resourceName) throws IOException {
-        return Resources.toString(Resources.getResource(getClass(), resourceName), Charsets.UTF_8);
-    }
-
 
 }

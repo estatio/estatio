@@ -121,10 +121,10 @@ public class EstatioAppManifest implements AppManifest {
                         // the incode catalog modules
                         org.incode.module.country.dom.CountryModule.class,
                         org.incode.module.communications.dom.CommunicationsModule.class,
+                        org.incode.module.docfragment.dom.DocFragmentModuleDomModule.class,
                         org.incode.module.document.dom.DocumentModule.class,
 
-                        // TODO: one day these module may not be required
-                        // TODO: ie, if we're above to move all the fixtures into the respective modules.
+                        // TODO: one day these module may not be required (if we're able to move all the fixtures into the respective modules).
                         EstatioFixtureModule.class,
                         EstatioFixtureScriptsModule.class,
 
