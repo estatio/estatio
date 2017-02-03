@@ -39,6 +39,7 @@ import org.estatio.domlink.EstatioLinkDomModule;
 import org.estatio.domsettings.EstatioSettingsDomModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
+import org.estatio.lease.fixture.EstatioLeaseFixtureModule;
 import org.estatio.numerator.EstatioNumeratorModule;
 
 public class EstatioAppManifest implements AppManifest {
@@ -111,6 +112,7 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioIndexDomModule.class,
                         EstatioInvoiceDomModule.class,
                         EstatioLeaseDomModule.class,
+                        EstatioLeaseFixtureModule.class,
                         EstatioLinkDomModule.class,
                         EstatioNumeratorModule.class,
                         EstatioPartyDomModule.class,

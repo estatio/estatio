@@ -36,12 +36,47 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DocFragmentData {
 
+    InvoiceDescriptionIta(
+            "org.estatio.dom.invoice.Invoice", "description", "/ITA",
+            "Invoice_description_ITA.docFragment.txt") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
     InvoiceItemDescriptionIta(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/ITA",
-            "InvoiceItem_description_ITA.docFragment.txt"),
+            "org.estatio.dom.invoice.InvoiceItem", "description", "/ITA",
+            "InvoiceItem_description_ITA.docFragment.txt") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
     InvoiceItemDescriptionFra(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/FRA",
-            "InvoiceItem_description_FRA.docFragment.txt"),
+            "org.estatio.dom.invoice.InvoiceItem", "description", "/FRA",
+            "InvoiceItem_description_FRA.docFragment.txt") {
+        public FixtureScript script() {
+            return new DocFragmentScript() {};
+        }
+    },
+
+    // for demos only
+    InvoiceItemDescription_DemoGbr(
+            "org.estatio.dom.invoice.InvoiceItem", "description", "/GBR",
+            "InvoiceItem_description_ITA.docFragment.txt") {
+        public FixtureScript script() {
+            return new DocFragmentScript() {};
+        }
+    },
+    InvoiceItemDescription_DemoNld(
+            "org.estatio.dom.invoice.InvoiceItem", "description", "/NLD",
+            "InvoiceItem_description_FRA.docFragment.txt") {
+        public FixtureScript script() {
+            return new DocFragmentScript() {};
+        }
+    },
     ;
 
     @Getter
@@ -56,25 +91,24 @@ public enum DocFragmentData {
         return read(templateResourceName);
     }
 
-    public FixtureScript script() {
-        class DocFragmentScript extends FixtureScript {
-            @Override
-            public void execute(final ExecutionContext executionContext) {
+    class DocFragmentScript extends FixtureScript {
+        @Override
+        public void execute(final ExecutionContext executionContext) {
 
-                final DocFragment docFrag = docFragmentRepository
-                        .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
-                if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
-                    return;
-                }
-
-                docFragmentRepository.create(objectType, name, atPath, getTemplateText());
+            final DocFragment docFrag = docFragmentRepository
+                    .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
+            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
+                return;
             }
 
-            @Inject
-            DocFragmentRepository docFragmentRepository;
+            docFragmentRepository.create(objectType, name, atPath, getTemplateText());
         }
-        return new DocFragmentScript();
+
+        @Inject
+        DocFragmentRepository docFragmentRepository;
     }
+
+    public abstract FixtureScript script();
 
     public static String read(final String resourceName) {
         try {
