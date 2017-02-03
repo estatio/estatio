@@ -18,10 +18,10 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Index;
@@ -64,10 +64,10 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
-import freemarker.template.TemplateException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -206,6 +206,22 @@ public class InvoiceForLease
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String runId;
+
+
+    @Programmatic
+    public Occupancy getCurrentOccupancy() {
+        final InvoiceForLease invoice =
+                this;
+        final Lease leaseIfAny = invoice.getLease();
+        if (leaseIfAny == null) {
+            return null;
+        }
+        final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
+        if (occupancies.isEmpty()) {
+            return null;
+        }
+        return occupancies.first();
+    }
 
 
     @Mixin
@@ -421,6 +437,8 @@ public class InvoiceForLease
             invoiceForLease.setInvoiceDate(invoiceDate);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
 
+            invoiceDescriptionService.update(invoiceForLease);
+
             messageService.informUser("Assigned " + invoiceForLease.getInvoiceNumber() + " to invoice " + titleService.titleOf(
                     invoiceForLease));
             return invoiceForLease;
@@ -477,6 +495,9 @@ public class InvoiceForLease
 
         @javax.inject.Inject
         TitleService titleService;
+
+        @javax.inject.Inject
+        InvoiceDescriptionService invoiceDescriptionService;
     }
 
     @Mixin

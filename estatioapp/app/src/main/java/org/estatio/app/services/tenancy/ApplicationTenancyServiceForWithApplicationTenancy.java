@@ -17,17 +17,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.link;
+package org.estatio.app.services.tenancy;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.document.dom.spi.ApplicationTenancyService;
-
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
-public class ApplicationTenancyServiceForWithApplicationTenancy implements ApplicationTenancyService {
+public class ApplicationTenancyServiceForWithApplicationTenancy
+        implements org.incode.module.document.dom.spi.ApplicationTenancyService,
+                   org.incode.module.docfragment.dom.spi.ApplicationTenancyService  {
 
     @Override
     public String atPathFor(final Object domainObject) {
