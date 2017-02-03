@@ -63,6 +63,24 @@ public enum DocFragmentData {
     },
 
     // for demos only
+    InvoiceDescription_DemoGbr(
+            "org.estatio.dom.invoice.Invoice", "description", "/GBR",
+            "Invoice_description_ITA.docFragment.txt") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
+    InvoiceDescription_DemoNld(
+            "org.estatio.dom.invoice.Invoice", "description", "/NLD",
+            "Invoice_description_ITA.docFragment.txt") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
     InvoiceItemDescription_DemoGbr(
             "org.estatio.dom.invoice.InvoiceItem", "description", "/GBR",
             "InvoiceItem_description_ITA.docFragment.txt") {
