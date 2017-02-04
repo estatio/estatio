@@ -69,11 +69,11 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     public static final String URL = "${reportServerBaseUrl}";
 
-    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter ${invoice.dueDate}";
-    public static final String NAME_TEXT_PRELIM_LETTER_ITA = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Preliminary Letter/Avviso di fatturazione ${invoice.dueDate}";
+    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = loadResource("PrelimLetterName.txt");
+    public static final String NAME_TEXT_PRELIM_LETTER_ITA = loadResource("PrelimLetterName-ITA.txt");
 
-    public static final String NAME_TEXT_INVOICE_ITA = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice/Fatturazione ${invoice.dueDate}";
-    public static final String NAME_TEXT_INVOICE_GLOBAL = "${property.reference} ${tenant.name} ${(unit.name)!\"\"} ${(brand.name)!\"\"} Invoice ${invoice.dueDate}";
+    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName.txt");
+    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName-ITA.txt");
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

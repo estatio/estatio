@@ -14,6 +14,6 @@
 ${charge.description}<#t>
 <#t>
 <#t>
-<#if startDate??><#t>
+<#if startDate?? && effectiveStartDate?? && effectiveEndDate?? ><#t>
  dal ${effectiveStartDate?string["dd-MM-yyyy"]} al ${effectiveEndDate?string["dd-MM-yyyy"]}<#rt>
 </#if><#t>

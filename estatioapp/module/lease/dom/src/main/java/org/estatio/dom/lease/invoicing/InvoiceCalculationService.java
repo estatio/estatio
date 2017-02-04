@@ -56,7 +56,6 @@ import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 
-import freemarker.template.TemplateException;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
