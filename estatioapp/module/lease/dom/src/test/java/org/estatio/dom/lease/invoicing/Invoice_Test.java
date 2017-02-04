@@ -65,6 +65,9 @@ public class Invoice_Test {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
+    InvoiceDescriptionService mockInvoiceDescriptionService;
+
+    @Mock
     NumeratorForCollectionRepository mockNumeratorRepository;
 
     @Mock
@@ -166,6 +169,7 @@ public class Invoice_Test {
 
     public static class AssignInvoiceNumber extends Invoice_Test {
 
+
         @Test
         public void happyCase_whenNoInvoiceNumberPreviouslyAssigned() {
             allowingMockInvoicesToReturnNumerator(numerator);
@@ -173,10 +177,11 @@ public class Invoice_Test {
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             // when
-            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(this.invoice);
+            final InvoiceForLease._invoice invoice_invoice = new InvoiceForLease._invoice(invoice);
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
+            invoice_invoice.invoiceDescriptionService = mockInvoiceDescriptionService;
 
             // expect
             context.checking(new Expectations() {{
@@ -184,6 +189,8 @@ public class Invoice_Test {
                 will(returnValue("Invoice #001"));
 
                 oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
+
+                oneOf(mockInvoiceDescriptionService).update(invoice);
             }});
 
             assertThat(invoice_invoice.disable$$()).isNull();

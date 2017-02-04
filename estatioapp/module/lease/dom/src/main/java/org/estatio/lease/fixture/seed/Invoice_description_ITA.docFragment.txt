@@ -32,9 +32,9 @@
 <#t>
 <#if currentOccupancy?? && currentOccupancy.brand?? > ${currentOccupancy.brand.name}</#if><#t>
 <#t>
-<#t>
+<#if lease.tenancyStartDate?? ><#t>
  con effetto dal ${lease.tenancyStartDate?string["dd-MM-yyyy"]}<#rt>
-<#t>
+</#if><#t>
 <#t>
 <#t>
 <#if fixedAsset?? ><#t>
