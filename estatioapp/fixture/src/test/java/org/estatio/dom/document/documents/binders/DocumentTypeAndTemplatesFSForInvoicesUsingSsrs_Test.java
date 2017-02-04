@@ -3,6 +3,8 @@ package org.estatio.dom.document.documents.binders;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -135,7 +137,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
-        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1 XXX-123 Brandino Invoice 2016-11-01");
+        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1 XXX-123 Brandino Invoice 01-11-2016");
 
     }
 
@@ -159,7 +161,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
-        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1   Invoice 2016-11-01");
+        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1   Invoice 01-11-2016");
     }
 
     private RendererForFreemarker rendererForFreemarker() throws NoSuchFieldException, IllegalAccessException {
@@ -167,7 +169,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final Field configurationServiceField = FreeMarkerService.class.getDeclaredField("configurationService");
         configurationServiceField.setAccessible(true);
         configurationServiceField.set(freeMarkerService, mockConfigurationService);
-        freeMarkerService.init();
+        freeMarkerService.init(ImmutableMap.of());
 
         final RendererForFreemarker renderer = new RendererForFreemarker();
         final Field freeMarkerServiceField = RendererForFreemarker.class.getDeclaredField("freeMarkerService");

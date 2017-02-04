@@ -311,7 +311,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
             assertThat(prelimLetterComm.getQueuedAt()).isNotNull();
             assertThat(prelimLetterComm.getSentAt()).isNull();
-            assertThat(prelimLetterComm.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Preliminary Letter 2012-01-01.html");
+            assertThat(prelimLetterComm.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Preliminary Letter 01-01-2012.html");
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -399,7 +399,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
             assertThat(communication.getQueuedAt()).isNotNull();
             assertThat(communication.getSentAt()).isNull();
-            assertThat(communication.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Invoice 2012-01-01.html");
+            assertThat(communication.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Invoice 01-01-2012.html");
 
             // and InvNote doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice two receipts)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);

@@ -10,6 +10,6 @@
 <#t>
 <#t>
 <#t>
-<#if startDate??><#t>
+<#if startDate?? && effectiveStartDate?? && effectiveEndDate?? ><#t>
  du ${effectiveStartDate?string["dd-MM-yyyy"]} au ${effectiveEndDate?string["dd-MM-yyyy"]}<#rt>
 </#if>

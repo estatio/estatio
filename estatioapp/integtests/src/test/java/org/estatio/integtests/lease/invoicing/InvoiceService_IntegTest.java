@@ -191,7 +191,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             mixin(InvoiceForLease._approve.class, invoice).$$();
             mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
 
-            assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
+            assertThat(invoice.getInvoiceNumber(), is("OXF-0001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
 

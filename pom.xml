@@ -78,6 +78,7 @@ language governing permissions and limitations under the License.
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
         <isis-module-xdocreport.version>1.13.0</isis-module-xdocreport.version>
         <isis-module-togglz.version>1.13.1</isis-module-togglz.version>
+        <isis-module-freemarker.version>1.13.2</isis-module-freemarker.version>
 
         <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
 
@@ -182,6 +183,12 @@ language governing permissions and limitations under the License.
                 <artifactId>isis-module-pdfbox-dom</artifactId>
                 <version>${isis-module-pdfbox.version}</version>
             </dependency>
+                <dependency>
+                    <groupId>org.isisaddons.module.freemarker</groupId>
+                    <artifactId>isis-module-freemarker-dom</artifactId>
+                    <version>${isis-module-freemarker.version}</version>
+                </dependency>
+
 
             <dependency>
                 <groupId>org.isisaddons.metamodel.paraname8</groupId>
