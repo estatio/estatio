@@ -46,7 +46,7 @@ public enum DocFragmentData {
         }
     },
     InvoiceItemDescriptionIta(
-            "org.estatio.dom.invoice.InvoiceItem", "description", "/ITA",
+            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/ITA",
             "InvoiceItem_description_ITA.docFragment.txt") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -55,7 +55,7 @@ public enum DocFragmentData {
         }
     },
     InvoiceItemDescriptionFra(
-            "org.estatio.dom.invoice.InvoiceItem", "description", "/FRA",
+            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/FRA",
             "InvoiceItem_description_FRA.docFragment.txt") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
@@ -82,14 +82,14 @@ public enum DocFragmentData {
         }
     },
     InvoiceItemDescription_DemoGbr(
-            "org.estatio.dom.invoice.InvoiceItem", "description", "/GBR",
+            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/GBR",
             "InvoiceItem_description_ITA.docFragment.txt") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
     InvoiceItemDescription_DemoNld(
-            "org.estatio.dom.invoice.InvoiceItem", "description", "/NLD",
+            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/NLD",
             "InvoiceItem_description_FRA.docFragment.txt") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
