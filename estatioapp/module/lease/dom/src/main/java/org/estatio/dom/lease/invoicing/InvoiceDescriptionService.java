@@ -1,0 +1,66 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.estatio.dom.lease.invoicing;
+
+import java.io.IOException;
+
+import javax.inject.Inject;
+
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.incode.module.docfragment.dom.api.DocFragmentService;
+
+import org.estatio.dom.UdoDomainService;
+
+import freemarker.template.TemplateException;
+
+@DomainService(nature = NatureOfService.DOMAIN)
+public class InvoiceDescriptionService extends UdoDomainService<InvoiceDescriptionService> {
+
+    public InvoiceDescriptionService() {
+        super(InvoiceDescriptionService.class);
+    }
+
+    @Programmatic
+    public void update(InvoiceItemForLease invoiceItem)  {
+        final String description = render(invoiceItem);
+        invoiceItem.setDescription(description);
+    }
+
+    @Programmatic
+    public void update(final InvoiceForLease invoice) {
+        final String description = render(invoice);
+        invoice.setDescription(description);
+    }
+
+    private String render(final Object invoiceItem) {
+        try {
+            return docFragmentService.render(invoiceItem, "description");
+        } catch (IOException | TemplateException e) {
+            throw new ApplicationException(e);
+        }
+    }
+
+    @Inject
+    private DocFragmentService docFragmentService;
+
+}

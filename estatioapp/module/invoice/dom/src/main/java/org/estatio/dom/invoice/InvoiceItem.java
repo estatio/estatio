@@ -52,7 +52,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithDescriptionGetter;
@@ -209,10 +208,21 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
-    @PropertyLayout(typicalLength = DescriptionType.Meta.TYPICAL_LEN, multiLine = DescriptionType.Meta.MULTI_LINE)
+    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
+    @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
 
+    public String disableDescription() {
+        if (getInvoice().isImmutable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
+
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
         setDescription(description);
@@ -225,10 +235,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     public String disableChangeDescription(
             final String description) {
-        if (getInvoice().isImmutable()) {
-            return "Invoice can't be changed";
-        }
-        return null;
+        return disableDescription();
     }
 
     // //////////////////////////////////////
@@ -391,7 +398,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         public static class Meta {
 
             public static final int MAX_LEN = org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
-            public static final int TYPICAL_LEN = NameType.Meta.MAX_LEN;
             public static final int MULTI_LINE = org.incode.module.base.dom.types.DescriptionType.Meta.MULTI_LINE;
 
             private Meta() {}

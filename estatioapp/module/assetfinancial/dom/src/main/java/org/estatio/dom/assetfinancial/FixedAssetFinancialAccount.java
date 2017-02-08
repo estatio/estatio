@@ -74,7 +74,7 @@ import lombok.Setter;
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
 @DomainObject(
-        objectType = "FixedAssetFinancialAccount"
+        objectType = "org.estatio.dom.asset.financial.FixedAssetFinancialAccount"  // backwards compatibility with audit logs.
 )
 public class FixedAssetFinancialAccount
         extends UdoDomainObject2<FixedAssetFinancialAccount>

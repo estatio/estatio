@@ -1,6 +1,4 @@
-
 /*
- *
  *  Copyright 2012-2014 Eurocommercial Properties NV
  *
  *
@@ -17,24 +15,24 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.link;
+package org.estatio.lease.fixture.seed;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.incode.module.document.dom.spi.ApplicationTenancyService;
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
+public class DocFragmentSeedService {
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
-
-@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
-public class ApplicationTenancyServiceForWithApplicationTenancy implements ApplicationTenancyService {
-
-    @Override
-    public String atPathFor(final Object domainObject) {
-        if(domainObject instanceof WithApplicationTenancy) {
-            final WithApplicationTenancy withApplicationTenancy = (WithApplicationTenancy) domainObject;
-            return withApplicationTenancy.getApplicationTenancy().getPath();
-        }
-        return null;
+    @PostConstruct
+    public void init() {
+        fixtureScripts.runFixtureScript(new DocFragmentSeedFixture(), null);
     }
+
+    @Inject
+    FixtureScripts fixtureScripts;
 }
+

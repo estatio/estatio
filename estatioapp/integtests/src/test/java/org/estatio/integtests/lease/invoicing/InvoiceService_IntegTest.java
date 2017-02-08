@@ -19,7 +19,6 @@
 package org.estatio.integtests.lease.invoicing;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,6 +62,7 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.fixturescripts.CreateInvoiceNumerators;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -125,6 +125,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
                     executionContext.executeChild(this, new LeaseForOxfPret004Gb());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new CreateInvoiceNumerators());
                 }
             });
 
@@ -185,12 +186,12 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
         public void step3_approveInvoice() throws Exception {
             final List<Invoice<?>> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
-            estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
+            //estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
 
             mixin(InvoiceForLease._approve.class, invoice).$$();
             mixin(InvoiceForLease._invoice.class, invoice).$$(VT.ld(2013, 11, 7));
 
-            assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
+            assertThat(invoice.getInvoiceNumber(), is("OXF-0001"));
             assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
         }
 

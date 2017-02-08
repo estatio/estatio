@@ -36,10 +36,6 @@ language governing permissions and limitations under the License.
         <resources>
             <resource>
                 <filtering>false</filtering>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <filtering>false</filtering>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**</include>
@@ -49,6 +45,19 @@ language governing permissions and limitations under the License.
                 </excludes>
             </resource>
         </resources>
+
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>
@@ -98,8 +107,22 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.incode.module.docfragment</groupId>
+            <artifactId>incode-module-docfragment-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.fixturesupport</groupId>
+            <artifactId>incode-module-fixturesupport-dom</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.incode.module.communications</groupId>
             <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.docfragment</groupId>
+            <artifactId>incode-module-docfragment-dom</artifactId>
         </dependency>
 
         <dependency>

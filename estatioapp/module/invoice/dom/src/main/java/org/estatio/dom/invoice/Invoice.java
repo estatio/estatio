@@ -81,7 +81,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.invoice.Invoice"
+        value = "org.estatio.dom.invoice.InvoiceAbstract" // dummy value required because the InvoiceForLease subclass uses this class' FQCN (for backward compatibility; see EST-1084)
 )
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
@@ -119,8 +119,7 @@ import lombok.Setter;
                 members = { "sendTo" })
 })
 @DomainObject(
-        editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.invoice.Invoice"
+        editing = Editing.DISABLED
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Invoice<T extends Invoice<T>>
@@ -210,6 +209,37 @@ public abstract class Invoice<T extends Invoice<T>>
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate dueDate;
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
+    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    @Getter @Setter
+    private String description;
+
+    public String disableDescription() {
+        if (isImmutable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Invoice changeDescription(
+            final @ParameterLayout(multiLine = 3) String description) {
+        setDescription(description);
+        return this;
+    }
+
+    public String default0ChangeDescription() {
+        return getDescription();
+    }
+
+    public String disableChangeDescription(
+            final String description) {
+        return disableDescription();
+    }
+
 
     @Mixin
     public static class _changeDueDate {
@@ -435,4 +465,21 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
     }
+
+
+    public static class DescriptionType {
+
+        private DescriptionType() {}
+
+        public static class Meta {
+
+            public static final int MAX_LEN = org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
+            public static final int MULTI_LINE = org.incode.module.base.dom.types.DescriptionType.Meta.MULTI_LINE;
+
+            private Meta() {}
+
+        }
+
+    }
+
 }

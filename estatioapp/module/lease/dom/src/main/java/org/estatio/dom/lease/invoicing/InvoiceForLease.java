@@ -21,6 +21,7 @@ package org.estatio.dom.lease.invoicing;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Index;
@@ -63,6 +64,7 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
@@ -74,7 +76,10 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("InvoiceForLease")
+@javax.jdo.annotations.Discriminator(
+        "org.estatio.dom.invoice.Invoice" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
+        // (would rather use "lease.InvoiceForLease", but @Discriminator currently takes precedence over @DomainObject#objectType); see EST-1084
+)
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findMatchingInvoices", language = "JDOQL",
@@ -164,8 +169,8 @@ import lombok.Setter;
                 members = { "fixedAsset", "dueDate", "status" }),
 })
 @DomainObject(
-        editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.invoice.Invoice" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
+        editing = Editing.DISABLED
+        // objectType inferred from @Discriminator
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class InvoiceForLease
@@ -203,6 +208,22 @@ public class InvoiceForLease
     private String runId;
 
 
+    @Programmatic
+    public Occupancy getCurrentOccupancy() {
+        final InvoiceForLease invoice =
+                this;
+        final Lease leaseIfAny = invoice.getLease();
+        if (leaseIfAny == null) {
+            return null;
+        }
+        final SortedSet<Occupancy> occupancies = leaseIfAny.getOccupancies();
+        if (occupancies.isEmpty()) {
+            return null;
+        }
+        return occupancies.first();
+    }
+
+
     @Mixin
     public static class _newItem {
 
@@ -220,14 +241,18 @@ public class InvoiceForLease
                 final BigDecimal netAmount,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
                 final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
-            InvoiceItem invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
+
+            InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
+
             invoiceItem.setQuantity(quantity);
             invoiceItem.setCharge(charge);
-            invoiceItem.setDescription(charge.getDescription());
             invoiceItem.setTax(charge.getTax());
             invoiceItem.setNetAmount(netAmount);
             invoiceItem.setStartDate(startDate);
             invoiceItem.setEndDate(endDate);
+
+            invoiceDescriptionService.update(invoiceItem);
+
             invoiceItem.verify();
             // TODO: we need to create a new subclass InvoiceForLease but that
             // requires a database change so this is quick fix
@@ -272,6 +297,9 @@ public class InvoiceForLease
                 final LocalDate endDate){
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
+
+        @javax.inject.Inject
+        InvoiceDescriptionService invoiceDescriptionService;
 
         @javax.inject.Inject
         InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
@@ -398,7 +426,7 @@ public class InvoiceForLease
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$(final LocalDate invoiceDate) {
 
-            if (disable$$(invoiceDate) != null) {
+            if (disable$$() != null) {
                 return invoiceForLease; // Safeguard to do nothing when called without a wrapper.
             }
 
@@ -409,12 +437,14 @@ public class InvoiceForLease
             invoiceForLease.setInvoiceDate(invoiceDate);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
 
+            invoiceDescriptionService.update(invoiceForLease);
+
             messageService.informUser("Assigned " + invoiceForLease.getInvoiceNumber() + " to invoice " + titleService.titleOf(
                     invoiceForLease));
             return invoiceForLease;
         }
 
-        public String disable$$(final LocalDate invoiceDate) {
+        public String disable$$() {
             if (invoiceForLease.getInvoiceNumber() != null) {
                 return "Invoice number already assigned";
             }
@@ -465,6 +495,9 @@ public class InvoiceForLease
 
         @javax.inject.Inject
         TitleService titleService;
+
+        @javax.inject.Inject
+        InvoiceDescriptionService invoiceDescriptionService;
     }
 
     @Mixin

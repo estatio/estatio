@@ -21,8 +21,6 @@ package org.estatio.fixturescripts;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -32,8 +30,8 @@ import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
+import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
 import org.estatio.numerator.dom.impl.Numerator;
 
 import static org.incode.module.base.integtests.VT.bi;
@@ -56,15 +54,15 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     }
     // //////////////////////////////////////
 
-    @Inject
+    @javax.inject.Inject
     NumeratorForCollectionRepository estatioNumeratorRepository;
 
-    @Inject
+    @javax.inject.Inject
     PropertyRepository propertyRepository;
 
-    @Inject
+    @javax.inject.Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
-    @Inject
+    @javax.inject.Inject
     EstatioApplicationTenancyRepositoryForLease estatioApplicationTenancyRepository;
 }

@@ -29,6 +29,11 @@
                                 <ns2:property id="number"/>
                                 <ns2:property id="runId"/>
                             </ns2:fieldSet>
+                            <ns2:fieldSet name="Description" id="description">
+                                <ns2:property id="description">
+                                    <ns2:action id="changeDescription" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
                             <ns2:fieldSet name="Communications" id="comms">
                                 <ns2:property id="sendTo" hidden="ALL_TABLES">
                                     <ns2:action id="overrideSendTo">
