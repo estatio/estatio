@@ -54,6 +54,17 @@ public enum DocFragmentData {
             return new DocFragmentScript() {};
         }
     },
+
+    InvoiceDescriptionFra(
+            "org.estatio.dom.invoice.Invoice", "description", "/FRA",
+            "Invoice_description_FRA.docFragment.txt") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
+
     InvoiceItemDescriptionFra(
             "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/FRA",
             "InvoiceItem_description_FRA.docFragment.txt") {

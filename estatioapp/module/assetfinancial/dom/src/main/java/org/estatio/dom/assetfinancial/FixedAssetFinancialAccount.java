@@ -58,18 +58,18 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByFixedAsset", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM FixedAssetFinancialAccount "
+                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM FixedAssetFinancialAccount "
+                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset "
                         + "&& financialAccount == :financialAccount"),
         @javax.jdo.annotations.Query(
                 name = "findByFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM FixedAssetFinancialAccount "
+                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
                         + "WHERE financialAccount == :financialAccount")
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })
