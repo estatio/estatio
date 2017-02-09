@@ -87,6 +87,7 @@ language governing permissions and limitations under the License.
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
         <incode-module-base.version>1.13.5</incode-module-base.version>
+        <incode-module-classification.version>1.13.1</incode-module-classification.version>
         <incode-module-country.version>1.13.1</incode-module-country.version>
         <incode-module-docfragment.version>1.13.3</incode-module-docfragment.version>
         <incode-module-document.version>1.13.12</incode-module-document.version>
@@ -216,7 +217,12 @@ language governing permissions and limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- TODO: update version when move out to separate module -->
+            <dependency>
+                <groupId>org.incode.module.classification</groupId>
+                <artifactId>incode-module-classification-dom</artifactId>
+                <version>${incode-module-classification.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.incode.module.communications</groupId>
                 <artifactId>incode-module-communications-dom</artifactId>
@@ -620,6 +626,19 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-registration</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-registration</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-settings</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -779,6 +798,7 @@ language governing permissions and limitations under the License.
         <module>estatioapp/module/party/dom</module>
         <module>estatioapp/module/project/dom</module>
         <module>estatioapp/module/numerator/dom</module>
+        <module>estatioapp/module/registration/dom</module>
         <module>estatioapp/module/settings/dom</module>
         <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>

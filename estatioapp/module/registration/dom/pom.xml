@@ -24,12 +24,12 @@ language governing permissions and limitations under the License.
         <relativePath>../../../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>estatio-dom-asset</artifactId>
+    <artifactId>estatio-dom-registration</artifactId>
     <packaging>jar</packaging>
-    
-    <name>Estatio (Open Source) Module - Asset</name>
+
+    <name>Estatio (Open Source) Module - Agreement</name>
     <description>
-        Estatio Asset Module
+        Estatio Registration Module
     </description>
 
     <build>
@@ -60,15 +60,11 @@ language governing permissions and limitations under the License.
                     <mixins>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
-                            <artifactId>standard</artifactId>
-                        </mixin>
-                        <mixin>
-                            <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>datanucleusenhance</artifactId>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
-                            <artifactId>staticanalysis</artifactId>
+                            <artifactId>standard</artifactId>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
@@ -82,6 +78,7 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-base</artifactId>
@@ -89,12 +86,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
+            <artifactId>estatio-dom-asset</artifactId>
         </dependency>
 
         <dependency>
@@ -102,27 +94,13 @@ language governing permissions and limitations under the License.
             <artifactId>incode-module-classification-dom</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.document</groupId>
-            <artifactId>incode-module-document-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.wicket.gmap3</groupId>
-            <artifactId>isis-wicket-gmap3-cpt</artifactId>
-        </dependency>
-
         <!-- testing -->
+        <dependency>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.danhaywood.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
@@ -131,17 +109,18 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <!-- requires FixedAssetForTesting -->
         <dependency>
-            <groupId>org.incode.module.unittestsupport</groupId>
-            <artifactId>incode-module-unittestsupport-dom</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-asset</artifactId>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
