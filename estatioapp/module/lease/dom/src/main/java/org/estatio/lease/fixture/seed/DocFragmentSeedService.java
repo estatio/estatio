@@ -24,6 +24,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
+/**
+ * Apologies: have chosen to load in the DocFragment entities this way rather than using flywaydb mostly because
+ * of the difficult of writing an INSERT SQL statement for large text fields.  Also, there would be code duplication that way.
+ */
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
 public class DocFragmentSeedService {
 

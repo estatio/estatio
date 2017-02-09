@@ -20,13 +20,15 @@ package org.estatio.fixture;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.incode.module.country.fixture.CountriesRefData;
+import org.incode.module.country.fixture.StatesRefData;
+
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
-import org.incode.module.country.fixture.CountriesRefData;
-import org.incode.module.country.fixture.StatesRefData;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.tax.TaxVatStdForAllCountries;
+import org.estatio.lease.fixture.seed.DocFragmentDemoFixture;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
@@ -44,5 +46,7 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
         executionContext.executeChild(this, "charges", new ChargeRefData());
         executionContext.executeChild(this, "indexs", new IndexRefData());
+        executionContext.executeChild(this, "docFrags", new DocFragmentDemoFixture());
+
     }
 }

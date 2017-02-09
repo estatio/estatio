@@ -54,6 +54,7 @@ import org.estatio.fixture.project.ProgramForGra;
 import org.estatio.fixture.project.ProgramForKal;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
+import org.estatio.lease.fixture.seed.DocFragmentDemoFixture;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
