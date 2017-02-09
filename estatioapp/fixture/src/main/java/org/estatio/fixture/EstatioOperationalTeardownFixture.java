@@ -43,6 +43,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.registration.LandRegister;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
@@ -101,6 +102,13 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
     @Override
     protected void execute(final ExecutionContext executionContext) {
         deleteAllDirect();
+    }
+
+    @Override
+    protected void preDeleteFrom(final Class cls) {
+        if(cls == FixedAssetRegistration.class) {
+            deleteFrom(LandRegister.class);
+        }
     }
 
     protected void deleteAllDirect() {

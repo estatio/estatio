@@ -19,6 +19,7 @@ import org.incode.module.base.services.calendar.CalendarService;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
+import org.estatio.dom.asset.registration.EstatioRegistrationDomModule;
 import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
 import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;
@@ -117,6 +118,7 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioNumeratorModule.class,
                         EstatioPartyDomModule.class,
                         EstatioSettingsDomModule.class,
+                        EstatioRegistrationDomModule.class,
                         EstatioTaxDomModule.class,
                         EstatioBaseDtoModule.class,
 
@@ -125,6 +127,7 @@ public class EstatioAppManifest implements AppManifest {
                         org.incode.module.communications.dom.CommunicationsModule.class,
                         org.incode.module.docfragment.dom.DocFragmentModuleDomModule.class,
                         org.incode.module.document.dom.DocumentModule.class,
+                        org.incode.module.classification.dom.ClassificationModule.class,
 
                         // TODO: one day these module may not be required (if we're able to move all the fixtures into the respective modules).
                         EstatioFixtureModule.class,
