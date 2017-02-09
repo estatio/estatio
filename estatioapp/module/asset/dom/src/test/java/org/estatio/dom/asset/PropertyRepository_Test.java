@@ -74,12 +74,11 @@ public class PropertyRepository_Test {
             // then
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
             assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrNameAndAtPath");
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReferenceOrName");
 
             final Map<String, Object> argsByParam = finderInteraction.getArgumentsByParameterName();
             assertThat(argsByParam.get("referenceOrName")).isEqualTo((Object) "(?i).*X.yz.*");
-            assertThat(argsByParam.get("atPath")).isEqualTo((Object) "/ITA/.*");
-            assertThat(argsByParam).hasSize(2);
+            assertThat(argsByParam).hasSize(1);
         }
 
     }

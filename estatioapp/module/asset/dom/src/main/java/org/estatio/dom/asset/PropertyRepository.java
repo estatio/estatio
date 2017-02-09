@@ -37,7 +37,6 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.utils.AtPathUtils;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -104,13 +103,9 @@ public class PropertyRepository extends UdoDomainRepositoryAndFactory<Property> 
      */
     public List<Property> autoComplete(final String searchPhrase) {
 
-        final String atPath = meService.me().getAtPath();
-
         final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
-        final String atPathRegex = AtPathUtils.toAtPathRegex(atPath, 2);
-        return allMatches("findByReferenceOrNameAndAtPath",
-                "referenceOrName", refRegex,
-                "atPath", atPathRegex
+        return allMatches("findByReferenceOrName",
+                "referenceOrName", refRegex
                 );
     }
 
