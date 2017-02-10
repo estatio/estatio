@@ -35,9 +35,9 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.agreement.dom.Agreement;
+import org.estatio.agreement.dom.AgreementRole;
+import org.estatio.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;

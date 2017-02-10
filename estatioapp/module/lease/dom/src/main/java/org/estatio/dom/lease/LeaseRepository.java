@@ -38,11 +38,11 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleType;
+import org.estatio.agreement.dom.AgreementRoleTypeRepository;
+import org.estatio.agreement.dom.AgreementType;
+import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;

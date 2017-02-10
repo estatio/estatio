@@ -34,8 +34,8 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.PartySubscriptions;
+import org.estatio.agreement.dom.AgreementRoleRepository;
+import org.estatio.agreement.dom.PartySubscriptions;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;

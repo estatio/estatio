@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableMap;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.unittestsupport.dom.with.ComparableByReferenceContractTestAbstract_compareTo;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.agreement.dom.Agreement;
+import org.estatio.agreement.dom.AgreementForTesting;
 
 
 /**

@@ -39,8 +39,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleTypeRepository;
+import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;

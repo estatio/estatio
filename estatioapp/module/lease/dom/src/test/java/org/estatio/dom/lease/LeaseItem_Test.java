@@ -45,7 +45,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.estatio.dom.agreement.AgreementType;
+import org.estatio.agreement.dom.AgreementType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 

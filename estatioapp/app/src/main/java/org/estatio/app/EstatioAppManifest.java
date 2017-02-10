@@ -17,7 +17,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.base.services.calendar.CalendarService;
 
 import org.estatio.dom.EstatioDomainModule;
-import org.estatio.dom.agreement.EstatioAgreementDomModule;
+import org.estatio.agreement.dom.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
 import org.estatio.dom.asset.registration.EstatioRegistrationDomModule;
 import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
