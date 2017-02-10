@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankmandate.contributed;
+package org.estatio.bankmandate.dom.contributed;
 
 import java.util.Collection;
 
@@ -37,14 +37,14 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.bankmandate.dom.BankMandate;
+import org.estatio.bankmandate.dom.BankMandateConstants;
 import org.estatio.dom.UdoDomainService;
 import org.incode.module.base.dom.with.WithInterval;
 import org.estatio.agreement.dom.AgreementRole;
 import org.estatio.agreement.dom.AgreementRoleHolder;
 import org.estatio.agreement.dom.AgreementType;
 import org.estatio.agreement.dom.AgreementTypeRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
 
 /**
  * These contributions act upon {@link AgreementRoleHolder}, and from its

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankmandate;
+package org.estatio.bankmandate.dom;
 
 import java.util.List;
 
@@ -55,12 +55,12 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@javax.jdo.annotations.Discriminator("org.estatio.dom.bankmandate.BankMandate")
+@javax.jdo.annotations.Discriminator("BankMandate")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findBankMandatesFor", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.bankmandate.BankMandate "
+                        + "FROM BankMandate "
                         + "WHERE bankAccount == :bankAccount")
 })
 @DomainObject(editing = Editing.DISABLED)

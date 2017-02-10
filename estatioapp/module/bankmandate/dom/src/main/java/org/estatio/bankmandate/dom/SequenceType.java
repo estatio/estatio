@@ -1,4 +1,4 @@
-package org.estatio.dom.bankmandate;
+package org.estatio.bankmandate.dom;
 
 public enum SequenceType {
 

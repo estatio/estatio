@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankmandate;
+package org.estatio.bankmandate.dom;
 
 // TODO: eventually this should move to org.estatio.bankmandate, and be renamed to EstatioBankMandateModule (no "Dom" part)
 public final class EstatioBankMandateDomModule {

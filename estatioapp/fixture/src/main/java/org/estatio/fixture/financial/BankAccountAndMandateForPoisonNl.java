@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.dom.bankmandate.Scheme;
-import org.estatio.dom.bankmandate.SequenceType;
+import org.estatio.bankmandate.dom.Scheme;
+import org.estatio.bankmandate.dom.SequenceType;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {

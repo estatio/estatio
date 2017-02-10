@@ -1,4 +1,4 @@
-package org.estatio.dom.bankmandate.canonical.v1;
+package org.estatio.bankmandate.dom.canonical.v1;
 
 import javax.inject.Inject;
 
@@ -6,12 +6,13 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.bankmandate.dom.BankMandate;
+import org.estatio.bankmandate.dom.Scheme;
+import org.estatio.bankmandate.dom.SequenceType;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
 import org.estatio.canonical.bankmandate.v1.Status;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.SequenceType;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -48,7 +49,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract {
         }
     }
 
-    private org.estatio.canonical.bankmandate.v1.Scheme toDto(final org.estatio.dom.bankmandate.Scheme scheme) {
+    private org.estatio.canonical.bankmandate.v1.Scheme toDto(final Scheme scheme) {
         switch (scheme) {
         case CORE:
             return org.estatio.canonical.bankmandate.v1.Scheme.CORE;

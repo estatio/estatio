@@ -42,7 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.bankmandate.dom.BankMandate;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;

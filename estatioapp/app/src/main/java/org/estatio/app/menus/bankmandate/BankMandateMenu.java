@@ -32,9 +32,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.agreement.dom.Agreement;
 import org.estatio.agreement.dom.AgreementRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.bankmandate.dom.BankMandate;
+import org.estatio.bankmandate.dom.BankMandateConstants;
+import org.estatio.bankmandate.dom.BankMandateRepository;
 import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(
