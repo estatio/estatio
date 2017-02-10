@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.budget.dom.budget.Budget;
 
 @Mixin

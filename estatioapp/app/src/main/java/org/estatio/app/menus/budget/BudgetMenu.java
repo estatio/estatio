@@ -16,10 +16,10 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideValueRepository;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budget.BudgetRepository;
 

@@ -25,12 +25,12 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideType;
+import org.estatio.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFixed;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFlatRate;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForMax;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;

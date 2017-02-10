@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFixed;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideValueRepository;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.budget.dom.budgetcalculation.Status;
 import org.estatio.dom.charge.Charge;

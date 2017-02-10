@@ -34,11 +34,11 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFixed;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFlatRate;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForMax;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.dom.lease.Lease;

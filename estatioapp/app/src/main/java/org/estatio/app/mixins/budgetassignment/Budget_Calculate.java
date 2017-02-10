@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgetassignment.BudgetAssignmentService;
+import org.estatio.budgetassignment.dom.BudgetAssignmentService;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;

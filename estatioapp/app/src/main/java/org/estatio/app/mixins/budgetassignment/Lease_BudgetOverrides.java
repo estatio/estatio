@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.dom.lease.Lease;
 
 @Mixin

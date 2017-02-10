@@ -14,8 +14,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFixed;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;

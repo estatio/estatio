@@ -11,10 +11,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budget.BudgetRepository;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;

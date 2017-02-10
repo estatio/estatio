@@ -11,9 +11,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
+import org.estatio.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
 @Mixin

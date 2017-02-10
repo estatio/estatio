@@ -14,9 +14,9 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideType;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideForFlatRate;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
+import org.estatio.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
