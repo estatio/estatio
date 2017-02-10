@@ -24,8 +24,8 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.incode.module.integtestsupport.dom.ClockFixture;
 
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.currency.dom.Currency;
+import org.estatio.currency.dom.CurrencyRepository;
 import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
 
 /**

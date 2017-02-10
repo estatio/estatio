@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)

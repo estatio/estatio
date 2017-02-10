@@ -33,8 +33,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.currency.dom.Currency;
+import org.estatio.currency.dom.CurrencyRepository;
 import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;

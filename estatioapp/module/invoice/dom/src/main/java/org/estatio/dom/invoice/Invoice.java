@@ -65,7 +65,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.bankmandate.dom.BankMandate;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

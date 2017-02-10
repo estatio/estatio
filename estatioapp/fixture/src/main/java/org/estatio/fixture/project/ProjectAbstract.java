@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.BusinessCase;

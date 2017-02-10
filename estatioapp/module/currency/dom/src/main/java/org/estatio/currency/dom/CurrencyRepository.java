@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.currency;
+package org.estatio.currency.dom;
 
 import java.util.List;
 

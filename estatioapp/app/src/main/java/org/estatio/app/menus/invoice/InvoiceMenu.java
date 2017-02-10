@@ -42,7 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;

@@ -58,7 +58,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.dom.UdoDomainObject;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 
 import lombok.Getter;
 import lombok.Setter;

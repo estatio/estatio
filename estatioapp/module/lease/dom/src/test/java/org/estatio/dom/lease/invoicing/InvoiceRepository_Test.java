@@ -36,7 +36,7 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;

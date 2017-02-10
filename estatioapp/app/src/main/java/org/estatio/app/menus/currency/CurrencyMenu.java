@@ -34,8 +34,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.currency.dom.Currency;
+import org.estatio.currency.dom.CurrencyRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, repositoryFor = Currency.class)
 @DomainServiceLayout(

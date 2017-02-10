@@ -30,7 +30,7 @@ import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.FixedAssetForTesting;
 import org.estatio.bankmandate.dom.BankMandate;
 import org.estatio.dom.communicationchannel.CommunicationChannelForTesting;
-import org.estatio.dom.currency.Currency;
+import org.estatio.currency.dom.Currency;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;

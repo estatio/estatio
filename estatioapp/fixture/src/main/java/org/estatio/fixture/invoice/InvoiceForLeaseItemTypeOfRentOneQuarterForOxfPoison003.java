@@ -28,7 +28,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.fixture.currency.CurrenciesRefData;
+import org.estatio.currency.fixture.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
