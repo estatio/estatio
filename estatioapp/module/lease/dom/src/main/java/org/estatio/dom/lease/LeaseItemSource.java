@@ -38,6 +38,12 @@ import lombok.Setter;
                         + "FROM org.estatio.dom.lease.LeaseItemSource "
                         + "WHERE item == :item "),
         @javax.jdo.annotations.Query(
+                name = "findBySourceItem",
+                language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItemSource "
+                        + "WHERE sourceItem == :sourceItem "),
+        @javax.jdo.annotations.Query(
                 name = "findByItemAndSourceItem",
                 language = "JDOQL",
                 value = "SELECT "
@@ -62,7 +68,7 @@ public class LeaseItemSource extends UdoDomainObject2<LeaseItemSource> implement
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove(){
-        getContainer().remove(this);
+        remove(this);
     }
 
     @Override

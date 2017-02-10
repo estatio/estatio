@@ -57,15 +57,16 @@ import org.apache.isis.applib.services.title.TitleService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -421,6 +422,18 @@ public class AgreementRole
         arcc.setRole(this);
         persistIfNotAlready(arcc);
         return arcc;
+    }
+
+    public Agreement remove() {
+        for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : getCommunicationChannels()) {
+            agreementRoleCommunicationChannel.remove();
+        }
+        remove(this);
+        return getAgreement();
+    }
+
+    public boolean hideRemove() {
+        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
     }
 
     // //////////////////////////////////////

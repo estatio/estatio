@@ -185,11 +185,9 @@ public class AgreementRoleCommunicationChannel
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void remove() {
-        AgreementRole agreementRole = this.getRole();
-        getContainer().remove(this);
-
-        return;
+    public AgreementRole remove() {
+        remove(this);
+        return getRole();
     }
 
     // //////////////////////////////////////

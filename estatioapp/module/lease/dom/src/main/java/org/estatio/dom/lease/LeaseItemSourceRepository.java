@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -30,8 +31,14 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
         return sourceFound == null ? newSource(item, sourceItem) : sourceFound;
     }
 
+    @Programmatic
     public List<LeaseItemSource> findByItem(final LeaseItem item) {
         return allMatches("findByItem", "item", item);
+    }
+
+    @Programmatic
+    public List<LeaseItemSource> findBySourceItem(final LeaseItem sourceItem) {
+        return allMatches("findBySourceItem", "sourceItem", sourceItem);
     }
 
     public LeaseItemSource findUnique(final LeaseItem item, final LeaseItem sourceItem) {
@@ -40,6 +47,5 @@ public class LeaseItemSourceRepository extends UdoDomainRepositoryAndFactory<Lea
 
     @Inject
     FactoryService factoryService;
-
 
 }

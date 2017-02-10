@@ -57,12 +57,12 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
+import org.incode.module.base.dom.with.WithSequence;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithSequence;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
@@ -231,8 +231,6 @@ public class LeaseItem
         this.setStatus(LeaseItemStatus.UNKOWN);
     }
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object remove() {
         Lease tmpLease = getLease();
@@ -249,7 +247,15 @@ public class LeaseItem
             canDelete = getTerms().first().doRemove();
         }
         if (canDelete) {
-            getContainer().remove(this);
+            final Sets.SetView<LeaseItemSource> itemSources = Sets.union(
+                    Sets.newHashSet(leaseItemSourceRepository.findByItem(this)),
+                    Sets.newHashSet(leaseItemSourceRepository.findBySourceItem(this)));
+
+            for (LeaseItemSource leaseItemSource : itemSources){
+                leaseItemSource.remove();
+            }
+            remove(this);
+//            getContainer().remove(this);
             getContainer().flush();
         }
         return canDelete;

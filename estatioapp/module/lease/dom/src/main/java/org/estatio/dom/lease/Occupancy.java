@@ -39,6 +39,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -128,6 +129,8 @@ public class Occupancy
     public Occupancy() {
         super("lease, startDate desc nullsLast, unit");
     }
+
+    public static class RemoveEvent extends ActionDomainEvent<Occupancy> {}
 
     public String title() {
         return TitleBuilder.start()
@@ -229,10 +232,10 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, domainEvent = Occupancy.RemoveEvent.class)
     public Object remove() {
         Lease lease = getLease();
-        getContainer().remove(this);
+        remove(this);
         return lease;
     }
 
@@ -453,6 +456,7 @@ public class Occupancy
             setEndDate(lease.getTenancyEndDate());
         }
     }
+
 
     @Inject
     private BrandRepository brandRepository;

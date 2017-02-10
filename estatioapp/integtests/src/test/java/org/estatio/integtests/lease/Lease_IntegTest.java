@@ -22,6 +22,8 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,6 +32,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
@@ -37,6 +40,9 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.integtests.VT;
+
+import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -44,11 +50,11 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
@@ -58,12 +64,12 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.party.OrganisationForMediaXGb;
+import org.estatio.fixture.security.users.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.incode.module.base.integtests.VT.ld;
 import static org.hamcrest.Matchers.containsString;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class Lease_IntegTest extends EstatioIntegrationTest {
 
@@ -78,6 +84,42 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     TransactionService transactionService;
+
+    public static class Remove extends Lease_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                }
+            });
+        }
+
+        @Test
+        public void happy_case() throws Exception {
+            //Given
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            assertThat(lease.getOccupancies().size()).isGreaterThan(0);
+
+            //When
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
+                    new Runnable() {
+                        @Override public void run() {
+                            wrap(lease).remove("Some reason");
+                        }
+                    });
+
+            //Then
+            assertThat(leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF)).isNull();
+        }
+
+        @Inject
+        SudoService sudoService;
+
+    }
 
     public static class Assign extends Lease_IntegTest {
 

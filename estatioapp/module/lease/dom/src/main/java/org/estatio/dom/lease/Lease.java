@@ -167,13 +167,11 @@ public class Lease
         super(LeaseConstants.ART_LANDLORD, LeaseConstants.ART_TENANT);
     }
 
-    // //////////////////////////////////////
+    public static class RemoveEvent extends ActionDomainEvent<Lease> {}
 
     public void created() {
         setStatus(LeaseStatus.ACTIVE);
     }
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
@@ -1047,20 +1045,29 @@ public class Lease
         return null;
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void remove() {
-        boolean success = true;
-
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, domainEvent = Lease.RemoveEvent.class)
+    public void remove(final String reason) {
+        for (BreakOption breakOption : getBreakOptions()){
+            breakOption.remove(reason);
+        }
+        for (Occupancy occupancy : getOccupancies()){
+            occupancy.remove();
+        }
         for (LeaseItem item : getItems()) {
-            success = !item.doRemove() ? false : success;
+            item.remove();
         }
-        if (success) {
-            getContainer().remove(this);
-        }
+        remove(this);
     }
 
     public boolean hideRemove() {
-        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+    }
+
+    public String disableRemove() {
+        if (getNext() != null){
+            return "Cannot remove lease that has successor";
+        }
+        return null;
     }
 
     @Programmatic

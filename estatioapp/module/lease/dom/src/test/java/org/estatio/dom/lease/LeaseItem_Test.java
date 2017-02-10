@@ -32,7 +32,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -97,73 +96,6 @@ public class LeaseItem_Test {
         public void test() {
             assertThat(leaseItem.getValue()).isEqualTo(BigDecimal.TEN);
             assertThat(getCurrentValueDateArgument).isEqualTo(now);
-        }
-
-    }
-
-    public static class Remove extends LeaseItem_Test {
-
-        private Lease lease;
-        private LeaseTermForTesting leaseTerm;
-
-        @Mock
-        private DomainObjectContainer mockContainer;
-
-        private boolean leaseTermSuccessfullyRemoved;
-
-        @Before
-        public void setUp() throws Exception {
-            lease = new Lease();
-            leaseItem = new LeaseItem();
-
-            leaseItem.setLease(lease);
-            leaseItem.setContainer(mockContainer);
-
-            leaseTerm = new LeaseTermForTesting() {
-                @Override
-                public boolean doRemove() {
-                    return leaseTermSuccessfullyRemoved;
-                }
-            };
-
-        }
-
-        @Test
-        public void whenConfirmedAndNoChildTerms() throws Exception {
-            expectingRemoveAndFlush(leaseItem);
-
-            Object returned = leaseItem.remove();
-            assertThat(returned).isEqualTo((Object) lease);
-        }
-
-        @Test
-        public void whenConfirmedAndChildTermsThatVeto() throws Exception {
-
-            leaseItem.getTerms().add(leaseTerm);
-            leaseTermSuccessfullyRemoved = false;
-
-            Object returned = leaseItem.remove();
-            assertThat(returned).isEqualTo((Object) leaseItem);
-        }
-
-        @Test
-        public void whenConfirmedAndChildTermsThatDontVeto() throws Exception {
-            leaseItem.getTerms().add(leaseTerm);
-
-            leaseTermSuccessfullyRemoved = true;
-            expectingRemoveAndFlush(leaseItem);
-
-            Object returned = leaseItem.remove();
-            assertThat(returned).isEqualTo((Object) lease);
-        }
-
-        private void expectingRemoveAndFlush(final LeaseItem obj) {
-            context.checking(new Expectations() {
-                {
-                    oneOf(mockContainer).remove(obj);
-                    oneOf(mockContainer).flush();
-                }
-            });
         }
 
     }
