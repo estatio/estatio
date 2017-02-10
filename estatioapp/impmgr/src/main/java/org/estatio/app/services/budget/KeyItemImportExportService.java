@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.budget.dom.keyitem.KeyItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class KeyItemImportExportService {

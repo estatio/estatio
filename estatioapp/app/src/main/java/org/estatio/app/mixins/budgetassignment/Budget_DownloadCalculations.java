@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgetassignment.viewmodels.CalculationResultViewModel;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.budget.dom.budget.Budget;
 
 @Mixin
 public class Budget_DownloadCalculations {

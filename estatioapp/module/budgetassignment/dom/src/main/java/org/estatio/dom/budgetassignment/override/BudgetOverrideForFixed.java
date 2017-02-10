@@ -9,7 +9,7 @@ import org.joda.time.LocalDate;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -20,9 +20,9 @@ package org.estatio.fixture.budget;
 import org.joda.time.LocalDate;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.keytable.FoundationValueType;
-import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.keytable.FoundationValueType;
+import org.estatio.budget.dom.keytable.KeyValueMethod;
 import org.estatio.fixture.asset.PropertyForBudNl;
 
 public class KeyTablesForBud extends KeyTableAbstact {

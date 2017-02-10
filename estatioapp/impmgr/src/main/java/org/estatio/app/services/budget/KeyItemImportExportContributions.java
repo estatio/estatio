@@ -29,7 +29,7 @@ import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.budget.dom.keytable.KeyTable;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

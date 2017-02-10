@@ -31,7 +31,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideDummy;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -39,8 +39,8 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.budget.dom.budgetitem.BudgetItem;
+import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 

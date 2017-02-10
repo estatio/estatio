@@ -22,12 +22,12 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.keytable.FoundationValueType;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
+import org.estatio.budget.dom.keytable.FoundationValueType;
+import org.estatio.budget.dom.keytable.KeyTable;
+import org.estatio.budget.dom.keytable.KeyTableRepository;
+import org.estatio.budget.dom.keytable.KeyValueMethod;
 
 public abstract class KeyTableAbstact extends FixtureScript {
 

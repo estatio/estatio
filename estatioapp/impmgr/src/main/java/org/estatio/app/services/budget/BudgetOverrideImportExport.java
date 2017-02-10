@@ -18,7 +18,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.dom.Importable;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.Lease;

@@ -13,12 +13,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemValueRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetitem.BudgetItem;
+import org.estatio.budget.dom.budgetitem.BudgetItemValue;
+import org.estatio.budget.dom.budgetitem.BudgetItemValueRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;

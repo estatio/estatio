@@ -12,11 +12,11 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.partioning.Partitioning;
-import org.estatio.dom.budgeting.partioning.PartitioningRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.partioning.Partitioning;
+import org.estatio.budget.dom.partioning.PartitioningRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;

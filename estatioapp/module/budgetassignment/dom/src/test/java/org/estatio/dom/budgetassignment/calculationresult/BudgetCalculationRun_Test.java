@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.budget.dom.budget.Budget;
 import org.estatio.dom.lease.Lease;
 
 public class BudgetCalculationRun_Test {

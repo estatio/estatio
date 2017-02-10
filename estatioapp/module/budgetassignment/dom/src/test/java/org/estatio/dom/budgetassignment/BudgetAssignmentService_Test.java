@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.budget.dom.budget.Budget;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;

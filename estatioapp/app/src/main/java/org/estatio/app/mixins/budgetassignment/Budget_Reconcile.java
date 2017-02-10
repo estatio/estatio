@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.budget.dom.budget.Budget;
 
 @Mixin
 public class Budget_Reconcile {

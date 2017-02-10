@@ -29,7 +29,7 @@ import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.budget.dom.budget.Budget;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

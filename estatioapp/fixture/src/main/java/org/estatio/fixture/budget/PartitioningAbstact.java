@@ -22,12 +22,12 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.budgeting.partioning.Partitioning;
-import org.estatio.dom.budgeting.partioning.PartitioningRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.keytable.KeyTableRepository;
+import org.estatio.budget.dom.partioning.Partitioning;
+import org.estatio.budget.dom.partioning.PartitioningRepository;
 import org.estatio.dom.charge.ChargeRepository;
 
 public abstract class PartitioningAbstact extends FixtureScript {

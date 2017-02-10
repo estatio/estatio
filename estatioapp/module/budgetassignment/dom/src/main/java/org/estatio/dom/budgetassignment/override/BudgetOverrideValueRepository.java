@@ -7,8 +7,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetcalculation.Status;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetcalculation.Status;
 
 @DomainService(repositoryFor = BudgetOverrideValue.class, nature = NatureOfService.DOMAIN)
 public class BudgetOverrideValueRepository extends UdoDomainRepositoryAndFactory<BudgetOverrideValue> {

@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgetassignment.BudgetAssignmentService;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 
 @Mixin
 public class Budget_Calculate {

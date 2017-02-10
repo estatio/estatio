@@ -44,10 +44,10 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.keyitem.KeyItem;
+import org.estatio.budget.dom.keytable.KeyTable;
+import org.estatio.budget.dom.keytable.KeyTableRepository;
 
 import lombok.Getter;
 import lombok.Setter;

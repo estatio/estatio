@@ -20,8 +20,8 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResul
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

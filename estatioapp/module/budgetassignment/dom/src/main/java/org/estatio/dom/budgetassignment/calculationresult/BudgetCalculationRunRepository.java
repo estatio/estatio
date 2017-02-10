@@ -6,9 +6,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetcalculation.Status;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetcalculation.Status;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(repositoryFor = BudgetCalculationRun.class, nature = NatureOfService.DOMAIN)

@@ -14,10 +14,10 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResul
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetcalculation.Status;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetcalculation.Status;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;

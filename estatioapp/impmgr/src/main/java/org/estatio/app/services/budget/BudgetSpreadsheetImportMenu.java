@@ -33,8 +33,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budget.BudgetRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY

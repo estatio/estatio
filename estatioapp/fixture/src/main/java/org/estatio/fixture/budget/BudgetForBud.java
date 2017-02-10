@@ -22,9 +22,9 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;

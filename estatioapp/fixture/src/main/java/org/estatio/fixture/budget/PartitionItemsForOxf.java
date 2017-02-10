@@ -23,10 +23,10 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.partioning.Partitioning;
+import org.estatio.budget.dom.budget.Budget;
+import org.estatio.budget.dom.budgetitem.BudgetItem;
+import org.estatio.budget.dom.keytable.KeyTable;
+import org.estatio.budget.dom.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;

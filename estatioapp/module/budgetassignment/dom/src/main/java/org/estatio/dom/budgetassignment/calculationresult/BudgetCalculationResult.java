@@ -33,8 +33,8 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Occupancy;
 
