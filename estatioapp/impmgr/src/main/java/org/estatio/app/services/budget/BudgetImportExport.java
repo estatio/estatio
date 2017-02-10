@@ -27,8 +27,8 @@ import org.estatio.budget.dom.keytable.KeyTableRepository;
 import org.estatio.budget.dom.keytable.KeyValueMethod;
 import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;

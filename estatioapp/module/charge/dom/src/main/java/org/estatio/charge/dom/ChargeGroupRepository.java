@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.charge;
+package org.estatio.charge.dom;
 
 import java.util.List;
 

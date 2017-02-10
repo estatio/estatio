@@ -59,8 +59,8 @@ import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;

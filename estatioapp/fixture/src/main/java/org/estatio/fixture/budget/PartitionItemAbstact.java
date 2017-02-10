@@ -35,8 +35,8 @@ import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.budget.dom.partioning.Partitioning;
 import org.estatio.budget.dom.partioning.PartitioningRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeRepository;
 
 public abstract class PartitionItemAbstact extends FixtureScript {
 

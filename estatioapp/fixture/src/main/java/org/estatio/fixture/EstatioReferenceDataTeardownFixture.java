@@ -23,8 +23,8 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeGroup;
 import org.estatio.dom.currency.Currency;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;

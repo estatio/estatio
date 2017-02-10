@@ -62,7 +62,7 @@ import org.estatio.bankmandate.dom.BankMandateConstants;
 import org.estatio.bankmandate.dom.BankMandateRepository;
 import org.estatio.bankmandate.dom.Scheme;
 import org.estatio.bankmandate.dom.SequenceType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;

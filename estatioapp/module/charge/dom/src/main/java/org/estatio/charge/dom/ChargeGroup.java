@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.charge.dom;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -66,13 +66,13 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.ChargeGroup "
+                        + "FROM ChargeGroup "
                         + "WHERE reference == :reference")
 })
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.charge.ChargeGroup"
+        objectType = "ChargeGroup"
 )
 public class ChargeGroup
         extends UdoDomainObject2<ChargeGroup>

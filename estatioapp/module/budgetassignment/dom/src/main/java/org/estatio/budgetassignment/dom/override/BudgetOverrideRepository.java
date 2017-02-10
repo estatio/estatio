@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(repositoryFor = BudgetOverride.class, nature = NatureOfService.DOMAIN)

@@ -39,9 +39,9 @@ import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeGroup;
+import org.estatio.charge.dom.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

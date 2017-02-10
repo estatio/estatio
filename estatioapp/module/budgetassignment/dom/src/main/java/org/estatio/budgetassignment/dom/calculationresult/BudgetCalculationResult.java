@@ -35,7 +35,7 @@ import org.estatio.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.lease.Occupancy;
 
 import lombok.Getter;

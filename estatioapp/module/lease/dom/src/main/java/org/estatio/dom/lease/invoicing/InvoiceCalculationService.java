@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -44,7 +43,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;

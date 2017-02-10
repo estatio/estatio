@@ -38,7 +38,7 @@ import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.budget.dom.keyitem.KeyItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

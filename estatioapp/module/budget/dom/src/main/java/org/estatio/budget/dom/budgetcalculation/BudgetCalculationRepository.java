@@ -13,7 +13,7 @@ import org.estatio.asset.dom.Unit;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.budget.dom.keyitem.KeyItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 @DomainService(repositoryFor = BudgetCalculation.class, nature = NatureOfService.DOMAIN)
 public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<BudgetCalculation> {

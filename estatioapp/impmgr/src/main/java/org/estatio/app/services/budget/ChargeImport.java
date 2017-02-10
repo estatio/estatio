@@ -21,10 +21,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroupRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeGroup;
+import org.estatio.charge.dom.ChargeGroupRepository;
+import org.estatio.charge.dom.ChargeRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 

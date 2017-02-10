@@ -18,7 +18,7 @@ import org.estatio.budgetassignment.dom.override.BudgetOverrideForMax;
 import org.estatio.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.lease.Lease;
 
 @Mixin

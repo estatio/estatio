@@ -32,7 +32,7 @@ import org.estatio.budgetassignment.dom.override.BudgetOverride;
 import org.estatio.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.budgetassignment.dom.override.BudgetOverrideDummy;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

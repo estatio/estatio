@@ -39,7 +39,7 @@ import org.estatio.budget.dom.budget.BudgetRepository;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.asset.dom.Property;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 @DomainService(repositoryFor = BudgetItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()

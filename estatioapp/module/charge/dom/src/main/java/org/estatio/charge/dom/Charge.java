@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.charge.dom;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -67,12 +67,12 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.Charge "
+                        + "FROM Charge "
                         + "WHERE reference == :reference")
 })
 @DomainObject(
         bounded = true,
-        objectType = "org.estatio.dom.charge.Charge"
+        objectType = "Charge"
 )
 public class Charge
         extends UdoDomainObject2<Charge>

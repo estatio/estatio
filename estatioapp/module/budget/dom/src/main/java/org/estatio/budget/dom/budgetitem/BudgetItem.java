@@ -59,7 +59,7 @@ import org.estatio.budget.dom.partioning.PartitioningRepository;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.budget.dom.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 import lombok.Getter;
 import lombok.Setter;

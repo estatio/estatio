@@ -16,26 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.charge.dom;
 
 import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.estatio.dom.tax.Tax;
 
-public class Charge_Test {
-
+public class ChargeGroup_Test {
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
         @Test
         public void test() {
             newPojoTester()
-                    .withFixture(pojos(ChargeGroup.class))
-                    .withFixture(pojos(Tax.class))
                     .withFixture(pojos(ApplicationTenancy.class))
-                    .exercise(new Charge());
+                    .exercise(new ChargeGroup());
         }
 
     }

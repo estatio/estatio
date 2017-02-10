@@ -1,7 +1,7 @@
 package org.estatio.budget.dom.api;
 
 import org.estatio.budget.dom.budgetitem.BudgetItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 public interface BudgetItemCreator {
 

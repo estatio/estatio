@@ -34,7 +34,7 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.budget.dom.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

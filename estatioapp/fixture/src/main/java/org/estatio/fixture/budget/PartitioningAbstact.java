@@ -28,7 +28,7 @@ import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.budget.dom.keytable.KeyTableRepository;
 import org.estatio.budget.dom.partioning.Partitioning;
 import org.estatio.budget.dom.partioning.PartitioningRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.ChargeRepository;
 
 public abstract class PartitioningAbstact extends FixtureScript {
 

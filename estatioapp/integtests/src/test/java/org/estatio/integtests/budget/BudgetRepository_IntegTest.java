@@ -17,7 +17,7 @@ import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.budget.dom.budget.Budget;
 import org.estatio.budget.dom.budget.BudgetRepository;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.PartitionItemsForOxf;

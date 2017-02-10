@@ -35,8 +35,8 @@ import org.estatio.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.budget.dom.budgetitem.BudgetItemValueRepository;
 import org.estatio.budget.dom.partioning.PartitioningRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.charge.dom.Charge;
+import org.estatio.charge.dom.ChargeRepository;
 
 public abstract class BudgetAbstact extends FixtureScript {
 

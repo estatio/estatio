@@ -6,7 +6,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 @DomainService(repositoryFor = BudgetCalculationResult.class, nature = NatureOfService.DOMAIN)
 public class BudgetCalculationResultRepository extends UdoDomainRepositoryAndFactory<BudgetCalculationResult> {

@@ -46,7 +46,7 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.agreement.dom.AgreementType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;

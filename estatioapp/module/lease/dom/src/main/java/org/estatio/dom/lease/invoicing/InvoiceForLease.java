@@ -56,7 +56,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;

@@ -35,7 +35,7 @@ import org.estatio.budget.dom.budget.BudgetRepository;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 

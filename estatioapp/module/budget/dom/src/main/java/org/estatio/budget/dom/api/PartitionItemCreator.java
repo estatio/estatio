@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.budget.dom.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.charge.dom.Charge;
 
 public interface PartitionItemCreator {
 
