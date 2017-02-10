@@ -6,9 +6,9 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.indexation.IndexationMethod;
-import org.estatio.dom.index.indexation.IndexationService;
+import org.estatio.index.dom.Indexable;
+import org.estatio.index.dom.indexation.IndexationMethod;
+import org.estatio.index.dom.indexation.IndexationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

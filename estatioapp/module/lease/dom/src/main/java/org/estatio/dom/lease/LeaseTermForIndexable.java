@@ -34,13 +34,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.indexation.IndexationCalculationMethod;
-import org.estatio.dom.index.indexation.IndexationMethod;
-import org.estatio.dom.index.indexation.IndexationService;
+import org.estatio.index.dom.Index;
+import org.estatio.index.dom.IndexRepository;
+import org.estatio.index.dom.IndexValue;
+import org.estatio.index.dom.Indexable;
+import org.estatio.index.dom.indexation.IndexationCalculationMethod;
+import org.estatio.index.dom.indexation.IndexationMethod;
+import org.estatio.index.dom.indexation.IndexationService;
 
 import lombok.Getter;
 import lombok.Setter;

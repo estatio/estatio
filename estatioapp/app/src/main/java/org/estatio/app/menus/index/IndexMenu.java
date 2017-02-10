@@ -38,8 +38,8 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexRepository;
+import org.estatio.index.dom.Index;
+import org.estatio.index.dom.IndexRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(named = "Indices", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "60.2")

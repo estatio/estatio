@@ -32,7 +32,7 @@
  * 
  * <p>
  * An important philosophy is that {@link org.estatio.dom.invoice.InvoiceItem}s become immutable once invoiced.  If 
- * there is a retrospective change in reference data (eg {@link org.estatio.dom.index.Index indices} which impact the
+ * there is a retrospective change in reference data (eg {@link org.estatio.index.dom.Index indices} which impact the
  * {@link org.estatio.dom.lease.LeaseTermForIndexable}, then the invoice calculations for that term can be re-run. 
  * This may produce a delta {@link org.estatio.dom.invoice.InvoiceItem} (debit or credit), which is billed in arrears.
  *  

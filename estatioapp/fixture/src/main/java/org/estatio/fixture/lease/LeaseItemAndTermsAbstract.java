@@ -33,7 +33,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.charge.dom.Charge;
 import org.estatio.charge.dom.ChargeRepository;
-import org.estatio.dom.index.IndexRepository;
+import org.estatio.index.dom.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.InvoicingFrequency;

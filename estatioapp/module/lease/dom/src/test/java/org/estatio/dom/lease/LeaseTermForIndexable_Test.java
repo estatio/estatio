@@ -36,11 +36,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexValueRepository;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.indexation.IndexationMethod;
-import org.estatio.dom.index.indexation.IndexationService;
+import org.estatio.index.dom.Index;
+import org.estatio.index.dom.IndexValueRepository;
+import org.estatio.index.dom.Indexable;
+import org.estatio.index.dom.indexation.IndexationMethod;
+import org.estatio.index.dom.indexation.IndexationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
