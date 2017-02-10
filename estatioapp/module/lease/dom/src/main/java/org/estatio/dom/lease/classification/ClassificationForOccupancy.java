@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.classification;
+package org.estatio.dom.lease.classification;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.classification.dom.impl.classification.Classification;
 import org.incode.module.classification.dom.impl.classification.ClassificationRepository;
@@ -35,7 +36,7 @@ import org.incode.module.classification.dom.impl.classification.T_classify;
 import org.incode.module.classification.dom.impl.classification.T_unclassify;
 import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 
-import org.estatio.asset.dom.Property;
+import org.estatio.dom.lease.Occupancy;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE,
@@ -43,39 +44,39 @@ import org.estatio.asset.dom.Property;
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "org.estatio.dom.classification.ClassificationForProperty"
+        objectType = "ClassificationForOccupancy"
 )
-public class ClassificationForProperty extends Classification {
+public class ClassificationForOccupancy extends Classification {
 
-    private Property property;
+    private Occupancy occupancy;
 
-    @Column(allowsNull = "false", name = "propertyId")
-    @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
-    public Property getProperty() {
-        return property;
+    @Column(allowsNull = "false", name = "occupancyId")
+    @Property(editing = Editing.DISABLED)
+    public Occupancy getOccupancy() {
+        return occupancy;
     }
 
-    public void setProperty(final Property property) {
-        this.property = property;
+    public void setOccupancy(final Occupancy occupancy) {
+        this.occupancy = occupancy;
     }
 
     @Override
     public Object getClassified() {
-        return getProperty();
+        return getOccupancy();
     }
 
     @Override
     protected void setClassified(final Object classified) {
-        setProperty((Property) classified);
+        setOccupancy((Occupancy) classified);
     }
 
     //region > ApplicationTenancyService SPI implementation
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class ApplicationTenancyServiceForProperty implements ApplicationTenancyService {
+    public static class ApplicationTenancyServiceForOccupancy implements ApplicationTenancyService {
         @Override
         public String atPathFor(final Object domainObjectToClassify) {
-            if(domainObjectToClassify instanceof Property) {
-                return ((Property) domainObjectToClassify).getApplicationTenancy().getPath();
+            if(domainObjectToClassify instanceof Occupancy) {
+                return ((Occupancy) domainObjectToClassify).getApplicationTenancy().getPath();
             }
             return null;
         }
@@ -86,7 +87,7 @@ public class ClassificationForProperty extends Classification {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends ClassificationRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
-            super(Property.class, ClassificationForProperty.class);
+            super(Occupancy.class, ClassificationForOccupancy.class);
         }
     }
     //endregion
@@ -94,22 +95,22 @@ public class ClassificationForProperty extends Classification {
     //region > mixins
 
     @Mixin
-    public static class _classifications extends T_classifications<Property> {
-        public _classifications(final Property classified) {
+    public static class _classifications extends T_classifications<Occupancy> {
+        public _classifications(final Occupancy classified) {
             super(classified);
         }
     }
 
     @Mixin
-    public static class _classify extends T_classify<Property> {
-        public _classify(final Property classified) {
+    public static class _classify extends T_classify<Occupancy> {
+        public _classify(final Occupancy classified) {
             super(classified);
         }
     }
 
     @Mixin
-    public static class _unclassify extends T_unclassify<Property> {
-        public _unclassify(final Property classified) {
+    public static class _unclassify extends T_unclassify<Occupancy> {
+        public _unclassify(final Occupancy classified) {
             super(classified);
         }
     }
