@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
-import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.dom.lease.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.invoice.dom.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;

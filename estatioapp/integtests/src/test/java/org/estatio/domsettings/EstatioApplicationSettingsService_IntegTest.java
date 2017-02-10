@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
-import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
+import org.estatio.dom.lease.appsettings.LeaseInvoicingSettingKey;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.dom.lease.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.domsettings.ApplicationSettingForEstatio;
 import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 

@@ -33,7 +33,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.agreement.dom.Agreement;
-import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.dom.lease.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.currency.dom.Currency;
 import org.estatio.invoice.dom.Invoice;

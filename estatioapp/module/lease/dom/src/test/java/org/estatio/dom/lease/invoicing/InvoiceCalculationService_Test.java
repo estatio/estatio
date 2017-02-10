@@ -39,7 +39,7 @@ import org.estatio.agreement.dom.AgreementRoleRepository;
 import org.estatio.agreement.dom.AgreementRoleType;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.AgreementTypeRepository;
-import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.dom.lease.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.charge.dom.Charge;
 import org.estatio.invoice.dom.InvoiceRunType;
 import org.estatio.invoice.dom.InvoicingInterval;
