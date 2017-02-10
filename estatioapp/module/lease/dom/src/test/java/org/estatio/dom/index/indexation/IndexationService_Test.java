@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.indexation;
+package org.estatio.dom.index.indexation;
 
 import java.math.BigDecimal;
 

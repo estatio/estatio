@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.indexation.IndexationMethod;
-import org.estatio.dom.lease.indexation.IndexationService;
+import org.estatio.dom.index.indexation.IndexationMethod;
+import org.estatio.dom.index.indexation.IndexationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

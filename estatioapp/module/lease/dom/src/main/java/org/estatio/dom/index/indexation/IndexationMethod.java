@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.indexation;
+package org.estatio.dom.index.indexation;
 
 import java.math.BigDecimal;
 

@@ -38,9 +38,9 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
-import org.estatio.dom.lease.indexation.IndexationMethod;
-import org.estatio.dom.lease.indexation.IndexationService;
+import org.estatio.dom.index.indexation.IndexationCalculationMethod;
+import org.estatio.dom.index.indexation.IndexationMethod;
+import org.estatio.dom.index.indexation.IndexationService;
 
 import lombok.Getter;
 import lombok.Setter;

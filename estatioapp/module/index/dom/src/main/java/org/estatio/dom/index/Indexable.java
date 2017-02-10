@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.dom.index.indexation.IndexationCalculationMethod;
 
 public interface Indexable {
 
