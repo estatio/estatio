@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.classification;
+package org.estatio.dom.asset.classification;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
