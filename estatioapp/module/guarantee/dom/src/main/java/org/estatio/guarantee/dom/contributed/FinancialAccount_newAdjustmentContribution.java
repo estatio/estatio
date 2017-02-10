@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 
@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.FinancialAccountTransactionRepository;
-import org.estatio.dom.guarantee.GuaranteeRepository;
+import org.estatio.guarantee.dom.GuaranteeRepository;
 
 public class FinancialAccount_newAdjustmentContribution {
 

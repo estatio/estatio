@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee;
+package org.estatio.guarantee.dom;
 
 import java.math.BigDecimal;
 
@@ -62,27 +62,27 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("org.estatio.dom.guarantee.Guarantee")
+@javax.jdo.annotations.Discriminator("Guarantee")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.guarantee.Guarantee "
+                        + "FROM Guarantee "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.guarantee.Guarantee "
+                        + "FROM Guarantee "
                         + "WHERE lease == :lease"),
         @javax.jdo.annotations.Query(
                 name = "findByFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.guarantee.Guarantee "
+                        + "FROM Guarantee "
                         + "WHERE financialAccount == :financialAccount"),
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrNameOrComments", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.guarantee.Guarantee "
+                        + "FROM Guarantee "
                         + "WHERE reference.matches(:referenceOrNameOrComments)"
                         + "|| name.matches(:referenceOrNameOrComments)"
                         + "|| comments.matches(:referenceOrNameOrComments)")

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,7 +38,7 @@ import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.FinancialAccountRepository;
 import org.estatio.financial.dom.FinancialAccountTransaction;
 import org.estatio.financial.dom.FinancialAccountTransactionRepository;
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.guarantee.dom.Guarantee;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class Guarantee_financialAccountContributions extends UdoDomainService<Guarantee_financialAccountContributions> {

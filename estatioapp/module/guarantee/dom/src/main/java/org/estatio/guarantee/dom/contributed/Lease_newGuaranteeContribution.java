@@ -1,4 +1,4 @@
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,9 +21,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeRepository;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.guarantee.dom.Guarantee;
+import org.estatio.guarantee.dom.GuaranteeRepository;
+import org.estatio.guarantee.dom.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

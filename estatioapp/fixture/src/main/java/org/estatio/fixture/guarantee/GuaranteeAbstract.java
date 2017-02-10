@@ -26,9 +26,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeRepository;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.guarantee.dom.Guarantee;
+import org.estatio.guarantee.dom.GuaranteeRepository;
+import org.estatio.guarantee.dom.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 
 public abstract class GuaranteeAbstract extends FixtureScript {

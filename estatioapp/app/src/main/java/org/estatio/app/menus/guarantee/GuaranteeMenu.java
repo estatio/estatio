@@ -42,9 +42,9 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.financial.dom.FinancialAccountRepository;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeRepository;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.guarantee.dom.Guarantee;
+import org.estatio.guarantee.dom.GuaranteeRepository;
+import org.estatio.guarantee.dom.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.incode.module.base.dom.utils.StringUtils;
 

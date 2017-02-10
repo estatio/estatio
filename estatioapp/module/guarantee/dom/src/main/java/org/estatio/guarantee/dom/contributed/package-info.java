@@ -19,4 +19,4 @@
  *
  * @version $Rev$ $Date$
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.guarantee.dom.contributed;

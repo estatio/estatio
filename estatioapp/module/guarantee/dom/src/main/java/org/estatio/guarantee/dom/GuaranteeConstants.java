@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee;
+package org.estatio.guarantee.dom;
 
 public final class GuaranteeConstants {
 

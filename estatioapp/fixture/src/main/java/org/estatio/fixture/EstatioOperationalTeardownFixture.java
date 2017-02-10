@@ -66,7 +66,7 @@ import org.estatio.event.dom.EventSourceLink;
 import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.FinancialAccountTransaction;
 import org.estatio.financial.dom.bankaccount.BankAccount;
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.guarantee.dom.Guarantee;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.paperclips.PaperclipForInvoice;
