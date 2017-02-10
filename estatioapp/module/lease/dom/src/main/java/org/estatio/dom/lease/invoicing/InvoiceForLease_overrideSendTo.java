@@ -30,7 +30,7 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 import org.estatio.dom.lease.LeaseConstants;
 
 @Mixin

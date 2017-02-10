@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 public class InvoiceForTesting extends Invoice<InvoiceForTesting> {
 

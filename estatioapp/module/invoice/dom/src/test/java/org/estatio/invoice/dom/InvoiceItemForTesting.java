@@ -16,29 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
-import org.incode.module.base.dom.utils.StringUtils;
 
-public enum InvoiceStatus {
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-    NEW,
-    APPROVED,
-    INVOICED,
-    HISTORIC;
+public class InvoiceItemForTesting extends InvoiceItem {
 
-    public String title() {
-        return StringUtils.enumTitle(this.name());
+    public ApplicationTenancy getApplicationTenancy() {
+        return null;
     }
 
-    public boolean invoiceIsChangable() {
-        return this.equals(InvoiceStatus.APPROVED) || this.equals(InvoiceStatus.NEW);
-    }
-
-    public static class Meta {
-        private Meta() {}
-
-        public final static int MAX_LEN = 20;
-
-    }
 }

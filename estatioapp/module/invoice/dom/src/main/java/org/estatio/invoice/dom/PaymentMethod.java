@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 import org.incode.module.base.dom.utils.StringUtils;
 

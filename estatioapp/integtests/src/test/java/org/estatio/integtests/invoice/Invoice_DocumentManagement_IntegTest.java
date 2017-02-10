@@ -59,11 +59,11 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceRepository;
+import org.estatio.invoice.dom.InvoiceStatus;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_attachReceipt;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_createAndAttachDocument;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_email;

@@ -33,15 +33,15 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceStatus;
+import org.estatio.invoice.dom.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.invoice.dom.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 import static org.incode.module.base.integtests.VT.ld;

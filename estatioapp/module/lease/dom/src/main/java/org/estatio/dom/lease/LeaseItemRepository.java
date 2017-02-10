@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.charge.dom.Charge;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class, nature = NatureOfService.DOMAIN)
 public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem> {

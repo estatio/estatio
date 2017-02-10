@@ -30,8 +30,8 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.Unit;
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;

@@ -20,8 +20,8 @@ package org.estatio.dom.lease.invoicing.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 
 @Mixin
 public class Invoice_emailInvoiceDoc extends Invoice_emailPrelimLetterOrInvoiceDocAbstract {

@@ -40,7 +40,7 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.Unit;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemRepository;
 import org.estatio.dom.lease.LeaseItemType;

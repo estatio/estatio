@@ -20,7 +20,7 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.ViewModel;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 @ViewModel
 public class DocAndCommForInvoiceDoc extends DocAndCommAbstract<DocAndCommForInvoiceDoc> {

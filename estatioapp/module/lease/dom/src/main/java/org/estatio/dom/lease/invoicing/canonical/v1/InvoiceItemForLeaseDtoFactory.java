@@ -15,7 +15,7 @@ import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.charge.dom.Charge;
 import org.estatio.charge.dom.ChargeGroup;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.invoice.dom.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;

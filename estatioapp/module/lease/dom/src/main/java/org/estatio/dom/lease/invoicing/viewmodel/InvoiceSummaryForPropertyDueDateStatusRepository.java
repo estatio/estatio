@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.invoice.dom.InvoiceStatus;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class InvoiceSummaryForPropertyDueDateStatusRepository

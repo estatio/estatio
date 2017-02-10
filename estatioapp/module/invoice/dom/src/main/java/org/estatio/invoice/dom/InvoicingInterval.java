@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

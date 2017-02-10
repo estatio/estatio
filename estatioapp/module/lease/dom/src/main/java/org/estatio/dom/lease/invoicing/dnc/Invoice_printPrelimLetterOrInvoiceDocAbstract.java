@@ -34,7 +34,7 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 /**
  * Provides the ability to send an print.

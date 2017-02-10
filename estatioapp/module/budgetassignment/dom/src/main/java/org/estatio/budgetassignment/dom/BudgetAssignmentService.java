@@ -31,7 +31,7 @@ import org.estatio.budget.dom.budgetitem.BudgetItem;
 import org.estatio.budget.dom.partioning.PartitionItem;
 import org.estatio.budget.dom.partioning.Partitioning;
 import org.estatio.charge.dom.Charge;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;

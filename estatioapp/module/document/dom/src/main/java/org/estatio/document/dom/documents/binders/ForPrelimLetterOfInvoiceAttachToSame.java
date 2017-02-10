@@ -24,7 +24,7 @@ import java.util.List;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 public class ForPrelimLetterOfInvoiceAttachToSame extends AttachmentAdvisorAbstract<Invoice> {
 

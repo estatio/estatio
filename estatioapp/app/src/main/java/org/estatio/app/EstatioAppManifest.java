@@ -32,7 +32,7 @@ import org.estatio.event.dom.EstatioEventDomModule;
 import org.estatio.financial.dom.EstatioFinancialDomModule;
 import org.estatio.guarantee.dom.EstatioGuaranteeDomModule;
 import org.estatio.index.dom.EstatioIndexDomModule;
-import org.estatio.dom.invoice.EstatioInvoiceDomModule;
+import org.estatio.invoice.dom.EstatioInvoiceDomModule;
 import org.estatio.dom.lease.EstatioLeaseDomModule;
 import org.estatio.dom.party.EstatioPartyDomModule;
 import org.estatio.dom.tax.EstatioTaxDomModule;

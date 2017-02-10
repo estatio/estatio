@@ -24,7 +24,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;

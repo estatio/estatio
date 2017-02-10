@@ -30,8 +30,8 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {

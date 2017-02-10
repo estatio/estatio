@@ -87,7 +87,7 @@ import org.estatio.charge.dom.ChargeRepository;
 import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.bankaccount.BankAccount;
 import org.estatio.financial.dom.bankaccount.BankAccountRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.party.Party;

@@ -35,9 +35,9 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.asset.dom.FixedAsset;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceSource;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceItem;
+import org.estatio.invoice.dom.InvoiceSource;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 

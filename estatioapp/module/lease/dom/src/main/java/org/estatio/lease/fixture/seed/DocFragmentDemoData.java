@@ -37,7 +37,7 @@ import lombok.Getter;
 public enum DocFragmentDemoData {
 
     InvoiceDescription_DemoGbr(
-            "org.estatio.dom.invoice.Invoice", "description", "/GBR",
+            "Invoice", "description", "/GBR",
             "Invoice_description_ITA.docFragment.txt") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -46,7 +46,7 @@ public enum DocFragmentDemoData {
         }
     },
     InvoiceDescription_DemoNld(
-            "org.estatio.dom.invoice.Invoice", "description", "/NLD",
+            "Invoice", "description", "/NLD",
             "Invoice_description_ITA.docFragment.txt") {
         public FixtureScript script() {
             // subclasses are necessary because

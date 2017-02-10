@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;

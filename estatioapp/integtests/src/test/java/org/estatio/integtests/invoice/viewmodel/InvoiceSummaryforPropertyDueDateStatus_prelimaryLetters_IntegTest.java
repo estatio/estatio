@@ -40,9 +40,9 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter;

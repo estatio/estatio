@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 // TODO: eventually this should move to org.estatio.invoice, and be renamed to EstatioInvoiceModule (no "Dom" part)
 public final class EstatioInvoiceDomModule {

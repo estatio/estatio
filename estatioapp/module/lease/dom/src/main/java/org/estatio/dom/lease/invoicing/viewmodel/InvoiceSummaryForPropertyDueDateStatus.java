@@ -38,7 +38,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.asset.dom.PropertyRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.invoice.dom.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;

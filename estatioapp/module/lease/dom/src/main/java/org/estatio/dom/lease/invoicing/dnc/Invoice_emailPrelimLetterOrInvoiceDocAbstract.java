@@ -35,7 +35,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 public abstract class Invoice_emailPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 

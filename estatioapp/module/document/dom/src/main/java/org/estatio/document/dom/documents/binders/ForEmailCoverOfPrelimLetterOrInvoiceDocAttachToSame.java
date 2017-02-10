@@ -30,7 +30,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.invoice.dom.Constants;
 
 public class ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame extends
         AttachmentAdvisorAbstract<Document> {

@@ -43,8 +43,8 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 
 /**
  * Provides the ability to send an print.

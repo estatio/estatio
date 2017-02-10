@@ -24,8 +24,8 @@ import java.io.IOException;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 
 @Mixin
 public class Invoice_prepareInvoiceDoc extends Invoice_prepareAbstract{

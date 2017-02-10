@@ -30,9 +30,9 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceRepository;
+import org.estatio.invoice.dom.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;

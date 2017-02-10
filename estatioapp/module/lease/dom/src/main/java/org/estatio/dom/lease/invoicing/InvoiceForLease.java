@@ -59,10 +59,10 @@ import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.charge.dom.Charge;
 import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.bankaccount.BankAccount;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceItem;
+import org.estatio.invoice.dom.InvoiceRepository;
+import org.estatio.invoice.dom.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.roles.EstatioRole;
@@ -77,14 +77,14 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(
-        "org.estatio.dom.invoice.Invoice" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
+        "Invoice" // backward compatibility, so don't have to migrate all bookmarks in auditing etc
         // (would rather use "lease.InvoiceForLease", but @Discriminator currently takes precedence over @DomainObject#objectType); see EST-1084
 )
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findMatchingInvoices", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE " +
                         "lease == :lease && " +
                         "seller == :seller && " +
@@ -95,20 +95,20 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE lease == :lease " +
                         "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE " +
                         "fixedAsset == :fixedAsset && " +
                         "status == :status " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndDueDateAndStatus", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                value = "SELECT FROM Invoice " +
                         "WHERE " +
                         "fixedAsset == :fixedAsset && " +
                         "status == :status && " +
@@ -116,14 +116,14 @@ import lombok.Setter;
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndDueDate", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                value = "SELECT FROM Invoice " +
                         "WHERE " +
                         "fixedAsset == :fixedAsset && " +
                         "dueDate == :dueDate " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndInvoiceDate", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                value = "SELECT FROM Invoice " +
                         "WHERE " +
                         "fixedAsset == :fixedAsset && " +
                         "invoiceDate == :invoiceDate " +
@@ -131,16 +131,16 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByRunId", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE runId == :runId "),
         @javax.jdo.annotations.Query(
                 name = "findByRunIdAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE runId == :runId && applicationTenancyPath == :applicationTenancyPath"),
         @javax.jdo.annotations.Query(
                 name = "findByApplicationTenancyPathAndSellerAndDueDateAndStatus", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                value = "SELECT FROM Invoice " +
                         "WHERE " +
                         "seller == :seller && " +
                         "applicationTenancyPath == :applicationTenancyPath && " +
@@ -149,7 +149,7 @@ import lombok.Setter;
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByApplicationTenancyPathAndSellerAndInvoiceDate", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                value = "SELECT FROM Invoice " +
                         "WHERE " +
                         "seller == :seller && " +
                         "applicationTenancyPath == :applicationTenancyPath && " +

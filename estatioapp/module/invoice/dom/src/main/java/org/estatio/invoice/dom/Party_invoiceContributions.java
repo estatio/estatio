@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 import java.util.List;
 

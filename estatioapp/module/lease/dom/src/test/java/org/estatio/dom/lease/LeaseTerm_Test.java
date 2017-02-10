@@ -48,7 +48,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.invoice.dom.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 

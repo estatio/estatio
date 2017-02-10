@@ -20,7 +20,7 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 @Mixin
 public class Invoice_invoiceDocs extends Invoice_collectionAbstract<DocAndCommForInvoiceDoc> {

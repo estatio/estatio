@@ -16,15 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
-import java.math.BigDecimal;
 
-public final class InvoiceConstants {
-
-    private InvoiceConstants() {}
-
-    public static final BigDecimal PERCENTAGE_DIVISOR = BigDecimal.valueOf(100);
-
+/**
+ * For UI purposes only. allows an {@link InvoiceItem} to indicate its source.
+ * 
+ * <p>
+ * The {@link InvoiceItem#getSource()} is therefore rendered in the UI as a column in tables, enabling a drill-down.
+ */
+public interface InvoiceSource {
 
 }

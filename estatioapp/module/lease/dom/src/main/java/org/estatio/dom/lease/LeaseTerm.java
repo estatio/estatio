@@ -63,7 +63,7 @@ import org.incode.module.base.dom.with.WithSequence;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
-import org.estatio.dom.invoice.InvoiceSource;
+import org.estatio.invoice.dom.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;

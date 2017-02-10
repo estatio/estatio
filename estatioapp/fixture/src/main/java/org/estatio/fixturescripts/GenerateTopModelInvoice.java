@@ -27,7 +27,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.invoice.dom.InvoiceRunType;
 
 import static org.incode.module.base.integtests.VT.ld;
 

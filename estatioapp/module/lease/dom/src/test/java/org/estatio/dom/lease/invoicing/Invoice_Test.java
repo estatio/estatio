@@ -45,9 +45,9 @@ import org.estatio.asset.dom.Property;
 import org.estatio.bankmandate.dom.BankMandate;
 import org.estatio.financial.dom.FinancialAccount;
 import org.estatio.financial.dom.bankaccount.BankAccount;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.InvoiceRepository;
+import org.estatio.invoice.dom.InvoiceStatus;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.numerator.dom.impl.Numerator;
 

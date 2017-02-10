@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -90,25 +90,25 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE status == :status " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByBuyer", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE buyer == :buyer " +
                         "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
                 name = "findBySeller", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE seller == :seller " +
                         "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "FROM Invoice " +
                         "WHERE invoiceNumber.matches(:invoiceNumber) "
                         + "ORDER BY invoiceDate DESC")
 })

@@ -22,8 +22,8 @@ import com.google.common.base.Predicate;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin

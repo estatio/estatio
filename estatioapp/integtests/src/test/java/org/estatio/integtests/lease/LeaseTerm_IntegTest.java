@@ -39,7 +39,7 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.invoice.dom.InvoiceRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;

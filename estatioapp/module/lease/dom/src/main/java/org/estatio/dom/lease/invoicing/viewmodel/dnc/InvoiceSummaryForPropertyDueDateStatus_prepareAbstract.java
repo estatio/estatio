@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_createAndAttachDocumentAndScheduleRender;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;

@@ -35,8 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.invoice.dom.Invoice;
+import org.estatio.invoice.dom.InvoiceRepository;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.roles.EstatioRole;

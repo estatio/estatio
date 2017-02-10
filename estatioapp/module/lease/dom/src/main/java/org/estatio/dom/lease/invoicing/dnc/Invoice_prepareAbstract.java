@@ -39,7 +39,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 import org.incode.module.document.dom.services.DocumentCreatorService;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommAbstract_abstract;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_actionAbstract;
 

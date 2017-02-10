@@ -23,7 +23,7 @@ import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 public final class PaperclipRoleNames {
 

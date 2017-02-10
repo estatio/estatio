@@ -65,7 +65,7 @@ import org.estatio.bankmandate.dom.SequenceType;
 import org.estatio.charge.dom.Charge;
 import org.estatio.financial.dom.bankaccount.BankAccount;
 import org.estatio.financial.dom.bankaccount.BankAccountRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;

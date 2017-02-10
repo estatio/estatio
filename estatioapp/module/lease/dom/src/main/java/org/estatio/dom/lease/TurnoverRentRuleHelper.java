@@ -21,7 +21,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.estatio.dom.invoice.InvoiceConstants;
+import org.estatio.invoice.dom.InvoiceConstants;
 
 public class TurnoverRentRuleHelper {
 

@@ -40,7 +40,7 @@ import org.estatio.budget.dom.budgetcalculation.Status;
 import org.estatio.budget.dom.keytable.KeyTable;
 import org.estatio.charge.dom.Charge;
 import org.estatio.charge.dom.ChargeRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.invoice.dom.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemRepository;

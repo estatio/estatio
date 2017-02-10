@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.invoice.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -82,7 +82,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
-        value = "org.estatio.dom.invoice.InvoiceItem"
+        value = "InvoiceItem"
 )
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,

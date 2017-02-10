@@ -13,7 +13,7 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.asset.dom.Property;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.invoice.dom.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;

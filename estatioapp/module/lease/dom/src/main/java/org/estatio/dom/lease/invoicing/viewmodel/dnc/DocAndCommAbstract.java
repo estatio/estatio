@@ -35,7 +35,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.document.dom.services.ClassService;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Invoice;
 
 import lombok.Getter;
 import lombok.Setter;

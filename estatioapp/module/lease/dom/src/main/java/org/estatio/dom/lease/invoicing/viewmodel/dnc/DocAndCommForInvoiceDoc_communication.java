@@ -20,11 +20,13 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.invoice.dom.Constants;
+
 @Mixin
 public class DocAndCommForInvoiceDoc_communication extends DocAndCommAbstract_communication<DocAndCommForInvoiceDoc>  {
 
     public DocAndCommForInvoiceDoc_communication(final DocAndCommForInvoiceDoc docAndComm) {
-        super(docAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_INVOICE);
+        super(docAndComm, Constants.DOC_TYPE_REF_INVOICE);
     }
 
 }

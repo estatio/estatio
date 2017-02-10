@@ -20,11 +20,13 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.invoice.dom.Constants;
+
 @Mixin
 public class DocAndCommForPrelimLetter_document extends DocAndCommAbstract_document<DocAndCommForPrelimLetter> {
 
     public DocAndCommForPrelimLetter_document(final DocAndCommForPrelimLetter docAndComm) {
-        super(docAndComm, org.estatio.dom.invoice.Constants.DOC_TYPE_REF_PRELIM);
+        super(docAndComm, Constants.DOC_TYPE_REF_PRELIM);
     }
 
 }

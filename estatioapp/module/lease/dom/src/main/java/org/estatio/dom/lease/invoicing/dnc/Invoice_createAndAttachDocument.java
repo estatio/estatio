@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.invoice.dom.Constants;
+import org.estatio.invoice.dom.Invoice;
 
 @Mixin
 public class Invoice_createAndAttachDocument extends T_createAndAttachDocumentAndRender<Invoice> {
