@@ -21,11 +21,11 @@ import org.estatio.agreement.dom.AgreementRoleType;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.AgreementType;
 import org.estatio.agreement.dom.AgreementTypeRepository;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountType;
+import org.estatio.financial.dom.bankaccount.BankAccount;
+import org.estatio.financial.dom.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(

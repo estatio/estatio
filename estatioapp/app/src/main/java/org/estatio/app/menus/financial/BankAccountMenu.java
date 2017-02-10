@@ -34,9 +34,9 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.financial.dom.bankaccount.BankAccount;
+import org.estatio.financial.dom.bankaccount.BankAccountRepository;
+import org.estatio.financial.dom.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

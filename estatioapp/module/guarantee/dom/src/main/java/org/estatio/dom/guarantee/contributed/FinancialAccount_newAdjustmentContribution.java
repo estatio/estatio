@@ -27,8 +27,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 
 public class FinancialAccount_newAdjustmentContribution {

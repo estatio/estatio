@@ -37,9 +37,9 @@ import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.bankaccount.BankAccount;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.roles.EstatioRole;

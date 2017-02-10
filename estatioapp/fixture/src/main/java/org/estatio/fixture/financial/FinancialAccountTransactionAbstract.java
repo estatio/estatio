@@ -26,10 +26,10 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountTransaction;
+import org.estatio.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 

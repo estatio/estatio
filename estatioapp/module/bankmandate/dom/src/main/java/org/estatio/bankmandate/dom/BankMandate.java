@@ -41,9 +41,9 @@ import org.incode.module.base.dom.types.NameType;
 import org.estatio.agreement.dom.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.bankaccount.BankAccount;
+import org.estatio.financial.dom.bankaccount.BankAccountRepository;
 
 import lombok.Getter;
 import lombok.Setter;

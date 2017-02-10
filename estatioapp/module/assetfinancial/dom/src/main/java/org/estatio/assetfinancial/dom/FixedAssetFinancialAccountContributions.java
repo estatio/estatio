@@ -36,8 +36,8 @@ import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.FixedAssetRole;
 import org.estatio.asset.dom.FixedAssetRoleRepository;
 import org.estatio.asset.dom.FixedAssetRoleType;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

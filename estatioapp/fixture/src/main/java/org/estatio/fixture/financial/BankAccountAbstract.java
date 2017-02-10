@@ -25,8 +25,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.asset.dom.Property;
 import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.financial.dom.bankaccount.BankAccount;
+import org.estatio.financial.dom.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 

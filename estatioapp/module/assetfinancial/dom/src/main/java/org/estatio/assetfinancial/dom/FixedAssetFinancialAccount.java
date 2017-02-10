@@ -40,7 +40,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.FixedAssetRole;
-import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccount;
 
 import lombok.Getter;
 import lombok.Setter;

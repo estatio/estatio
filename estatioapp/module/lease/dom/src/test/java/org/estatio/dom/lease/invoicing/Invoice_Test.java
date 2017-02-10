@@ -43,7 +43,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.Property;
 import org.estatio.bankmandate.dom.BankMandate;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -279,7 +280,7 @@ public class Invoice_Test {
                 {
                     allowing(lease).getPaidBy();
                     will(returnValue(new BankMandate() {
-                        public org.estatio.dom.financial.FinancialAccount getBankAccount() {
+                        public FinancialAccount getBankAccount() {
                             return new BankAccount() {
                                 public boolean isValidIban() {
                                     return true;

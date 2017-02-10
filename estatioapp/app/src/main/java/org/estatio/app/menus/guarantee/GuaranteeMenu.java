@@ -41,7 +41,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.AgreementTypeRepository;
-import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountRepository;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;

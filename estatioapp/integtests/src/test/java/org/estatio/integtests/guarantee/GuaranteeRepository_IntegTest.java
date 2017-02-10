@@ -32,9 +32,9 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountType;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;

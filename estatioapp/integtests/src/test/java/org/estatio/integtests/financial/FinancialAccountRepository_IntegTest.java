@@ -32,11 +32,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.contributed.Party_financialAccountContributions;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountType;
+import org.estatio.financial.dom.bankaccount.BankAccount;
+import org.estatio.financial.dom.contributed.Party_financialAccountContributions;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;

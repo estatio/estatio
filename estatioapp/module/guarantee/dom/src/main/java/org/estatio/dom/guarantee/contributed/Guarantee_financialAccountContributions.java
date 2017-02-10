@@ -34,10 +34,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.financial.dom.FinancialAccount;
+import org.estatio.financial.dom.FinancialAccountRepository;
+import org.estatio.financial.dom.FinancialAccountTransaction;
+import org.estatio.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.Guarantee;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

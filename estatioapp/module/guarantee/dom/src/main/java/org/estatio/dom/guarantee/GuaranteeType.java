@@ -2,7 +2,7 @@ package org.estatio.dom.guarantee;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.financial.dom.FinancialAccountType;
 
 public enum GuaranteeType {
     BANK_GUARANTEE(FinancialAccountType.BANK_GUARANTEE, false),
