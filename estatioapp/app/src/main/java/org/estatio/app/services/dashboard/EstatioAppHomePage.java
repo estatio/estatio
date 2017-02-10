@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.event.Event;
-import org.estatio.dom.event.EventRepository;
+import org.estatio.event.dom.Event;
+import org.estatio.event.dom.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 

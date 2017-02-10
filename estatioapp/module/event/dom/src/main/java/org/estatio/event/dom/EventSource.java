@@ -16,18 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event.types;
+package org.estatio.event.dom;
 
-public class CalendarNameType {
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 
-    private CalendarNameType() {}
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
-    public static class Meta {
-
-        public static final int MAX_LEN = 254;
-
-        private Meta() {}
-
-    }
+public interface EventSource extends Calendarable, WithApplicationTenancy {
 
 }

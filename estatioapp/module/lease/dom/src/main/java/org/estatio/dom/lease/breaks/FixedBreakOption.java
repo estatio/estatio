@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.event.Event;
+import org.estatio.event.dom.Event;
 
 import lombok.Getter;
 import lombok.Setter;

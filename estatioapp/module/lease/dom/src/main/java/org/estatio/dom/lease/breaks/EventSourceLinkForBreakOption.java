@@ -28,8 +28,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.estatio.dom.event.EventSource;
-import org.estatio.dom.event.EventSourceLink;
+import org.estatio.event.dom.EventSource;
+import org.estatio.event.dom.EventSourceLink;
 
 @javax.jdo.annotations.PersistenceCapable(
         schema = "dbo"     // Isis' ObjectSpecId inferred from @DomainObject#objectType

@@ -54,9 +54,9 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.event.Event;
-import org.estatio.dom.event.EventRepository;
-import org.estatio.dom.event.EventSource;
+import org.estatio.event.dom.Event;
+import org.estatio.event.dom.EventRepository;
+import org.estatio.event.dom.EventSource;
 import org.estatio.dom.lease.Lease;
 
 import lombok.Getter;

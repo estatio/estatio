@@ -1,4 +1,4 @@
 /**
  * Currently out-of-scope.
  */
-package org.estatio.dom.event;
+package org.estatio.event.dom;
