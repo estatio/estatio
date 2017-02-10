@@ -16,7 +16,7 @@ echo "" >&2
 
 echo "repo,who,yyyy-mm-dd,day,date,descr" > /tmp/$$
 
-for a in `cat gitlog.repos`
+for a in `cat gitlog.txt`
 do  
 	repo=`echo $a | cut -d: -f1`
 	repodir=`echo $a | cut -d: -f2`
@@ -33,7 +33,7 @@ done
 
 cat /tmp/$$ | sort -k3 | grep -v "^$"
 
-#for a in `cat gitlog.repos`
+#for a in `cat gitlog.txt`
 #do  
 	#repo=`echo $a | cut -d: -f1`
 	#rm /tmp/$$.$repo
