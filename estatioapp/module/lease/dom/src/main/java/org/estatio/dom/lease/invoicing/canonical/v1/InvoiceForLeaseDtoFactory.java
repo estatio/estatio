@@ -14,7 +14,7 @@ import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.asset.dom.FixedAsset;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;

@@ -20,7 +20,7 @@ import org.estatio.dom.EstatioDomainModule;
 import org.estatio.agreement.dom.EstatioAgreementDomModule;
 import org.estatio.asset.dom.EstatioAssetDomModule;
 import org.estatio.asset.dom.registration.EstatioRegistrationDomModule;
-import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
+import org.estatio.assetfinancial.dom.EstatioAssetFinancialDomModule;
 import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;
 import org.estatio.dom.budgeting.EstatioBudgetingDomModule;

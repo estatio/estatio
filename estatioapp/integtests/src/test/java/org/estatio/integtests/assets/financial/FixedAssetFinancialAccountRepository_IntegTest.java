@@ -34,8 +34,8 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.FixedAssetRepository;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.assetfinancial.dom.FixedAssetFinancialAccount;
+import org.estatio.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Party;
