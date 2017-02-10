@@ -2,7 +2,7 @@
  * Defines the central {@link org.estatio.dom.lease.Lease} entity and associated entities.
  * 
  * <p>
- * {@link org.estatio.dom.lease.Lease} is a subtype of {@link org.estatio.dom.agreement.Agreement} and thus
+ * {@link org.estatio.dom.lease.Lease} is a subtype of {@link org.estatio.agreement.dom.Agreement} and thus
  * associates the {@link org.estatio.dom.party.Party} that is the <i>TENANT</i> and the 
  * {@link org.estatio.dom.party.Party} that is the <i>LANDLORD</i>).  Each {@link org.estatio.dom.lease.Lease}
  * {@link Lease#getItems() contains} a number of {@link org.estatio.dom.lease.LeaseItem}s, being the elements that the
@@ -38,8 +38,8 @@
  *  
  * <p>
  * As already noted, {@link org.estatio.dom.lease.Lease} is a particular (sub)type of 
- * {@link org.estatio.dom.agreement.Agreement}, the other one being {@link org.estatio.dom.bankmandate.BankMandate}.  
- * Thus, two parties will often have two related but independent {@link org.estatio.dom.agreement.Agreement}s.  Each 
+ * {@link org.estatio.agreement.dom.Agreement}, the other one being {@link org.estatio.dom.bankmandate.BankMandate}.
+ * Thus, two parties will often have two related but independent {@link org.estatio.agreement.dom.Agreement}s.  Each
  * lease {@link org.estatio.dom.lease.Lease#getPaidBy() tracks} the {@link org.estatio.dom.bankmandate.BankMandate} by 
  * which its invoices are paid.
  */

@@ -40,10 +40,10 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleType;
+import org.estatio.agreement.dom.AgreementRoleTypeRepository;
+import org.estatio.agreement.dom.AgreementType;
+import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;

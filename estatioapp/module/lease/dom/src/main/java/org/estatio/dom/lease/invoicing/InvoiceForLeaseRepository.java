@@ -32,7 +32,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.Agreement;
+import org.estatio.agreement.dom.Agreement;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.currency.Currency;

@@ -35,10 +35,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleRepository;
+import org.estatio.agreement.dom.AgreementRoleType;
+import org.estatio.agreement.dom.AgreementRoleTypeRepository;
+import org.estatio.agreement.dom.AgreementTypeRepository;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;

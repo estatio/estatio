@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.agreement.AgreementRoleRepository;
+import org.estatio.agreement.dom.AgreementRoleRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;

@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.app.menus.asset.PropertyMenu;
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.agreement.dom.AgreementRoleRepository;
+import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.Lease;
