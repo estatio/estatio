@@ -32,10 +32,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRole;
-import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetRole;
+import org.estatio.asset.dom.FixedAssetRoleRepository;
+import org.estatio.asset.dom.FixedAssetRoleType;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 

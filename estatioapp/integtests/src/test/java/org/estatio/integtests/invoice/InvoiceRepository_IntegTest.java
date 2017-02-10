@@ -44,8 +44,8 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.app.services.invoice.InvoiceImportLine;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;

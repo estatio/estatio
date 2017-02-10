@@ -24,10 +24,10 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.registration.LandRegister;
-import org.estatio.dom.asset.registration.LandRegisters;
+import org.estatio.asset.dom.PropertyRepository;
+import org.estatio.asset.dom.Unit;
+import org.estatio.asset.dom.registration.LandRegister;
+import org.estatio.asset.dom.registration.LandRegisters;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 
 public class LandRegisterForOxfordUnit001 extends FixtureScript {

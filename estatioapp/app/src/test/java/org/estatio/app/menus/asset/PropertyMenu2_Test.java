@@ -35,10 +35,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
-import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.PropertyType;
+import org.estatio.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
+import org.estatio.asset.dom.PropertyType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

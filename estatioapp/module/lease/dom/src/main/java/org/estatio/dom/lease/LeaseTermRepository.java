@@ -39,7 +39,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.roles.EstatioRole;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)

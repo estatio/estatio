@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
+import org.estatio.asset.dom.registration.FixedAssetRegistration;
+import org.estatio.asset.dom.registration.FixedAssetRegistrationRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY

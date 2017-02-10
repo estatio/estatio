@@ -18,8 +18,8 @@ import org.incode.module.base.services.calendar.CalendarService;
 
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.agreement.dom.EstatioAgreementDomModule;
-import org.estatio.dom.asset.EstatioAssetDomModule;
-import org.estatio.dom.asset.registration.EstatioRegistrationDomModule;
+import org.estatio.asset.dom.EstatioAssetDomModule;
+import org.estatio.asset.dom.registration.EstatioRegistrationDomModule;
 import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
 import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;

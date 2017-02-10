@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.lease.LeaseTermRepository;
 
 @DomainService(menuOrder = "00")

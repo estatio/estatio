@@ -17,7 +17,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;

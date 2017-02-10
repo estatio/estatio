@@ -13,7 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;

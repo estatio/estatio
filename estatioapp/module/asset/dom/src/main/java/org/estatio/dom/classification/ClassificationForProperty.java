@@ -35,7 +35,7 @@ import org.incode.module.classification.dom.impl.classification.T_classify;
 import org.incode.module.classification.dom.impl.classification.T_unclassify;
 import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE,

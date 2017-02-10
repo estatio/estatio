@@ -37,8 +37,8 @@ import org.incode.module.unittestsupport.dom.with.InstantiatorForWithStartDate;
 
 import org.estatio.agreement.dom.Agreement;
 import org.estatio.agreement.dom.AgreementForTesting;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetForTesting;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;

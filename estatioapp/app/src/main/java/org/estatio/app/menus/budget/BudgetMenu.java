@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;

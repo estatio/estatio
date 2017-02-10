@@ -22,7 +22,7 @@ import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
 import org.incode.module.unittestsupport.dom.reflect.ReflectUtils;
 
-import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.asset.dom.FixedAssetForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.lease.Lease;

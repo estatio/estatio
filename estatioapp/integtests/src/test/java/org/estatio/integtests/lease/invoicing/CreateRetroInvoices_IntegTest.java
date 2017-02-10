@@ -33,7 +33,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceRunType;

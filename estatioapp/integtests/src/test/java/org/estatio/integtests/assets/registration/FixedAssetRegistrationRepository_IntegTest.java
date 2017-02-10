@@ -29,10 +29,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRepository;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetRepository;
+import org.estatio.asset.dom.registration.FixedAssetRegistration;
+import org.estatio.asset.dom.registration.FixedAssetRegistrationRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;

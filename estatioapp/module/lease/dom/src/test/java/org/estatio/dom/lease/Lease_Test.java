@@ -56,7 +56,7 @@ import org.estatio.agreement.dom.AgreementRoleTypeRepository;
 import org.estatio.agreement.dom.Agreement_Test;
 import org.estatio.agreement.dom.AgreementType;
 import org.estatio.agreement.dom.AgreementTypeRepository;
-import org.estatio.dom.asset.Unit;
+import org.estatio.asset.dom.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;

@@ -40,8 +40,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.invoice.CommunicationChannelSubscriptions;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;

@@ -48,11 +48,12 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRepository;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetRepository;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -72,7 +73,7 @@ public class LeaseMenu {
 
     /**
      *
-     * @param property - obtained via {@link org.estatio.dom.asset.PropertyRepository#autoComplete(String)} ... nb this does server-side filtering based on user's atPath
+     * @param property - obtained via {@link PropertyRepository#autoComplete(String)} ... nb this does server-side filtering based on user's atPath
      */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")

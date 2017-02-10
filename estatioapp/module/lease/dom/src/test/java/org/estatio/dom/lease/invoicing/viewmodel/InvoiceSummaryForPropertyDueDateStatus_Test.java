@@ -25,8 +25,8 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
 
 public class InvoiceSummaryForPropertyDueDateStatus_Test {
 

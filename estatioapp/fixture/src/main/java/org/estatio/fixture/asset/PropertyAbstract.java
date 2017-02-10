@@ -29,11 +29,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
-import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.asset.UnitType;
+import org.estatio.asset.dom.FixedAssetRoleType;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
+import org.estatio.asset.dom.Unit;
+import org.estatio.asset.dom.PropertyType;
+import org.estatio.asset.dom.UnitType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
@@ -43,8 +44,8 @@ import org.estatio.dom.party.PartyRepository;
 import static org.incode.module.base.integtests.VT.ld;
 
 /**
- * Sets up the {@link org.estatio.dom.asset.Property} and also a number of
- * {@link org.estatio.dom.asset.Unit}s.
+ * Sets up the {@link Property} and also a number of
+ * {@link Unit}s.
  */
 public abstract class PropertyAbstract extends FixtureScript {
 

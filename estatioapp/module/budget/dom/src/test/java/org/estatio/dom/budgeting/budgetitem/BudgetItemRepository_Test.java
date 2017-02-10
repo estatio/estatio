@@ -32,7 +32,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.charge.Charge;
 

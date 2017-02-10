@@ -37,9 +37,9 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.Unit;
+import org.estatio.asset.dom.UnitRepository;
 import org.estatio.dom.lease.tags.Brand;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)

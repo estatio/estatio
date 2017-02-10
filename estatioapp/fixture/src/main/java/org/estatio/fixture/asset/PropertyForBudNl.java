@@ -21,7 +21,7 @@ package org.estatio.fixture.asset;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.dom.asset.PropertyType;
+import org.estatio.asset.dom.PropertyType;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;

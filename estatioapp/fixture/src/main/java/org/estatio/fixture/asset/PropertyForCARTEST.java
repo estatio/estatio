@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.asset;
 
-import org.estatio.dom.asset.PropertyType;
+import org.estatio.asset.dom.PropertyType;
 import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.party.Party;
 import org.incode.module.country.fixture.CountriesRefData;

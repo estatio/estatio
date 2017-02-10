@@ -28,7 +28,7 @@ import org.estatio.agreement.dom.AgreementRole;
 import org.estatio.agreement.dom.AgreementRoleRepository;
 import org.estatio.agreement.dom.AgreementRoleType;
 import org.estatio.agreement.dom.AgreementRoleTypeRepository;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.asset.dom.PropertyRepository;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateRepository;

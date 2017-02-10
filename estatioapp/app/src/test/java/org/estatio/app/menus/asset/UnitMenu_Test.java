@@ -27,9 +27,9 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.asset.UnitType;
+import org.estatio.asset.dom.Unit;
+import org.estatio.asset.dom.UnitRepository;
+import org.estatio.asset.dom.UnitType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

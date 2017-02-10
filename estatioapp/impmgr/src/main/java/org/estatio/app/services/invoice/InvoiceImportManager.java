@@ -38,8 +38,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.Unit;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemRepository;

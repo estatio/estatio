@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY

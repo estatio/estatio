@@ -35,8 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceForTesting;

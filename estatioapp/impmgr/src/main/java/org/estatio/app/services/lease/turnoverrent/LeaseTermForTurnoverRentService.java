@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermRepository;
 

@@ -31,8 +31,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.document.documents.ReportServerSettingsService;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
 import org.estatio.numerator.dom.impl.Numerator;
 

@@ -22,7 +22,7 @@
  *
  * <p>
  * The {@link org.estatio.dom.lease.Occupancy} entity associates the {@link org.estatio.dom.lease.Lease} with a
- * particular {@link org.estatio.dom.asset.Unit}.
+ * particular {@link org.estatio.asset.dom.Unit}.
  * 
  * <p>
  * {@link org.estatio.dom.lease.Lease} also integrates with the <tt>invoicing</tt> module, by implementing the

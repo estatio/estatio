@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.asset.dom.Property;
 import org.estatio.dom.party.Party;
 
 @DomainService(

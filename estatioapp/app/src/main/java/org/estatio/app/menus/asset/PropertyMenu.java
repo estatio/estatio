@@ -35,9 +35,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.PropertyType;
+import org.estatio.asset.dom.Property;
+import org.estatio.asset.dom.PropertyRepository;
+import org.estatio.asset.dom.PropertyType;
 import org.incode.module.country.dom.impl.Country;
 
 @DomainService(repositoryFor = Property.class)

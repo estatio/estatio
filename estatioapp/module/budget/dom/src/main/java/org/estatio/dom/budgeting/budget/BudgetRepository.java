@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
+import org.estatio.asset.dom.Property;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 @DomainService(repositoryFor = Budget.class, nature = NatureOfService.DOMAIN)

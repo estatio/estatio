@@ -29,7 +29,7 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
-import org.estatio.dom.asset.Unit;
+import org.estatio.asset.dom.Unit;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;

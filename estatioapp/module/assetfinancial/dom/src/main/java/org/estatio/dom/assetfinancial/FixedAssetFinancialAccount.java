@@ -38,8 +38,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.asset.dom.FixedAsset;
+import org.estatio.asset.dom.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
 
 import lombok.Getter;

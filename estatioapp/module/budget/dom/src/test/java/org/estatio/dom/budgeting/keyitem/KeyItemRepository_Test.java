@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import org.estatio.dom.asset.Unit;
+import org.estatio.asset.dom.Unit;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 
 import static org.assertj.core.api.Assertions.assertThat;
