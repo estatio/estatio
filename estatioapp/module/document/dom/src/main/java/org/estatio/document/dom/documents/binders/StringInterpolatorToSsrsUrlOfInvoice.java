@@ -16,28 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.documents.binders;
-
-import java.util.Collections;
-import java.util.List;
-
-import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
-import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+package org.estatio.document.dom.documents.binders;
 
 import org.estatio.dom.invoice.Invoice;
 
-public class ForPrelimLetterOfInvoiceAttachToSame extends AttachmentAdvisorAbstract<Invoice> {
+/**
+ * for PrelimLetter or InvoiceNote
+ */
+public class StringInterpolatorToSsrsUrlOfInvoice extends StringInterpolatorToSsrsUrlAbstract<Invoice> {
 
-    public ForPrelimLetterOfInvoiceAttachToSame() {
+    public StringInterpolatorToSsrsUrlOfInvoice() {
         super(Invoice.class);
     }
 
-    @Override
-    protected List<PaperclipSpec> doAdvise(
-            final DocumentTemplate documentTemplate,
-            final Invoice invoice) {
-
-        return Collections.singletonList(new PaperclipSpec(null, invoice));
-    }
 
 }

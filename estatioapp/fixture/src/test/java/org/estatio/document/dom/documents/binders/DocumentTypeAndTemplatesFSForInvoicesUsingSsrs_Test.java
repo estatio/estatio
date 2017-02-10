@@ -1,4 +1,4 @@
-package org.estatio.dom.document.documents.binders;
+package org.estatio.document.dom.documents.binders;
 
 import java.lang.reflect.Field;
 import java.util.Optional;

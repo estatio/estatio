@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.documents.renderers;
+package org.estatio.document.dom.documents.renderers;
 
 import java.io.IOException;
 

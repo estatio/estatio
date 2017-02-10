@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.document.documents.ReportServerSettingsService;
+import org.estatio.document.dom.documents.ReportServerSettingsService;
 import org.estatio.asset.dom.FixedAsset;
 import org.estatio.asset.dom.Property;
 import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;

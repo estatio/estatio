@@ -88,7 +88,7 @@ import org.estatio.dom.party.OrganisationPreviousName;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
-import org.estatio.dom.document.paperclips.PaperclipForParty;
+import org.estatio.document.dom.paperclips.PaperclipForParty;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.Program;

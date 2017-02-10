@@ -40,13 +40,13 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.document.documents.binders.AttachToNone;
-import org.estatio.dom.document.documents.binders.ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame;
-import org.estatio.dom.document.documents.binders.ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts;
-import org.estatio.dom.document.documents.binders.ForPrelimLetterOfInvoiceAttachToSame;
-import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
-import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
-import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
+import org.estatio.document.dom.documents.binders.AttachToNone;
+import org.estatio.document.dom.documents.binders.ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame;
+import org.estatio.document.dom.documents.binders.ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts;
+import org.estatio.document.dom.documents.binders.ForPrelimLetterOfInvoiceAttachToSame;
+import org.estatio.document.dom.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
+import org.estatio.document.dom.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
+import org.estatio.document.dom.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;

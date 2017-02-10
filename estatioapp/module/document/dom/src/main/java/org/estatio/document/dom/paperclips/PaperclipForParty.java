@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.paperclips;
+package org.estatio.document.dom.paperclips;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -45,7 +45,7 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @DomainObject(
-        objectType = "org.estatio.dom.document.paperclips.PaperclipForParty"
+        objectType = "PaperclipForParty"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT

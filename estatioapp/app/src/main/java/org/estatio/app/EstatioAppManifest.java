@@ -26,7 +26,7 @@ import org.estatio.budgetassignment.dom.EstatioBudgetAssignmentDomModule;
 import org.estatio.budget.dom.EstatioBudgetingDomModule;
 import org.estatio.charge.dom.EstatioChargeDomModule;
 import org.estatio.currency.dom.EstatioCurrencyDomModule;
-import org.estatio.dom.document.EstatioDocumentDomModule;
+import org.estatio.document.dom.EstatioDocumentDomModule;
 import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.dom.event.EstatioEventDomModule;
 import org.estatio.dom.financial.EstatioFinancialDomModule;
