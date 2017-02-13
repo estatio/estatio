@@ -173,11 +173,11 @@ public class Property_Test {
             // given
             property = new Property();
             // then
-            assertThat(property.disableDispose(null)).isNull();
+            assertThat(property.disableDispose()).isNull();
             // when
             property.dispose(new LocalDate(2000, 1, 1));
             // then
-            assertThat(property.disableDispose(null)).isNotNull();
+            assertThat(property.disableDispose()).isNotNull();
         }
     }
 

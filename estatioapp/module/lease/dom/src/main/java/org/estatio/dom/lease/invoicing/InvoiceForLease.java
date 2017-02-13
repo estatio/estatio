@@ -289,12 +289,7 @@ public class InvoiceForLease
             return null;
         }
 
-        public String disable$$(
-                final Charge charge,
-                final BigDecimal quantity,
-                final BigDecimal netAmount,
-                final LocalDate startDate,
-                final LocalDate endDate){
+        public String disable$$(){
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
 

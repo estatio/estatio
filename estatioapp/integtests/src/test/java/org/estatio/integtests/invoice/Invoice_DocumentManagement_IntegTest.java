@@ -607,7 +607,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final Bookmark documentBookmark = bookmarkService.bookmarkFor(document);
 
             // when remove the invoice
-            wrap(mixin(Invoice._remove.class, invoice)).$$();
+            wrap(mixin(Invoice._remove.class, invoice)).exec();
 
             transactionService.nextTransaction();
 
@@ -663,7 +663,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
                     .contains(invoice, invoiceBuyer, invoiceSeller, communication);
 
             // when remove the invoice
-            wrap(mixin(Invoice._remove.class, invoice)).$$();
+            wrap(mixin(Invoice._remove.class, invoice)).exec();
 
             transactionService.flushTransaction();
 

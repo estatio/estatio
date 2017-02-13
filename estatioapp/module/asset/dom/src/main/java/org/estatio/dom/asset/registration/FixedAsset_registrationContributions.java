@@ -60,9 +60,7 @@ public class FixedAsset_registrationContributions extends UdoDomainService<Fixed
         return registration;
     }
 
-    public boolean hideNewRegistration(
-            final FixedAsset subject,
-            final FixedAssetRegistrationType registrationType) {
+    public boolean hideNewRegistration() {
         return false; // TODO: return true if action is hidden, false if visible
     }
 

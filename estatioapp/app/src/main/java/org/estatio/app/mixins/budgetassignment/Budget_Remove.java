@@ -81,7 +81,7 @@ public class Budget_Remove {
         budget.remove();
     }
 
-    public String disableRemoveBudget(final boolean areYouSure){
+    public String disableRemoveBudget(){
         for (BudgetCalculation calculation : budgetCalculationRepository.findByBudget(budget)){
             if (calculation.getStatus().equals(Status.ASSIGNED)){
                 return "This budget is assigned already";

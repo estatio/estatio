@@ -29,11 +29,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 
 import org.estatio.dom.project.BusinessCase;
-import org.estatio.dom.project.BusinessCaseContributions;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
+import org.estatio.dom.project.Project_businessCase;
+import org.estatio.dom.project.Project_newBusinessCase;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
@@ -57,9 +58,6 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             }
         });
     }
-
-    @Inject
-    BusinessCaseContributions businessCaseContributions;
 
     @Inject
     ProjectRepository projectRepository;
@@ -88,13 +86,13 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
 
             // when
-            bc = businessCaseContributions.newBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
         }
 
         @Test
         public void valuesSet() throws Exception {
             //then
-            assertThat(businessCaseContributions.businessCase(pr1), is(bc));
+            assertThat(mixin(Project_businessCase.class, pr1).exec(), is(bc));
             assertNull(bc.getNext());
             assertNull(bc.getPrevious());
             assertThat(bc.getDate(), is(NOW));
@@ -103,9 +101,9 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             assertNull(bc.getLastUpdated());
             assertThat(bc.getDescription(), is(BUSINESSCASE_DESCRIPTION));
             assertThat(bc.getProject(), is(pr1));
-            assertThat(bc.hideUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, REVIEWDATE), is(false));
+            assertThat(bc.hideUpdateBusinessCase(), is(false));
             assertNull(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, REVIEWDATE));
-            assertThat(businessCaseContributions.hideNewBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, REVIEWDATE), is(true));
+            assertThat(mixin(Project_newBusinessCase.class, pr1).hideExec(), is(true));
         }
 
     }
@@ -127,13 +125,13 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
 
             // when
-            bc = businessCaseContributions.newBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, WRONG_REVIEWDATE);
+            bc = wrap(mixin(Project_newBusinessCase.class, pr1)).exec(BUSINESSCASE_DESCRIPTION, WRONG_REVIEWDATE);
         }
 
         @Test
         public void valuesSet() throws Exception {
             //then
-            assertThat(businessCaseContributions.businessCase(pr1), is(bc));
+            assertThat(mixin(Project_businessCase.class, pr1).exec(), is(bc));
             assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, WRONG_REVIEWDATE), is("A review date should not be in the past"));
         }
 
@@ -158,7 +156,7 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
-            bc = businessCaseContributions.newBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
 
             // when
             bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE_UPDATED);
@@ -167,7 +165,7 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void valuesSet() throws Exception {
             //then
-            assertThat(businessCaseContributions.businessCase(pr1), is(bc_upd));
+            assertThat(mixin(Project_businessCase.class, pr1).exec(), is(bc_upd));
             assertNull(bc_upd.getNext());
             assertThat(bc_upd.getPrevious(), is(bc));
             assertThat(bc.getNext(), is(bc_upd));
@@ -184,11 +182,11 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(bc.getDescription(), is(BUSINESSCASE_DESCRIPTION));
             assertThat(bc_upd.getProject(), is(pr1));
             assertThat(bc.getProject(), is(pr1));
-            assertThat(bc_upd.hideUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE), is(false));
-            assertThat(bc.hideUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE), is(true));
+            assertThat(bc_upd.hideUpdateBusinessCase(), is(false));
+            assertThat(bc.hideUpdateBusinessCase(), is(true));
             assertNull(bc_upd.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE));
             assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE), is("This is no active version of the business case and cannot be updated"));
-            assertThat(businessCaseContributions.hideNewBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, REVIEWDATE), is(true));
+            assertThat(mixin(Project_newBusinessCase.class, pr1).hideExec(), is(true));
         }
 
     }
@@ -211,7 +209,7 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
-            bc = businessCaseContributions.newBusinessCase(pr1, BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
 
             // when
             bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, WRONG_REVIEWDATE_UPDATED);

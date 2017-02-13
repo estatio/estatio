@@ -77,8 +77,17 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 	//endregion
 	// //////////////////////////////////////
 
+
+	public static class DescriptionType {
+		private DescriptionType() {}
+		public static class Meta {
+			public static final int MULTI_LINE = 5;
+			private Meta() {}
+		}
+	}
+
 	@Column(allowsNull = "false")
-    @PropertyLayout(multiLine = 5, describedAs = "Reason for the project and expected benefits")
+    @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE, describedAs = "Reason for the project and expected benefits")
 	@MemberOrder(sequence="1")
 	@Getter @Setter
 	private String description;
@@ -141,7 +150,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 		return this.getNextReviewDate();
 	}
 	
-	public boolean hideUpdateBusinessCase(final String description, final LocalDate reviewDate) {
+	public boolean hideUpdateBusinessCase() {
 		
 		if (this.getNext()==null) {
 			return false;

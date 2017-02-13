@@ -141,7 +141,7 @@ public abstract class Party
         getContainer().flush();
     }
 
-    public boolean hideRemoveAndReplace(Party party) {
+    public boolean hideRemoveAndReplace() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 

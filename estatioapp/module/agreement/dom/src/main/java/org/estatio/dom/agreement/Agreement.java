@@ -56,16 +56,16 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.Chained;
-import org.incode.module.base.dom.with.WithInterval;
-import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
-
-import org.estatio.dom.UdoDomainObject2;
+import org.incode.module.base.dom.with.WithInterval;
+import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
@@ -293,9 +293,7 @@ public abstract class Agreement
         return getChangeDates().changeDates(startDate, endDate);
     }
 
-    public String disableChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String disableChangeDates() {
         return null;
     }
 

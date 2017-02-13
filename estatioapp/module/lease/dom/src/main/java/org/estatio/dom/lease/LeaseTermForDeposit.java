@@ -152,9 +152,7 @@ public class LeaseTermForDeposit extends LeaseTerm {
         return netValue;
     }
 
-    public boolean hideChangeDates(
-            final LocalDate newStartDate,
-            final LocalDate newEndDate) {
+    public boolean hideChangeDates() {
         return true;
     }
 

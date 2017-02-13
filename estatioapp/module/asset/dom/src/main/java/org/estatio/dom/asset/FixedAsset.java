@@ -52,11 +52,11 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithNameComparable;
+import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithNameComparable;
-import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
 import org.estatio.dom.party.Party;
@@ -200,7 +200,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         }
     }
 
-    public String disableAddOwner(final Party newOwner, final OwnershipType type) {
+    public String disableAddOwner() {
         if (getOwners().stream().filter(owner -> owner.getOwnershipType().equals(OwnershipType.FULL)).toArray().length > 0) {
             return "This property is fully owned. To add another owner, first change the ownership type of the current owner to 'shared'";
         } else {

@@ -97,7 +97,6 @@ language governing permissions and limitations under the License.
         <incode-module-integtestsupport.version>1.13.1</incode-module-integtestsupport.version>
         <incode-module-fixturesupport.version>1.13.1</incode-module-fixturesupport.version>
 
-
         <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
         <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
         <mavendeps-isiswebapp.version>0.0.1</mavendeps-isiswebapp.version>

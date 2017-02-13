@@ -256,7 +256,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
     public void removeRuns(InvoiceCalculationParameters parameters) {
         List<InvoiceForLease> invoices = findByFixedAssetAndDueDateAndStatus(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
         for (Invoice invoice : invoices) {
-            factoryService.mixin(Invoice._remove.class, invoice).$$();
+            factoryService.mixin(Invoice._remove.class, invoice).exec();
         }
     }
 
