@@ -16,7 +16,6 @@
  */
 package org.estatio.app.services.budget;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -25,12 +24,9 @@ import javax.annotation.PostConstruct;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
@@ -46,25 +42,18 @@ public class KeyItemImportExportService {
         }
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @Programmatic
     public List<KeyItemImportExportLineItem> items(KeyItemImportExportManager manager) {
-        return Lists.transform(new ArrayList<KeyItem>(manager.getKeyTable().getItems()), toLineItem());
+        return Lists.transform(Lists.newArrayList(manager.getKeyTable().getItems()), toLineItem());
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @Programmatic
     public List<KeyItemImportExportLineItem> items(SortedSet<KeyItem> keyItems) {
-        return Lists.transform(new ArrayList<KeyItem>(keyItems), toLineItem());
+        return Lists.transform(Lists.newArrayList(keyItems), toLineItem());
     }
 
     private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {
-        return new Function<KeyItem, KeyItemImportExportLineItem>() {
-            @Override
-            public KeyItemImportExportLineItem apply(final KeyItem keyItem) {
-                return new KeyItemImportExportLineItem(keyItem);
-            }
-        };
+        return keyItem -> new KeyItemImportExportLineItem(keyItem);
     }
 
     @javax.inject.Inject
