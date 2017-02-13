@@ -83,7 +83,6 @@ public class EstatioFakeDataService {
         this.collections = new Collections();
         this.dates = new Dates();
         this.periods = new Periods();
-
     }
 
     @Programmatic
@@ -144,6 +143,7 @@ public class EstatioFakeDataService {
 
     public class Values {
 
+        @Programmatic
         public String code(final int numChars) {
             final StringBuilder buf = new StringBuilder();
             final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -154,22 +154,27 @@ public class EstatioFakeDataService {
             return buf.toString();
         }
 
+        @Programmatic
         public int anInt(final int upTo) {
             return randomService.nextInt(upTo);
         }
 
+        @Programmatic
         public int anInt(final int min, final int max) {
             return min + randomService.nextInt(max-min);
         }
 
+        @Programmatic
         public int aDouble(final int upTo) {
             return randomService.nextInt(upTo);
         }
 
+        @Programmatic
         public boolean aCoinFlip() {
             return randomService.nextDouble() < 0.5;
         }
 
+        @Programmatic
         public boolean aDiceRollOf6() {
             return anInt(6) == 5;
         }
@@ -178,61 +183,73 @@ public class EstatioFakeDataService {
 
     public class Collections  {
 
+        @Programmatic
         public <E extends Enum<E>> E anEnum(final Class<E> enumType) {
             final E[] enumConstants = enumType.getEnumConstants();
             return enumConstants[values().anInt(enumConstants.length)];
         }
 
+        @Programmatic
         public <T> T aBounded(final Class<T> cls) {
             final List<T> list = container.allInstances(cls);
             return anElement(list);
         }
 
+        @Programmatic
         public <T> T anElement(final List<T> list) {
             final int randomIdx = values().anInt(list.size());
             return list.get(randomIdx);
         }
 
+        @Programmatic
         public char anElement(final char[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public byte anElement(final byte[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public short anElement(final short[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public int anElement(final int[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public long anElement(final long[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public float anElement(final float[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public double anElement(final double[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public boolean anElement(final boolean[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
         }
 
+        @Programmatic
         public <T> T anElement(final T[] elements) {
             final int randomIdx = values().anInt(elements.length);
             return elements[randomIdx];
@@ -242,16 +259,19 @@ public class EstatioFakeDataService {
 
     public class Dates {
 
+        @Programmatic
         public LocalDate around(final Period period) {
             final LocalDate now = clockService.now();
             return values().aCoinFlip() ? before(period): after(period);
         }
 
+        @Programmatic
         public LocalDate before(final Period period) {
             final LocalDate now = clockService.now();
             return now.minus(period);
         }
 
+        @Programmatic
         public LocalDate after(final Period period) {
             final LocalDate now = clockService.now();
             return now.plus(period);
@@ -261,26 +281,32 @@ public class EstatioFakeDataService {
 
     public class Periods {
 
+        @Programmatic
         public Period days(final int minDays, final int maxDays) {
             return Period.days(values().anInt(minDays, maxDays));
         }
 
+        @Programmatic
         public Period daysUpTo(final int maxDays) {
             return days(0, maxDays);
         }
 
+        @Programmatic
         public Period months(final int minMonths, final int maxMonths) {
             return Period.months(values().anInt(minMonths, maxMonths));
         }
 
+        @Programmatic
         public Period monthsUpTo(final int months) {
             return months(0, months);
         }
 
+        @Programmatic
         public Period years(final int minYears, final int maxYears) {
             return Period.years(values().anInt(minYears, maxYears));
         }
 
+        @Programmatic
         public Period yearsUpTo(final int years) {
             return years(0, years);
         }
