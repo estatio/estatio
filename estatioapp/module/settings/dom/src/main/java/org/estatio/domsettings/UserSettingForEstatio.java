@@ -49,19 +49,19 @@ import lombok.Setter;
     @javax.jdo.annotations.Query(
             name = "findByUserAndKey", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.services.settings.UserSettingForEstatio "
+                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
                     + "WHERE user == :user "
                     + "&& key == :key ") 
     ,@javax.jdo.annotations.Query(
             name = "findByUser", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.services.settings.UserSettingForEstatio "
+                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
                     + "WHERE user == :user "
                     + "ORDER BY key") 
     ,@javax.jdo.annotations.Query(
             name = "findAll", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.services.settings.UserSettingForEstatio "
+                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
                     + "ORDER BY user, key") 
 })
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(

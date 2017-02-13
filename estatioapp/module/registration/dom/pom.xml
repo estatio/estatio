@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-dom-registration</artifactId>
     <packaging>jar</packaging>
 
-    <name>Estatio (Open Source) Module - Agreement</name>
+    <name>Estatio (Open Source) Module - Registration</name>
     <description>
         Estatio Registration Module
     </description>
