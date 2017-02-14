@@ -867,7 +867,7 @@ public class Lease
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Lease assign(
-            @Parameter(regexPattern = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX, regexPatternReplacement = org.incode.module.base.dom.types.ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
+            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) final String reference,
             final String name,
             final Party tenant,
             final LocalDate tenancyStartDate
