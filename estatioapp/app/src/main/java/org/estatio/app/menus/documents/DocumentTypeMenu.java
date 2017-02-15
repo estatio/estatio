@@ -39,7 +39,10 @@ import org.incode.module.document.dom.types.NameType;
 
 import org.estatio.dom.UdoDomainService;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "incodeDocuments.DocumentTypeMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
