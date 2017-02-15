@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jmock.auto.Mock;
@@ -38,7 +39,9 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
@@ -156,6 +159,47 @@ public class Occupancy_Test {
             return ib;
         }
 
+    }
+
+    @Test
+    public void validateNewOccupancy_Passes_Test(){
+        // given
+        Unit unit = new Unit();
+        Lease lease = new Lease();
+        LocalDate occStartDate = new LocalDate();
+
+        // when
+        UnitRepository unitRepository = new UnitRepository(){
+            @Override
+            public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
+                return Arrays.asList(unit);
+            }
+        };
+        lease.unitRepository = unitRepository;
+
+        // then
+        assertThat(lease.validateNewOccupancy(occStartDate, unit)).isNull();
+
+    }
+
+    @Test
+    public void validateNewOccupancy_Fails_Test() {
+        // given
+        Unit unit = new Unit();
+        Lease lease = new Lease();
+        LocalDate occStartDate = new LocalDate();
+
+        // when
+        UnitRepository unitRepository = new UnitRepository() {
+            @Override
+            public List<Unit> findByPropertyAndActiveOnDate(final Property property, LocalDate date) {
+                return Arrays.asList();
+            }
+        };
+        lease.unitRepository = unitRepository;
+
+        // then
+        assertThat(lease.validateNewOccupancy(occStartDate, unit)).isEqualTo("At the start date of the occupancy this unit is not available.");
     }
 
 }
