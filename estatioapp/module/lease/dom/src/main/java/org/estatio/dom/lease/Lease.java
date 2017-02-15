@@ -444,7 +444,7 @@ public class Lease
     }
 
     public String validateNewOccupancy(final LocalDate startDate, final Unit unit){
-        if (unitRepository.findByPropertyAndActiveOnDate(getProperty(), startDate).size()<1){
+        if (!unit.isActiveOn(startDate)){
             return "At the start date of the occupancy this unit is not available.";
         }
         return null;

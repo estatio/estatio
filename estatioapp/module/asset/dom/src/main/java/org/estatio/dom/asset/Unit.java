@@ -176,7 +176,7 @@ public class Unit
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(final LocalDate date) {
+    public boolean isActiveOn(final LocalDate date) {
         return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
     }
 
