@@ -37,9 +37,13 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 
 @DomainService(
-        nature = NatureOfService.VIEW_MENU_ONLY
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.services.budget.BudgetSpreadsheetImportMenu"
 )
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Budgets")
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Budgets"
+)
 public class BudgetSpreadsheetImportMenu {
 
     @PostConstruct

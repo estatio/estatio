@@ -46,6 +46,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.docfragments.DocFragmentMenu",
         repositoryFor = DocFragment.class
 )
 @DomainServiceLayout(

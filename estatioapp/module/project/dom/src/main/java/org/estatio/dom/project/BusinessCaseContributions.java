@@ -13,7 +13,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-@DomainService(nature=NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@DomainService(
+		nature=NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 public class BusinessCaseContributions  {
 
 	@Action(semantics=SemanticsOf.NON_IDEMPOTENT)

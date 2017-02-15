@@ -41,8 +41,15 @@ import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(named = "Indices", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "60.2")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.index.IndexMenu"
+)
+@DomainServiceLayout(
+        named = "Indices",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "60.2"
+)
 public class IndexMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

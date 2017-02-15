@@ -39,8 +39,15 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.SECONDARY, named = "Prototyping", menuOrder = "980")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.services.metamodel.BadCommandTargets"
+)
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
+        named = "Prototyping",
+        menuOrder = "980"
+)
 public class BadCommandTargets {
 
     @XmlRootElement

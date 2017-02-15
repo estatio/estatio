@@ -50,7 +50,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        nature = Nature.VIEW_MODEL
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.invoice.InvoiceImportManager"
 )
 public class InvoiceImportManager {
 

@@ -37,7 +37,11 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY, repositoryFor = Currency.class)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.currency.CurrencyMenu",
+        repositoryFor = Currency.class
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

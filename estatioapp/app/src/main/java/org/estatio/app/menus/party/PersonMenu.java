@@ -43,11 +43,15 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.PersonRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.party.PersonMenu"
+)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.3")
+        menuOrder = "20.3"
+)
 public class PersonMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

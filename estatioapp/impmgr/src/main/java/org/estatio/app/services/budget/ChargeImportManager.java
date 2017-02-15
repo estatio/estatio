@@ -38,7 +38,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        nature = Nature.VIEW_MODEL
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.budget.ChargeImportManager"
 )
 @DomainObjectLayout(paged = -1)
 public class ChargeImportManager {

@@ -39,7 +39,10 @@ import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.financial.BankAccountMenu"
+)
 @DomainServiceLayout(named = "Accounts", menuOrder = "30")
 public class BankAccountMenu {
 

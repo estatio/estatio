@@ -44,12 +44,14 @@ import org.estatio.dom.party.relationship.PartyRelationshipRepository;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
 
 @DomainService(
-        nature = NatureOfService.VIEW
+        nature = NatureOfService.VIEW,
+        objectType = "org.estatio.app.menus.party.PartyRelationshipMenuAndContributions"
 )
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.4")
+        menuOrder = "20.4"
+)
 public class PartyRelationshipMenuAndContributions {
 
 

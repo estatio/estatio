@@ -40,7 +40,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.currency.Currency;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 public class ProjectContributions {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

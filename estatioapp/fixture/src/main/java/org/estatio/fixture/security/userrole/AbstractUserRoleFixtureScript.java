@@ -16,11 +16,12 @@
  */
 package org.estatio.fixture.security.userrole;
 
-import org.isisaddons.module.security.dom.role.ApplicationRole;
-import org.isisaddons.module.security.dom.role.ApplicationRoles;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
-import org.isisaddons.module.security.dom.user.ApplicationUsers;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.isisaddons.module.security.dom.role.ApplicationRole;
+import org.isisaddons.module.security.dom.role.ApplicationRoleRepository;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
 public abstract class AbstractUserRoleFixtureScript extends FixtureScript {
 
@@ -43,8 +44,8 @@ public abstract class AbstractUserRoleFixtureScript extends FixtureScript {
             final String userName,
             final String roleName,
             final ExecutionContext executionContext) {
-        final ApplicationUser user = applicationUsers.findUserByUsername(userName);
-        final ApplicationRole applicationRole = applicationRoles.findRoleByName(roleName);
+        final ApplicationUser user = applicationUserRepository.findByUsername(userName);
+        final ApplicationRole applicationRole = applicationRoleRepository.findByName(roleName);
         if(applicationRole != null) {
             user.addRole(applicationRole);
         }
@@ -53,8 +54,8 @@ public abstract class AbstractUserRoleFixtureScript extends FixtureScript {
     }
 
     @javax.inject.Inject
-    private ApplicationUsers applicationUsers;
+    private ApplicationUserRepository applicationUserRepository;
     @javax.inject.Inject
-    private ApplicationRoles applicationRoles;
+    private ApplicationRoleRepository applicationRoleRepository;
 
 }

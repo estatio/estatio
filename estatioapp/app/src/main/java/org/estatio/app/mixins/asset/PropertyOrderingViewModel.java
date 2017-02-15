@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -48,6 +49,9 @@ import org.estatio.dom.asset.PropertyRepository;
 import lombok.Getter;
 import lombok.Setter;
 
+@DomainObject(
+        objectType = "org.estatio.app.mixins.asset.PropertyOrderingViewModel"
+)
 @MemberGroupLayout(
         columnSpans = {6,0,0,6},
         left = {"Group", "Ordering"}

@@ -34,7 +34,9 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 @DomainServiceLayout()
 public class KeyItem_occupancies {
 

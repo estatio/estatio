@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -41,7 +42,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 
-@DomainService(menuOrder = "93")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.fixturescripts.EstatioFixtureScripts",
+        menuOrder = "93"
+)
 @DomainServiceLayout(
         named = "Prototyping",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,

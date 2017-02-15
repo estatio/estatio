@@ -31,7 +31,10 @@ import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.dashboard.EstatioAppHomePage"
+)
 public class EstatioAppHomePage {
 
     private static final int MONTHS = 3;

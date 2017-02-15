@@ -7,9 +7,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.email.EmailService;
-
-import lombok.Getter;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -26,19 +25,43 @@ public class FakeEmailService implements EmailService {
     public void init() {
     }
 
-    @Getter
     private List<String> to;
-    @Getter
-    private List<String> cc;
-    @Getter
-    private List<String> bcc;
-    @Getter
-    private String subject;
-    @Getter
-    private String body;
-    @Getter
-    private DataSource[] attachments;
+    @Programmatic
+    public List<String> getTo() {
+        return to;
+    }
 
+    private List<String> cc;
+    @Programmatic
+    public List<String> getCc() {
+        return cc;
+    }
+
+    private List<String> bcc;
+    @Programmatic
+    public List<String> getBcc() {
+        return bcc;
+    }
+
+    private String subject;
+    @Programmatic
+    public String getSubject() {
+        return subject;
+    }
+
+    private String body;
+    @Programmatic
+    public String getBody() {
+        return body;
+    }
+
+    private DataSource[] attachments;
+    @Programmatic
+    public DataSource[] getAttachments() {
+        return attachments;
+    }
+
+    @Programmatic
     @Override
     public boolean send(
             final List<String> to,
@@ -57,6 +80,7 @@ public class FakeEmailService implements EmailService {
         return true; // all OK
     }
 
+    @Programmatic
     @Override
     public boolean isConfigured() {
         return true;

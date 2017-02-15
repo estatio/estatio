@@ -17,7 +17,11 @@ import org.estatio.dom.lease.Lease;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.dom.budgetassignment.viewmodels.CalculationResultViewModel",
+        auditing = Auditing.DISABLED
+)
 public class CalculationResultViewModel {
 
     public CalculationResultViewModel(){}
