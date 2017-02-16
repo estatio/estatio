@@ -300,7 +300,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
-                ChargeRefData.GB_SERVICE_CHARGE,
+                ChargeRefData.GB_MARKETING,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext,
