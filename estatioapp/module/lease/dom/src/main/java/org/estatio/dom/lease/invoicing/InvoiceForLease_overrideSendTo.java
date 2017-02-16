@@ -54,7 +54,7 @@ public class InvoiceForLease_overrideSendTo {
     public List<CommunicationChannel> choices0$$() {
         return locator.onFile(
                 invoiceForLease.getLease(),
-                LeaseConstants.ART_TENANT,
+                LeaseConstants.AgreementRoleType.TENANT.getTitle(),
                 CommunicationChannelType.EMAIL_ADDRESS, CommunicationChannelType.POSTAL_ADDRESS);
     }
 

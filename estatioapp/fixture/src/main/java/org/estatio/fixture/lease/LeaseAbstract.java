@@ -131,7 +131,7 @@ public abstract class LeaseAbstract extends FixtureScript {
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
-            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
@@ -191,9 +191,9 @@ public abstract class LeaseAbstract extends FixtureScript {
             final CommunicationChannelType channelType) {
 
         final AgreementRoleType inRoleOfTenant =
-                agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+                agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
         final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
-                agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
+                agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
 
         final Party tenant = partyRepository.findPartyByReference(partyRefTenant);
 
@@ -256,7 +256,7 @@ public abstract class LeaseAbstract extends FixtureScript {
     protected CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
     public void createAddress(Lease lease, String addressType) {
-        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
+        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
                 .findByTitle(addressType);
         final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
@@ -265,7 +265,7 @@ public abstract class LeaseAbstract extends FixtureScript {
     }
 
     protected void addAddresses(final Lease lease) {
-        createAddress(lease, LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
-        createAddress(lease, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS.getTitle());
+        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
     }
 }

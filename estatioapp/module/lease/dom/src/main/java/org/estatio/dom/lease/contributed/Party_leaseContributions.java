@@ -50,7 +50,7 @@ public class Party_leaseContributions extends UdoDomainService<Party_leaseContri
     @CollectionLayout(defaultView = "table")
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Lease> currentLeases(final Party party) {
-        return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT), getClockService().now())
+        return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()), getClockService().now())
                 .stream()
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()
@@ -61,7 +61,7 @@ public class Party_leaseContributions extends UdoDomainService<Party_leaseContri
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "currentLeases", sequence = "1")
     public List<Lease> allLeases(final Party party) {
-        return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT))
+        return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()))
                 .stream()
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()

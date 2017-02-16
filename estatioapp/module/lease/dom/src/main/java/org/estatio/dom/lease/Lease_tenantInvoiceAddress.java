@@ -26,7 +26,7 @@ import org.estatio.dom.communications.Agreement_currentCommunicationChannel;
 public class Lease_tenantInvoiceAddress extends Agreement_currentCommunicationChannel {
 
     public Lease_tenantInvoiceAddress(final Lease lease) {
-        super(lease, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+        super(lease, LeaseConstants.AgreementRoleType.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
     }
 
 

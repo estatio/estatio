@@ -27,9 +27,18 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicate;
@@ -88,26 +97,26 @@ import lombok.Setter;
  * generated on a quarterly basis. The lease terms (by implementing
  * <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s.
  */
-@javax.jdo.annotations.PersistenceCapable(
+@PersistenceCapable(
         identityType = IdentityType.DATASTORE
         ,schema = "dbo"     // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
-@javax.jdo.annotations.DatastoreIdentity(
+@DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Version(
+@Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Indices({
-        @javax.jdo.annotations.Index(
+@Indices({
+        @Index(
                 name = "LeaseItem_lease_type_sequence_IDX",
                 members = {"lease", "type", "sequence"}),
-        @javax.jdo.annotations.Index(
+        @Index(
                 name = "LeaseItem_lease_type_startDate_IDX",
                 members = {"lease", "type", "startDate"})
 })
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
+@Queries({
+        @Query(
                 name = "findByLeaseAndTypeAndStartDateAndSequence",
                 language = "JDOQL",
                 value = "SELECT "
@@ -116,7 +125,7 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& startDate == :startDate "
                         + "&& sequence == :sequence"),
-        @javax.jdo.annotations.Query(
+        @Query(
                 name = "findByLeaseAndType",
                 language = "JDOQL",
                 value = "SELECT "
@@ -124,7 +133,7 @@ import lombok.Setter;
                         + "WHERE lease == :lease "
                         + "&& type == :type "
                         + "ORDER BY sequence "),
-        @javax.jdo.annotations.Query(
+        @Query(
                 name = "findByLeaseAndTypeAndCharge",
                 language = "JDOQL",
                 value = "SELECT "
@@ -133,7 +142,7 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& charge == :charge "
                         + "ORDER BY sequence "),
-        @javax.jdo.annotations.Query(
+        @Query(
                 name = "findByLeaseAndTypeAndChargeAndStartDate",
                 language = "JDOQL",
                 value = "SELECT "
@@ -180,7 +189,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(
+    @Column(
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
@@ -200,7 +209,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseItemStatus.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = LeaseItemStatus.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseItemStatus status;
 
@@ -273,7 +282,7 @@ public class LeaseItem
 
 
 
-    @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
+    @Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private Lease lease;
@@ -282,7 +291,7 @@ public class LeaseItem
 
     @Property(hidden = Where.ALL_TABLES)
     @PropertyLayout(describedAs = "When left empty the tax of the charge will be used")
-    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
+    @Column(name = "taxId", allowsNull = "true")
     @Getter @Setter
     private Tax tax;
 
@@ -293,7 +302,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Column(allowsNull = "false")
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private BigInteger sequence;
@@ -305,21 +314,25 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
-    @javax.jdo.annotations.Column(allowsNull = "false", length = LeaseItemType.Meta.MAX_LEN)
+    @Persistent(defaultFetchGroup = "true")
+    @Column(allowsNull = "false", length = LeaseItemType.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseItemType type;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
+    @Persistent
     @Getter @Setter
     private LocalDate startDate;
 
     @Property(optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Persistent
+    @Persistent
     @Getter @Setter
     private LocalDate endDate;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private LeaseConstants.AgreementRoleType invoicedBy;
 
     // //////////////////////////////////////
 
@@ -369,7 +382,7 @@ public class LeaseItem
             final Charge charge
     ) {
         final LeaseItem newItem = getLease().newItem(
-                this.getType(), charge, invoicingFrequency, paymentMethod, startDate);
+                this.getType(), LeaseConstants.AgreementRoleType.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
         this.copyTerms(startDate, newItem);
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;
@@ -446,7 +459,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = InvoicingFrequency.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = InvoicingFrequency.Meta.MAX_LEN)
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private InvoicingFrequency invoicingFrequency;
@@ -463,13 +476,13 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "false")
+    @Column(name = "chargeId", allowsNull = "false")
     @Getter @Setter
     private Charge charge;
 
@@ -543,14 +556,14 @@ public class LeaseItem
     // //////////////////////////////////////
 
     @Property(hidden = Where.PARENTED_TABLES, optionality = Optionality.OPTIONAL)
-    @javax.jdo.annotations.Persistent
+    @Persistent
     @Getter @Setter
     private LocalDate nextDueDate;
 
     // //////////////////////////////////////
 
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
-    @javax.jdo.annotations.Persistent
+    @Persistent
     @Getter @Setter
     private LocalDate epochDate;
 
@@ -579,7 +592,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
+    @Persistent(mappedBy = "leaseItem")
     @CollectionLayout(render = RenderType.EAGERLY, paged = PAGE_SIZE)
     @Getter @Setter
     private SortedSet<LeaseTerm> terms = new TreeSet<>();

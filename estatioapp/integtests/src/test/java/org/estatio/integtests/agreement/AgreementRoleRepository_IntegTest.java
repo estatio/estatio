@@ -101,9 +101,9 @@ public class AgreementRoleRepository_IntegTest extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
+        agreementType = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
-        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.AgreementRoleType.TENANT.getTitle());
 
     }
 
@@ -134,7 +134,7 @@ public class AgreementRoleRepository_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+            artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
             leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             partyTopModel = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         }

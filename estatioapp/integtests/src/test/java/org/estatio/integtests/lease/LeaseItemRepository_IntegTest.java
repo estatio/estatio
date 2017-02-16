@@ -31,6 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemRepository;
 import org.estatio.dom.lease.LeaseItemType;
@@ -90,7 +91,7 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
 
             // when
             final ApplicationTenancy firstLocalAppTenancy = lease.getApplicationTenancy().getChildren().first();
-            LeaseItem newItem = leaseItemRepository.newLeaseItem(lease, currentItem.getType(), currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
+            LeaseItem newItem = leaseItemRepository.newLeaseItem(lease, currentItem.getType(), LeaseConstants.AgreementRoleType.LANDLORD, currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
             lease.getItems().add(newItem);
 
             // then

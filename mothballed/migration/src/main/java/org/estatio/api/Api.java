@@ -737,7 +737,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (address1 != null && partyReference != null && leaseReference != null) {
             final Lease lease = fetchLease(leaseReference);
             final Party party = fetchParty(partyReference);
-            final AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(isInvoiceAddress.compareTo(BigInteger.ZERO) == 0 ? LeaseConstants.ARCCT_INVOICE_ADDRESS : LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+            final AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(isInvoiceAddress.compareTo(BigInteger.ZERO) == 0 ? LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle() : LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS.getTitle());
             if (agreementRoleCommunicationChannelType == null)
                 throw new ApplicationException(String.format("AgreementRoleCommunicationChannelType not found."));
             PostalAddress address = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, fetchCountry(countryCode));

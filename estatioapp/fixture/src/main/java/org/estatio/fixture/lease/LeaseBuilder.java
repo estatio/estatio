@@ -191,7 +191,7 @@ public class LeaseBuilder extends FixtureScript {
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
-            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {

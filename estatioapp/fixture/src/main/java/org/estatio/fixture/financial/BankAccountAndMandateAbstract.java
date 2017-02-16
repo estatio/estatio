@@ -52,7 +52,7 @@ public abstract class BankAccountAndMandateAbstract extends FixtureScript {
     protected void createBankMandate(String ownerRef, String bankAccountRef, Integer sequence, SequenceType sequenceType, Scheme scheme, ExecutionContext executionContext) {
         final Party owner = partyRepository.findPartyByReference(ownerRef);
         final BankAccount bankAccount = (BankAccount) financialAccountRepository.findByOwnerAndReference(owner, bankAccountRef);
-        final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRoleType agreementRoleType = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
         final String partyRef = owner.getReference();
         final List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(owner, agreementRoleType, ld(2013, 10, 1));
         final Lease lease = (Lease) roles.get(0).getAgreement();

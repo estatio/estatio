@@ -26,19 +26,21 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.incode.module.country.fixture.CountriesRefData;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
-import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 
 public class ChargeRefData extends FixtureScript {
 
     private static final String CHARGE_SUFFIX_RENT = "_RENT";
+    private static final String CHARGE_SUFFIX_MARKETING = "_MARKETING";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE = "_SERVICE_CHARGE";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE2 = "_SERVICE_CHARGE2";
     private static final String CHARGE_SUFFIX_INCOMING_CHARGE_1 = "_INCOMING_CHARGE_1";
@@ -111,6 +113,8 @@ public class ChargeRefData extends FixtureScript {
     public static final String GB_ENTRY_FEE = CountriesRefData.GBR + CHARGE_SUFFIX_ENTRY_FEE;
     public static final String GB_TAX = CountriesRefData.GBR + CHARGE_SUFFIX_TAX;
     public static final String GB_SERVICE_CHARGE_INDEXABLE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String GB_MARKETING = CountriesRefData.GBR + CHARGE_SUFFIX_MARKETING;
+
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
