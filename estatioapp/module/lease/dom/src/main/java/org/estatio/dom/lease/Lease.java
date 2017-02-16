@@ -485,7 +485,7 @@ public class Lease
         return leaseItem;
     }
 
-    public List<Charge> choices1NewItem() {
+    public List<Charge> choices2NewItem() {
         return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }
 
@@ -508,7 +508,7 @@ public class Lease
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
-        final List<Charge> validCharges = choices1NewItem();
+        final List<Charge> validCharges = choices2NewItem();
         if (!validCharges.contains(charge)) {
             return String.format(
                     "Charge (with app tenancy level '%s') is not valid for this lease",
