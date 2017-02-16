@@ -21,7 +21,7 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.13.2</version>
+        <version>1.13.2.20170214-2237</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -64,21 +64,18 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.13.2.20170214-2237</isis.version>
-
-        <isis-module-command.version>1.13.2</isis-module-command.version>
+        <isis-module-command.version>1.13.2.20170216-1253</isis-module-command.version>
         <isis-module-excel.version>1.13.6</isis-module-excel.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
+        <isis-module-freemarker.version>1.13.2</isis-module-freemarker.version>
         <isis-module-pdfbox.version>1.13.0</isis-module-pdfbox.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
-        <isis-module-security.version>1.13.6</isis-module-security.version>
+        <isis-module-security.version>1.13.6.20170216-1316</isis-module-security.version>
         <isis-module-sessionlogger.version>1.13.1</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.13.0</isis-module-settings.version>
-
+        <isis-module-settings.version>1.13.0.20170216-1813</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
+        <isis-module-togglz.version>1.13.1.20170216-1353</isis-module-togglz.version>
         <isis-module-xdocreport.version>1.13.0</isis-module-xdocreport.version>
-        <isis-module-togglz.version>1.13.1</isis-module-togglz.version>
-        <isis-module-freemarker.version>1.13.2</isis-module-freemarker.version>
 
         <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
 
@@ -88,9 +85,10 @@ language governing permissions and limitations under the License.
 
         <incode-module-base.version>1.13.5</incode-module-base.version>
         <incode-module-classification.version>1.13.1</incode-module-classification.version>
+        <incode-module-communications.version>1.13.0.20170216-1424</incode-module-communications.version>
         <incode-module-country.version>1.13.1</incode-module-country.version>
         <incode-module-docfragment.version>1.13.3</incode-module-docfragment.version>
-        <incode-module-document.version>1.13.12</incode-module-document.version>
+        <incode-module-document.version>1.13.12.20170216-1418</incode-module-document.version>
         <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>1.13.1</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
@@ -99,7 +97,6 @@ language governing permissions and limitations under the License.
         <incode-module-integtestsupport.version>1.13.1</incode-module-integtestsupport.version>
         <incode-module-fixturesupport.version>1.13.1</incode-module-fixturesupport.version>
 
-        <incode-module-communications.version>1.13.0</incode-module-communications.version>
 
         <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
         <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
