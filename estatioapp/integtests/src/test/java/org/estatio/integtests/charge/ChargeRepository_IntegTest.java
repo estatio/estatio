@@ -85,7 +85,8 @@ public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
                     chargeRepository.findByReference(ChargeRefData.GB_TAX),
                     chargeRepository.findByReference(ChargeRefData.GB_TURNOVER_RENT),
                     chargeRepository.findByReference(ChargeRefData.GB_PERCENTAGE),
-                    chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT));
+                    chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT),
+                    chargeRepository.findByReference(ChargeRefData.GB_MARKETING));
 
         }
 

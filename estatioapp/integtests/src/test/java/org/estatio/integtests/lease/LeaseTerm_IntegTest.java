@@ -349,7 +349,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            Assert.assertThat(lease.getItems().size(), is(9));
+            Assert.assertThat(lease.getItems().size(), is(10));
         }
 
         @Test

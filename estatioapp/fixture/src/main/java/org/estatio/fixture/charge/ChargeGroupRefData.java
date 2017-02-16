@@ -39,6 +39,7 @@ public class ChargeGroupRefData extends FixtureScript {
     public static final String REF_ENTRY_FEE = "ENTRY_FEE";
     public static final String REF_TAX = "TAX";
     public static final String REF_SERVICE_CHARGE_INDEXABLE = "SERVICE_CHARGE_INDEXABLE";
+    public static final String REF_MARKETING = "MARKETING";
 
 
     @Override
@@ -57,6 +58,7 @@ public class ChargeGroupRefData extends FixtureScript {
         createChargeGroup(REF_ENTRY_FEE, "Entry Fee", executionContext);
         createChargeGroup(REF_TAX, "Tax", executionContext);
         createChargeGroup(REF_SERVICE_CHARGE_INDEXABLE, "Service Charge Indexable", executionContext);
+        createChargeGroup(REF_MARKETING, "Marketing", executionContext);
 
     }
 

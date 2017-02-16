@@ -132,6 +132,7 @@ public class ChargeRefData extends FixtureScript {
         final ChargeGroup chargeGroupEntryFee = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_ENTRY_FEE);
         final ChargeGroup chargeGroupTax = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_TAX);
         final ChargeGroup chargeGroupServiceChargeIndexable = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_SERVICE_CHARGE_INDEXABLE);
+        final ChargeGroup chargeGroupMarketing = chargeGroupRepository.findChargeGroup(ChargeGroupRefData.REF_MARKETING);
 
         final List<ApplicationTenancy> countryTenancies = estatioApplicationTenancyRepository.allCountryTenancies();
 
@@ -180,6 +181,9 @@ public class ChargeRefData extends FixtureScript {
                     taxReference, executionContext);
             createCharge(chargeGroupServiceChargeIndexable, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE,
                     "Service Charge Indexable" + countryName,
+                    taxReference, executionContext);
+            createCharge(chargeGroupMarketing, country2AlphaCode + CHARGE_SUFFIX_MARKETING,
+                    "Marketing" + countryName,
                     taxReference, executionContext);
         }
     }
