@@ -585,10 +585,18 @@ public class Lease
     @Programmatic
     public LeaseItem findItem(
             final LeaseItemType itemType,
+            final LocalDate itemStartDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(this, itemType, itemStartDate, invoicedBy);
+    }
+
+    @Programmatic
+    public LeaseItem findItem(
+            final LeaseItemType itemType,
             final Charge charge,
-            final LocalDate itemStartDate
-    ) {
-        return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDate(this, itemType, charge, itemStartDate);
+            final LocalDate itemStartDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy(this, itemType, charge, itemStartDate, invoicedBy);
     }
 
     @Programmatic

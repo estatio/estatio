@@ -52,7 +52,8 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
     public LeaseItem newLeaseItem(
             final Lease lease,
             final LeaseItemType type,
-            final LeaseConstants.AgreementRoleType invoicedBy, final Charge charge,
+            final LeaseConstants.AgreementRoleType invoicedBy,
+            final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
@@ -67,6 +68,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
         leaseItem.setStartDate(startDate);
         leaseItem.setStatus(LeaseItemStatus.ACTIVE);
         leaseItem.setSequence(nextSequence);
+        leaseItem.setInvoicedBy(invoicedBy);
         persistIfNotAlready(leaseItem);
         return leaseItem;
     }
@@ -115,16 +117,31 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
     }
 
     @Programmatic
-    public LeaseItem findByLeaseAndTypeAndChargeAndStartDate(
+    public LeaseItem findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy(
             final Lease lease,
             final LeaseItemType type,
             final Charge charge,
-            final LocalDate startDate) {
-        return firstMatch("findByLeaseAndTypeAndChargeAndStartDate",
+            final LocalDate startDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return firstMatch("findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy",
                 "lease", lease,
                 "type", type,
                 "charge", charge,
-                "startDate", startDate);
+                "startDate", startDate,
+                "invoicedBy", invoicedBy);
+    }
+
+    @Programmatic
+    public LeaseItem findByLeaseAndTypeAndStartDateAndInvoicedBy(
+            final Lease lease,
+            final LeaseItemType type,
+            final LocalDate startDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return firstMatch("findByLeaseAndTypeAndStartDateAndInvoicedBy",
+                "lease", lease,
+                "type", type,
+                "startDate", startDate,
+                "invoicedBy", invoicedBy);
     }
 
     // //////////////////////////////////////

@@ -27,6 +27,7 @@
                 <ns2:property id="applicationTenancyPath"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Invoicing" id="invoicing">
+                <ns2:property id="invoicedBy"/>
                 <ns2:property id="invoicingFrequency">
                     <ns2:action id="changeInvoicingFrequency" position="BELOW" />
                 </ns2:property>

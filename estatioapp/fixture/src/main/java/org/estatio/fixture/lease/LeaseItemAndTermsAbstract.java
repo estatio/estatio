@@ -95,14 +95,12 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
         final Charge charge = chargeRepository.findByReference(chargeReference);
 
-        final Lease lease1 = findLease(leaseRef);
-
-        LeaseItem li = lease1.findItem(leaseItemType, lease1.getStartDate(), BigInteger.ONE);
+        LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), invoicedBy);
         if (li == null) {
-            li = lease1.newItem(leaseItemType, invoicedBy, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease1.getStartDate());
+            li = lease.newItem(leaseItemType, invoicedBy, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
             li.setType(leaseItemType);
             li.setStatus(LeaseItemStatus.ACTIVE);
-            li.setEndDate(lease1.getEndDate());
+            li.setEndDate(lease.getEndDate());
             li.setSequence(BigInteger.valueOf(1));
             executionContext.addResult(this, li);
         }
@@ -273,14 +271,17 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
-            final ExecutionContext executionContext) {
+            final ExecutionContext executionContext,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
 
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
-                leaseRef, leaseItemAtPath,
+                leaseRef,
+                leaseItemAtPath,
                 ChargeRefData.GB_SERVICE_CHARGE,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                executionContext);
+                executionContext,
+                invoicedBy);
 
         final LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItemServiceCharge.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -292,11 +293,11 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
     protected LeaseTerm createLeaseTermForMarketing(
             final String leaseRef,
             final String leaseItemAtPath,
+            final LeaseConstants.AgreementRoleType invoicedBy,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
-            final ExecutionContext executionContext,
-            final LeaseConstants.AgreementRoleType invoicedBy){
+            final ExecutionContext executionContext){
 
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,

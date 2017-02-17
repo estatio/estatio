@@ -19,6 +19,7 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -46,12 +47,14 @@ public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb extends L
                 LEASE_REF,
                 AT_PATH, lease.getStartDate(), null,
                 bd(12400),
-                executionContext);
+                executionContext,
+                LeaseConstants.AgreementRoleType.LANDLORD);
         createLeaseTermForServiceCharge(
                 LEASE_REF,
                 AT_PATH, ld(2014, 1, 1), null,
                 bd(13000),
-                executionContext);
+                executionContext,
+                LeaseConstants.AgreementRoleType.LANDLORD);
 
     }
 

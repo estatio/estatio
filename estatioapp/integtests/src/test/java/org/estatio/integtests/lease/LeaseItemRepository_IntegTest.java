@@ -30,6 +30,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
@@ -37,14 +41,13 @@ import org.estatio.dom.lease.LeaseItemRepository;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
 
@@ -66,6 +69,8 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
     @Inject
     LeaseItemRepository leaseItemRepository;
 
+    @Inject ChargeRepository chargeRepository;
+
     Lease lease;
 
     @Before
@@ -78,7 +83,7 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void findLeaseItem() throws Exception {
             LeaseItem leaseItem = leaseItemRepository.findLeaseItem(lease, LeaseItemType.RENT, lease.getStartDate(), BigInteger.valueOf(1));
-            assertTrue(lease.getItems().contains(leaseItem));
+            assertThat(lease.getItems().contains(leaseItem)).isTrue();
         }
     }
 
@@ -96,7 +101,29 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
 
             // then
             List<LeaseItem> results = leaseItemRepository.findLeaseItemsByType(lease, LeaseItemType.RENT);
-            assertThat(results.size(), is(2));
+            assertThat(results.size()).isEqualTo(2);
+        }
+
+    }
+    public static class FindByLeaseAndTypeAndStartDateAndInvoicedBy extends LeaseItemRepository_IntegTest {
+
+        @Test
+        public void happy_case() throws Exception {
+            //given
+            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_RENT);
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            final LeaseItemType leaseItemType = LeaseItemType.RENT;
+            final LeaseConstants.AgreementRoleType agreementRoleType = LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION;
+            final InvoicingFrequency invoicingFrequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+            final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER;
+
+            lease.newItem(leaseItemType, agreementRoleType, charge, invoicingFrequency, paymentMethod, lease.getStartDate());
+
+            // When
+            final LeaseItem foundItem = leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(lease, leaseItemType, lease.getStartDate(), agreementRoleType);
+
+            //Then
+            assertThat(foundItem.getInvoicedBy()).isEqualTo(agreementRoleType);
         }
     }
 

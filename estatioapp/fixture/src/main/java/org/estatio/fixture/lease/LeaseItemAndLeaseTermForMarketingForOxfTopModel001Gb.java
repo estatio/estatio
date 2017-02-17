@@ -45,9 +45,9 @@ public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseI
         createLeaseTermForMarketing(
                 LEASE_REF,
                 AT_PATH,
-                lease.getStartDate(), null,
+                LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION, lease.getStartDate(), null,
                 bd(6000),
-                executionContext,
-                LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION);
+                executionContext
+        );
     }
 }

@@ -134,6 +134,16 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "ORDER BY sequence "),
         @Query(
+                name = "findByLeaseAndTypeAndStartDateAndInvoicedBy",
+                language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "&& type == :type "
+                        + "&& startDate == :startDate "
+                        + "&& invoicedBy == :invoicedBy "
+                        + "ORDER BY sequence "),
+        @Query(
                 name = "findByLeaseAndTypeAndCharge",
                 language = "JDOQL",
                 value = "SELECT "
@@ -143,7 +153,7 @@ import lombok.Setter;
                         + "&& charge == :charge "
                         + "ORDER BY sequence "),
         @Query(
-                name = "findByLeaseAndTypeAndChargeAndStartDate",
+                name = "findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy",
                 language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseItem "
@@ -151,10 +161,10 @@ import lombok.Setter;
                         + "&& type == :type "
                         + "&& charge == :charge "
                         + "&& startDate == :startDate "
+                        + "&& invoicedBy == :invoicedBy "
                         + "ORDER BY sequence ")
-
 })
-@Unique(name = "LeaseItem_lease_type_charge_startDate_sequence_UNQ", members = {"lease", "type", "charge", "startDate", "sequence"})
+@Unique(name = "LeaseItem_lease_type_charge_startDate_invoicedBy_sequence_UNQ", members = {"lease", "type", "charge", "startDate", "invoicedBy", "sequence"})
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "org.estatio.dom.lease.LeaseItem"
@@ -193,6 +203,7 @@ public class LeaseItem
             length = ApplicationTenancy.MAX_LENGTH_PATH,
             allowsNull = "false",
             name = "atPath"
+
     )
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
@@ -330,7 +341,7 @@ public class LeaseItem
     @Getter @Setter
     private LocalDate endDate;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = LeaseConstants.AgreementRoleType.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseConstants.AgreementRoleType invoicedBy;
 
