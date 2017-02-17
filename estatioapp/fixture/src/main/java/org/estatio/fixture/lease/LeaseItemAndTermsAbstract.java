@@ -38,6 +38,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
@@ -64,6 +65,24 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
             final ExecutionContext executionContext) {
+        return findOrCreateLeaseItem(
+                leaseRef,
+                leaseItemAtPath,
+                chargeReference,
+                leaseItemType,
+                invoicingFrequency,
+                executionContext,
+                LeaseConstants.AgreementRoleType.LANDLORD);
+    }
+
+    protected LeaseItem findOrCreateLeaseItem(
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final String chargeReference,
+            final LeaseItemType leaseItemType,
+            final InvoicingFrequency invoicingFrequency,
+            final ExecutionContext executionContext,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
 
         final Lease lease = findLease(leaseRef);
         final ApplicationTenancy leaseApplicationTenancy = lease.getApplicationTenancy();
@@ -75,7 +94,17 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         }
 
         final Charge charge = chargeRepository.findByReference(chargeReference);
-        return findOrCreateLeaseItem(leaseRef, leaseItemAtPath, charge, leaseItemType, invoicingFrequency, executionContext);
+
+        LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), invoicedBy);
+        if (li == null) {
+            li = lease.newItem(leaseItemType, invoicedBy, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
+            li.setType(leaseItemType);
+            li.setStatus(LeaseItemStatus.ACTIVE);
+            li.setEndDate(lease.getEndDate());
+            li.setSequence(BigInteger.valueOf(1));
+            executionContext.addResult(this, li);
+        }
+        return li;
     }
 
     private LeaseItem findOrCreateRentItem(final String leaseRef, final String leaseItemAtPath, final ExecutionContext executionContext){
@@ -90,28 +119,6 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     private Lease findLease(final String leaseRef) {
         return leaseRepository.findLeaseByReference(leaseRef);
-    }
-
-    protected LeaseItem findOrCreateLeaseItem(
-            final String leaseRef,
-            final String leaseItemAtPath,
-            final Charge charge,
-            final LeaseItemType leaseItemType,
-            final InvoicingFrequency invoicingFrequency,
-            final ExecutionContext executionContext) {
-
-        final Lease lease = findLease(leaseRef);
-
-        LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
-        if (li == null) {
-            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
-            li.setType(leaseItemType);
-            li.setStatus(LeaseItemStatus.ACTIVE);
-            li.setEndDate(lease.getEndDate());
-            li.setSequence(BigInteger.valueOf(1));
-            executionContext.addResult(this, li);
-        }
-        return li;
     }
 
     // //////////////////////////////////////
@@ -264,16 +271,43 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
-            final ExecutionContext executionContext) {
+            final ExecutionContext executionContext,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
 
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
-                leaseRef, leaseItemAtPath,
+                leaseRef,
+                leaseItemAtPath,
                 ChargeRefData.GB_SERVICE_CHARGE,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                executionContext);
+                executionContext,
+                invoicedBy);
 
         final LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItemServiceCharge.newTerm(startDate, endDate);
+        leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
+        leaseTerm.setBudgetedValue(budgetedValue);
+
+        return executionContext.addResult(this, leaseTerm);
+    }
+
+    protected LeaseTerm createLeaseTermForMarketing(
+            final String leaseRef,
+            final String leaseItemAtPath,
+            final LeaseConstants.AgreementRoleType invoicedBy,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal budgetedValue,
+            final ExecutionContext executionContext){
+
+        final LeaseItem leaseItem = findOrCreateLeaseItem(
+                leaseRef, leaseItemAtPath,
+                ChargeRefData.GB_MARKETING,
+                LeaseItemType.MARKETING,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                executionContext,
+                invoicedBy);
+
+        final LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setBudgetedValue(budgetedValue);
 

@@ -174,7 +174,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
     }
 
     List<CommunicationChannel> currentTenantInvoiceAddresses(final Agreement agreement) {
-        return locator.current(agreement, LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+        return locator.current(agreement, LeaseConstants.AgreementRoleType.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
 
     }
 

@@ -18,19 +18,49 @@
  */
 package org.estatio.dom.lease;
 
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public final class LeaseConstants {
 
     private LeaseConstants() {}
-    
-    public final static String AT_LEASE = "Lease";
-    
-    public final static String ART_LANDLORD = "Landlord"; 
-    public final static String ART_TENANT = "Tenant";
-    public final static String ART_MANAGER = "Manager";
 
-    public final static String ARCCT_INVOICE_ADDRESS = "Invoice Address";
-    public final static String ARCCT_ADMINISTRATION_ADDRESS = "Administration Address";
+    public interface Type {
 
+        String name();
+        String getTitle();
+    }
+
+    @AllArgsConstructor
+    public enum AgreementType implements Type {
+        LEASE("Lease");
+
+        @Getter
+        private String title;
+    }
+
+    @AllArgsConstructor
+    public enum AgreementRoleType implements Type {
+        LANDLORD("Landlord"),
+        TENANT("Tenant"),
+        TENANTS_ASSOCIATION("Tenants association"),
+        MANAGER("Manager");
+
+        @Getter
+        private String title;
+
+        public static class Meta {
+            public final static int MAX_LEN = 30;
+            private Meta() {}
+        }
+    }
+
+    @AllArgsConstructor
+    public enum AgreementRoleCommunicationChannelType implements Type {
+        INVOICE_ADDRESS("Invoice Address"),
+        ADMINISTRATION_ADDRESS("Administration Address");
+
+        @Getter
+        private String title;
+    }
 }

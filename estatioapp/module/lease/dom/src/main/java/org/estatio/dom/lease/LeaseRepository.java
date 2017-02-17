@@ -37,6 +37,9 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.JodaPeriodUtils;
+import org.incode.module.base.dom.utils.StringUtils;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -47,8 +50,6 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.JodaPeriodUtils;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
 public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
@@ -61,12 +62,12 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AT_LEASE);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE.getTitle());
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.TENANT.getTitle(), agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.LANDLORD.getTitle(), agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.MANAGER.getTitle(), agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS.getTitle(), agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle(), agreementType);
     }
 
     @Programmatic
@@ -108,7 +109,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
             final Party landlord,
             final Party tenant) {
         Lease lease = newTransientInstance();
-        final AgreementType at = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
+        final AgreementType at = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
         lease.setType(at);
         lease.setApplicationTenancyPath(applicationTenancy.getPath());
         lease.setReference(reference);
@@ -121,11 +122,11 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         persistIfNotAlready(lease);
 
         if (tenant != null) {
-            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
             lease.newRole(artTenant, tenant, null, null);
         }
         if (landlord != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_LANDLORD);
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
             lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;

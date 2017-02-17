@@ -48,6 +48,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
@@ -184,7 +185,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
             // given
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size()).isEqualTo(9);
+            assertThat(lease.getItems().size()).isEqualTo(10);
 
             // when
             LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
@@ -214,7 +215,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
         @Test
         public void whenNonEmpty() throws Exception {
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(lease.getItems().size()).isEqualTo(9);
+            assertThat(lease.getItems().size()).isEqualTo(10);
         }
     }
 
@@ -255,7 +256,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
             // when
             final LeaseItem leaseItem = wrap(leasePoison).newItem(
-                    LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
+                    LeaseItemType.DISCOUNT, LeaseConstants.AgreementRoleType.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate());
 
             // then
@@ -280,7 +281,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
             // when
             wrap(leasePoison).newItem(
-                    LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
+                    LeaseItemType.DISCOUNT, LeaseConstants.AgreementRoleType.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate());
         }
 

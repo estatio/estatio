@@ -23,39 +23,31 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;
-import static org.incode.module.base.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
+public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfMiracl005Gb.REF;
+    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
     public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfMiracl005(fixtureResults);
+        createLeaseTermsForOxfTopModel001(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfMiracl005(final ExecutionContext executionContext) {
+    private void createLeaseTermsForOxfTopModel001(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
+        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
 
-        createLeaseTermForServiceCharge(
+        createLeaseTermForMarketing(
                 LEASE_REF,
-                AT_PATH, lease.getStartDate(), null,
-                bd(12400),
-                executionContext,
-                LeaseConstants.AgreementRoleType.LANDLORD);
-        createLeaseTermForServiceCharge(
-                LEASE_REF,
-                AT_PATH, ld(2014, 1, 1), null,
-                bd(13000),
-                executionContext,
-                LeaseConstants.AgreementRoleType.LANDLORD);
-
+                AT_PATH,
+                LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION, lease.getStartDate(), null,
+                bd(6000),
+                executionContext
+        );
     }
-
 }

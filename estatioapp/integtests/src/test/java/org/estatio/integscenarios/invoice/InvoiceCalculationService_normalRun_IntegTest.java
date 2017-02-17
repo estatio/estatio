@@ -112,7 +112,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         });
 
         lease = leaseRepository.findLeaseByReference("OXF-TOPMODEL-001");
-        assertThat(lease.getItems().size(), is(9));
+        assertThat(lease.getItems().size(), is(10));
 
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));

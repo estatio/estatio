@@ -61,7 +61,7 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(LeaseConstants.AT_LEASE), LeaseForKalPoison001Nl.REF);
+        agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
         party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
@@ -77,8 +77,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
 
             // when
             existingRole.setEndDate(new LocalDate(2013, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), party, new LocalDate(2015, 1, 1), null);
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), party, new LocalDate(2015, 1, 1), null);
 
             // then
             assertThat(agreementRoleRepository.findByParty(party).size(), is(3));
@@ -90,8 +90,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
             assertThat(agreementRoleRepository.findByParty(party).size(), is(1));
 
             // when
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), party, null, new LocalDate(2014, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_MANAGER), party, new LocalDate(2014, 12, 31), null);
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), party, null, new LocalDate(2014, 12, 31));
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), party, new LocalDate(2014, 12, 31), null);
 
         }
     }

@@ -59,9 +59,9 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
     @Before
     public void setUp() throws Exception {
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreementType = agreementTypeRepository.find(LeaseConstants.AT_LEASE);
+        agreementType = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
-        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.AgreementRoleType.TENANT.getTitle());
 
     }
 
@@ -69,7 +69,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(LeaseConstants.ART_TENANT);
+            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
             assertThat(result, is(agreementRoleType));
         }
     }
@@ -88,7 +88,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByAgreementTypeAndTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.ART_TENANT);
+            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.AgreementRoleType.TENANT.getTitle());
             assertNotNull(result);
         }
     }

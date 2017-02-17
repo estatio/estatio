@@ -201,12 +201,12 @@ public class Lease_Test {
             // Then
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLeaseItemRepository).newLeaseItem(lease, leaseItemType, charge, invoicingFrequency, paymentMethod, startDate);
+                    oneOf(mockLeaseItemRepository).newLeaseItem(lease, leaseItemType, LeaseConstants.AgreementRoleType.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
                 }
             });
 
             // When
-            lease.newItem(leaseItemType, charge, invoicingFrequency, paymentMethod, startDate);
+            lease.newItem(leaseItemType, LeaseConstants.AgreementRoleType.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
         }
 
     }
@@ -343,19 +343,19 @@ public class Lease_Test {
         public void setUp() throws Exception {
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(LeaseConstants.ART_LANDLORD);
+            tenantAgreementRoleType.setTitle(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_LANDLORD);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
                     will(returnValue(landlordAgreementRoleType));
                 }
             });
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(LeaseConstants.ART_TENANT);
+            tenantAgreementRoleType.setTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_TENANT);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
                     will(returnValue(tenantAgreementRoleType));
                 }
             });
@@ -602,10 +602,10 @@ public class Lease_Test {
         public void setUp() throws Exception {
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(LeaseConstants.ART_TENANT);
+            tenantAgreementRoleType.setTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.ART_TENANT);
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
                     will(returnValue(tenantAgreementRoleType));
                 }
             });

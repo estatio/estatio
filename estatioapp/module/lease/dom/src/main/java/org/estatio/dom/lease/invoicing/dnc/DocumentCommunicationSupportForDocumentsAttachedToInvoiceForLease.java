@@ -116,7 +116,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
 
         // current choice(s) and default
         final List current = locator.current(lease,
-                LeaseConstants.ART_TENANT, LeaseConstants.ARCCT_INVOICE_ADDRESS, channelType);
+                LeaseConstants.AgreementRoleType.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle(), channelType);
         header.getToChoices().addAll(current);
         final CommunicationChannel sendTo = invoice.getSendTo();
 
@@ -127,7 +127,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
         }
 
         // additional choices (those on file)
-        final List onFile = locator.onFile(lease, LeaseConstants.ART_TENANT, channelType);
+        final List onFile = locator.onFile(lease, LeaseConstants.AgreementRoleType.TENANT.getTitle(), channelType);
         header.getToChoices().addAll(onFile);
     }
 

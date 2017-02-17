@@ -35,6 +35,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
@@ -89,7 +90,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
             // when
             final LeaseItem leaseItem = wrap(leasePoison).newItem(
                     LeaseItemType.DISCOUNT,
-                    charge,
+                    LeaseConstants.AgreementRoleType.LANDLORD, charge,
                     InvoicingFrequency.FIXED_IN_ADVANCE,
                     PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate()
@@ -116,7 +117,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
             expectedExceptions.expectMessage("not valid for this lease");
 
             // when
-            wrap(leasePoison).newItem(LeaseItemType.DISCOUNT, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leasePoison.getStartDate());
+            wrap(leasePoison).newItem(LeaseItemType.DISCOUNT, LeaseConstants.AgreementRoleType.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leasePoison.getStartDate());
         }
     }
 }

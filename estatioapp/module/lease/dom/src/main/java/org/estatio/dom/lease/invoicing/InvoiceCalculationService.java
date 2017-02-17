@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.lease.invoicing;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -48,6 +47,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
@@ -166,7 +166,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                                     lease.getItems() :
                                     new TreeSet<>(Arrays.asList(parameters.leaseItem()));
                     for (LeaseItem leaseItem : leaseItems) {
-                        if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED)) {
+                        if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED) && leaseItem.getInvoicedBy().equals(LeaseConstants.AgreementRoleType.LANDLORD)) {
+                            //TODO: We only filter the Landlords
                             if (parameters.leaseItemTypes() == null || parameters.leaseItemTypes().contains(leaseItem.getType())) {
                                 SortedSet<LeaseTerm> leaseTerms =
                                         parameters.leaseTerm() == null ?

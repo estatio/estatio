@@ -24,7 +24,6 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -44,6 +43,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
@@ -60,11 +60,9 @@ import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.unittestsupport.dom.assertions.Asserting.assertType;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class LeaseItem_IntegTest extends EstatioIntegrationTest {
 
@@ -116,7 +114,7 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
 
             // then
             Assert.assertNotNull(leaseTopModelRentTerm);
-            assertThat(leaseTopModelRentTerm, is(term0));
+            assertThat(leaseTopModelRentTerm).isEqualTo(term0);
 
             // and then
             Assert.assertNotNull(leaseTopModelRentTerm.getFrequency());
@@ -136,7 +134,7 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
             LeaseTermForServiceCharge leaseTopModelServiceChargeTerm = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.findTerm(VT.ld(2010, 7, 15));
 
             // then
-            assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(VT.bd("6000.00")));
+            assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue()).isEqualTo(VT.bd("6000.00"));
         }
 
     }
@@ -150,27 +148,28 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), LeaseConstants.AgreementRoleType.LANDLORD);
             final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+            assertThat(leaseItem.getInvoicedBy()).isEqualTo(LeaseConstants.AgreementRoleType.LANDLORD);
 
             // when
             final LocalDate startDate = VT.ld(2011, 7, 15);
             final LeaseItem newLeaseItem = wrap(leaseItem).copy(startDate, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, charge);
 
             // then
-            Assertions.assertThat(newLeaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
-            Assertions.assertThat(newLeaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
-            Assertions.assertThat(newLeaseItem.getStartDate()).isEqualTo(startDate);
-            Assertions.assertThat(newLeaseItem.getCharge()).isEqualTo(charge);
+            assertThat(newLeaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
+            assertThat(newLeaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
+            assertThat(newLeaseItem.getStartDate()).isEqualTo(startDate);
+            assertThat(newLeaseItem.getCharge()).isEqualTo(charge);
 
             final BigInteger nextSequenceNumber = leaseItem.getSequence().add(VT.bi(1));
-            Assertions.assertThat(newLeaseItem.getSequence()).isEqualTo(nextSequenceNumber);
+            assertThat(newLeaseItem.getSequence()).isEqualTo(nextSequenceNumber);
 
             final String atPath = leaseItem.getApplicationTenancyPath();
-            Assertions.assertThat(newLeaseItem.getApplicationTenancyPath()).isEqualTo(atPath);
+            assertThat(newLeaseItem.getApplicationTenancyPath()).isEqualTo(atPath);
 
-            Assertions.assertThat(newLeaseItem.getTerms().size()).isEqualTo(leaseItem.getTerms().size());
-            Assertions.assertThat(newLeaseItem.getEndDate()).isNull();
+            assertThat(newLeaseItem.getTerms().size()).isEqualTo(leaseItem.getTerms().size());
+            assertThat(newLeaseItem.getEndDate()).isNull();
         }
 
     }
@@ -186,15 +185,15 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
             // given
             LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
             final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-            Assertions.assertThat(leaseItem.getCharge()).isEqualTo(charge);
+            assertThat(leaseItem.getCharge()).isEqualTo(charge);
 
             // when
             final Charge newCharge = chargeRepository.findByReference(ChargeRefData.IT_SERVICE_CHARGE);
             final LeaseItem leaseItemReturned = wrap(leaseItem).changeCharge(newCharge);
 
             // then
-            Assertions.assertThat(leaseItem.getCharge()).isEqualTo(newCharge);
-            Assertions.assertThat(leaseItemReturned).isSameAs(leaseItem);
+            assertThat(leaseItem.getCharge()).isEqualTo(newCharge);
+            assertThat(leaseItemReturned).isSameAs(leaseItem);
         }
     }
 
@@ -210,16 +209,16 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            Assertions.assertThat(leaseItem).isNotNull();
-            Assertions.assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+            assertThat(leaseItem).isNotNull();
+            assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
             final SortedSet<LeaseTerm> terms = leaseItem.getTerms();
-            terms.forEach(leaseTerm -> Assertions.assertThat(leaseTerm.getInvoiceItems()).isEmpty());
+            terms.forEach(leaseTerm -> assertThat(leaseTerm.getInvoiceItems()).isEmpty());
 
             // when
             wrap(leaseItem).changeInvoicingFrequency(InvoicingFrequency.MONTHLY_IN_ADVANCE);
 
             // then
-            Assertions.assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.MONTHLY_IN_ADVANCE);
+            assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.MONTHLY_IN_ADVANCE);
         }
 
         @Test
@@ -227,9 +226,9 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
             // given
             Lease leaseWithInvoiceItem = leaseRepository.findLeaseByReference(LeaseForKalPoison001Nl.REF);
             LeaseItem leaseItem = leaseWithInvoiceItem.findFirstItemOfType(LeaseItemType.RENT);
-            Assertions.assertThat(leaseItem).isNotNull();
+            assertThat(leaseItem).isNotNull();
             final LeaseTerm term = leaseItem.getTerms().first();
-            Assertions.assertThat(term.getInvoiceItems()).isNotEmpty();
+            assertThat(term.getInvoiceItems()).isNotEmpty();
 
             // then
             thrown.expect(InvalidException.class);
@@ -291,40 +290,40 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
             super.setUp();
 
             leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
-            assertNotNull(leaseTopModelServiceChargeItem);
+            assertThat(leaseTopModelServiceChargeItem).isNotNull();
 
             leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
-            assertNotNull(leaseTopModelRentItem);
+            assertThat(leaseTopModelRentItem).isNotNull();
         }
 
         @Test
         public void givenServiceChargeItem_thenCreatesTermsForThatItemOnly() throws Exception {
 
             // given
-            assertNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNull();
 
             // when
             leaseTopModelServiceChargeItem.verify();
 
             // then
-            assertNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNotNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNotNull();
         }
 
         @Test
         public void givenIndexableRentItem_thenCreatesTermsForThatItemOnly() throws Exception {
 
             // given
-            assertNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNull();
 
             // when
             leaseTopModelRentItem.verify();
 
             // then
-            assertNotNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
-            assertNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
+            assertThat(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15))).isNotNull();
+            assertThat(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15))).isNull();
         }
     }
 

@@ -38,7 +38,9 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true, false, true),
     DISCOUNT(LeaseTermForFixed.class, false, false, true),
     ENTRY_FEE(LeaseTermForFixed.class, false, false, true),
-    TAX(LeaseTermForTax.class, true, true, false);
+    TAX(LeaseTermForTax.class, true, true, false),
+    MARKETING(LeaseTermForServiceCharge.class, true, false, true),
+    PROPERTY_TAX(LeaseTermForServiceCharge.class, true, false, true);
 
     private final Class<? extends LeaseTerm> cls;
     private final boolean autoCreateTerms;

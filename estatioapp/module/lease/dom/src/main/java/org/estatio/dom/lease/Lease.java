@@ -164,7 +164,7 @@ public class Lease
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Lease() {
-        super(LeaseConstants.ART_LANDLORD, LeaseConstants.ART_TENANT);
+        super(LeaseConstants.AgreementRoleType.LANDLORD.getTitle(), LeaseConstants.AgreementRoleType.TENANT.getTitle());
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
@@ -239,12 +239,12 @@ public class Lease
 
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_LANDLORD);
+        return findCurrentOrMostRecentAgreementRole(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
     }
 
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_TENANT);
+        return findCurrentOrMostRecentAgreementRole(LeaseConstants.AgreementRoleType.TENANT.getTitle());
     }
 
     // //////////////////////////////////////
@@ -476,33 +476,39 @@ public class Lease
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
+            final LeaseConstants.AgreementRoleType invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
-        LeaseItem leaseItem = leaseItemRepository.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
+        LeaseItem leaseItem = leaseItemRepository.newLeaseItem(this, type, invoicedBy, charge, invoicingFrequency, paymentMethod, startDate);
         return leaseItem;
     }
 
-    public List<Charge> choices1NewItem() {
+    public List<Charge> choices2NewItem() {
         return chargeRepository.chargesForCountry(this.getApplicationTenancy());
     }
 
-    public PaymentMethod default3NewItem() {
+    public LeaseConstants.AgreementRoleType default1NewItem(){
+        return LeaseConstants.AgreementRoleType.LANDLORD;
+    }
+
+    public PaymentMethod default4NewItem() {
         return defaultPaymentMethod();
     }
 
-    public LocalDate default4NewItem() {
+    public LocalDate default5NewItem() {
         return this.getStartDate();
     }
 
     public String validateNewItem(
             final LeaseItemType type,
+            final LeaseConstants.AgreementRoleType invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
-        final List<Charge> validCharges = choices1NewItem();
+        final List<Charge> validCharges = choices2NewItem();
         if (!validCharges.contains(charge)) {
             return String.format(
                     "Charge (with app tenancy level '%s') is not valid for this lease",
@@ -579,10 +585,18 @@ public class Lease
     @Programmatic
     public LeaseItem findItem(
             final LeaseItemType itemType,
+            final LocalDate itemStartDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(this, itemType, itemStartDate, invoicedBy);
+    }
+
+    @Programmatic
+    public LeaseItem findItem(
+            final LeaseItemType itemType,
             final Charge charge,
-            final LocalDate itemStartDate
-    ) {
-        return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDate(this, itemType, charge, itemStartDate);
+            final LocalDate itemStartDate,
+            final LeaseConstants.AgreementRoleType invoicedBy) {
+        return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy(this, itemType, charge, itemStartDate, invoicedBy);
     }
 
     @Programmatic
@@ -927,7 +941,7 @@ public class Lease
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
-                    item.getCharge(),
+                    LeaseConstants.AgreementRoleType.LANDLORD, item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
                     item.getStartDate()
