@@ -65,13 +65,13 @@ language governing permissions and limitations under the License.
 
     <properties>
         <isis-module-command.version>1.13.2.20170216-1253</isis-module-command.version>
-        <isis-module-excel.version>1.13.6</isis-module-excel.version>
+        <isis-module-excel.version>1.13.6.20170217-1145</isis-module-excel.version>
         <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
         <isis-module-freemarker.version>1.13.2</isis-module-freemarker.version>
         <isis-module-pdfbox.version>1.13.0</isis-module-pdfbox.version>
         <isis-module-poly.version>1.13.0</isis-module-poly.version>
         <isis-module-security.version>1.13.6.20170216-1316</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.13.1</isis-module-sessionlogger.version>
+        <isis-module-sessionlogger.version>1.13.1.20170217-1032</isis-module-sessionlogger.version>
         <isis-module-settings.version>1.13.0</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
         <isis-module-togglz.version>1.13.1.20170216-1353</isis-module-togglz.version>
@@ -84,7 +84,7 @@ language governing permissions and limitations under the License.
         <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
 
         <incode-module-base.version>1.13.5</incode-module-base.version>
-        <incode-module-classification.version>1.13.1</incode-module-classification.version>
+        <incode-module-classification.version>1.13.1.20170217-1253</incode-module-classification.version>
         <incode-module-communications.version>1.13.0.20170216-1424</incode-module-communications.version>
         <incode-module-country.version>1.13.1</incode-module-country.version>
         <incode-module-docfragment.version>1.13.3</incode-module-docfragment.version>
