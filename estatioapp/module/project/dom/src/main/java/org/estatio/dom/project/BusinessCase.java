@@ -134,7 +134,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 			final @ParameterLayout(multiLine = 5) String description,
 			final LocalDate nextReviewDate){
 		
-		final LocalDate now = LocalDate.now();
+		final LocalDate now = clockService.now();
 		
 		BusinessCase nextBusinesscase = businesscases.newBusinessCase(this.getProject(), description, nextReviewDate, this.date, now, this.getBusinessCaseVersion() + 1);
 		this.setNext(nextBusinesscase);
@@ -165,7 +165,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 			return "This is no active version of the business case and cannot be updated";
 		}
 		
-		LocalDate now = LocalDate.now();
+		LocalDate now = clockService.now();
 		if (reviewDate.isBefore(now)) {
 			return "A review date should not be in the past";
 		}

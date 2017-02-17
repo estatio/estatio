@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 
@@ -66,6 +67,9 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
     ProgramRepository programRepository;
 
     @Inject
+    ClockService clockService;
+
+    @Inject
     ApplicationTenancies applicationTenancies;
 
     public static class newBusinessCase extends BusinessCaseRepository_IntegTest {
@@ -75,18 +79,22 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
         Project pr1;
 
         private static final String BUSINESSCASE_DESCRIPTION = "This is a description";
-        private static final LocalDate REVIEWDATE = LocalDate.now().plusDays(7);
-        private static final LocalDate NOW = LocalDate.now();
+        private LocalDate reviewDate;
+        private LocalDate now;
         private static final String AT_PATH_GLOBAL = "/";
 
         @Before
         public void setUp() throws Exception {
+
+            reviewDate = clockService.now().plusDays(7);
+            now = clockService.now();
+
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
 
             // when
-            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, reviewDate);
         }
 
         @Test
@@ -95,14 +103,14 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(mixin(Project_businessCase.class, pr1).exec(), is(bc));
             assertNull(bc.getNext());
             assertNull(bc.getPrevious());
-            assertThat(bc.getDate(), is(NOW));
+            assertThat(bc.getDate(), is(now));
             assertThat(bc.getBusinessCaseVersion(), is(1));
-            assertThat(bc.getNextReviewDate(), is(REVIEWDATE));
+            assertThat(bc.getNextReviewDate(), is(reviewDate));
             assertNull(bc.getLastUpdated());
             assertThat(bc.getDescription(), is(BUSINESSCASE_DESCRIPTION));
             assertThat(bc.getProject(), is(pr1));
             assertThat(bc.hideUpdateBusinessCase(), is(false));
-            assertNull(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, REVIEWDATE));
+            assertNull(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, reviewDate));
             assertThat(mixin(Project_newBusinessCase.class, pr1).hideExec(), is(true));
         }
 
@@ -115,24 +123,30 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
         Project pr1;
 
         private static final String BUSINESSCASE_DESCRIPTION = "This is a description";
-        private static final LocalDate WRONG_REVIEWDATE = LocalDate.now().minusDays(7);
+        private LocalDate wrongReviewDate;
         private static final String AT_PATH_GLOBAL = "/";
 
         @Before
         public void setUp() throws Exception {
+
+            wrongReviewDate =  clockService.now().minusDays(7);
+
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
 
-            // when
-            bc = wrap(mixin(Project_newBusinessCase.class, pr1)).exec(BUSINESSCASE_DESCRIPTION, WRONG_REVIEWDATE);
         }
 
         @Test
         public void valuesSet() throws Exception {
+
+            expectedExceptions.expectMessage("A review date should not be in the past");
+
+            // when
+            bc = wrap(mixin(Project_newBusinessCase.class, pr1)).exec(BUSINESSCASE_DESCRIPTION, wrongReviewDate);
+
             //then
             assertThat(mixin(Project_businessCase.class, pr1).exec(), is(bc));
-            assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION, WRONG_REVIEWDATE), is("A review date should not be in the past"));
         }
 
     }
@@ -146,20 +160,26 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
 
         private static final String BUSINESSCASE_DESCRIPTION = "This is a description";
         private static final String BUSINESSCASE_DESCRIPTION_UPDATED = "This is an updated description";
-        private static final LocalDate REVIEWDATE = LocalDate.now().plusDays(7);
-        private static final LocalDate REVIEWDATE_UPDATED = LocalDate.now().plusDays(14);
-        private static final LocalDate NOW = LocalDate.now();
+        private LocalDate reviewDate;
+        private LocalDate reviewDateUpdated;
+        private LocalDate now;
+
         private static final String AT_PATH_GLOBAL = "/";
 
         @Before
         public void setUp() throws Exception {
+
+            reviewDate = clockService.now().plusDays(7);
+            reviewDateUpdated = clockService.now().plusDays(14);
+            now = clockService.now();
+
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
-            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, reviewDate);
 
             // when
-            bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE_UPDATED);
+            bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, reviewDateUpdated);
         }
 
         @Test
@@ -170,13 +190,13 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(bc_upd.getPrevious(), is(bc));
             assertThat(bc.getNext(), is(bc_upd));
             assertNull(bc.getPrevious());
-            assertThat(bc_upd.getDate(), is(NOW));
-            assertThat(bc.getDate(), is(NOW));
+            assertThat(bc_upd.getDate(), is(now));
+            assertThat(bc.getDate(), is(now));
             assertThat(bc_upd.getBusinessCaseVersion(), is(2));
             assertThat(bc.getBusinessCaseVersion(), is(1));
-            assertThat(bc_upd.getNextReviewDate(), is(REVIEWDATE_UPDATED));
-            assertThat(bc.getNextReviewDate(), is(REVIEWDATE));
-            assertThat(bc_upd.getLastUpdated(), is(NOW));
+            assertThat(bc_upd.getNextReviewDate(), is(reviewDateUpdated));
+            assertThat(bc.getNextReviewDate(), is(reviewDate));
+            assertThat(bc_upd.getLastUpdated(), is(now));
             assertNull(bc.getLastUpdated());
             assertThat(bc_upd.getDescription(), is(BUSINESSCASE_DESCRIPTION_UPDATED));
             assertThat(bc.getDescription(), is(BUSINESSCASE_DESCRIPTION));
@@ -184,8 +204,8 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(bc.getProject(), is(pr1));
             assertThat(bc_upd.hideUpdateBusinessCase(), is(false));
             assertThat(bc.hideUpdateBusinessCase(), is(true));
-            assertNull(bc_upd.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE));
-            assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE), is("This is no active version of the business case and cannot be updated"));
+            assertNull(bc_upd.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, reviewDate));
+            assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, reviewDate), is("This is no active version of the business case and cannot be updated"));
             assertThat(mixin(Project_newBusinessCase.class, pr1).hideExec(), is(true));
         }
 
@@ -200,27 +220,31 @@ public class BusinessCaseRepository_IntegTest extends EstatioIntegrationTest {
 
         private static final String BUSINESSCASE_DESCRIPTION = "This is a description";
         private static final String BUSINESSCASE_DESCRIPTION_UPDATED = "This is an updated description";
-        private static final LocalDate REVIEWDATE = LocalDate.now().plusDays(7);
-        private static final LocalDate WRONG_REVIEWDATE_UPDATED = LocalDate.now().minusDays(1);
+        private LocalDate reviewDate;
+        private LocalDate wrongReviewDateUpdated;
         private static final String AT_PATH_GLOBAL = "/";
 
         @Before
         public void setUp() throws Exception {
+
+            reviewDate = clockService.now().plusDays(7);
+            wrongReviewDateUpdated = clockService.now().minusDays(1);
+
             // given
             p1 = programRepository.newProgram("TST", "TestProgram", "TestGoal", applicationTenancies.findTenancyByPath(AT_PATH_GLOBAL));
             pr1 = projectRepository.newProject("PR4", "Testproject", new LocalDate(2015, 1, 1), new LocalDate(2015, 12, 31), null, null, null, p1);
-            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, REVIEWDATE);
+            bc = mixin(Project_newBusinessCase.class, pr1).exec(BUSINESSCASE_DESCRIPTION, reviewDate);
 
             // when
-            bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, WRONG_REVIEWDATE_UPDATED);
+            bc_upd = bc.updateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, wrongReviewDateUpdated);
         }
 
         @Test
         public void valuesSet() throws Exception {
             //then
 
-            assertThat(bc_upd.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, WRONG_REVIEWDATE_UPDATED), is("A review date should not be in the past"));
-            assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, REVIEWDATE), is("This is no active version of the business case and cannot be updated"));
+            assertThat(bc_upd.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, wrongReviewDateUpdated), is("A review date should not be in the past"));
+            assertThat(bc.validateUpdateBusinessCase(BUSINESSCASE_DESCRIPTION_UPDATED, reviewDate), is("This is no active version of the business case and cannot be updated"));
         }
 
     }

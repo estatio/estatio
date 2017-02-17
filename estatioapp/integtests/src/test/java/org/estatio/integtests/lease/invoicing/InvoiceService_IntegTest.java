@@ -32,7 +32,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.invoice.InvoiceMenu;
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.index.Index;
@@ -80,7 +80,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    InvoiceServiceMenuAndContributions invoiceService;
+    InvoiceServiceMenu invoiceService;
 
     @Inject
     InvoiceRepository invoiceRepository;
