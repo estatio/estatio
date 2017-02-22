@@ -31,9 +31,10 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.tax.Tax;
 import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,6 +66,74 @@ public class LeaseTermForDeposit_Test {
 
     public static class ValueForDate extends LeaseTermForDeposit_Test {
 
+        @Mock
+        LeaseItem leaseItem;
+
+        @Test
+        public void value_for_date_in_arrears_takes_endDate_interval_before_intervalContaining_dueDate(){
+
+            context.checking(new Expectations() {
+                {
+                    allowing(leaseItem).getInvoicingFrequency();
+                    will(returnValue(InvoicingFrequency.QUARTERLY_IN_ARREARS));
+                }
+            });
+
+            // given
+            LeaseTermForDeposit leaseTermForDeposit = new LeaseTermForDeposit();
+            leaseTermForDeposit.setLeaseItem(leaseItem);
+
+            // when
+            LocalDate dueDateOnStartDueDateInterval = new LocalDate(2010,01,01);
+            // then
+            LocalDate endDateOfDueDateInterval = new LocalDate(2009,12,31);
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDateOnStartDueDateInterval)).isEqualTo(endDateOfDueDateInterval);
+
+            // and when
+            LocalDate dueDate = new LocalDate(2010,01,02);
+            // then still
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
+
+            // and when
+            dueDate = new LocalDate(2009,12,31);
+            // then
+            endDateOfDueDateInterval = new LocalDate(2009,9,30);
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
+
+        }
+
+        @Test
+        public void value_for_date_in_advance_takes_endDate_intervalContaining_dueDate(){
+
+            context.checking(new Expectations() {
+                {
+                    allowing(leaseItem).getInvoicingFrequency();
+                    will(returnValue(InvoicingFrequency.QUARTERLY_IN_ADVANCE));
+                }
+            });
+
+            // given
+            LeaseTermForDeposit leaseTermForDeposit = new LeaseTermForDeposit();
+            leaseTermForDeposit.setLeaseItem(leaseItem);
+
+            // when
+            LocalDate dueDateOnStartDueDateInterval = new LocalDate(2010,01,01);
+            // then
+            LocalDate endDateOfDueDateInterval = new LocalDate(2010,3,31);
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDateOnStartDueDateInterval)).isEqualTo(endDateOfDueDateInterval);
+            // and when
+            LocalDate dueDate = new LocalDate(2010,01,02);
+            // then still
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
+
+            // and when
+            dueDate = new LocalDate(2009,12,31);
+            // then
+            endDateOfDueDateInterval = new LocalDate(2009,12,31);
+            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
+
+        }
+
         @Test
         public void date_outside_interval_returns_zero() throws Exception {
 
@@ -72,7 +141,7 @@ public class LeaseTermForDeposit_Test {
                 @Override public LocalDateInterval getInterval() {
                     return new LocalDateInterval(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1), AbstractInterval.IntervalEnding.EXCLUDING_END_DATE);
                 }
-                @Override public BigDecimal getCalculatedDepositValue() {
+                @Override BigDecimal calculatedDepositValueForDate(final LocalDate verificationDate) {
                     return new BigDecimal("123.45");
                 }
             };
@@ -90,13 +159,15 @@ public class LeaseTermForDeposit_Test {
                 @Override public LocalDateInterval getInterval() {
                     return new LocalDateInterval(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1), AbstractInterval.IntervalEnding.EXCLUDING_END_DATE);
                 }
-                @Override public BigDecimal getCalculatedDepositValue() {
+                @Override BigDecimal calculatedDepositValueForDate(final LocalDate verificationDate) {
                     return new BigDecimal("123.45");
                 }
                 @Override public BigDecimal getManualDepositValue() {
                     return new BigDecimal("123.46");
                 }
             };
+            leaseTermForDeposit.setLeaseItem(leaseItem);
+            leaseTermForDeposit.setFraction(Fraction.M6);
             
             //When,Then
             assertThat(leaseTermForDeposit.valueForDate(new LocalDate(2013, 1, 1))).isEqualTo(new BigDecimal("123.46"));

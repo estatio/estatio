@@ -116,7 +116,22 @@ public class LeaseTermForDeposit extends LeaseTerm {
 
     @Override
     public BigDecimal valueForDate(LocalDate dueDate) {
-        return getInterval().contains(dueDate) ? ObjectUtils.firstNonNull(getManualDepositValue(), getCalculatedDepositValue()) : BigDecimal.ZERO.setScale(2);
+        return getInterval().contains(dueDate) ? ObjectUtils.firstNonNull(getManualDepositValue(), calculatedDepositValueForDate(dueDate)) : BigDecimal.ZERO.setScale(2);
+    }
+
+    @Programmatic
+    BigDecimal calculatedDepositValueForDate(final LocalDate dueDate){
+        BigDecimal depositBaseForDate = calculateDepositBaseValue(dueDateToUse(dueDate));
+        return getFraction().fractionOf(depositBaseForDate);
+    }
+
+    @Programmatic
+    LocalDate dueDateToUse(final LocalDate dueDate){
+        return getLeaseItem().getInvoicingFrequency().getPaidIn()== InvoicingFrequency.PaidIn.ADVANCE ?
+                getLeaseItem().getInvoicingFrequency().intervalContaining(dueDate).endDate() :
+                getLeaseItem().getInvoicingFrequency().intervalContaining(
+                        getLeaseItem().getInvoicingFrequency().intervalContaining(dueDate).startDate().minusDays(1)
+                ).endDate();
     }
 
     @Override
@@ -134,7 +149,8 @@ public class LeaseTermForDeposit extends LeaseTerm {
         return this;
     }
 
-    @Programmatic BigDecimal calculateDepositBaseValue(final LocalDate verificationDate) {
+    @Programmatic
+    BigDecimal calculateDepositBaseValue(final LocalDate verificationDate) {
         BigDecimal calculatedValue = BigDecimal.ZERO;
         for (LeaseItem leaseItem : this.getLeaseItem().getSourceItems().stream().map(i-> i.getSourceItem()).collect(Collectors.toList())) {
             LocalDate dateToUse = ObjectUtils.firstNonNull(getFixedDepositCalculationDate(), verificationDate);

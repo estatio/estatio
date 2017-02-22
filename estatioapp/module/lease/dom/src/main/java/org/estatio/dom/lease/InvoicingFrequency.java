@@ -28,10 +28,11 @@ import com.google.common.collect.Ordering;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.utils.CalendarUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.utils.CalendarUtils;
 
 public enum InvoicingFrequency {
 
@@ -210,6 +211,10 @@ public enum InvoicingFrequency {
         private Meta() {}
 
 
+    }
+
+    public PaidIn getPaidIn(){
+        return paidIn;
     }
 
 }
