@@ -67,70 +67,34 @@ public class LeaseTermForDeposit_Test {
     public static class ValueForDate extends LeaseTermForDeposit_Test {
 
         @Mock
-        LeaseItem leaseItem;
+        LeaseItem sourceItemMock;
 
         @Test
-        public void value_for_date_in_arrears_takes_endDate_interval_before_intervalContaining_dueDate(){
+        public void valueForDate_inspects_sourceItem() throws Exception {
 
             context.checking(new Expectations() {
                 {
-                    allowing(leaseItem).getInvoicingFrequency();
-                    will(returnValue(InvoicingFrequency.QUARTERLY_IN_ARREARS));
+                    oneOf(sourceItemMock).valueForDate(with(any(LocalDate.class)));
+                    will(returnValue(new BigDecimal("246.90")));
                 }
             });
 
             // given
-            LeaseTermForDeposit leaseTermForDeposit = new LeaseTermForDeposit();
-            leaseTermForDeposit.setLeaseItem(leaseItem);
-
-            // when
-            LocalDate dueDateOnStartDueDateInterval = new LocalDate(2010,01,01);
-            // then
-            LocalDate endDateOfDueDateInterval = new LocalDate(2009,12,31);
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDateOnStartDueDateInterval)).isEqualTo(endDateOfDueDateInterval);
-
-            // and when
-            LocalDate dueDate = new LocalDate(2010,01,02);
-            // then still
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
-
-            // and when
-            dueDate = new LocalDate(2009,12,31);
-            // then
-            endDateOfDueDateInterval = new LocalDate(2009,9,30);
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
-
-        }
-
-        @Test
-        public void value_for_date_in_advance_takes_endDate_intervalContaining_dueDate(){
-
-            context.checking(new Expectations() {
-                {
-                    allowing(leaseItem).getInvoicingFrequency();
-                    will(returnValue(InvoicingFrequency.QUARTERLY_IN_ADVANCE));
+            LocalDate inspectionDate = new LocalDate();
+            LeaseItem depositItem = new LeaseItem(){
+                @Override
+                public List<LeaseItemSource> getSourceItems(){
+                    return Arrays.asList(new LeaseItemSource(null, sourceItemMock));
                 }
-            });
 
-            // given
+            };
             LeaseTermForDeposit leaseTermForDeposit = new LeaseTermForDeposit();
-            leaseTermForDeposit.setLeaseItem(leaseItem);
-
+            leaseTermForDeposit.setLeaseItem(depositItem);
+            leaseTermForDeposit.setFraction(Fraction.M6);
             // when
-            LocalDate dueDateOnStartDueDateInterval = new LocalDate(2010,01,01);
+            BigDecimal valueForDate = leaseTermForDeposit.valueForDate(inspectionDate);
             // then
-            LocalDate endDateOfDueDateInterval = new LocalDate(2010,3,31);
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDateOnStartDueDateInterval)).isEqualTo(endDateOfDueDateInterval);
-            // and when
-            LocalDate dueDate = new LocalDate(2010,01,02);
-            // then still
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
-
-            // and when
-            dueDate = new LocalDate(2009,12,31);
-            // then
-            endDateOfDueDateInterval = new LocalDate(2009,12,31);
-            assertThat(leaseTermForDeposit.dueDateToUse(dueDate)).isEqualTo(endDateOfDueDateInterval);
+            assertThat(valueForDate).isEqualTo(new BigDecimal("123.45"));
 
         }
 
@@ -166,8 +130,6 @@ public class LeaseTermForDeposit_Test {
                     return new BigDecimal("123.46");
                 }
             };
-            leaseTermForDeposit.setLeaseItem(leaseItem);
-            leaseTermForDeposit.setFraction(Fraction.M6);
             
             //When,Then
             assertThat(leaseTermForDeposit.valueForDate(new LocalDate(2013, 1, 1))).isEqualTo(new BigDecimal("123.46"));

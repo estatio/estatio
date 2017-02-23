@@ -213,8 +213,4 @@ public enum InvoicingFrequency {
 
     }
 
-    public PaidIn getPaidIn(){
-        return paidIn;
-    }
-
 }

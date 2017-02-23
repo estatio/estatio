@@ -215,8 +215,8 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
 
             assertThat(depositItemInArrears.getTerms().size()).isEqualTo(1);
             assertThat(termInArrears.getDepositBase()).isEqualTo(new BigDecimal("21016.31"));
-            assertThat(termInArrears.valueForDate(startDateDeposit)).isEqualTo(new BigDecimal("10150.00"));
-            assertThat(termInArrears.valueForDate(invoiceDueDate)).isEqualTo(new BigDecimal("10281.95"));
+            assertThat(termInArrears.valueForDate(startDateDeposit)).isEqualTo(new BigDecimal("10281.95"));
+            assertThat(termInArrears.valueForDate(invoiceDueDate)).isEqualTo(new BigDecimal("10508.16"));
 
             // and when
             invoiceService.calculate(leaseForMedia, InvoiceRunType.RETRO_RUN, Arrays.asList(LeaseItemType.DEPOSIT),invoiceDueDate,invoiceDueDate,invoiceDueDate.plusDays(1));

@@ -120,18 +120,9 @@ public class LeaseTermForDeposit extends LeaseTerm {
     }
 
     @Programmatic
-    BigDecimal calculatedDepositValueForDate(final LocalDate dueDate){
-        BigDecimal depositBaseForDate = calculateDepositBaseValue(dueDateToUse(dueDate));
+    BigDecimal calculatedDepositValueForDate(final LocalDate date){
+        BigDecimal depositBaseForDate = calculateDepositBaseValue(date);
         return getFraction().fractionOf(depositBaseForDate);
-    }
-
-    @Programmatic
-    LocalDate dueDateToUse(final LocalDate dueDate){
-        return getLeaseItem().getInvoicingFrequency().getPaidIn()== InvoicingFrequency.PaidIn.ADVANCE ?
-                getLeaseItem().getInvoicingFrequency().intervalContaining(dueDate).endDate() :
-                getLeaseItem().getInvoicingFrequency().intervalContaining(
-                        getLeaseItem().getInvoicingFrequency().intervalContaining(dueDate).startDate().minusDays(1)
-                ).endDate();
     }
 
     @Override
