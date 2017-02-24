@@ -93,7 +93,7 @@ language governing permissions and limitations under the License.
     </build>
 
     <properties>
-        <mavenmixin-jettywar.warName>${project.parent.artifactId}</mavenmixin-jettywar.warName>
+        <maven-war-plugin.warName>${project.parent.artifactId}</maven-war-plugin.warName>
     </properties>
 
     <dependencies>
