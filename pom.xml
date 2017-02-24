@@ -21,7 +21,7 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.13.2.20170214-2237</version>
+        <version>1.14.0</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -64,44 +64,44 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis-module-command.version>1.13.2.20170216-1253</isis-module-command.version>
-        <isis-module-excel.version>1.13.6.20170217-1145</isis-module-excel.version>
-        <isis-module-fakedata.version>1.13.0</isis-module-fakedata.version>
-        <isis-module-freemarker.version>1.13.2</isis-module-freemarker.version>
-        <isis-module-pdfbox.version>1.13.0</isis-module-pdfbox.version>
-        <isis-module-poly.version>1.13.0</isis-module-poly.version>
-        <isis-module-security.version>1.13.6.20170216-1316</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.13.1.20170217-1032</isis-module-sessionlogger.version>
-        <isis-module-settings.version>1.13.0</isis-module-settings.version>
-        <isis-module-stringinterpolator.version>1.13.0</isis-module-stringinterpolator.version>
-        <isis-module-togglz.version>1.13.1.20170216-1353</isis-module-togglz.version>
-        <isis-module-xdocreport.version>1.13.0</isis-module-xdocreport.version>
+        <isis-module-command.version>1.14.0</isis-module-command.version>
+        <isis-module-excel.version>1.14.0</isis-module-excel.version>
+        <isis-module-fakedata.version>1.14.0</isis-module-fakedata.version>
+        <isis-module-freemarker.version>1.14.0</isis-module-freemarker.version>
+        <isis-module-pdfbox.version>1.14.0</isis-module-pdfbox.version>
+        <isis-module-poly.version>1.14.0</isis-module-poly.version>
+        <isis-module-security.version>1.14.0</isis-module-security.version>
+        <isis-module-sessionlogger.version>1.14.0</isis-module-sessionlogger.version>
+        <isis-module-settings.version>1.14.0</isis-module-settings.version>
+        <isis-module-stringinterpolator.version>1.14.0</isis-module-stringinterpolator.version>
+        <isis-module-togglz.version>1.14.0</isis-module-togglz.version>
+        <isis-module-xdocreport.version>1.14.0</isis-module-xdocreport.version>
 
-        <isis-metamodel-paraname8.version>1.13.0</isis-metamodel-paraname8.version>
+        <isis-metamodel-paraname8.version>1.14.0</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.13.0</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.13.0</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.13.0</isis-wicket-gmap3.version>
+        <isis-wicket-excel.version>1.14.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.14.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.14.0</isis-wicket-gmap3.version>
 
-        <incode-module-base.version>1.13.5</incode-module-base.version>
-        <incode-module-classification.version>1.13.1.20170217-1253</incode-module-classification.version>
-        <incode-module-communications.version>1.13.0.20170216-1424</incode-module-communications.version>
-        <incode-module-country.version>1.13.1</incode-module-country.version>
-        <incode-module-docfragment.version>1.13.3</incode-module-docfragment.version>
-        <incode-module-document.version>1.13.12.20170216-1418</incode-module-document.version>
-        <incode-module-docrendering-freemarker.version>1.13.0</incode-module-docrendering-freemarker.version>
-        <incode-module-docrendering-stringinterpolator.version>1.13.1</incode-module-docrendering-stringinterpolator.version>
-        <incode-module-docrendering-xdocreport.version>1.13.0</incode-module-docrendering-xdocreport.version>
+        <incode-module-base.version>1.14.0</incode-module-base.version>
+        <incode-module-classification.version>1.14.0</incode-module-classification.version>
+        <incode-module-communications.version>1.14.0</incode-module-communications.version>
+        <incode-module-country.version>1.14.0</incode-module-country.version>
+        <incode-module-docfragment.version>1.14.0</incode-module-docfragment.version>
+        <incode-module-document.version>1.14.0</incode-module-document.version>
+        <incode-module-docrendering-freemarker.version>1.14.0</incode-module-docrendering-freemarker.version>
+        <incode-module-docrendering-stringinterpolator.version>1.14.0</incode-module-docrendering-stringinterpolator.version>
+        <incode-module-docrendering-xdocreport.version>1.14.0</incode-module-docrendering-xdocreport.version>
 
-        <incode-module-unittestsupport.version>1.13.4</incode-module-unittestsupport.version>
-        <incode-module-integtestsupport.version>1.13.1</incode-module-integtestsupport.version>
-        <incode-module-fixturesupport.version>1.13.1</incode-module-fixturesupport.version>
+        <incode-module-unittestsupport.version>1.14.0</incode-module-unittestsupport.version>
+        <incode-module-integtestsupport.version>1.14.0</incode-module-integtestsupport.version>
+        <incode-module-fixturesupport.version>1.14.0</incode-module-fixturesupport.version>
 
-        <mavendeps-isistesting.version>0.0.2</mavendeps-isistesting.version>
-        <mavendeps-isisintellij.version>0.0.1</mavendeps-isisintellij.version>
-        <mavendeps-isiswebapp.version>0.0.1</mavendeps-isiswebapp.version>
+        <mavendeps-isistesting.version>${isis.version}</mavendeps-isistesting.version>
+        <mavendeps-isisintellij.version>${isis.version}</mavendeps-isisintellij.version>
+        <mavendeps-isiswebapp.version>${isis.version}</mavendeps-isiswebapp.version>
 
-        <estatio-canonical.version>1.0.0</estatio-canonical.version>
+        <estatio-canonical.version>1.1.0</estatio-canonical.version>
 
         <maven-checkstyle-plugin.configLocation>${project.basedir}/codequality/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <maven-pmd-plugin.ruleset>${project.basedir}/codequality/pmd.xml</maven-pmd-plugin.ruleset>
