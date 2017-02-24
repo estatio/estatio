@@ -29,7 +29,7 @@ import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
