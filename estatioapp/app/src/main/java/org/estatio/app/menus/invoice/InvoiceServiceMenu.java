@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -432,6 +433,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
         return null;
     }
 
+    @Programmatic
     public String doDisableCalculate(final Lease lease) {
         if (lease == null) return null;
         return lease.getProperty() == null ? "Please set occupancy first" : null;
