@@ -25,13 +25,9 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;
@@ -40,24 +36,26 @@ import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.Guarantee;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class Guarantee_financialAccountContributions extends UdoDomainService<Guarantee_financialAccountContributions> {
+@DomainService(
+        nature = NatureOfService.DOMAIN
+)
+public class GuaranteeFinancialAccountTransactionService
+        extends UdoDomainService<GuaranteeFinancialAccountTransactionService> {
 
-    public Guarantee_financialAccountContributions() {
-        super(Guarantee_financialAccountContributions.class);
+    public GuaranteeFinancialAccountTransactionService() {
+        super(GuaranteeFinancialAccountTransactionService.class);
     }
 
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @CollectionLayout(defaultView = "table")
+    @Programmatic
     public List<FinancialAccountTransaction> transactions(Guarantee guarantee) {
         return financialAccountTransactionRepository.transactions(guarantee.getFinancialAccount());
     }
 
+
     // //////////////////////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @Programmatic
     public Guarantee newTransaction(
             final Guarantee guarantee,
             final LocalDate transactionDate,
@@ -68,11 +66,15 @@ public class Guarantee_financialAccountContributions extends UdoDomainService<Gu
         return guarantee;
     }
 
-    public boolean hideNewTransaction(final Guarantee guarantee, final LocalDate transactionDate, final String description, final BigDecimal amount) {
+    @Programmatic
+    public boolean hideNewTransaction(final Guarantee guarantee) {
         return guarantee.getFinancialAccount() == null;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    // //////////////////////////////////////
+
+
+    @Programmatic
     public BigDecimal balance(FinancialAccount financialAccount) {
         BigDecimal balance = financialAccountTransactionRepository.balance(financialAccount);
         return balance;

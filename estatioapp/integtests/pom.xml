@@ -104,7 +104,6 @@ language governing permissions and limitations under the License.
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

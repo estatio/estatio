@@ -134,7 +134,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, BudgetCalculationType.ACTUAL);
     }
 
-    public String disableNewValue(final BigDecimal value, final LocalDate date){
+    public String disableNewValue(){
         return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.ACTUAL).size()>0 ? "Audited value already entered" : null;
     }
 

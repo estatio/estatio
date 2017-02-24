@@ -195,7 +195,7 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
             Assert.assertThat(matchingInvoices.size(), Is.is(1));
             Invoice invoice = matchingInvoices.get(0);
             // when
-            mixin(Invoice._remove.class, invoice).$$();
+            mixin(Invoice._remove.class, invoice).exec();
             // then
             matchingInvoices = findMatchingInvoices(seller, buyer, lease);
             Assert.assertThat(matchingInvoices.size(), Is.is(0));

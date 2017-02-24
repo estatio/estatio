@@ -149,7 +149,7 @@ public class Guarantee
         return this.getGuaranteeType();
     }
 
-    public String disableChangeGuaranteeType(GuaranteeType guaranteeType) {
+    public String disableChangeGuaranteeType() {
         return getGuaranteeType().isMutable() || EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Bank guarantees and deposits cannot be changed";
     }
 

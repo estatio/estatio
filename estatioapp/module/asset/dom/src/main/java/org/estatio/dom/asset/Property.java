@@ -242,7 +242,7 @@ public class Property
         return this;
     }
 
-    public String disableDispose(LocalDate disposalDate) {
+    public String disableDispose() {
         return getDisposalDate() == null ? null : "Property already disposed";
     }
 

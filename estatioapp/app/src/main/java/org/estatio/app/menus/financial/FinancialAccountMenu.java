@@ -35,7 +35,10 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.financial.FinancialAccountMenu"
+)
 @DomainServiceLayout(
         named = "Accounts",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

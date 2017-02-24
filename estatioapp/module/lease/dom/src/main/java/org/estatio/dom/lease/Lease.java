@@ -391,9 +391,7 @@ public class Lease
     // //////////////////////////////////////
 
     @Override
-    public String disableChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String disableChangeDates() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to change the dates" : null;
     }
 
@@ -651,7 +649,7 @@ public class Lease
         return this;
     }
 
-    public String disablePaidBy(final BankMandate bankMandate) {
+    public String disablePaidBy() {
         final List<BankMandate> validMandates = existingBankMandatesForTenant();
         if (validMandates.isEmpty()) {
             return "There are no valid mandates; set one up using 'New Mandate'";
@@ -721,14 +719,7 @@ public class Lease
         return this;
     }
 
-    public String disableNewMandate(
-            final BankAccount bankAccount,
-            final String reference,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final SequenceType sequenceType,
-            final Scheme scheme,
-            final LocalDate signatureDate) {
+    public String disableNewMandate() {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
         if (tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";

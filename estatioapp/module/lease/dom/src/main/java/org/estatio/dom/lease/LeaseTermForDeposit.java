@@ -21,6 +21,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -30,6 +31,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.dom.types.MoneyType;
 
@@ -73,7 +75,7 @@ public class LeaseTermForDeposit extends LeaseTerm {
     }
 
     public LocalDate default0Terminate() {
-        return LocalDate.now();
+        return clockService.now();
     }
 
     public LeaseTermForDeposit changeParameters(
@@ -152,9 +154,7 @@ public class LeaseTermForDeposit extends LeaseTerm {
         return netValue;
     }
 
-    public boolean hideChangeDates(
-            final LocalDate newStartDate,
-            final LocalDate newEndDate) {
+    public boolean hideChangeDates() {
         return true;
     }
 
@@ -181,6 +181,10 @@ public class LeaseTermForDeposit extends LeaseTerm {
         if (getFixedDepositCalculationDate() != null) t.setFixedDepositCalculationDate(this.getFixedDepositCalculationDate());
         t.setIncludeVat(this.isIncludeVat());
     }
+
+    @Inject
+    ClockService clockService;
+
 
 }
 

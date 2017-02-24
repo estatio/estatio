@@ -483,7 +483,7 @@ public class Invoice_Test {
             invoice.setStatus(InvoiceStatus.INVOICED);
             // When, Then
             final InvoiceForLease._newItem invoice_newItem = new InvoiceForLease._newItem(invoice);
-            assertThat(invoice_newItem.disable$$(null, null, null, null, null)).isNotNull();
+            assertThat(invoice_newItem.disable$$()).isNotNull();
         }
     }
 

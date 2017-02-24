@@ -453,7 +453,7 @@ public class Lease_Test {
             assertThat(lease.getRoles()).hasSize(0);
 
             // when
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
+            final String disabledReason = lease.disableNewMandate();
 
             // then
             assertThat(disabledReason).isEqualTo("Could not determine the tenant (secondary party) of this lease");
@@ -469,7 +469,7 @@ public class Lease_Test {
             tenantAgreementRole.setEndDate(new LocalDate(2013, 4, 1));
 
             // when
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
+            final String disabledReason = lease.disableNewMandate();
 
             // then
             assertThat(disabledReason).isNotNull();
@@ -494,7 +494,7 @@ public class Lease_Test {
             });
 
             // when, then
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
+            final String disabledReason = lease.disableNewMandate();
             assertThat(disabledReason).isNotNull();
         }
 
@@ -514,7 +514,7 @@ public class Lease_Test {
             });
 
             // when/then
-            final String disabledReason = lease.disableNewMandate(bankAccount, "MANDATEREF", startDate, endDate, sequenceType, scheme, signatureDate);
+            final String disabledReason = lease.disableNewMandate();
             assertThat(disabledReason).isNull();
 
             // and when/then
@@ -658,7 +658,7 @@ public class Lease_Test {
             assertThat(lease.getRoles()).isEmpty();
 
             // when
-            final String reason = lease.disablePaidBy(bankMandate);
+            final String reason = lease.disablePaidBy();
 
             // then
             assertThat(reason).isEqualTo("There are no valid mandates; set one up using 'New Mandate'");
@@ -679,7 +679,7 @@ public class Lease_Test {
             });
 
             // when, then
-            final String disabledReason = lease.disablePaidBy(bankMandate);
+            final String disabledReason = lease.disablePaidBy();
             assertThat(disabledReason).isNotNull();
         }
 
@@ -698,7 +698,7 @@ public class Lease_Test {
                 }
             });
 
-            final String reason = lease.disablePaidBy(bankMandate);
+            final String reason = lease.disablePaidBy();
 
             // then
             assertThat(reason).isNotNull();
@@ -723,7 +723,7 @@ public class Lease_Test {
             });
 
             // when/then
-            final String disabledReason = lease.disablePaidBy(bankMandate);
+            final String disabledReason = lease.disablePaidBy();
             assertThat(disabledReason).isNull();
 
             // and when/then

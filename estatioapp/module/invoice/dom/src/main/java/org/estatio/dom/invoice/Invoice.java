@@ -235,13 +235,12 @@ public abstract class Invoice<T extends Invoice<T>>
         return getDescription();
     }
 
-    public String disableChangeDescription(
-            final String description) {
+    public String disableChangeDescription() {
         return disableDescription();
     }
 
 
-    @Mixin
+    @Mixin(method = "exec")
     public static class _changeDueDate {
 
         private final Invoice invoice;
@@ -252,18 +251,17 @@ public abstract class Invoice<T extends Invoice<T>>
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
-        public void $$(
+        public void exec(
                 final LocalDate dueDate) {
             invoice.setDueDate(dueDate);
         }
 
-        public LocalDate default0$$(
+        public LocalDate default0Exec(
                 final LocalDate dueDate) {
             return invoice.getDueDate();
         }
 
-        public String disable$$(
-                final LocalDate dueDate) {
+        public String disableExec() {
             if (invoice.isImmutable()) {
                 return "Due date can't be changed";
             }
@@ -290,7 +288,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private PaymentMethod paymentMethod;
 
 
-    @Mixin
+    @Mixin(method = "exec")
     public static class _changePaymentMethod {
 
         private final Invoice invoice;
@@ -301,7 +299,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice $$(
+        public Invoice exec(
                 final PaymentMethod paymentMethod,
                 @ParameterLayout(describedAs = "Not currently used")
                 final String reason) {
@@ -309,13 +307,11 @@ public abstract class Invoice<T extends Invoice<T>>
             return invoice;
         }
 
-        public PaymentMethod default0$$() {
+        public PaymentMethod default0Exec() {
             return invoice.getPaymentMethod();
         }
 
-        public String disable$$(
-                final PaymentMethod paymentMethod,
-                final String reason) {
+        public String disableExec() {
             return invoice.getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
         }
     }
@@ -397,7 +393,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
 
 
-    @Mixin
+    @Mixin(method = "exec")
     public static class _remove {
 
         private final Invoice<?> invoice;
@@ -408,9 +404,9 @@ public abstract class Invoice<T extends Invoice<T>>
 
         @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
         @ActionLayout(contributed = Contributed.AS_ACTION)
-        public void $$() {
+        public void exec() {
             // Can be called as bulk so have a safeguard
-            if (disable$$() == null) {
+            if (disableExec() == null) {
                 for (InvoiceItem item : invoice.getItems()) {
                     item.remove();
                 }
@@ -419,7 +415,7 @@ public abstract class Invoice<T extends Invoice<T>>
             }
         }
 
-        public String disable$$() {
+        public String disableExec() {
             if (!invoice.getStatus().invoiceIsChangable()) {
                 return "Only invoices with status New can be removed.";
             }

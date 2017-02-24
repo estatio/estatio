@@ -24,19 +24,20 @@ import org.estatio.dom.lease.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceServiceMenuAndContributions_Test {
+public class InvoiceServiceMenu_Test {
 
     @Test
     public void test() {
         // given
-        InvoiceServiceMenuAndContributions invoiceService = new InvoiceServiceMenuAndContributions();
+        InvoiceServiceMenu invoiceService = new InvoiceServiceMenu();
         Lease lease = new Lease();
 
         // when
         assertThat(lease.getProperty()).isNull();
 
         // then
-        assertThat(invoiceService.disableCalculateLegacy(lease, null, null, null, null, null)).isEqualTo("Please set occupancy first");
+
+        assertThat(invoiceService.doDisableCalculate(lease)).isEqualTo("Please set occupancy first");
 
     }
 

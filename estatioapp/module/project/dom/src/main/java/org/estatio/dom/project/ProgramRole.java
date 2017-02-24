@@ -180,9 +180,7 @@ public class ProgramRole
         return this;
     }
 
-    public String disableChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String disableChangeDates() {
         return null;
     }
 

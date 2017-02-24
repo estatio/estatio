@@ -30,7 +30,10 @@ import org.estatio.dom.party.Party;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.dom.party.relationship.PartyRelationshipView"
+)
 public class PartyRelationshipView  {
 
     //region > constructors, title

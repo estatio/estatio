@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceRunType;
@@ -51,7 +51,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    InvoiceServiceMenuAndContributions invoiceService;
+    InvoiceServiceMenu invoiceService;
 
     @Inject
     InvoiceRepository invoiceRepository;

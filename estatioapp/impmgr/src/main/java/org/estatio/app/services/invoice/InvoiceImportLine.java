@@ -38,7 +38,10 @@ import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.invoice.InvoiceImportLine"
+)
 public class InvoiceImportLine implements Importable {
 
     //region > constructors, title

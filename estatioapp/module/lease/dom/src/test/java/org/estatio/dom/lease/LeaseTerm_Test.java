@@ -162,7 +162,7 @@ public class LeaseTerm_Test {
             term.setLeaseItem(item);
             //when, then
             then(leaseItemType.autoCreateTerms()).isFalse();
-            then(term.hideCreateNext(null, null)).isTrue();
+            then(term.hideCreateNext()).isTrue();
         }
 
     }

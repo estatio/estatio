@@ -33,8 +33,15 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuOrder = "35", menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Projects")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.project.ProjectMenu"
+)
+@DomainServiceLayout(
+        menuOrder = "35",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Projects"
+)
 public class ProjectMenu {
 
     @Action(semantics = SemanticsOf.SAFE)

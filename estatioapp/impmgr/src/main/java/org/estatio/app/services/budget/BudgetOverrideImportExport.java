@@ -27,7 +27,10 @@ import org.estatio.dom.lease.LeaseRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.budget.BudgetOverrideImportExport"
+)
 public class BudgetOverrideImportExport implements Importable {
 
     public String title() {
