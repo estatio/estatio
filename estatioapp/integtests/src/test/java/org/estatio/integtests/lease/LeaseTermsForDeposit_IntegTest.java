@@ -209,7 +209,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             assertThat(rentItem.valueForDate(dueDate.minusDays(1))).isEqualTo(new BigDecimal("20563.90"));
             assertThat(rentItem.valueForDate(dueDate)).isEqualTo(new BigDecimal("21016.31"));
 
-            // and when
+            // and when (NORMAL RUN, inspection value for date deposit on 1-1-2011)
             invoiceService.calculate(leaseForMedia, InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.DEPOSIT), dueDate, dueDate.minusDays(1), dueDate.plusDays(1));
             transactionService.nextTransaction();
 
@@ -225,6 +225,36 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             InvoiceItemForLease invoiceItemInAdvance = (InvoiceItemForLease) invoice.getItems().first();
             assertThat(invoiceItemInAdvance.getSource()).isEqualTo(termInAdvance);
             assertThat(invoiceItemInAdvance.getNetAmount()).isEqualTo(new BigDecimal("10508.16"));
+
+            // and when (NORMAL RUN, inspection value for date deposit on 31-12-2010, duedate for In_ADVANCE item 1-1-2011 not included)
+            invoiceService.calculate(leaseForMedia, InvoiceRunType.NORMAL_RUN, Arrays.asList(LeaseItemType.DEPOSIT), dueDate, dueDate.minusDays(1), dueDate);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(invoiceForLeaseRepository.findByLease(leaseForMedia).size()).isEqualTo(1);
+            invoice = invoiceForLeaseRepository.findByLease(leaseForMedia).get(0);
+            assertThat(invoice.getItems().size()).isEqualTo(1);
+
+            invoiceItemInArrears = (InvoiceItemForLease) invoice.getItems().first();
+            assertThat(invoiceItemInArrears.getSource()).isEqualTo(termInArrears);
+            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+
+            // and when (RETRO RUN, inspection value for date deposit on 31-12-2010 - now due date 1-1-2010 for In_ADVANCE item picked up)
+            invoiceService.calculate(leaseForMedia, InvoiceRunType.RETRO_RUN, Arrays.asList(LeaseItemType.DEPOSIT), dueDate, dueDate.minusDays(1), dueDate);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(invoiceForLeaseRepository.findByLease(leaseForMedia).size()).isEqualTo(1);
+            invoice = invoiceForLeaseRepository.findByLease(leaseForMedia).get(0);
+            assertThat(invoice.getItems().size()).isEqualTo(2);
+
+            invoiceItemInArrears = (InvoiceItemForLease) invoice.getItems().first();
+            assertThat(invoiceItemInArrears.getSource()).isEqualTo(termInArrears);
+            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+
+            invoiceItemInAdvance = (InvoiceItemForLease) invoice.getItems().last();
+            assertThat(invoiceItemInAdvance.getSource()).isEqualTo(termInAdvance);
+            assertThat(invoiceItemInAdvance.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
 
         }
 
