@@ -44,6 +44,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.tax.Tax;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -79,7 +80,13 @@ public class Charge
         implements WithReferenceUnique, WithNameUnique, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Charge() {
+        this(null);
+    }
+
+    @Builder
+    public Charge(String reference) {
         super("reference");
+        setReference(reference);
     }
 
     public String title() {
@@ -113,10 +120,8 @@ public class Charge
 
     @Programmatic
     public String getReference4() {
-        return reference != null
-                ? reference.length() >= 4
-                    ? reference.substring(0, 4)
-                    : reference
+        return reference != null && reference.length() >= 6
+                ? reference.substring(2, 6)
                 : null;
     }
 

@@ -18,11 +18,13 @@
  */
 package org.estatio.dom.charge;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
 import org.estatio.dom.tax.Tax;
 
 public class Charge_Test {
@@ -39,4 +41,63 @@ public class Charge_Test {
         }
 
     }
+
+    public static class Reference4  {
+
+        @Test
+        public void happy_case() {
+            final Charge charge = Charge.builder().reference("XX1234").build();
+
+            Assertions.assertThat(charge.getReference4()).isEqualTo("1234");
+        }
+
+        @Test
+        public void too_short() {
+            final Charge charge = Charge.builder().reference("XX123").build();
+
+            Assertions.assertThat(charge.getReference4()).isNull();
+        }
+
+        @Test
+        public void longer_than_required() {
+            final Charge charge = Charge.builder().reference("XX12345678").build();
+
+            Assertions.assertThat(charge.getReference4()).isEqualTo("1234");
+        }
+
+    }
+
+    public static class Reference4i {
+
+        @Test
+        public void happy_case() {
+            final Charge charge = Charge.builder().reference("XX1234").build();
+
+            Assertions.assertThat(charge.getReference4i()).isEqualTo(1234);
+        }
+
+        @Test
+        public void too_short() {
+            final Charge charge = Charge.builder().reference("XX123").build();
+
+            Assertions.assertThat(charge.getReference4i()).isNull();
+        }
+
+        @Test
+        public void longer_than_required() {
+            final Charge charge = Charge.builder().reference("XX12345678").build();
+
+            Assertions.assertThat(charge.getReference4i()).isEqualTo(1234);
+        }
+
+        @Test
+        public void does_not_parse() {
+            final Charge charge = Charge.builder().reference("XX123a").build();
+
+            Assertions.assertThat(charge.getReference4i()).isNull();
+        }
+
+    }
+
+
 }
