@@ -252,10 +252,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-command-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.isisaddons.module.poly</groupId>
             <artifactId>isis-module-poly-dom</artifactId>
         </dependency>
