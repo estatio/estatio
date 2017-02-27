@@ -437,8 +437,8 @@ public class Lease
         return getTenancyStartDate();
     }
 
-    public List<Unit> choices1NewOccupancy(final LocalDate startDate) {
-        return unitRepository.findByProperty(getProperty());
+    public List<Unit> choices1NewOccupancy() {
+        return getProperty()!=null ? unitRepository.findByProperty(getProperty()) : unitRepository.allUnits();
     }
 
     public String validateNewOccupancy(final LocalDate startDate, final Unit unit){

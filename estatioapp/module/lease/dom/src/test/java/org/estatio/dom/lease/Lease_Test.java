@@ -56,7 +56,9 @@ import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.Agreement_Test;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
@@ -984,6 +986,74 @@ public class Lease_Test {
             unit.setArea(new BigDecimal(area));
             o.setUnit(unit);
             return o;
+        }
+
+    }
+
+    public static class ChoicesNewOccupancy extends Lease_Test {
+
+        @Mock
+        UnitRepository mockUnitRepository;
+
+        Property property;
+        Occupancy occupancy;
+
+        @Test
+        public void choices_first_new_occupancy_uses_all_units() {
+
+            //expect
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockUnitRepository).allUnits();
+                }
+            });
+
+            // given
+            Lease newLease = new Lease(){
+                @Override
+                public SortedSet<Occupancy> getOccupancies(){
+                    return Collections.emptySortedSet();
+                }
+            };
+            newLease.unitRepository = mockUnitRepository;
+
+            // when
+            newLease.choices1NewOccupancy();
+
+        }
+
+        @Before
+        public void setupOccupancy(){
+            property = new Property();
+            Unit unit = new Unit();
+            unit.setProperty(property);
+            occupancy = new Occupancy();
+            occupancy.setUnit(unit);
+        }
+
+        @Test
+        public void choices_not_first_new_occupancy_uses_find_by_property() {
+
+            //expect
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockUnitRepository).findByProperty(property);
+                }
+            });
+
+            // given
+            Lease newLease = new Lease(){
+                @Override
+                public SortedSet<Occupancy> getOccupancies(){
+                    SortedSet<Occupancy> occupancies = new TreeSet<>(Arrays.asList(occupancy));
+                    return occupancies;
+                }
+            };
+            newLease.unitRepository = mockUnitRepository;
+
+            // when
+            newLease.choices1NewOccupancy();
+
         }
 
     }
