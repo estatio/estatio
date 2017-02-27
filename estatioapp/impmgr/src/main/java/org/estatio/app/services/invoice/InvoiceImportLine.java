@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
@@ -95,10 +93,10 @@ public class InvoiceImportLine implements Importable {
     @Getter @Setter
     private String unitReference;
 
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList();
-    }
+//    @Override
+//    public List<Class> importAfter() {
+//        return Lists.newArrayList();
+//    }
 
     // REVIEW: is this view model actually ever surfaced in the UI?
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)

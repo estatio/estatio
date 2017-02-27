@@ -68,10 +68,10 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String externalReference;
 
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList(TaxImport.class);
-    }
+//    @Override
+//    public List<Class> importAfter() {
+//        return Lists.newArrayList(TaxImport.class);
+//    }
 
     @Programmatic
     @Override
