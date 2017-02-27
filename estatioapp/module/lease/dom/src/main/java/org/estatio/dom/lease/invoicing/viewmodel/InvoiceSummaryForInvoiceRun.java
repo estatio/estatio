@@ -112,7 +112,7 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
     }
 
     @PropertyLayout(typicalLength = 100)
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = 512)
     @Getter @Setter
     private String runId;
 

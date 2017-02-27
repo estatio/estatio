@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -204,6 +205,7 @@ public class InvoiceForLease
     private FixedAsset fixedAsset;
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
+    @Column(length = 512)
     @Getter @Setter
     private String runId;
 
