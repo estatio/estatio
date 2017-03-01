@@ -85,9 +85,8 @@ public class LeaseTermForTurnoverRent_Test {
                     will(returnValue(Arrays.asList(new InvoiceCalculationService.CalculationResult(
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),
-                                    new BigDecimal("100000.00"),
-                                    BigDecimal.ZERO
-                            ))));
+                                    new BigDecimal("100000.00")
+                    ))));
                 }
             });
         }

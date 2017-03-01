@@ -71,8 +71,6 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     public static class CalculationResult {
         private static final BigDecimal ZERO = new BigDecimal("0.00");
         private BigDecimal value;
-        private BigDecimal mockValue;
-        ;
 
         private InvoicingInterval invoicingInterval;
         private LocalDateInterval effectiveInterval;
@@ -82,26 +80,20 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
         }
 
         public CalculationResult(final InvoicingInterval interval) {
-            this(interval, interval.asLocalDateInterval(), ZERO, ZERO);
+            this(interval, interval.asLocalDateInterval(), ZERO);
         }
 
         public CalculationResult(
                 final InvoicingInterval interval,
                 final LocalDateInterval effectiveInterval,
-                final BigDecimal value,
-                final BigDecimal mockValue) {
+                final BigDecimal value) {
             this.invoicingInterval = interval;
             this.effectiveInterval = effectiveInterval;
             this.value = value;
-            this.mockValue = mockValue;
         }
 
         public BigDecimal value() {
             return value;
-        }
-
-        public BigDecimal mockValue() {
-            return mockValue;
         }
 
         public InvoicingInterval invoicingInterval() {
@@ -267,8 +259,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                     final CalculationResult calculationResult = new CalculationResult(
                             invoicingInterval,
                             effectiveInterval,
-                            calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType()),
-                            calculateValue(rangeFactor, annualFactor, mockValue, leaseTerm.valueType()));
+                            calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType())
+                    );
                     results2.add(calculationResult);
                 }
             }
@@ -311,9 +303,9 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             // values on a normal run
             if (result.value().compareTo(BigDecimal.ZERO) != 0 || parameters.invoiceRunType().equals(InvoiceRunType.RETRO_RUN)) {
                 BigDecimal invoicedValue = invoiceItemForLeaseRepository.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
-                BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
+                BigDecimal newValue = result.value().subtract(invoicedValue);
                 if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                    boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
+                    boolean adjustment = invoicedValue.compareTo(BigDecimal.ZERO) != 0;
                     InvoiceItemForLease invoiceItem =
                             invoiceItemForLeaseRepository.createUnapprovedInvoiceItem(
                                     leaseTerm,

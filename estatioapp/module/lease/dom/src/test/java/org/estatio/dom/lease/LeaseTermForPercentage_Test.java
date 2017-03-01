@@ -95,8 +95,7 @@ public class LeaseTermForPercentage_Test {
                             add(new InvoiceCalculationService.CalculationResult(
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),
-                                    new BigDecimal("222222.22"),
-                                    BigDecimal.ZERO
+                                    new BigDecimal("222222.22")
                             ));
                         }
                     }));
@@ -106,8 +105,7 @@ public class LeaseTermForPercentage_Test {
                             add(new InvoiceCalculationService.CalculationResult(
                                     new InvoicingInterval(LocalDateInterval.parseString("2013-01-01/2013-04-01"), new LocalDate(2013, 1, 1)),
                                     LocalDateInterval.parseString("2013-01-01/2013-04-01"),
-                                    new BigDecimal("111111.11"),
-                                    BigDecimal.ZERO
+                                    new BigDecimal("111111.11")
                             ));
                         }
                     }));

@@ -90,7 +90,7 @@ public class InvoiceCalculationService_Test {
             assertThat(results.size()).isEqualTo(values.length);
 
             for (int i = 0; i < results.size(); i++) {
-                assertThat(results.get(i).value().subtract(results.get(i).mockValue())).isEqualTo(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP));
+                assertThat(results.get(i).value()).isEqualTo(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP));
             }
             return results;
         }
