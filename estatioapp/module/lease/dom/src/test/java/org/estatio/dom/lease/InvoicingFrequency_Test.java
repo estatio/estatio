@@ -5,8 +5,9 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import org.estatio.dom.invoice.InvoicingInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
+import org.estatio.dom.invoice.InvoicingInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,6 +66,16 @@ public class InvoicingFrequency_Test {
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2011-01-31/2012-01-30", "2011-01-31/2012-01-30:2012-01-29", 1);
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2011-01-31/2011-12-31", null, 0);
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ADVANCE, "2012-01-01/2014-04-01", "2011-01-31/2011-12-31", null, 0);
+    }
+
+    @Test
+    public void test_due_date() throws Exception {
+
+        //Given
+        final InvoicingInterval invoicingInterval = InvoicingFrequency.QUARTERLY_IN_ARREARS.intervalMatching(new LocalDate(2013, 1, 1));
+
+        assertThat(invoicingInterval.dueDate()).isEqualTo(new LocalDate(2013,3,31));
+
     }
 
     private void dueDateRangeTester(

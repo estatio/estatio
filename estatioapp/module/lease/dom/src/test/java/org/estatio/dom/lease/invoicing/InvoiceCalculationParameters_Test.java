@@ -70,6 +70,22 @@ public class InvoiceCalculationParameters_Test {
         }
 
         @Test
+        public void due_date_range_test() throws Exception {
+            //Given
+            InvoiceCalculationParameters parameters =
+                    InvoiceCalculationParameters.builder()
+                            .property(property)
+                            .leaseItemTypes(InvoiceCalculationSelection.ALL_RENT.selectedTypes())
+                            .invoiceRunType( InvoiceRunType.NORMAL_RUN)
+                            .invoiceDueDate(new LocalDate(2012, 1, 1))
+                            .startDueDate(new LocalDate(2012, 1, 1))
+                            .nextDueDate(new LocalDate(2012, 4, 1)).build();
+
+            //Then
+            assertThat(parameters.dueDateRange().endDateExcluding()).isEqualTo(new LocalDate(2012,4,1));
+        }
+
+        @Test
         public void lease() throws Exception {
             //Given, When
             InvoiceCalculationParameters parameters =

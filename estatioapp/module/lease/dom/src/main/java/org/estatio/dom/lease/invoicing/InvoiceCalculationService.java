@@ -50,7 +50,6 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
@@ -254,25 +253,24 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
             final LocalDate dueDateForCalculation) {
         final List<CalculationResult> results2 = Lists.newArrayList();
         for (final InvoicingInterval invoicingInterval : intervals) {
-            final LocalDateInterval effectiveInterval = invoicingInterval.asLocalDateInterval().overlap(leaseTerm.getEffectiveInterval());
-            if (effectiveInterval == null) {
-                results2.add(new CalculationResult(invoicingInterval));
-            } else {
-                final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
-                final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
-                final BigDecimal rangeFactor = frequencyDays.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
-                final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
-                BigDecimal mockValue = BigDecimal.ZERO;
-                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate) && leaseTerm.getLeaseItem().getType()!= LeaseItemType.DEPOSIT) {
-                    mockValue = leaseTerm.valueForDate(epochDate);
+            if (!invoicingInterval.dueDate().isBefore(epochDate)) {
+                final LocalDateInterval effectiveInterval = invoicingInterval.asLocalDateInterval().overlap(leaseTerm.getEffectiveInterval());
+                if (effectiveInterval == null) {
+                    results2.add(new CalculationResult(invoicingInterval));
+                } else {
+                    final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
+                    final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
+                    final BigDecimal rangeFactor = frequencyDays.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
+                    final BigDecimal annualFactor = leaseTerm.getLeaseItem().getInvoicingFrequency().annualMultiplier();
+                    BigDecimal mockValue = BigDecimal.ZERO;
+                    final CalculationResult calculationResult = new CalculationResult(
+                            invoicingInterval,
+                            effectiveInterval,
+                            calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType()),
+                            calculateValue(rangeFactor, annualFactor, mockValue, leaseTerm.valueType()));
+                    results2.add(calculationResult);
                 }
-                final CalculationResult calculationResult = new CalculationResult(
-                        invoicingInterval,
-                        effectiveInterval,
-                        calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(dueDateForCalculation), leaseTerm.valueType()),
-                        calculateValue(rangeFactor, annualFactor, mockValue, leaseTerm.valueType()));
-                results2.add(calculationResult);
             }
         }
         return results2;

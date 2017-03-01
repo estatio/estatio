@@ -42,13 +42,10 @@ import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
-import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForDeposit;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.tax.Tax;
@@ -90,6 +87,8 @@ public class InvoiceCalculationService_Test {
                             .invoiceDueDate(startDueDate)
                             .startDueDate(startDueDate)
                             .nextDueDate(nextDueDate == null ? startDueDate.plusDays(1) : nextDueDate).build());
+            assertThat(results.size()).isEqualTo(values.length);
+
             for (int i = 0; i < results.size(); i++) {
                 assertThat(results.get(i).value().subtract(results.get(i).mockValue())).isEqualTo(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP));
             }
@@ -347,15 +346,15 @@ public class InvoiceCalculationService_Test {
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 leaseTerm.setAdjustedValue(BigDecimal.valueOf(22000));
                 calculateDueDateRange(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1),
-                        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
+                         0.00, 0.00, 0.00, 0.00);
             }
 
             @Test
             public void testWithYearlyInvoicingFrequency() {
-                leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
-                leaseTerm.setEndDate(new LocalDate(2013, 1, 1));
+                leaseTerm.setStartDate(new LocalDate(2016, 2, 1));
+                leaseTerm.setEndDate(new LocalDate(2017, 1, 1));
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
-                calculateDueDateRange(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS,
+                calculateDueDateRange(leaseTerm, new LocalDate(2016, 1, 1), new LocalDate(2017, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS,
                         3296.70, 5000.00, 5000.00, 5000.00);
 
             }
@@ -366,7 +365,7 @@ public class InvoiceCalculationService_Test {
                 leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
                 leaseTerm.setValue(BigDecimal.valueOf(20000));
                 calculateDueDateRange(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
-                        0.00, 0.00, 0.00, 1722.22);
+                        1722.22);
                 // TODO: Since 2012 is a leap year, the keySum of the invoices is greater
                 // than the value of the term.....
             }
@@ -446,11 +445,6 @@ public class InvoiceCalculationService_Test {
             tester(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2014-02-01/2015-02-01", 10000.00, "2014-02-01/2015-02-01", "2015-01-01", 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33, 833.33);
         }
 
-        @Test // When EST-112 is solved this one should break and can be removed
-        public void testDateRangeWithZeroDayInterval() throws Exception {
-            tester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "1999-09-01/2015-02-01", 10000.00, "1999-09-01/2000-02-01", "2000-01-01", 0.00, 2500.00);
-        }
-
         private void tester(final InvoicingFrequency invoicingFrequency, final String termInterval, final double termValue, final String caluculationInterval, final String dueDate, final Double... results) {
             Lease lease = new Lease();
             LeaseItem item = new LeaseItem(lease, invoicingFrequency);
@@ -468,70 +462,6 @@ public class InvoiceCalculationService_Test {
             for (int i = 0; i < results.size(); i++) {
                 assertThat(results.get(i).value()).isEqualTo(BigDecimal.valueOf(value[i]).setScale(2));
             }
-
-        }
-
-    }
-
-    public static class CalculateTermTest extends InvoiceCalculationService_Test {
-
-        @Rule
-        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-
-        InvoiceCalculationService ic;
-        LocalDate epochDate = new LocalDate(2013, 1, 1);
-
-        @Mock
-        LeaseInvoicingSettingsService mockSettings;
-
-        @Before
-        public void setUp() throws Exception {
-            ic = new InvoiceCalculationService();
-            ic.leaseInvoicingSettingsService = mockSettings;
-
-            context.checking(new Expectations() {
-                {
-                    allowing(mockSettings).fetchEpochDate();
-                    will(returnValue(epochDate));
-                }
-            });
-
-        }
-
-        @Test
-        public void depositTerm_Should_Have_No_MockValue() throws Exception {
-
-            //given
-            LocalDate startDateBeforeEpochDate = new LocalDate(2000, 1, 1);
-            LocalDate endDateBeforeEpochDate = new LocalDate(2000, 3,31);
-            LocalDate dueDateBeforeEpochDate = new LocalDate(2000, 4, 8);
-
-            LeaseItem depositItem = new LeaseItem();
-            depositItem.setType(LeaseItemType.DEPOSIT);
-            depositItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-            LeaseTermForDeposit depositTerm = new LeaseTermForDeposit(){
-                @Override
-                public LocalDateInterval getEffectiveInterval() {
-                    return new LocalDateInterval(startDateBeforeEpochDate, endDateBeforeEpochDate);
-                }
-                @Override
-                public BigDecimal valueForDate(final LocalDate dueDate){
-                    return new BigDecimal("1000.00");
-                }
-            };
-            depositTerm.setLeaseItem(depositItem);
-            InvoicingInterval invoicingInterval = new InvoicingInterval(
-                    new LocalDateInterval(startDateBeforeEpochDate, endDateBeforeEpochDate),
-                    dueDateBeforeEpochDate);
-            List<InvoicingInterval> intervals = Arrays.asList(invoicingInterval);
-            LocalDate dueDateForCalculation = dueDateBeforeEpochDate;
-
-            //when
-            List<InvoiceCalculationService.CalculationResult> calculationResults = ic.calculateTerm(depositTerm, intervals, dueDateForCalculation);
-
-            // then
-            assertThat(calculationResults.size()).isEqualTo(1);
-            assertThat(calculationResults.get(0).mockValue()).isEqualTo(BigDecimal.ZERO.setScale(2));
 
         }
 
