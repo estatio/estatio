@@ -38,7 +38,7 @@ import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.guarantee.contributed.Lease_newGuaranteeContribution;
+import org.estatio.dom.guarantee.contributed.LeaseGuaranteeService;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.Party;
@@ -73,7 +73,7 @@ public class GuaranteeRepository_IntegTest extends EstatioIntegrationTest {
     GuaranteeRepository guaranteeRepository;
 
     @Inject
-    Lease_newGuaranteeContribution leaseNewGuaranteeContribution;
+    LeaseGuaranteeService leaseNewGuaranteeContribution;
 
     @Inject
     FinancialAccountRepository financialAccountRepository;

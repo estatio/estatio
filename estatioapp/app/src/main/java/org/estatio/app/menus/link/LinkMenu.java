@@ -15,7 +15,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.domlink.Link;
 import org.estatio.domlink.LinkRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.link.LinkMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

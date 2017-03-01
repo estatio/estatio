@@ -48,6 +48,7 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditManager",
         editing = Editing.DISABLED
 )
 public class LeaseTermForServiceChargeBudgetAuditManager  {

@@ -97,14 +97,9 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-lease</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
-        </dependency>
-
         <!-- testing -->
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>

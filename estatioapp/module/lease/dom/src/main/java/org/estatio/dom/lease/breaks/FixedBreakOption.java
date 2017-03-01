@@ -136,7 +136,7 @@ public class FixedBreakOption
         return getExerciseDate().minusWeeks(2);
     }
 
-    public String disableUpdateReminderDate(final LocalDate reminderDate) {
+    public String disableUpdateReminderDate() {
         return getExerciseType() == BreakExerciseType.TENANT ?
                 "Can only set reminders for "
                         + BreakExerciseType.LANDLORD

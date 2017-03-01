@@ -40,7 +40,10 @@ import org.isisaddons.module.security.dom.role.ApplicationRole;
 /**
  * Enables fixtures to be installed from the application.
  */
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.fixture.security.EstatioSecurityModuleFixturesMenu"
+)
 @DomainServiceLayout(
         named = "Prototyping",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,

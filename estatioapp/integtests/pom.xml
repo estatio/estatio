@@ -100,11 +100,10 @@ language governing permissions and limitations under the License.
         </dependency>
         
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

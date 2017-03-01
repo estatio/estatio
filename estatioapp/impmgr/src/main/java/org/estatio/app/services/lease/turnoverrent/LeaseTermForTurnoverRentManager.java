@@ -51,7 +51,8 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        editing = Editing.DISABLED
+        editing = Editing.DISABLED,
+        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentManager"
 )
 public class LeaseTermForTurnoverRentManager {
 

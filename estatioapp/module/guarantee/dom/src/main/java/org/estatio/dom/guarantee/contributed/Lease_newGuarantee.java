@@ -1,0 +1,49 @@
+package org.estatio.dom.guarantee.contributed;
+
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.incode.module.base.dom.types.ReferenceType;
+
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.dom.lease.Lease;
+
+@Mixin(method = "exec")
+public class Lease_newGuarantee {
+
+    private final Lease lease;
+
+    public Lease_newGuarantee(final Lease lease) {
+        this.lease = lease;
+    }
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Guarantee exec(
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX) String reference,
+            final String name,
+            final GuaranteeType guaranteeType,
+            final LocalDate startDate,
+            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate,
+            final String description,
+            final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal contractualAmount,
+            final BigDecimal startAmount
+    ) {
+        return leaseGuaranteeService.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, contractualAmount, startAmount);
+    }
+
+
+    @Inject
+    LeaseGuaranteeService leaseGuaranteeService;
+
+}

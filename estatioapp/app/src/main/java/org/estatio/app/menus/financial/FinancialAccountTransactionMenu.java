@@ -34,8 +34,14 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuOrder = "30", named = "Accounts")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.financial.FinancialAccountTransactionMenu"
+)
+@DomainServiceLayout(
+        menuOrder = "30",
+        named = "Accounts"
+)
 public class FinancialAccountTransactionMenu {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)

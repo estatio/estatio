@@ -36,10 +36,13 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.party.Party;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+import org.estatio.dom.party.Party;
+
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 public class ProjectRoleContributions {
 
     // //////////////////////////////////////

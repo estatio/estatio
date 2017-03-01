@@ -36,7 +36,10 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.charge.ChargeGroupMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

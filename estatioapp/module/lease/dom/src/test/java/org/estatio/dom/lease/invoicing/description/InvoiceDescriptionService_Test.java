@@ -235,7 +235,7 @@ public class InvoiceDescriptionService_Test {
                 // given
                 item.setAdjustment(true);
                 chargeGroup.setReference("FR-S");
-                charge.setReference("4000");
+                charge.setReference("FR4000");
                 item.setStartDate(new LocalDate(2017,3,1));
 
                 item.setEffectiveStartDate(new LocalDate(2017,4,1));
@@ -249,7 +249,7 @@ public class InvoiceDescriptionService_Test {
 
 
                 // given
-                charge.setReference("4599");
+                charge.setReference("FR4599");
 
                 // when
                 rendered = freeMarkerService.render(templateName, templateText, item);
@@ -265,7 +265,7 @@ public class InvoiceDescriptionService_Test {
                 // given
                 item.setAdjustment(true);
                 chargeGroup.setReference("FR-S");
-                charge.setReference("3999");
+                charge.setReference("FR3999");
                 item.setStartDate(new LocalDate(2017,3,1));
 
                 item.setEffectiveStartDate(new LocalDate(2017,4,1));
@@ -279,7 +279,7 @@ public class InvoiceDescriptionService_Test {
 
 
                 // given
-                charge.setReference("4600");
+                charge.setReference("FR4600");
 
                 // when
                 rendered = freeMarkerService.render(templateName, templateText, item);

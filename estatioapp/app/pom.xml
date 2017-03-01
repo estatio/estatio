@@ -109,32 +109,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-agreement</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-asset</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-assetfinancial</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-bankmandate</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-budget</artifactId>
         </dependency>
 
         <dependency>
@@ -149,42 +129,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-charge</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-currency</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-event</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-financial</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-guarantee</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-index</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-invoice</artifactId>
         </dependency>
 
         <dependency>
@@ -250,10 +200,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.command</groupId>
             <artifactId>isis-module-command-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.module.excel</groupId>
-            <artifactId>isis-module-excel-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.isisaddons.module.poly</groupId>

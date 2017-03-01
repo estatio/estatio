@@ -57,11 +57,11 @@ public class Object_links {
         return new URL(urlStr);
     }
     
-    public boolean hide$$(final Link link) {
-         return choices0$$(link).isEmpty();
+    public boolean hide$$() {
+         return choices0$$().isEmpty();
     }
 
-    public List<Link> choices0$$(final Link link) {
+    public List<Link> choices0$$() {
         return linkRepository.findAllForClassHierarchy(domainObject);
     }
 

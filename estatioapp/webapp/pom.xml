@@ -93,7 +93,7 @@ language governing permissions and limitations under the License.
     </build>
 
     <properties>
-        <mavenmixin-jettywar.warName>${project.parent.artifactId}</mavenmixin-jettywar.warName>
+        <maven-war-plugin.warName>${project.parent.artifactId}</maven-war-plugin.warName>
     </properties>
 
     <dependencies>
@@ -103,7 +103,7 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isiswebapp</artifactId>
             <version>${mavendeps-isiswebapp.version}</version>
             <type>pom</type>
@@ -127,7 +127,7 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isisintellij</artifactId>
             <version>${mavendeps-isisintellij.version}</version>
             <type>pom</type>

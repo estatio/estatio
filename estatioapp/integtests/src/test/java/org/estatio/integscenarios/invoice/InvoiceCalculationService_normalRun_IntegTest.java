@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
@@ -85,7 +85,7 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
     private InvoiceCalculationService invoiceCalculationService;
 
     @Inject
-    private InvoiceServiceMenuAndContributions invoiceService;
+    private InvoiceServiceMenu invoiceService;
 
     private Lease lease;
     private LeaseItem leaseTopModelRentItem;

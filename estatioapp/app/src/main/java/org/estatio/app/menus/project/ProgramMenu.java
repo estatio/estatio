@@ -42,8 +42,15 @@ import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuOrder = "35", menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Projects")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.project.ProgramMenu"
+)
+@DomainServiceLayout(
+        menuOrder = "35",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Projects"
+)
 public class ProgramMenu {
 
 

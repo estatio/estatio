@@ -25,14 +25,20 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.incode.module.base.dom.utils.TitleBuilder;
+
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
-@DomainObjectLayout(paged = Integer.MAX_VALUE)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.lease.budgetaudit.LeaseTermForServiceChargeBudgetAuditLineItem"
+)
+@DomainObjectLayout(
+        paged = Integer.MAX_VALUE
+)
 public class LeaseTermForServiceChargeBudgetAuditLineItem {
 
     //region > constructors, title

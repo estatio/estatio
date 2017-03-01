@@ -73,7 +73,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Object removeAll() {
         for (Invoice invoice : getInvoices()) {
-            mixin(Invoice._remove.class, invoice).$$();
+            mixin(Invoice._remove.class, invoice).exec();
         }
         return this;
     }

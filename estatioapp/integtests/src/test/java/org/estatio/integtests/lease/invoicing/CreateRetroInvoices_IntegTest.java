@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -88,7 +88,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
     InvoiceCalculationService invoiceCalculationService;
 
     @Inject
-    InvoiceServiceMenuAndContributions invoiceService;
+    InvoiceServiceMenu invoiceService;
 
     CreateRetroInvoices createRetroInvoices;
 

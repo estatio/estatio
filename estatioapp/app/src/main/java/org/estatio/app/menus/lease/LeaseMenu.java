@@ -62,7 +62,10 @@ import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.lease.LeaseMenu"
+)
 @DomainServiceLayout(
         named = "Leases",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

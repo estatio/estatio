@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -29,15 +30,15 @@ import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
-@DomainService(nature = NatureOfService.VIEW)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
         named = "Invoices",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "50.5")
-public class InvoiceServiceMenuAndContributions extends UdoDomainService<InvoiceServiceMenuAndContributions> {
+public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
 
-    public InvoiceServiceMenuAndContributions() {
-        super(InvoiceServiceMenuAndContributions.class);
+    public InvoiceServiceMenu() {
+        super(InvoiceServiceMenu.class);
     }
 
     // //////////////////////////////////////
@@ -243,7 +244,6 @@ public class InvoiceServiceMenuAndContributions extends UdoDomainService<Invoice
         return Arrays.asList(LeaseItemType.values());
     }
 
-
     public boolean hideCalculateRetroInvoices() {
         return isMultiSelectInactive();
     }
@@ -326,16 +326,6 @@ public class InvoiceServiceMenuAndContributions extends UdoDomainService<Invoice
         return doValidateCalculate(startDate, endDate);
     }
 
-    public String disableCalculateLegacy(final Lease lease,
-            final InvoiceRunType runType,
-            final InvoiceCalculationSelection selection,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate){
-
-        return doDisableCalculate(lease);
-    }
-
     public boolean hideCalculateLegacy() {
         return isMultiSelectActive();
     }
@@ -387,16 +377,6 @@ public class InvoiceServiceMenuAndContributions extends UdoDomainService<Invoice
             final LocalDate startDate,
             final LocalDate endDate) {
         return doValidateCalculate(startDate, endDate);
-    }
-
-    public String disableCalculate(final Lease lease,
-            final InvoiceRunType runType,
-            final List<LeaseItemType> leaseItemTypes,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate){
-
-        return doDisableCalculate(lease);
     }
 
     public boolean hideCalculate() {
@@ -453,7 +433,8 @@ public class InvoiceServiceMenuAndContributions extends UdoDomainService<Invoice
         return null;
     }
 
-    private String doDisableCalculate(final Lease lease) {
+    @Programmatic
+    public String doDisableCalculate(final Lease lease) {
         if (lease == null) return null;
         return lease.getProperty() == null ? "Please set occupancy first" : null;
     }

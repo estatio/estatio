@@ -31,7 +31,10 @@ import org.estatio.dom.tax.TaxRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.budget.ChargeImport"
+)
 public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     public String title() {
@@ -65,10 +68,10 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String externalReference;
 
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList(TaxImport.class);
-    }
+//    @Override
+//    public List<Class> importAfter() {
+//        return Lists.newArrayList(TaxImport.class);
+//    }
 
     @Programmatic
     @Override

@@ -98,23 +98,8 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.classification</groupId>
-            <artifactId>incode-module-classification-dom</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.incode.module.communications</groupId>
             <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.country</groupId>
-            <artifactId>incode-module-country-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.document</groupId>
-            <artifactId>incode-module-document-dom</artifactId>
         </dependency>
 
         <dependency>
@@ -124,7 +109,7 @@ language governing permissions and limitations under the License.
 
         <!-- testing -->
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>

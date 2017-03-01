@@ -237,9 +237,7 @@ public abstract class LeaseTerm
         return this;
     }
 
-    public String disableChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String disableChangeDates() {
         if (getStatus().isApproved()){
             return "Cannot change dates when term is approved";
         }
@@ -442,15 +440,11 @@ public abstract class LeaseTerm
         return nextTerm;
     }
 
-    public boolean hideCreateNext(
-            final LocalDate nextStartDate,
-            final LocalDate nextEndDate) {
+    public boolean hideCreateNext() {
         return !getLeaseItem().getType().autoCreateTerms();
     }
 
-    public String disableCreateNext(
-            final LocalDate nextStartDate,
-            final LocalDate nextEndDate) {
+    public String disableCreateNext() {
         return getNext() == null ? null : "Already a next term available";
     }
 
@@ -554,7 +548,7 @@ public abstract class LeaseTerm
         return this;
     }
 
-    public boolean hideChangeStatus(final LeaseTermStatus newStatus) {
+    public boolean hideChangeStatus() {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 

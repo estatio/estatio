@@ -28,13 +28,5 @@ public interface Importable {
      */
     List<Object> importData(Object previousRow);
 
-    /**
-     * Defines the order in which all {@link Importable}s are loaded.
-     *
-     * <p>
-     *     NB: this is to replace the ImportOrder that has a hard-coded list of classes (WIP).
-     * </p>
-     */
-    List<Class> importAfter();
 
 }

@@ -31,9 +31,13 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.estatio.dom.asset.Property;
 
 @DomainService(
-        nature = NatureOfService.VIEW_MENU_ONLY
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.services.invoice.InvoiceImportMenu"
 )
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.PRIMARY, named = "Invoices")
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Invoices"
+)
 public class InvoiceImportMenu {
 
     @PostConstruct

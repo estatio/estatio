@@ -31,9 +31,8 @@ import org.isisaddons.module.settings.dom.UserSetting;
 
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;
-
 import org.incode.module.base.dom.utils.TitleBuilder;
-import org.estatio.domsettings.types.SettingKeyType;
+
 import org.estatio.domsettings.types.SettingTypeType;
 
 import lombok.Getter;
@@ -88,7 +87,7 @@ public class UserSettingForEstatio extends SettingAbstractForEstatio implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="false", length= SettingKeyType.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull="false", length= 128)
     @javax.jdo.annotations.PrimaryKey
     @Getter @Setter
     private String key;

@@ -31,11 +31,17 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 
-public class FinancialAccount_newAdjustmentContribution {
+// REVIEW: this has been refactored to a mixin, but previously it wasn't annotated as @DomainService, so this is still not actually in use.
+public class FinancialAccount_newAdjustmentUNUSED {
+
+    private final FinancialAccount financialAccount;
+
+    public FinancialAccount_newAdjustmentUNUSED(final FinancialAccount financialAccount) {
+        this.financialAccount = financialAccount;
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public void newAdjustment(
-            final FinancialAccount financialAccount, // contributee
             final LocalDate transactionDate,
             final String description,
             final BigDecimal amount
@@ -47,9 +53,7 @@ public class FinancialAccount_newAdjustmentContribution {
                 amount);
     }
 
-    public boolean hideNewAdjustment(
-            final FinancialAccount financialAccount // contributee
-    ) {
+    public boolean hideNewAdjustment() {
         // don't show if there is no guarantee pointing back to financialAccount
         return guaranteeRepository.findbyFinancialAccount(financialAccount) == null;
     }

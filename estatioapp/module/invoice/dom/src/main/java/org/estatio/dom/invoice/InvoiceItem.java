@@ -195,7 +195,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return getTax();
     }
 
-    public String disableChangeTax(final Tax tax) {
+    public String disableChangeTax() {
         if (getInvoice().isImmutable()){
             return "Invoice is immutable";
         }
@@ -233,8 +233,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return getDescription();
     }
 
-    public String disableChangeDescription(
-            final String description) {
+    public String disableChangeDescription() {
         return disableDescription();
     }
 

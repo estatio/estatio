@@ -77,8 +77,17 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 	//endregion
 	// //////////////////////////////////////
 
+
+	public static class DescriptionType {
+		private DescriptionType() {}
+		public static class Meta {
+			public static final int MULTI_LINE = 5;
+			private Meta() {}
+		}
+	}
+
 	@Column(allowsNull = "false")
-    @PropertyLayout(multiLine = 5, describedAs = "Reason for the project and expected benefits")
+    @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE, describedAs = "Reason for the project and expected benefits")
 	@MemberOrder(sequence="1")
 	@Getter @Setter
 	private String description;
@@ -125,7 +134,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 			final @ParameterLayout(multiLine = 5) String description,
 			final LocalDate nextReviewDate){
 		
-		final LocalDate now = LocalDate.now();
+		final LocalDate now = clockService.now();
 		
 		BusinessCase nextBusinesscase = businesscases.newBusinessCase(this.getProject(), description, nextReviewDate, this.date, now, this.getBusinessCaseVersion() + 1);
 		this.setNext(nextBusinesscase);
@@ -141,7 +150,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 		return this.getNextReviewDate();
 	}
 	
-	public boolean hideUpdateBusinessCase(final String description, final LocalDate reviewDate) {
+	public boolean hideUpdateBusinessCase() {
 		
 		if (this.getNext()==null) {
 			return false;
@@ -156,7 +165,7 @@ public class BusinessCase extends UdoDomainObject<BusinessCase> implements Chain
 			return "This is no active version of the business case and cannot be updated";
 		}
 		
-		LocalDate now = LocalDate.now();
+		LocalDate now = clockService.now();
 		if (reviewDate.isBefore(now)) {
 			return "A review date should not be in the past";
 		}

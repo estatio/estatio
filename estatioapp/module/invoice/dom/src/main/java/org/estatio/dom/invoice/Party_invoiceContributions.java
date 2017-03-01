@@ -13,7 +13,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
+)
 public class Party_invoiceContributions {
 
     @Action(semantics = SemanticsOf.SAFE)

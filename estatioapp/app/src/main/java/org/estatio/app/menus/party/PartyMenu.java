@@ -35,11 +35,15 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.party.PartyMenu"
+)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.1")
+        menuOrder = "20.1"
+)
 public class PartyMenu {
 
     @Action(semantics = SemanticsOf.SAFE)

@@ -54,10 +54,10 @@ public class TaxImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String rateExternalReference;
 
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList();
-    }
+//    @Override
+//    public List<Class> importAfter() {
+//        return Lists.newArrayList();
+//    }
 
     @Programmatic
     @Override

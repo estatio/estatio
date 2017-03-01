@@ -25,15 +25,21 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
-@DomainObjectLayout(paged = Integer.MAX_VALUE)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentLineItem"
+)
+@DomainObjectLayout(
+        paged = Integer.MAX_VALUE
+)
 public class LeaseTermForTurnoverRentLineItem  {
 
     //region > constructors, title

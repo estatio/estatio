@@ -196,9 +196,7 @@ public class Unit
         return getChangeDates().changeDates(startDate, endDate);
     }
 
-    public String disableChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String disableChangeDates() {
         return null;
     }
 

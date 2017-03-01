@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -204,6 +205,7 @@ public class InvoiceForLease
     private FixedAsset fixedAsset;
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
+    @Column(length = 512)
     @Getter @Setter
     private String runId;
 
@@ -289,12 +291,7 @@ public class InvoiceForLease
             return null;
         }
 
-        public String disable$$(
-                final Charge charge,
-                final BigDecimal quantity,
-                final BigDecimal netAmount,
-                final LocalDate startDate,
-                final LocalDate endDate){
+        public String disable$$(){
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
 

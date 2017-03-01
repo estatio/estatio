@@ -33,7 +33,10 @@ import org.estatio.dom.charge.ChargeRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.budget.BudgetImportExport"
+)
 public class BudgetImportExport implements Importable {
 
     public String title() {
@@ -93,10 +96,10 @@ public class BudgetImportExport implements Importable {
     private BigDecimal percentage;
 
 
-    @Override
-    public List<Class> importAfter() {
-        return Lists.newArrayList();
-    }
+//    @Override
+//    public List<Class> importAfter() {
+//        return Lists.newArrayList();
+//    }
 
     @Override
     @Programmatic

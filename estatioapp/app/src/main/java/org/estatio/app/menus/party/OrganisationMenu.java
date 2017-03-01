@@ -47,11 +47,15 @@ import org.estatio.dom.party.PartyConstants;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.numerator.dom.impl.NumeratorRepository;
 
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.party.OrganisationMenu"
+)
 @DomainServiceLayout(
         named = "Parties",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "20.2")
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+        menuOrder = "20.2"
+)
 public class OrganisationMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

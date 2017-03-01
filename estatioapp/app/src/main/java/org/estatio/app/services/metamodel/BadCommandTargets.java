@@ -28,8 +28,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
@@ -39,10 +41,21 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.SECONDARY, named = "Prototyping", menuOrder = "980")
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.services.metamodel.BadCommandTargets"
+)
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.SECONDARY,
+        named = "Prototyping",
+        menuOrder = "980"
+)
 public class BadCommandTargets {
 
+    @DomainObject(
+            nature = Nature.VIEW_MODEL,
+            objectType = "org.estatio.app.services.metamodel.BadCommandTargets$BadTarget"
+    )
     @XmlRootElement
     public static class BadTarget {
         @Getter @Setter

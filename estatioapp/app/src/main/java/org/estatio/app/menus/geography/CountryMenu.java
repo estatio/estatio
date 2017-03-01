@@ -37,7 +37,10 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.geography.CountryMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.app.menus.invoice.InvoiceServiceMenuAndContributions;
+import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRunType;
@@ -64,7 +64,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
     LeaseRepository leaseRepository;
 
     @Inject
-    InvoiceServiceMenuAndContributions invoiceService;
+    InvoiceServiceMenu invoiceService;
 
     @Inject
     ChargeRepository chargeRepository;

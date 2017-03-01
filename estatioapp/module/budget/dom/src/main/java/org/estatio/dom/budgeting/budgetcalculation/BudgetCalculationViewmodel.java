@@ -30,7 +30,11 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL, auditing = Auditing.DISABLED)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationViewmodel",
+        auditing = Auditing.DISABLED
+)
 public class BudgetCalculationViewmodel {
 
     public BudgetCalculationViewmodel(

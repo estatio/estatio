@@ -112,11 +112,6 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.incode.module.docfragment</groupId>
-            <artifactId>incode-module-docfragment-dom</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.incode.module.fixturesupport</groupId>
             <artifactId>incode-module-fixturesupport-dom</artifactId>
         </dependency>
@@ -174,7 +169,7 @@ language governing permissions and limitations under the License.
 
         <!-- testing -->
         <dependency>
-            <groupId>com.danhaywood.mavendeps</groupId>
+            <groupId>org.incode.mavendeps</groupId>
             <artifactId>isistesting</artifactId>
             <version>${mavendeps-isistesting.version}</version>
             <type>pom</type>

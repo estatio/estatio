@@ -47,7 +47,10 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.app.services.budget.KeyItemImportExportLineItem"
+)
 public class KeyItemImportExportLineItem
         implements Comparable<KeyItemImportExportLineItem> {
 
