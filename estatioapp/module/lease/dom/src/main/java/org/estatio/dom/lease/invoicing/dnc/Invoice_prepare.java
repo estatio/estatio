@@ -36,9 +36,9 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 
 @Mixin
-public class Invoice_createAndAttachDocument extends T_createAndAttachDocumentAndRender<Invoice> {
+public class Invoice_prepare extends T_createAndAttachDocumentAndRender<Invoice> {
 
-    public Invoice_createAndAttachDocument(final Invoice domainObject) {
+    public Invoice_prepare(final Invoice domainObject) {
         super(domainObject);
     }
 

@@ -43,7 +43,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_print;
+import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByPost;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
@@ -68,11 +68,11 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
             final Invoice invoice = invoiceAndDocument.getInvoice();
             final Document prelimLetterOrInvoiceNote = invoiceAndDocument.getDocument();
 
-            final Invoice_print invoice_print = invoice_print(invoice);
-            final PostalAddress postalAddress = invoice_print.default1$$(prelimLetterOrInvoiceNote);
+            final Invoice_sendByPost invoice_sendByPost = invoice_print(invoice);
+            final PostalAddress postalAddress = invoice_sendByPost.default1$$(prelimLetterOrInvoiceNote);
 
-            invoice_print.createCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
-            invoice_print.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes);
+            invoice_sendByPost.createCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
+            invoice_sendByPost.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes);
         }
 
         final byte[] mergedBytes = pdfBoxService.merge(pdfBytes.toArray(new byte[][] {}));
@@ -97,8 +97,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
     private Predicate<InvoiceAndDocument> withPostalAddress() {
         return invoiceAndDocument -> {
-            final Invoice_print invoice_print = invoice_print(invoiceAndDocument.getInvoice());
-            final PostalAddress postalAddress = invoice_print.default1$$(invoiceAndDocument.getDocument());
+            final Invoice_sendByPost invoice_sendByPost = invoice_print(invoiceAndDocument.getInvoice());
+            final PostalAddress postalAddress = invoice_sendByPost.default1$$(invoiceAndDocument.getDocument());
             return postalAddress != null;
         };
     }
@@ -122,8 +122,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
         };
     }
 
-    private Invoice_print invoice_print(final Invoice invoice) {
-        return factoryService.mixin(Invoice_print.class, invoice);
+    private Invoice_sendByPost invoice_print(final Invoice invoice) {
+        return factoryService.mixin(Invoice_sendByPost.class, invoice);
     }
 
 

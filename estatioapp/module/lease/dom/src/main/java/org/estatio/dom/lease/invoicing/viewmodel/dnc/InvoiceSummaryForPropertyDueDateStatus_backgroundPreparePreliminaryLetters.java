@@ -16,19 +16,29 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.dom.lease.invoicing.viewmodel.dnc;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
-public class Invoice_printPrelimLetter extends Invoice_printPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters
+        extends InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract {
 
-    public Invoice_printPrelimLetter(final Invoice invoice) {
-        super(invoice, Constants.DOC_TYPE_REF_PRELIM);
+    public InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
+        super(invoiceSummary, Constants.DOC_TYPE_REF_PRELIM);
     }
 
+    @Override
+    Predicate<Invoice> filter() {
+        // no restrictions for creating preliminary letters
+        return Predicates.alwaysTrue();
+    }
 
 }

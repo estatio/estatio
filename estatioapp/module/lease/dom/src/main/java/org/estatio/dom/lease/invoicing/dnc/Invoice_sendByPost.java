@@ -36,7 +36,7 @@ import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
-import org.incode.module.communications.dom.mixins.Document_print;
+import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.DocumentModule;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
@@ -50,19 +50,20 @@ import org.estatio.dom.invoice.Invoice;
  * Provides the ability to send an print.
  */
 @Mixin
-public class Invoice_print extends Invoice_sendAbstract {
+public class Invoice_sendByPost extends Invoice_sendAbstract {
 
-    public Invoice_print(final Invoice invoice) {
+    public Invoice_sendByPost(final Invoice invoice) {
         super(invoice);
     }
 
-    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Invoice_print> { }
+    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Invoice_sendByPost> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
-    @ActionLayout(cssClassFa = "print",
+    @ActionLayout(
+            cssClassFa = "envelope-o",
             contributed = Contributed.AS_ACTION
     )
     @MemberOrder(name = "documents", sequence = "4.2")
@@ -107,8 +108,8 @@ public class Invoice_print extends Invoice_sendAbstract {
             if (!Constants.DOC_TYPE_REF_PRELIM.equals(reference) && !Constants.DOC_TYPE_REF_INVOICE.equals(reference)) {
                 continue;
             }
-            final Document_print document_print = document_print(document);
-            if(document_print.disable$$() != null) {
+            final Document_sendByPost document_sendByPost = document_print(document);
+            if(document_sendByPost.disable$$() != null) {
                 continue;
             }
             documents.add(document);

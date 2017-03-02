@@ -37,19 +37,20 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.Invoice;
 
-public abstract class Invoice_emailPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
+public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_emailPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
+    public Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
         super(invoice, documentTypeReference);
     }
 
-    public static class DomainEvent extends ActionDomainEvent<Invoice_emailPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
             domainEvent = DomainEvent.class
     )
     @ActionLayout(
+            cssClassFa = "at",
             contributed = Contributed.AS_ACTION
     )
     public Invoice $$(

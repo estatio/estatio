@@ -35,13 +35,13 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_createAndAttachDocumentAndScheduleRender;
+import org.estatio.dom.lease.invoicing.dnc.Invoice_backgroundPrepare;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
-public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
+public abstract class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
-    public InvoiceSummaryForPropertyDueDateStatus_prepareAbstract(
+    public InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
             final String documentTypeReference) {
         super(invoiceSummary, documentTypeReference);
@@ -53,7 +53,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_prepareAbstract ext
         final List<InvoiceForLease> invoices = invoicesToPrepare();
         for (Invoice invoice : invoices) {
             final DocumentTemplate documentTemplate = documentTemplateFor(invoice);
-            factoryService.mixin(Invoice_createAndAttachDocumentAndScheduleRender.class, invoice).$$(documentTemplate);
+            factoryService.mixin(Invoice_backgroundPrepare.class, invoice).$$(documentTemplate);
         }
         return this.invoiceSummary;
     }

@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,28 +17,35 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.viewmodel.dnc;
+package org.estatio.dom.lease.invoicing.dnc;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
+import java.io.IOException;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.invoice.Constants;
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
+
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
-public class InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters extends InvoiceSummaryForPropertyDueDateStatus_prepareAbstract {
+public class Invoice_backgroundPrepare
+        extends T_createAndAttachDocumentAndScheduleRender<Invoice> {
 
-    public InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        super(invoiceSummary, Constants.DOC_TYPE_REF_PRELIM);
+    public Invoice_backgroundPrepare(final Invoice domainObject) {
+        super(domainObject);
     }
 
+    /**
+     * For use only programmatically.
+     */
+    @Action(hidden = Where.EVERYWHERE)
     @Override
-    Predicate<Invoice> filter() {
-        // no restrictions for creating preliminary letters
-        return Predicates.alwaysTrue();
+    public Object $$(
+            final DocumentTemplate template) throws IOException {
+        super.$$(template);
+        return domainObject;
     }
-
 }

@@ -52,7 +52,7 @@ import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForInvoiceDoc_com
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForInvoiceDoc_document;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForInvoiceDoc_documentState;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_invoiceDocs;
-import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_prepareInvoiceDocs;
+import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -98,7 +98,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
 
             // when prepare
-            mixin(InvoiceSummaryForPropertyDueDateStatus_prepareInvoiceDocs.class, summary).$$();
+            mixin(InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs.class, summary).$$();
 
             // (clearing queryResultsCache)
             summary = findSummary();
@@ -117,7 +117,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
 
 
             // when prepare
-            mixin(InvoiceSummaryForPropertyDueDateStatus_prepareInvoiceDocs.class, summary).$$();
+            mixin(InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs.class, summary).$$();
 
 
             // then now populated

@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -39,7 +38,7 @@ public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {
     @Programmatic
     public String disableSendInvoiceDoc(final Invoice invoice, final Document document) {
 
-        // only applies to InvoiceNote documents
+        // only applies to InvoiceDoc documents
         final DocumentType documentType = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_INVOICE);
         if(document.getType() != documentType) {
             return null;
@@ -54,8 +53,6 @@ public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {
     }
 
 
-    @Inject
-    PaperclipRepository paperclipRepository;
     @Inject
     DocumentTypeRepository documentTypeRepository;
 

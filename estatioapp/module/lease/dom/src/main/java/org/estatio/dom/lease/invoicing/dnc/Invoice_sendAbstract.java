@@ -35,8 +35,8 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
-import org.incode.module.communications.dom.mixins.Document_email;
-import org.incode.module.communications.dom.mixins.Document_print;
+import org.incode.module.communications.dom.mixins.Document_sendByEmail;
+import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -89,12 +89,12 @@ public abstract class Invoice_sendAbstract {
     }
 
 
-    Document_email document_email(final Document document) {
-        return factoryService.mixin(Document_email.class, document);
+    Document_sendByEmail document_email(final Document document) {
+        return factoryService.mixin(Document_sendByEmail.class, document);
     }
 
-    Document_print document_print(final Document document) {
-        return factoryService.mixin(Document_print.class, document);
+    Document_sendByPost document_print(final Document document) {
+        return factoryService.mixin(Document_sendByPost.class, document);
     }
 
 

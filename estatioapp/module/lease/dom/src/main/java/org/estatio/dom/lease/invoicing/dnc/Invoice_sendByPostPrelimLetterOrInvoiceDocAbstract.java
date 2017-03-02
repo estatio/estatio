@@ -39,13 +39,13 @@ import org.estatio.dom.invoice.Invoice;
 /**
  * Provides the ability to send an print.
  */
-public abstract class Invoice_printPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
+public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_printPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
+    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
         super(invoice, documentTypeReference);
     }
 
-    public static class DomainEvent extends ActionDomainEvent<Invoice_printPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,

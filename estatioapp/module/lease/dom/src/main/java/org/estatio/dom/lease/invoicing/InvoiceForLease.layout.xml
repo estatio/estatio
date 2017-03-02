@@ -115,15 +115,9 @@
                             <ns2:collection id="documents">
                                 <ns2:action id="attachReceipt"/>
                                 <ns2:action id="preview"/>
-                                <ns2:action id="createAndAttachDocument">
-                                    <ns2:named>Prepare</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="email" cssClassFa="at">
-                                    <ns2:named>Send by email</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="print" cssClassFa="print">
-                                    <ns2:named>Send by post</ns2:named>
-                                </ns2:action>
+                                <ns2:action id="prepare"/>
+                                <ns2:action id="sendByEmail"/>
+                                <ns2:action id="sendByPost"/>
                             </ns2:collection>
                         </col>
                     </row>
@@ -135,10 +129,10 @@
                                 <ns2:action id="preparePrelimLetter">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="emailPrelimLetter" cssClassFa="at">
+                                <ns2:action id="sendByEmailPrelimLetter" cssClassFa="at">
                                     <ns2:named>Send by email</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="printPrelimLetter" cssClassFa="print">
+                                <ns2:action id="sendByPostPrelimLetter" cssClassFa="print">
                                     <ns2:named>Send by post</ns2:named>
                                 </ns2:action>
                             </ns2:collection>
@@ -146,10 +140,10 @@
                                 <ns2:action id="prepareInvoiceDoc">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="emailInvoiceDoc" cssClassFa="at">
+                                <ns2:action id="sendByEmailInvoiceDoc">
                                     <ns2:named>Send by email</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="printInvoiceDoc" cssClassFa="print">
+                                <ns2:action id="sendByPostInvoiceDoc" cssClassFa="print">
                                     <ns2:named>Send by post</ns2:named>
                                 </ns2:action>
                             </ns2:collection>

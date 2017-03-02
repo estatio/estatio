@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
@@ -34,12 +35,13 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
-import org.incode.module.document.dom.impl.docs.DocumentSort;
-import org.incode.module.document.dom.impl.docs.DocumentState;
+import org.incode.module.document.dom.impl.docs.Document_attachSupportingPdf;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -64,54 +66,42 @@ public class Invoice_attachReceipt {
             sequence = "1"
     )
     public Invoice $$(
+            final Document document,
             final DocumentType documentType,
             @Parameter(fileAccept = "application/pdf")
-            final Blob document,
+            final Blob blob,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String fileName
         ) throws IOException {
 
-        String name = determineName(document, fileName);
+        final Document_attachSupportingPdf supportingPdf =
+                factoryService.mixin(Document_attachSupportingPdf.class, document);
 
-        final Document receiptDoc = documentRepository
-                .create(documentType, invoice.getApplicationTenancyPath(),
-                        name,
-                        document.getMimeType().getBaseType());
-
-        // unlike documents that are generated from a template (where we call documentTemplate#render), in this case
-        // we have the actual bytes; so we just set up the remaining state of the document manually.
-        receiptDoc.setRenderedAt(clockService.nowAsDateTime());
-        receiptDoc.setState(DocumentState.RENDERED);
-        receiptDoc.setSort(DocumentSort.BLOB);
-        receiptDoc.setBlobBytes(document.getBytes());
-
-        paperclipRepository.attach(receiptDoc, PaperclipRoleNames.INVOICE_RECEIPT, invoice);
-
-        final DocumentType invoiceDocType = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_INVOICE);
-
-        final Document invoiceDocIfAny = invoiceDocAndCommService.findDocument(invoice, invoiceDocType);
-        if(invoiceDocIfAny != null) {
-            paperclipRepository.attach(invoiceDocIfAny, PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY, receiptDoc);
-        }
+        supportingPdf.exec(documentType, blob, fileName, PaperclipRoleNames.INVOICE_RECEIPT);
 
         return invoice;
     }
 
-    public List<DocumentType> choices0$$() {
+    public String disable$$() {
+        final List<Document> documents = choices0$$();
+        return documents.isEmpty() ? "No documents to attach receipts to": null;
+    }
+
+    public List<Document> choices0$$() {
+        final List<Paperclip> byAttachedTo = paperclipRepository.findByAttachedTo(this.invoice);
+        return Lists.newArrayList(
+                FluentIterable.from(byAttachedTo).transform(Paperclip::getDocument)
+                        .filter(Document.class::isInstance)
+                        .transform(Document.class::cast)
+                        .toList()
+        );
+    }
+
+    public List<DocumentType> choices1$$() {
         return Lists.newArrayList(
                 findDocumentType(Constants.DOC_TYPE_REF_SUPPLIER_RECEIPT),
                 findDocumentType(Constants.DOC_TYPE_REF_TAX_RECEIPT)
                 );
-    }
-
-    private String determineName(
-            final Blob document,
-            final String fileName) {
-        String name = fileName != null ? fileName : document.getName();
-        if(!name.endsWith(".pdf")) {
-            name = name + ".pdf";
-        }
-        return name;
     }
 
     private DocumentType findDocumentType(final String ref) {
@@ -132,5 +122,8 @@ public class Invoice_attachReceipt {
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    FactoryService factoryService;
 
 }

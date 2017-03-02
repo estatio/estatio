@@ -43,7 +43,7 @@ import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.mixins.Document_email;
+import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentState;
@@ -57,13 +57,13 @@ import org.estatio.dom.invoice.Invoice;
  * Provides the ability to send an email.
  */
 @Mixin
-public class Invoice_email extends Invoice_sendAbstract {
+public class Invoice_sendByEmail extends Invoice_sendAbstract {
 
-    public Invoice_email(final Invoice invoice) {
+    public Invoice_sendByEmail(final Invoice invoice) {
         super(invoice);
     }
 
-    public static class DomainEvent extends ActionDomainEvent<Invoice_email> { }
+    public static class DomainEvent extends ActionDomainEvent<Invoice_sendByEmail> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
@@ -129,7 +129,7 @@ public class Invoice_email extends Invoice_sendAbstract {
             if (!Constants.DOC_TYPE_REF_PRELIM.equals(reference) && !Constants.DOC_TYPE_REF_INVOICE.equals(reference)) {
                 continue;
             }
-            final Document_email document_email = document_email(document);
+            final Document_sendByEmail document_email = document_email(document);
             if(document_email.disable$$() != null) {
                 continue;
             }

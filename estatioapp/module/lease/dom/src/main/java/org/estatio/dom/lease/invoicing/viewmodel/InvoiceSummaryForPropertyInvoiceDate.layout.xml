@@ -48,7 +48,7 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="preliminaryLetters">
-                                <ns2:action id="preparePreliminaryLetters">
+                                <ns2:action id="backgroundPreparePreliminaryLetters">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
                                 <ns2:action id="sendByEmailPreliminaryLetters">
@@ -68,7 +68,7 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="invoiceDocs">
-                                <ns2:action id="prepareInvoiceDocs">
+                                <ns2:action id="backgroundPrepareInvoiceDocs">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
                                 <ns2:action id="sendByEmailInvoiceDocs">

@@ -37,7 +37,7 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_email;
+import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByEmail;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
@@ -57,13 +57,13 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
             final Invoice invoice = invoiceAndDocument.getInvoice();
             final Document document = invoiceAndDocument.getDocument();
 
-            final Invoice_email invoice_email = invoice_email(invoice);
+            final Invoice_sendByEmail invoice_sendByEmail = invoice_email(invoice);
 
-            final EmailAddress emailAddress = invoice_email.default1$$(document);
-            final String cc = invoice_email.default2$$(document);
-            final String bcc = invoice_email.default3$$(document);
+            final EmailAddress emailAddress = invoice_sendByEmail.default1$$(document);
+            final String cc = invoice_sendByEmail.default2$$(document);
+            final String bcc = invoice_sendByEmail.default3$$(document);
 
-            invoice_email.$$(document, emailAddress, cc, bcc);
+            invoice_sendByEmail.$$(document, emailAddress, cc, bcc);
         }
         return this.invoiceSummary;
     }
@@ -89,14 +89,14 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
 
     private Predicate<InvoiceAndDocument> canBeSentByEmail() {
         return invoiceAndDocument -> {
-            final Invoice_email emailMixin = invoice_email(invoiceAndDocument.getInvoice());
+            final Invoice_sendByEmail emailMixin = invoice_email(invoiceAndDocument.getInvoice());
             final EmailAddress emailAddress = emailMixin.default1$$(invoiceAndDocument.getDocument());
             return emailAddress != null;
         };
     }
 
-    private Invoice_email invoice_email(final Invoice invoice) {
-        return factoryService.mixin(Invoice_email.class, invoice);
+    private Invoice_sendByEmail invoice_email(final Invoice invoice) {
+        return factoryService.mixin(Invoice_sendByEmail.class, invoice);
     }
 
     @Inject

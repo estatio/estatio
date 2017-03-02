@@ -18,24 +18,17 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
-import com.google.common.eventbus.Subscribe;
+import org.apache.isis.applib.annotation.Mixin;
 
-import org.apache.isis.applib.AbstractSubscriber;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
+import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.Invoice;
 
-import org.incode.module.communications.dom.mixins.Document_print;
+@Mixin
+public class Invoice_sendByEmailInvoiceDoc extends Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract {
 
-@DomainService(nature = NatureOfService.DOMAIN)
-public class HideDocumentPrint extends AbstractSubscriber {
-
-    @Subscribe
-    public void on(Document_print.ActionDomainEvent ev) {
-        switch (ev.getEventPhase()) {
-        case HIDE:
-            ev.hide();
-            break;
-        }
+    public Invoice_sendByEmailInvoiceDoc(final Invoice invoice) {
+        super(invoice, Constants.DOC_TYPE_REF_INVOICE);
     }
+
 
 }

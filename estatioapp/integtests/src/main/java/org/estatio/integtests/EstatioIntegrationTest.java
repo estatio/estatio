@@ -31,7 +31,6 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
@@ -116,9 +115,6 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
 
     @Inject
     protected TransactionService transactionService;
-
-    @Inject
-    protected FixtureScripts fixtureScripts;
 
 
 }

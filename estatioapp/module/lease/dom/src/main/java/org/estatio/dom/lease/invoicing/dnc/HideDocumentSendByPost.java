@@ -24,13 +24,13 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.communications.dom.mixins.Document_email;
+import org.incode.module.communications.dom.mixins.Document_sendByPost;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class HideDocumentEmail extends AbstractSubscriber {
+public class HideDocumentSendByPost extends AbstractSubscriber {
 
     @Subscribe
-    public void on(Document_email.ActionDomainEvent ev) {
+    public void on(Document_sendByPost.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case HIDE:
             ev.hide();

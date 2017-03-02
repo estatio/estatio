@@ -51,7 +51,7 @@ import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_c
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_document;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_documentState;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_preliminaryLetters;
-import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters;
+import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_sendByEmailPreliminaryLetters;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -96,7 +96,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
 
             // when prepare
-            mixin(InvoiceSummaryForPropertyDueDateStatus_preparePreliminaryLetters.class, summary).$$();
+            mixin(InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters.class, summary).$$();
 
             // (clearing queryResultsCache)
             summary = findSummary();

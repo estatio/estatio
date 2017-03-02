@@ -16,19 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.dom.lease.invoicing.viewmodel.dnc;
+
+import com.google.common.base.Predicate;
 
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
-public class Invoice_emailPrelimLetter extends Invoice_emailPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs extends
+        InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract {
 
-    public Invoice_emailPrelimLetter(final Invoice invoice) {
-        super(invoice, Constants.DOC_TYPE_REF_PRELIM);
+    public InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
+        super(invoiceSummary, Constants.DOC_TYPE_REF_INVOICE);
     }
 
+    @Override
+    Predicate<Invoice> filter() {
+        // can only create invoice notes that have been invoiced (no longer changeable)
+        return Invoice.Predicates.noLongerChangeable();
+    }
 
 }
