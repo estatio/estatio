@@ -30,7 +30,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.spi.CommHeaderAbstract;
 import org.incode.module.communications.dom.spi.CommHeaderForEmail;
-import org.incode.module.communications.dom.spi.CommHeaderForPrint;
+import org.incode.module.communications.dom.spi.CommHeaderForPost;
 import org.incode.module.communications.dom.spi.DocumentCommunicationSupport;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -85,7 +85,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
 
     @Override
     public void inferPrintHeaderFor(
-            final Document document, final CommHeaderForPrint header) {
+            final Document document, final CommHeaderForPost header) {
 
         inferToHeader(document, header, CommunicationChannelType.POSTAL_ADDRESS);
     }
