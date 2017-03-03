@@ -144,7 +144,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.number}",
+                "Preliminary letter for Invoice ${this.buyer.reference} {this.dueDate}",
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -162,7 +162,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.number} (Italy)",
+                "Preliminary letter for Invoice ${this.buyer.reference} {this.dueDate} (Italy)",
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -215,7 +215,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.number}", siRenderingStrategy,
+                "Invoice for ${this.buyer.reference} {this.dueDate}", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,
@@ -232,7 +232,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.number}", siRenderingStrategy,
+                "Invoice for ${this.buyer.reference} {this.dueDate} (Italy)", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,
@@ -310,7 +310,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     private DocumentTemplate upsertTemplateForPdfWithApplicability(
             final DocumentType documentType,
             final String atPath,
-            final String nameSuffixIfAny,
+            final String templateNameSuffixIfAny,
             final boolean previewOnly,
             final String contentText, final RenderingStrategy contentRenderingStrategy,
             final String nameText, final RenderingStrategy nameRenderingStrategy,
@@ -320,7 +320,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final ExecutionContext executionContext) {
 
         final DocumentTemplate template =
-                upsertTemplateForPdf(documentType, atPath, nameSuffixIfAny, previewOnly, 
+                upsertTemplateForPdf(documentType, atPath, templateNameSuffixIfAny, previewOnly,
 				        contentText, contentRenderingStrategy, 
 						nameText, nameRenderingStrategy, 
 						executionContext);
@@ -334,7 +334,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     private DocumentTemplate upsertTemplateForPdf(
             final DocumentType docType,
             final String atPath,
-            final String nameSuffixIfAny,
+            final String templateNameSuffixIfAny,
             final boolean previewOnly,
             final String contentText, final RenderingStrategy contentRenderingStrategy,
             final String nameText, final RenderingStrategy nameRenderingStrategy,
@@ -346,7 +346,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 docType, now, atPath,
                 ".pdf",
                 previewOnly,
-                buildTemplateName(docType, nameSuffixIfAny),
+                buildTemplateName(docType, templateNameSuffixIfAny),
                 "application/pdf",
                 contentText, contentRenderingStrategy,
                 nameText, nameRenderingStrategy,
@@ -384,15 +384,15 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     private static String buildTemplateName(
             final DocumentType docType,
-            final String nameSuffixIfAny) {
-        return buildTemplateName(docType, nameSuffixIfAny, null);
+            final String templateNameSuffixIfAny) {
+        return buildTemplateName(docType, templateNameSuffixIfAny, null);
     }
 
     private static String buildTemplateName(
             final DocumentType docType,
-            final String nameSuffixIfAny,
+            final String templateNameSuffixIfAny,
             final String extension) {
-        final String name = docType.getName() + (nameSuffixIfAny != null ? nameSuffixIfAny : "");
+        final String name = docType.getName() + (templateNameSuffixIfAny != null ? templateNameSuffixIfAny : "");
         return extension != null
                 ? name.endsWith(extension)
                     ? name
