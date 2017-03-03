@@ -53,6 +53,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ObjectUpdatingEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -120,11 +121,17 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED
+//        ,
+//        updatingLifecycleEvent = Invoice.UpdatingEvent.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
+
+
+    public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {}
+
 
     public Invoice(final String keyProperties) {
         super(keyProperties);
@@ -210,8 +217,38 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private LocalDate dueDate;
 
+    
+    
     @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
-    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    @Getter @Setter
+    private String preliminaryLetterDescription;
+
+    public String disablePreliminaryLetterDescription() {
+        if (isImmutable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Invoice changePreliminaryLetterDescription(
+            final @ParameterLayout(multiLine = 3) String preliminaryLetterDescription) {
+        setPreliminaryLetterDescription(preliminaryLetterDescription);
+        return this;
+    }
+
+    public String default0ChangePreliminaryLetterDescription() {
+        return getPreliminaryLetterDescription();
+    }
+
+    public String disableChangePreliminaryLetterDescription() {
+        return disablePreliminaryLetterDescription();
+    }
+
+
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
@@ -238,6 +275,8 @@ public abstract class Invoice<T extends Invoice<T>>
     public String disableChangeDescription() {
         return disableDescription();
     }
+
+
 
 
     @Mixin(method = "exec")

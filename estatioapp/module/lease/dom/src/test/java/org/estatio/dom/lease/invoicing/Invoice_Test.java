@@ -65,9 +65,6 @@ public class Invoice_Test {
     InvoiceRepository mockInvoiceRepository;
 
     @Mock
-    InvoiceDescriptionService mockInvoiceDescriptionService;
-
-    @Mock
     NumeratorForCollectionRepository mockNumeratorRepository;
 
     @Mock
@@ -181,7 +178,6 @@ public class Invoice_Test {
             invoice_invoice.numeratorRepository = mockNumeratorRepository;
             invoice_invoice.titleService = mockTitleService;
             invoice_invoice.messageService = mockMessageService;
-            invoice_invoice.invoiceDescriptionService = mockInvoiceDescriptionService;
 
             // expect
             context.checking(new Expectations() {{
@@ -190,7 +186,6 @@ public class Invoice_Test {
 
                 oneOf(mockMessageService).informUser("Assigned XXX-00011 to invoice Invoice #001");
 
-                oneOf(mockInvoiceDescriptionService).update(invoice);
             }});
 
             assertThat(invoice_invoice.disable$$()).isNull();

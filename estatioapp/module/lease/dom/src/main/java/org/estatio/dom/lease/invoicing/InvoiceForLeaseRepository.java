@@ -18,10 +18,14 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -30,6 +34,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.docfragment.dom.api.DocFragmentService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
@@ -42,6 +47,8 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
+
+import freemarker.template.TemplateException;
 
 @DomainService(repositoryFor = InvoiceForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceForLease> {
@@ -163,10 +170,28 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         final CommunicationChannel sendTo = firstCurrentTenantInvoiceAddress(lease);
         invoice.setSendTo(sendTo);
 
+        try {
+            // invoiceDescriptionService.update(invoice);
+            final String description = docFragmentService.render(invoice, "description");
+            invoice.setDescription(description);
+
+            // invoiceDescriptionService.update(invoice);
+            final String preliminaryLetterDescription = docFragmentService.render(invoice, "preliminaryLetterDescription");
+            invoice.setPreliminaryLetterDescription(preliminaryLetterDescription);
+        } catch (IOException | TemplateException e) {
+            throw new ApplicationException(e);
+        }
+
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
     }
+
+    @Inject
+    private DocFragmentService docFragmentService;
+
+    @javax.inject.Inject
+    InvoiceDescriptionService invoiceDescriptionService;
 
     CommunicationChannel firstCurrentTenantInvoiceAddress(final Agreement agreement) {
         final List<CommunicationChannel> channels = currentTenantInvoiceAddresses(agreement);

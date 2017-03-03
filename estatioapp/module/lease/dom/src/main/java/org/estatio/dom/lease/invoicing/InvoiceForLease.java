@@ -29,18 +29,24 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import com.google.common.eventbus.Subscribe;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -434,8 +440,6 @@ public class InvoiceForLease
             invoiceForLease.setInvoiceDate(invoiceDate);
             invoiceForLease.setStatus(InvoiceStatus.INVOICED);
 
-            invoiceDescriptionService.update(invoiceForLease);
-
             messageService.informUser("Assigned " + invoiceForLease.getInvoiceNumber() + " to invoice " + titleService.titleOf(
                     invoiceForLease));
             return invoiceForLease;
@@ -492,9 +496,6 @@ public class InvoiceForLease
 
         @javax.inject.Inject
         TitleService titleService;
-
-        @javax.inject.Inject
-        InvoiceDescriptionService invoiceDescriptionService;
     }
 
     @Mixin
@@ -517,6 +518,33 @@ public class InvoiceForLease
 
         @Inject
         UserService userService;
+    }
+
+
+    public void updating() {
+        invoiceDescriptionService.update(this);
+    }
+
+    @Inject
+    InvoiceDescriptionService invoiceDescriptionService;
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class UpdatingEventSubscriber extends AbstractSubscriber {
+
+        @EventHandler // if axon
+        @Subscribe    // if guava
+        public void on(Invoice.UpdatingEvent ev) {
+
+            final Invoice source = ev.getSource();
+            if(source instanceof InvoiceForLease) {
+                final InvoiceForLease invoiceForLease = (InvoiceForLease) source;
+                invoiceDescriptionService.update(invoiceForLease);
+            }
+        }
+
+        @Inject
+        InvoiceDescriptionService invoiceDescriptionService;
+
     }
 
     /**

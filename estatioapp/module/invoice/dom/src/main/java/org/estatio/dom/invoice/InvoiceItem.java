@@ -208,7 +208,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
-    @Property(editing = Editing.ENABLED) // TODO: this doesn't work, ISIS-1478
     @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;

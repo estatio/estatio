@@ -94,7 +94,7 @@ public class InvoiceDescriptionService_Test {
             @Before
             public void setUp() throws Exception {
                 super.setUp();
-                templateText = DocFragmentData.read("InvoiceItem_description_ITA.docFragment.txt");
+                templateText = DocFragmentData.read("InvoiceItem_description_ITA.docFragment.ftl");
             }
 
             @Test
@@ -226,7 +226,7 @@ public class InvoiceDescriptionService_Test {
             @Before
             public void setUp() throws Exception {
                 super.setUp();
-                templateText = DocFragmentData.read("InvoiceItem_description_FRA.docFragment.txt");
+                templateText = DocFragmentData.read("InvoiceItem_description_FRA.docFragment.ftl");
             }
 
             @Test
@@ -370,7 +370,7 @@ public class InvoiceDescriptionService_Test {
             public void setUp() throws Exception {
                 super.setUp();
 
-                templateText = DocFragmentData.read("Invoice_description_ITA.docFragment.txt");
+                templateText = DocFragmentData.read("Invoice_description_ITA.docFragment.ftl");
             }
 
             @Test

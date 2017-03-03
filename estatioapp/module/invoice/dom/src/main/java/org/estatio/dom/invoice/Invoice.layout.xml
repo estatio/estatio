@@ -29,7 +29,8 @@
                                 <ns2:property id="number"/>
                                 <ns2:property id="runId"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Description" id="description">
+                            <ns2:fieldSet name="Descriptions" id="descriptions">
+                                <ns2:property id="preliminaryDescription" hidden="ALL_TABLES"/>
                                 <ns2:property id="description" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Communications" id="comms">

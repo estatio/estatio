@@ -36,9 +36,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DocFragmentData {
 
+    InvoicePreliminaryLetterDescriptionIta(
+            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/ITA",
+            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
     InvoiceDescriptionIta(
             "org.estatio.dom.invoice.Invoice", "description", "/ITA",
-            "Invoice_description_ITA.docFragment.txt") {
+            "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
             // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
@@ -47,7 +56,7 @@ public enum DocFragmentData {
     },
     InvoiceItemDescriptionIta(
             "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/ITA",
-            "InvoiceItem_description_ITA.docFragment.txt") {
+            "InvoiceItem_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
             // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
@@ -55,9 +64,18 @@ public enum DocFragmentData {
         }
     },
 
+    InvoicePreliminaryLetterDescriptionFra(
+            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/FRA",
+            "Invoice_preliminaryLetterDescription_FRA.docFragment.ftl") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
     InvoiceDescriptionFra(
             "org.estatio.dom.invoice.Invoice", "description", "/FRA",
-            "Invoice_description_FRA.docFragment.txt") {
+            "Invoice_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
             // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
@@ -67,7 +85,7 @@ public enum DocFragmentData {
 
     InvoiceItemDescriptionFra(
             "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/FRA",
-            "InvoiceItem_description_FRA.docFragment.txt") {
+            "InvoiceItem_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
@@ -93,11 +111,13 @@ public enum DocFragmentData {
 
             final DocFragment docFrag = docFragmentRepository
                     .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
-            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
-                return;
-            }
 
-            docFragmentRepository.create(objectType, name, atPath, getTemplateText());
+            final String templateText = getTemplateText();
+            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
+                docFrag.setTemplateText(templateText);
+            } else {
+                docFragmentRepository.create(objectType, name, atPath, templateText);
+            }
         }
 
         @Inject

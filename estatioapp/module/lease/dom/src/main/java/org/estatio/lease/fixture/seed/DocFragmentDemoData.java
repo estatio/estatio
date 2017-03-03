@@ -38,7 +38,7 @@ public enum DocFragmentDemoData {
 
     InvoiceDescription_DemoGbr(
             "org.estatio.dom.invoice.Invoice", "description", "/GBR",
-            "Invoice_description_ITA.docFragment.txt") {
+            "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
             // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
@@ -47,7 +47,7 @@ public enum DocFragmentDemoData {
     },
     InvoiceDescription_DemoNld(
             "org.estatio.dom.invoice.Invoice", "description", "/NLD",
-            "Invoice_description_ITA.docFragment.txt") {
+            "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
             // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
@@ -56,14 +56,14 @@ public enum DocFragmentDemoData {
     },
     InvoiceItemDescription_DemoGbr(
             "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/GBR",
-            "InvoiceItem_description_ITA.docFragment.txt") {
+            "InvoiceItem_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
     InvoiceItemDescription_DemoNld(
             "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/NLD",
-            "InvoiceItem_description_FRA.docFragment.txt") {
+            "InvoiceItem_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
