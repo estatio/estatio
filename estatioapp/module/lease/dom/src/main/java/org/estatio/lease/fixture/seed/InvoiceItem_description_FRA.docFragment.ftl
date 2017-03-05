@@ -1,15 +1,1 @@
-<#if (charge.group.reference4 == "FR-S") &&
-     (charge.reference4i >= 4000)        &&
-     (charge.reference4i < 4600)
-><#t>
-    Provision de Charges HT<#t>
- <#rt>
-<#else><#t>
-    ${charge.description}<#t>
-</#if><#t>
-<#t>
-<#t>
-<#t>
-<#if startDate?? && effectiveStartDate?? && effectiveEndDate?? ><#t>
- du ${effectiveStartDate?string["dd-MM-yyyy"]} au ${effectiveEndDate?string["dd-MM-yyyy"]}<#rt>
-</#if>
+${charge.description}<#t>
