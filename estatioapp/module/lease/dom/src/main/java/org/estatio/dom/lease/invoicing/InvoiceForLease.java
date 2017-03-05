@@ -29,24 +29,18 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -528,28 +522,17 @@ public class InvoiceForLease
 
     @Programmatic
     public void updateDescriptions() {
-        setDescription(fragmentRenderService.render(this, "description"));
-        setPreliminaryLetterDescription(fragmentRenderService.render(this, "preliminaryLetterDescription"));
+        if(!isDescriptionOverridden()) {
+            setDescription(fragmentRenderService.render(this, "description"));
+        }
+        if(!isPreliminaryLetterDescriptionOverridden()) {
+            setPreliminaryLetterDescription(fragmentRenderService.render(this, "preliminaryLetterDescription"));
+        }
     }
 
     @Inject
     FragmentRenderService fragmentRenderService;
 
-    // TODO: review, don't think this works...
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class UpdatingEventSubscriber extends AbstractSubscriber {
-
-        @EventHandler // if axon
-        @Subscribe    // if guava
-        public void on(Invoice.UpdatingEvent ev) {
-
-            final Invoice source = ev.getSource();
-            if(source instanceof InvoiceForLease) {
-                final InvoiceForLease invoiceForLease = (InvoiceForLease) source;
-                invoiceForLease.updateDescriptions();
-            }
-        }
-    }
 
     /**
      * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
