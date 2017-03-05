@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -229,6 +230,7 @@ public class DocFragments_for_Invoicing_Test {
                 templateText = DocFragmentData.read("InvoiceItem_description_FRA.docFragment.ftl");
             }
 
+            @Ignore // EST-1151
             @Test
             public void chargeGroup_is_FR_S_and_charge_in_range_with_startDate() throws Exception {
 
@@ -259,6 +261,7 @@ public class DocFragments_for_Invoicing_Test {
 
             }
 
+            @Ignore // EST-1151
             @Test
             public void chargeGroup_is_FR_S_but_charge_not_in_range_with_startDate() throws Exception {
 
@@ -288,6 +291,7 @@ public class DocFragments_for_Invoicing_Test {
                 Assertions.assertThat(rendered).isEqualTo("Charge description du 01-04-2017 au 15-10-2017");
             }
 
+            @Ignore // EST-1151
             @Test
             public void chargeGroup_not_FR_S_with_startDate() throws Exception {
 
