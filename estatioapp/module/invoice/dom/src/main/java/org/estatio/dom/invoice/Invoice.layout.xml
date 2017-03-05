@@ -30,8 +30,29 @@
                                 <ns2:property id="runId"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Descriptions" id="descriptions">
-                                <ns2:property id="preliminaryDescription" hidden="ALL_TABLES"/>
-                                <ns2:property id="description" hidden="ALL_TABLES"/>
+                                <ns2:property id="preliminaryLetterDescription" hidden="ALL_TABLES">
+                                    <ns2:action id="overridePreliminaryLetterDescription">
+                                        <ns2:named>Override</ns2:named>
+                                    </ns2:action>
+                                    <ns2:action id="unoverridePreliminaryLetterDescription">
+                                        <ns2:named>Clear</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
+                                <ns2:property id="description" hidden="ALL_TABLES">
+                                    <ns2:action id="overrideDescription">
+                                        <ns2:named>Override</ns2:named>
+                                    </ns2:action>
+                                    <ns2:action id="unoverrideDescription">
+                                        <ns2:named>Clear</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Comments" id="comments">
+                                <ns2:property id="preliminaryLetterComment" hidden="ALL_TABLES">
+                                    <ns2:action id="changePreliminaryLetterComment">
+                                        <ns2:named>Change</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Communications" id="comms">
                                 <ns2:property id="sendTo" hidden="ALL_TABLES">

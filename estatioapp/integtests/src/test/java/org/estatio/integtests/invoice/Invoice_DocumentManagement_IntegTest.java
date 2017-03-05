@@ -30,6 +30,7 @@ import com.google.common.io.Resources;
 import org.assertj.core.data.Percentage;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -179,6 +180,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     public static class Invoice_attachReceipt_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
+        @Ignore // EST-1154
         @Test
         public void when_has_associated_document_that_has_not_been_sent() throws Exception {
 
@@ -245,6 +247,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     public static class Invoice_sendByEmail_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
+        @Ignore // EST-1154
         @Test
         public void when_prelim_letter_any_invoice_receipts_attached_are_ignored() throws IOException {
 
@@ -332,6 +335,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
         }
 
+        @Ignore // EST-1154
         @Test
         public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException {
 
@@ -428,6 +432,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     public static class Invoice_sendByPost_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
+        @Ignore // EST-1154
         @Test
         public void when_prelim_letter_any_invoice_receipts_attached_are_ignored() throws IOException {
 
@@ -504,6 +509,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(paperclips).extracting(x -> x.getDocument()).contains(prelimLetterDoc);
         }
 
+        @Ignore // EST-1154
         @Test
         public void when_invoice_doc_then_any_receipts_attached_are_included() throws IOException {
 

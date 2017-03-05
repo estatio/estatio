@@ -63,6 +63,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -259,7 +260,8 @@ public class InvoiceForLease
             invoiceItem.setStartDate(startDate);
             invoiceItem.setEndDate(endDate);
 
-            invoiceDescriptionService.update(invoiceItem);
+            final String description = fragmentRenderService.render(invoiceItem, "description");
+            invoiceItem.setDescription(description);
 
             invoiceItem.verify();
             // TODO: we need to create a new subclass InvoiceForLease but that
@@ -302,7 +304,7 @@ public class InvoiceForLease
         }
 
         @javax.inject.Inject
-        InvoiceDescriptionService invoiceDescriptionService;
+        FragmentRenderService fragmentRenderService;
 
         @javax.inject.Inject
         InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
@@ -520,14 +522,20 @@ public class InvoiceForLease
         UserService userService;
     }
 
-
     public void updating() {
-        invoiceDescriptionService.update(this);
+        updateDescriptions();
+    }
+
+    @Programmatic
+    public void updateDescriptions() {
+        setDescription(fragmentRenderService.render(this, "description"));
+        setPreliminaryLetterDescription(fragmentRenderService.render(this, "preliminaryLetterDescription"));
     }
 
     @Inject
-    InvoiceDescriptionService invoiceDescriptionService;
+    FragmentRenderService fragmentRenderService;
 
+    // TODO: review, don't think this works...
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class UpdatingEventSubscriber extends AbstractSubscriber {
 
@@ -538,13 +546,9 @@ public class InvoiceForLease
             final Invoice source = ev.getSource();
             if(source instanceof InvoiceForLease) {
                 final InvoiceForLease invoiceForLease = (InvoiceForLease) source;
-                invoiceDescriptionService.update(invoiceForLease);
+                invoiceForLease.updateDescriptions();
             }
         }
-
-        @Inject
-        InvoiceDescriptionService invoiceDescriptionService;
-
     }
 
     /**

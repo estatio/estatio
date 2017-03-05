@@ -33,7 +33,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.lease.fixture.seed.DocFragmentData;
 
-public class InvoiceDescriptionService_Test {
+public class DocFragments_for_Invoicing_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -68,7 +68,7 @@ public class InvoiceDescriptionService_Test {
         templateName = "Template name";
     }
 
-    public static class InvoiceItem_Test extends InvoiceDescriptionService_Test {
+    public static class InvoiceItem_Test extends DocFragments_for_Invoicing_Test {
 
         InvoiceItemForLease item;
 
@@ -324,7 +324,7 @@ public class InvoiceDescriptionService_Test {
 
     }
 
-    public static class Invoice_Test extends InvoiceDescriptionService_Test {
+    public static class Invoice_Test extends DocFragments_for_Invoicing_Test {
 
         LocalDate tenancyStartDate;
         Lease lease;

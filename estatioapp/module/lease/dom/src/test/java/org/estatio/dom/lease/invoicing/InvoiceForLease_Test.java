@@ -43,6 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -52,7 +53,7 @@ import org.estatio.numerator.dom.impl.Numerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Invoice_Test {
+public class InvoiceForLease_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -75,6 +76,9 @@ public class Invoice_Test {
 
     @Mock
     MessageService mockMessageService;
+
+    @Mock
+    FragmentRenderService mockFragmentRenderService;
 
     @Mock
     Lease lease;
@@ -164,7 +168,7 @@ public class Invoice_Test {
         return invoice;
     }
 
-    public static class AssignInvoiceNumber extends Invoice_Test {
+    public static class AssignInvoiceNumber_Test extends InvoiceForLease_Test {
 
 
         @Test
@@ -243,7 +247,7 @@ public class Invoice_Test {
 
     }
 
-    public static class Collect extends Invoice_Test {
+    public static class Collect_Test extends InvoiceForLease_Test {
 
         private InvoiceForLease createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
             final InvoiceForLease invoice = new InvoiceForLease() {
@@ -394,7 +398,7 @@ public class Invoice_Test {
 
     }
 
-    public static class CompareTo extends ComparableContractTest_compareTo<InvoiceForLease> {
+    public static class CompareTo_Test extends ComparableContractTest_compareTo<InvoiceForLease> {
 
         @SuppressWarnings("unchecked")
         @Override
@@ -413,7 +417,7 @@ public class Invoice_Test {
         }
     }
 
-    public static class ValidInvoiceDate extends Invoice_Test {
+    public static class ValidInvoiceDate_Test extends InvoiceForLease_Test {
 
         InvoiceForLease._invoice invoice_invoice;
 
@@ -469,7 +473,7 @@ public class Invoice_Test {
         }
     }
 
-    public static class NewItem extends Invoice_Test {
+    public static class NewItem_Test extends InvoiceForLease_Test {
 
         @Test
         public void disabled_when_immutable() throws Exception {
@@ -482,7 +486,7 @@ public class Invoice_Test {
         }
     }
 
-    public static class ValidateNewItemWithEmptyDates extends Invoice_Test {
+    public static class ValidateNewItemWithEmptyDates_Test extends InvoiceForLease_Test {
 
         @Test
         public void giveWarningForEmptyDates() throws Exception {
@@ -504,7 +508,7 @@ public class Invoice_Test {
         }
     }
 
-    public static class ValidateNewItemWithEmptyStartDate extends Invoice_Test {
+    public static class ValidateNewItemWithEmptyStartDate_Test extends InvoiceForLease_Test {
 
 
         @Test
@@ -524,4 +528,7 @@ public class Invoice_Test {
             invoice_newItem.validate$$(null, null, null, null, new LocalDate(2000, 01, 01));
         }
     }
+
+
+
 }

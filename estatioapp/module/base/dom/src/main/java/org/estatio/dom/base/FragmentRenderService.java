@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing;
+package org.estatio.dom.base;
 
 import java.io.IOException;
 
@@ -33,34 +33,26 @@ import org.estatio.dom.UdoDomainService;
 
 import freemarker.template.TemplateException;
 
+/**
+ * A simple wrapper around {@link DocFragmentService} that handles any checked exceptions.
+ */
 @DomainService(nature = NatureOfService.DOMAIN)
-public class InvoiceDescriptionService extends UdoDomainService<InvoiceDescriptionService> {
+public class FragmentRenderService extends UdoDomainService<FragmentRenderService> {
 
-    public InvoiceDescriptionService() {
-        super(InvoiceDescriptionService.class);
+    public FragmentRenderService() {
+        super(FragmentRenderService.class);
     }
 
     @Programmatic
-    public void update(InvoiceItemForLease invoiceItem)  {
-        final String description = render(invoiceItem);
-        invoiceItem.setDescription(description);
-    }
-
-    @Programmatic
-    public void update(final InvoiceForLease invoice) {
-        final String description = render(invoice);
-        invoice.setDescription(description);
-    }
-
-    private String render(final Object invoiceItem) {
+    public String render(final Object domainObject, final String fragmentName) {
         try {
-            return docFragmentService.render(invoiceItem, "description");
+            return docFragmentService.render(domainObject, fragmentName);
         } catch (IOException | TemplateException e) {
             throw new ApplicationException(e);
         }
     }
 
     @Inject
-    private DocFragmentService docFragmentService;
+    DocFragmentService docFragmentService;
 
 }

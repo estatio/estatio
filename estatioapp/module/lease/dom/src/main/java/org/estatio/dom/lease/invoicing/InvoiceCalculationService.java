@@ -43,6 +43,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -330,7 +331,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
                     invoiceItem.setTax(leaseItem.getEffectiveTax());
 
-                    invoiceDescriptionService.update(invoiceItem);
+                    final String description = fragmentRenderService.render(invoiceItem, "description");
+                    invoiceItem.setDescription(description);
 
                     invoiceItem.verify();
                     invoiceItem.setAdjustment(adjustment);
@@ -342,7 +344,7 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
     // //////////////////////////////////////
 
     @javax.inject.Inject
-    InvoiceDescriptionService invoiceDescriptionService;
+    FragmentRenderService fragmentRenderService;
 
     @Inject
     LeaseInvoicingSettingsService leaseInvoicingSettingsService;

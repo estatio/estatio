@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -66,6 +67,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.party.Party;
 
@@ -218,32 +220,71 @@ public abstract class Invoice<T extends Invoice<T>>
     private LocalDate dueDate;
 
     
-    
     @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String preliminaryLetterDescription;
 
-    public String disablePreliminaryLetterDescription() {
-        if (isImmutable()) {
-            return "Invoice can't be changed";
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private boolean preliminaryLetterDescriptionOverridden;
+
+    @Mixin(method="act")
+    public static class _overridePreliminaryLetterDescription {
+        private final Invoice invoice;
+        public _overridePreliminaryLetterDescription(final Invoice invoice) {
+            this.invoice = invoice;
         }
-        return null;
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed=Contributed.AS_ACTION)
+        public Invoice act(
+                @ParameterLayout(multiLine = 3, named = "PL description")
+                final String preliminaryLetterDescription) {
+            invoice.setPreliminaryLetterDescription(preliminaryLetterDescription);
+            invoice.setPreliminaryLetterDescriptionOverridden(true);
+            return invoice;
+        }
+        public boolean hideAct() {
+            return invoice.isPreliminaryLetterDescriptionOverridden();
+        }
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+        public String default0Act() {
+            return invoice.getPreliminaryLetterDescription();
+        }
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Invoice changePreliminaryLetterDescription(
-            final @ParameterLayout(multiLine = 3) String preliminaryLetterDescription) {
-        setPreliminaryLetterDescription(preliminaryLetterDescription);
-        return this;
-    }
+    @Mixin(method="act")
+    public static class _unoverridePreliminaryLetterDescription {
+        private final Invoice invoice;
+        public _unoverridePreliminaryLetterDescription(final Invoice invoice) {
+            this.invoice = invoice;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+        @ActionLayout(contributed=Contributed.AS_ACTION)
+        public Invoice act() {
+            final String preliminaryLetterDescription = fragmentRenderService
+                    .render(invoice, "preliminaryLetterDescription");
+            invoice.setPreliminaryLetterDescription(preliminaryLetterDescription);
+            invoice.setPreliminaryLetterDescriptionOverridden(false);
+            return invoice;
+        }
+        public boolean hideAct() {
+            return !invoice.isPreliminaryLetterDescriptionOverridden();
+        }
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
 
-    public String default0ChangePreliminaryLetterDescription() {
-        return getPreliminaryLetterDescription();
-    }
-
-    public String disableChangePreliminaryLetterDescription() {
-        return disablePreliminaryLetterDescription();
+        @Inject
+        FragmentRenderService fragmentRenderService;
     }
 
 
@@ -253,31 +294,96 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private String description;
 
-    public String disableDescription() {
-        if (isImmutable()) {
-            return "Invoice can't be changed";
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private boolean descriptionOverridden;
+
+    @Mixin(method="act")
+    public static class _overrideDescription {
+        private final Invoice invoice;
+        public _overrideDescription(final Invoice invoice) {
+            this.invoice = invoice;
         }
-        return null;
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed=Contributed.AS_ACTION)
+        public Invoice act(
+                @ParameterLayout(multiLine = 3)
+                final String description) {
+            invoice.setDescription(description);
+            invoice.setDescriptionOverridden(true);
+            return invoice;
+        }
+        public boolean hideAct() {
+            return invoice.isDescriptionOverridden();
+        }
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+        public String default0Act() {
+            return invoice.getDescription();
+        }
+    }
+
+    @Mixin(method="act")
+    public static class _unoverrideDescription {
+        private final Invoice invoice;
+        public _unoverrideDescription(final Invoice invoice) {
+            this.invoice = invoice;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+        @ActionLayout(contributed=Contributed.AS_ACTION)
+        public Invoice act() {
+            final String description = fragmentRenderService.render(invoice, "description");
+            invoice.setDescription(description);
+            invoice.setDescriptionOverridden(false);
+            return invoice;
+        }
+        public boolean hideAct() {
+            return !invoice.isDescriptionOverridden();
+        }
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+        @Inject
+        FragmentRenderService fragmentRenderService;
     }
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Invoice changeDescription(
-            final @ParameterLayout(multiLine = 3) String description) {
-        setDescription(description);
-        return this;
+    @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    @Getter @Setter
+    private String preliminaryLetterComment;
+
+    @Mixin(method="act")
+    public static class _changePreliminaryLetterComment {
+        private final Invoice invoice;
+        public _changePreliminaryLetterComment(final Invoice invoice) {
+            this.invoice = invoice;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed=Contributed.AS_ACTION)
+        public Invoice act(
+                @ParameterLayout(multiLine = 3)
+                final String comment) {
+            invoice.setPreliminaryLetterComment(comment);
+            return invoice;
+        }
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+        public String default0Act() {
+            return invoice.getPreliminaryLetterComment();
+        }
     }
-
-    public String default0ChangeDescription() {
-        return getDescription();
-    }
-
-    public String disableChangeDescription() {
-        return disableDescription();
-    }
-
-
-
 
     @Mixin(method = "exec")
     public static class _changeDueDate {
@@ -509,7 +615,7 @@ public abstract class Invoice<T extends Invoice<T>>
         public static class Meta {
 
             public static final int MAX_LEN = org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
-            public static final int MULTI_LINE = org.incode.module.base.dom.types.DescriptionType.Meta.MULTI_LINE;
+            public static final int MULTI_LINE = 3;
 
             private Meta() {}
 

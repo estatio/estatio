@@ -24,6 +24,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -80,6 +81,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             });
         }
 
+        @Ignore // EST-1154
         @Test
         public void happy_case() throws Exception {
 
