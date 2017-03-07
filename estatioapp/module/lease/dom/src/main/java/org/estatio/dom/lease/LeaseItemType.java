@@ -18,12 +18,16 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.EnumUtils;
+
 import org.apache.isis.applib.FatalException;
 import org.apache.isis.applib.services.factory.FactoryService;
 
-import org.incode.module.base.dom.utils.StringUtils;
-
 import org.incode.module.base.dom.PowerType;
+import org.incode.module.base.dom.utils.StringUtils;
 
 public enum LeaseItemType implements PowerType<LeaseTerm> {
 
@@ -97,6 +101,10 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
         private Meta(){}
 
         public final static int MAX_LEN = 30;
+    }
+
+    public static List<LeaseItemType> typesForLeaseTermForServiceCharge(){
+        return EnumUtils.getEnumList(LeaseItemType.class).stream().filter(x->x.cls == LeaseTermForServiceCharge.class).collect(Collectors.toList());
     }
 
 }
