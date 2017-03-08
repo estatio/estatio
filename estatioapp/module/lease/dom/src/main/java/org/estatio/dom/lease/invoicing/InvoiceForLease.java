@@ -62,6 +62,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceAttributeName;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -520,17 +521,21 @@ public class InvoiceForLease
         updateDescriptions();
     }
 
-    @Programmatic
-    public void updateDescriptions() {
-        if(!isDescriptionOverridden()) {
-            setDescription(fragmentRenderService.render(this, "description"));
+    public Invoice updateDescriptions() {
+        if (!isDescriptionOverridden()) {
+            final String fragment = fragmentRenderService.render(this, InvoiceAttributeName.INVOICE_DESCRIPTION.getFragmentName());
+            setDescription(fragment);
+            updateAttribute(InvoiceAttributeName.INVOICE_DESCRIPTION, fragment, true);
         }
-        if(!isPreliminaryLetterDescriptionOverridden()) {
-            setPreliminaryLetterDescription(fragmentRenderService.render(this, "preliminaryLetterDescription"));
+        if (!isPreliminaryLetterDescriptionOverridden()) {
+            final String fragment = fragmentRenderService.render(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION.getFragmentName());
+            setPreliminaryLetterDescription(fragment);
+            updateAttribute(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION, fragment, true);
         }
+        return this;
     }
 
-    @Inject
+    @javax.inject.Inject
     FragmentRenderService fragmentRenderService;
 
 

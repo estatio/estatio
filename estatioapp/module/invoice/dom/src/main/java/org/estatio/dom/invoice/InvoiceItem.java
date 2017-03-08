@@ -132,7 +132,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
+    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter

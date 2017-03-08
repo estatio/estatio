@@ -131,14 +131,11 @@ public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
 
-
     public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {}
-
 
     public Invoice(final String keyProperties) {
         super(keyProperties);
     }
-
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     @Getter @Setter
@@ -219,7 +216,6 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private LocalDate dueDate;
 
-    
     @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
@@ -286,8 +282,6 @@ public abstract class Invoice<T extends Invoice<T>>
         @Inject
         FragmentRenderService fragmentRenderService;
     }
-
-
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = Invoice.DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
@@ -384,6 +378,27 @@ public abstract class Invoice<T extends Invoice<T>>
             return invoice.getPreliminaryLetterComment();
         }
     }
+
+    @Persistent(mappedBy = "invoice", dependentElement = "false")
+    @Getter @Setter
+    private SortedSet<InvoiceAttribute> attributes = new TreeSet<InvoiceAttribute>();
+
+
+    public Invoice updateAttribute(
+            InvoiceAttributeName name,
+            String value,
+            boolean derived
+    ){
+        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, name);
+        if (invoiceAttribute != null){
+            invoiceAttribute.setValue(value);
+        }
+        invoiceAttributeRepository.newAttribute(this ,name, value, derived);
+        return this;
+    }
+
+    @Inject
+    InvoiceAttributeRepository invoiceAttributeRepository;
 
     @Mixin(method = "exec")
     public static class _changeDueDate {
@@ -510,33 +525,19 @@ public abstract class Invoice<T extends Invoice<T>>
         return total;
     }
 
-
-    // //////////////////////////////////////
-
     @Programmatic
     public void createPaymentTerms() {
 
     }
 
-
-    // //////////////////////////////////////
-
     protected boolean isImmutable() {
         return !getStatus().invoiceIsChangable();
     }
-
-    // //////////////////////////////////////
-
 
     @Property(hidden = Where.ALL_TABLES)
     @javax.jdo.annotations.Column(allowsNull = "true", name = "paidByBankMandateId")
     @Getter @Setter
     private BankMandate paidBy;
-
-
-    // //////////////////////////////////////
-
-
 
     @Mixin(method = "exec")
     public static class _remove {
@@ -575,8 +576,6 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
-
-
     public static class Predicates {
 
         public static Predicate<Invoice> isChangeable() {
@@ -588,7 +587,6 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
     }
-
 
     public static class InvoiceNumberType {
 
@@ -606,7 +604,6 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
     }
-
 
     public static class DescriptionType {
 

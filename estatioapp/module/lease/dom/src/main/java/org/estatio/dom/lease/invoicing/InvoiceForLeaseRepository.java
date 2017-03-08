@@ -68,10 +68,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
                 "dueDate", dueDate);
     }
 
-
-
-
-
     @Programmatic
     public InvoiceForLease findOrCreateMatchingInvoice(
             final ApplicationTenancy applicationTenancy,
@@ -120,16 +116,10 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         return invoices.get(0);
     }
 
-
-
-
-
     @Programmatic
     public List<InvoiceForLease> findByLease(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
-
-
 
     @Programmatic
     public InvoiceForLease newInvoice(
