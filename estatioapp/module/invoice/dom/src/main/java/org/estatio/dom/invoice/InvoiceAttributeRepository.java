@@ -53,12 +53,12 @@ public class InvoiceAttributeRepository extends UdoDomainRepositoryAndFactory<In
             final Invoice invoice,
             final InvoiceAttributeName name,
             final String value,
-            final boolean derived) {
+            final boolean overridden) {
         InvoiceAttribute invoiceAttribute = newTransientInstance();
         invoiceAttribute.setInvoice(invoice);
         invoiceAttribute.setName(name);
         invoiceAttribute.setValue(value);
-        invoiceAttribute.setDerived(derived);
+        invoiceAttribute.setOverridden(overridden);
         persistIfNotAlready(invoiceAttribute);
         return invoiceAttribute;
     }

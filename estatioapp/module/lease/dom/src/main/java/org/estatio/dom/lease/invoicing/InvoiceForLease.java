@@ -62,6 +62,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceAttribute;
 import org.estatio.dom.invoice.InvoiceAttributeName;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -183,7 +184,6 @@ public class InvoiceForLease
         super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");
     }
 
-
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
@@ -193,7 +193,7 @@ public class InvoiceForLease
      * Derived from the {@link #getLease() lease}, but safe to persist since
      * business rule states that we never generate invoices for invoice items
      * that relate to different properties.
-     *
+     * <p>
      * <p>
      * Another reason for persisting this is that it allows eager validation
      * when attaching additional {@link InvoiceItem}s to an invoice, to check
@@ -211,7 +211,6 @@ public class InvoiceForLease
     @Getter @Setter
     private String runId;
 
-
     @Programmatic
     public Occupancy getCurrentOccupancy() {
         final InvoiceForLease invoice =
@@ -226,7 +225,6 @@ public class InvoiceForLease
         }
         return occupancies.first();
     }
-
 
     @Mixin
     public static class _newItem {
@@ -294,7 +292,7 @@ public class InvoiceForLease
             return null;
         }
 
-        public String disable$$(){
+        public String disable$$() {
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
 
@@ -473,7 +471,7 @@ public class InvoiceForLease
                     List<Invoice> result = invoiceRepository.findByInvoiceNumber(invoiceNumber);
                     if (result.size() > 0) {
                         final Invoice invoice = result.get(0);
-                        if (invoice.getInvoiceDate().isAfter(invoiceDate)){
+                        if (invoice.getInvoiceDate().isAfter(invoiceDate)) {
                             return String.format("Invoice number %s has an invoice date %s which is after %s", invoice.getInvoiceNumber(), invoice.getInvoiceDate().toString(), invoiceDate.toString());
                         }
                     }
@@ -498,6 +496,7 @@ public class InvoiceForLease
     @Mixin
     public static class _saveAsHistoric {
         private final InvoiceForLease invoiceForLease;
+
         public _saveAsHistoric(final InvoiceForLease invoiceForLease) {
             this.invoiceForLease = invoiceForLease;
         }
@@ -509,7 +508,7 @@ public class InvoiceForLease
             invoiceForLease.setRunId(null);
         }
 
-        public boolean hide$$(){
+        public boolean hide$$() {
             return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(userService.getUser());
         }
 
@@ -522,35 +521,51 @@ public class InvoiceForLease
     }
 
     public Invoice updateDescriptions() {
-        if (!isDescriptionOverridden()) {
-            final String fragment = fragmentRenderService.render(this, InvoiceAttributeName.INVOICE_DESCRIPTION.getFragmentName());
-            setDescription(fragment);
-            updateAttribute(InvoiceAttributeName.INVOICE_DESCRIPTION, fragment, true);
-        }
-        if (!isPreliminaryLetterDescriptionOverridden()) {
-            final String fragment = fragmentRenderService.render(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION.getFragmentName());
-            setPreliminaryLetterDescription(fragment);
-            updateAttribute(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION, fragment, true);
-        }
+        updateAttribute(InvoiceAttributeName.INVOICE_DESCRIPTION, fragmentRenderService.render(this, InvoiceAttributeName.INVOICE_DESCRIPTION.getFragmentName()), false);
+        updateAttribute(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION, fragmentRenderService.render(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION.getFragmentName()), false);
         return this;
+    }
+
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    public String getDescription() {
+        return attributeValueFor(InvoiceAttributeName.INVOICE_DESCRIPTION);
+    }
+
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    public String getPreliminaryLetterDescription() {
+        return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
+    }
+
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    public String getPreliminaryLetterComment() {
+        return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
+    }
+
+    private String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
+        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
+        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
+    }
+
+    private boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
+        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
+        return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
     }
 
     @javax.inject.Inject
     FragmentRenderService fragmentRenderService;
-
 
     /**
      * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
      */
     @Programmatic
     public FinancialAccount getSellerBankAccount() {
-        if(getFixedAsset() == null) {
+        if (getFixedAsset() == null) {
             return null;
         }
         // TODO: EST-xxxx to enforce the constraint that there can only be one "at any given time".
         final Optional<FixedAssetFinancialAccount> fafrIfAny =
                 fixedAssetFinancialAccountRepository.findByFixedAsset(getFixedAsset()).stream().findFirst();
-        return fafrIfAny.isPresent()? fafrIfAny.get().getFinancialAccount(): null;
+        return fafrIfAny.isPresent() ? fafrIfAny.get().getFinancialAccount() : null;
     }
 
     @javax.inject.Inject
@@ -559,5 +574,102 @@ public class InvoiceForLease
     @javax.inject.Inject
     NumeratorForCollectionRepository numeratorRepository;
 
+    public static abstract class _override {
+        private final InvoiceForLease invoice;
+        private final InvoiceAttributeName invoiceAttributeName;
 
+        public _override(final InvoiceForLease invoice, final InvoiceAttributeName invoiceAttributeName) {
+            this.invoice = invoice;
+            this.invoiceAttributeName = invoiceAttributeName;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed = Contributed.AS_ACTION)
+        public Invoice act(
+                final String value) {
+            invoice.updateAttribute(this.invoiceAttributeName, value, true);
+            return invoice;
+        }
+
+        public boolean hideAct() {
+            return invoice.attributeOverriddenFor(invoiceAttributeName);
+        }
+
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+
+        public String default0Act() {
+            return invoice.attributeValueFor(invoiceAttributeName);
+        }
+
+    }
+
+    @Mixin(method = "act")
+    public static class _overridePreliminaryLetterDescription extends _override {
+        public _overridePreliminaryLetterDescription(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
+        }
+    }
+
+    @Mixin(method = "act")
+    public static class _overrideDescription extends _override {
+        public _overrideDescription(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
+        }
+    }
+
+    public static abstract class _unoverride {
+        private final InvoiceForLease invoice;
+        private final InvoiceAttributeName invoiceAttributeName;
+
+        public _unoverride(final InvoiceForLease invoice, final InvoiceAttributeName invoiceAttributeName) {
+            this.invoice = invoice;
+            this.invoiceAttributeName = invoiceAttributeName;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+        @ActionLayout(contributed = Contributed.AS_ACTION)
+        public Invoice act() {
+            invoice.updateAttribute(
+                    invoiceAttributeName,
+                    fragmentRenderService.render(this, invoiceAttributeName.getFragmentName()),
+                    false);
+            return invoice;
+        }
+
+        public boolean hideAct() {
+            return !invoice.attributeOverriddenFor(invoiceAttributeName);
+        }
+
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+
+        @Inject
+        FragmentRenderService fragmentRenderService;
+
+    }
+
+    @Mixin(method = "act")
+    public static class _unoverridePreliminaryLetterDescription extends _unoverride {
+
+        public _unoverridePreliminaryLetterDescription(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
+        }
+    }
+
+    @Mixin(method = "act")
+    public static class _unoverrideDescription extends _unoverride {
+
+        public _unoverrideDescription(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
+        }
+    }
 }

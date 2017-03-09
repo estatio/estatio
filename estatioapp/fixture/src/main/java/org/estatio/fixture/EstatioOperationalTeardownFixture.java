@@ -68,6 +68,7 @@ import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceAttribute;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.paperclips.PaperclipForInvoice;
 import org.estatio.dom.lease.Lease;
@@ -135,6 +136,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
         deleteFrom(PaperclipForInvoice.class);
         deleteFrom(InvoiceItem.class);
+        deleteFrom(InvoiceAttribute.class);
         deleteFrom(Invoice.class);
 
         deleteFrom(EventSourceLinkForBreakOption.class);
