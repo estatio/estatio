@@ -38,7 +38,9 @@ import static org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
                         + "WHERE invoice == :invoice && "
                         + "name == :name")
 })
-@DomainObject()
+@DomainObject(
+        objectType = "org.estatio.dom.invoice.InvoiceAttribute"
+)
 public class InvoiceAttribute extends UdoDomainObject2<InvoiceAttribute> {
 
     public InvoiceAttribute() {
