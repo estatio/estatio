@@ -48,10 +48,12 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatingEvent;
@@ -59,6 +61,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.types.AtPathType;
@@ -230,11 +233,15 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private SortedSet<InvoiceAttribute> attributes = new TreeSet<InvoiceAttribute>();
 
-    // TODO: for prototyping, to remove
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     public Invoice updateAttribute(
             final InvoiceAttributeName name,
-            String value,
+            @Parameter(maxLength = NotesType.Meta.MAX_LEN)
+            @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+            final String value,
             boolean overridden
     ){
         final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, name);
@@ -477,8 +484,10 @@ public abstract class Invoice<T extends Invoice<T>>
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice act(
-                final String value) {
-            invoice.updateAttribute(this.invoiceAttributeName, value, true);
+                @Parameter(maxLength = NotesType.Meta.MAX_LEN)
+                @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+                final String overrideWith) {
+            invoice.updateAttribute(this.invoiceAttributeName, overrideWith, true);
             return invoice;
         }
 

@@ -46,6 +46,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -533,8 +534,10 @@ public class InvoiceForLease
         updateDescriptions();
     }
 
-    // TODO: for prototyping
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            restrictTo = RestrictTo.PROTOTYPING
+    )
     public Invoice updateDescriptions() {
         updateAttribute(this, InvoiceAttributeName.INVOICE_DESCRIPTION);
         updateAttribute(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
