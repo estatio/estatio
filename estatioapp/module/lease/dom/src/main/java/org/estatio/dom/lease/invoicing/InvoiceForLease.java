@@ -48,6 +48,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
@@ -458,8 +459,14 @@ public class InvoiceForLease
             return null;
         }
 
-        public String validate$$(final LocalDate invoiceDate) {
+        public String validate0$$(final LocalDate invoiceDate) {
             return validInvoiceDate(invoiceDate);
+        }
+
+        public LocalDate default0$$() {
+            LocalDate today = clockService.now();
+            LocalDate dueDate = invoiceForLease.getDueDate();
+            return today.isAfter(dueDate) ? dueDate : null;
         }
 
         String validInvoiceDate(LocalDate invoiceDate) {
@@ -485,6 +492,9 @@ public class InvoiceForLease
 
         @javax.inject.Inject
         NumeratorForCollectionRepository numeratorRepository;
+
+        @javax.inject.Inject
+        ClockService clockService;
 
         @javax.inject.Inject
         InvoiceRepository invoiceRepository;

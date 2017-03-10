@@ -26,13 +26,14 @@ import com.google.common.collect.Lists;
 
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
+import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
 
 public class ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts extends
         AttachmentAdvisorAbstract<Invoice> {
@@ -44,19 +45,29 @@ public class ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts extends
     @Override
     protected List<AttachmentAdvisor.PaperclipSpec> doAdvise(
             final DocumentTemplate documentTemplate,
-            final Invoice domainObject) {
+            final Invoice invoice,
+            final Document createdDocument) {
 
         final List<PaperclipSpec> paperclipSpecs = Lists.newArrayList();
 
-        // attach the new invoice note to the invoice
-        paperclipSpecs.add(new PaperclipSpec(null, domainObject));
+        paperclipSpecs.add(new PaperclipSpec(null, invoice, createdDocument));
 
-        // also, copy over any receipts attached to the invoice, so that also attached to the invoice note
-        final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(domainObject);
+        // also, copy over any receipts attached to the invoice (but with those receipts attached to the
+        // new invoice note, rather than the other way around)
+        final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoice);
         for (Paperclip paperclip : paperclips) {
             if(PaperclipRoleNames.INVOICE_RECEIPT.equals(paperclip.getRoleName())) {
-                final DocumentAbstract paperclipDocument = paperclip.getDocument();
-                paperclipSpecs.add(new PaperclipSpec(PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY, paperclipDocument));
+                final DocumentAbstract paperclipDocAbs = paperclip.getDocument();
+                if(paperclipDocAbs instanceof Document) {
+                    Document paperclipDocument = (Document) paperclipDocAbs;
+                    paperclipSpecs.add(
+                            new PaperclipSpec(
+                                    PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY,
+                                    createdDocument,
+                                    paperclipDocument
+));
+
+                }
             }
         }
 

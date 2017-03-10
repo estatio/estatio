@@ -42,7 +42,7 @@ public class ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame extends
     @Override
     protected List<PaperclipSpec> doAdvise(
             final DocumentTemplate documentTemplate,
-            final Document prelimLetterOrInvoiceNoteDoc) {
+            final Document prelimLetterOrInvoiceNoteDoc, final Document createdDocument) {
 
         final String docTypeRef = prelimLetterOrInvoiceNoteDoc.getType().getReference();
         if (!Constants.DOC_TYPE_REF_PRELIM.equals(docTypeRef) && !Constants.DOC_TYPE_REF_INVOICE.equals(docTypeRef)) {
@@ -51,7 +51,7 @@ public class ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame extends
         }
 
         return Collections.singletonList(
-                new PaperclipSpec(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, prelimLetterOrInvoiceNoteDoc));
+                new PaperclipSpec(DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT, prelimLetterOrInvoiceNoteDoc, createdDocument));
 
     }
 

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
+import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.Invoice;
@@ -35,9 +36,10 @@ public class ForPrelimLetterOfInvoiceAttachToSame extends AttachmentAdvisorAbstr
     @Override
     protected List<PaperclipSpec> doAdvise(
             final DocumentTemplate documentTemplate,
-            final Invoice invoice) {
+            final Invoice invoice,
+            final Document createdDocument) {
 
-        return Collections.singletonList(new PaperclipSpec(null, invoice));
+        return Collections.singletonList(new PaperclipSpec(null, invoice, createdDocument));
     }
 
 }

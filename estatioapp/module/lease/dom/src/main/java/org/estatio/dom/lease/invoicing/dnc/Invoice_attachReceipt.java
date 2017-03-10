@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
@@ -33,14 +32,18 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
-import org.incode.module.document.dom.impl.docs.Document_attachSupportingPdf;
+import org.incode.module.document.dom.impl.docs.DocumentSort;
+import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -60,44 +63,99 @@ public class Invoice_attachReceipt {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "paperclip")
     @MemberOrder(
             name = "documents",
             sequence = "1"
     )
     public Invoice $$(
-            final Document document,
             final DocumentType documentType,
             @Parameter(fileAccept = "application/pdf")
+            @ParameterLayout(named = "Receipt (PDF)")
             final Blob blob,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String fileName
         ) throws IOException {
 
-        final Document_attachSupportingPdf supportingPdf =
-                factoryService.mixin(Document_attachSupportingPdf.class, document);
 
-        supportingPdf.exec(documentType, blob, fileName, PaperclipRoleNames.INVOICE_RECEIPT);
+
+        //
+        // we will automatically attach the receipt doc (once created)
+        // to any unsent invoice documents for this Invoice
+        // before we do anything, therefore, we get hold of those invoice documents.
+        //
+        final List<DocumentAbstract> unsentInvoiceDocuments = findUnsentInvoiceDocumentsFor(invoice);
+
+        //
+        // now we create the receiptDoc, and attach to the invoice
+        //
+        String name = determineName(blob, fileName);
+
+        final Document receiptDoc = documentRepository.create(
+                documentType, this.invoice.getAtPath(), name, blob.getMimeType().getBaseType());
+
+        // unlike documents that are generated from a template (where we call documentTemplate#render), in this case
+        // we have the actual bytes; so we just set up the remaining state of the document manually.
+        receiptDoc.setRenderedAt(clockService.nowAsDateTime());
+        receiptDoc.setState(DocumentState.RENDERED);
+        receiptDoc.setSort(DocumentSort.BLOB);
+        receiptDoc.setBlobBytes(blob.getBytes());
+
+        paperclipRepository.attach(receiptDoc, PaperclipRoleNames.INVOICE_RECEIPT, invoice);
+
+
+        //
+        // finally we also attach the newly created receipt doc to the unsent invoices we picked up previously.
+        //
+        for (DocumentAbstract unsentInvoiceDocument : unsentInvoiceDocuments) {
+            paperclipRepository.attach(unsentInvoiceDocument, PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY, receiptDoc);
+        }
 
         return invoice;
     }
 
-    public String disable$$() {
-        final List<Document> documents = choices0$$();
-        return documents.isEmpty() ? "No documents to attach receipts to": null;
+    private List<DocumentAbstract> findUnsentInvoiceDocumentsFor(final Invoice invoice) {
+
+        final DocumentType invDocType = findDocumentType(Constants.DOC_TYPE_REF_INVOICE);
+
+        final List<DocumentAbstract> unsentInvoiceDocuments = Lists.newArrayList();
+
+        final List<Paperclip> existingInvoicePaperclips = paperclipRepository.findByAttachedTo(invoice);
+        for (Paperclip paperclip : existingInvoicePaperclips) {
+            final DocumentAbstract document = paperclip.getDocument();
+            if(document.getType() == invDocType) {
+                boolean sent = whetherSent(document);
+                if(!sent) {
+                    unsentInvoiceDocuments.add(document);
+                }
+            }
+        }
+
+        return unsentInvoiceDocuments;
     }
 
-    public List<Document> choices0$$() {
-        final List<Paperclip> byAttachedTo = paperclipRepository.findByAttachedTo(this.invoice);
-        return Lists.newArrayList(
-                FluentIterable.from(byAttachedTo).transform(Paperclip::getDocument)
-                        .filter(Document.class::isInstance)
-                        .transform(Document.class::cast)
-                        .toList()
-        );
+    private boolean whetherSent(final DocumentAbstract document) {
+        final List<Paperclip> invDocPaperclips = paperclipRepository.findByDocument(document);
+        for (final Paperclip invDocPaperclip : invDocPaperclips) {
+            final Object attachedTo = invDocPaperclip.getAttachedTo();
+            if(attachedTo instanceof Communication) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public List<DocumentType> choices1$$() {
+    private static String determineName(
+            final Blob document,
+            final String fileName) {
+        String name = fileName != null ? fileName : document.getName();
+        if(!name.toLowerCase().endsWith(".pdf")) {
+            name = name + ".pdf";
+        }
+        return name;
+    }
+
+    public List<DocumentType> choices0$$() {
         return Lists.newArrayList(
                 findDocumentType(Constants.DOC_TYPE_REF_SUPPLIER_RECEIPT),
                 findDocumentType(Constants.DOC_TYPE_REF_TAX_RECEIPT)

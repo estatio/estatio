@@ -144,7 +144,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.buyer.reference} {this.dueDate}",
+                "Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate}",
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -162,7 +162,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.buyer.reference} {this.dueDate} (Italy)",
+                "Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate} (Italy)",
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -215,7 +215,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.buyer.reference} {this.dueDate}", siRenderingStrategy,
+                "Invoice for ${this.buyer.reference} ${this.dueDate}", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,
@@ -232,7 +232,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.buyer.reference} {this.dueDate} (Italy)", siRenderingStrategy,
+                "Invoice for ${this.buyer.reference} ${this.dueDate} (Italy)", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,

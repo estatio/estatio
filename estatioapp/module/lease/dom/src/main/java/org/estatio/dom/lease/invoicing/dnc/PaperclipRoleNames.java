@@ -57,7 +57,7 @@ public final class PaperclipRoleNames {
     /**
      * for invoice note attached to a supplier or tax receipt document (copied over from {@link Invoice}).
      */
-    public static final String INVOICE_DOCUMENT_SUPPORTED_BY = "supported by";
+    public static final String INVOICE_DOCUMENT_SUPPORTED_BY = "supportS";
 
 
 }

@@ -180,9 +180,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     public static class Invoice_attachReceipt_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
-        @Ignore // EST-1154
         @Test
-        public void when_has_associated_document_that_has_not_been_sent() throws Exception {
+        public void attaches_to_invoice() throws Exception {
 
             // given
             Invoice invoice = findInvoice(InvoiceStatus.NEW);
@@ -195,24 +194,17 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final Invoice_attachReceipt invoice_attachReceipt = mixin(Invoice_attachReceipt.class, invoice);
 
             // when
-            final List<Document> documents = invoice_attachReceipt.choices0$$();
-
-            // then
-            assertThat(documents).hasSize(1);
-
-            // when
-            final List<DocumentType> documentTypes = invoice_attachReceipt.choices1$$();
+            final List<DocumentType> documentTypes = invoice_attachReceipt.choices0$$();
 
             // then
             assertThat(documentTypes).hasSize(2);
 
             // and when
-            final Document invoiceDoc = documents.get(0);
             final DocumentType documentType = documentTypes.get(0);
             final String fileName = "receipt-1.pdf";
             final Blob blob = asBlob(fileName);
 
-            wrap(invoice_attachReceipt).$$(invoiceDoc, documentType, blob, null);
+            wrap(invoice_attachReceipt).$$(documentType, blob, null);
 
             // then
             paperclips = paperclipRepository.findByAttachedTo(invoice);
@@ -239,11 +231,31 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(paperclip.getRoleName()).isEqualTo(PaperclipRoleNames.INVOICE_RECEIPT);
             assertThat(paperclip.getDocumentCreatedAt()).isEqualTo(document.getCreatedAt());
             assertThat(paperclip.getDocumentDate()).isEqualTo(document.getCreatedAt());
+        }
+
+        @Ignore // TODO
+        @Test
+        public void when_create_doc_then_attached_receipts_copied_over() throws Exception {
 
         }
 
     }
 
+    public static class Invoice_delete_document_IntegTest extends Invoice_DocumentManagement_IntegTest {
+
+        @Ignore // TODO
+        @Test
+        public void can_delete_documents_if_not_sent() throws Exception {
+
+        }
+
+        @Ignore // TODO
+        @Test
+        public void cannot_delete_documents_if_have_been_sent() throws Exception {
+
+        }
+
+    }
 
     public static class Invoice_sendByEmail_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
@@ -877,17 +889,13 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
         final Invoice_attachReceipt invoice_attachReceipt = mixin(Invoice_attachReceipt.class, invoice);
 
-        final List<Document> documents = invoice_attachReceipt.choices0$$();
-        assertThat(documents).hasSize(1);
-        final Document document = documents.get(0);
-
-        final List<DocumentType> documentTypes = invoice_attachReceipt.choices1$$();
+        final List<DocumentType> documentTypes = invoice_attachReceipt.choices0$$();
         assertThat(documentTypes).hasSize(2);
         final DocumentType documentType = documentTypes.get(0);
 
         final Blob blob = asBlob(fileName);
 
-        wrap(invoice_attachReceipt).$$(document, documentType, blob, null);
+        wrap(invoice_attachReceipt).$$(documentType, blob, null);
     }
 
     void assertNoDocumentOrCommunicationsFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {

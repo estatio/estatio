@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisorAbstract;
+import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 public class AttachToNone
@@ -36,7 +37,7 @@ public class AttachToNone
     @Override
     protected List<AttachmentAdvisor.PaperclipSpec> doAdvise(
             final DocumentTemplate documentTemplate,
-            final Object domainObject) {
+            final Object domainObject, final Document createdDocument) {
 
         return Collections.emptyList();
     }

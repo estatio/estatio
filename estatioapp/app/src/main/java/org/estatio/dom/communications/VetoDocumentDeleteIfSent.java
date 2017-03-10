@@ -38,7 +38,10 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
-@DomainService(nature = NatureOfService.DOMAIN)
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        objectType = "estatio.VetoDocumentDeleteIfSent"
+)
 public class VetoDocumentDeleteIfSent extends UdoDomainRepositoryAndFactory<CommunicationChannel> {
 
     public String getId() {
@@ -49,7 +52,6 @@ public class VetoDocumentDeleteIfSent extends UdoDomainRepositoryAndFactory<Comm
         super(VetoDocumentDeleteIfSent.class, CommunicationChannel.class);
     }
 
-
     @Subscribe
     @Programmatic
     public void on(final Document_delete.ActionDomainEvent ev) {
@@ -59,7 +61,6 @@ public class VetoDocumentDeleteIfSent extends UdoDomainRepositoryAndFactory<Comm
             final List<Paperclip> attachments = paperclipRepository.findByDocument(document);
             for (Paperclip attachment : attachments) {
                 if(attachment.getAttachedTo() instanceof Communication) {
-                    Communication communication = (Communication) attachment.getAttachedTo();
                     ev.veto(TranslatableString.tr("Document has already been sent as a communication"));
                 }
             }
