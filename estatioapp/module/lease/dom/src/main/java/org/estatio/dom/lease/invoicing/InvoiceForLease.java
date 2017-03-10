@@ -62,7 +62,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceAttribute;
 import org.estatio.dom.invoice.InvoiceAttributeName;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRepository;
@@ -227,6 +226,7 @@ public class InvoiceForLease
         }
         return occupancies.first();
     }
+
 
     @Mixin
     public static class _newItem {
@@ -555,16 +555,6 @@ public class InvoiceForLease
         return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
     }
 
-    private String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
-    }
-
-    private boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
-        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
-        return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
-    }
-
     /**
      * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
      */
@@ -585,40 +575,6 @@ public class InvoiceForLease
     @javax.inject.Inject
     NumeratorForCollectionRepository numeratorRepository;
 
-    public static abstract class _override {
-        private final InvoiceForLease invoice;
-        private final InvoiceAttributeName invoiceAttributeName;
-
-        public _override(final InvoiceForLease invoice, final InvoiceAttributeName invoiceAttributeName) {
-            this.invoice = invoice;
-            this.invoiceAttributeName = invoiceAttributeName;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice act(
-                final String value) {
-            invoice.updateAttribute(this.invoiceAttributeName, value, true);
-            return invoice;
-        }
-
-        public boolean hideAct() {
-            return invoice.attributeOverriddenFor(invoiceAttributeName);
-        }
-
-        public String disableAct() {
-            if (invoice.isImmutable()) {
-                return "Invoice can't be changed";
-            }
-            return null;
-        }
-
-        public String default0Act() {
-            return invoice.attributeValueFor(invoiceAttributeName);
-        }
-
-    }
-
     @Mixin(method = "act")
     public static class _overridePreliminaryLetterDescription extends _override {
         public _overridePreliminaryLetterDescription(final InvoiceForLease invoice) {
@@ -627,61 +583,40 @@ public class InvoiceForLease
     }
 
     @Mixin(method = "act")
-    public static class _overrideDescription extends _override {
-        public _overrideDescription(final InvoiceForLease invoice) {
-            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
-        }
-    }
+    public static class _resetPreliminaryLetterDescription extends _unoverride {
 
-    public static abstract class _unoverride {
-        private final InvoiceForLease invoice;
-        private final InvoiceAttributeName invoiceAttributeName;
-
-        public _unoverride(final InvoiceForLease invoice, final InvoiceAttributeName invoiceAttributeName) {
-            this.invoice = invoice;
-            this.invoiceAttributeName = invoiceAttributeName;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice act() {
-            final InvoiceAttributesVM vm = new InvoiceAttributesVM(invoice);
-            invoice.updateAttribute(
-                    invoiceAttributeName,
-                    fragmentRenderService.render(vm, invoiceAttributeName.getFragmentName()),
-                    false);
-            return invoice;
-        }
-
-        public boolean hideAct() {
-            return !invoice.attributeOverriddenFor(invoiceAttributeName);
-        }
-
-        public String disableAct() {
-            if (invoice.isImmutable()) {
-                return "Invoice can't be changed";
-            }
-            return null;
-        }
-
-        @Inject
-        FragmentRenderService fragmentRenderService;
-
-    }
-
-    @Mixin(method = "act")
-    public static class _unoverridePreliminaryLetterDescription extends _unoverride {
-
-        public _unoverridePreliminaryLetterDescription(final InvoiceForLease invoice) {
+        public _resetPreliminaryLetterDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
         }
+
+        @Override protected Object viewModelFor(final Invoice invoice) {
+            return new InvoiceAttributesVM((InvoiceForLease) invoice);
+        }
     }
 
     @Mixin(method = "act")
-    public static class _unoverrideDescription extends _unoverride {
-
-        public _unoverrideDescription(final InvoiceForLease invoice) {
+    public static class _overrideInvoiceDescription extends _override {
+        public _overrideInvoiceDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
+        }
+    }
+
+    @Mixin(method = "act")
+    public static class _resetInvoiceDescription extends _unoverride {
+
+        public _resetInvoiceDescription(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
+        }
+
+        @Override protected Object viewModelFor(final Invoice invoice) {
+            return new InvoiceAttributesVM((InvoiceForLease) invoice);
+        }
+    }
+
+    @Mixin(method = "act")
+    public static class _changePreliminaryLetterComment extends _override {
+        public _changePreliminaryLetterComment(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
         }
     }
 

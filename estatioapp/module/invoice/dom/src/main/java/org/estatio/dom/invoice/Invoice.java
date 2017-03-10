@@ -67,6 +67,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.party.Party;
 
@@ -129,6 +130,16 @@ import lombok.Setter;
 public abstract class Invoice<T extends Invoice<T>>
         extends UdoDomainObject2<T>
         implements WithApplicationTenancyAny, WithApplicationTenancyPathPersisted {
+
+    protected String attributeValueFor(final InvoiceAttributeName invoiceAttributeName) {
+        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
+        return invoiceAttribute == null ? null : invoiceAttribute.getValue();
+    }
+
+    protected boolean attributeOverriddenFor(final InvoiceAttributeName invoiceAttributeName) {
+        final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
+        return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
+    }
 
     public static class UpdatingEvent extends ObjectUpdatingEvent<Invoice> {}
 
@@ -231,6 +242,7 @@ public abstract class Invoice<T extends Invoice<T>>
             invoiceAttributeRepository.newAttribute(this, name, value, overridden);
         } else {
             invoiceAttribute.setValue(value);
+            invoiceAttribute.setOverridden(overridden);
         }
         return this;
     }
@@ -453,5 +465,75 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
+    public static abstract class _override {
+        private final Invoice invoice;
+        private final InvoiceAttributeName invoiceAttributeName;
 
+        public _override(final Invoice invoice, final InvoiceAttributeName invoiceAttributeName) {
+            this.invoice = invoice;
+            this.invoiceAttributeName = invoiceAttributeName;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed = Contributed.AS_ACTION)
+        public Invoice act(
+                final String value) {
+            invoice.updateAttribute(this.invoiceAttributeName, value, true);
+            return invoice;
+        }
+
+        public boolean hideAct() {
+            return invoice.attributeOverriddenFor(invoiceAttributeName);
+        }
+
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+
+        public String default0Act() {
+            return invoice.attributeValueFor(invoiceAttributeName);
+        }
+
+    }
+
+    public static abstract class _unoverride<T extends Invoice<?>> {
+        private final T invoice;
+        private final InvoiceAttributeName invoiceAttributeName;
+
+        public _unoverride(final T invoice, final InvoiceAttributeName invoiceAttributeName) {
+            this.invoice = invoice;
+            this.invoiceAttributeName = invoiceAttributeName;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+        @ActionLayout(contributed = Contributed.AS_ACTION)
+        public Invoice act() {
+            final Object domainObject = viewModelFor(invoice);
+            invoice.updateAttribute(
+                    invoiceAttributeName,
+                    fragmentRenderService.render(domainObject, invoiceAttributeName.getFragmentName()),
+                    false);
+            return invoice;
+        }
+
+        protected abstract Object viewModelFor(T invoice);
+
+        public boolean hideAct() {
+            return !invoice.attributeOverriddenFor(invoiceAttributeName);
+        }
+
+        public String disableAct() {
+            if (invoice.isImmutable()) {
+                return "Invoice can't be changed";
+            }
+            return null;
+        }
+
+        @Inject protected
+        FragmentRenderService fragmentRenderService;
+
+    }
 }
