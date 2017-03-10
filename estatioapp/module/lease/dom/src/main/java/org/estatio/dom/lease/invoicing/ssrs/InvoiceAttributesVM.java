@@ -235,6 +235,8 @@ public class InvoiceAttributesVM implements WithApplicationTenancy {
         case 12:
             return "YEAR";
         case 3:
+            return "QUARTER";
+        case 1:
             return "MONTH";
         }
         return null;

@@ -1,7 +1,9 @@
 package org.estatio.dom.lease.invoicing.description;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -24,8 +26,14 @@ import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 import org.incode.module.unittestsupport.dom.reflect.ReflectUtils;
 
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.Occupancy;
@@ -34,13 +42,13 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.party.PartyForTesting;
 import org.estatio.lease.fixture.seed.DocFragmentData;
 
 public class DocFragments_for_Invoicing_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
 
     FakeDataService fake;
 
@@ -63,10 +71,9 @@ public class DocFragments_for_Invoicing_Test {
         fake.init();
 
         freeMarkerService = new FreeMarkerService();
-        ReflectUtils.inject(freeMarkerService, "configurationService",  mockConfigurationService);
+        ReflectUtils.inject(freeMarkerService, "configurationService", mockConfigurationService);
         final ImmutableMap<String, String> props = ImmutableMap.of();
         freeMarkerService.init(props);
-
 
         templateName = "Template name";
     }
@@ -108,62 +115,65 @@ public class DocFragments_for_Invoicing_Test {
 
                 // given
 
-                final LocalDate itemDueDate = new LocalDate(2017,3,1);
+                final LocalDate itemDueDate = new LocalDate(2017, 3, 1);
 
                 item.setAdjustment(true);
                 chargeGroup.setReference("S");
                 item.setDueDate(itemDueDate);
                 item.setStartDate(itemDueDate.minusDays(1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
-                Assertions.assertThat(rendered).isEqualTo("Conguaglio: Charge description dal 01-04-2017 al 15-10-2017");
+                Assertions.assertThat(rendered)
+                        .isEqualTo("Conguaglio: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
             @Test
             public void adjustment_and_chargeGroupOfS_but_dueDate_not_after_startDate() throws Exception {
 
                 // given
-                final LocalDate itemDueDate = new LocalDate(2017,3,1);
+                final LocalDate itemDueDate = new LocalDate(2017, 3, 1);
 
                 item.setAdjustment(true);
                 chargeGroup.setReference("S");
                 item.setDueDate(itemDueDate);
                 item.setStartDate(itemDueDate);
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
-                Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
+                Assertions.assertThat(rendered)
+                        .isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
             @Test
             public void adjustment_but_not_chargeGroupOfS_and_startDate() throws Exception {
 
                 // given
-                final LocalDate itemDueDate = new LocalDate(2017,3,1);
+                final LocalDate itemDueDate = new LocalDate(2017, 3, 1);
 
                 item.setAdjustment(true);
                 chargeGroup.setReference("X");
                 item.setStartDate(itemDueDate.minusDays(1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
-                Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
+                Assertions.assertThat(rendered)
+                        .isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
             @Test
@@ -184,13 +194,13 @@ public class DocFragments_for_Invoicing_Test {
             public void no_adjustment_with_startDate() throws Exception {
 
                 // given
-                final LocalDate itemDueDate = new LocalDate(2017,3,1);
+                final LocalDate itemDueDate = new LocalDate(2017, 3, 1);
 
                 item.setAdjustment(false);
                 item.setStartDate(itemDueDate.minusDays(1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 final String rendered = freeMarkerService.render(templateName, templateText, vm);
@@ -226,7 +236,6 @@ public class DocFragments_for_Invoicing_Test {
             }
         }
 
-
         public static class FRA_Test extends InvoiceItem_Description_Test {
 
             @Before
@@ -243,17 +252,16 @@ public class DocFragments_for_Invoicing_Test {
                 item.setAdjustment(true);
                 chargeGroup.setReference("FR-S");
                 charge.setReference("FR4000");
-                item.setStartDate(new LocalDate(2017,3,1));
+                item.setStartDate(new LocalDate(2017, 3, 1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Provision de Charges HT du 01-04-2017 au 15-10-2017");
-
 
                 // given
                 charge.setReference("FR4599");
@@ -274,17 +282,16 @@ public class DocFragments_for_Invoicing_Test {
                 item.setAdjustment(true);
                 chargeGroup.setReference("FR-S");
                 charge.setReference("FR3999");
-                item.setStartDate(new LocalDate(2017,3,1));
+                item.setStartDate(new LocalDate(2017, 3, 1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description du 01-04-2017 au 15-10-2017");
-
 
                 // given
                 charge.setReference("FR4600");
@@ -303,10 +310,10 @@ public class DocFragments_for_Invoicing_Test {
                 // given
                 item.setAdjustment(true);
                 chargeGroup.setReference("XXXX");
-                item.setStartDate(new LocalDate(2017,3,1));
+                item.setStartDate(new LocalDate(2017, 3, 1));
 
-                item.setEffectiveStartDate(new LocalDate(2017,4,1));
-                item.setEffectiveEndDate(new LocalDate(2017,10,15));
+                item.setEffectiveStartDate(new LocalDate(2017, 4, 1));
+                item.setEffectiveEndDate(new LocalDate(2017, 10, 15));
 
                 // when
                 String rendered = freeMarkerService.render(templateName, templateText, vm);
@@ -378,7 +385,6 @@ public class DocFragments_for_Invoicing_Test {
 
         public static class ITA_Test extends Invoice_Description_Test {
 
-
             @Before
             public void setUp() throws Exception {
                 super.setUp();
@@ -398,7 +404,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di affitto di ramo d'azienda con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered).isEqualTo(
+                            String.format("Contratto di affitto di ramo d'azienda con effetto dal 01-04-2017%n%n"));
 
                 }
             }
@@ -415,7 +422,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di commodato con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered)
+                            .isEqualTo(String.format("Contratto di commodato con effetto dal 01-04-2017%n%n"));
 
                 }
             }
@@ -432,7 +440,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered)
+                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
 
                 }
             }
@@ -449,7 +458,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di locazione con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered)
+                            .isEqualTo(String.format("Contratto di locazione con effetto dal 01-04-2017%n%n"));
 
                 }
             }
@@ -466,7 +476,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di locazione di spazio con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered).isEqualTo(
+                            String.format("Contratto di locazione di spazio con effetto dal 01-04-2017%n%n"));
 
                 }
             }
@@ -486,7 +497,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Esercizio Commerciale%n%n"));
+                    Assertions.assertThat(rendered)
+                            .endsWith(String.format("con effetto dal 01-04-2017 - Esercizio Commerciale%n%n"));
                 }
             }
 
@@ -524,7 +536,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Spazio Commerciale%n%n"));
+                    Assertions.assertThat(rendered)
+                            .endsWith(String.format("con effetto dal 01-04-2017 - Spazio Commerciale%n%n"));
                 }
             }
 
@@ -543,7 +556,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered)
+                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
                 }
             }
 
@@ -563,7 +577,8 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione Some brand con effetto dal 01-04-2017%n%n"));
+                    Assertions.assertThat(rendered).isEqualTo(
+                            String.format("Contratto di concessione Some brand con effetto dal 01-04-2017%n%n"));
                 }
             }
 
@@ -571,5 +586,244 @@ public class DocFragments_for_Invoicing_Test {
 
     }
 
+    public static class Invoice_PrelimLetterDescription_Test extends DocFragments_for_Invoicing_Test {
 
+        LocalDate tenancyStartDate;
+        Lease lease;
+        LeaseType leaseType;
+
+        FixedAssetForTesting fixedAsset;
+
+        SortedSet<Occupancy> occupancies;
+        Occupancy occupancy;
+        Unit unit;
+        Property property;
+
+        InvoiceForLease invoice;
+        TreeSet<InvoiceItem> items;
+
+        Charge charge1;
+        Charge charge2;
+
+        InvoiceItemForLease item1;
+        InvoiceItemForLease item2;
+
+        InvoiceAttributesVM vm;
+        private PartyForTesting seller;
+        private BankAccount sellerBankAccount;
+        private PartyForTesting bank;
+
+        @Before
+        public void setUp() throws Exception {
+            super.setUp();
+
+            fixedAsset = new FixedAssetForTesting();
+
+            tenancyStartDate = new LocalDate(2017, 4, 1);
+
+            property = new Property();
+            property.setName("Some Property Name");
+            unit = new Unit();
+            unit.setName("Some Unit Name");
+            unit.setProperty(property);
+
+            seller = new PartyForTesting();
+            seller.setName("Some Seller");
+
+            bank = new PartyForTesting();
+            bank.setName("Some Bank");
+
+            sellerBankAccount = new BankAccount();
+            sellerBankAccount.setBank(bank);
+            sellerBankAccount.setIban("Some Iban");
+
+            lease = new Lease();
+            leaseType = new LeaseType();
+            lease.setLeaseType(leaseType);
+            lease.setTenancyStartDate(tenancyStartDate);
+
+            occupancy = new Occupancy();
+            occupancy.setUnit(unit);
+
+            occupancies = Sets.newTreeSet();
+            occupancies.add(occupancy);
+
+            lease.setOccupancies(occupancies);
+
+            invoice = new InvoiceForLease() {
+                @Override
+                public FinancialAccount getSellerBankAccount() {
+                    return sellerBankAccount;
+                }
+            };
+            invoice.setSeller(seller);
+
+            invoice.setLease(lease);
+
+            charge1 = new Charge();
+            charge1.setReference("CHARGE-1");
+            charge1.setDescription("Charge 1");
+            charge2 = new Charge();
+            charge2.setReference("CHARGE-2");
+            charge2.setDescription("Charge 2");
+
+            items = new TreeSet<>();
+            invoice.setItems(items);
+
+            item1 = new InvoiceItemForLease();
+            item1.setCharge(charge1);
+            item1.setGrossAmount(new BigDecimal("123.45"));
+
+            item2 = new InvoiceItemForLease();
+            item2.setCharge(charge2);
+            item2.setGrossAmount(new BigDecimal("543.21"));
+
+            items.add(item1);
+            items.add(item2);
+
+            invoice.setDueDate(new LocalDate(2016,3,12));
+
+            vm = new InvoiceAttributesVM(invoice);
+        }
+
+        public static class ITA_Test extends Invoice_PrelimLetterDescription_Test {
+
+            @Before
+            public void setUp() throws Exception {
+                super.setUp();
+
+                templateText = DocFragmentData.read("Invoice_preliminaryLetterDescription_ITA.docFragment.ftl");
+            }
+
+            @Test
+            public void when_occupancyNotV_and_leaseType_for_Esercezio() throws Exception {
+
+                // given
+                invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+                unit.setReference("AAA"); // doesn't contain a -V
+
+                for (String leaseType : Arrays.asList("AD", "OA", "PA", "SA")) {
+
+                    // given
+                    this.leaseType.setReference(leaseType);
+
+                    // when
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                    // then
+                    Assertions.assertThat(rendered).contains("Esercizio Commerciale");
+                }
+            }
+
+            @Test
+            public void when_occupancyNotV_and_leaseType_for_Unita() throws Exception {
+
+                // given
+                invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+                unit.setReference("AAA"); // doesn't contain a -V
+
+                for (String leaseType : Arrays.asList("CG", "CA", "LO", "PR", "OL", "PL", "SL")) {
+
+                    // given
+                    this.leaseType.setReference(leaseType);
+
+                    // when
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                    // then
+                    Assertions.assertThat(rendered).contains("Unità");
+                }
+            }
+
+            @Test
+            public void when_occupancy_not_V_and_leaseType_for_Spazio_Commerciale() throws Exception {
+
+                // given
+                invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+                unit.setReference("AAA"); // doesn't contain a -V
+
+                for (String leaseType : Arrays.asList("DH")) {
+
+                    // given
+                    this.leaseType.setReference(leaseType);
+
+                    // when
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                    // then
+                    Assertions.assertThat(rendered).contains("Spazio Commerciale");
+                }
+            }
+
+            @Test
+            public void when_occupancy_is_V() throws Exception {
+
+                // given
+                invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+                unit.setReference("-V"); // doesn't contain a -V
+
+                // when
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                // then
+                Assertions.assertThat(rendered).contains("Some Property Name / / Fatturazione");
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_frequency_is_QUARTER() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_frequency_is_MONTH() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_paymentMethod_is_DIRECT_DEBIT() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_paymentMethod_is_BILLING_ACCOUNT() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_paymentMethod_is_BANK_TRANSFER() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_paymentMethod_is_CASH() throws Exception {
+            }
+
+            @Ignore // TODO
+            @Test
+            public void when_paymentMethod_is_CHEQUE() throws Exception {
+            }
+
+            @Test
+            public void smoke_test() throws Exception {
+
+                // given
+                invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+                unit.setReference("AAA"); // doesn't contain a -V
+                this.leaseType.setReference("CG");
+
+                // when
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                // then
+                Assertions.assertThat(rendered).isEqualTo(
+                          "<b>OGGETTO</b>: Some Property Name / Unità Some Unit Name / Fatturazione Charge 1 e Charge 2."
+                        + "<br /><br />"
+                        + "Come a Voi già noto, la fatturazione relativa al Charge 1 e Charge 2, verrà effettuata alla stessa data stabilita per il pagamento ."
+                        + "<br /><br />"
+                        + "Pertanto, Vi invitiamo a voler predisporre il pagamento a mezzo bonifico bancario sul conto corrente intestato "
+                            + "alla Some Seller Some Bank - Some Iban per l'importo di <b>€ 666.66</b> con scadenza 12-03-2016 così suddiviso:");
+            }
+        }
+    }
 }

@@ -203,7 +203,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -216,7 +216,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -229,7 +229,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -242,7 +242,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -255,7 +255,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -268,7 +268,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -294,7 +294,7 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
-            assertThat(frequency).isEqualTo("MONTH");
+            assertThat(frequency).isEqualTo("QUARTER");
         }
 
         @Test
@@ -307,7 +307,73 @@ public class InvoiceAttributesVM_Test {
             String frequency = invoiceAttributesVM.getFrequency();
 
             // then
+            assertThat(frequency).isEqualTo("QUARTER");
+        }
+
+        @Test
+        public void exactly_a_month() {
+
+            // given
+            addItemFor(this.invoiceForLease, ld(2015, 10, 1), ld(2015, 10, 31));
+
+            // when
+            String frequency = invoiceAttributesVM.getFrequency();
+
+            // then
             assertThat(frequency).isEqualTo("MONTH");
+        }
+
+        @Test
+        public void almost_a_month() {
+
+            // given
+            addItemFor(this.invoiceForLease, ld(2015, 10, 1), ld(2015, 10, 30));
+
+            // when
+            String frequency = invoiceAttributesVM.getFrequency();
+
+            // then
+            assertThat(frequency).isEqualTo("OTHER");
+        }
+
+
+        @Test
+        public void just_over_a_month() {
+
+            // given
+            addItemFor(this.invoiceForLease, ld(2015, 10, 1), ld(2015, 11, 1));
+
+            // when
+            String frequency = invoiceAttributesVM.getFrequency();
+
+            // then
+            assertThat(frequency).isEqualTo("MONTH");
+        }
+
+        @Test
+        public void almost_two_months() {
+
+            // given
+            addItemFor(this.invoiceForLease, ld(2015, 10, 1), ld(2015, 11, 29));
+
+            // when
+            String frequency = invoiceAttributesVM.getFrequency();
+
+            // then
+            assertThat(frequency).isEqualTo("MONTH");
+        }
+
+        @Test
+        public void two_months() {
+
+            // given
+            addItemFor(this.invoiceForLease, ld(2015, 10, 1), ld(2015, 11, 30));
+
+            // when
+            String frequency = invoiceAttributesVM.getFrequency();
+
+            // then
+            assertThat(frequency).isEqualTo("OTHER");
         }
 
         static void addItemFor(
