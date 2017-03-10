@@ -16,11 +16,12 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.NotesType;
+
 import org.estatio.dom.UdoDomainObject2;
 
 import lombok.Getter;
 import lombok.Setter;
-import static org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE ,schema = "dbo")
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -60,7 +61,7 @@ public class InvoiceAttribute extends UdoDomainObject2<InvoiceAttribute> {
     @Getter @Setter
     private InvoiceAttributeName name;
 
-    @Column(allowsNull = "true", length = MAX_LEN)
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     @Getter @Setter
     private String value;
 

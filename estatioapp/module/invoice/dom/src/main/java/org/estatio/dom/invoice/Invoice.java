@@ -219,8 +219,10 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private SortedSet<InvoiceAttribute> attributes = new TreeSet<InvoiceAttribute>();
 
+    // TODO: for prototyping, to remove
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Invoice updateAttribute(
-            InvoiceAttributeName name,
+            final InvoiceAttributeName name,
             String value,
             boolean overridden
     ){

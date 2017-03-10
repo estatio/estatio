@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum InvoiceAttributeName {
     PRELIMINARY_LETTER_DESCRIPTION("preliminaryLetterDescription"),
-    PRELIMINARY_LETTER_COMMENT("preliminaryLetterDescription"),
+    PRELIMINARY_LETTER_COMMENT("preliminaryLetterComment"),
     INVOICE_DESCRIPTION("description");
 
     @Getter
