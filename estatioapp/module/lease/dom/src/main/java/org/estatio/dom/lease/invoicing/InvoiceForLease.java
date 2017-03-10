@@ -70,6 +70,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
+import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
@@ -254,7 +255,8 @@ public class InvoiceForLease
             invoiceItem.setStartDate(startDate);
             invoiceItem.setEndDate(endDate);
 
-            final String description = fragmentRenderService.render(invoiceItem, "description");
+            final InvoiceItemAttributesVM vm = new InvoiceItemAttributesVM(invoiceItem);
+            final String description = fragmentRenderService.render(vm, "description");
             invoiceItem.setDescription(description);
 
             invoiceItem.verify();
