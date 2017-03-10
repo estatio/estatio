@@ -15,6 +15,7 @@
                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                 <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                <cpt:property id="buyer"/>
                 <cpt:property id="invoice" hidden="REFERENCES_PARENT"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Document">

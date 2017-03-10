@@ -30,12 +30,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.document.dom.services.ClassService;
 
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,15 +46,19 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
 
     //region > title, icon etc
     public String title() {
-        return titleService.titleOf(getInvoice());
+        return titleService.titleOf(getInvoice().getBuyer());
     }
     //endregion
 
-    // @Title   // REVIEW: not being picked up?
-    @Property()
-    @MemberOrder(sequence = "1")
+    @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Invoice invoice;
+
+    @Property()
+    @MemberOrder(sequence = "1")
+    public Party getBuyer() {
+        return invoice.getBuyer();
+    }
 
     @Property()
     @MemberOrder(sequence = "4")
