@@ -40,7 +40,7 @@ public enum DocFragmentDemoData {
     // using ITA's fragments for now
     //
     InvoicePreliminaryLetterDescription_DemoGbr(
-            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/GBR",
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -49,14 +49,14 @@ public enum DocFragmentDemoData {
         }
     },
     InvoiceDescription_DemoGbr(
-            "org.estatio.dom.invoice.Invoice", "description", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/GBR",
             "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
     InvoiceItemDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/GBR",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/GBR",
             "InvoiceItem_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
@@ -67,21 +67,21 @@ public enum DocFragmentDemoData {
     // using ITA's fragments for now
     //
     InvoicePreliminaryLetterDescription_DemoNld(
-            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/NLD",
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
     InvoiceDescription_DemoNld(
-            "org.estatio.dom.invoice.Invoice", "description", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/NLD",
             "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
     InvoiceItemDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/NLD",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/NLD",
             "InvoiceItem_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};

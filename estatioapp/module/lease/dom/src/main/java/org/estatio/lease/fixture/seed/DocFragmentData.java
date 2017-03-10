@@ -37,7 +37,7 @@ import lombok.Getter;
 public enum DocFragmentData {
 
     InvoicePreliminaryLetterDescriptionIta(
-            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/ITA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA",
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -46,7 +46,7 @@ public enum DocFragmentData {
         }
     },
     InvoiceDescriptionIta(
-            "org.estatio.dom.invoice.Invoice", "description", "/ITA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA",
             "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -55,7 +55,7 @@ public enum DocFragmentData {
         }
     },
     InvoiceItemDescriptionIta(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/ITA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA",
             "InvoiceItem_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -65,7 +65,7 @@ public enum DocFragmentData {
     },
 
     InvoicePreliminaryLetterDescriptionFra(
-            "org.estatio.dom.invoice.Invoice", "preliminaryLetterDescription", "/FRA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/FRA",
             "Invoice_preliminaryLetterDescription_FRA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -74,7 +74,7 @@ public enum DocFragmentData {
         }
     },
     InvoiceDescriptionFra(
-            "org.estatio.dom.invoice.Invoice", "description", "/FRA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/FRA",
             "Invoice_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -84,7 +84,7 @@ public enum DocFragmentData {
     },
 
     InvoiceItemDescriptionFra(
-            "org.estatio.dom.lease.invoicing.InvoiceItemForLease", "description", "/FRA",
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/FRA",
             "InvoiceItem_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};

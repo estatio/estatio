@@ -1,61 +1,61 @@
-<#if (lease.leaseType.reference == "AD") ||
-     (lease.leaseType.reference == "OA") ||
-     (lease.leaseType.reference == "PA") ||
-     (lease.leaseType.reference == "SA")
+<#if (leaseType.reference == "AD") ||
+     (leaseType.reference == "OA") ||
+     (leaseType.reference == "PA") ||
+     (leaseType.reference == "SA")
 ><#t>
     Contratto di affitto di ramo d'azienda<#t>
 </#if><#t>
-<#if (lease.leaseType.reference == "CO") ||
-     (lease.leaseType.reference == "CG")
+<#if (leaseType.reference == "CO") ||
+     (leaseType.reference == "CG")
 ><#t>
     Contratto di commodato<#t>
 </#if><#t>
-<#if (lease.leaseType.reference == "DH") ||
-     (lease.leaseType.reference == "PP")
+<#if (leaseType.reference == "DH") ||
+     (leaseType.reference == "PP")
 ><#t>
      Contratto di concessione<#t>
 </#if><#t>
-<#if (lease.leaseType.reference == "LO") ||
-     (lease.leaseType.reference == "OL") ||
-     (lease.leaseType.reference == "PL") ||
-     (lease.leaseType.reference == "SL") ||
-     (lease.leaseType.reference == "AA")
+<#if (leaseType.reference == "LO") ||
+     (leaseType.reference == "OL") ||
+     (leaseType.reference == "PL") ||
+     (leaseType.reference == "SL") ||
+     (leaseType.reference == "AA")
 ><#t>
      Contratto di locazione<#t>
 </#if><#t>
-<#if (lease.leaseType.reference == "PR")
+<#if (leaseType.reference == "PR")
 ><#t>
     Contratto di locazione di spazio<#t>
 </#if><#t>
 <#t>
 <#t>
 <#t>
-<#if currentOccupancy?? && currentOccupancy.brand?? > ${currentOccupancy.brand.name}</#if><#t>
+<#if currentOccupancyBrandName?? > ${currentOccupancyBrandName}</#if><#t>
 <#t>
-<#if lease.tenancyStartDate?? ><#t>
- con effetto dal ${lease.tenancyStartDate?string["dd-MM-yyyy"]}<#rt>
+<#if leaseTenancyStartDate?? ><#t>
+ con effetto dal ${leaseTenancyStartDate?string["dd-MM-yyyy"]}<#rt>
 </#if><#t>
 <#t>
 <#t>
-<#if fixedAsset?? ><#t>
-    <#if (lease.leaseType.reference == "AD") ||
-         (lease.leaseType.reference == "OA") ||
-         (lease.leaseType.reference == "PA") ||
-         (lease.leaseType.reference == "SA")
+<#if fixedAssetDefined ><#t>
+    <#if (leaseType.reference == "AD") ||
+         (leaseType.reference == "OA") ||
+         (leaseType.reference == "PA") ||
+         (leaseType.reference == "SA")
     ><#t>
  - Esercizio Commerciale<#rt>
     </#if><#t>
-    <#if (lease.leaseType.reference == "CG") ||
-         (lease.leaseType.reference == "CO") ||
-         (lease.leaseType.reference == "LO") ||
-         (lease.leaseType.reference == "PR") ||
-         (lease.leaseType.reference == "OL") ||
-         (lease.leaseType.reference == "PL") ||
-         (lease.leaseType.reference == "SL")
+    <#if (leaseType.reference == "CG") ||
+         (leaseType.reference == "CO") ||
+         (leaseType.reference == "LO") ||
+         (leaseType.reference == "PR") ||
+         (leaseType.reference == "OL") ||
+         (leaseType.reference == "PL") ||
+         (leaseType.reference == "SL")
     ><#t>
  - Unità<#rt>
     </#if><#t>
-    <#if (lease.leaseType.reference == "DH")
+    <#if (leaseType.reference == "DH")
     ><#t>
  - Spazio Commerciale<#rt>
     </#if><#t>

@@ -69,6 +69,7 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
@@ -520,10 +521,21 @@ public class InvoiceForLease
         updateDescriptions();
     }
 
+    // TODO: for prototyping
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Invoice updateDescriptions() {
-        updateAttribute(InvoiceAttributeName.INVOICE_DESCRIPTION, fragmentRenderService.render(this, InvoiceAttributeName.INVOICE_DESCRIPTION.getFragmentName()), false);
-        updateAttribute(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION, fragmentRenderService.render(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION.getFragmentName()), false);
+        updateAttribute(this, InvoiceAttributeName.INVOICE_DESCRIPTION);
+        updateAttribute(this, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
         return this;
+    }
+
+    public InvoiceAttributesVM updateAttribute(
+            final InvoiceForLease invoice,
+            final InvoiceAttributeName attributeName) {
+        final InvoiceAttributesVM vm = new InvoiceAttributesVM(invoice);
+        updateAttribute(attributeName,
+                fragmentRenderService.render(vm, attributeName.getFragmentName()), false);
+        return vm;
     }
 
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
@@ -550,9 +562,6 @@ public class InvoiceForLease
         final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, invoiceAttributeName);
         return invoiceAttribute == null ? false : invoiceAttribute.isOverridden();
     }
-
-    @javax.inject.Inject
-    FragmentRenderService fragmentRenderService;
 
     /**
      * It's the responsibility of the invoice to be able to determine which seller's bank account is to be paid into by the buyer.
@@ -634,9 +643,10 @@ public class InvoiceForLease
         @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice act() {
+            final InvoiceAttributesVM vm = new InvoiceAttributesVM(invoice);
             invoice.updateAttribute(
                     invoiceAttributeName,
-                    fragmentRenderService.render(this, invoiceAttributeName.getFragmentName()),
+                    fragmentRenderService.render(vm, invoiceAttributeName.getFragmentName()),
                     false);
             return invoice;
         }
@@ -672,4 +682,9 @@ public class InvoiceForLease
             super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
         }
     }
+
+    @javax.inject.Inject
+    FragmentRenderService fragmentRenderService;
+
+
 }

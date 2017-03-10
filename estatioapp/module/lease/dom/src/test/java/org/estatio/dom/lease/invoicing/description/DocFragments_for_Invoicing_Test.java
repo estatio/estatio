@@ -31,6 +31,8 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
+import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.lease.fixture.seed.DocFragmentData;
 
@@ -69,12 +71,14 @@ public class DocFragments_for_Invoicing_Test {
         templateName = "Template name";
     }
 
-    public static class InvoiceItem_Test extends DocFragments_for_Invoicing_Test {
+    public static class InvoiceItem_Description_Test extends DocFragments_for_Invoicing_Test {
 
         InvoiceItemForLease item;
 
         Charge charge;
         ChargeGroup chargeGroup;
+
+        InvoiceItemAttributesVM vm;
 
         @Before
         public void setUp() throws Exception {
@@ -88,9 +92,10 @@ public class DocFragments_for_Invoicing_Test {
             item = new InvoiceItemForLease();
             item.setCharge(charge);
 
+            vm = new InvoiceItemAttributesVM(item);
         }
 
-        public static class ITA_Test extends InvoiceItem_Test {
+        public static class ITA_Test extends InvoiceItem_Description_Test {
 
             @Before
             public void setUp() throws Exception {
@@ -114,7 +119,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Conguaglio: Charge description dal 01-04-2017 al 15-10-2017");
@@ -135,7 +140,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
@@ -155,7 +160,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
@@ -169,7 +174,7 @@ public class DocFragments_for_Invoicing_Test {
                 chargeGroup.setReference("X");
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description");
@@ -188,7 +193,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description dal 01-04-2017 al 15-10-2017");
@@ -201,7 +206,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setAdjustment(false);
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description");
@@ -214,7 +219,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setAdjustment(null);
 
                 // when
-                final String rendered = freeMarkerService.render(templateName, templateText, item);
+                final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description");
@@ -222,7 +227,7 @@ public class DocFragments_for_Invoicing_Test {
         }
 
 
-        public static class FRA_Test extends InvoiceItem_Test {
+        public static class FRA_Test extends InvoiceItem_Description_Test {
 
             @Before
             public void setUp() throws Exception {
@@ -244,7 +249,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                String rendered = freeMarkerService.render(templateName, templateText, item);
+                String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Provision de Charges HT du 01-04-2017 au 15-10-2017");
@@ -254,7 +259,7 @@ public class DocFragments_for_Invoicing_Test {
                 charge.setReference("FR4599");
 
                 // when
-                rendered = freeMarkerService.render(templateName, templateText, item);
+                rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Provision de Charges HT du 01-04-2017 au 15-10-2017");
@@ -275,7 +280,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                String rendered = freeMarkerService.render(templateName, templateText, item);
+                String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description du 01-04-2017 au 15-10-2017");
@@ -285,7 +290,7 @@ public class DocFragments_for_Invoicing_Test {
                 charge.setReference("FR4600");
 
                 // when
-                rendered = freeMarkerService.render(templateName, templateText, item);
+                rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description du 01-04-2017 au 15-10-2017");
@@ -304,7 +309,7 @@ public class DocFragments_for_Invoicing_Test {
                 item.setEffectiveEndDate(new LocalDate(2017,10,15));
 
                 // when
-                String rendered = freeMarkerService.render(templateName, templateText, item);
+                String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description du 01-04-2017 au 15-10-2017");
@@ -318,7 +323,7 @@ public class DocFragments_for_Invoicing_Test {
                 chargeGroup.setReference("XXXX");
 
                 // when
-                String rendered = freeMarkerService.render(templateName, templateText, item);
+                String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                 // then
                 Assertions.assertThat(rendered).isEqualTo("Charge description");
@@ -328,7 +333,7 @@ public class DocFragments_for_Invoicing_Test {
 
     }
 
-    public static class Invoice_Test extends DocFragments_for_Invoicing_Test {
+    public static class Invoice_Description_Test extends DocFragments_for_Invoicing_Test {
 
         LocalDate tenancyStartDate;
         Lease lease;
@@ -341,6 +346,8 @@ public class DocFragments_for_Invoicing_Test {
         Brand brand;
 
         InvoiceForLease invoice;
+
+        InvoiceAttributesVM vm;
 
         @Before
         public void setUp() throws Exception {
@@ -365,9 +372,11 @@ public class DocFragments_for_Invoicing_Test {
 
             invoice = new InvoiceForLease();
             invoice.setLease(lease);
+
+            vm = new InvoiceAttributesVM(invoice);
         }
 
-        public static class ITA_Test extends Invoice_Test {
+        public static class ITA_Test extends Invoice_Description_Test {
 
 
             @Before
@@ -386,7 +395,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di affitto di ramo d'azienda con effetto dal 01-04-2017%n%n"));
@@ -403,7 +412,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di commodato con effetto dal 01-04-2017%n%n"));
@@ -420,7 +429,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
@@ -437,7 +446,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di locazione con effetto dal 01-04-2017%n%n"));
@@ -454,7 +463,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di locazione di spazio con effetto dal 01-04-2017%n%n"));
@@ -474,7 +483,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Esercizio Commerciale%n%n"));
@@ -493,7 +502,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Unità%n%n"));
@@ -512,7 +521,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Spazio Commerciale%n%n"));
@@ -531,7 +540,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
@@ -551,7 +560,7 @@ public class DocFragments_for_Invoicing_Test {
                     this.leaseType.setReference(leaseType);
 
                     // when
-                    final String rendered = freeMarkerService.render(templateName, templateText, invoice);
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(String.format("Contratto di concessione Some brand con effetto dal 01-04-2017%n%n"));

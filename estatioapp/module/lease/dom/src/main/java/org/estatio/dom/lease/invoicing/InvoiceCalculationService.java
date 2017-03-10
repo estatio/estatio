@@ -55,7 +55,7 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
-
+import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)
@@ -331,7 +331,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
 
                     invoiceItem.setTax(leaseItem.getEffectiveTax());
 
-                    final String description = fragmentRenderService.render(invoiceItem, "description");
+                    final InvoiceItemAttributesVM vm = new InvoiceItemAttributesVM(invoiceItem);
+                    final String description = fragmentRenderService.render(vm, "description");
                     invoiceItem.setDescription(description);
 
                     invoiceItem.verify();
