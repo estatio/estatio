@@ -20,6 +20,7 @@ package org.estatio.dom.lease.invoicing.ssrs;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -39,6 +40,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceItem;
@@ -192,7 +194,11 @@ public class InvoiceAttributesVM implements WithApplicationTenancy {
         SortedSet<InvoiceItem> invoiceItems = invoice.getItems();
         Set<String> descriptions =
                 FluentIterable.from(invoiceItems)
-                        .transform(x -> x.getCharge().getDescription())
+                        .transform(x -> {
+                            Charge charge = x.getCharge();
+                            return charge != null ? charge.getDescription(): null;
+                        })
+                        .filter(Objects::nonNull)
                         .toSortedSet(Ordering.natural());
         final List<String> items = Lists.newArrayList(descriptions);
         final int numItems = items.size();
