@@ -320,7 +320,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             // when
             final Communication communication =
-                    wrap(mixin(Invoice_sendByEmail.class, invoice)).$$(document, sendToEmailAddress, null, null);
+                    wrap(mixin(Invoice_sendByEmail.class, invoice)).$$(document, sendToEmailAddress, null, null, null, null, null);
 
             invoice = findInvoice(InvoiceStatus.NEW);
             prelimLetterViewModel = prelimLetterViewModelOf(invoice);
@@ -409,7 +409,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             // when
             final Communication communication =
-                    wrap(mixin(Invoice_sendByEmail.class, invoice)).$$(document, sendToEmailAddress, null, null);
+                    wrap(mixin(Invoice_sendByEmail.class, invoice)).$$(document, sendToEmailAddress, null, null, null, null, null);
 
             invoice = findInvoice(InvoiceStatus.INVOICED);
             invoiceDocViewModel = invoiceDocViewModelOf(invoice);
@@ -664,7 +664,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             // and given document sent
             final CommunicationChannel sendTo = invoice.getSendTo();
             assertThat(sendTo).isInstanceOf(EmailAddress.class);
-            mixin(Invoice_sendByEmail.class, invoice).$$(document, (EmailAddress)sendTo, null, null);
+            mixin(Invoice_sendByEmail.class, invoice).$$(document, (EmailAddress)sendTo, null, null, null, null, null);
 
             transactionService.flushTransaction();
 
@@ -762,7 +762,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             // and given document sent
             final CommunicationChannel sendTo = invoice.getSendTo();
             assertThat(sendTo).isInstanceOf(EmailAddress.class);
-            mixin(Invoice_sendByEmail.class, invoice).$$(document, (EmailAddress)sendTo, null, null);
+            mixin(Invoice_sendByEmail.class, invoice).$$(document, (EmailAddress)sendTo, null, null, null, null, null);
 
             transactionService.flushTransaction();
 

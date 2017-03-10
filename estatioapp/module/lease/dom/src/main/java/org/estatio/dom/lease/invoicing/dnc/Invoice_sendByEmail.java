@@ -90,10 +90,32 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
                     maxLength = CommunicationChannel.EmailType.MAX_LEN,
                     regexPattern = CommunicationChannel.EmailType.REGEX,
                     regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "cc (2):")
+            final String cc2,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "cc (3):")
+            final String cc3,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
             @ParameterLayout(named = "bcc:")
-            final String bcc) throws IOException {
+            final String bcc,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "bcc (2):")
+            final String bcc2
+            ) throws IOException {
 
-        final Communication communication = createCommunication(document, toChannel, cc, bcc);
+        final Communication communication = createCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
 
         return communication;
     }
@@ -156,16 +178,14 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
 
     // TODO: currently not properly supported by Isis, but does no harm
     @Programmatic
-    public String default3$$(final Document document) {
-        return document == null ? null :document_email(document).default2$$();
+    public String default5$$(final Document document) {
+        return document == null ? null :document_email(document).default4$$();
     }
-
 
     @Inject
     PaperclipRepository paperclipRepository;
 
     @Inject
     EmailService emailService;
-
 
 }

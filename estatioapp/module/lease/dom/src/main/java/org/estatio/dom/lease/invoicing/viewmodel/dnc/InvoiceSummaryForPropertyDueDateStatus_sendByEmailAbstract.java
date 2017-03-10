@@ -61,9 +61,9 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
 
             final EmailAddress emailAddress = invoice_sendByEmail.default1$$(document);
             final String cc = invoice_sendByEmail.default2$$(document);
-            final String bcc = invoice_sendByEmail.default3$$(document);
+            final String bcc = invoice_sendByEmail.default5$$(document);
 
-            invoice_sendByEmail.$$(document, emailAddress, cc, bcc);
+            invoice_sendByEmail.$$(document, emailAddress, cc, null, null, bcc, null);
         }
         return this.invoiceSummary;
     }

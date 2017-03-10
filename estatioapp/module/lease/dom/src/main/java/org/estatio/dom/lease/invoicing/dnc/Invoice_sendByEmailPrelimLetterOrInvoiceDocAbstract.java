@@ -68,11 +68,33 @@ public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extend
                     maxLength = CommunicationChannel.EmailType.MAX_LEN,
                     regexPattern = CommunicationChannel.EmailType.REGEX,
                     regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "cc (2):")
+            final String cc2,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "cc (3):")
+            final String cc3,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
             @ParameterLayout(named = "bcc:")
-            final String bcc) throws IOException {
+            final String bcc,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+            @ParameterLayout(named = "bcc (2):")
+            final String bcc2
+            ) throws IOException {
 
         final Document document = findDocument();
-        createCommunication(document, toChannel, cc, bcc);
+        createCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
 
         return invoice;
     }
@@ -100,9 +122,9 @@ public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extend
         return document == null ? null : document_email(document).default1$$();
     }
 
-    public String default2$$() {
+    public String default4$$() {
         final Document document = findDocument();
-        return document == null ? null :document_email(document).default2$$();
+        return document == null ? null :document_email(document).default4$$();
     }
 
 

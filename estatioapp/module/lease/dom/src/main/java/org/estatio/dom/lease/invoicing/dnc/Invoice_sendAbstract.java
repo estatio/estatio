@@ -56,11 +56,15 @@ public abstract class Invoice_sendAbstract {
             final Document document,
             final EmailAddress toChannel,
             final String cc,
-            final String bcc)
+            final String cc2,
+            final String cc3,
+            final String bcc,
+            final String bcc2
+            )
             throws IOException {
 
         // just delegate to Document_email to do the work.
-        final Communication communication = document_email(document).$$(toChannel, cc, bcc);
+        final Communication communication = document_email(document).$$(toChannel, cc, cc2, cc3, bcc, bcc2);
 
         // now that a comm has been sent, also attach this document to the buyer and seller
         // that way, if the (temporary) invoice is subsequently deleted
