@@ -52,7 +52,7 @@ Come a Voi già noto, la fatturazione relativa al ${chargeDescriptions}, verrà 
 </#if><#t>
 <#if (paymentMethod == "BANK_TRANSFER")
  ><#t>
-    Pertanto, Vi invitiamo a voler predisporre il pagamento a mezzo bonifico bancario sul conto corrente intestato alla ${sellerName} ${sellerBankAccountBankName} - ${sellerBankAccountIban} per l'importo di <b>€ ${grossAmount} </b> con scadenza ${dueDate?string["dd-MM-yyyy"]} così suddiviso:<#rt>
+    Pertanto, Vi invitiamo a voler predisporre il pagamento a mezzo bonifico bancario sul conto corrente intestato alla ${sellerName} ${sellerBankAccountBankName!""} - ${sellerBankAccountIban!""} per l'importo di <b>€ ${grossAmount} </b> con scadenza ${dueDate?string["dd-MM-yyyy"]} così suddiviso:<#rt>
 </#if><#t>
 <#if (paymentMethod == "Q")
  ><#t>
