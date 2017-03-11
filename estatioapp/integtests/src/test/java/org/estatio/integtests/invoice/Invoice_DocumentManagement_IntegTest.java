@@ -59,8 +59,8 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -121,7 +121,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
                 // given
                 Invoice invoice = findInvoice(InvoiceStatus.NEW);
-                DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+                DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
                 // when
                 wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
@@ -140,7 +140,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
                 // given
                 Invoice invoice = findInvoice(InvoiceStatus.NEW);
-                DocumentTemplate invoiceDocTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_INVOICE, invoice);
+                DocumentTemplate invoiceDocTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
 
                 // given the invoice has been invoiced
                 approveAndInvoice(invoice);
@@ -162,8 +162,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
                 // given
                 Invoice invoice = findInvoice(InvoiceStatus.NEW);
-                DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
-                DocumentTemplate invoiceDocTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_INVOICE, invoice);
+                DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
+                DocumentTemplate invoiceDocTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
 
                 // when
                 final List<DocumentTemplate> documentTemplates =
@@ -278,7 +278,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final DocumentAbstract attachedReceipt = paperclips.get(0).getDocument();
 
             // when
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
@@ -368,7 +368,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final DocumentAbstract attachedReceipt = paperclips.get(0).getDocument();
 
             // when
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_INVOICE, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
@@ -433,8 +433,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             paperclips = paperclipRepository.findByAttachedTo(invoiceDocComm);
             assertThat(paperclips).hasSize(4);
             assertThat(paperclips)
-                    .extracting(x -> x.getDocument().getType().getReference())
-                    .filteredOn(x -> x.equals(Constants.DOC_TYPE_REF_SUPPLIER_RECEIPT))
+                    .extracting(Paperclip::getDocument)
+                    .filteredOn(x -> DocumentTypeData.SUPPLIER_RECEIPT.docTypeFor(document))
                     .hasSize(2);
 
         }
@@ -463,7 +463,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final DocumentAbstract attachedReceipt = paperclips.get(0).getDocument();
 
             // when
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
@@ -542,7 +542,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final DocumentAbstract attachedReceipt = paperclips.get(0).getDocument();
 
             // when
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_INVOICE, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.INVOICE, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = invoiceDocOf(invoice);
 
@@ -618,7 +618,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoice.getStatus().invoiceIsChangable()).isTrue();
 
             // and given have a PL doc
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
@@ -656,7 +656,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoice.getStatus().invoiceIsChangable()).isTrue();
 
             // and given have a PL doc
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
             assertThat(document).isNotNull();
@@ -723,7 +723,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoice.getStatus().invoiceIsChangable()).isTrue();
 
             // and given have a PL doc
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
@@ -755,7 +755,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoice.getStatus().invoiceIsChangable()).isTrue();
 
             // and given have a PL doc
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
             Document document = prelimLetterOf(invoice);
 
@@ -783,7 +783,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             // given
             Invoice invoice = findInvoice(InvoiceStatus.NEW);
-            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(Constants.DOC_TYPE_REF_PRELIM, invoice);
+            DocumentTemplate prelimLetterTemplate = findDocumentTemplateFor(DocumentTypeData.PRELIM_LETTER, invoice);
 
             // and given
             wrap(mixin(Invoice_prepare.class, invoice)).$$(prelimLetterTemplate);
@@ -836,8 +836,8 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
         return matchingInvoices.isEmpty() ? null : matchingInvoices.get(0);
     }
 
-    DocumentTemplate findDocumentTemplateFor(final String docTypeRef, final Invoice invoice) {
-        final DocumentType documentType = documentTypeRepository.findByReference(docTypeRef);
+    DocumentTemplate findDocumentTemplateFor(final DocumentTypeData documentTypeData, final Invoice invoice) {
+        final DocumentType documentType = documentTypeData.findUsing(documentTypeRepository);
         assertThat(documentType).isNotNull();
         DocumentTemplate documentTemplate = documentTemplateRepository.findFirstByTypeAndApplicableToAtPath(documentType, invoice.getApplicationTenancyPath());
         assertThat(documentType).isNotNull();

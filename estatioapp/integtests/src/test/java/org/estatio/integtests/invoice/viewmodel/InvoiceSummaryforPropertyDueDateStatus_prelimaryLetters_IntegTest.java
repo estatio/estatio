@@ -41,7 +41,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -116,7 +116,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(prelimLetterDoc.getName()).isNotNull();
             assertThat(prelimLetterDoc.getId()).isNotNull();
             assertThat(prelimLetterDoc.getCreatedAt()).isNotNull();
-            final DocumentType docTypePrelimLetter = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_PRELIM);
+            final DocumentType docTypePrelimLetter =  DocumentTypeData.PRELIM_LETTER.findUsing(documentTypeRepository);
             assertThat(prelimLetterDoc.getType()).isEqualTo(docTypePrelimLetter);
 
             assertThat(prelimLetterDoc.getState()).isEqualTo(DocumentState.NOT_RENDERED);
@@ -177,7 +177,8 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(coverNote.getName()).isNotNull();
             assertThat(coverNote.getId()).isNotNull();
             assertThat(coverNote.getCreatedAt()).isNotNull();
-            final DocumentType docTypePrelimLetterCoverNote = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE);
+            final DocumentType docTypePrelimLetterCoverNote =
+                    DocumentTypeData.COVER_NOTE_PRELIM_LETTER.findUsing(documentTypeRepository);
             assertThat(coverNote.getType()).isEqualTo(docTypePrelimLetterCoverNote);
 
             assertThat(coverNote.getState()).isEqualTo(DocumentState.RENDERED);

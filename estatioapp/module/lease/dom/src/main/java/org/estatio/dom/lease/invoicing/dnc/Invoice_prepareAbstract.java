@@ -39,18 +39,18 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 import org.incode.module.document.dom.services.DocumentCreatorService;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommAbstract_abstract;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_actionAbstract;
 
 public abstract class Invoice_prepareAbstract {
 
     final Invoice invoice;
-    final String documentTypeReference;
+    final DocumentTypeData documentTypeData;
 
-    public Invoice_prepareAbstract(final Invoice invoice, final String documentTypeReference) {
+    public Invoice_prepareAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
         this.invoice = invoice;
-        this.documentTypeReference = documentTypeReference;
+        this.documentTypeData = documentTypeData;
     }
 
     public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<T_createAndAttachDocumentAndRender> {}
@@ -82,10 +82,7 @@ public abstract class Invoice_prepareAbstract {
     }
 
     DocumentType getDocumentType() {
-        return queryResultsCache.execute(
-                () -> documentTypeRepository.findByReference(documentTypeReference),
-                DocAndCommAbstract_abstract.class,
-                "getDocumentType", documentTypeReference);
+        return documentTypeData.findUsing(documentTypeRepository, queryResultsCache);
     }
 
     DocumentTemplate documentTemplateFor(final Invoice invoice) {

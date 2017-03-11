@@ -47,7 +47,7 @@ import org.estatio.dom.document.documents.binders.ForPrelimLetterOfInvoiceAttach
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
@@ -55,17 +55,6 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemplateFSAbstract {
 
-    // applicable to Invoice.class
-    public static final String DOC_TYPE_REF_PRELIM = Constants.DOC_TYPE_REF_PRELIM;
-    public static final String DOC_TYPE_REF_INVOICE = Constants.DOC_TYPE_REF_INVOICE;
-
-    public static final String DOC_TYPE_REF_SUPPLIER_RECEIPT = Constants.DOC_TYPE_REF_SUPPLIER_RECEIPT;
-    public static final String DOC_TYPE_REF_TAX_RECEIPT = Constants.DOC_TYPE_REF_TAX_RECEIPT;
-
-    // applicable to InvoiceSummaryForPropertyDueDateStatus.class
-    public static final String DOC_TYPE_REF_INVOICES_OVERVIEW = "INVOICES";
-    public static final String DOC_TYPE_REF_INVOICES_PRELIM = "INVOICES-PRELIM";
-    public static final String DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER = "INVOICES-FOR-SELLER";
 
     public static final String URL = "${reportServerBaseUrl}";
 
@@ -74,6 +63,15 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName.txt");
     public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName-ITA.txt");
+
+
+    protected DocumentType upsertType(
+            DocumentTypeData documentTypeData,
+            ExecutionContext executionContext) {
+
+        return upsertType(documentTypeData.getRef(), documentTypeData.getName(), executionContext);
+    }
+
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -107,7 +105,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         // template for PL cover note
         final DocumentType docTypeForPrelimCoverNote =
-                upsertType(Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE, "Email Cover Note for Preliminary Letter", executionContext);
+                upsertType(DocumentTypeData.COVER_NOTE_PRELIM_LETTER, executionContext);
 
         String contentText = loadResource("PrelimLetterEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
@@ -134,7 +132,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         // template for PL itself
         final DocumentType docTypeForPrelim =
-                upsertType(DOC_TYPE_REF_PRELIM, "Preliminary letter for Invoice", executionContext);
+                upsertType(DocumentTypeData.PRELIM_LETTER, executionContext);
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 ApplicationTenancyForGlobal.PATH, null,
@@ -177,7 +175,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         // template for invoice cover note
         final DocumentType docTypeForInvoiceCoverNote =
-                upsertType(Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE, "Email Cover Note for Invoice", executionContext);
+                upsertType(DocumentTypeData.COVER_NOTE_INVOICE, executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
@@ -204,7 +202,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
 
         // template for invoice itself
-        final DocumentType docTypeForInvoice = upsertType(DOC_TYPE_REF_INVOICE, "Invoice", executionContext);
+        final DocumentType docTypeForInvoice = upsertType(DocumentTypeData.INVOICE, executionContext);
 
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
@@ -243,8 +241,10 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // document types without any templates
         // (used to attach supporting documents to invoice)
         //
-        upsertType(DOC_TYPE_REF_SUPPLIER_RECEIPT, "Invoice Supplier Receipt", executionContext);
-        upsertType(DOC_TYPE_REF_TAX_RECEIPT, "Invoice Tax Receipt", executionContext);
+        upsertType(DocumentTypeData.SUPPLIER_RECEIPT, executionContext);
+        upsertType(DocumentTypeData.TAX_REGISTER, executionContext);
+        upsertType(DocumentTypeData.SPECIAL_COMMUNICATION, executionContext);
+        upsertType(DocumentTypeData.CALCULATION, executionContext);
 
     }
 
@@ -256,7 +256,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_SI);
 
         upsertTemplateForPdfWithApplicability(
-                upsertType(DOC_TYPE_REF_INVOICES_OVERVIEW, "Invoices overview", executionContext),
+                upsertType(DocumentTypeData.INVOICES, executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
@@ -273,7 +273,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         );
 
         upsertTemplateForPdfWithApplicability(
-                upsertType(DOC_TYPE_REF_INVOICES_PRELIM, "Preliminary letter for Invoices", executionContext),
+                upsertType(DocumentTypeData.INVOICES_PRELIM, executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
@@ -290,7 +290,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         );
 
         upsertTemplateForPdfWithApplicability(
-                upsertType(DOC_TYPE_REF_INVOICES_PRELIM_FOR_SELLER, "Preliminary Invoice for Seller", executionContext),
+                upsertType(DocumentTypeData.INVOICES_FOR_SELLER, executionContext),
                 ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL

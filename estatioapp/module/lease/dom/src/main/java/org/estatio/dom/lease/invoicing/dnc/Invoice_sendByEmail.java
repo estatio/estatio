@@ -50,7 +50,7 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 
 /**
@@ -147,8 +147,7 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
             if (document.getState() != DocumentState.RENDERED) {
                 continue;
             }
-            final String reference = document.getType().getReference();
-            if (!Constants.DOC_TYPE_REF_PRELIM.equals(reference) && !Constants.DOC_TYPE_REF_INVOICE.equals(reference)) {
+            if (!DocumentTypeData.isPrimaryType(document)) {
                 continue;
             }
             final Document_sendByEmail document_email = document_email(document);

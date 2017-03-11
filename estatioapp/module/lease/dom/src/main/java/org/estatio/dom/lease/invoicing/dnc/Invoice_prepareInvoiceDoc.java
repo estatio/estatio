@@ -24,14 +24,14 @@ import java.io.IOException;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 
 @Mixin
 public class Invoice_prepareInvoiceDoc extends Invoice_prepareAbstract{
 
     public Invoice_prepareInvoiceDoc(final Invoice invoice) {
-        super(invoice, Constants.DOC_TYPE_REF_INVOICE);
+        super(invoice, DocumentTypeData.INVOICE);
     }
 
 

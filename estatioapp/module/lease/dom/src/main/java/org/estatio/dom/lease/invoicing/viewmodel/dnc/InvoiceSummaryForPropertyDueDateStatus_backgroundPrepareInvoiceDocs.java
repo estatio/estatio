@@ -22,7 +22,7 @@ import com.google.common.base.Predicate;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
@@ -31,7 +31,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs
         InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract {
 
     public InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        super(invoiceSummary, Constants.DOC_TYPE_REF_INVOICE);
+        super(invoiceSummary, DocumentTypeData.INVOICE);
     }
 
     @Override

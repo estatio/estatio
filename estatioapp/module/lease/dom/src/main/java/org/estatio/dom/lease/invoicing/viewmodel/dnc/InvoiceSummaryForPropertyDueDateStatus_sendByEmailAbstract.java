@@ -36,6 +36,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByEmail;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -44,8 +45,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
 
     public InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final String documentTypeReference) {
-        super(invoiceSummary, documentTypeReference, CommunicationChannelType.EMAIL_ADDRESS);
+            final DocumentTypeData documentTypeData) {
+        super(invoiceSummary, documentTypeData, CommunicationChannelType.EMAIL_ADDRESS);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)

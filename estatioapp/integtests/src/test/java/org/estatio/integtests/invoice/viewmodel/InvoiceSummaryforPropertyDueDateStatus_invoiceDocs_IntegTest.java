@@ -42,7 +42,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -135,7 +135,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(invoiceDoc.getName()).isNotNull();
             assertThat(invoiceDoc.getId()).isNotNull();
             assertThat(invoiceDoc.getCreatedAt()).isNotNull();
-            final DocumentType docTypeInvoiceNote = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_INVOICE);
+            final DocumentType docTypeInvoiceNote = DocumentTypeData.INVOICE.findUsing(documentTypeRepository);
             assertThat(invoiceDoc.getType()).isEqualTo(docTypeInvoiceNote);
 
             assertThat(invoiceDoc.getState()).isEqualTo(DocumentState.NOT_RENDERED);
@@ -196,7 +196,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(coverNote.getName()).isNotNull();
             assertThat(coverNote.getId()).isNotNull();
             assertThat(coverNote.getCreatedAt()).isNotNull();
-            final DocumentType docTypeInvoiceNoteCoverNote = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE);
+            final DocumentType docTypeInvoiceNoteCoverNote = DocumentTypeData.COVER_NOTE_INVOICE.findUsing(documentTypeRepository);
             assertThat(coverNote.getType()).isEqualTo(docTypeInvoiceNoteCoverNote);
 
             assertThat(coverNote.getState()).isEqualTo(DocumentState.RENDERED);

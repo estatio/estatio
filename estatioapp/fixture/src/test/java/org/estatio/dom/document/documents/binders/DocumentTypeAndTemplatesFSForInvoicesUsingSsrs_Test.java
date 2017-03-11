@@ -26,7 +26,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
@@ -68,7 +68,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
 
     @Before
     public void setUp() throws Exception {
-        stubDocumentType = new DocumentType(Constants.DOC_TYPE_REF_PRELIM, "Prelim letter");
+        stubDocumentType = DocumentTypeData.PRELIM_LETTER.create();
 
         stubInvoice = new InvoiceForLease();
         stubInvoice.setDueDate(new LocalDate(2016,11,1));

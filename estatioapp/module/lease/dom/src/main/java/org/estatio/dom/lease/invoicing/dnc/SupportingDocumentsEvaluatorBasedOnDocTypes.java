@@ -18,17 +18,13 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
-import java.util.ArrayList;
-
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.spi.SupportingDocumentsEvaluator;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -36,19 +32,16 @@ import org.estatio.dom.invoice.Constants;
 )
 public class SupportingDocumentsEvaluatorBasedOnDocTypes implements SupportingDocumentsEvaluator {
 
-    private static final ArrayList<String> REGULAR_DOC_TYPES =
-            Lists.newArrayList(Constants.DOC_TYPE_REF_INVOICE, Constants.DOC_TYPE_REF_PRELIM);
-
     @Override
     public Document supportedBy(final Document candidateSupportingDocument) {
         return null;
     }
 
     @Override
-    public boolean isSupporting(final Document candidateSupportingDocument) {
-        String docTypeRef = candidateSupportingDocument.getType().getReference();
-
-        return !REGULAR_DOC_TYPES.contains(docTypeRef);
+    public Evaluation evaluate(final Document candidateSupportingDocument) {
+        return DocumentTypeData.isPrimaryType(candidateSupportingDocument)
+                ? Evaluation.NOT_SUPPORTING
+                : Evaluation.UNKNOWN;
     }
 
 }

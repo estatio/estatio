@@ -27,10 +27,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
+import org.estatio.dom.invoice.DocumentTypeData;
+
 public abstract class DocAndCommAbstract_documentState<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 
-    public DocAndCommAbstract_documentState(final T docAndComm, final String documentTypeReference) {
-        super(docAndComm, documentTypeReference);
+    public DocAndCommAbstract_documentState(final T docAndComm, final DocumentTypeData documentTypeData) {
+        super(docAndComm, documentTypeData);
     }
 
     @Action(semantics = SemanticsOf.SAFE)

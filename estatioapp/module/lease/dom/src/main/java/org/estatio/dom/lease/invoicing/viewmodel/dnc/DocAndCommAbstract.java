@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.document.dom.services.ClassService;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
@@ -95,9 +94,6 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
                 final DncProvider<T> provider) {
             return documentsAndCommunicationsFor(Collections.singletonList(invoice), provider);
         }
-
-        @Inject
-        ClassService classService;
 
     }
 

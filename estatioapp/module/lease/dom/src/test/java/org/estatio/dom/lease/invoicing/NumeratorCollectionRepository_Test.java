@@ -140,7 +140,7 @@ public class NumeratorCollectionRepository_Test {
         public void findCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorRepository).findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
+                    oneOf(mockNumeratorRepository).findGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, null);
                 }
             });
             estatioNumeratorRepository.findCollectionNumberNumerator();
@@ -150,7 +150,7 @@ public class NumeratorCollectionRepository_Test {
         public void createCollectionNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.createCollectionNumberNumerator(format, lastIncrement, applicationTenancy);
@@ -160,7 +160,7 @@ public class NumeratorCollectionRepository_Test {
         public void findInvoiceNumberNumerator() {
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.findInvoiceNumberNumerator(mockProperty, applicationTenancy);
@@ -174,7 +174,7 @@ public class NumeratorCollectionRepository_Test {
 
             context.checking(new Expectations() {
                 {
-                    oneOf(mockNumeratorRepository).createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty, format, lastIncrement, applicationTenancy);
+                    oneOf(mockNumeratorRepository).createScopedNumerator(Constants.NumeratorName.INVOICE_NUMBER, mockProperty, format, lastIncrement, applicationTenancy);
                 }
             });
             estatioNumeratorRepository.createInvoiceNumberNumerator(mockProperty, format, lastIncrement, applicationTenancy);

@@ -20,17 +20,13 @@ public final class Constants {
     
     private Constants(){}
 
-    public static final String INVOICE_NUMBER_NUMERATOR_NAME = "Invoice number";
-    public static final String COLLECTION_NUMBER_NUMERATOR_NAME = "Collection number";
+    // TODO: convert this into NumeratorData, similar to DocTypeData
+    public static class NumeratorName {
+        private NumeratorName(){}
 
-    public static final String DOC_TYPE_REF_PRELIM = "PL";
-    public static final String DOC_TYPE_REF_INVOICE = "INV";
-
-    public static final String DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE = "PL-COVER";
-    public static final String DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE = "INV-COVER";
-
-    public static final String DOC_TYPE_REF_SUPPLIER_RECEIPT = "SUP-RCPT";
-    public static final String DOC_TYPE_REF_TAX_RECEIPT = "TAX-RCPT";
+        public static final String INVOICE_NUMBER = "Invoice number";
+        public static final String COLLECTION_NUMBER = "Collection number";
+    }
 
 
 }

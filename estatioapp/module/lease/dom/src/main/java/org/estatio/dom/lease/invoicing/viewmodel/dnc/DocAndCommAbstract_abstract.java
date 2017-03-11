@@ -27,17 +27,18 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 
 public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T>> {
 
     final T docAndComm;
-    private final String documentTypeReference;
+    private final DocumentTypeData documentTypeData;
 
-    public DocAndCommAbstract_abstract(final T docAndComm, final String documentTypeReference) {
+    public DocAndCommAbstract_abstract(final T docAndComm, final DocumentTypeData documentTypeData) {
         this.docAndComm = docAndComm;
-        this.documentTypeReference = documentTypeReference;
+        this.documentTypeData = documentTypeData;
     }
 
     Invoice getInvoice() {
@@ -45,10 +46,7 @@ public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T
     }
 
     DocumentType getDocumentType() {
-        return queryResultsCache.execute(
-                () -> documentTypeRepository.findByReference(documentTypeReference),
-                DocAndCommAbstract_abstract.class,
-                "getDocumentType", documentTypeReference);
+        return documentTypeData.findUsing(documentTypeRepository, queryResultsCache);
     }
 
     Document getDocument() {

@@ -20,13 +20,13 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin
 public class DocAndCommForInvoiceDoc_download extends DocAndCommAbstract_download<DocAndCommForInvoiceDoc> {
 
     public DocAndCommForInvoiceDoc_download(final DocAndCommForInvoiceDoc docAndComm) {
-        super(docAndComm, Constants.DOC_TYPE_REF_INVOICE, "Merged Invoice Notes.pdf");
+        super(docAndComm, DocumentTypeData.INVOICE);
     }
 
 }

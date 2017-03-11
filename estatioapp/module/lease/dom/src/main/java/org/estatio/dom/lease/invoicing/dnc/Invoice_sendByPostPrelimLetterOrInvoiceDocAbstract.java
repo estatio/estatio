@@ -34,6 +34,7 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 
 /**
@@ -41,8 +42,8 @@ import org.estatio.dom.invoice.Invoice;
  */
 public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
-        super(invoice, documentTypeReference);
+    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
+        super(invoice, documentTypeData);
     }
 
     public static class DomainEvent extends ActionDomainEvent<Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract> { }

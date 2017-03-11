@@ -44,7 +44,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
 
     @Programmatic
     public Numerator findCollectionNumberNumerator() {
-        return numeratorRepository.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, null);
+        return numeratorRepository.findGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, null);
     }
 
 
@@ -57,7 +57,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final ApplicationTenancy applicationTenancy) {
 
         return numeratorRepository
-                .createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastValue, applicationTenancy);
+                .createGlobalNumerator(Constants.NumeratorName.COLLECTION_NUMBER, format, lastValue, applicationTenancy);
     }
 
 
@@ -69,7 +69,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final FixedAsset fixedAsset,
             final ApplicationTenancy applicationTenancy) {
         return numeratorRepository
-                .findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset, applicationTenancy);
+                .findScopedNumeratorIncludeWildCardMatching(Constants.NumeratorName.INVOICE_NUMBER, fixedAsset, applicationTenancy);
     }
 
 
@@ -82,7 +82,7 @@ public class NumeratorForCollectionRepository extends UdoDomainService<Numerator
             final BigInteger lastIncrement,
             final ApplicationTenancy applicationTenancy) {
         return numeratorRepository.createScopedNumerator(
-                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement, applicationTenancy);
+                Constants.NumeratorName.INVOICE_NUMBER, property, format, lastIncrement, applicationTenancy);
     }
 
 

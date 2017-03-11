@@ -35,12 +35,13 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 
 public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
-        super(invoice, documentTypeReference);
+    public Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
+        super(invoice, documentTypeData);
     }
 
     public static class DomainEvent extends ActionDomainEvent<Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract> { }

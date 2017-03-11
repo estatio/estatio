@@ -18,18 +18,14 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -38,9 +34,8 @@ public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {
     @Programmatic
     public String disableSendInvoiceDoc(final Invoice invoice, final Document document) {
 
-        // only applies to InvoiceDoc documents
-        final DocumentType documentType = documentTypeRepository.findByReference(Constants.DOC_TYPE_REF_INVOICE);
-        if(document.getType() != documentType) {
+        // only enforces a rule for Invoice documents
+        if ( ! DocumentTypeData.INVOICE.docTypeFor(document)) {
             return null;
         }
 
@@ -51,9 +46,5 @@ public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {
         // ok then
         return null;
     }
-
-
-    @Inject
-    DocumentTypeRepository documentTypeRepository;
 
 }

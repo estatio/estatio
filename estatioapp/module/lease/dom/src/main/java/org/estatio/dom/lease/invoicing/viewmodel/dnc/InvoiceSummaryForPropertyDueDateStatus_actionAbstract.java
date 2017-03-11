@@ -35,26 +35,24 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
     final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;
-    final String documentTypeReference;
+    final DocumentTypeData documentTypeData;
 
     public InvoiceSummaryForPropertyDueDateStatus_actionAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final String documentTypeReference) {
+            final DocumentTypeData documentTypeData) {
         this.invoiceSummary = invoiceSummary;
-        this.documentTypeReference = documentTypeReference;
+        this.documentTypeData = documentTypeData;
     }
 
     DocumentType getDocumentType() {
-        return queryResultsCache.execute(
-                () -> documentTypeRepository.findByReference(documentTypeReference),
-                DocAndCommAbstract_abstract.class,
-                "getDocumentType", documentTypeReference);
+        return documentTypeData.findUsing(documentTypeRepository, queryResultsCache);
     }
 
     Document findMostRecentAttachedTo(final Invoice invoice, final DocumentType documentType) {
@@ -79,7 +77,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
                                 getDocumentType(),
                                 invoice.getApplicationTenancyPath()),
                 InvoiceSummaryForPropertyDueDateStatus_actionAbstract.class,
-                "findFirstByTypeAndApplicableToAtPath",
+                "documentTemplateFor",
                 getDocumentType(), invoice
         );
         // best to fail fast...

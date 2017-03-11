@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.dnc.InvoicePrintAndEmailPolicyService;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
@@ -31,7 +31,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs exten
         InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract {
 
     public InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        super(invoiceSummary, Constants.DOC_TYPE_REF_INVOICE);
+        super(invoiceSummary, DocumentTypeData.INVOICE);
     }
 
     @Override

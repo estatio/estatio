@@ -26,24 +26,21 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
-import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommAbstract_abstract;
 
 public abstract class Invoice_sendPrelimLetterOrInvoiceDocAbstract extends Invoice_sendAbstract {
 
-    private final String documentTypeReference;
+    private final DocumentTypeData documentTypeData;
 
-    public Invoice_sendPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final String documentTypeReference) {
+    public Invoice_sendPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
         super(invoice);
-        this.documentTypeReference = documentTypeReference;
+        this.documentTypeData = documentTypeData;
     }
 
     DocumentType getDocumentType() {
-        return queryResultsCache.execute(
-                () -> documentTypeRepository.findByReference(documentTypeReference),
-                DocAndCommAbstract_abstract.class,
-                "getDocumentType", documentTypeReference);
+        return documentTypeData.findUsing(documentTypeRepository, queryResultsCache);
     }
 
     Document findDocument() {

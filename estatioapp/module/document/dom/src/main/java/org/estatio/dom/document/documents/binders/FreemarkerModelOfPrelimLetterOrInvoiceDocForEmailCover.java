@@ -30,7 +30,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
@@ -51,10 +51,11 @@ public class FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover
             final DocumentTemplate documentTemplate,
             final Document prelimLetterOrInvoiceNoteDoc) {
 
-        final String docTypeRef = prelimLetterOrInvoiceNoteDoc.getType().getReference();
-        if (!Constants.DOC_TYPE_REF_PRELIM.equals(docTypeRef) && !Constants.DOC_TYPE_REF_INVOICE.equals(docTypeRef)) {
-            throw new IllegalArgumentException(
-                    String.format("Document must be a prelim letter or invoice note (provided document' type is '%s')", docTypeRef));
+        boolean isPrimaryType = DocumentTypeData.isPrimaryType(prelimLetterOrInvoiceNoteDoc);
+        if (!isPrimaryType) {
+            final String docTypeRef2 = prelimLetterOrInvoiceNoteDoc.getType().getReference();
+            throw new IllegalArgumentException(String.format(
+                    "Document must be a prelim letter or invoice (provided document's type is '%s')", docTypeRef2));
         }
 
         final InvoiceForLease invoice = paperclipRepository.paperclipAttaches(prelimLetterOrInvoiceNoteDoc, InvoiceForLease.class);

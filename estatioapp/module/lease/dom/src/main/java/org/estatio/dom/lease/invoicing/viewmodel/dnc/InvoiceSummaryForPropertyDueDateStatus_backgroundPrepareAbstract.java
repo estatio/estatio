@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_backgroundPrepare;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -43,8 +44,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAb
 
     public InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final String documentTypeReference) {
-        super(invoiceSummary, documentTypeReference);
+            final DocumentTypeData documentTypeData) {
+        super(invoiceSummary, documentTypeData);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)

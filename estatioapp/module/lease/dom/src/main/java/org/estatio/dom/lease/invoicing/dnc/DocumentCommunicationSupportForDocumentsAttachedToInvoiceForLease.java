@@ -19,12 +19,12 @@
 package org.estatio.dom.lease.invoicing.dnc;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
@@ -38,7 +38,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -56,23 +56,8 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
             return null;
         }
 
-        final String coverNoteTypeRef = determineCoverNoteTypeRef(document);
-        return coverNoteTypeRef != null
-                    ? documentTypeRepository.findByReference(coverNoteTypeRef)
-                    : null;
-    }
-
-    private static String determineCoverNoteTypeRef(final Document document) {
-
-        if(Objects.equals(document.getType().getReference(), Constants.DOC_TYPE_REF_INVOICE)) {
-            return Constants.DOC_TYPE_REF_INVOICE_EMAIL_COVER_NOTE;
-        }
-
-        if(Objects.equals(document.getType().getReference(), Constants.DOC_TYPE_REF_PRELIM)) {
-            return Constants.DOC_TYPE_REF_PRELIM_EMAIL_COVER_NOTE;
-        }
-
-        return null;
+        return DocumentTypeData.coverNoteTypeFor(
+                document, documentTypeRepository, queryResultsCache);
     }
 
     @Override
@@ -138,6 +123,9 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
 
     @Inject
     DocumentTypeRepository documentTypeRepository;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Inject
     PaperclipRepository paperclipRepository;

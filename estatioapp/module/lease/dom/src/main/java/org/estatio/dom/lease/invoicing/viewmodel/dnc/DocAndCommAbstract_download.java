@@ -41,15 +41,17 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
+import org.estatio.dom.invoice.DocumentTypeData;
+
 import static org.incode.module.communications.dom.mixins.DocumentConstants.MIME_TYPE_APPLICATION_PDF;
 
 public abstract class DocAndCommAbstract_download<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 
     final String fileName;
 
-    public DocAndCommAbstract_download(final T docAndComm, final String documentTypeReference, final String fileName) {
-        super(docAndComm, documentTypeReference);
-        this.fileName = fileName;
+    public DocAndCommAbstract_download(final T docAndComm, final DocumentTypeData documentTypeData) {
+        super(docAndComm, documentTypeData);
+        this.fileName = documentTypeData.getMergedFileName();
     }
 
     @Action(

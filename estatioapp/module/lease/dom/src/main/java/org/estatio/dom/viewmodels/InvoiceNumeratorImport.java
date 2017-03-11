@@ -67,15 +67,15 @@ public class InvoiceNumeratorImport implements ExcelFixtureRowHandler, Importabl
         Numerator numerator;
         if (atPath.contains("/%/")) {
             numerator = numeratorRepository
-                    .findScopedNumeratorIncludeWildCardMatching(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, applicationTenancy);
+                    .findScopedNumeratorIncludeWildCardMatching(Constants.NumeratorName.INVOICE_NUMBER, property, applicationTenancy);
         } else {
             numerator = numeratorRepository
-                    .findNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, applicationTenancy);
+                    .findNumerator(Constants.NumeratorName.INVOICE_NUMBER, property, applicationTenancy);
         }
 
         if (numerator == null) {
             numerator = numeratorRepository
-                    .createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, formatStr, lastIncrement, applicationTenancy);
+                    .createScopedNumerator(Constants.NumeratorName.INVOICE_NUMBER, property, formatStr, lastIncrement, applicationTenancy);
         }
         return Lists.newArrayList(numerator);
     }

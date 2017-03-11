@@ -32,6 +32,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
@@ -50,9 +51,9 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendAbstract extend
 
     public InvoiceSummaryForPropertyDueDateStatus_sendAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final String documentTypeReference,
+            final DocumentTypeData documentTypeData,
             final CommunicationChannelType communicationChannelType) {
-        super(invoiceSummary, documentTypeReference);
+        super(invoiceSummary, documentTypeData);
         this.communicationChannelType = communicationChannelType;
     }
 

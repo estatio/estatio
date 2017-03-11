@@ -20,7 +20,7 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 @Mixin
@@ -28,7 +28,7 @@ public class InvoiceSummaryForPropertyDueDateStatus_sendByPostInvoiceDocs extend
         InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract {
 
     public InvoiceSummaryForPropertyDueDateStatus_sendByPostInvoiceDocs(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        super(invoiceSummary, Constants.DOC_TYPE_REF_INVOICE, "Merged Invoice Notes.pdf");
+        super(invoiceSummary, DocumentTypeData.INVOICE);
     }
 
 }

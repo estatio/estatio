@@ -22,8 +22,6 @@ package org.estatio.dom.lease.invoicing.dnc;
 import java.io.IOException;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
@@ -32,8 +30,10 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+
+import static com.google.common.base.Predicates.not;
 
 @Mixin
 public class Invoice_prepare extends T_createAndAttachDocumentAndRender<Invoice> {
@@ -54,7 +54,7 @@ public class Invoice_prepare extends T_createAndAttachDocumentAndRender<Invoice>
             // cannot send an invoice note
             documentTemplates = Lists.newArrayList(
                  FluentIterable.from(documentTemplates)
-                               .filter(Predicates.not(hasDocumentType(Constants.DOC_TYPE_REF_INVOICE))
+                               .filter(not(DocumentTypeData.INVOICE.ofTemplate())
                 ).toList()
             );
         }
@@ -65,12 +65,5 @@ public class Invoice_prepare extends T_createAndAttachDocumentAndRender<Invoice>
         final List<DocumentTemplate> documentTemplates = choices0$$();
         return documentTemplates.size() == 1 ? documentTemplates.get(0) : null;
     }
-
-
-    public static Predicate<DocumentTemplate> hasDocumentType(final String docTypeRefInvoice) {
-        return template -> template.getType().getReference().equals(docTypeRefInvoice);
-    }
-
-
 
 }

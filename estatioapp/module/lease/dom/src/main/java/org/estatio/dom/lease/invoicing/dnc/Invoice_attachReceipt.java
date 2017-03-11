@@ -36,6 +36,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
@@ -49,7 +50,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 
@@ -116,7 +117,8 @@ public class Invoice_attachReceipt {
 
     private List<DocumentAbstract> findUnsentInvoiceDocumentsFor(final Invoice invoice) {
 
-        final DocumentType invDocType = findDocumentType(Constants.DOC_TYPE_REF_INVOICE);
+        final DocumentType invDocType =
+                DocumentTypeData.INVOICE.findUsing(documentTypeRepository, queryResultsCache);
 
         final List<DocumentAbstract> unsentInvoiceDocuments = Lists.newArrayList();
 
@@ -156,14 +158,7 @@ public class Invoice_attachReceipt {
     }
 
     public List<DocumentType> choices0$$() {
-        return Lists.newArrayList(
-                findDocumentType(Constants.DOC_TYPE_REF_SUPPLIER_RECEIPT),
-                findDocumentType(Constants.DOC_TYPE_REF_TAX_RECEIPT)
-                );
-    }
-
-    private DocumentType findDocumentType(final String ref) {
-        return documentTypeRepository.findByReference(ref);
+        return DocumentTypeData.supportingDocTypesUsing(documentTypeRepository, queryResultsCache);
     }
 
     @Inject
@@ -174,6 +169,9 @@ public class Invoice_attachReceipt {
 
     @Inject
     DocumentRepository documentRepository;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Inject
     InvoiceDocAndCommService invoiceDocAndCommService;

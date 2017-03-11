@@ -131,7 +131,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             Numerator numerator = estatioNumeratorRepository.createCollectionNumberNumerator("%09d", BigInteger.TEN, applicationTenancyRepository.findByPath("/"));
             // then
             assertThat(numerator, is(notNullValue()));
-            assertThat(numerator.getName(), is(Constants.COLLECTION_NUMBER_NUMERATOR_NAME));
+            assertThat(numerator.getName(), is(Constants.NumeratorName.COLLECTION_NUMBER));
             assertThat(numerator.getObjectType(), is(nullValue()));
             assertThat(numerator.getObjectIdentifier(), is(nullValue()));
             assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
@@ -185,7 +185,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
 
             // then
             Assert.assertNotNull(numerator);
-            assertThat(numerator.getName(), is(Constants.INVOICE_NUMBER_NUMERATOR_NAME));
+            assertThat(numerator.getName(), is(Constants.NumeratorName.INVOICE_NUMBER));
             assertThat(numerator.getObjectType(), is(propertyOxfBookmark.getObjectType()));
             assertThat(numerator.getObjectIdentifier(), is(propertyOxfBookmark.getIdentifier()));
             assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
@@ -291,7 +291,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
             propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
             numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
-                    Constants.INVOICE_NUMBER_NUMERATOR_NAME,
+                    Constants.NumeratorName.INVOICE_NUMBER,
                     propertyOxf,
                     propertyOxf.getReference().concat("-%04d"),
                     BigInteger.ZERO,

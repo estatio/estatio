@@ -42,6 +42,7 @@ import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByPost;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -52,10 +53,9 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
     public InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final String documentTypeReference,
-            final String defaultFileName) {
-        super(invoiceSummary, documentTypeReference, CommunicationChannelType.POSTAL_ADDRESS);
-        this.defaultFileName = defaultFileName;
+            final DocumentTypeData documentTypeData) {
+        super(invoiceSummary, documentTypeData, CommunicationChannelType.POSTAL_ADDRESS);
+        this.defaultFileName = documentTypeData.getMergedFileName();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
