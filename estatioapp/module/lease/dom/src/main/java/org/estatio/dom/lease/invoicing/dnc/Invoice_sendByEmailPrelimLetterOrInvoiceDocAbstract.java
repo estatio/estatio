@@ -59,37 +59,37 @@ public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extend
             final EmailAddress toChannel,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC)
             @ParameterLayout(named = "cc:")
             final String cc,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC)
             @ParameterLayout(named = "cc (2):")
             final String cc2,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC)
             @ParameterLayout(named = "cc (3):")
             final String cc3,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC)
             @ParameterLayout(named = "bcc:")
             final String bcc,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC)
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC)
             @ParameterLayout(named = "bcc (2):")
             final String bcc2
             ) throws IOException {

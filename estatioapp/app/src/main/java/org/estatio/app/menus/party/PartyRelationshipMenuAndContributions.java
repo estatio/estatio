@@ -97,19 +97,35 @@ public class PartyRelationshipMenuAndContributions {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = Person.ReferenceType.Meta.REGEX, regexPatternReplacement = Person.ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = Person.InitialsType.Meta.REGEX, regexPatternReplacement = Person.InitialsType.Meta.REGEX_DESCRIPTION) String initials,
-            final @Parameter(optionality = Optionality.OPTIONAL) String firstName,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    regexPattern = Person.ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = Person.ReferenceType.Meta.REGEX_DESCRIPTION)
+            final String reference,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    regexPattern = Person.InitialsType.Meta.REGEX,
+                    regexPatternReplacement = Person.InitialsType.Meta.REGEX_DESCRIPTION
+            )
+            final String initials,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String firstName,
             final String lastName,
             final PersonGenderType gender,
             final String relationshipType,
-            final @Parameter(optionality = Optionality.OPTIONAL) String description,
-            final @Parameter(optionality = Optionality.OPTIONAL, regexPattern = CommunicationChannel.PhoneNumberType.REGEX, regexPatternReplacement = CommunicationChannel.PhoneNumberType.REGEX_DESC) String phoneNumber,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String description,
             @Parameter(
                     optionality = Optionality.OPTIONAL,
-                    maxLength = CommunicationChannel.EmailType.MAX_LEN,
-                    regexPattern = CommunicationChannel.EmailType.REGEX,
-                    regexPatternReplacement = CommunicationChannel.EmailType.REGEX_DESC
+                    regexPattern = CommunicationChannel.PhoneNumberType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.PhoneNumberType.Meta.REGEX_DESC
+            )
+            final String phoneNumber,
+            @Parameter(
+                    optionality = Optionality.OPTIONAL,
+                    maxLength = CommunicationChannel.EmailType.Meta.MAX_LEN,
+                    regexPattern = CommunicationChannel.EmailType.Meta.REGEX,
+                    regexPatternReplacement = CommunicationChannel.EmailType.Meta.REGEX_DESC
             )
             final String emailAddress
     ) {
