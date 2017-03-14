@@ -8,16 +8,17 @@
             <ns2:action id="links"/>
             <ns2:action id="invoice"/>
             <ns2:action id="collect"/>
+            <ns2:action id="attachReceipt"/>
             <ns2:action id="sync"/>
             <ns2:action id="remove"/>
         </col>
     </row>
     <row>
-        <col span="12">
+        <col span="6">
             <tabGroup>
                 <tab name="Invoice">
                     <row>
-                        <col span="4">
+                        <col span="12">
                             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                                 <ns2:property id="seller"/>
                                 <ns2:property id="buyer"/>
@@ -28,63 +29,6 @@
                                 <ns2:property id="uuid"/>
                                 <ns2:property id="number"/>
                                 <ns2:property id="runId"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Descriptions" id="descriptions">
-                                <ns2:property id="preliminaryLetterDescription" hidden="ALL_TABLES">
-                                    <ns2:action id="overridePreliminaryLetterDescription">
-                                        <ns2:named>Override</ns2:named>
-                                    </ns2:action>
-                                    <ns2:action id="unoverridePreliminaryLetterDescription">
-                                        <ns2:named>Clear</ns2:named>
-                                    </ns2:action>
-                                </ns2:property>
-                                <ns2:property id="description" hidden="ALL_TABLES">
-                                    <ns2:action id="overrideDescription">
-                                        <ns2:named>Override</ns2:named>
-                                    </ns2:action>
-                                    <ns2:action id="unoverrideDescription">
-                                        <ns2:named>Clear</ns2:named>
-                                    </ns2:action>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Comments" id="comments">
-                                <ns2:property id="preliminaryLetterComment" hidden="ALL_TABLES">
-                                    <ns2:action id="changePreliminaryLetterComment">
-                                        <ns2:named>Change</ns2:named>
-                                    </ns2:action>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Communications" id="comms">
-                                <ns2:property id="sendTo" hidden="ALL_TABLES">
-                                    <ns2:action id="overrideSendTo">
-                                        <ns2:named>Override</ns2:named>
-                                    </ns2:action>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="RelatedTo" id="relatedTo">
-                                <ns2:property id="fixedAsset"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="Dates" id="dates">
-                                <ns2:property id="invoiceDate"/>
-                                <ns2:property id="dueDate">
-                                    <ns2:action id="changeDueDate" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Payment" id="payment">
-                                <ns2:property id="paymentMethod">
-                                    <ns2:action id="changePaymentMethod" position="BELOW"/>
-                                </ns2:property>
-                                <ns2:property id="paidBy"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="Amounts" id="amounts">
-                                <ns2:property id="currency"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -116,6 +60,54 @@
                     </row>
                 </tab>
             </tabGroup>
+            <ns2:fieldSet name="Communications" id="comms">
+                <ns2:property id="sendTo" hidden="ALL_TABLES">
+                    <ns2:action id="overrideSendTo">
+                        <ns2:named>Override</ns2:named>
+                    </ns2:action>
+                </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="RelatedTo" id="relatedTo">
+                <ns2:property id="fixedAsset"/>
+                <ns2:property id="lease"/>
+            </ns2:fieldSet>
+        </col>
+         <col span="6">
+            <tabGroup>
+                <tab name="Dates and Amounts">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Dates" id="dates">
+                                <ns2:property id="invoiceDate"/>
+                                <ns2:property id="dueDate">
+                                    <ns2:action id="changeDueDate" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Payment" id="payment">
+                                <ns2:property id="paymentMethod">
+                                    <ns2:action id="changePaymentMethod" position="BELOW"/>
+                                </ns2:property>
+                                <ns2:property id="paidBy"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Amounts" id="amounts">
+                                <ns2:property id="currency"/>
+                                <ns2:property id="netAmount"/>
+                                <ns2:property id="vatAmount"/>
+                                <ns2:property id="grossAmount"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Dummy">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="dummy-to-make-first-tab-appear">
+                                <ns2:property id="dummy"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="12">
             <tabGroup>
@@ -134,15 +126,9 @@
                             <ns2:collection id="documents">
                                 <ns2:action id="attachReceipt"/>
                                 <ns2:action id="preview"/>
-                                <ns2:action id="createAndAttachDocument">
-                                    <ns2:named>Prepare</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="email" cssClassFa="at">
-                                    <ns2:named>Send by email</ns2:named>
-                                </ns2:action>
-                                <ns2:action id="print" cssClassFa="print">
-                                    <ns2:named>Send by post</ns2:named>
-                                </ns2:action>
+                                <ns2:action id="prepare"/>
+                                <ns2:action id="sendByEmail"/>
+                                <ns2:action id="sendByPost"/>
                             </ns2:collection>
                         </col>
                     </row>
@@ -154,10 +140,10 @@
                                 <ns2:action id="preparePrelimLetter">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="emailPrelimLetter" cssClassFa="at">
+                                <ns2:action id="sendByEmailPrelimLetter" cssClassFa="at">
                                     <ns2:named>Send by email</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="printPrelimLetter" cssClassFa="print">
+                                <ns2:action id="sendByPostPrelimLetter" cssClassFa="print">
                                     <ns2:named>Send by post</ns2:named>
                                 </ns2:action>
                             </ns2:collection>
@@ -165,12 +151,21 @@
                                 <ns2:action id="prepareInvoiceDoc">
                                     <ns2:named>Prepare</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="emailInvoiceDoc" cssClassFa="at">
+                                <ns2:action id="sendByEmailInvoiceDoc">
                                     <ns2:named>Send by email</ns2:named>
                                 </ns2:action>
-                                <ns2:action id="printInvoiceDoc" cssClassFa="print">
+                                <ns2:action id="sendByPostInvoiceDoc" cssClassFa="print">
                                     <ns2:named>Send by post</ns2:named>
                                 </ns2:action>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Attributes">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="attributes" defaultView="table">
+                                <ns2:action id="updateAttribute"/>
                             </ns2:collection>
                         </col>
                     </row>
