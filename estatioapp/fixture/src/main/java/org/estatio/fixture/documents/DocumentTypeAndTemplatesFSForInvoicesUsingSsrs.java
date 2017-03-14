@@ -41,7 +41,6 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.document.documents.binders.AttachToNone;
-import org.estatio.dom.document.documents.binders.ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame;
 import org.estatio.dom.document.documents.binders.ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts;
 import org.estatio.dom.document.documents.binders.ForPrelimLetterOfInvoiceAttachToSame;
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
@@ -115,7 +114,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 NAME_TEXT_PRELIM_LETTER_GLOBAL, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-                ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame.class,
+                AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html");
@@ -126,7 +125,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 NAME_TEXT_PRELIM_LETTER_ITA, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-                ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame.class,
+                AttachToNone.class,
                 executionContext);
 
 
@@ -185,7 +184,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 NAME_TEXT_INVOICE_GLOBAL, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-                ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame.class,
+                AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote-ITA.html");
@@ -196,7 +195,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 NAME_TEXT_INVOICE_ITA, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
-                ForEmailCoverOfPrelimLetterOrInvoiceDocAttachToSame.class,
+                AttachToNone.class,
 				executionContext
         );
 
