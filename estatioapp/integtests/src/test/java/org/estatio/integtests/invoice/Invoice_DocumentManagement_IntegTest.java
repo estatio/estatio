@@ -197,7 +197,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final List<DocumentType> documentTypes = invoice_attachReceipt.choices0$$();
 
             // then
-            assertThat(documentTypes).hasSize(2);
+            assertThat(documentTypes).hasSize(4);
 
             // and when
             final DocumentType documentType = documentTypes.get(0);
