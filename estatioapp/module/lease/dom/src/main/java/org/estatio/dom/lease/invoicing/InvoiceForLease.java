@@ -589,14 +589,14 @@ public class InvoiceForLease
     NumeratorForCollectionRepository numeratorRepository;
 
     @Mixin(method = "act")
-    public static class _overridePreliminaryLetterDescription extends _override {
+    public static class _overridePreliminaryLetterDescription extends _overrideAttributeAbstract {
         public _overridePreliminaryLetterDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
         }
     }
 
     @Mixin(method = "act")
-    public static class _resetPreliminaryLetterDescription extends _unoverride {
+    public static class _resetPreliminaryLetterDescription extends _resetAttributeAbstract {
 
         public _resetPreliminaryLetterDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
@@ -608,14 +608,14 @@ public class InvoiceForLease
     }
 
     @Mixin(method = "act")
-    public static class _overrideInvoiceDescription extends _override {
+    public static class _overrideInvoiceDescription extends _overrideAttributeAbstract {
         public _overrideInvoiceDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
         }
     }
 
     @Mixin(method = "act")
-    public static class _resetInvoiceDescription extends _unoverride {
+    public static class _resetInvoiceDescription extends _resetAttributeAbstract {
 
         public _resetInvoiceDescription(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
@@ -627,7 +627,7 @@ public class InvoiceForLease
     }
 
     @Mixin(method = "act")
-    public static class _changePreliminaryLetterComment extends _override {
+    public static class _changePreliminaryLetterComment extends _overrideAttributeAbstract {
         public _changePreliminaryLetterComment(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
         }

@@ -53,14 +53,12 @@ public class Invoice_Test {
         }
 
         @Test
-        @Ignore
         public void can_change() throws Exception {
 
             //Given
             invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Some PL desc", false);
 
             // then
-            assertThat(this.mixin.hideAct()).isFalse();
             assertThat(this.mixin.disableAct()).isNull();
             assertThat(this.mixin.default0Act()).isEqualTo("Some PL desc");
 
@@ -69,21 +67,9 @@ public class Invoice_Test {
 
             // then
             assertThat(invoice.getPreliminaryLetterDescription()).isEqualTo("Overridden PL desc");
-            assertThat(mixin.hideAct()).isFalse();
         }
 
         @Test
-        @Ignore
-        public void hidden_if_overridden() throws Exception {
-            // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Overridden desc", true);
-
-            // then
-            assertThat(mixin.hideAct()).isTrue();
-        }
-
-        @Test
-        @Ignore
         public void disabled_if_immutable() throws Exception {
             // given
             invoice.setStatus(InvoiceStatus.INVOICED);
@@ -109,8 +95,7 @@ public class Invoice_Test {
         }
 
         @Test
-        @Ignore
-        public void can_unoverride() throws Exception {
+        public void can_reset() throws Exception {
 
             // then
             assertThat(mixin.hideAct()).isFalse();
@@ -169,7 +154,6 @@ public class Invoice_Test {
         public void can_change() throws Exception {
 
             // then
-            assertThat(mixin.hideAct()).isFalse();
             assertThat(mixin.disableAct()).isNull();
             assertThat(mixin.default0Act()).isEqualTo("Some PL desc");
 
@@ -178,17 +162,6 @@ public class Invoice_Test {
 
             // then
             assertThat(invoice.getDescription()).isEqualTo("Overridden PL desc");
-            assertThat(mixin.hideAct()).isTrue();
-        }
-
-        @Test
-        @Ignore
-        public void hidden_if_overridden() throws Exception {
-            // given
-            invoice = getInvoiceForLease(InvoiceStatus.APPROVED, "Overridden PL desc", true);
-
-            // then
-            assertThat(mixin.hideAct()).isTrue();
         }
 
         @Test

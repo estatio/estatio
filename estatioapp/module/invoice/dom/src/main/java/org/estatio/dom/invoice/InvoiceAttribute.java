@@ -61,12 +61,22 @@ public class InvoiceAttribute extends UdoDomainObject2<InvoiceAttribute> {
     @Getter @Setter
     private InvoiceAttributeName name;
 
-    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
+    @Column(allowsNull = "true", length = ValueType.Meta.MAX_LEN)
     @Getter @Setter
     private String value;
 
     @Getter @Setter
     private boolean overridden;
+
+
+
+    public static class ValueType {
+        private ValueType() {}
+        public static class Meta {
+            public static final int MAX_LEN = NotesType.Meta.MAX_LEN;
+            private Meta() {}
+        }
+    }
 
 
 }

@@ -463,20 +463,18 @@ public abstract class Invoice<T extends Invoice<T>>
 
         public static class Meta {
 
-            public static final int MAX_LEN = org.incode.module.base.dom.types.DescriptionType.Meta.MAX_LEN;
-            public static final int MULTI_LINE = 3;
+            public static final int MAX_LEN = InvoiceAttribute.ValueType.Meta.MAX_LEN;
+            public static final int MULTI_LINE = 6;
 
             private Meta() {}
-
         }
-
     }
 
-    public static abstract class _override {
+    public static abstract class _overrideAttributeAbstract {
         private final Invoice invoice;
         private final InvoiceAttributeName invoiceAttributeName;
 
-        public _override(final Invoice invoice, final InvoiceAttributeName invoiceAttributeName) {
+        public _overrideAttributeAbstract(final Invoice invoice, final InvoiceAttributeName invoiceAttributeName) {
             this.invoice = invoice;
             this.invoiceAttributeName = invoiceAttributeName;
         }
@@ -489,10 +487,6 @@ public abstract class Invoice<T extends Invoice<T>>
                 final String overrideWith) {
             invoice.updateAttribute(this.invoiceAttributeName, overrideWith, true);
             return invoice;
-        }
-
-        public boolean hideAct() {
-            return invoice.attributeOverriddenFor(invoiceAttributeName);
         }
 
         public String disableAct() {
@@ -508,11 +502,11 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
-    public static abstract class _unoverride<T extends Invoice<?>> {
+    public static abstract class _resetAttributeAbstract<T extends Invoice<?>> {
         private final T invoice;
         private final InvoiceAttributeName invoiceAttributeName;
 
-        public _unoverride(final T invoice, final InvoiceAttributeName invoiceAttributeName) {
+        public _resetAttributeAbstract(final T invoice, final InvoiceAttributeName invoiceAttributeName) {
             this.invoice = invoice;
             this.invoiceAttributeName = invoiceAttributeName;
         }
