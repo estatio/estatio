@@ -35,7 +35,7 @@ public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {
     public String disableSendInvoiceDoc(final Invoice invoice, final Document document) {
 
         // only enforces a rule for Invoice documents
-        if ( ! DocumentTypeData.INVOICE.docTypeFor(document)) {
+        if ( ! DocumentTypeData.INVOICE.isDocTypeFor(document)) {
             return null;
         }
 

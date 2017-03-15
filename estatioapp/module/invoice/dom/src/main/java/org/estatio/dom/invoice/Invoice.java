@@ -180,7 +180,7 @@ public abstract class Invoice<T extends Invoice<T>>
         if (getCollectionNumber() != null) {
             return String.format("Collection %s", getCollectionNumber());
         }
-        return String.format("Temp *%08d", Integer.parseInt(getId()));
+        return String.format("Temp *%08d (%s)", Integer.parseInt(getId()), getBuyer().getName());
     }
 
     // //////////////////////////////////////
@@ -482,7 +482,7 @@ public abstract class Invoice<T extends Invoice<T>>
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice act(
-                @Parameter(maxLength = NotesType.Meta.MAX_LEN)
+                @Parameter(maxLength = NotesType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL)
                 @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
                 final String overrideWith) {
             invoice.updateAttribute(this.invoiceAttributeName, overrideWith, true);

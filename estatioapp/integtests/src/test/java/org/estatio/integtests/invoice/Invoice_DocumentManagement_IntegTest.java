@@ -65,7 +65,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_attachReceipt;
+import org.estatio.dom.lease.invoicing.dnc.Invoice_attachSupportingDocument;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_prepare;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByEmail;
 import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByPost;
@@ -178,7 +178,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
 
-    public static class Invoice_attachReceipt_IntegTest extends Invoice_DocumentManagement_IntegTest {
+    public static class Invoice_attachSupportingDocument_IntegTest extends Invoice_DocumentManagement_IntegTest {
 
         @Test
         public void attaches_to_invoice() throws Exception {
@@ -191,20 +191,27 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoice);
             assertThat(paperclips).isEmpty();
 
-            final Invoice_attachReceipt invoice_attachReceipt = mixin(Invoice_attachReceipt.class, invoice);
+            final Invoice_attachSupportingDocument invoice_attachSupportingDocument = mixin(Invoice_attachSupportingDocument.class, invoice);
 
             // when
-            final List<DocumentType> documentTypes = invoice_attachReceipt.choices0$$();
+            final List<DocumentType> documentTypes = invoice_attachSupportingDocument.choices0$$();
 
             // then
-            assertThat(documentTypes).hasSize(4);
+            assertThat(documentTypes).hasSize(2);
+
+            // when
+            final List<String> roleNames = invoice_attachSupportingDocument.choices3$$();
+
+            // then
+            assertThat(roleNames).hasSize(1);
 
             // and when
             final DocumentType documentType = documentTypes.get(0);
+            final String roleName = roleNames.get(0);
             final String fileName = "receipt-1.pdf";
             final Blob blob = asBlob(fileName);
 
-            wrap(invoice_attachReceipt).$$(documentType, blob, null);
+            wrap(invoice_attachSupportingDocument).$$(documentType, blob, null, roleName);
 
             // then
             paperclips = paperclipRepository.findByAttachedTo(invoice);
@@ -228,7 +235,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final Object attachedTo = paperclip.getAttachedTo();
             assertThat(attachedTo).isSameAs(invoice);
 
-            assertThat(paperclip.getRoleName()).isEqualTo(PaperclipRoleNames.INVOICE_RECEIPT);
+            assertThat(paperclip.getRoleName()).isEqualTo(PaperclipRoleNames.SUPPORTING_DOCUMENT);
             assertThat(paperclip.getDocumentCreatedAt()).isEqualTo(document.getCreatedAt());
             assertThat(paperclip.getDocumentDate()).isEqualTo(document.getCreatedAt());
         }
@@ -434,7 +441,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(paperclips).hasSize(4);
             assertThat(paperclips)
                     .extracting(Paperclip::getDocument)
-                    .filteredOn(x -> DocumentTypeData.SUPPLIER_RECEIPT.docTypeFor(document))
+                    .filteredOn(x -> DocumentTypeData.SUPPLIER_RECEIPT.isDocTypeFor(document))
                     .hasSize(2);
 
         }
@@ -887,15 +894,18 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
     void receiptAttachedToInvoice(final Invoice invoice, final String fileName) throws IOException {
 
-        final Invoice_attachReceipt invoice_attachReceipt = mixin(Invoice_attachReceipt.class, invoice);
+        final Invoice_attachSupportingDocument invoice_attachSupportingDocument = mixin(Invoice_attachSupportingDocument.class, invoice);
 
-        final List<DocumentType> documentTypes = invoice_attachReceipt.choices0$$();
+        final List<DocumentType> documentTypes = invoice_attachSupportingDocument.choices0$$();
         assertThat(documentTypes).hasSize(2);
         final DocumentType documentType = documentTypes.get(0);
+        final List<String> roleNames = invoice_attachSupportingDocument.choices3$$();
+        assertThat(roleNames).hasSize(1);
+        final String roleName = roleNames.get(0);
 
         final Blob blob = asBlob(fileName);
 
-        wrap(invoice_attachReceipt).$$(documentType, blob, null);
+        wrap(invoice_attachSupportingDocument).$$(documentType, blob, null, roleName);
     }
 
     void assertNoDocumentOrCommunicationsFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {

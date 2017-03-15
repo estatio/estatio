@@ -46,9 +46,9 @@ public final class PaperclipRoleNames {
 
 
     /**
-     * for supplier or tax receipt {@link Document}s attached to {@link Invoice}s.
+     * for supporting {@link Document}s attached to {@link Invoice}s.
      */
-    public static final String INVOICE_RECEIPT = "receipt";
+    public static final String SUPPORTING_DOCUMENT = "supporting";
 
     public static final String INVOICE_BUYER = "buyer";
     public static final String INVOICE_SELLER = "seller";
@@ -57,7 +57,7 @@ public final class PaperclipRoleNames {
     /**
      * for invoice note attached to a supplier or tax receipt document (copied over from {@link Invoice}).
      */
-    public static final String INVOICE_DOCUMENT_SUPPORTED_BY = "supportS";
+    public static final String INVOICE_DOCUMENT_SUPPORTED_BY = "supports";
 
 
 }

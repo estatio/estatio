@@ -51,10 +51,10 @@ public enum DocumentTypeData {
                         "Merged Invoices.pdf", COVER_NOTE_INVOICE),
 
     // supporting docs
-    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)"),
-    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)"),
-    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)"),
-    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)"),
+    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE),
+    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE),
+    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER),
+    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER),
 
     // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
     INVOICES("INVOICES", "Invoices overview"),
@@ -62,20 +62,25 @@ public enum DocumentTypeData {
     INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller");
 
     private final String ref;
-    public String getRef() { return ref; }
     private final String name;
     private final String mergedFileName;
     private final DocumentTypeData coverNote;
+    private final DocumentTypeData supports;
 
     DocumentTypeData(final String ref, final String name) {
-        this(ref, name, null, null);
+        this(ref, name, null, null, null);
     }
 
     DocumentTypeData(final String ref, final String name, final String mergedFileName, final DocumentTypeData coverNote) {
+        this(ref, name, mergedFileName, coverNote, null);
+    }
+
+    DocumentTypeData(final String ref, final String name, final String mergedFileName, final DocumentTypeData coverNote, final DocumentTypeData supports) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
         this.coverNote = coverNote;
+        this.supports = supports;
     }
 
     /**
@@ -109,10 +114,13 @@ public enum DocumentTypeData {
 
     }
 
-    public boolean docTypeFor(final Document document) {
-        return ref.equals(document.getType().getReference());
+    public boolean isDocTypeFor(final Document document) {
+        return isDocTypeFor(document.getType());
     }
 
+    private boolean isDocTypeFor(final DocumentType documentType) {
+        return ref.equals(documentType.getReference());
+    }
 
     /**
      * For testing, primarily.
@@ -159,6 +167,7 @@ public enum DocumentTypeData {
         );
     }
 
+
     /**
      * Obtain the {@link DocumentType} to use as the cover note for the supplied {@link Document} (else null).
      */
@@ -172,14 +181,70 @@ public enum DocumentTypeData {
                 : null;
     }
 
+    public static DocumentTypeData docTypeDataFor(final Document document) {
+        if(document == null) {
+            return null;
+        }
+        for (DocumentTypeData candidate : values()) {
+            if (candidate.isDocTypeFor(document)) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    public static DocumentTypeData supportedBy(final DocumentType documentType) {
+        DocumentTypeData value = reverseLookup(documentType);
+        return value.getSupports();
+    }
+
+    /**
+     * Returns the {@link DocumentTypeData} whose {@link DocumentTypeData#getRef()} corresponds to
+     * {@link DocumentType#getReference() that} of the supplied {@link DocumentType}.
+     */
+    private static DocumentTypeData reverseLookup(final DocumentType documentType) {
+        DocumentTypeData[] values = values();
+        for (DocumentTypeData value : values) {
+            if(value.isDocTypeFor(documentType)) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException(
+                String.format("Could not locate any DocumentTypeData corresponding to '%s'", documentType));
+    }
+
     static DocumentTypeData coverNoteFor(final Document document) {
         DocumentTypeData[] values = values();
         for (DocumentTypeData value : values) {
-            if(value.docTypeFor(document)) {
+            if(value.isDocTypeFor(document)) {
                 return value.getCoverNote();
             }
         }
         return null;
     }
 
+    /**
+     * The {@link DocumentTypeData} that {@link DocumentTypeData#getSupports() support} the provided {@link DocumentTypeData}.
+     */
+    public static List<DocumentTypeData> supports(final DocumentTypeData documentTypeData) {
+        DocumentTypeData[] values = values();
+        return FluentIterable
+                        .of(values)
+                        .filter(x -> x.getSupports() == documentTypeData || documentTypeData == null)
+                        .toList();
+    }
+
+    /**
+     * Performs a bulk {@link #findUsing(DocumentTypeRepository) lookup}.
+     */
+    public static List<DocumentType> findUsing(
+            final List<DocumentTypeData> dataList,
+            final DocumentTypeRepository documentTypeRepository, final QueryResultsCache queryResultsCache) {
+        return Lists.newArrayList(
+                FluentIterable
+                        .from(dataList)
+                        .transform(x -> x.findUsing(documentTypeRepository, queryResultsCache))
+                        .toList()
+        );
+    }
 }

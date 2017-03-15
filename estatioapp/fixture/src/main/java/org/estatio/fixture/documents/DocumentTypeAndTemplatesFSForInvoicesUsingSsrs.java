@@ -41,8 +41,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.document.documents.binders.AttachToNone;
-import org.estatio.dom.document.documents.binders.ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts;
-import org.estatio.dom.document.documents.binders.ForPrelimLetterOfInvoiceAttachToSame;
+import org.estatio.dom.document.documents.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
@@ -145,7 +144,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
-                ForPrelimLetterOfInvoiceAttachToSame.class,
+                ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
                 executionContext
         );
 
@@ -163,7 +162,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
-                ForPrelimLetterOfInvoiceAttachToSame.class,
+                ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
                 executionContext
         );
 
@@ -215,7 +214,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 "Invoice for ${this.buyer.reference} ${this.dueDate}", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
-                ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,
+                ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
                 executionContext
         );
 
@@ -232,7 +231,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 "Invoice for ${this.buyer.reference} ${this.dueDate} (Italy)", siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
-                ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts.class,
+                ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
                 executionContext
         );
 

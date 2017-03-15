@@ -8,7 +8,7 @@
             <ns2:action id="links"/>
             <ns2:action id="invoice"/>
             <ns2:action id="collect"/>
-            <ns2:action id="attachReceipt"/>
+            <ns2:action id="attachSupportingDocument"/>
             <ns2:action id="sync"/>
             <ns2:action id="remove"/>
         </col>
@@ -124,7 +124,7 @@
                     <row>
                         <col span="12">
                             <ns2:collection id="documents">
-                                <ns2:action id="attachReceipt"/>
+                                <ns2:action id="attachSupportingDocument"/>
                                 <ns2:action id="preview"/>
                                 <ns2:action id="prepare"/>
                                 <ns2:action id="sendByEmail"/>

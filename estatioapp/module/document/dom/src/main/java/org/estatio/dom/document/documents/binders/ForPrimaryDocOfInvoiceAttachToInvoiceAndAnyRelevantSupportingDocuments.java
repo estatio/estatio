@@ -32,13 +32,14 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
 
-public class ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts extends
+public class ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments extends
         AttachmentAdvisorAbstract<Invoice> {
 
-    public ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts() {
+    public ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments() {
         super(Invoice.class);
     }
 
@@ -52,21 +53,36 @@ public class ForInvoiceDocOfInvoiceAttachToInvoiceAndAnyReceipts extends
 
         paperclipSpecs.add(new PaperclipSpec(null, invoice, createdDocument));
 
-        // also, copy over any receipts attached to the invoice (but with those receipts attached to the
-        // new invoice note, rather than the other way around)
+        // not every supporting doc type supports each type of primary document
+        // for example, TAX_REGISTER supports invoices (but not PLs), whereas CALCULATION is other way around.
+        // we therefore need to filter the supporting documents that we find attached to the invoice.
+        //
+        // to start with, we get hold of the set of doc type (data)s that _do_ support the primary doc just created
+        DocumentTypeData primaryDocTypeData = DocumentTypeData.docTypeDataFor(createdDocument);
+        List<DocumentTypeData> supportingDocTypeDatasForThisPrimaryDoc = DocumentTypeData.supports(primaryDocTypeData);
+
+        // copy over all relevant supporting attached to this primary document (invoice or prelim letter)
         final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoice);
         for (Paperclip paperclip : paperclips) {
-            if(PaperclipRoleNames.INVOICE_RECEIPT.equals(paperclip.getRoleName())) {
-                final DocumentAbstract paperclipDocAbs = paperclip.getDocument();
-                if(paperclipDocAbs instanceof Document) {
-                    Document paperclipDocument = (Document) paperclipDocAbs;
-                    paperclipSpecs.add(
-                            new PaperclipSpec(
-                                    PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY,
-                                    createdDocument,
-                                    paperclipDocument
-));
+            if(PaperclipRoleNames.SUPPORTING_DOCUMENT.equals(paperclip.getRoleName())) {
+                final DocumentAbstract supportingDocAbs = paperclip.getDocument();
+                if(supportingDocAbs instanceof Document) {
 
+                    final Document supportingDoc = (Document) supportingDocAbs;
+                    final DocumentTypeData supportingDocTypeData = DocumentTypeData.docTypeDataFor(supportingDoc);
+
+                    // (and here is where filter out to only attach those that are relevant)
+                    if(supportingDocTypeDatasForThisPrimaryDoc.contains(supportingDocTypeData)) {
+
+                        // note that the supporting documents point to the primary doc, rather than the other way around
+                        paperclipSpecs.add(
+                                new PaperclipSpec(
+                                        PaperclipRoleNames.INVOICE_DOCUMENT_SUPPORTED_BY,
+                                        createdDocument,
+                                        supportingDoc
+                                )
+                        );
+                    }
                 }
             }
         }
