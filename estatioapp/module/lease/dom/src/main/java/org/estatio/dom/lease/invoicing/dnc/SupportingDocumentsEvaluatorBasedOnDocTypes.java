@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
+import java.util.List;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
@@ -33,7 +35,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 public class SupportingDocumentsEvaluatorBasedOnDocTypes implements SupportingDocumentsEvaluator {
 
     @Override
-    public Document supportedBy(final Document candidateSupportingDocument) {
+    public List<Document> supportedBy(final Document candidateSupportingDocument) {
         return null;
     }
 
