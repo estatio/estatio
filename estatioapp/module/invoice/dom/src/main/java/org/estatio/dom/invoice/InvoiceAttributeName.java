@@ -7,7 +7,9 @@ import lombok.Getter;
 public enum InvoiceAttributeName {
     PRELIMINARY_LETTER_DESCRIPTION("preliminaryLetterDescription"),
     PRELIMINARY_LETTER_COMMENT("preliminaryLetterComment"),
-    INVOICE_DESCRIPTION("description");
+    INVOICE_DESCRIPTION("description"),
+    INVOICE_COMMENT("invoiceComment"),
+    ;
 
     @Getter
     private String fragmentName;

@@ -554,11 +554,6 @@ public class InvoiceForLease
     }
 
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
-    public String getDescription() {
-        return attributeValueFor(InvoiceAttributeName.INVOICE_DESCRIPTION);
-    }
-
-    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     public String getPreliminaryLetterDescription() {
         return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_DESCRIPTION);
     }
@@ -566,6 +561,16 @@ public class InvoiceForLease
     @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
     public String getPreliminaryLetterComment() {
         return attributeValueFor(InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
+    }
+
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    public String getDescription() {
+        return attributeValueFor(InvoiceAttributeName.INVOICE_DESCRIPTION);
+    }
+
+    @PropertyLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
+    public String getComment() {
+        return attributeValueFor(InvoiceAttributeName.INVOICE_COMMENT);
     }
 
     /**
@@ -621,7 +626,8 @@ public class InvoiceForLease
             super(invoice, InvoiceAttributeName.INVOICE_DESCRIPTION);
         }
 
-        @Override protected Object viewModelFor(final Invoice invoice) {
+        @Override
+        protected Object viewModelFor(final Invoice invoice) {
             return new InvoiceAttributesVM((InvoiceForLease) invoice);
         }
     }
@@ -630,6 +636,13 @@ public class InvoiceForLease
     public static class _changePreliminaryLetterComment extends _overrideAttributeAbstract {
         public _changePreliminaryLetterComment(final InvoiceForLease invoice) {
             super(invoice, InvoiceAttributeName.PRELIMINARY_LETTER_COMMENT);
+        }
+    }
+
+    @Mixin(method = "act")
+    public static class _changeInvoiceComment extends _overrideAttributeAbstract {
+        public _changeInvoiceComment(final InvoiceForLease invoice) {
+            super(invoice, InvoiceAttributeName.INVOICE_COMMENT);
         }
     }
 

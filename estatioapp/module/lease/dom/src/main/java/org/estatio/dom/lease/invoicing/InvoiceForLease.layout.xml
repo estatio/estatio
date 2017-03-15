@@ -19,7 +19,7 @@
                 <tab name="Invoice">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                            <ns2:fieldSet name="General" id="general">
                                 <ns2:property id="seller"/>
                                 <ns2:property id="buyer"/>
                                 <ns2:property id="collectionNumber"/>
@@ -39,7 +39,15 @@
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
                                 <ns2:property id="applicationTenancy"/>
                                 <ns2:property id="applicationTenancyPath"/>
+                                <ns2:property id="atPath"/>
                             </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
                         </col>
                     </row>
                 </tab>
@@ -106,6 +114,11 @@
                                     </ns2:action>
                                     <ns2:action id="resetInvoiceDescription">
                                         <ns2:named>Reset</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
+                                <ns2:property id="comment" hidden="ALL_TABLES">
+                                    <ns2:action id="changeInvoiceComment">
+                                        <ns2:named>Change</ns2:named>
                                     </ns2:action>
                                 </ns2:property>
                             </ns2:fieldSet>

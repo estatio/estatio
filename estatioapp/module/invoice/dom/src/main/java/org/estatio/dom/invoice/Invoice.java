@@ -464,7 +464,7 @@ public abstract class Invoice<T extends Invoice<T>>
         public static class Meta {
 
             public static final int MAX_LEN = InvoiceAttribute.ValueType.Meta.MAX_LEN;
-            public static final int MULTI_LINE = 6;
+            public static final int MULTI_LINE = 10;
 
             private Meta() {}
         }
