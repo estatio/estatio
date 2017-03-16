@@ -37,6 +37,8 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.communications.dom.mixins.DocumentPredicates;
+import org.incode.module.communications.dom.mixins.Document_communicationAttachments;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentState;
@@ -56,24 +58,28 @@ public abstract class DocAndCommAbstract_download<T extends DocAndCommAbstract<T
 
     @Action(
             semantics = SemanticsOf.SAFE,
-            invokeOn = InvokeOn.COLLECTION_ONLY
+            invokeOn = InvokeOn.OBJECT_AND_COLLECTION
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Object $$() throws IOException {
+    public Blob act() throws IOException {
 
         final List<byte[]> pdfBytes = createOrLookupPdfBytes();
 
-        final Document document = getDocument();
-        if (    document != null &&
-                document.getState() == DocumentState.RENDERED &&
-                InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract.isPdfAndBlob().apply(document)) {
 
-            final DocumentSort documentSort = document.getSort();
-            final byte[] bytes = documentSort.asBytes(document);
-            pdfBytes.add(bytes);
+        final Document document = getDocument();
+
+        // in a bulk situation it's possible that some DnC's have a document, others do not.
+        // we just ignore those that do not
+        if (document != null) {
+            appendBytes(document, pdfBytes);
+
+            final List<Document> supportingDocs = attachmentsProvider.attachmentsFor(document);
+            for (Document supportingDoc : supportingDocs) {
+                appendBytes(supportingDoc, pdfBytes);
+            }
         }
 
-        if(interactionContext.isLast()) {
+        if(interactionContext.getInvokedAs().isRegular() || interactionContext.isLast()) {
             if(pdfBytes.isEmpty()) {
                 messageService.warnUser("No documents to be merged");
                 return null;
@@ -86,7 +92,25 @@ public abstract class DocAndCommAbstract_download<T extends DocAndCommAbstract<T
         return null;
     }
 
-    List<byte[]> createOrLookupPdfBytes() {
+    public String disableAct() {
+        // guard for when invoked on single DnC; ignored if invoke in bulk
+        return getDocument() == null || getDocument().getState() != DocumentState.RENDERED
+                ? "No document has been prepared & rendered"
+                : null;
+    }
+
+    private static void appendBytes(final Document document, final List<byte[]> pdfBytes) {
+        if (document.getState() != DocumentState.RENDERED ||
+            !DocumentPredicates.isPdfAndBlob().apply(document)) {
+            return;
+        }
+
+        final DocumentSort documentSort = document.getSort();
+        final byte[] bytes = documentSort.asBytes(document);
+        pdfBytes.add(bytes);
+    }
+
+    private List<byte[]> createOrLookupPdfBytes() {
         final List<byte[]> pdfBytes ;
         if(interactionContext.isFirst()) {
             pdfBytes = Lists.newArrayList();
@@ -96,6 +120,10 @@ public abstract class DocAndCommAbstract_download<T extends DocAndCommAbstract<T
         }
         return pdfBytes;
     }
+
+
+    @Inject
+    Document_communicationAttachments.Provider attachmentsProvider;
 
     @Inject
     PdfBoxService pdfBoxService;

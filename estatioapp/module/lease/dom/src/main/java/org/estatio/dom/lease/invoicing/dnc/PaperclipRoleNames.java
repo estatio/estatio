@@ -21,6 +21,8 @@ package org.estatio.dom.lease.invoicing.dnc;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
+import org.incode.module.communications.dom.mixins.Document_sendByEmail;
+import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.Invoice;
@@ -30,19 +32,24 @@ public final class PaperclipRoleNames {
     private PaperclipRoleNames(){}
 
     /**
-     * for {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s
+     * for {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} / enclosed with {@link CommunicationChannelType#POSTAL_ADDRESS postal} {@link Communication}s
      */
     public static final String ATTACHMENT = DocumentConstants.PAPERCLIP_ROLE_ATTACHMENT;
+
+    /**
+     * for "primary" {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s.
+     *
+     * <p>
+     *     These are the {@link Document}s that are sent either by {@link Document_sendByEmail email} or {@link Document_sendByPost post}.
+     * </p>
+     */
+    public static final String PRIMARY = DocumentConstants.PAPERCLIP_ROLE_PRIMARY;
 
     /**
      * for {@link Document}s attached to {@link CommunicationChannelType#EMAIL_ADDRESS email} {@link Communication}s
      */
     public static final String COVER = DocumentConstants.PAPERCLIP_ROLE_COVER;
 
-    /**
-     * for {@link Document}s attached to {@link CommunicationChannelType#POSTAL_ADDRESS postal} {@link Communication}s
-     */
-    public static final String ENCLOSED = DocumentConstants.PAPERCLIP_ROLE_ENCLOSED;
 
 
     /**

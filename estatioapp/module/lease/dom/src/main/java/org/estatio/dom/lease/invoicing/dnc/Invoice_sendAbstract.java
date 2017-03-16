@@ -52,7 +52,7 @@ public abstract class Invoice_sendAbstract {
         this.invoice = invoice;
     }
 
-    Communication createCommunication(
+    Communication createEmailCommunication(
             final Document document,
             final EmailAddress toChannel,
             final String cc,
@@ -63,42 +63,40 @@ public abstract class Invoice_sendAbstract {
             )
             throws IOException {
 
-        // just delegate to Document_email to do the work.
-        final Communication communication = document_email(document).$$(toChannel, cc, cc2, cc3, bcc, bcc2);
-
-        // now that a comm has been sent, also attach this document to the buyer and seller
-        // that way, if the (temporary) invoice is subsequently deleted
-        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_BUYER, invoice.getBuyer());
-        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_SELLER, invoice.getSeller());
+        // just delegate to Document_sendByEmail to do the work, then attach to buyer and seller
+        final Communication communication = document_sendByEmail(document).act(toChannel, cc, cc2, cc3, bcc, bcc2);
+        attachToBuyerAndSeller(document);
 
         return communication;
     }
 
     @Programmatic
-    public Communication createCommunicationAsSent(
+    public Communication createPostalCommunicationAsSent(
             final Document document,
             @ParameterLayout(named = "to:")
             final PostalAddress toChannel) throws IOException {
 
-        // just delegate to Document_print to do the work.
-        final Communication communication = document_print(document).$$(toChannel);
+        // just delegate to document_sendByPost to do the work, then attach to buyer and seller
+        final Communication communication = document_sendByPost(document).act(toChannel);
+        attachToBuyerAndSeller(document);
 
-        // now that a comm has been sent, also attach this document to the buyer and seller
-        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_BUYER, invoice.getBuyer());
-        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_SELLER, invoice.getSeller());
-
+        // and mark as sent
         communication.sent();
 
         return communication;
     }
 
-
-    Document_sendByEmail document_email(final Document document) {
+    Document_sendByEmail document_sendByEmail(final Document document) {
         return factoryService.mixin(Document_sendByEmail.class, document);
     }
 
-    Document_sendByPost document_print(final Document document) {
+    Document_sendByPost document_sendByPost(final Document document) {
         return factoryService.mixin(Document_sendByPost.class, document);
+    }
+
+    private void attachToBuyerAndSeller(final Document document) {
+        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_BUYER, invoice.getBuyer());
+        paperclipRepository.attach(document, PaperclipRoleNames.INVOICE_SELLER, invoice.getSeller());
     }
 
 
@@ -109,13 +107,13 @@ public abstract class Invoice_sendAbstract {
     }
 
     @Programmatic
-    public void appendPdfBytes(final Document prelimLetterOrInvoiceNote, final List<byte[]> pdfBytes) {
+    public void appendPdfBytes(final Document prelimLetterOrInvoiceDoc, final List<byte[]> pdfBytes) {
 
         // this one should be a PDF
-        appendBytesIfPdf(prelimLetterOrInvoiceNote, pdfBytes);
+        appendBytesIfPdf(prelimLetterOrInvoiceDoc, pdfBytes);
 
         // and any attachments that are PDFs are also merged in
-        final List<Paperclip> paperclips = paperclipRepository.findByDocument(prelimLetterOrInvoiceNote);
+        final List<Paperclip> paperclips = paperclipRepository.findByDocument(prelimLetterOrInvoiceDoc);
         for (Paperclip paperclip : paperclips) {
             final Object objAttachedToDocument = paperclip.getAttachedTo();
             if(objAttachedToDocument instanceof Document) {

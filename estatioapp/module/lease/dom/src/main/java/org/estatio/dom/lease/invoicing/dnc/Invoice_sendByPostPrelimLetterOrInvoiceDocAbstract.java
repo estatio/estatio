@@ -61,7 +61,7 @@ public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends
 
         final Document document = findDocument();
 
-        createCommunicationAsSent(document, toChannel);
+        createPostalCommunicationAsSent(document, toChannel);
 
         final byte[] mergedBytes = mergePdfBytes(document);
 
@@ -74,17 +74,17 @@ public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends
         if (document == null) {
             return "No document available to send";
         }
-        return document_print(document).disable$$();
+        return document_sendByPost(document).disableAct();
     }
 
     public Set<PostalAddress> choices0$$() {
         final Document document = findDocument();
-        return document == null ? Collections.emptySet() : document_print(document).choices0$$();
+        return document == null ? Collections.emptySet() : document_sendByPost(document).choices0Act();
     }
 
     public PostalAddress default0$$() {
         final Document document = findDocument();
-        return document == null ? null : document_print(document).default0$$();
+        return document == null ? null : document_sendByPost(document).default0Act();
     }
 
 

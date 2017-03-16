@@ -22,7 +22,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 
-@Mixin
+@Mixin(method = "act")
 public class DocAndCommForPrelimLetter_download extends DocAndCommAbstract_download<DocAndCommForPrelimLetter> {
 
     public DocAndCommForPrelimLetter_download(final DocAndCommForPrelimLetter docAndComm) {

@@ -66,7 +66,7 @@
                 <ns2:property id="phoneNumbers"/>
             </ns2:fieldSet>
         </col>
-        <col span="8" unreferencedCollections="true">
+        <col span="8">
             <tabGroup>
                 <tab name="Communication Channels">
                     <row>
@@ -106,6 +106,28 @@
             <ns2:collection id="agreements"/>
             <ns2:collection id="invoicesFrom"/>
             <ns2:collection id="invoicesTo"/>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true">
+                <tab name="Documents">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="documents"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Communications">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="recentCommunications" defaultView="table">
+                                <ns2:action id="findCommunications"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
     </row>
 </grid>

@@ -40,7 +40,6 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentSort;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
@@ -65,13 +64,14 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
         final List<byte[]> pdfBytes = Lists.newArrayList();
 
         for (final InvoiceAndDocument invoiceAndDocument : invoiceAndDocumentsToSend()) {
+
             final Invoice invoice = invoiceAndDocument.getInvoice();
             final Document prelimLetterOrInvoiceNote = invoiceAndDocument.getDocument();
 
-            final Invoice_sendByPost invoice_sendByPost = invoice_print(invoice);
+            final Invoice_sendByPost invoice_sendByPost = invoice_sendByPost(invoice);
             final PostalAddress postalAddress = invoice_sendByPost.default1$$(prelimLetterOrInvoiceNote);
 
-            invoice_sendByPost.createCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
+            invoice_sendByPost.createPostalCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
             invoice_sendByPost.appendPdfBytes(prelimLetterOrInvoiceNote, pdfBytes);
         }
 
@@ -92,37 +92,18 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
     @Override
     Predicate<InvoiceAndDocument> filter() {
-        return Predicates.and(isDocPdfAndBlob(), withPostalAddress());
+        return Predicates.and(InvoiceAndDocument.Predicates.isDocPdfAndBlob(), withPostalAddress());
     }
 
     private Predicate<InvoiceAndDocument> withPostalAddress() {
         return invoiceAndDocument -> {
-            final Invoice_sendByPost invoice_sendByPost = invoice_print(invoiceAndDocument.getInvoice());
+            final Invoice_sendByPost invoice_sendByPost = invoice_sendByPost(invoiceAndDocument.getInvoice());
             final PostalAddress postalAddress = invoice_sendByPost.default1$$(invoiceAndDocument.getDocument());
             return postalAddress != null;
         };
     }
 
-    static Predicate<InvoiceAndDocument> isDocPdfAndBlob() {
-        return invoiceAndDocument -> isPdfAndBlob().apply(invoiceAndDocument.getDocument());
-    }
-
-    static Predicate<Document> isPdfAndBlob() {
-        return Predicates.and(isPdf(), isBlobSort());
-    }
-
-    static Predicate<Document> isPdf() {
-        return document -> DocumentConstants.MIME_TYPE_APPLICATION_PDF.equals(document.getMimeType());
-    }
-
-    static Predicate<Document> isBlobSort() {
-        return document -> {
-            final DocumentSort documentSort = document.getSort();
-            return !(documentSort != DocumentSort.BLOB && documentSort != DocumentSort.EXTERNAL_BLOB);
-        };
-    }
-
-    private Invoice_sendByPost invoice_print(final Invoice invoice) {
+    private Invoice_sendByPost invoice_sendByPost(final Invoice invoice) {
         return factoryService.mixin(Invoice_sendByPost.class, invoice);
     }
 

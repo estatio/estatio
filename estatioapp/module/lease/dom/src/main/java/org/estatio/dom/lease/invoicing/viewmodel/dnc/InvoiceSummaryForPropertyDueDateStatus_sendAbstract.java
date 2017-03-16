@@ -29,6 +29,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.mixins.DocumentPredicates;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
@@ -45,6 +46,13 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendAbstract extend
     public static class InvoiceAndDocument {
         final Invoice invoice;
         final Document document;
+
+        public static class Predicates {
+            private Predicates(){}
+            public static Predicate<InvoiceAndDocument> isDocPdfAndBlob() {
+                return invoiceAndDocument -> DocumentPredicates.isPdfAndBlob().apply(invoiceAndDocument.getDocument());
+            }
+        }
     }
 
     private final CommunicationChannelType communicationChannelType;

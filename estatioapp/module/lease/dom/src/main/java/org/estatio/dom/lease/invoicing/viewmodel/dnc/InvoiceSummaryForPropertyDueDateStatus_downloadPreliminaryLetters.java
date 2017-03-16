@@ -20,15 +20,16 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 
-@Mixin
+@Mixin(method = "act")
 public class InvoiceSummaryForPropertyDueDateStatus_downloadPreliminaryLetters extends InvoiceSummaryForPropertyDueDateStatus_downloadAbstract<DocAndCommForPrelimLetter>  {
 
     public InvoiceSummaryForPropertyDueDateStatus_downloadPreliminaryLetters(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-        super(invoiceSummary, i -> new DocAndCommForPrelimLetter(i));
+        super(invoiceSummary, i -> new DocAndCommForPrelimLetter(i), DocumentTypeData.PRELIM_LETTER);
     }
 
 }

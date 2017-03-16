@@ -72,7 +72,7 @@ public class Invoice_sendByPost extends Invoice_sendAbstract {
             @ParameterLayout(named = "to:")
             final PostalAddress toChannel) throws IOException {
 
-        createCommunicationAsSent(document, toChannel);
+        createPostalCommunicationAsSent(document, toChannel);
 
         final byte[] mergedBytes = mergePdfBytes(document);
 
@@ -107,8 +107,8 @@ public class Invoice_sendByPost extends Invoice_sendAbstract {
             if (!DocumentTypeData.isPrimaryType(document)) {
                 continue;
             }
-            final Document_sendByPost document_sendByPost = document_print(document);
-            if(document_sendByPost.disable$$() != null) {
+            final Document_sendByPost document_sendByPost = document_sendByPost(document);
+            if(document_sendByPost.disableAct() != null) {
                 continue;
             }
             documents.add(document);
@@ -117,12 +117,12 @@ public class Invoice_sendByPost extends Invoice_sendAbstract {
     }
 
     public Set<PostalAddress> choices1$$(final Document document) {
-        return document == null ? Collections.emptySet() : document_print(document).choices0$$();
+        return document == null ? Collections.emptySet() : document_sendByPost(document).choices0Act();
     }
 
     // TODO: currently not properly supported by Isis, but does not harm
     public PostalAddress default1$$(final Document document) {
-        return document == null ? null : document_print(document).default0$$();
+        return document == null ? null : document_sendByPost(document).default0Act();
     }
 
 

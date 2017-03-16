@@ -95,7 +95,7 @@ public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extend
             ) throws IOException {
 
         final Document document = findDocument();
-        createCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
+        createEmailCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
 
         return invoice;
     }
@@ -105,27 +105,27 @@ public abstract class Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract extend
         if (document == null) {
             return "No document available to send";
         }
-        return document_email(document).disable$$();
+        return document_sendByEmail(document).disableAct();
     }
 
     public Set<EmailAddress> choices0$$() {
         final Document document = findDocument();
-        return document == null ? Collections.emptySet() : document_email(document).choices0$$();
+        return document == null ? Collections.emptySet() : document_sendByEmail(document).choices0Act();
     }
 
     public EmailAddress default0$$() {
         final Document document = findDocument();
-        return document == null ? null : document_email(document).default0$$();
+        return document == null ? null : document_sendByEmail(document).default0Act();
     }
 
     public String default1$$() {
         final Document document = findDocument();
-        return document == null ? null : document_email(document).default1$$();
+        return document == null ? null : document_sendByEmail(document).default1Act();
     }
 
     public String default4$$() {
         final Document document = findDocument();
-        return document == null ? null :document_email(document).default4$$();
+        return document == null ? null : document_sendByEmail(document).default4Act();
     }
 
 

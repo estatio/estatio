@@ -115,7 +115,7 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
             final String bcc2
             ) throws IOException {
 
-        final Communication communication = createCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
+        final Communication communication = createEmailCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
 
         return communication;
     }
@@ -150,8 +150,8 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
             if (!DocumentTypeData.isPrimaryType(document)) {
                 continue;
             }
-            final Document_sendByEmail document_email = document_email(document);
-            if(document_email.disable$$() != null) {
+            final Document_sendByEmail document_email = document_sendByEmail(document);
+            if(document_email.disableAct() != null) {
                 continue;
             }
             documents.add(document);
@@ -160,25 +160,25 @@ public class Invoice_sendByEmail extends Invoice_sendAbstract {
     }
 
     public Set<EmailAddress> choices1$$(final Document document) {
-        return document == null ? Collections.emptySet() : document_email(document).choices0$$();
+        return document == null ? Collections.emptySet() : document_sendByEmail(document).choices0Act();
     }
 
     // TODO: currently not properly supported by Isis, but does no harm
     @Programmatic
     public EmailAddress default1$$(final Document document) {
-        return document == null ? null : document_email(document).default0$$();
+        return document == null ? null : document_sendByEmail(document).default0Act();
     }
 
     // TODO: currently not properly supported by Isis, but does no harm
     @Programmatic
     public String default2$$(final Document document) {
-        return document == null ? null : document_email(document).default1$$();
+        return document == null ? null : document_sendByEmail(document).default1Act();
     }
 
     // TODO: currently not properly supported by Isis, but does no harm
     @Programmatic
     public String default5$$(final Document document) {
-        return document == null ? null :document_email(document).default4$$();
+        return document == null ? null : document_sendByEmail(document).default4Act();
     }
 
     @Inject
