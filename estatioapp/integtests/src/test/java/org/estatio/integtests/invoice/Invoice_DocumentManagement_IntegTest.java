@@ -197,7 +197,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             final List<DocumentType> documentTypes = invoice_attachSupportingDocument.choices0$$();
 
             // then
-            assertThat(documentTypes).hasSize(2);
+            assertThat(documentTypes).hasSize(4);
 
             // when
             final List<String> roleNames = invoice_attachSupportingDocument.choices3$$();
