@@ -112,6 +112,7 @@ Organisation "\nsupplier" <-- Invoice
 
 abstract class Order #lightgreen {
 }
+note right #lightgray: probably also\nlinks to DocumentSet
 
 class PurchaseOrder #lightgreen extends Order {
 }
@@ -122,6 +123,7 @@ class SupplierProposal #lightgreen extends Order {
 
 'Order --> "  supplier" Organisation
 Organisation "  supplier" <-- Order
+
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -150,14 +152,11 @@ Order <-- IncomingInvoiceItem
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
-class IncomingDocument #lightgreen {
+class DocumentSet #lightgreen {
 }
 
 class DocumentHandle #lightgreen {
 
-}
-
-class Document #lightgreen {
 }
 
 enum HandleType #cyan {
@@ -165,14 +164,20 @@ enum HandleType #cyan {
     OCR
 }
 
-DocumentHandle "1..*" <-- IncomingDocument
-Document <-- DocumentHandle
-HandleType <-- DocumentHandle
+class Document #lightgreen {
+}
+
+
+'DocumentHandle "1..*" <-- DocumentSet
+DocumentSet --> "1..*" DocumentHandle
+'Document <-- DocumentHandle
+DocumentHandle --> Document
+DocumentHandle --> HandleType
 
 IncomingInvoiceItem "0..*" --> Property
 'Property <-- IncomingInvoiceItem
 
-IncomingInvoice --> IncomingDocument
+IncomingInvoice --> DocumentSet
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -184,7 +189,6 @@ IncomingInvoice --> "0..*" PaymentLine
 'PaymentLine "0..*" <-- IncomingInvoice
 
 
-
 --
 
 Sketched/placeholders:
@@ -194,4 +198,5 @@ Sketched/placeholders:
 
 Not yet in scope:
 
+* Order needs to link to DocumentSet
 * approvals workflow (perhaps: tasks/actors/orgunits/employees)
