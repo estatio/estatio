@@ -1,0 +1,197 @@
+= CAPEX Sketch
+:Notice: (c) 2017 Eurocommercial Properties Ltd.  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+:toc: right
+:_basedir: ./
+
+== Sketch
+
+From initial meetings in Paris, 13~15 March 2017:
+
+
+
+[plantuml,invoices,png]
+--
+hide empty members
+
+''''''''''''''''''''''''''''''''''''''''''''''
+class Property #lightgreen {
+}
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class IncomingCharge #cyan {
+}
+
+show IncomingCharge members
+
+IncomingCharge "parent\n0..1" <---> "child\n0..*" IncomingCharge
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+enum Language #cyan {
+}
+
+class ChargeName #cyan {
+}
+
+Language <-- ChargeName
+
+'IncomingCharge --> "0..*" ChargeName
+ChargeName "0..*" <-- IncomingCharge
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class CodaElement5 #lightgray {
+    el5Code
+}
+note right #lightgray: additional\ndimensions \nto be identified
+
+
+IncomingCharge <--> "0..*" CodaElement5
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class Project #cyan {
+}
+
+class Budget #lightgreen {
+    financialYear: DateTime;
+}
+
+enum BudgetCalculationType #cyan {
+    BUDGETED
+    ACTUAL
+}
+
+class BudgetItem #lightgreen {
+    budgeted: BigDecimal;
+    rollUp: BigDecimal;
+}
+
+class BudgetItemValue #lightgreen {
+    value: BigDecimal
+    rolledUp(): BigDecimal
+    remaining(): BigDecimal
+}
+
+
+Project <--> "0..*" Budget
+
+Budget <--> "0..*" BudgetItem
+
+BudgetItem <--> "0..*" BudgetItemValue
+
+BudgetItemValue --> BudgetCalculationType
+'BudgetCalculationType <-- BudgetItemValue
+
+IncomingCharge <-- BudgetItem
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+class Party #lightgreen {
+}
+
+class Organisation #lightgreen extends Party {
+}
+
+class PartyRole #yellow {
+}
+
+enum PartyRoleType #cyan {
+}
+
+PartyRole "0..*" <-- Party
+PartyRole --> PartyRoleType
+
+Organisation "buyer  " <-- Invoice
+Organisation "\nsupplier" <-- Invoice
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+abstract class Order #lightgreen {
+}
+
+class PurchaseOrder #lightgreen extends Order {
+}
+
+class SupplierProposal #lightgreen extends Order {
+    approved: boolean
+}
+
+'Order --> "  supplier" Organisation
+Organisation "  supplier" <-- Order
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+
+abstract class Invoice #pink {
+}
+
+class IncomingInvoice #pink extends Invoice  {
+}
+
+abstract class InvoiceItem #pink {
+}
+
+class IncomingInvoiceItem #pink extends InvoiceItem {
+}
+
+
+Invoice *---> "1..*  " InvoiceItem
+
+IncomingInvoiceItem --> BudgetItemValue
+
+Order <-- IncomingInvoiceItem
+
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+class IncomingDocument #lightgreen {
+}
+
+class DocumentHandle #lightgreen {
+
+}
+
+class Document #lightgreen {
+}
+
+enum HandleType #cyan {
+    ORIGINAL
+    OCR
+}
+
+DocumentHandle "1..*" <-- IncomingDocument
+Document <-- DocumentHandle
+HandleType <-- DocumentHandle
+
+IncomingInvoiceItem "0..*" --> Property
+'Property <-- IncomingInvoiceItem
+
+IncomingInvoice --> IncomingDocument
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+class PaymentLine #lightgray {
+}
+note right #lightgray: just a\nsketch
+
+IncomingInvoice --> "0..*" PaymentLine
+'PaymentLine "0..*" <-- IncomingInvoice
+
+
+
+--
+
+Sketched/placeholders:
+
+* CODA Element5 mappings
+* Payment lines
+
+Not yet in scope:
+
+* approvals workflow (perhaps: tasks/actors/orgunits/employees)
