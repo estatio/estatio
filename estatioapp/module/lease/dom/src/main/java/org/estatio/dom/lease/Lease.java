@@ -879,7 +879,7 @@ public class Lease
             final Party tenant,
             final LocalDate tenancyStartDate
     ) {
-        Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null);
+        Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null, true);
         this.terminate(LocalDateInterval.endDateFromStartDate(tenancyStartDate));
         return newLease;
     }
@@ -906,7 +906,8 @@ public class Lease
             final LocalDate startDate,
             final LocalDate endDate,
             final LocalDate tenancyStartDate,
-            final LocalDate tenancyEndDate) {
+            final LocalDate tenancyEndDate,
+            boolean copyEpochDate) {
         Lease newLease = leaseRepository.newLease(
                 this.getApplicationTenancy(),
                 reference,
@@ -920,7 +921,7 @@ public class Lease
                 tenant);
 
         copyOccupancies(newLease, tenancyStartDate);
-        copyItemsAndTerms(newLease, tenancyStartDate);
+        copyItemsAndTerms(newLease, tenancyStartDate, copyEpochDate);
         breakOptionRepository.copyBreakOptions(this, newLease, tenancyStartDate);
         copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
         newLease.setComments(this.getComments());
@@ -928,7 +929,7 @@ public class Lease
         return newLease;
     }
 
-    private void copyItemsAndTerms(final Lease newLease, final LocalDate startDate) {
+    void copyItemsAndTerms(final Lease newLease, final LocalDate startDate, boolean copyEpochDate) {
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
@@ -937,6 +938,9 @@ public class Lease
                     item.getPaymentMethod(),
                     item.getStartDate()
             );
+            if (copyEpochDate && item.getEpochDate()!=null){
+                newItem.setEpochDate(item.getEpochDate());
+            }
             item.copyTerms(startDate, newItem);
         }
     }
@@ -982,7 +986,7 @@ public class Lease
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        Lease newLease = copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
+        Lease newLease = copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate, false);
         if (newLease != null){
             wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
         }

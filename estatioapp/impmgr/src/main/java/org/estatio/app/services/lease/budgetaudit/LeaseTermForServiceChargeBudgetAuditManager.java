@@ -17,7 +17,9 @@
  */
 package org.estatio.app.services.lease.budgetaudit;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -40,6 +42,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermRepository;
 
@@ -57,9 +60,10 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     public LeaseTermForServiceChargeBudgetAuditManager() {
     }
 
-    public LeaseTermForServiceChargeBudgetAuditManager(Property property, LocalDate startDate) {
+    public LeaseTermForServiceChargeBudgetAuditManager(Property property, final List<LeaseItemType> leaseItemTypes, LocalDate startDate) {
         this.property = property;
         this.startDate = startDate;
+        this.leaseItemTypes = typesToString(leaseItemTypes);
     }
 
     public String title() {
@@ -75,48 +79,17 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     @Getter @Setter
     private Property property;
 
-    //region > selectProperty (action)
-    public LeaseTermForServiceChargeBudgetAuditManager selectProperty(
-            final Property property,
-            @ParameterLayout(named = "Start date")
-            final LocalDate startDate) {
-        setProperty(property);
-        setStartDate(startDate);
-        return this;
-    }
-
-    public List<LocalDate> choices1SelectProperty(Property property) {
-        return leaseTermRepository.findServiceChargeDatesByProperty(property);
-    }
-    //endregion
-
-
     @Getter @Setter
     @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL)
     private LocalDate startDate;
 
-
-    //region > selectStartDate (action)
-    public LeaseTermForServiceChargeBudgetAuditManager selectStartDate(
-            @ParameterLayout(named = "Start date")
-            final LocalDate startDate) {
-        setStartDate(startDate);
-        return this;
-    }
-
-    public List<LocalDate> choices0SelectStartDate() {
-        return leaseTermRepository.findServiceChargeDatesByProperty(property);
-    }
-
-    public LocalDate default0SelectStartDate() {
-        return getStartDate();
-    }
-    //endregion
+    @Getter @Setter
+    public String leaseItemTypes;
 
     //region > serviceCharges (derived collection)
 
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
-        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndStartDate(getProperty(), getStartDate());
+        final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeAndStartDate(getProperty(), typesFromString(getLeaseItemTypes()), getStartDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
@@ -163,6 +136,21 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
         return this;
     }
     //endregion
+
+    String typesToString(final List<LeaseItemType> leaseItemTypes){
+        String result = new String();
+        for (int i = 0; i < leaseItemTypes.size(); i++){
+            result = result.concat(leaseItemTypes.get(i).name());
+            if (i != leaseItemTypes.size()-1){
+                result = result.concat(", ");
+            }
+        }
+        return result;
+    }
+
+    List<LeaseItemType> typesFromString(final String stringOfTypes){
+        return Arrays.stream(stringOfTypes.split(",\\s+")).map(LeaseItemType::valueOf).collect(Collectors.toList());
+    }
 
     //region > injected services
     @javax.inject.Inject

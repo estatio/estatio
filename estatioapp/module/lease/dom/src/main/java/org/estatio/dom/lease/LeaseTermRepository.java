@@ -21,6 +21,7 @@ package org.estatio.dom.lease;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -156,11 +157,16 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
-    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
+//    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
+    @Programmatic
+    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndItemTypeAndStartDate(
             final Property property,
+            final List<LeaseItemType> leaseItemTypes,
             final LocalDate startDate) {
-        final List leaseTerms = findByPropertyAndTypeAndStartDate(property, LeaseItemType.SERVICE_CHARGE, startDate);
+        List<LeaseTermForServiceCharge> leaseTerms = new ArrayList<>();
+        for (LeaseItemType type : leaseItemTypes) {
+            leaseTerms.addAll((List) findByPropertyAndTypeAndStartDate(property, type, startDate));
+        }
         return leaseTerms;
     }
 
@@ -178,9 +184,17 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
         return startDates;
     }
 
-    @Action(semantics = SemanticsOf.SAFE, hidden = Where.EVERYWHERE)
-    public List<LocalDate> findServiceChargeDatesByProperty(final Property property) {
-        return findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+    @Programmatic
+    public List<LocalDate> findServiceChargeDatesByPropertyAndLeaseItemType(final Property property, final List<LeaseItemType> leaseItemTypes) {
+        List<LocalDate> result = new ArrayList<>();
+        for (LeaseItemType type : leaseItemTypes){
+            for (LocalDate date : findStartDatesByPropertyAndType(property, type)){
+                if (!result.contains(date)){
+                    result.add(date);
+                }
+            }
+        }
+        return result.stream().sorted().collect(Collectors.toList());
     }
 
     @Action(semantics = SemanticsOf.SAFE)

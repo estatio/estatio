@@ -19,14 +19,24 @@ package org.estatio.app.services.lease.budgetaudit;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
-import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermRepository;
 
 @DomainService(menuOrder = "00")
@@ -57,12 +67,21 @@ public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainServic
     @NotInServiceMenu
     public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
             final Property property,
+            final List<LeaseItemType> leaseItemTypes,
             @Named("Start date") final LocalDate startDate) {
-        return new LeaseTermForServiceChargeBudgetAuditManager(property, startDate);
+        return new LeaseTermForServiceChargeBudgetAuditManager(property, leaseItemTypes, startDate);
     }
 
-    public List<LocalDate> choices1MaintainServiceCharges(final Property property) {
-        return leaseTermRepository.findServiceChargeDatesByProperty(property);
+    public List<LeaseItemType> choices1MaintainServiceCharges(){
+        return LeaseItemType.typesForLeaseTermForServiceCharge();
+    }
+
+    public List<LeaseItemType> default1MaintainServiceCharges(){
+        return LeaseItemType.typesForLeaseTermForServiceCharge();
+    }
+
+    public List<LocalDate> choices2MaintainServiceCharges(final Property property, final List<LeaseItemType> leaseItemTypes, final LocalDate startDate) {
+        return leaseTermRepository.findServiceChargeDatesByPropertyAndLeaseItemType(property, leaseItemTypes);
     }
 
     // //////////////////////////////////////

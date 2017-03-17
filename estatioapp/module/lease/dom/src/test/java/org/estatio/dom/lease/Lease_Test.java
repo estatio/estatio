@@ -46,6 +46,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.agreement.AgreementRepository;
@@ -53,9 +54,9 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.Agreement_Test;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.agreement.Agreement_Test;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
@@ -1166,6 +1167,87 @@ public class Lease_Test {
 
         }
 
+
+    }
+
+    public static class CopyToNewLease extends Lease_Test {
+
+        Lease newLease;
+        LeaseItem newLeaseItem;
+        LocalDate epochDate;
+
+        @Before
+        public void setUp(){
+            newLeaseItem = new LeaseItem();
+            newLease = new Lease(){
+                @Override
+                public LeaseItem newItem(
+                        final LeaseItemType type,
+                        final LeaseConstants.AgreementRoleType invoicedBy,
+                        final Charge charge,
+                        final InvoicingFrequency invoicingFrequency,
+                        final PaymentMethod paymentMethod,
+                        final LocalDate startDate) {
+                    return  newLeaseItem;
+                }
+                @Override
+                public SortedSet<LeaseItem> getItems(){
+                    return new TreeSet<>(Arrays.asList(newLeaseItem));
+                }
+            };
+        }
+
+        @Test
+        public void epochDate_is_copied() throws Exception {
+
+            // given
+            epochDate = new LocalDate(2010, 01, 01);
+            Lease lease = new Lease();
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setEpochDate(epochDate);
+            lease.getItems().add(leaseItem);
+
+            // when
+            lease.copyItemsAndTerms(newLease, null, true);
+
+            // then
+            assertThat(newLease.getItems().first().getEpochDate()).isEqualTo(epochDate);
+
+        }
+
+        @Test
+        public void empty_epochDate_is_copied() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setEpochDate(null);
+            lease.getItems().add(leaseItem);
+
+            // when
+            lease.copyItemsAndTerms(newLease, null, true);
+
+            // then
+            assertThat(newLease.getItems().first().getEpochDate()).isNull();
+
+        }
+
+        @Test
+        public void epochDate_is_not_copied() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem leaseItem = new LeaseItem();
+            leaseItem.setEpochDate(epochDate);
+            lease.getItems().add(leaseItem);
+
+            // when
+            lease.copyItemsAndTerms(newLease, null, false);
+
+            // then
+            assertThat(newLease.getItems().first().getEpochDate()).isNull();
+
+        }
 
     }
 
