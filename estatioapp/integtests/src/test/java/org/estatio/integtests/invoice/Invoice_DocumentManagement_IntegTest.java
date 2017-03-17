@@ -90,7 +90,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixturescripts.SeedDocumentAndCommsFixture;
+import org.estatio.fixturescripts.DocumentTypesAndTemplatesFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,7 +105,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
-                executionContext.executeChild(this, new SeedDocumentAndCommsFixture());
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
             }
         });
     }

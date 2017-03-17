@@ -118,18 +118,6 @@ language governing permissions and limitations under the License.
             <groupId>org.isisaddons.module.command</groupId>
             <artifactId>isis-module-command-dom</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.isisaddons.module.security</groupId>

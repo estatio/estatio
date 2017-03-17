@@ -22,7 +22,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 import org.estatio.fixture.documents.RenderingStrategies;
 
-public class SeedDocumentAndCommsFixture extends DiscoverableFixtureScript {
+public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
