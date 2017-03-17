@@ -5,8 +5,6 @@
 
 == Sketch
 
-From initial meetings in Paris, 13~15 March 2017:
-
 
 
 [plantuml,invoices,png]
@@ -14,8 +12,11 @@ From initial meetings in Paris, 13~15 March 2017:
 hide empty members
 
 ''''''''''''''''''''''''''''''''''''''''''''''
-class Property #lightgreen {
+class FixedAsset #lightgreen {
 }
+
+
+FixedAsset "parent/child" <---> FixedAsset
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -24,20 +25,7 @@ class IncomingCharge #cyan {
 
 show IncomingCharge members
 
-IncomingCharge "parent\n0..1" <---> "child\n0..*" IncomingCharge
-
-''''''''''''''''''''''''''''''''''''''''''''''
-
-enum Language #cyan {
-}
-
-class ChargeName #cyan {
-}
-
-Language <-- ChargeName
-
-'IncomingCharge --> "0..*" ChargeName
-ChargeName "0..*" <-- IncomingCharge
+IncomingCharge "parent/child" <---> IncomingCharge
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -46,138 +34,133 @@ class CodaElement5 #lightgray {
 }
 note right #lightgray: additional\ndimensions \nto be identified
 
-
 IncomingCharge <--> "0..*" CodaElement5
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
+
 class Project #cyan {
 }
 
+Project "parent/child" <---> Project
+
 class Budget #lightgreen {
-    financialYear: DateTime;
+    financialYear: DateTime
 }
 
-enum BudgetCalculationType #cyan {
+enum ItemValueType #cyan {
     BUDGETED
-    ACTUAL
+    ORDERED
+    INVOICED
 }
 
-class BudgetItem #lightgreen {
-    budgeted: BigDecimal;
-    rollUp: BigDecimal;
-}
-
-class BudgetItemValue #lightgreen {
-    value: BigDecimal
+interface ItemValue #yellow {
+    value(): BigDecimal
     rolledUp(): BigDecimal
     remaining(): BigDecimal
 }
 
 
-Project <--> "0..*" Budget
+
+'Project <--> "0..*" Budget
 
 Budget <--> "0..*" BudgetItem
 
-BudgetItem <--> "0..*" BudgetItemValue
 
-BudgetItemValue --> BudgetCalculationType
-'BudgetCalculationType <-- BudgetItemValue
+'IncomingCharge <-- BudgetItem
 
-IncomingCharge <-- BudgetItem
+Project "     0..1" <-- ItemValue
+FixedAsset "0..1" <-- ItemValue
+Interval <-- ItemValue
+IncomingCharge <-- ItemValue
+
+ItemValueType <-- ItemValue
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class BudgetItem #lightgreen implements ItemValue {
+}
+
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 class Party #lightgreen {
 }
 
-class Organisation #lightgreen extends Party {
-}
 
-class PartyRole #yellow {
-}
-
-enum PartyRoleType #cyan {
-}
-
-PartyRole "0..*" <-- Party
-PartyRole --> PartyRoleType
-
-Organisation "buyer  " <-- Invoice
-Organisation "\nsupplier" <-- Invoice
+Party "buyer  " <-- Invoice
+Party "\nseller" <-- Invoice
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
-abstract class Order #lightgreen {
+class Order #lightgreen  {
 }
-note right #lightgray: probably also\nlinks to DocumentSet
 
+class OrderItem #lightgreen implements ItemValue {
+    
+}
+
+Order <--> "0..*" OrderItem
+
+/'
 class PurchaseOrder #lightgreen extends Order {
 }
-
 class SupplierProposal #lightgreen extends Order {
     approved: boolean
 }
+'/
 
-'Order --> "  supplier" Organisation
-Organisation "  supplier" <-- Order
+Party "  supplier" <-- Order
 
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
+class Interval #cyan {
+    
+}
 
+Interval "parent/child" <---> Interval
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
 
 abstract class Invoice #pink {
+    dueDate: Date
+    invoiceDate: Date
+    amount: BigDecimal
 }
 
 class IncomingInvoice #pink extends Invoice  {
+    received: Date
 }
 
 abstract class InvoiceItem #pink {
 }
 
-class IncomingInvoiceItem #pink extends InvoiceItem {
+class IncomingInvoiceItem #pink extends InvoiceItem implements ItemValue  {
+
 }
 
+'IncomingCharge <-- IncomingInvoiceItem
 
 Invoice *---> "1..*  " InvoiceItem
 
-IncomingInvoiceItem --> BudgetItemValue
+OrderItem <-- IncomingInvoiceItem
 
-Order <-- IncomingInvoiceItem
 
 
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
-class DocumentSet #lightgreen {
-}
-
-class DocumentHandle #lightgreen {
-
-}
-
-enum HandleType #cyan {
-    ORIGINAL
-    OCR
-}
-
 class Document #lightgreen {
 }
 
 
-'DocumentHandle "1..*" <-- DocumentSet
-DocumentSet --> "1..*" DocumentHandle
-'Document <-- DocumentHandle
-DocumentHandle --> Document
-DocumentHandle --> HandleType
+'FixedAsset <-- IncomingInvoiceItem
 
-IncomingInvoiceItem "0..*" --> Property
-'Property <-- IncomingInvoiceItem
-
-IncomingInvoice --> DocumentSet
+IncomingInvoice --> Document
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -198,5 +181,5 @@ Sketched/placeholders:
 
 Not yet in scope:
 
-* Order needs to link to DocumentSet
+* Order needs to link to Document
 * approvals workflow (perhaps: tasks/actors/orgunits/employees)
