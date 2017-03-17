@@ -338,7 +338,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(prelimLetterComm).isSameAs(communication);
 
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
-            assertThat(prelimLetterComm.getQueuedAt()).isNotNull();
+            assertThat(prelimLetterComm.getCreatedAt()).isNotNull();
             assertThat(prelimLetterComm.getSentAt()).isNull();
             assertThat(prelimLetterComm.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Preliminary Letter 01-01-2012.html");
 
@@ -427,7 +427,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoiceDocComm).isSameAs(communication);
 
             assertThat(communication.getState()).isEqualTo(CommunicationState.PENDING);
-            assertThat(communication.getQueuedAt()).isNotNull();
+            assertThat(communication.getCreatedAt()).isNotNull();
             assertThat(communication.getSentAt()).isNull();
             assertThat(communication.getSubject()).isEqualTo("OXF Poison Perfumeries Unit 3 Poison Invoice 01-01-2012.html");
 
@@ -513,7 +513,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             // then the comm is automatically sent
             assertThat(prelimLetterComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(prelimLetterComm.getQueuedAt()).isNull();
+            assertThat(prelimLetterComm.getCreatedAt()).isNull();
             assertThat(prelimLetterComm.getSentAt()).isNotNull();
             assertThat(prelimLetterComm.getSubject()).startsWith("Preliminary letter for Invoice Temp *000");
 
@@ -595,7 +595,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             // then the comm is automatically sent
             assertThat(invoiceDocComm.getState()).isEqualTo(CommunicationState.SENT);
-            assertThat(invoiceDocComm.getQueuedAt()).isNull();
+            assertThat(invoiceDocComm.getCreatedAt()).isNull();
             assertThat(invoiceDocComm.getSentAt()).isNotNull();
             assertThat(invoiceDocComm.getSubject()).isEqualTo("Invoice for OXF-000001.pdf");
 
