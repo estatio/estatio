@@ -64,6 +64,8 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
+        <isis.version>1.14.0.20170319-1823</isis.version>
+
         <isis-module-command.version>1.14.0</isis-module-command.version>
         <isis-module-excel.version>1.14.2</isis-module-excel.version>
         <isis-module-fakedata.version>1.14.0</isis-module-fakedata.version>
@@ -97,9 +99,9 @@ language governing permissions and limitations under the License.
         <incode-module-integtestsupport.version>1.14.0</incode-module-integtestsupport.version>
         <incode-module-fixturesupport.version>1.14.0</incode-module-fixturesupport.version>
 
-        <mavendeps-isistesting.version>${isis.version}</mavendeps-isistesting.version>
-        <mavendeps-isisintellij.version>${isis.version}</mavendeps-isisintellij.version>
-        <mavendeps-isiswebapp.version>${isis.version}</mavendeps-isiswebapp.version>
+        <mavendeps-isistesting.version>1.14.0</mavendeps-isistesting.version>
+        <mavendeps-isisintellij.version>1.14.0</mavendeps-isisintellij.version>
+        <mavendeps-isiswebapp.version>1.14.0</mavendeps-isiswebapp.version>
 
         <estatio-canonical.version>1.1.0</estatio-canonical.version>
 
