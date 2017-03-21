@@ -74,8 +74,7 @@ public class Lease_breakOptionContributions extends UdoDomainService<Lease_break
         if (notificationPeriodJoda == null) {
             return "Notification period format not recognized";
         }
-        final LocalDate notificationDate = breakDate.minus(notificationPeriodJoda);
-        return breakOptionRepository.checkNewBreakOptionDuplicate(lease, BreakType.FIXED, notificationDate);
+        return breakOptionRepository.checkNewBreakOptionDuplicate(lease, BreakType.FIXED, breakDate);
     }
 
     public LocalDate default1NewBreakOption() {
