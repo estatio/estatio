@@ -88,8 +88,24 @@ import lombok.Setter;
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                        "WHERE " +
-                        "status == :status ")
+                        "WHERE status == :status "),
+        @javax.jdo.annotations.Query(
+                name = "findByAtPathAndSellerReferenceAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                        "WHERE atPath == :atPath " +
+                        "   && sellerReference == :sellerReference " +
+                        "   && status == :status "
+        ),
+        @javax.jdo.annotations.Query(
+                name = "findByAtPathAndSellerReferenceAndStatusAndDueDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                        "WHERE atPath == :atPath " +
+                        "   && sellerReference == :sellerReference " +
+                        "   && status == :status " +
+                        "   && dueDate == :dueDate "
+        )
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @ViewModel
@@ -153,7 +169,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Getter @Setter
     private BigDecimal grossAmount;
 
-    // //////////////////////////////////////
 
     @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
@@ -161,7 +176,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
                 .findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
     }
 
-    // //////////////////////////////////////
 
     @Inject
     PropertyRepository propertyRepository;

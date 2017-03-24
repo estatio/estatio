@@ -15,15 +15,28 @@
     </row>
     <row>
         <col span="6">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+            <ns2:fieldSet name="Filter" id="filter">
+                <ns2:action id="statusOfNew" position="PANEL">
+                    <ns2:named>New</ns2:named>
+                </ns2:action>
+                <ns2:action id="statusOfApproved" position="PANEL">
+                    <ns2:named>Approved</ns2:named>
+                </ns2:action>
+                <ns2:action id="statusOfInvoiced" position="PANEL">
+                    <ns2:named>Invoiced</ns2:named>
+                </ns2:action>
+                <ns2:action id="statusOfHistoric" position="PANEL">
+                    <ns2:named>Historic</ns2:named>
+                </ns2:action>
+                <ns2:action id="filter" position="PANEL" cssClassFa="filter"/>
                 <ns2:property id="applicationTenancy"/>
-                <ns2:property id="seller"/>
-                <ns2:property id="dueDate"/>
-                <ns2:property id="status"/>
-                <ns2:property id="sellerReference"/>
-                <ns2:property id="vatAmount"/>
                 <ns2:property id="atPath"/>
+                <ns2:property id="seller"/>
+                <ns2:property id="sellerReference"/>
+                <ns2:property id="status"/>
+                <ns2:property id="dueDate"/>
             </ns2:fieldSet>
+            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -42,6 +55,7 @@
             <ns2:fieldSet name="Totals" id="totals">
                 <ns2:property id="netAmount"/>
                 <ns2:property id="grossAmount"/>
+                <ns2:property id="vatAmount"/>
             </ns2:fieldSet>
         </col>
         <col span="12" unreferencedCollections="false">

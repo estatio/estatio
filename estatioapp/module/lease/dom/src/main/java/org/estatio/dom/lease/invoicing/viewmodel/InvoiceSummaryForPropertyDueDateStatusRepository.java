@@ -19,10 +19,10 @@ package org.estatio.dom.lease.invoicing.viewmodel;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -38,9 +38,33 @@ public class InvoiceSummaryForPropertyDueDateStatusRepository
 
     @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
-            final @Parameter(optionality = Optionality.OPTIONAL) InvoiceStatus status) {
+            final InvoiceStatus status) {
         return allMatches("findByStatus",
                 "status", status);
+    }
+
+    @Programmatic
+    public List<InvoiceSummaryForPropertyDueDateStatus> findByAtPathAndSellerReferenceAndStatus(
+                final String atPath,
+                final String sellerReference,
+                final InvoiceStatus status) {
+        return allMatches("findByAtPathAndSellerReferenceAndStatus",
+                "atPath", atPath,
+                "sellerReference", sellerReference,
+                "status", status);
+    }
+
+    @Programmatic
+    public List<InvoiceSummaryForPropertyDueDateStatus> findByAtPathAndSellerReferenceAndStatusAndDueDate(
+                final String atPath,
+                final String sellerReference,
+                final InvoiceStatus status,
+                final LocalDate dueDate) {
+        return allMatches("findByAtPathAndSellerReferenceAndStatusAndDueDate",
+                "atPath", atPath,
+                "sellerReference", sellerReference,
+                "status", status,
+                "dueDate", dueDate);
     }
 
 }
