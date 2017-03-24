@@ -18,11 +18,15 @@
  */
 package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
-import org.apache.isis.applib.annotation.ViewModel;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
 
 import org.estatio.dom.invoice.Invoice;
 
-@ViewModel
+@DomainObject(
+        nature = Nature.VIEW_MODEL,
+        objectType = "org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForInvoiceDoc"
+)
 public class DocAndCommForInvoiceDoc extends DocAndCommAbstract<DocAndCommForInvoiceDoc> {
 
     public DocAndCommForInvoiceDoc() {

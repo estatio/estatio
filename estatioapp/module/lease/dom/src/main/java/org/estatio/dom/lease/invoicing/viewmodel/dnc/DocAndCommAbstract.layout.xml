@@ -4,6 +4,7 @@
         <col span="12" unreferencedActions="true">
             <cpt:domainObject/>
             <cpt:action id="download"/>
+            <cpt:action id="downloadSelected"/>
         </col>
     </row>
     <row>
