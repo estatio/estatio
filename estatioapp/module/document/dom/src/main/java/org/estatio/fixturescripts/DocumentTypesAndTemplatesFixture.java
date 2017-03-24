@@ -17,6 +17,8 @@
  */
 package org.estatio.fixturescripts;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
@@ -24,13 +26,25 @@ import org.estatio.fixture.documents.RenderingStrategies;
 
 public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript {
 
+    private final LocalDate templateDateIfAny;
+
+    public DocumentTypesAndTemplatesFixture() {
+        this(null);
+    }
+
+    public DocumentTypesAndTemplatesFixture(final LocalDate templateDateIfAny) {
+        this.templateDateIfAny = templateDateIfAny;
+    }
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new RenderingStrategies());
-        executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs());
+        executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
 
     }
 
-
+    LocalDate getTemplateDateIfAny() {
+        return templateDateIfAny;
+    }
 }

@@ -62,6 +62,20 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName.txt");
     public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName-ITA.txt");
 
+    private LocalDate templateDateIfAny;
+
+    public DocumentTypeAndTemplatesFSForInvoicesUsingSsrs() {
+        this(null);
+    }
+
+    public DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(
+            final LocalDate templateDateIfAny) {
+        this.templateDateIfAny = templateDateIfAny;
+    }
+
+    LocalDate getTemplateDateElseNow() {
+        return templateDateIfAny != null ? templateDateIfAny : clockService.now();
+    }
 
     protected DocumentType upsertType(
             DocumentTypeData documentTypeData,
@@ -74,17 +88,21 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
+        final LocalDate templateDate = getTemplateDateElseNow();
+
         // prereqs
         executionContext.executeChild(this, new ApplicationTenancyForGlobal());
         executionContext.executeChild(this, new ApplicationTenancyForIt());
         executionContext.executeChild(this, new RenderingStrategies());
 
-        upsertTemplatesForInvoice(executionContext);
+        upsertTemplatesForInvoice(templateDate, executionContext);
 
-        upsertTemplatesForInvoiceSummaryForPropertyDueDateStatus(executionContext);
+        upsertTemplatesForInvoiceSummaryForPropertyDueDateStatus(templateDate, executionContext);
     }
 
-    private void upsertTemplatesForInvoice(final ExecutionContext executionContext) {
+    private void upsertTemplatesForInvoice(
+            final LocalDate templateDate,
+            final ExecutionContext executionContext) {
 
         final String url = "${reportServerBaseUrl}";
 
@@ -108,7 +126,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         String contentText = loadResource("PrelimLetterEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
                 NAME_TEXT_PRELIM_LETTER_GLOBAL, fmkRenderingStrategy,
                 Document.class,
@@ -119,7 +137,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
-                ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
                 NAME_TEXT_PRELIM_LETTER_ITA, fmkRenderingStrategy,
                 Document.class,
@@ -133,7 +151,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 upsertType(DocumentTypeData.PRELIM_LETTER, executionContext);
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 false,
                 url
                         + "Preliminary+Letter"
@@ -151,7 +169,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
-                ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 false,
                 url
                         + "Preliminary+Letter"
@@ -178,7 +196,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         contentText = loadResource("InvoiceEmailCoverNote.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
                 NAME_TEXT_INVOICE_GLOBAL, fmkRenderingStrategy,
                 Document.class,
@@ -189,7 +207,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         contentText = loadResource("InvoiceEmailCoverNote-ITA.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
-                ApplicationTenancyForIt.PATH, " (Italy)",
+                templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
                 NAME_TEXT_INVOICE_ITA, fmkRenderingStrategy,
                 Document.class,
@@ -204,7 +222,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 false,
                 url
                 + "Invoice"
@@ -221,7 +239,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // (currently) this is identical to global
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
-                ApplicationTenancyForIt.PATH, "( Italy)",
+                templateDate, ApplicationTenancyForIt.PATH, "( Italy)",
                 false,
                 url
                 + "Invoice"
@@ -246,7 +264,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     }
 
-    private void upsertTemplatesForInvoiceSummaryForPropertyDueDateStatus(final ExecutionContext executionContext) {
+    private void upsertTemplatesForInvoiceSummaryForPropertyDueDateStatus(
+            final LocalDate templateDate, final ExecutionContext executionContext) {
 
         final RenderingStrategy sipcRenderingStrategy =
                 renderingStrategyRepository.findByReference(RenderingStrategies.REF_SIPC);
@@ -255,7 +274,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES, executionContext),
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
                 + "Invoices"
@@ -272,7 +291,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES_PRELIM, executionContext),
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
                 + "Preliminary+Letter"
@@ -289,7 +308,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         upsertTemplateForPdfWithApplicability(
                 upsertType(DocumentTypeData.INVOICES_FOR_SELLER, executionContext),
-                ApplicationTenancyForGlobal.PATH, null,
+                templateDate, ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
                 + "Preliminary+Letter"
@@ -307,6 +326,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     private DocumentTemplate upsertTemplateForPdfWithApplicability(
             final DocumentType documentType,
+            final LocalDate templateDate,
             final String atPath,
             final String templateNameSuffixIfAny,
             final boolean previewOnly,
@@ -318,7 +338,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final ExecutionContext executionContext) {
 
         final DocumentTemplate template =
-                upsertTemplateForPdf(documentType, atPath, templateNameSuffixIfAny, previewOnly,
+                upsertTemplateForPdf(documentType, templateDate, atPath, templateNameSuffixIfAny, previewOnly,
 				        contentText, contentRenderingStrategy, 
 						nameText, nameRenderingStrategy, 
 						executionContext);
@@ -331,6 +351,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     private DocumentTemplate upsertTemplateForPdf(
             final DocumentType docType,
+            final LocalDate templateDate,
             final String atPath,
             final String templateNameSuffixIfAny,
             final boolean previewOnly,
@@ -338,10 +359,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final String nameText, final RenderingStrategy nameRenderingStrategy,
             final ExecutionContext executionContext) {
 
-        final LocalDate now = clockService.now();
-
         return upsertDocumentTextTemplate(
-                docType, now, atPath,
+                docType, templateDate, atPath,
                 ".pdf",
                 previewOnly,
                 buildTemplateName(docType, templateNameSuffixIfAny),
@@ -353,6 +372,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     private void upsertDocumentTemplateForTextHtmlWithApplicability(
             final DocumentType docType,
+            final LocalDate templateDate,
             final String atPath,
             final String nameSuffixIfAny,
             final String contentText,
@@ -364,11 +384,9 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
             final Class<? extends AttachmentAdvisor> attachmentAdvisorClass,
             final ExecutionContext executionContext) {
 
-        final LocalDate date = clockService.now();
-
         final Clob clob = new Clob(buildTemplateName(docType, nameSuffixIfAny, ".html"), "text/html", contentText);
         final DocumentTemplate documentTemplate = upsertDocumentClobTemplate(
-                docType, date, atPath,
+                docType, templateDate, atPath,
                 ".html",
                 false,
                 clob, contentRenderingStrategy,

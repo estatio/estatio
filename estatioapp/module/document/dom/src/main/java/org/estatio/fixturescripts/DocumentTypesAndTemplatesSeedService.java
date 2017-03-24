@@ -20,6 +20,8 @@ package org.estatio.fixturescripts;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
@@ -33,7 +35,13 @@ public class DocumentTypesAndTemplatesSeedService {
 
     @PostConstruct
     public void init() {
-        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesFixture(), null);
+
+        // If we get new versions of the templates in the future, then update this date
+        // the upsert logic here should result in the new templates being inserted alongside existing
+        // (with a different template date).
+        final LocalDate templateDate = new LocalDate(2017,3,24);
+
+        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesFixture(templateDate), null);
     }
 
     @Inject
