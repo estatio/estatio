@@ -1,0 +1,4 @@
+.entityCollection .org-estatio-dom-lease-invoicing-viewmodel-dnc-DocAndCommForPrelimLetter .title-column,
+.entityCollection .org-estatio-dom-lease-invoicing-viewmodel-dnc-DocAndCommForInvoiceDoc .title-column {
+    display: none;
+}
