@@ -39,7 +39,11 @@ public class DocumentTypesAndTemplatesSeedService {
         // If we get new versions of the templates in the future, then update this date
         // the upsert logic here should result in the new templates being inserted alongside existing
         // (with a different template date).
-        final LocalDate templateDate = new LocalDate(2017,3,24);
+
+        //
+        // using this date to ensure that prototyping still works (epoch date set back then)
+        //
+        final LocalDate templateDate = new LocalDate(2012,1,1);
 
         fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesFixture(templateDate), null);
     }
