@@ -25,14 +25,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.comms.CommChannelRole;
 import org.incode.module.communications.dom.impl.comms.Communication;
 import org.incode.module.communications.dom.impl.paperclips.PaperclipForCommunication;
-import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentAbstract;
-import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
-import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
-import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
 import org.estatio.dom.agreement.Agreement;
@@ -43,10 +38,10 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.registration.LandRegister;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.LandRegister;
+import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
@@ -61,6 +56,7 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.Partitioning;
+import org.estatio.dom.document.paperclips.PaperclipForParty;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventSourceLink;
 import org.estatio.dom.financial.FinancialAccount;
@@ -89,7 +85,6 @@ import org.estatio.dom.party.OrganisationPreviousName;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
-import org.estatio.dom.document.paperclips.PaperclipForParty;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.Program;
@@ -196,12 +191,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
         deleteFrom(PaperclipForDocument.class);
         deleteFrom(Paperclip.class);
-        deleteFrom(Applicability.class);
         deleteFrom(Document.class);
-        deleteFrom(DocumentTemplate.class);
-        deleteFrom(DocumentAbstract.class);
-        deleteFrom(DocumentType.class);
-        deleteFrom(RenderingStrategy.class);
 
         deleteFrom(Numerator.class);
 
