@@ -154,7 +154,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 false,
                 url
-                        + "Preliminary+Letter"
+                        + "PreliminaryLetterV2"
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
@@ -172,7 +172,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 false,
                 url
-                        + "Preliminary+Letter"
+                        + "PreliminaryLetterV2"
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
@@ -225,7 +225,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 false,
                 url
-                + "Invoice"
+                + "InvoiceItaly"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
@@ -242,7 +242,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForIt.PATH, "( Italy)",
                 false,
                 url
-                + "Invoice"
+                + "InvoiceItaly"
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
@@ -294,7 +294,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
-                + "Preliminary+Letter"
+                + "PreliminaryLetterV2"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
@@ -311,7 +311,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 true,
                 URL
-                + "Preliminary+Letter"
+                + "PreliminaryLetterV2"
                 + "&dueDate=${this.dueDate}&sellerId=${this.seller.id}&atPath=${this.atPath}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
