@@ -11,6 +11,7 @@
             <ns2:action id="saveAllAsHistoric"/>
             <ns2:action id="syncAll"/>
             <ns2:action id="links"/>
+            <ns2:action id="resetSendToAll"/>
         </col>
     </row>
     <row>

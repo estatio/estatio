@@ -10,11 +10,11 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLease_resetSendTo;
 
 @Mixin(method = "act")
-public class InvoiceSummaryForPropertyDueDateStatus_resetSendTo {
+public class InvoiceSummaryForPropertyDueDateStatus_resetSendToAll {
 
     private final InvoiceSummaryForPropertyDueDateStatus summary;
 
-    public InvoiceSummaryForPropertyDueDateStatus_resetSendTo(final InvoiceSummaryForPropertyDueDateStatus summary) {
+    public InvoiceSummaryForPropertyDueDateStatus_resetSendToAll(final InvoiceSummaryForPropertyDueDateStatus summary) {
         this.summary = summary;
     }
 
