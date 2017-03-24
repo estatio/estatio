@@ -75,8 +75,8 @@ public abstract class Invoice_prepareAbstract {
 
     public String disable$$() {
         return documentTemplateFor(invoice) == null
-                ? String.format("Could not locate a DocumentTemplate for %s for invoice %s",
-                                titleService.titleOf(getDocumentType()),
+                ? String.format("Could not locate a DocumentTemplate for document type '%s' for invoice '%s'",
+                                documentTypeData.getName(),
                                 titleService.titleOf(invoice))
                 : null;
     }

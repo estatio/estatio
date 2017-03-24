@@ -83,8 +83,8 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
         // best to fail fast...
         if(documentTemplate == null) {
             throw new ApplicationException(String.format(
-                    "Could not locate a DocumentTemplate for %s for invoice %s",
-                    titleService.titleOf(getDocumentType()),
+                    "Could not locate a DocumentTemplate for type '%s' for invoice '%s'",
+                    documentTypeData.getName(),
                     titleService.titleOf(invoice)));
         }
         return documentTemplate;
