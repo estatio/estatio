@@ -59,8 +59,8 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = loadResource("PrelimLetterName.txt");
     public static final String NAME_TEXT_PRELIM_LETTER_ITA = loadResource("PrelimLetterName-ITA.txt");
 
-    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName.txt");
-    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName-ITA.txt");
+    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName.txt");
+    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName-ITA.txt");
 
     private LocalDate templateDateIfAny;
 
