@@ -137,7 +137,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
-        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1 XXX-123 Brandino Invoice 01-11-2016");
+        Assertions.assertThat(rendered).isEqualTo("Fattura 2016-11-01, XXX XXX-123 Buyer-1 Brandino");
 
     }
 
@@ -161,7 +161,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
-        Assertions.assertThat(rendered).isEqualTo("XXX Buyer-1   Invoice 01-11-2016");
+        Assertions.assertThat(rendered).isEqualTo("Fattura 2016-11-01, XXX  Buyer-1 ");
     }
 
     private RendererForFreemarker rendererForFreemarker() throws NoSuchFieldException, IllegalAccessException {
