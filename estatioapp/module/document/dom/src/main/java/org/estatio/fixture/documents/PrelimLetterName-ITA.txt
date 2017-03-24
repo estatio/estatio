@@ -1,1 +1,1 @@
-${property.reference} ${tenant.name} ${(unit.name)!""} ${(brand.name)!""} Preliminary Letter/Avviso di fatturazione ${invoice.dueDate?string["dd-MM-yyyy"]}
+Avviso di fatturazione ${invoice.dueDate?string["yyyy-MM-dd"]}, ${property.reference} ${(unit.name)!""} ${tenant.name} ${(brand.name)!""}

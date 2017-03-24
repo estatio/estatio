@@ -1,1 +1,1 @@
-${property.reference} ${tenant.name} ${(unit.name)!""} ${(brand.name)!""} Invoice/Fatturazione ${invoice.dueDate?string["dd-MM-yyyy"]}
+Invoice ${invoice.dueDate?string["yyyy-MM-dd"]}, ${property.reference} ${(unit.name)!""} ${tenant.name} ${(brand.name)!""}
