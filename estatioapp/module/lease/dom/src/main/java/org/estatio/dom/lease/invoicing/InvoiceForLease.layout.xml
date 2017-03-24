@@ -73,6 +73,9 @@
                     <ns2:action id="overrideSendTo">
                         <ns2:named>Override</ns2:named>
                     </ns2:action>
+                    <ns2:action id="resetSendTo">
+                        <ns2:named>Reset</ns2:named>
+                    </ns2:action>
                 </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="RelatedTo" id="relatedTo">
