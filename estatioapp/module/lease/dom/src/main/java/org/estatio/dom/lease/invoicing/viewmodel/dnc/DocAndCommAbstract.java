@@ -30,13 +30,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,15 +47,9 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
     }
     //endregion
 
-    @Property(hidden = Where.ALL_TABLES)
+    @Property
     @Getter @Setter
     private Invoice invoice;
-
-    @Property()
-    @MemberOrder(sequence = "1")
-    public Party getBuyer() {
-        return invoice.getBuyer();
-    }
 
     @Property()
     @MemberOrder(sequence = "4")
