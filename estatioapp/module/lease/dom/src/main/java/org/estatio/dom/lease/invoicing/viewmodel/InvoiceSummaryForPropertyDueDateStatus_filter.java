@@ -36,25 +36,17 @@ public class InvoiceSummaryForPropertyDueDateStatus_filter extends InvoiceSummar
     }
 
     public InvoiceStatus default0Act() {
-        final InvoiceStatus currentStatus = invoiceSummary.getStatus();
-        switch (currentStatus) {
-        case NEW:
-            return InvoiceStatus.APPROVED;
-        case APPROVED:
-            return InvoiceStatus.INVOICED;
-        case INVOICED:
-            return InvoiceStatus.HISTORIC;
-        case HISTORIC:
-            return InvoiceStatus.HISTORIC;
-        default:
-            return InvoiceStatus.INVOICED;
-        }
+        return invoiceSummary.getStatus();
     }
 
     public List<LocalDate> choices1Act(final InvoiceStatus invoiceStatus) {
         final List<InvoiceSummaryForPropertyDueDateStatus> summaries = findSummariesFor(invoiceStatus);
         return Lists.newArrayList(
-                FluentIterable.from(summaries).transform(x -> x.getDueDate()).toList());
+                FluentIterable.from(summaries)
+                              .transform(x -> x.getDueDate())
+                              .toList()
+                              .reverse()
+        );
     }
 
     @Inject
