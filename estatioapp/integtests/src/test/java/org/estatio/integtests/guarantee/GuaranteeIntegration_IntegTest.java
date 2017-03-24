@@ -101,7 +101,7 @@ public class GuaranteeIntegration_IntegTest extends EstatioIntegrationTest {
         guaranteeWithFinancialAccount = guaranteeRepository.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guaranteeRepository.newGuarantee(
-                lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld("20120101"), null, "", VT.bd(1000), null);
+                lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld(2012,1,1), null, "", VT.bd(1000), null);
         transactionService.flushTransaction();
     }
 
@@ -117,11 +117,8 @@ public class GuaranteeIntegration_IntegTest extends EstatioIntegrationTest {
 
 
             //When
-            sudoService.sudo("estatio-admin", Lists.newArrayList("estatio-admin"), new Runnable() {
-                @Override public void run() {
-                    wrap(guarantee).remove("Some reason");
-                }
-            });
+            sudoService.sudo("estatio-admin", Lists.newArrayList("estatio-admin"),
+                    () -> wrap(guarantee).remove("Some reason"));
 
             //Then
             assertThat(guaranteeRepository.findByReference(GuaranteeForOxfTopModel001Gb.REFERENCE)).isNull();

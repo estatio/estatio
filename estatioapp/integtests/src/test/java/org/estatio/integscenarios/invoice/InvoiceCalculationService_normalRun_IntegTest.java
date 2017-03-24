@@ -23,6 +23,7 @@ import java.util.SortedSet;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,6 +57,8 @@ import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -150,7 +153,11 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         assertThat(leaseTopModelRentTerm.getEffectiveValue(), is(VT.bd2(20200)));
 
         // when, then
-        calculateNormalRunAndAssert(leaseTopModelRentTerm, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 4239.13, false);
+
+        calculateNormalRunAndAssert(
+                leaseTopModelRentTerm, VT.ld(2010,7,1), VT.ld(2010,10,01), VT.ldi("2010-07-01/2010-10-01"),
+                4239.13, false
+        );
     }
 
     // scenario: invoiceItemsForRentCreated
@@ -160,13 +167,24 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
 
         LeaseTerm leaseTopModelRentTerm0 = (LeaseTerm) leaseTopModelRentItem.getTerms().first();
         // full term
-        calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2010-10-02", "2010-10-01/2011-01-01", 5000.00, false);
+
+        calculateNormalRunAndAssert(
+                leaseTopModelRentTerm0, VT.ld(2010,10,1), VT.ld(2010,10,2), VT.ldi("2010-10-01/2011-01-01"),
+                5000.00, false
+        );
         // invoice after effective date
-        calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-02", "2010-10-01/2011-01-01", 5050.00, false);
+
+        calculateNormalRunAndAssert(
+                leaseTopModelRentTerm0, VT.ld(2010,10,1), VT.ld(2011,4,2), VT.ldi("2010-10-01/2011-01-01"),
+                5050.00, false
+        );
         // invoice after effective date with mock
         leaseInvoicingSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
 
-        calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-2", "2010-10-01/2011-01-01", 50.00, true);
+        calculateNormalRunAndAssert(
+                leaseTopModelRentTerm0, VT.ld(2010,10,1), VT.ld(2011,4,2), VT.ldi("2010-10-01/2011-01-01"), 50.00,
+                true
+        );
 
         leaseInvoicingSettingsService.updateEpochDate(null);
 
@@ -185,10 +203,15 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         leaseTopModelServiceChargeTerm0.approve();
 
         // partial period
-        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 1271.74, false);
+
+        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, VT.ld(2010,7,1), VT.ld(2010,10,1), VT.ldi(
+                "2010-07-01/2010-10-01"), 1271.74, false
+        );
         // full period
 
-        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-01-10", "2010-10-02", "2010-10-01/2011-01-01", 1500.00, false);
+        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, VT.ld(2010,1,10), VT.ld(2010,10,2), VT.ldi(
+                "2010-10-01/2011-01-01"), 1500.00, false
+        );
         // reconcile with mock date
     }
 
@@ -196,11 +219,15 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         leaseInvoicingSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
 
-        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
+        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, VT.ld(2010,10,1), VT.ld(2011,1,1), VT.ldi(
+                "2010-10-01/2011-01-01"), 0.00, false
+        );
         leaseTopModelServiceChargeTerm0.setAuditedValue(VT.bd(6600.00));
         leaseTopModelServiceChargeTerm0.verify();
 
-        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00, true);
+        calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, VT.ld(2010,10,1), VT.ld(2012,1,1), VT.ldi(
+                "2010-10-01/2011-01-01"), 150.00, true
+        );
         // reconcile without mock
         leaseInvoicingSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
     }
@@ -215,13 +242,12 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
 
     private void calculateNormalRunAndAssert(
             final LeaseTerm leaseTerm,
-            final String startDueDate,
-            final String nextDueDate,
-            final String interval,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate,
+            final LocalDateInterval interval,
             final Double expected,
             final boolean expectedAdjustment) {
-
-        invoiceItemForLeaseRepository.removeUnapprovedInvoiceItems(leaseTerm, VT.ldi(interval));
+        invoiceItemForLeaseRepository.removeUnapprovedInvoiceItems(leaseTerm, interval);
 
         nextTransaction();
         isisJdoSupport.refresh(leaseTerm);
@@ -229,12 +255,13 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
         InvoiceCalculationParameters parameters = InvoiceCalculationParameters.builder()
                 .leaseTerm(leaseTerm)
                 .invoiceRunType(InvoiceRunType.NORMAL_RUN)
-                .invoiceDueDate(VT.ld(startDueDate))
-                .startDueDate(VT.ld(startDueDate))
-                .nextDueDate(VT.ld(nextDueDate)).build();
+                .invoiceDueDate(startDueDate)
+                .startDueDate(startDueDate)
+                .nextDueDate(nextDueDate).build();
         invoiceCalculationService.calculateAndInvoice(parameters);
 
-        InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
+        InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.findUnapprovedInvoiceItem(leaseTerm,
+                interval);
         isisJdoSupport.refresh(leaseTerm);
 
         BigDecimal netAmount = invoiceItem == null ? VT.bd2(0) : invoiceItem.getNetAmount();
