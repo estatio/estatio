@@ -18,15 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
-import java.util.List;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
@@ -37,15 +29,6 @@ public class InvoiceSummaryForPropertyDueDateStatus_preliminaryLetters extends
     public InvoiceSummaryForPropertyDueDateStatus_preliminaryLetters(
             final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
         super(invoiceSummary, i -> new DocAndCommForPrelimLetter(i));
-    }
-
-    // workaround, consistency with _invoiceDocs
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @Collection(typeOf = DocAndCommForPrelimLetter.class)
-    @CollectionLayout(defaultView = "table")
-    public List<DocAndCommForPrelimLetter> $$() {
-        return super.$$();
     }
 
 }

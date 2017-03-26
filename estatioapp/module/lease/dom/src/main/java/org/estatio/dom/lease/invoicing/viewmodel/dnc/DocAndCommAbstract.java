@@ -49,10 +49,11 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
 
     @Property
     @Getter @Setter
+    @MemberOrder(sequence = "1") // workaround, DocAndCommForInvoiceDoc.layout.xml not being honoured for table, for some reason
     private Invoice invoice;
 
     @Property()
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "4") // workaround, DocAndCommForInvoiceDoc.layout.xml not being honoured for table, for some reason
     @Getter @Setter
     private CommunicationChannel sendTo;
 

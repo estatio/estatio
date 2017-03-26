@@ -39,13 +39,4 @@ public class InvoiceSummaryForPropertyDueDateStatus_invoiceDocs extends
         super(invoiceSummary, i -> new DocAndCommForInvoiceDoc(i));
     }
 
-    // workaround, was rendering invoice column in wrong place
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    @Collection(typeOf = DocAndCommForInvoiceDoc.class)
-    @CollectionLayout(defaultView = "table")
-    public List<DocAndCommForInvoiceDoc> $$() {
-        return super.$$();
-    }
-
 }
