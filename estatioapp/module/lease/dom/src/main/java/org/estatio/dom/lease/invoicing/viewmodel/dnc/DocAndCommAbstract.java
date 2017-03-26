@@ -30,6 +30,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
@@ -48,6 +50,7 @@ public abstract class DocAndCommAbstract<T extends DocAndCommAbstract<T>> {
     //endregion
 
     @Property
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     @MemberOrder(sequence = "1") // workaround, DocAndCommForInvoiceDoc.layout.xml not being honoured for table, for some reason
     private Invoice invoice;
