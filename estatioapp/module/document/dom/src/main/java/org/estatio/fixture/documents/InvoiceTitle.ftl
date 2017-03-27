@@ -1,1 +1,1 @@
-Invoice for ${this.buyer.reference} ${this.dueDate}
+Invoice ${this.number} ${this.dueDate}, ${this.lease.reference} ${this.buyer.name}

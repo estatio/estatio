@@ -1,1 +1,1 @@
-Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate}
+Prelim letter ${this.dueDate}, ${this.lease.reference} ${this.buyer.name}

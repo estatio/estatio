@@ -1,1 +1,1 @@
-Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate} (Italy)
+Avviso di fatturazione ${this.dueDate}, ${this.lease.reference} ${this.buyer.name}
