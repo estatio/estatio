@@ -56,11 +56,11 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     public static final String URL = "${reportServerBaseUrl}";
 
-    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = loadResource("PrelimLetterName.txt");
-    public static final String NAME_TEXT_PRELIM_LETTER_ITA = loadResource("PrelimLetterName-ITA.txt");
+    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = loadResource("PrelimLetterName.ftl");
+    public static final String NAME_TEXT_PRELIM_LETTER_ITA = loadResource("PrelimLetterName-ITA.ftl");
 
-    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName.txt");
-    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName-ITA.txt");
+    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName.ftl");
+    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName-ITA.ftl");
 
     private LocalDate templateDateIfAny;
 
@@ -123,7 +123,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForPrelimCoverNote =
                 upsertType(DocumentTypeData.COVER_NOTE_PRELIM_LETTER, executionContext);
 
-        String contentText = loadResource("PrelimLetterEmailCoverNote.html");
+        String contentText = loadResource("PrelimLetterEmailCoverNote.ftl.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
@@ -134,7 +134,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 AttachToNone.class,
                 executionContext);
 
-        contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html");
+        contentText = loadResource("PrelimLetterEmailCoverNote-ITA.ftl.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
@@ -193,7 +193,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForInvoiceCoverNote =
                 upsertType(DocumentTypeData.COVER_NOTE_INVOICE, executionContext);
 
-        contentText = loadResource("InvoiceEmailCoverNote.html");
+        contentText = loadResource("InvoiceEmailCoverNote.ftl.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
@@ -204,7 +204,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 AttachToNone.class,
                 executionContext);
 
-        contentText = loadResource("InvoiceEmailCoverNote-ITA.html");
+        contentText = loadResource("InvoiceEmailCoverNote-ITA.ftl.html");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
