@@ -1,4 +1,4 @@
-package org.estatio.dom.document.documents.binders;
+package org.estatio.fixture.documents;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -26,13 +26,13 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Organisation;
-import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
 
@@ -109,7 +109,16 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         }});
 
         rendererModelFactory = new FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover();
-        rendererModelFactory.paperclipRepository = mockPaperclipRepository;
+        inject(rendererModelFactory, "paperclipRepository", mockPaperclipRepository);
+    }
+
+    private static void inject(
+            final Object target,
+            final String fieldName,
+            final Object reference) throws NoSuchFieldException, IllegalAccessException {
+        final Field delegateField = target.getClass().getDeclaredField(fieldName);
+        delegateField.setAccessible(true);
+        delegateField.set(target, reference);
     }
 
     @Test
@@ -133,7 +142,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
-        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.NAME_TEXT_INVOICE_GLOBAL;
+        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceName.ftl");
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
@@ -157,7 +166,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
-        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.NAME_TEXT_INVOICE_GLOBAL;
+        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceName.ftl");
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then

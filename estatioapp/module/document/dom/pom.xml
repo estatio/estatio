@@ -124,6 +124,31 @@ language governing permissions and limitations under the License.
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- testing -->
+        <dependency>
+            <groupId>org.incode.module.unittestsupport</groupId>
+            <artifactId>incode-module-unittestsupport-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.integtestsupport</groupId>
+            <artifactId>incode-module-integtestsupport-dom</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.mavendeps</groupId>
+            <artifactId>isistesting</artifactId>
+            <version>${mavendeps-isistesting.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-numerator</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

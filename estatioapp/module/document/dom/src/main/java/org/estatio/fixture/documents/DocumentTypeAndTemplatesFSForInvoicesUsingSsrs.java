@@ -56,12 +56,6 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
     public static final String URL = "${reportServerBaseUrl}";
 
-    public static final String NAME_TEXT_PRELIM_LETTER_GLOBAL = loadResource("PrelimLetterName.ftl");
-    public static final String NAME_TEXT_PRELIM_LETTER_ITA = loadResource("PrelimLetterName-ITA.ftl");
-
-    public static final String NAME_TEXT_INVOICE_GLOBAL = loadResource("InvoiceName.ftl");
-    public static final String NAME_TEXT_INVOICE_ITA = loadResource("InvoiceName-ITA.ftl");
-
     private LocalDate templateDateIfAny;
 
     public DocumentTypeAndTemplatesFSForInvoicesUsingSsrs() {
@@ -124,22 +118,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 upsertType(DocumentTypeData.COVER_NOTE_PRELIM_LETTER, executionContext);
 
         String contentText = loadResource("PrelimLetterEmailCoverNote.ftl.html");
+        String nameText = loadResource("PrelimLetterName.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
-                NAME_TEXT_PRELIM_LETTER_GLOBAL, fmkRenderingStrategy,
+                nameText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.ftl.html");
+        nameText = loadResource("PrelimLetterName-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
-                NAME_TEXT_PRELIM_LETTER_ITA, fmkRenderingStrategy,
+                nameText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
@@ -194,22 +190,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 upsertType(DocumentTypeData.COVER_NOTE_INVOICE, executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote.ftl.html");
+        nameText = loadResource("InvoiceName.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
-                NAME_TEXT_INVOICE_GLOBAL, fmkRenderingStrategy,
+                nameText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote-ITA.ftl.html");
+        nameText = loadResource("InvoiceName-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
-                NAME_TEXT_INVOICE_ITA, fmkRenderingStrategy,
+                nameText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
@@ -417,7 +415,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
     }
 
 
-    private static String loadResource(final String resourceName) {
+    static String loadResource(final String resourceName) {
         final URL templateUrl = Resources
                 .getResource(DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.class, resourceName);
         try {
