@@ -1,0 +1,1 @@
+Invoice for ${this.buyer.reference} ${this.dueDate}

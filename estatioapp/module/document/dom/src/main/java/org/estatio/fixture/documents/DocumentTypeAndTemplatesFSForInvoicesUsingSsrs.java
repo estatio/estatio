@@ -145,6 +145,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // template for PL itself
         final DocumentType docTypeForPrelim =
                 upsertType(DocumentTypeData.PRELIM_LETTER, executionContext);
+        String titleText = loadResource("PrelimLetterTitle.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
@@ -154,7 +155,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate}",
+                titleText,
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -163,6 +164,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         );
 
         // (currently) this is identical to global
+        titleText = loadResource("PrelimLetterTitle-ITA.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForPrelim,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
@@ -172,7 +174,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                         + "&id=${this.id}"
                         + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Preliminary letter for Invoice ${this.buyer.reference} ${this.dueDate} (Italy)",
+                titleText,
                 siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
@@ -218,6 +220,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         // template for invoice itself
         final DocumentType docTypeForInvoice = upsertType(DocumentTypeData.INVOICE, executionContext);
 
+        titleText = loadResource("InvoiceTitle.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
@@ -227,7 +230,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.buyer.reference} ${this.dueDate}", siRenderingStrategy,
+                titleText, siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
@@ -235,6 +238,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         );
 
         // (currently) this is identical to global
+        titleText = loadResource("InvoiceTitle-ITA.ftl");
         upsertTemplateForPdfWithApplicability(
                 docTypeForInvoice,
                 templateDate, ApplicationTenancyForIt.PATH, "( Italy)",
@@ -244,7 +248,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 + "&id=${this.id}"
                 + "&rs:Command=Render&rs:Format=PDF",
                 sipcRenderingStrategy,
-                "Invoice for ${this.buyer.reference} ${this.dueDate} (Italy)", siRenderingStrategy,
+                titleText, siRenderingStrategy,
                 Invoice.class,
                 StringInterpolatorToSsrsUrlOfInvoice.class,
                 ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments.class,
