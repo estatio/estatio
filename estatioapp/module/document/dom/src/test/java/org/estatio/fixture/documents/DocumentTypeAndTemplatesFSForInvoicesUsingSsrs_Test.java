@@ -142,7 +142,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
-        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceName.ftl");
+        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceEmailCoverNoteSubjectLine.ftl");
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then
@@ -166,7 +166,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {
         final RendererForFreemarker renderer = rendererForFreemarker();
 
         // when
-        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceName.ftl");
+        final String nameText = DocumentTypeAndTemplatesFSForInvoicesUsingSsrs.loadResource("InvoiceEmailCoverNoteSubjectLine.ftl");
         final String rendered = renderer.renderCharsToChars(stubDocumentType, "", "/", 0L, nameText, rendererModel);
 
         // then

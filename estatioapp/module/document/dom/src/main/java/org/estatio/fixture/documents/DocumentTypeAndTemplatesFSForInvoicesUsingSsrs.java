@@ -118,24 +118,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 upsertType(DocumentTypeData.COVER_NOTE_PRELIM_LETTER, executionContext);
 
         String contentText = loadResource("PrelimLetterEmailCoverNote.ftl.html");
-        String nameText = loadResource("PrelimLetterName.ftl");
+        String subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
-                nameText, fmkRenderingStrategy,
+                subjLneText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("PrelimLetterEmailCoverNote-ITA.ftl.html");
-        nameText = loadResource("PrelimLetterName-ITA.ftl");
+        subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
-                nameText, fmkRenderingStrategy,
+                subjLneText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
@@ -190,24 +190,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 upsertType(DocumentTypeData.COVER_NOTE_INVOICE, executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote.ftl.html");
-        nameText = loadResource("InvoiceName.ftl");
+        subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForGlobal.PATH, null,
                 contentText, fmkRenderingStrategy,
-                nameText, fmkRenderingStrategy,
+                subjLneText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
                 executionContext);
 
         contentText = loadResource("InvoiceEmailCoverNote-ITA.ftl.html");
-        nameText = loadResource("InvoiceName-ITA.ftl");
+        subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
                 templateDate, ApplicationTenancyForIt.PATH, " (Italy)",
                 contentText, fmkRenderingStrategy,
-                nameText, fmkRenderingStrategy,
+                subjLneText, fmkRenderingStrategy,
                 Document.class,
                 FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover.class,
                 AttachToNone.class,
