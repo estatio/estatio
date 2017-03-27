@@ -44,6 +44,15 @@ public class InvoiceSummaryForPropertyDueDateStatusRepository
     }
 
     @Programmatic
+    public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatusAndDueDateAfter(
+            final InvoiceStatus status,
+            final LocalDate fromDate) {
+        return allMatches("findByStatusAndDueDateAfter",
+                "status", status,
+                "dueDateAfter", fromDate);
+    }
+
+    @Programmatic
     public List<InvoiceSummaryForPropertyDueDateStatus> findByAtPathAndSellerReferenceAndStatus(
                 final String atPath,
                 final String sellerReference,

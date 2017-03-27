@@ -47,16 +47,15 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDate;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
@@ -116,9 +115,12 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "1")
-    public List<InvoiceSummaryForPropertyInvoiceDate> allRecentlyInvoiced() {
-        return invoiceSummaryForPropertyInvoiceDateRepository.byInvoiceDate(clockService.now().minusDays(6));
+    @MemberOrder(sequence = "22")
+    public List<InvoiceSummaryForPropertyDueDateStatus> allRecentlyInvoiced(final LocalDate dueDateOnOrAfter) {
+        return invoiceSummaryForPropertyDueDateStatusRepository.findInvoicesByStatusAndDueDateAfter(InvoiceStatus.INVOICED, dueDateOnOrAfter);
+    }
+    public LocalDate default0AllRecentlyInvoiced() {
+        return clockService.now().minusDays(6);
     }
 
     @Action(semantics = SemanticsOf.SAFE)

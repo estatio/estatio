@@ -92,6 +92,13 @@ import lombok.Setter;
                         "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
                         "WHERE status == :status "),
         @javax.jdo.annotations.Query(
+                name = "findByStatusAndDueDateAfter", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                        "WHERE status == :status " +
+                        "   && dueDate >= :dueDateAfter "
+        ),
+        @javax.jdo.annotations.Query(
                 name = "findByAtPathAndSellerReferenceAndStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
