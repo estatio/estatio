@@ -11,7 +11,7 @@
                 <column name="blob_bytes" jdbc-type="BLOB" sql-type="LONGVARBINARY" allows-null="true"/>
             </field>
             <field name="clobChars">
-                <column name="clob_chars" jdbc-type="CLOB" sql-type="LONGVARCHAR" allows-null="true"/>
+                <column name="clob_chars" jdbc-type="CLOB" sql-type="LONGNVARCHAR" allows-null="true"/>
             </field>
         </class>
     </package>
