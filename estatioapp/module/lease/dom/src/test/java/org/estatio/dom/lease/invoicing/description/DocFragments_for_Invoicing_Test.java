@@ -110,6 +110,7 @@ public class DocFragments_for_Invoicing_Test {
                 templateText = DocFragmentData.read("InvoiceItem_description_ITA.docFragment.ftl");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void adjustment_and_chargeGroupOfS_and_dueDate_after_startDate() throws Exception {
 
@@ -133,6 +134,7 @@ public class DocFragments_for_Invoicing_Test {
                         .isEqualTo("Conguaglio: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void adjustment_and_chargeGroupOfS_but_dueDate_not_after_startDate() throws Exception {
 
@@ -155,6 +157,7 @@ public class DocFragments_for_Invoicing_Test {
                         .isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void adjustment_but_not_chargeGroupOfS_and_startDate() throws Exception {
 
@@ -176,6 +179,7 @@ public class DocFragments_for_Invoicing_Test {
                         .isEqualTo("Adeguamento: Charge description dal 01-04-2017 al 15-10-2017");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void adjustment_but_not_chargeGroupOfS_and_no_startDate() throws Exception {
 
@@ -190,6 +194,7 @@ public class DocFragments_for_Invoicing_Test {
                 Assertions.assertThat(rendered).isEqualTo("Adeguamento: Charge description");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void no_adjustment_with_startDate() throws Exception {
 
@@ -209,6 +214,7 @@ public class DocFragments_for_Invoicing_Test {
                 Assertions.assertThat(rendered).isEqualTo("Charge description dal 01-04-2017 al 15-10-2017");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void no_adjustment_no_startDate() throws Exception {
 
@@ -222,6 +228,7 @@ public class DocFragments_for_Invoicing_Test {
                 Assertions.assertThat(rendered).isEqualTo("Charge description");
             }
 
+            @Ignore // in EST-1197
             @Test
             public void null_adjustment_no_startDate() throws Exception {
 

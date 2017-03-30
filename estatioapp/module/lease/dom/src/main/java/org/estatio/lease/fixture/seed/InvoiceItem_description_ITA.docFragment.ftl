@@ -1,19 +1,1 @@
-<#if adjustment??><#t>
-    <#if adjustment ><#t>
-        <#if charge.group.reference == "S" &&
-            (dueDate > startDate)
-        ><#t>
-            Conguaglio: <#t>
-        <#else><#t>
-            Adeguamento: <#t>
-        </#if><#t>
-    </#if><#t>
-</#if><#t>
-<#t>
-<#t>
 ${charge.description}<#t>
-<#t>
-<#t>
-<#if startDate?? && effectiveStartDate?? && effectiveEndDate?? ><#t>
- dal ${effectiveStartDate?string["dd-MM-yyyy"]} al ${effectiveEndDate?string["dd-MM-yyyy"]}<#rt>
-</#if><#t>
