@@ -11,47 +11,13 @@
 --
 hide empty members
 
-''''''''''''''''''''''''''''''''''''''''''''''
-class FixedAsset << Dimension >> #lightgreen {
-}
-
-
-FixedAsset "parent/child" <---> FixedAsset
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
-class IncomingCharge << Dimension >> #cyan {
-}
-
-show IncomingCharge members
-
-IncomingCharge "parent/child" <---> IncomingCharge
-
-''''''''''''''''''''''''''''''''''''''''''''''
-
-class CodaElement5 #lightgray {
-    el5Code
-}
-note right #lightgray: additional\ndimensions \nto be identified
-
-IncomingCharge <--> "0..*" CodaElement5
-
-
-''''''''''''''''''''''''''''''''''''''''''''''
-
-
-class Project << Dimension >> #cyan {
-}
-
-class ProjectItem #cyan implements FinancialItem {
-}
-
-Project "parent/child" <---> Project
-
-Project <--> "0..*" ProjectItem
-
-class ServiceChargeBudget #lightgreen {
-    financialYear: DateTime
+interface FinancialItem << Fact >> #yellow {
+    value(): BigDecimal
+    rolledUp(): BigDecimal
+    remaining(): BigDecimal
 }
 
 enum FinancialItemType #cyan  {
@@ -60,48 +26,94 @@ enum FinancialItemType #cyan  {
     INVOICED
 }
 
-interface FinancialItem << Fact >> #yellow {
-    value(): BigDecimal
-    rolledUp(): BigDecimal
-    remaining(): BigDecimal
+FinancialItemType <-- FinancialItem
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class CodaElement5 #pink {
+    el5Code
+}
+note right #lightgray: fact + its dimensions\nmap to Coda
+
+FinancialItem <--> "0..*" CodaElement5
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class IncomingCharge << Dimension >> #cyan {
 }
 
 
+IncomingCharge "parent/child" <---> IncomingCharge
 
-'Project <--> "0..*" ServiceChargeBudget
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+class TimeInterval << Dimension >>  #cyan {
+    name: String  
+    from: Date
+    to: Date
+    financial : boolean
+}
+note right #lightgray: both calendar\nand financial\ntime intervals\neg F2014, 2015Q1,\neg 2015-03, 2015-03-17
+
+TimeInterval "parent/child" <---> TimeInterval
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class Tax << Dimension >> #cyan {
+
+}
+
+Tax "parent/child" <---> Tax
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class Project << Dimension >> #lightgreen {
+}
+
+class ProjectItem #lightgreen implements FinancialItem {
+}
+
+Project "parent/child" <---> Project
+
+Project <--> "0..*" ProjectItem
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class FixedAsset << Dimension >> #lightgreen {
+}
+
+
+FixedAsset "parent/child" <---> FixedAsset
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class ServiceChargeBudget #lightgreen {
+    financialYear
+}
+
 
 ServiceChargeBudget <--> "0..*" ServiceChargeBudgetItem
 
-
-'IncomingCharge <-- ServiceChargeBudgetItem
-
-Project "     0..1" <-- FinancialItem
-FixedAsset "0..1" <-- FinancialItem
-Interval <-- FinancialItem
-IncomingCharge <-- FinancialItem
-
-FinancialItemType <-- FinancialItem
-
 FixedAsset <-- ServiceChargeBudget
-
-class OrderInvoiceLink #pink {
-
-}
-
-OrderItem <-- OrderInvoiceLink
-IncomingInvoiceItem <-- OrderInvoiceLink
-
-''''''''''''''''''''''''''''''''''''''''''''''
 
 class ServiceChargeBudgetItem #lightgreen implements FinancialItem {
 }
 
 
 
+
 ''''''''''''''''''''''''''''''''''''''''''''''
 class Party #lightgreen {
 }
-
+note right #lightgray: eventually expect Party\nto also be 1 or 2 dimensions\n(debtor and/or creditor)
 
 Party "buyer  " <-- Invoice
 Party "\nseller" <-- Invoice
@@ -118,24 +130,9 @@ class OrderItem #lightgreen implements FinancialItem {
 
 Order <--> "0..*" OrderItem
 
-/'
-class PurchaseOrder #lightgreen extends Order {
-}
-class SupplierProposal #lightgreen extends Order {
-    approved: boolean
-}
-'/
 
 Party "  supplier" <-- Order
 
-
-
-''''''''''''''''''''''''''''''''''''''''''''''
-class Interval << Dimension >>  #cyan {
-    
-}
-
-Interval "parent/child" <---> Interval
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -150,46 +147,47 @@ class IncomingInvoice #pink extends Invoice  {
     received: Date
 }
 
-abstract class InvoiceItem #pink {
+
+class IncomingInvoiceItem #pink  implements FinancialItem  {
 }
 
-class IncomingInvoiceItem #pink extends InvoiceItem implements FinancialItem  {
 
-}
-
-class Tax << Dimension >> #cyan {
-
-}
-
-Tax "parent/child" <---> Tax
-
-
-'IncomingCharge <-- IncomingInvoiceItem
-
-Invoice *---> "1..*  " InvoiceItem
-
-Tax "0..1" <-- FinancialItem
+IncomingInvoice *---> "1..*  " IncomingInvoiceItem
 
 
 
-
-''''''''''''''''''''''''''''''''''''''''''''''
 class Document #lightgreen {
 }
 
 
-'FixedAsset <-- IncomingInvoiceItem
-
 IncomingInvoice --> Document
 
 
-''''''''''''''''''''''''''''''''''''''''''''''
 class PaymentLine #lightgray {
 }
-note right #lightgray: just a\nsketch
+
 
 IncomingInvoice --> "0..*" PaymentLine
-'PaymentLine "0..*" <-- IncomingInvoice
+
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+class OrderInvoiceLink #pink {
+
+}
+
+OrderItem <-- OrderInvoiceLink
+IncomingInvoiceItem <-- OrderInvoiceLink
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+
+Project <-.- FinancialItem
+FixedAsset <-.- FinancialItem
+Tax <-.- FinancialItem
+IncomingCharge <--- FinancialItem
+TimeInterval <--- FinancialItem
+
 
 
 --
