@@ -5,14 +5,14 @@
 
 == Sketch
 
-
+:graphvizdot: c:\Program Files (x86)\Graphviz2.38\bin\dot.exe
 
 [plantuml,invoices,png]
 --
 hide empty members
 
 ''''''''''''''''''''''''''''''''''''''''''''''
-class FixedAsset #lightgreen {
+class FixedAsset << Dimension >> #lightgreen {
 }
 
 
@@ -20,7 +20,7 @@ FixedAsset "parent/child" <---> FixedAsset
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
-class IncomingCharge #cyan {
+class IncomingCharge << Dimension >> #cyan {
 }
 
 show IncomingCharge members
@@ -40,22 +40,27 @@ IncomingCharge <--> "0..*" CodaElement5
 ''''''''''''''''''''''''''''''''''''''''''''''
 
 
-class Project #cyan {
+class Project << Dimension >> #cyan {
+}
+
+class ProjectItem #cyan implements FinancialItem {
 }
 
 Project "parent/child" <---> Project
 
-class Budget #lightgreen {
+Project <--> "0..*" ProjectItem
+
+class ServiceChargeBudget #lightgreen {
     financialYear: DateTime
 }
 
-enum ItemValueType #cyan {
+enum FinancialItemType #cyan  {
     BUDGETED
     ORDERED
     INVOICED
 }
 
-interface ItemValue #yellow {
+interface FinancialItem << Fact >> #yellow {
     value(): BigDecimal
     rolledUp(): BigDecimal
     remaining(): BigDecimal
@@ -63,23 +68,32 @@ interface ItemValue #yellow {
 
 
 
-'Project <--> "0..*" Budget
+'Project <--> "0..*" ServiceChargeBudget
 
-Budget <--> "0..*" BudgetItem
+ServiceChargeBudget <--> "0..*" ServiceChargeBudgetItem
 
 
-'IncomingCharge <-- BudgetItem
+'IncomingCharge <-- ServiceChargeBudgetItem
 
-Project "     0..1" <-- ItemValue
-FixedAsset "0..1" <-- ItemValue
-Interval <-- ItemValue
-IncomingCharge <-- ItemValue
+Project "     0..1" <-- FinancialItem
+FixedAsset "0..1" <-- FinancialItem
+Interval <-- FinancialItem
+IncomingCharge <-- FinancialItem
 
-ItemValueType <-- ItemValue
+FinancialItemType <-- FinancialItem
+
+FixedAsset <-- ServiceChargeBudget
+
+class OrderInvoiceLink #pink {
+
+}
+
+OrderItem <-- OrderInvoiceLink
+IncomingInvoiceItem <-- OrderInvoiceLink
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
-class BudgetItem #lightgreen implements ItemValue {
+class ServiceChargeBudgetItem #lightgreen implements FinancialItem {
 }
 
 
@@ -98,7 +112,7 @@ Party "\nseller" <-- Invoice
 class Order #lightgreen  {
 }
 
-class OrderItem #lightgreen implements ItemValue {
+class OrderItem #lightgreen implements FinancialItem {
     
 }
 
@@ -117,7 +131,7 @@ Party "  supplier" <-- Order
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
-class Interval #cyan {
+class Interval << Dimension >>  #cyan {
     
 }
 
@@ -139,16 +153,22 @@ class IncomingInvoice #pink extends Invoice  {
 abstract class InvoiceItem #pink {
 }
 
-class IncomingInvoiceItem #pink extends InvoiceItem implements ItemValue  {
+class IncomingInvoiceItem #pink extends InvoiceItem implements FinancialItem  {
 
 }
+
+class Tax << Dimension >> #cyan {
+
+}
+
+Tax "parent/child" <---> Tax
+
 
 'IncomingCharge <-- IncomingInvoiceItem
 
 Invoice *---> "1..*  " InvoiceItem
 
-OrderItem <-- IncomingInvoiceItem
-
+Tax "0..1" <-- FinancialItem
 
 
 
