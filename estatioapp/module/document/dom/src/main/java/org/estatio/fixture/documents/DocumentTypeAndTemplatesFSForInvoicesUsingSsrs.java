@@ -117,7 +117,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForPrelimCoverNote =
                 upsertType(DocumentTypeData.COVER_NOTE_PRELIM_LETTER, executionContext);
 
-        String contentText = loadResource("PrelimLetterEmailCoverNote.ftl.html");
+        String contentText = loadResource("PrelimLetterEmailCoverNote.html.ftl");
         String subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
@@ -129,7 +129,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 AttachToNone.class,
                 executionContext);
 
-        contentText = loadResource("PrelimLetterEmailCoverNote-ITA.ftl.html");
+        contentText = loadResource("PrelimLetterEmailCoverNote-ITA.html.ftl");
         subjLneText = loadResource("PrelimLetterEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForPrelimCoverNote,
@@ -191,7 +191,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
         final DocumentType docTypeForInvoiceCoverNote =
                 upsertType(DocumentTypeData.COVER_NOTE_INVOICE, executionContext);
 
-        contentText = loadResource("InvoiceEmailCoverNote.ftl.html");
+        contentText = loadResource("InvoiceEmailCoverNote.html.ftl");
         subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
@@ -203,7 +203,7 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
                 AttachToNone.class,
                 executionContext);
 
-        contentText = loadResource("InvoiceEmailCoverNote-ITA.ftl.html");
+        contentText = loadResource("InvoiceEmailCoverNote-ITA.html.ftl");
         subjLneText = loadResource("InvoiceEmailCoverNoteSubjectLine-ITA.ftl");
         upsertDocumentTemplateForTextHtmlWithApplicability(
                 docTypeForInvoiceCoverNote,
