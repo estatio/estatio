@@ -27,6 +27,7 @@ public class InvoicingFrequency_Test {
         testRange(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2010-09-01", "2010-09-01/2010-12-01");
         testRange(InvoicingFrequency.MONTHLY_IN_ADVANCE, "2010-01-01", "2010-01-01/2010-02-01");
         testRange(InvoicingFrequency.YEARLY_IN_ARREARS, "2010-01-01", "2010-01-01/2011-01-01");
+        testRange(InvoicingFrequency.YEARLY_IN_ARREARS_PLUS6M, "2010-07-01", "2010-07-01/2011-07-01");
     }
 
     @Test
@@ -55,6 +56,9 @@ public class InvoicingFrequency_Test {
         dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, "2012-03-01/2012-03-02", 1);
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ADVANCE, "2012-03-01/2012-03-02", 1);
         dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-03-01/2012-03-02", 1);
+        dueDateRangeTester(InvoicingFrequency.YEARLY_IN_ARREARS_PLUS6M, "2010-07-01/2011-06-30", 0);
+        dueDateRangeTester(InvoicingFrequency.YEARLY_IN_ARREARS_PLUS6M, "2010-07-01/2011-07-01", 1);
+
     }
 
     @Test

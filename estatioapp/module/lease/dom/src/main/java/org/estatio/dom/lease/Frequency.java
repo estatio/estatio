@@ -50,6 +50,10 @@ public enum Frequency {
             "RRULE:FREQ=YEARLY;INTERVAL=1",
             BigDecimal.valueOf(1),
             BigDecimal.valueOf(1)),
+    YEARLY_PLUS6M(
+            "RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=7",
+            BigDecimal.valueOf(1),
+            BigDecimal.valueOf(1)),
     FIXED(
             null,
             BigDecimal.valueOf(1),
