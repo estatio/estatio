@@ -35,10 +35,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.TitleType;
 import org.incode.module.base.dom.utils.TitleBuilder;
-
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithTitleComparable;
 import org.incode.module.base.dom.with.WithTitleUnique;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -70,7 +70,7 @@ import lombok.Setter;
 )
 public class AgreementType
         extends UdoDomainObject2<AgreementType>
-        implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal {
+        implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal, AgreementTypeData {
 
     public AgreementType() {
         super("title");

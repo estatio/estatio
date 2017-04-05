@@ -43,6 +43,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -193,7 +194,7 @@ public abstract class LeaseAbstract extends FixtureScript {
         final AgreementRoleType inRoleOfTenant =
                 agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
         final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
-                agreementRoleCommunicationChannelTypeRepository.findByTitle(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
+                agreementRoleCommunicationChannelTypeRepository.find(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS);
 
         final Party tenant = partyRepository.findPartyByReference(partyRefTenant);
 
@@ -255,17 +256,17 @@ public abstract class LeaseAbstract extends FixtureScript {
     @Inject
     protected CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
-    public void createAddress(Lease lease, String addressType) {
-        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()), ld(2010, 7, 15));
+    public void createAddress(Lease lease, AgreementRoleCommunicationChannelTypeData addressType) {
+        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.find(LeaseConstants.AgreementRoleType.TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
-                .findByTitle(addressType);
+                .find(addressType);
         final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);
         final CommunicationChannel postalAddress = channels.first();
         agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
     }
 
     protected void addAddresses(final Lease lease) {
-        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS.getTitle());
-        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
+        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS);
+        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS);
     }
 }

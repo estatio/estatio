@@ -417,8 +417,6 @@ public abstract class Agreement
         return role;
     }
 
-    // //////////////////////////////////////
-
     @Programmatic
     public AgreementRole findRole(final Party party, final AgreementRoleType type, final LocalDate date) {
         return agreementRoleRepository.findByAgreementAndPartyAndTypeAndContainsDate(this, party, type, date);
@@ -429,7 +427,10 @@ public abstract class Agreement
         return agreementRoleRepository.findByAgreementAndTypeAndContainsDate(this, agreementRoleType, date);
     }
 
-    // //////////////////////////////////////
+    @Programmatic
+    public AgreementRole findRoleWithType(final AgreementRoleTypeData agreementRoleTypeData, final LocalDate date) {
+        return findRoleWithType(agreementRoleTypeRepository.find(agreementRoleTypeData), date);
+    }
 
     @Inject
     public AgreementRepository agreementRepository;
@@ -440,6 +441,7 @@ public abstract class Agreement
     @Inject
     public AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    @Inject public AgreementTypeRepository agreementTypeRepository;
+    @Inject
+    public AgreementTypeRepository agreementTypeRepository;
 
 }

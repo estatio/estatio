@@ -75,7 +75,7 @@ import lombok.Setter;
 )
 public class AgreementRoleCommunicationChannelType
         extends UdoDomainObject2<AgreementRoleCommunicationChannelType>
-        implements WithApplicationTenancyGlobal {
+        implements WithApplicationTenancyGlobal, AgreementRoleCommunicationChannelTypeData {
 
     public AgreementRoleCommunicationChannelType() {
         super("title");
@@ -117,11 +117,8 @@ public class AgreementRoleCommunicationChannelType
         };
     }
 
-    // //////////////////////////////////////
-
     public static List<AgreementRoleCommunicationChannelType> applicableTo(final AgreementType at) {
         return at.getRoleChannelTypesApplicableTo();
     }
-
 
 }

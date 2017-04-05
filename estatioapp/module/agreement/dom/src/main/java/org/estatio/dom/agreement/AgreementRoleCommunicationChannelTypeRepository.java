@@ -40,6 +40,11 @@ public class AgreementRoleCommunicationChannelTypeRepository
         super(AgreementRoleCommunicationChannelTypeRepository.class, AgreementRoleCommunicationChannelType.class);
     }
 
+    public AgreementRoleCommunicationChannelType find(final AgreementRoleCommunicationChannelTypeData data) {
+        return findByTitle(data.getTitle());
+    }
+
+    @Deprecated
     public AgreementRoleCommunicationChannelType findByTitle(final String title) {
         return queryResultsCache.execute(new Callable<AgreementRoleCommunicationChannelType>() {
             @Override
@@ -67,7 +72,9 @@ public class AgreementRoleCommunicationChannelTypeRepository
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findApplicableTo", agreementType);
     }
 
-    public AgreementRoleCommunicationChannelType findOrCreate(final String title, final AgreementType agreementType) {
+    public AgreementRoleCommunicationChannelType findOrCreate(final AgreementRoleCommunicationChannelTypeData data, final AgreementTypeData agreementTypeData) {
+        final String title = data.getTitle();
+        final AgreementType agreementType = agreementTypeRepository.find(agreementTypeData);
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
         if (arcct == null) {
             arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);
@@ -80,5 +87,9 @@ public class AgreementRoleCommunicationChannelTypeRepository
 
     @Inject
     QueryResultsCache queryResultsCache;
+
+    @Inject
+    AgreementTypeRepository agreementTypeRepository;
+
 
 }

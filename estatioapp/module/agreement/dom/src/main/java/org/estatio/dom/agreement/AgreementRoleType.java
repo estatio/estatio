@@ -33,9 +33,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.TitleType;
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.with.WithTitleComparable;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithTitleComparable;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -74,7 +74,7 @@ import lombok.Setter;
 )
 public class AgreementRoleType
         extends UdoDomainObject2<AgreementRoleType>
-        implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal {
+        implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal, AgreementRoleTypeData {
 
     public AgreementRoleType() {
         super("title");

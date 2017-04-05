@@ -18,6 +18,10 @@
  */
 package org.estatio.dom.lease;
 
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
+import org.estatio.dom.agreement.AgreementRoleTypeData;
+import org.estatio.dom.agreement.AgreementTypeData;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -25,14 +29,8 @@ public final class LeaseConstants {
 
     private LeaseConstants() {}
 
-    public interface Type {
-
-        String name();
-        String getTitle();
-    }
-
     @AllArgsConstructor
-    public enum AgreementType implements Type {
+    public enum AgreementType implements AgreementTypeData {
         LEASE("Lease");
 
         @Getter
@@ -40,7 +38,7 @@ public final class LeaseConstants {
     }
 
     @AllArgsConstructor
-    public enum AgreementRoleType implements Type {
+    public enum AgreementRoleType implements AgreementRoleTypeData {
         LANDLORD("Landlord"),
         TENANT("Tenant"),
         TENANTS_ASSOCIATION("Tenants association"),
@@ -56,11 +54,16 @@ public final class LeaseConstants {
     }
 
     @AllArgsConstructor
-    public enum AgreementRoleCommunicationChannelType implements Type {
+    public enum AgreementRoleCommunicationChannelType implements AgreementRoleCommunicationChannelTypeData {
         INVOICE_ADDRESS("Invoice Address"),
         ADMINISTRATION_ADDRESS("Administration Address");
 
         @Getter
         private String title;
+
+        public boolean equalTo(final AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelType){
+            return getTitle().equals(agreementRoleCommunicationChannelType.getTitle());
+        }
+
     }
 }

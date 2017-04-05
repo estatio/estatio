@@ -62,12 +62,12 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE.getTitle());
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.TENANT.getTitle(), agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.LANDLORD.getTitle(), agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.MANAGER.getTitle(), agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS.getTitle(), agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle(), agreementType);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.TENANT, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.LANDLORD, agreementType);
+        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.MANAGER, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS, agreementType);
+        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS, agreementType);
     }
 
     @Programmatic

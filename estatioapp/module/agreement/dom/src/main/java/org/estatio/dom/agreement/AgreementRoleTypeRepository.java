@@ -39,8 +39,11 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         super(AgreementRoleTypeRepository.class, AgreementRoleType.class);
     }
 
-    // //////////////////////////////////////
+    public AgreementRoleType find(final AgreementRoleTypeData data) {
+        return findByTitle(data.getTitle());
+    }
 
+    @Deprecated
     public AgreementRoleType findByTitle(final String title) {
         return queryResultsCache.execute(new Callable<AgreementRoleType>() {
             @Override
@@ -68,6 +71,12 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         }, AgreementRoleTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
 
+    public AgreementRoleType findOrCreate(final AgreementRoleTypeData data, final AgreementTypeData appliesTo) {
+        final AgreementType agreementType = agreementTypeRepository.find(appliesTo);
+        return findOrCreate(data.getTitle(), agreementType);
+    }
+
+    @Deprecated
     public AgreementRoleType findOrCreate(final String title, final AgreementType appliesTo) {
         AgreementRoleType agreementRoleType = findByAgreementTypeAndTitle(appliesTo, title);
         if (agreementRoleType == null) {
@@ -78,6 +87,9 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         }
         return agreementRoleType;
     }
+
+    @Inject
+    AgreementTypeRepository agreementTypeRepository;
 
     @Inject
     QueryResultsCache queryResultsCache;
