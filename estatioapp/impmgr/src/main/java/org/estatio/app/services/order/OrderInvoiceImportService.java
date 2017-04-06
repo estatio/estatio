@@ -41,14 +41,14 @@ public class OrderInvoiceImportService {
         }
     }
 
-    public List<OrderInvoiceImportLine> createLines(final String sheetNameMatcher, final Blob spreadsheet){
-        List<OrderInvoiceImportLine> result = new ArrayList<>();
+    public List<OrderInvoiceLine> createLines(final String sheetNameMatcher, final Blob spreadsheet){
+        List<OrderInvoiceLine> orderInvoiceLines = new ArrayList<>();
         List<List<?>> res = excelService.fromExcel(
                 spreadsheet,
                 sheetName -> {
                     if(sheetName.startsWith(sheetNameMatcher)) {
                         return new WorksheetSpec(
-                                OrderInvoiceImportLine.class,
+                                OrderInvoiceImportHandler.class,
                                 sheetName,
                                 Mode.RELAXED);
                     }
@@ -56,22 +56,24 @@ public class OrderInvoiceImportService {
                         return null;
                 }
         );
-        for (List<?> r : res){
-            OrderInvoiceImportLine previous = null;
-            for (Object o : r){
-                OrderInvoiceImportLine line = (OrderInvoiceImportLine) o;
-                if (line.handle(previous)!=null) {
-                    result.add(line.handle(previous));
+        List<List<OrderInvoiceImportHandler>> worksheetHandlers = (List)res;
+
+        for (final List<OrderInvoiceImportHandler> rowHandlers : worksheetHandlers){
+            OrderInvoiceImportHandler previous = null;
+            for (OrderInvoiceImportHandler handler : rowHandlers){
+                final OrderInvoiceLine invoiceLine = handler.handle(previous);
+                if (invoiceLine !=null) {
+                    orderInvoiceLines.add(invoiceLine);
                 }
-                previous = line;
+                previous = handler;
             }
         }
-        return result;
+        return orderInvoiceLines;
     }
 
     @Programmatic
-    public Blob createSheet(final List<OrderInvoiceImportLine> lines){
-        return excelService.toExcel(lines, OrderInvoiceImportLine.class, "OrderInvoiceImportLine", "result.xlsx");
+    public Blob createSheet(final List<OrderInvoiceLine> lines){
+        return excelService.toExcel(lines, OrderInvoiceLine.class, "OrderInvoiceLine", "result.xlsx");
     }
 
     @Inject

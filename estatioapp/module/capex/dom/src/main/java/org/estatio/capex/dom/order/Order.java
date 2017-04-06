@@ -1,8 +1,10 @@
 package org.estatio.capex.dom.order;
 
+import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -22,17 +24,21 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.capex.dom.charge.IncomingCharge;
+import org.estatio.capex.dom.time.CalendarType;
 import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.party.Organisation;
 import org.estatio.dom.project.Project;
+import org.estatio.dom.tax.Tax;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -68,6 +74,33 @@ public class Order extends UdoDomainObject2<Order> {
         super("reference");
     }
 
+    @Builder
+    public Order(
+            final String reference,
+            final String number,
+            final LocalDate entryDate,
+            final LocalDate orderDate,
+            final TimeInterval period,
+            final String sellerName,
+            final Project project,
+            final org.estatio.dom.asset.Property property,
+            final String atPath,
+            final String approvedBy,
+            final LocalDate approvedOn) {
+        this();
+        this.reference = reference;
+        this.number = number;
+        this.entryDate = entryDate;
+        this.orderDate = orderDate;
+        this.period = period;
+        this.sellerName = sellerName;
+        this.project = project;
+        this.property = property;
+        this.atPath = atPath;
+        this.approvedBy = approvedBy;
+        this.approvedOn = approvedOn;
+    }
+
     // proposal: 20160302-001
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -91,7 +124,7 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private Organisation seller;
+    private String sellerName;
 
     @Column(allowsNull = "true")
     @Getter @Setter
@@ -103,7 +136,21 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Persistent(mappedBy = "order", dependentElement = "true")
     @Getter @Setter
-    private SortedSet<OrderItem> items = new TreeSet<OrderItem>();
+    private SortedSet<OrderItem> items = new TreeSet<>();
+
+    @Programmatic
+    public void addItem(
+            final IncomingCharge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final CalendarType calendarType) {
+        orderItemRepository.findOrCreate(
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, calendarType);
+        // (we think there's) no need to add to the getItems(), because the item points back to this order.
+    }
 
 
 
@@ -137,5 +184,9 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private LocalDate approvedOn;
 
+
+
+    @Inject
+    OrderItemRepository orderItemRepository;
 
 }
