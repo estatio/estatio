@@ -2,6 +2,7 @@ package org.estatio.capex.dom.items;
 
 import java.math.BigDecimal;
 
+import org.estatio.capex.dom.time.CalendarType;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.time.TimeInterval;
@@ -25,14 +26,12 @@ public interface FinancialItem {
      */
     IncomingCharge getCharge();
 
+    TimeInterval getPeriod();
+
     /**
-     * Optional, though either this or {@link #getFinancialTimeInterval()} are expected to be defined.
+     * Whether the {@link #getPeriod()} is a financial or natural calendar period.
      */
-    TimeInterval getNaturalTimeInterval();
-    /**
-     * Optional, though either this or {@link #getNaturalTimeInterval()} are expected to be defined.
-     */
-    TimeInterval getFinancialTimeInterval();
+    CalendarType getCalendarType();
 
     /**
      * Optional
