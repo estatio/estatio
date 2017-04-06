@@ -10,9 +10,11 @@ import org.estatio.dom.tax.Tax;
 
 public interface FinancialItem {
 
+    /**
+     * From which we can infer the rolledUp costs and the remaining; but this probably won't be a programmatic
+     * responsibility of the item, rather we'll use the database (eg CTE queries) to answer.
+     */
     BigDecimal value();
-    BigDecimal rolledUp();
-    BigDecimal remaining();
 
     /**
      * Mandatory
@@ -21,7 +23,7 @@ public interface FinancialItem {
     /**
      * Mandatory
      */
-    IncomingCharge getIncomingCharge();
+    IncomingCharge getCharge();
 
     /**
      * Optional, though either this or {@link #getFinancialTimeInterval()} are expected to be defined.
