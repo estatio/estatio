@@ -775,6 +775,7 @@ language governing permissions and limitations under the License.
 
     <modules>
         <module>estatioapp/module/base/dom</module>
+        <module>estatioapp/module/capex/dom</module>
         <module>estatioapp/module/agreement/dom</module>
         <module>estatioapp/module/asset/dom</module>
         <module>estatioapp/module/assetfinancial/dom</module>
