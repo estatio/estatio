@@ -29,9 +29,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.incode.module.base.dom.utils.StringUtils;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.currency.Currency;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -48,6 +49,11 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     @Programmatic
     public List<Project> findProject(String searchStr) {
         return allMatches("matchByReferenceOrName", "matcher", StringUtils.wildcardToCaseInsensitiveRegex(searchStr));
+    }
+
+    @Programmatic
+    public Project findByReference(final String reference) {
+        return uniqueMatch("findByReference", "reference", reference);
     }
 
     @Programmatic

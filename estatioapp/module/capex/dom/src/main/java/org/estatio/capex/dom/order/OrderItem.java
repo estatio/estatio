@@ -7,6 +7,8 @@ import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
@@ -29,6 +31,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +46,15 @@ import lombok.Setter;
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@Queries({
+        @Query(
+                name = "findByOrderAndCharge", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE order == :order "
+                        + "   && charge == :charge ")
+})
+
 @Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "charge" })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -55,6 +67,28 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     public OrderItem() {
         super("order,charge");
+    }
+
+    @Builder
+    public OrderItem(
+            final Order order,
+            final IncomingCharge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final CalendarType calendarType
+    ) {
+        this();
+        this.order = order;
+        this.charge = charge;
+        this.description = description;
+        this.netAmount = netAmount;
+        this.vatAmount = vatAmount;
+        this.grossAmount = grossAmount;
+        this.tax = tax;
+        this.calendarType = calendarType;
     }
 
     @Column(allowsNull = "false")

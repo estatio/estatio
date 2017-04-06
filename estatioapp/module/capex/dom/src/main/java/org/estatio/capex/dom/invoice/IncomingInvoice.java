@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.invoice;
 
-import java.math.BigDecimal;
-
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -16,8 +14,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-
-import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -3,107 +3,61 @@ package org.estatio.app.services.order;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.jdo.annotations.Column;
+import java.util.Objects;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(
-        nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.app.services.order.OrderInvoiceImportLine"
-)
-@AllArgsConstructor
-public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoiceImportLine> {
+public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderInvoiceImportHandler> {
 
-    public String title() {
-        return "Order - Invoice Import Line";
-    }
-
-    public OrderInvoiceImportLine() {
-    }
 
     @Getter @Setter
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    private int rowCounter;
-    @Getter @Setter
-    @MemberOrder(sequence = "1")
     private String status;
     @Getter @Setter
-    @MemberOrder(sequence = "2")
     private String orderNumber;
     @Getter @Setter
-    @MemberOrder(sequence = "3")
     private String charge;
     @Getter @Setter
-    @MemberOrder(sequence = "4")
     private LocalDate entryDate;
     @Getter @Setter
-    @MemberOrder(sequence = "5")
     private LocalDate orderDate;
     @Getter @Setter
-    @MemberOrder(sequence = "6")
     private String seller;
     @Getter @Setter
-    @MemberOrder(sequence = "7")
     private String orderDescription;
     @Getter @Setter
-    @MemberOrder(sequence = "8")
-    @Column(scale = 2)
     private BigDecimal netAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "9")
-    @Column(scale = 2)
     private BigDecimal vatAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "10")
-    @Column(scale = 2)
     private BigDecimal grossAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "11")
     private String orderApprovedBy;
     @Getter @Setter
-    @MemberOrder(sequence = "12")
-    private String orderApprovedOn;
+    private LocalDate orderApprovedOn;
     @Getter @Setter
-    @MemberOrder(sequence = "13")
     private String projectReference;
     @Getter @Setter
-    @MemberOrder(sequence = "14")
     private String period;
     @Getter @Setter
-    @MemberOrder(sequence = "15")
     private String tax;
     @Getter @Setter
-    @MemberOrder(sequence = "16")
     private String invoiceNumber;
     @Getter @Setter
-    @MemberOrder(sequence = "17")
     private String invoiceDescription;
     @Getter @Setter
-    @MemberOrder(sequence = "18")
-    @Column(scale = 2)
     private BigDecimal invoiceNetAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "19")
-    @Column(scale = 2)
     private BigDecimal invoiceVatAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "20")
-    @Column(scale = 2)
     private BigDecimal invoiceGrossAmount;
     @Getter @Setter
     @MemberOrder(sequence = "21")
@@ -121,12 +75,9 @@ public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoi
     @Setter
     private ExcelFixture2 excelFixture2;
 
-    public OrderInvoiceImportLine handle(final OrderInvoiceImportLine previousRow){
+    public OrderInvoiceLine handle(final OrderInvoiceImportHandler previousRow){
 
-        if (previousRow==null) {
-            setRowCounter(1);
-        } else {
-            setRowCounter(previousRow.getRowCounter() + 1);
+        if (previousRow != null) {
 
             // support sparse population for charge
             if (getCharge() == null && previousRow.getCharge() != null) {
@@ -156,11 +107,10 @@ public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoi
             }
         }
 
-        OrderInvoiceImportLine lineItem = null;
+        OrderInvoiceLine lineItem = null;
 
         if (getEntryDate()!=null || invoiceNumberToUse()!=null) {
-            lineItem = new OrderInvoiceImportLine(
-                    getRowCounter(),
+            lineItem = new OrderInvoiceLine(
                     validateRow(),
                     clean(getOrderNumber()),
                     getCharge(),
@@ -181,14 +131,11 @@ public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoi
                     invoiceNetAmountToUse(),
                     invoiceVatAmountToUse(),
                     invoiceGrossAmountToUse(),
-                    invoiceTaxToUse(),
-                    null,
-                    null
+                    invoiceTaxToUse()
             );
         }
 
         return lineItem;
-
     }
 
     private String clean(final String input){
@@ -238,7 +185,7 @@ public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoi
         if (getNetAmount()!= null && getVatAmount() != null) {
             return getNetAmount().add(getVatAmount()).setScale(2, BigDecimal.ROUND_HALF_UP);
         }
-        if (getNetAmount()!= null && taxToUse().equals("FRE")){
+        if (getNetAmount()!= null && Objects.equals(taxToUse(), "FRE")){
             return getNetAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return null;
@@ -382,7 +329,7 @@ public class OrderInvoiceImportLine implements FixtureAwareRowHandler<OrderInvoi
     }
 
     @Override
-    public void handleRow(final OrderInvoiceImportLine previousRow) {
+    public void handleRow(final OrderInvoiceImportHandler previousRow) {
 
             if(executionContext != null && excelFixture2 != null) {
                 executionContext.addResult(excelFixture2,this.handle(previousRow));
