@@ -22,6 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.time.CalendarType;
 import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
@@ -84,6 +85,10 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private Tax tax;
 
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private CalendarType calendarType;
+
 
     @PropertyLayout(
             named = "Application Level",
@@ -108,12 +113,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     @Override
-    public TimeInterval getNaturalTimeInterval() {
-        return null;
-    }
-
-    @Override
-    public TimeInterval getFinancialTimeInterval() {
+    public TimeInterval getPeriod() {
         return getOrder().getPeriod();
     }
 

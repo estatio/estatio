@@ -191,9 +191,9 @@ Project <-.- FinancialItem
 FixedAsset <-.- FinancialItem
 Tax <-.- FinancialItem
 IncomingCharge <--- FinancialItem
-TimeInterval "natural" <--- FinancialItem
-TimeInterval "financial" <--- FinancialItem
+TimeInterval <--- FinancialItem
 
+CalendarType <--- FinancialItem
 
 
 --

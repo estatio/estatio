@@ -126,7 +126,6 @@ public class Order extends UdoDomainObject2<Order> {
 
 
 
-
     // random thought: approvedBy and approvedOn are probably both attributes of a different entity, "Approval".
     // workflow is a crosscutting concern, the approval points back to the order that it approves
     // (perhaps Order is Approvable)
