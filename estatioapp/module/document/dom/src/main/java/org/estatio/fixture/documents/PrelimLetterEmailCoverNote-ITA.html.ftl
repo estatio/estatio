@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="windows-1252"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
+		<!-- this file is utf-8, but when saved/retrieved from DB will be in windows-1252.  So we declare it in that charset -->
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
         <meta name="viewport" content="width=device-width"/>
         <style>

@@ -164,7 +164,7 @@ public class Lease
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Lease() {
-        super(LeaseConstants.AgreementRoleType.LANDLORD.getTitle(), LeaseConstants.AgreementRoleType.TENANT.getTitle());
+        super(LeaseConstants.AgreementRoleType.LANDLORD, LeaseConstants.AgreementRoleType.TENANT);
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
@@ -776,11 +776,11 @@ public class Lease
     }
 
     private AgreementRoleType debtorRoleType() {
-        return agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
+        return agreementRoleTypeRepository.find(BankMandateConstants.AgreementRoleType.DEBTOR);
     }
 
     private AgreementType bankMandateAgreementType() {
-        return agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
+        return agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
     }
 
     // //////////////////////////////////////

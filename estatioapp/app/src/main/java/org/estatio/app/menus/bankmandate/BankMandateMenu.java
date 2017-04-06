@@ -29,13 +29,14 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.base.dom.utils.StringUtils;
+
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandateRepository;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(
     nature = NatureOfService.VIEW_MENU_ONLY
@@ -56,7 +57,7 @@ public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
     @Action(semantics = SemanticsOf.SAFE)
     public List<Agreement> findBankMandates(final String search){
         return agreementRepository.findByTypeTitleAndReferenceOrName(
-                BankMandateConstants.AT_MANDATE,
+                BankMandateConstants.AgreementType.MANDATE.getTitle(),
                 StringUtils.wildcardToCaseInsensitiveRegex(search));
     }
 

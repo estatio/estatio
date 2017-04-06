@@ -18,20 +18,37 @@
  */
 package org.estatio.dom.bankmandate;
 
+import org.estatio.dom.agreement.AgreementRoleTypeData;
+import org.estatio.dom.agreement.AgreementTypeData;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public final class BankMandateConstants {
 
     private BankMandateConstants() {}
-    
-    public final static String AT_MANDATE = "Mandate";
-    
-    public final static String ART_CREDITOR = "Creditor"; 
-    public final static String ART_DEBTOR = "Debtor";
-    public final static String ART_OWNER = "Owner";
 
-    // TODO: what are the AgreementRoleCommunicationChannelTypes for BankMandates 
-    // (or more generally, any subtype of Agreement defined by the financial module)?
-    public final static String ARCCT_FOO_ADDRESS = "Foo Address";
-    public final static String ARCCT_BAR_ADDRESS = "Bar Address";
+    @AllArgsConstructor
+    public enum AgreementType implements AgreementTypeData {
+        MANDATE("Mandate");
+
+        @Getter
+        private String title;
+    }
+
+    @AllArgsConstructor
+    public enum AgreementRoleType implements AgreementRoleTypeData {
+        DEBTOR("Debtor"),
+        CREDITOR("Creditor"),
+        OWNER("Owner");
+
+        @Getter
+        private String title;
+
+        public static class Meta {
+            public final static int MAX_LEN = 30;
+            private Meta() {}
+        }
+    }
 
 }

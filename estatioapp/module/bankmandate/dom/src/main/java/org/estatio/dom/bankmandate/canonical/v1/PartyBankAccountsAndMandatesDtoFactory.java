@@ -46,8 +46,8 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
 
         dto.setBankAccounts(bankAccountDtos);
 
-        final AgreementType bankMandateAt = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
-        final AgreementRoleType debtorOfMandate = agreementRoleTypeRepository.findByAgreementTypeAndTitle(bankMandateAt, BankMandateConstants.ART_DEBTOR);
+        final AgreementType bankMandateAt = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
+        final AgreementRoleType debtorOfMandate = agreementRoleTypeRepository.findByAgreementTypeAndTitle(bankMandateAt, BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
         final List<AgreementRole> agreementRoles = agreementRoleRepository.findByPartyAndType(party, debtorOfMandate);
 
         final List<BankMandateDto> mandateDtos =

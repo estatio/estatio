@@ -364,10 +364,10 @@ public class Lease_Test {
             });
 
             debtorAgreementRoleType = new AgreementRoleType();
-            debtorAgreementRoleType.setTitle(BankMandateConstants.ART_DEBTOR);
+            debtorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
@@ -379,19 +379,19 @@ public class Lease_Test {
             });
 
             creditorAgreementRoleType = new AgreementRoleType();
-            creditorAgreementRoleType.setTitle(BankMandateConstants.ART_CREDITOR);
+            creditorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.CREDITOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_CREDITOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.CREDITOR);
                     will(returnValue(creditorAgreementRoleType));
                 }
             });
 
             bankMandateAgreementType = new AgreementType();
-            bankMandateAgreementType.setTitle(BankMandateConstants.AT_MANDATE);
+            bankMandateAgreementType.setTitle(BankMandateConstants.AgreementType.MANDATE.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AT_MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AgreementType.MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });
@@ -614,19 +614,19 @@ public class Lease_Test {
             });
 
             debtorAgreementRoleType = new AgreementRoleType();
-            debtorAgreementRoleType.setTitle(BankMandateConstants.ART_DEBTOR);
+            debtorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(BankMandateConstants.ART_DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
 
             bankMandateAgreementType = new AgreementType();
-            bankMandateAgreementType.setTitle(BankMandateConstants.AT_MANDATE);
+            bankMandateAgreementType.setTitle(BankMandateConstants.AgreementType.MANDATE.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AT_MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AgreementType.MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });

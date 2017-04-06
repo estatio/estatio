@@ -141,10 +141,10 @@ public abstract class Agreement
     protected final String primaryRoleTypeTitle;
     protected final String secondaryRoleTypeTitle;
 
-    public Agreement(final String primaryRoleTypeTitle, final String secondaryRoleTypeTitle) {
+    public Agreement(final AgreementRoleTypeData primaryRoleType, final AgreementRoleTypeData secondaryRoleType) {
         super("type,reference");
-        this.primaryRoleTypeTitle = primaryRoleTypeTitle;
-        this.secondaryRoleTypeTitle = secondaryRoleTypeTitle;
+        this.primaryRoleTypeTitle = primaryRoleType == null ? null : primaryRoleType.getTitle();
+        this.secondaryRoleTypeTitle = secondaryRoleType == null ? null : secondaryRoleType.getTitle();
     }
 
     public String title() {

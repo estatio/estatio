@@ -65,7 +65,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
                 bd(50000),
                 executionContext);
         guarantee.createRole(
-                agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_BANK),
+                agreementRoleTypeRepository.find(GuaranteeConstants.AgreementRoleType.BANK),
                 partyRepository.findPartyByReference(PARTY_REF_BANK),
                 null,
                 null);

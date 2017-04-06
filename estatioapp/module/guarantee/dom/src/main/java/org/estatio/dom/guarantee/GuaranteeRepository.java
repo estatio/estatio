@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -50,7 +51,6 @@ import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)
 public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee> {
@@ -77,14 +77,14 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
             final BigDecimal startAmount
     ) {
 
-        AgreementRoleType artGuarantee = agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_GUARANTEE);
+        AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeConstants.AgreementRoleType.GUARANTEE);
         Party leasePrimaryParty = lease.getPrimaryParty();
 
-        AgreementRoleType artGuarantor = agreementRoleTypeRepository.findByTitle(GuaranteeConstants.ART_GUARANTOR);
+        AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeConstants.AgreementRoleType.GUARANTOR);
         Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
-        final AgreementType at = agreementTypeRepository.find(GuaranteeConstants.AT_GUARANTEE);
+        final AgreementType at = agreementTypeRepository.find(GuaranteeConstants.AgreementType.GUARANTEE);
         guarantee.setType(at);
         guarantee.setReference(reference);
         guarantee.setDescription(description);
@@ -171,10 +171,10 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
     @Programmatic
     public void init(Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.ART_BANK, agreementType);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(GuaranteeConstants.AgreementType.GUARANTEE);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.GUARANTEE, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.GUARANTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.BANK, agreementType);
     }
 
     // //////////////////////////////////////

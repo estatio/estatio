@@ -79,7 +79,7 @@ public class AgreementRoleHolder_bankMandateContributions
     @CollectionLayout(render = RenderType.LAZILY)
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -108,7 +108,7 @@ public class AgreementRoleHolder_bankMandateContributions
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AT_MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(

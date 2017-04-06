@@ -63,7 +63,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
             final LocalDate signatureDate
     ) {
         BankMandate mandate = newTransientInstance();
-        mandate.setType(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE));
+        mandate.setType(agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
         mandate.setStartDate(startDate);
@@ -79,9 +79,9 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         persistIfNotAlready(mandate);
 
         final AgreementRoleType artCreditor = agreementRoleTypeRepository
-                .findByTitle(BankMandateConstants.ART_CREDITOR);
+                .find(BankMandateConstants.AgreementRoleType.CREDITOR);
         mandate.newRole(artCreditor, creditor, null, null);
-        final AgreementRoleType artDebtor = agreementRoleTypeRepository.findByTitle(BankMandateConstants.ART_DEBTOR);
+        final AgreementRoleType artDebtor = agreementRoleTypeRepository.find(BankMandateConstants.AgreementRoleType.DEBTOR);
         mandate.newRole(artDebtor, debtor, null, null);
         return mandate;
     }
@@ -97,7 +97,7 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
     }
 
     public BankMandate findByReference(final String reference){
-        return (BankMandate) agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(BankMandateConstants.AT_MANDATE), reference);
+        return (BankMandate) agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE), reference);
     }
 
     // //////////////////////////////////////
@@ -105,10 +105,10 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
     @PostConstruct
     public void init(Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(BankMandateConstants.AT_MANDATE);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(BankMandateConstants.AgreementType.MANDATE);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.AgreementRoleType.DEBTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.AgreementRoleType.CREDITOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(BankMandateConstants.AgreementRoleType.OWNER, agreementType);
     }
 
     // //////////////////////////////////////

@@ -157,6 +157,7 @@ public class EmailServiceThrowingException {
 
             email.setSubject(subject);
             email.setHtmlMsg(body);
+            email.setCharset("windows-1252");
 
             if (attachments != null && attachments.length > 0) {
                 for (DataSource attachment : attachments) {
