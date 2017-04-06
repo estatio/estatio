@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.charge;
 
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -15,12 +16,19 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.UdoDomainObject2;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -56,7 +64,18 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class IncomingCharge implements Comparable<IncomingCharge> {
+public class IncomingCharge extends UdoDomainObject2<IncomingCharge> {
+
+    public IncomingCharge() {
+        super("name");
+    }
+
+    public IncomingCharge(final String name, final IncomingCharge parent, final String atPath) {
+        this();
+        this.name = name;
+        this.parent = parent;
+        this.atPath = atPath;
+    }
 
     @Column(allowsNull = "false")
     @Property()
@@ -64,26 +83,46 @@ public class IncomingCharge implements Comparable<IncomingCharge> {
     private String name;
 
     @Persistent(mappedBy = "parent", dependentElement = "true")
-    @Collection()
     @Getter @Setter
     private SortedSet<IncomingCharge> children = new TreeSet<IncomingCharge>();
 
     @Column(allowsNull = "true")
-    @Property()
     @Getter @Setter
     private IncomingCharge parent;
 
 
-    //region > compareTo, toString
-    @Override
-    public int compareTo(final IncomingCharge other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "name");
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false"
+    )
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String atPath;
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return securityApplicationTenancyRepository.findByPathCached(getAtPath());
     }
+
+    //region > compareTo, toString
 
     @Override
     public String toString() {
-        return org.apache.isis.applib.util.ObjectContracts.toString(this, "name");
+        return getName();
     }
+
+    private final Comparator<IncomingCharge> comparator =
+            Ordering.natural()
+                    .onResultOf(IncomingCharge::getName);
+
+    @Override
+    public int compareTo(final IncomingCharge other) {
+        return comparator.compare(this, other);
+    }
+
     //endregion
 
 }
