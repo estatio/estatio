@@ -1,10 +1,10 @@
 package org.estatio.capex.integtests.time;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +17,8 @@ import org.estatio.capex.dom.time.TimeIntervalRepository;
 import org.estatio.capex.fixture.time.TimeIntervalFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TimeInterval_IntegTest extends EstatioIntegrationTest {
 
@@ -58,7 +60,36 @@ public class TimeInterval_IntegTest extends EstatioIntegrationTest {
             // then
             final List<TimeInterval> timeIntervals = timeIntervalRepository.listAll();
 
-            Assertions.assertThat(timeIntervals).isNotEmpty();
+            assertThat(timeIntervals).isNotEmpty();
+
+            // and when
+            final TimeInterval f2016 = timeIntervalRepository.findByName("F2016");
+
+            // then
+            assertThat(f2016).isNotNull();
+            final SortedSet<TimeInterval> f2016Children = f2016.getChildren();
+            assertThat(f2016Children).isEmpty();
+            assertThat(f2016.getParent()).isNull();
+
+            // and when
+            final TimeInterval n2016 = timeIntervalRepository.findByName("2016");
+
+            // then
+            assertThat(n2016).isNotNull();
+            final SortedSet<TimeInterval> n2016Children = n2016.getChildren();
+            assertThat(n2016Children).hasSize(4);
+            assertThat(n2016.getParent()).isNull();
+
+
+            // and when
+            final TimeInterval n2016q3 = timeIntervalRepository.findByName("2016Q3");
+
+            // then
+            assertThat(n2016q3).isNotNull();
+            final SortedSet<TimeInterval> n2016q3Children = n2016q3.getChildren();
+            assertThat(n2016q3Children).isEmpty();
+            assertThat(n2016q3.getParent()).isEqualTo(n2016);
+
         }
     }
 

@@ -57,12 +57,10 @@ class TimeInterval << Dimension >>  #cyan {
     name: String  
     startDate: Date
     endDate: Date
-    financialParent
-    naturalParent
 }
 note right #lightgray: both calendar\nand financial\ntime intervals\neg F2014, 2015Q1,\neg 2015-03, 2015-03-17\nand two hierarchies
 
-TimeInterval "parent/child\n(x2)\n" <---> TimeInterval
+TimeInterval "parent/child\n" <---> TimeInterval
 
 CalendarType <-- TimeInterval
 
@@ -193,7 +191,8 @@ Project <-.- FinancialItem
 FixedAsset <-.- FinancialItem
 Tax <-.- FinancialItem
 IncomingCharge <--- FinancialItem
-TimeInterval <--- FinancialItem
+TimeInterval "natural" <--- FinancialItem
+TimeInterval "financial" <--- FinancialItem
 
 
 

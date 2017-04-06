@@ -1,12 +1,15 @@
 package org.estatio.capex.dom.time;
 
 import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
@@ -75,15 +78,13 @@ public class TimeInterval extends UdoDomainObject2<TimeInterval> {
             final LocalDate startDate,
             final LocalDate endDate,
             final CalendarType calendarType,
-            final TimeInterval naturalParent,
-            final TimeInterval financialParent) {
+            final TimeInterval parent) {
         this();
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.calendarType = calendarType;
-        this.naturalParent = naturalParent;
-        this.financialParent = financialParent;
+        this.parent = parent;
         this.atPath = "/";
     }
 
@@ -104,13 +105,13 @@ public class TimeInterval extends UdoDomainObject2<TimeInterval> {
     @Getter @Setter
     private CalendarType calendarType;
 
-    @Column(allowsNull = "true")
+    @Persistent(mappedBy = "parent", dependentElement = "true")
     @Getter @Setter
-    private TimeInterval naturalParent;
+    private SortedSet<TimeInterval> children = new TreeSet<TimeInterval>();
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private TimeInterval financialParent;
+    private TimeInterval parent;
 
 
     @javax.jdo.annotations.Column(

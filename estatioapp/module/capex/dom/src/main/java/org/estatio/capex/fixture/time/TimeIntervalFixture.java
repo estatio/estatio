@@ -14,9 +14,15 @@ public class TimeIntervalFixture extends ExcelFixture2 {
         setExcelResource(Resources.getResource(getClass(), "TimeIntervalHierarchy.xlsx"));
 
         setMatcher(sheetName -> {
-            if(sheetName.startsWith("TimeHierarchy")) {
+            if(sheetName.startsWith("NaturalCalendar")) {
                 return new WorksheetSpec(
-                        rowFactoryFor(TimeIntervalHandler.class, executionContext),
+                        rowFactoryFor(NaturalTimeIntervalHandler.class, executionContext),
+                        sheetName,
+                        Mode.STRICT);
+            }
+            else if(sheetName.startsWith("FinancialCalendar")) {
+                return new WorksheetSpec(
+                        rowFactoryFor(FinancialTimeIntervalHandler.class, executionContext),
                         sheetName,
                         Mode.STRICT);
             }

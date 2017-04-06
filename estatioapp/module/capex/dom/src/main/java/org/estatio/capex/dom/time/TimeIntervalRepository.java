@@ -25,6 +25,9 @@ public class TimeIntervalRepository {
 
     @Programmatic
     public TimeInterval findByName(final String name) {
+        if(name == null) {
+            return null;
+        }
         return repositoryService.uniqueMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         TimeInterval.class,
@@ -48,9 +51,8 @@ public class TimeIntervalRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final CalendarType calendarType,
-            final TimeInterval naturalParent,
-            final TimeInterval financialParent) {
-        final TimeInterval timeInterval = new TimeInterval(name, startDate, endDate, calendarType, naturalParent, financialParent);
+            final TimeInterval parent) {
+        final TimeInterval timeInterval = new TimeInterval(name, startDate, endDate, calendarType, parent);
         serviceRegistry2.injectServicesInto(timeInterval);
         repositoryService.persist(timeInterval);
         return timeInterval;
@@ -62,12 +64,11 @@ public class TimeIntervalRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final CalendarType calendarType,
-            final TimeInterval naturalParent,
-            final TimeInterval financialParent) {
+            final TimeInterval parent) {
 
         TimeInterval timeInterval = findByName(name);
         if (timeInterval == null) {
-            timeInterval = create(name, startDate, endDate, calendarType, naturalParent, financialParent);
+            timeInterval = create(name, startDate, endDate, calendarType, parent);
         }
         return timeInterval;
     }
