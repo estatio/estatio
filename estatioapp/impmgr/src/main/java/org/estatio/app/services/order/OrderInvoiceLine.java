@@ -27,14 +27,12 @@ import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.capex.dom.time.TimeIntervalRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.Setter;
 
 @XmlRootElement(name = "orderInvoiceLine")
@@ -73,99 +71,194 @@ public class OrderInvoiceLine {
         return "Order - Invoice Import Line";
     }
 
+    public OrderInvoiceLine() {}
 
-    @XmlElement(required = false)
-    @Getter @Setter
+    @Setter
     @MemberOrder(sequence = "1")
     private String status;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "2")
+    public String getStatus() {
+        return status;
+    }
+
+    @Setter
     private String orderNumber;
+
     @XmlElement(required = false)
-    @Getter @Setter
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    @Setter
     @MemberOrder(sequence = "3")
     private String charge;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "4")
+    public String getCharge() {
+        return charge;
+    }
+
+
+    @Setter
     private LocalDate entryDate;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "5")
+    public LocalDate getEntryDate() {
+        return entryDate;
+    }
+
+    @Setter
     private LocalDate orderDate;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "6")
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    @Setter
     private String seller;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "7")
+    public String getSeller() {
+        return seller;
+    }
+
+    @Setter
     private String orderDescription;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "8")
+    public String getOrderDescription() {
+        return orderDescription;
+    }
+
+
+    @Setter
     @Column(scale = 2)
     private BigDecimal netAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "9")
+    public BigDecimal getNetAmount() {
+        return netAmount;
+    }
+
+
+    @Setter
     @Column(scale = 2)
     private BigDecimal vatAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "10")
+    public BigDecimal getVatAmount() {
+        return vatAmount;
+    }
+
+
+    @Setter
     @Column(scale = 2)
     private BigDecimal grossAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "11")
+    public BigDecimal getGrossAmount() {
+        return grossAmount;
+    }
+
+    @Setter
     private String orderApprovedBy;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "12")
+    public String getOrderApprovedBy() {
+        return orderApprovedBy;
+    }
+
+    @Setter
     private LocalDate orderApprovedOn;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "13")
+    public LocalDate getOrderApprovedOn() {
+        return orderApprovedOn;
+    }
+
+    @Setter
     private String projectReference;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "14")
+    public String getProjectReference() {
+        return projectReference;
+    }
+
+    @Setter
     private String period;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "15")
+    public String getPeriod() {
+        return period;
+    }
+
+    @Setter
     private String tax;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "16")
+    public String getTax() {
+        return tax;
+    }
+
+    @Setter
     private String invoiceNumber;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "17")
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    @Setter
     private String invoiceDescription;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "18")
+    public String getInvoiceDescription() {
+        return invoiceDescription;
+    }
+
+    @Setter
     @Column(scale = 2)
     private BigDecimal invoiceNetAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
-    @MemberOrder(sequence = "19")
+    public BigDecimal getInvoiceNetAmount() {
+        return invoiceNetAmount;
+    }
+
+    @Setter
     @Column(scale = 2)
     private BigDecimal invoiceVatAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
+    public BigDecimal getInvoiceVatAmount() {
+        return invoiceVatAmount;
+    }
+
+    @Setter
     @MemberOrder(sequence = "20")
     @Column(scale = 2)
     private BigDecimal invoiceGrossAmount;
+
     @XmlElement(required = false)
-    @Getter @Setter
+    public BigDecimal getInvoiceGrossAmount() {
+        return invoiceGrossAmount;
+    }
+
+    @Setter
     @MemberOrder(sequence = "21")
     private String invoiceTax;
 
-    
+    @XmlElement(required = false)
+    public String getInvoiceTax() {
+        return invoiceTax;
+    }
+
+    /**
+     * Using a mixin so can continue to use lombok's @AllArgsConstructor
+     * (else the additional injected services required confuse things)
+     */
     @Mixin(method="act")
     public static class _apply {
         private final OrderInvoiceLine line;
