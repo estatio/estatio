@@ -1,4 +1,4 @@
-package org.estatio.capex.integtests.time;
+package org.estatio.capex.integtests.charge;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.estatio.capex.dom.time.TimeInterval;
-import org.estatio.capex.dom.time.TimeIntervalRepository;
-import org.estatio.capex.fixture.time.TimeIntervalFixture;
+import org.estatio.capex.dom.charge.IncomingCharge;
+import org.estatio.capex.dom.charge.IncomingChargeRepository;
+import org.estatio.capex.fixture.charge.IncomingChargeFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class TimeInterval_IntegTest extends EstatioIntegrationTest {
+public class IncomingChargeInterval_IntegTest extends EstatioIntegrationTest {
 
 
     @Inject
@@ -39,7 +39,7 @@ public class TimeInterval_IntegTest extends EstatioIntegrationTest {
     public void setUp() {
     }
 
-    public static class LoadFixtures extends TimeInterval_IntegTest {
+    public static class LoadFixtures extends IncomingChargeInterval_IntegTest {
 
         List<FixtureResult> fixtureResults;
 
@@ -50,19 +50,19 @@ public class TimeInterval_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new TimeIntervalFixture());
+                    executionContext.executeChild(this, new IncomingChargeFixture());
                     fixtureResults = executionContext.getResults();
                 }
             });
 
             // then
-            final List<TimeInterval> timeIntervals = timeIntervalRepository.listAll();
+            final List<IncomingCharge> incomingCharges = incomingChargeRepository.listAll();
 
-            Assertions.assertThat(timeIntervals).isNotEmpty();
+            Assertions.assertThat(incomingCharges).hasSize(30);
         }
     }
 
     @Inject
-    TimeIntervalRepository timeIntervalRepository;
+    IncomingChargeRepository incomingChargeRepository;
 
 }
