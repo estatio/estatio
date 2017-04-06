@@ -16,6 +16,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.services.calendar.CalendarService;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.fixture.EstatioCapexFixtureModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
@@ -105,6 +107,7 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioBudgetingDomModule.class,
                         EstatioBudgetAssignmentDomModule.class,
                         EstatioChargeDomModule.class,
+                        EstatioCapexDomModule.class,
                         EstatioCurrencyDomModule.class,
                         EstatioDocumentDomModule.class,
                         EstatioEventDomModule.class,
@@ -130,6 +133,7 @@ public class EstatioAppManifest implements AppManifest {
                         org.incode.module.classification.dom.ClassificationModule.class,
 
                         // TODO: one day these module may not be required (if we're able to move all the fixtures into the respective modules).
+                        EstatioCapexFixtureModule.class,
                         EstatioFixtureModule.class,
                         EstatioFixtureScriptsModule.class,
 

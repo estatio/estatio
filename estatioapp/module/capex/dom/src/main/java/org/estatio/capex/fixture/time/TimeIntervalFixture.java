@@ -1,4 +1,4 @@
-package org.estatio.fixture.time.charge;
+package org.estatio.capex.fixture.time;
 
 import com.google.common.io.Resources;
 

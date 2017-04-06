@@ -109,6 +109,11 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-capex</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-assetfinancial</artifactId>
         </dependency>
 

@@ -1,4 +1,6 @@
-package org.estatio.dom.capex.time;
+package org.estatio.capex.dom.time;
+
+import java.util.Comparator;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -11,6 +13,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -18,6 +22,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -42,12 +47,12 @@ import lombok.Setter;
         @Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.capex.time.TimeInterval "
+                        + "FROM org.estatio.capex.dom.time.TimeInterval "
                         + "WHERE name == :name "),
         @Query(
                 name = "findByStartDateAndCalendarType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.capex.time.TimeInterval "
+                        + "FROM org.estatio.capex.dom.time.TimeInterval "
                         + "WHERE startDate    == :startDate "
                         + "   && calendarType == :calendarType ")
 })
@@ -61,6 +66,10 @@ import lombok.Setter;
 )
 public class TimeInterval extends UdoDomainObject2<TimeInterval> {
 
+    public TimeInterval() {
+        super("name");
+    }
+
     public TimeInterval(
             final String name,
             final LocalDate startDate,
@@ -68,16 +77,18 @@ public class TimeInterval extends UdoDomainObject2<TimeInterval> {
             final CalendarType calendarType,
             final TimeInterval naturalParent,
             final TimeInterval financialParent) {
-        super("name");
+        this();
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.calendarType = calendarType;
         this.naturalParent = naturalParent;
         this.financialParent = financialParent;
+        this.atPath = "/";
     }
 
     @Column(allowsNull = "false")
+    @Title
     @Getter @Setter
     private String name;
 
@@ -117,10 +128,24 @@ public class TimeInterval extends UdoDomainObject2<TimeInterval> {
 
 
     //region > compareTo, toString
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    private final Comparator<TimeInterval> comparator =
+            Ordering.natural()
+                .onResultOf(TimeInterval::getStartDate).reverse()
+                .thenComparing(TimeInterval::getName);
+
     @Override
     public int compareTo(final TimeInterval other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "startDate desc, name");
+//        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "startDate desc, name");
+        return comparator.compare(this, other);
     }
+
+
     //endregion
 
 }

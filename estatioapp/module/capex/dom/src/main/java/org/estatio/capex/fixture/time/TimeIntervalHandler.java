@@ -1,4 +1,4 @@
-package org.estatio.fixture.time.charge;
+package org.estatio.capex.fixture.time;
 
 import javax.inject.Inject;
 
@@ -9,15 +9,14 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import org.estatio.dom.capex.time.CalendarType;
-import org.estatio.dom.capex.time.TimeInterval;
-import org.estatio.dom.capex.time.TimeIntervalRepository;
+import org.estatio.capex.dom.time.CalendarType;
+import org.estatio.capex.dom.time.TimeInterval;
+import org.estatio.capex.dom.time.TimeIntervalRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
 public class TimeIntervalHandler implements FixtureAwareRowHandler<TimeIntervalHandler> {
 
     @Getter @Setter
