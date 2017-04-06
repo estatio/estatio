@@ -27,7 +27,7 @@ language governing permissions and limitations under the License.
     <artifactId>estatio-dom-document</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio (Open Source) dom document</name>
+    <name>Estatio (Open Source) Module - Document</name>
     <description>
         settings and glue for incode module document
     </description>

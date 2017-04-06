@@ -87,6 +87,7 @@
                 <module>../estatio/estatioapp/module/bankmandate/dom</module>
                 <module>../estatio/estatioapp/module/budget/dom</module>
                 <module>../estatio/estatioapp/module/budgetassignment/dom</module>
+                <module>../estatio/estatioapp/module/capex/dom</module>
                 <module>../estatio/estatioapp/module/charge/dom</module>
                 <module>../estatio/estatioapp/module/currency/dom</module>
                 <module>../estatio/estatioapp/module/document/dom</module>

@@ -1,10 +1,10 @@
-package org.estatio.dom.capex.items;
+package org.estatio.capex.dom.items;
 
 import java.math.BigDecimal;
 
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.capex.charge.IncomingCharge;
-import org.estatio.dom.capex.time.TimeInterval;
+import org.estatio.capex.dom.charge.IncomingCharge;
+import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 

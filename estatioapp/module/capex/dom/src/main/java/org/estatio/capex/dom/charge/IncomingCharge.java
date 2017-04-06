@@ -1,4 +1,4 @@
-package org.estatio.dom.capex.charge;
+package org.estatio.capex.dom.charge;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -38,18 +38,14 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "find", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.capex.charge.IncomingCharge "),
-        @Query(
                 name = "findByNameContains", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.capex.charge.IncomingCharge "
+                        + "FROM org.estatio.capex.dom.charge.IncomingCharge "
                         + "WHERE name.indexOf(:name) >= 0 "),
         @Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.capex.charge.IncomingCharge "
+                        + "FROM org.estatio.capex.dom.charge.IncomingCharge "
                         + "WHERE name == :name ")
 })
 @Unique(name = "IncomingCharge_name_UNQ", members = { "name" })

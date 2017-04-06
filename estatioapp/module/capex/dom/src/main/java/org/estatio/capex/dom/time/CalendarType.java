@@ -1,4 +1,4 @@
-package org.estatio.dom.capex.time;
+package org.estatio.capex.dom.time;
 
 import lombok.Getter;
 
