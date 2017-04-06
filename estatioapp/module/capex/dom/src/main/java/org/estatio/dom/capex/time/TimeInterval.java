@@ -18,6 +18,11 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Where;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.dom.UdoDomainObject2;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,19 +40,16 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "find", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.capex.time.TimeInterval "),
-        @Query(
-                name = "findByNameContains", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.capex.time.TimeInterval "
-                        + "WHERE name.indexOf(:name) >= 0 "),
-        @Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.capex.time.TimeInterval "
-                        + "WHERE name == :name ")
+                        + "WHERE name == :name "),
+        @Query(
+                name = "findByStartDateAndCalendarType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.capex.time.TimeInterval "
+                        + "WHERE startDate    == :startDate "
+                        + "   && calendarType == :calendarType ")
 })
 @Unique(name = "TimeInterval_name_UNQ", members = { "name" })
 @DomainObject(
@@ -57,37 +59,67 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class TimeInterval implements Comparable<TimeInterval> {
+public class TimeInterval extends UdoDomainObject2<TimeInterval> {
+
+    public TimeInterval(
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final CalendarType calendarType,
+            final TimeInterval naturalParent,
+            final TimeInterval financialParent) {
+        super("name");
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.calendarType = calendarType;
+        this.naturalParent = naturalParent;
+        this.financialParent = financialParent;
+    }
 
     @Column(allowsNull = "false")
-    @Property()
     @Getter @Setter
     private String name;
 
     @Column(allowsNull = "false")
-    @Property()
     @Getter @Setter
     private LocalDate startDate;
 
     @Column(allowsNull = "false")
-    @Property()
     @Getter @Setter
     private LocalDate endDate;
 
     @Column(allowsNull = "false")
-    @Property()
     @Getter @Setter
-    private boolean financial;
+    private CalendarType calendarType;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private TimeInterval naturalParent;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private TimeInterval financialParent;
+
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false"
+    )
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String atPath;
+
+    @Property(hidden = Where.EVERYWHERE)
+    public ApplicationTenancy getApplicationTenancy() {
+        return securityApplicationTenancyRepository.findByPathCached(getAtPath());
+    }
+
 
     //region > compareTo, toString
     @Override
     public int compareTo(final TimeInterval other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "name");
-    }
-
-    @Override
-    public String toString() {
-        return org.apache.isis.applib.util.ObjectContracts.toString(this, "name");
+        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "startDate desc, name");
     }
     //endregion
 
