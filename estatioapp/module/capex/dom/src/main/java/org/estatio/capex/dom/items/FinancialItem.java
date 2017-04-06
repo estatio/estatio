@@ -21,11 +21,16 @@ public interface FinancialItem {
     /**
      * Mandatory
      */
-    TimeInterval getTimeInterval();
-    /**
-     * Mandatory
-     */
     IncomingCharge getIncomingCharge();
+
+    /**
+     * Optional, though either this or {@link #getFinancialTimeInterval()} are expected to be defined.
+     */
+    TimeInterval getNaturalTimeInterval();
+    /**
+     * Optional, though either this or {@link #getNaturalTimeInterval()} are expected to be defined.
+     */
+    TimeInterval getFinancialTimeInterval();
 
     /**
      * Optional
