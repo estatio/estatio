@@ -208,3 +208,24 @@ Not yet in scope:
 * Order needs to link to Document
 * approvals workflow (perhaps: tasks/actors/orgunits/employees)
 
+
+
+== FinancialItem
+
+Responsibilities:
+
+[graphviz,_images/financial-item-responsibilities,png]
+----
+digraph {
+  node[shape=Mrecord]
+  FRANCE;
+  FRANCE -> LEGAL ;
+  FRANCE -> MARKETING ;
+  FRANCE -> ARCHITECT ;
+
+  FRANCE [label="{<f0> FRANCE|<f1> value=1,000,000\nrolledUp=225,000\nremaining=775,000}" ];
+  LEGAL [label="{<f0> LEGAL|<f1> value=50,000}" ];
+  MARKETING [label="{<f0> LEGAL|<f1> value=100,000}" ];
+  ARCHITECT [label="{<f0> LEGAL|<f1> value=75,000}" ];
+}
+----
