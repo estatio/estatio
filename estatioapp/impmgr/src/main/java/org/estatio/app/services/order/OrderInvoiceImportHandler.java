@@ -292,7 +292,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                 "WORKS",
                 "RELOCATION / DISPOSSESSION INDEMNITY",
                 "ARCHITECT / GEOMETRICIAN FEES",
-                "LEGAL FEES",
+                "LEGAL / BAILIFF FEES",
                 "MARKETING",
                 "TENANT INSTALLATION WORKS",
                 "SECURITY AGENTS",
