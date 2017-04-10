@@ -31,9 +31,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.time.CalendarType;
 import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
@@ -75,26 +75,22 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Builder
     public Order(
-            final String reference,
-            final String number,
+            final String supplierReference,
+            final String orderNumber,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final TimeInterval period,
-            final String sellerName,
-            final Project project,
-            final org.estatio.dom.asset.Property property,
+            final Party supplier,
+            final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
         this();
-        this.reference = reference;
-        this.number = number;
+        this.supplierReference = supplierReference;
+        this.orderNumber = orderNumber;
         this.entryDate = entryDate;
         this.orderDate = orderDate;
-        this.period = period;
-        this.sellerName = sellerName;
-        this.project = project;
-        this.property = property;
+        this.supplier = supplier;
+        this.buyer = buyer;
         this.atPath = atPath;
         this.approvedBy = approvedBy;
         this.approvedOn = approvedOn;
@@ -103,11 +99,11 @@ public class Order extends UdoDomainObject2<Order> {
     // proposal: 20160302-001
     @Column(allowsNull = "false")
     @Getter @Setter
-    private String reference;
+    private String orderNumber;
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private String number;
+    private String supplierReference;
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -119,19 +115,11 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private TimeInterval period;
+    private Party supplier;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private String sellerName;
-
-    @Column(allowsNull = "true")
-    @Getter @Setter
-    private Project project;
-
-    @Column(allowsNull = "true")
-    @Getter @Setter
-    private org.estatio.dom.asset.Property property;
+    private Party buyer;
 
     @Persistent(mappedBy = "order", dependentElement = "true")
     @Getter @Setter
@@ -145,9 +133,12 @@ public class Order extends UdoDomainObject2<Order> {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final CalendarType calendarType) {
+            final TimeInterval period,
+            final org.estatio.dom.asset.Property property,
+            final Project project
+    ) {
         orderItemRepository.findOrCreate(
-                this, charge, description, netAmount, vatAmount, grossAmount, tax, calendarType);
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, period, property, project);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
     }
 

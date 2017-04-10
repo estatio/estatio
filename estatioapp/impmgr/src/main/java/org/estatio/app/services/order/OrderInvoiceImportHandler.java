@@ -11,14 +11,18 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture2;
+import org.isisaddons.module.excel.dom.ExcelMetaDataEnabled;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderInvoiceImportHandler> {
+public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderInvoiceImportHandler>, ExcelMetaDataEnabled {
 
-
+    @Getter @Setter
+    private String excelSheetName;
+    @Getter @Setter
+    private Integer excelRowNumber;
     @Getter @Setter
     private String status;
     @Getter @Setter

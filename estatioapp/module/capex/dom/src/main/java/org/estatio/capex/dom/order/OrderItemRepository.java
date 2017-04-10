@@ -12,7 +12,9 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.time.CalendarType;
+import org.estatio.capex.dom.time.TimeInterval;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -42,7 +44,9 @@ public class OrderItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final CalendarType calendarType) {
+            final TimeInterval period,
+            final Property property,
+            final Project project) {
         final OrderItem orderItem = OrderItem.builder()
                 .order(order)
                 .charge(charge)
@@ -51,7 +55,9 @@ public class OrderItemRepository {
                 .vatAmount(vatAmount)
                 .grossAmount(grossAmount)
                 .tax(tax)
-                .calendarType(calendarType)
+                .period(period)
+                .property(property)
+                .project(project)
                 .build();
         serviceRegistry2.injectServicesInto(orderItem);
         repositoryService.persistAndFlush(orderItem);
@@ -67,10 +73,13 @@ public class OrderItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final CalendarType calendarType) {
+            final TimeInterval period,
+            final Property property,
+            final Project project
+    ) {
         OrderItem orderItem = findByOrderAndCharge(order, charge);
         if (orderItem == null) {
-            orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, calendarType);
+            orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, period, property, project);
         }
         return orderItem;
     }

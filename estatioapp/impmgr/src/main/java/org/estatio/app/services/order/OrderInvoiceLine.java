@@ -19,6 +19,9 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+
 import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.charge.IncomingChargeRepository;
 import org.estatio.capex.dom.order.Order;
@@ -27,6 +30,9 @@ import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.capex.dom.time.TimeIntervalRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
 import org.estatio.dom.tax.Tax;
@@ -39,7 +45,7 @@ import lombok.Setter;
 @XmlType(
         propOrder = {
                 "status",
-                "orderNumber",
+                "supplierName",
                 "charge",
                 "entryDate",
                 "orderDate",
@@ -83,11 +89,11 @@ public class OrderInvoiceLine {
     }
 
     @Setter
-    private String orderNumber;
+    private String supplierName;
 
     @XmlElement(required = false)
-    public String getOrderNumber() {
-        return orderNumber;
+    public String getSupplierName() {
+        return supplierName;
     }
 
     @Setter
@@ -268,9 +274,11 @@ public class OrderInvoiceLine {
         @Action()
         @ActionLayout(contributed= Contributed.AS_ACTION)
         public OrderInvoiceLine act() {
-            final String reference = determineReference();
+            final String orderNumber = determineOrderNumber();
+            final Party supplier = determineSupplier(line.supplierName);
             final Project project = lookupProject(line.projectReference);
             final Property property = inferPropertyFrom(line.projectReference);
+            final Party buyer =  partyRepository.findPartyByReference(property.getExternalReference());
             final String atPath = "/FRA";
             final TimeInterval timeInterval = timeIntervalRepository.findByName(line.period);
 
@@ -279,10 +287,12 @@ public class OrderInvoiceLine {
             }
 
             Order order = orderRepository.findOrCreate(
-                    reference, line.orderNumber,
-                    line.entryDate, line.orderDate,
-                    timeInterval, line.seller,
-                    project, property,
+                    line.getSupplierName(),
+                    determineOrderNumber(),
+                    line.entryDate,
+                    line.orderDate,
+                    supplier,
+                    buyer,
                     atPath,
                     line.orderApprovedBy, line.orderApprovedOn);
 
@@ -292,9 +302,19 @@ public class OrderInvoiceLine {
             order.addItem(
                     chargeObj, line.orderDescription,
                     line.netAmount, line.vatAmount, line.grossAmount,
-                    taxObj, timeInterval.getCalendarType());
+                    taxObj, timeInterval, property, project);
 
             return line;
+        }
+
+        private Party determineSupplier(final String supplierName) {
+            Party party = partyRepository.matchPartyByReferenceOrName(supplierName);
+            Country france = countryRepository.findCountry("FRA");
+            if (party==null){
+                RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
+                party = organisationRepository.newOrganisation(generator.generateRandomCode().toUpperCase(), false, supplierName, france);
+            }
+            return party;
         }
 
         private final Pattern projectReferencePattern = Pattern.compile("^([^-])+[-].*$");
@@ -311,7 +331,7 @@ public class OrderInvoiceLine {
             return projectRepository.findByReference(projectReference);
         }
 
-        private String determineReference() {
+        private String determineOrderNumber() {
             return "TODO";
         }
 
@@ -327,6 +347,30 @@ public class OrderInvoiceLine {
         TaxRepository taxRepository;
         @Inject
         TimeIntervalRepository timeIntervalRepository;
+        @Inject
+        PartyRepository partyRepository;
+        @Inject
+        OrganisationRepository organisationRepository;
+        @Inject
+        CountryRepository countryRepository;
+
+
+        public static class RandomCodeGenerator10Chars {
+
+            private static final int NUMBER_CHARACTERS = 10;
+            private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+            public String generateRandomCode() {
+                final StringBuilder buf = new StringBuilder(NUMBER_CHARACTERS);
+                for (int i = 0; i < NUMBER_CHARACTERS; i++) {
+                    final int pos = (int) ((Math.random() * CHARACTERS.length()));
+                    buf.append(CHARACTERS.charAt(pos));
+                }
+                return buf.toString();
+            }
+
+        }
+
 
     }
     

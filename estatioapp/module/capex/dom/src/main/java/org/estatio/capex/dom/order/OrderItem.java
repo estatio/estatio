@@ -24,10 +24,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
-import org.estatio.capex.dom.time.CalendarType;
 import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
@@ -78,7 +78,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final CalendarType calendarType
+            final TimeInterval period,
+            final Property property,
+            final Project project
     ) {
         this();
         this.order = order;
@@ -88,7 +90,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.vatAmount = vatAmount;
         this.grossAmount = grossAmount;
         this.tax = tax;
-        this.calendarType = calendarType;
+        this.period =period;
+        this.property = property;
+        this.project = project;
     }
 
     @Column(allowsNull = "false")
@@ -119,10 +123,17 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private Tax tax;
 
-    @Column(allowsNull = "false")
     @Getter @Setter
-    private CalendarType calendarType;
+    @Column(allowsNull = "false")
+    private TimeInterval period;
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Property property;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Project project;
 
     @PropertyLayout(
             named = "Application Level",
@@ -147,18 +158,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     @Override
-    public TimeInterval getPeriod() {
-        return getOrder().getPeriod();
-    }
-
-    @Override
     public FixedAsset<?> getFixedAsset() {
-        return getOrder().getProperty();
-    }
-
-    @Override
-    public Project getProject() {
-        return getOrder().getProject();
+        return getProperty();
     }
     //endregion
 
