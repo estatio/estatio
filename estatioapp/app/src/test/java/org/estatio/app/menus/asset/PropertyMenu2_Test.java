@@ -97,7 +97,7 @@ public class PropertyMenu2_Test {
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
             assertThat(finderInteraction.getResultType()).isEqualTo(Property.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByOrderNumber");
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
             assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object)"*REF?1*");
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }

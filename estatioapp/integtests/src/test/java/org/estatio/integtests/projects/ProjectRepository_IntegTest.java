@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +36,6 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class ProjectRepository_IntegTest extends EstatioIntegrationTest {
@@ -104,26 +102,5 @@ public class ProjectRepository_IntegTest extends EstatioIntegrationTest {
         }
     }
 
-    public static class updateDateOfProject extends ProjectRepository_IntegTest {
-
-        @Test
-        public void rightDates() throws Exception {
-            // when
-            Project project = projectRepository.allProjects().get(0);
-
-            //then
-            assertNull(project.validateUpdateDates(new LocalDate(2000, 01, 01), new LocalDate(2000, 01, 01)));
-        }
-
-        @Test
-        public void wrongDates() throws Exception {
-            // when
-            Project project = projectRepository.allProjects().get(0);
-
-            //then
-            assertThat(project.validateUpdateDates(new LocalDate(2000, 01, 02), new LocalDate(2000, 01, 01)), is("Start date cannot be later than End date"));
-        }
-
-    }
 
 }

@@ -321,30 +321,41 @@ public class OrderInvoiceLine {
                 return line;
             }
 
-            Order order = orderRepository.findOrCreate(
-                    orderNumber,
-                    line.getSupplierName(),
-                    line.entryDate,
-                    line.orderDate,
-                    supplier,
-                    buyer,
-                    atPath,
-                    line.orderApprovedBy,
-                    line.orderApprovedOn);
+            final boolean isOrder = line.entryDate != null;
+            final boolean isInvoice = line.invoiceNumber != null;
 
             final IncomingCharge chargeObj = incomingChargeRepository.findByName(line.charge);
-            final Tax taxObj = taxRepository.findByReference(line.tax);
 
-            order.addItem(
-                    chargeObj, line.orderDescription,
-                    line.netAmount, line.vatAmount, line.grossAmount,
-                    taxObj, startDate, endDate, property, project);
+            if(isOrder) {
+                Order order = orderRepository.findOrCreate(
+                        orderNumber,
+                        line.getSupplierName(),
+                        line.entryDate,
+                        line.orderDate,
+                        supplier,
+                        buyer,
+                        atPath,
+                        line.orderApprovedBy,
+                        line.orderApprovedOn);
 
-            IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, line.getOrderDate(), line.getOrderDate());
+                final Tax tax = taxRepository.findByReference(line.tax);
 
-            final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.invoiceNumber);
+                order.addItem(
+                        chargeObj, line.orderDescription,
+                        line.netAmount, line.vatAmount, line.grossAmount,
+                        tax, startDate, endDate, property, project);
+            }
 
-            invoice.addItem(invoiceObj,);
+            if(isInvoice) {
+                final LocalDate invoiceDate = line.getOrderDate();
+                final LocalDate dueDate = line.getOrderDate();
+                IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate);
+
+                final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.invoiceNumber);
+                final Tax invoiceTax = taxRepository.findByReference(line.invoiceTax);
+
+                invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax, startDate, endDate, property, project);
+            }
 
             return line;
         }

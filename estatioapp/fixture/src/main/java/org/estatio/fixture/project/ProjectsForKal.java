@@ -18,9 +18,6 @@
  */
 package org.estatio.fixture.project;
 
-import org.estatio.dom.party.Party;
-import org.estatio.dom.project.Program;
-import org.estatio.dom.project.ProjectPhase;
 import org.estatio.fixture.party.OrganisationForMediaXNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
@@ -39,20 +36,15 @@ public class ProjectsForKal extends ProjectAbstract {
         executionContext.executeChild(this, new OrganisationForMediaXNl());
         executionContext.executeChild(this, new PersonForJohnDoeNl());
         executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-        executionContext.executeChild(this, new ProgramForKal());
 
         // exec
-        Party executive = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
-        Party manager = partyRepository.findPartyByReference(PersonForLinusTorvaldsNl.REF);
-        Program program = programRepository.findProgram(ProgramForKal.PROGRAM_REFERENCE).get(0);
-
         createProject(
-        		PROJECT_REFERENCE, "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), null, null, ProjectPhase.EXECUTION, program, executive, manager,
-                executionContext);
+        		PROJECT_REFERENCE, "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), null,
+                "/NLD", executionContext);
         
         createProject(
-        		PROJECT_REFERENCE2, "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), null, null , ProjectPhase.INITIATION, program, executive, manager,
-                executionContext);
+        		PROJECT_REFERENCE2, "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), null,
+                "/NLD", executionContext);
     }
 
 }
