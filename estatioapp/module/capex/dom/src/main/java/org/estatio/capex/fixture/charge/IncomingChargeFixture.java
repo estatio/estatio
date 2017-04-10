@@ -6,8 +6,6 @@ import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
-import org.estatio.capex.fixture.time.TimeIntervalHandler;
-
 public class IncomingChargeFixture extends ExcelFixture2 {
 
     @Override
