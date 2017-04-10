@@ -342,6 +342,10 @@ public class OrderInvoiceLine {
 
             IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, line.getOrderDate(), line.getOrderDate());
 
+            final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.invoiceNumber);
+
+            invoice.addItem(invoiceObj,);
+
             return line;
         }
 
@@ -373,14 +377,14 @@ public class OrderInvoiceLine {
             return projectRepository.findByReference(line.projectReference);
         }
 
-        private String determineOrderNumber() {
+        String determineOrderNumber() {
             Integer counter = 1;
             String suffix = "-".concat(String.format("%03d", counter));
-            String result = line.getOrderDate().toString().concat(suffix);
+            String result = line.getOrderDate().toString().replace("-","").concat(suffix);
             while (orderRepository.findByOrderNumber(result)!=null){
-                counter = counter++;
+                counter = counter + 1;
                 suffix = "-".concat(String.format("%03d", counter));
-                result = line.getOrderDate().toString().concat(suffix);
+                result = line.getOrderDate().toString().replace("-","").concat(suffix);
             }
             return result;
         }

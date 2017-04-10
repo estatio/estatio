@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.invoice;
 
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -14,8 +17,12 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 
+import org.estatio.capex.dom.charge.IncomingCharge;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.project.Project;
+import org.estatio.dom.tax.Tax;
 
 import lombok.Builder;
 
@@ -80,6 +87,27 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     public String toString() {
         return org.apache.isis.applib.util.ObjectContracts.toString(this, "number");
     }
+
+    public void addItem(
+            final IncomingInvoice invoice,
+            final IncomingCharge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Property property,
+            final Project project
+    ) {
+        incomingInvoiceItemRepository.findOrCreate(invoice, charge, description, netAmount, vatAmount, grossAmount,
+                tax, startDate, endDate, property, project
+        );
+    }
     //endregion
+
+    @Inject
+    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
 }
