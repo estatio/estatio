@@ -25,18 +25,18 @@ public class OrderRepository {
     }
 
     @Programmatic
-    public Order findByReference(final String reference) {
+    public Order findByOrderNumber(final String orderNumber) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         Order.class,
-                        "findByReference",
-                        "reference", reference));
+                        "findByOrderNumber",
+                        "orderNumber", orderNumber));
     }
 
     @Programmatic
     public Order create(
-            final String supplierReference,
             final String number,
+            final String supplierReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party supplier,
@@ -45,8 +45,8 @@ public class OrderRepository {
             final String approvedBy,
             final LocalDate approvedOn) {
         final Order order = Order.builder()
-                .supplierReference(supplierReference)
                 .orderNumber(number)
+                .supplierReference(supplierReference)
                 .entryDate(entryDate)
                 .orderDate(orderDate)
                 .supplier(supplier)
@@ -62,8 +62,8 @@ public class OrderRepository {
 
     @Programmatic
     public Order findOrCreate(
-            final String supplierReference,
             final String number,
+            final String supplierReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party supplier,
@@ -71,11 +71,10 @@ public class OrderRepository {
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
-        Order order = findByReference(supplierReference);
+        Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(supplierReference, number, entryDate, orderDate,
-                    supplier, buyer,
-                    atPath, approvedBy, approvedOn);
+            order = create(number, supplierReference, entryDate, orderDate,
+                    supplier, buyer, atPath, approvedBy, approvedOn);
         }
         return order;
     }
