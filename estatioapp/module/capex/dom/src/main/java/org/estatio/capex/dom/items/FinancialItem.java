@@ -24,7 +24,7 @@ public interface FinancialItem {
     /**
      * Mandatory
      */
-    IncomingCharge getCharge();
+    IncomingCharge getIncomingCharge();
 
     LocalDate getStartDate();
 

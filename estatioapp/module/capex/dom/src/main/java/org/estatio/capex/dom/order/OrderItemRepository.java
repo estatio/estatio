@@ -25,13 +25,13 @@ import org.estatio.dom.tax.Tax;
 public class OrderItemRepository {
 
     @Programmatic
-    public OrderItem findByOrderAndCharge(final Order order, final IncomingCharge charge) {
+    public OrderItem findByOrderAndIncomingCharge(final Order order, final IncomingCharge incomingCharge) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         OrderItem.class,
-                        "findByOrderAndCharge",
+                        "findByOrderAndIncomingCharge",
                         "order", order,
-                        "charge", charge
+                        "incomingCharge", incomingCharge
                 ));
     }
 
@@ -81,7 +81,7 @@ public class OrderItemRepository {
             final Property property,
             final Project project
     ) {
-        OrderItem orderItem = findByOrderAndCharge(order, charge);
+        OrderItem orderItem = findByOrderAndIncomingCharge(order, charge);
         if (orderItem == null) {
             orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
                     property, project);

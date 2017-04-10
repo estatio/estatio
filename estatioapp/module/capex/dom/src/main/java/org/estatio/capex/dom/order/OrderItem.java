@@ -49,14 +49,14 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findByOrderAndCharge", language = "JDOQL",
+                name = "findByOrderAndIncomingCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE order == :order "
-                        + "   && charge == :charge ")
+                        + "   && incomingCharge == :incomingCharge ")
 })
 
-@Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "charge" })
+@Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "incomingCharge" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "capex.OrderItem"
@@ -67,7 +67,7 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public OrderItem() {
-        super("order,charge");
+        super("order,incomingCharge");
     }
 
     @Builder
@@ -86,7 +86,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     ) {
         this();
         this.order = order;
-        this.charge = charge;
+        this.incomingCharge = charge;
         this.description = description;
         this.netAmount = netAmount;
         this.vatAmount = vatAmount;
@@ -104,7 +104,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingCharge charge;
+    private IncomingCharge incomingCharge;
 
     @Column(allowsNull = "false")
     @Getter @Setter
