@@ -54,12 +54,12 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findByReference", language = "JDOQL",
+                name = "findByOrderNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
-                        + "WHERE reference == :reference ")
+                        + "WHERE orderNumber == :orderNumber ")
 })
-@Unique(name = "Order_reference_UNQ", members = { "reference" })
+@Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "capex.Order"
@@ -75,8 +75,8 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Builder
     public Order(
-            final String supplierReference,
             final String orderNumber,
+            final String supplierReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party supplier,
@@ -85,8 +85,8 @@ public class Order extends UdoDomainObject2<Order> {
             final String approvedBy,
             final LocalDate approvedOn) {
         this();
-        this.supplierReference = supplierReference;
         this.orderNumber = orderNumber;
+        this.supplierReference = supplierReference;
         this.entryDate = entryDate;
         this.orderDate = orderDate;
         this.supplier = supplier;
@@ -96,7 +96,6 @@ public class Order extends UdoDomainObject2<Order> {
         this.approvedOn = approvedOn;
     }
 
-    // proposal: 20160302-001
     @Column(allowsNull = "false")
     @Getter @Setter
     private String orderNumber;
@@ -173,8 +172,6 @@ public class Order extends UdoDomainObject2<Order> {
     @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate approvedOn;
-
-
 
     @Inject
     OrderItemRepository orderItemRepository;

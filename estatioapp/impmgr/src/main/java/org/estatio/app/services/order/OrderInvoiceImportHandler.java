@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.excel.dom.ExcelFixture2;
@@ -64,7 +63,6 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     @Getter @Setter
     private BigDecimal invoiceGrossAmount;
     @Getter @Setter
-    @MemberOrder(sequence = "21")
     private String invoiceTax;
 
     /**
@@ -81,8 +79,16 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
 
     public OrderInvoiceLine handle(final OrderInvoiceImportHandler previousRow){
 
+        if (getOrderDate()==null) {
+            setOrderDate(getEntryDate());
+        }
+
         if (previousRow != null) {
 
+            // support sparse population for orderdate (or derived)
+            if (getOrderDate() == null && previousRow.getOrderDate() != null){
+                setOrderDate(previousRow.getOrderDate());
+            }
             // support sparse population for charge
             if (getCharge() == null && previousRow.getCharge() != null) {
                 setCharge(previousRow.getCharge());
@@ -115,6 +121,8 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
 
         if (getEntryDate()!=null || invoiceNumberToUse()!=null) {
             lineItem = new OrderInvoiceLine(
+                    getExcelSheetName(),
+                    getExcelRowNumber(),
                     validateRow(),
                     clean(getOrderNumber()),
                     getCharge(),
