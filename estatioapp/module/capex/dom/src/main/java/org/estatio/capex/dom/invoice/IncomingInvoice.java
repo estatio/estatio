@@ -1,6 +1,5 @@
 package org.estatio.capex.dom.invoice;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,9 +12,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 
 import org.estatio.dom.invoice.Invoice;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -42,14 +38,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     public IncomingInvoice() {
         super("number");
     }
-
-    @Column(allowsNull = "false")
-    @Getter @Setter
-    private String number;
-
-    @Column(allowsNull = "false")
-    @Getter @Setter
-    private String description;
 
     //region > compareTo, toString
     @Override

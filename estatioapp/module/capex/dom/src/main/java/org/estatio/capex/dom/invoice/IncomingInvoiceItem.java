@@ -1,8 +1,5 @@
 package org.estatio.capex.dom.invoice;
 
-import java.math.BigDecimal;
-
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -14,10 +11,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.tax.Tax;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
@@ -40,27 +33,6 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> {
-
-
-    @Column(allowsNull = "false")
-    @Getter @Setter
-    private String description;
-
-    @Column(allowsNull = "false", scale = 2)
-    @Getter @Setter
-    private BigDecimal netAmount;
-
-    @Column(allowsNull = "false", scale = 2)
-    @Getter @Setter
-    private BigDecimal vatAmount;
-
-    @Column(allowsNull = "false", scale = 2)
-    @Getter @Setter
-    private BigDecimal grossAmount;
-
-    @Column(allowsNull = "false", scale = 2)
-    @Getter @Setter
-    private Tax tax;
 
 
 }

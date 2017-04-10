@@ -11,9 +11,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.capex.dom.time.TimeInterval;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.project.Project;
+import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -37,26 +35,22 @@ public class OrderRepository {
 
     @Programmatic
     public Order create(
-            final String reference,
+            final String supplierReference,
             final String number,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final TimeInterval period,
-            final String sellerName,
-            final Project project,
-            final Property property,
+            final Party supplier,
+            final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
         final Order order = Order.builder()
-                .reference(reference)
-                .number(number)
+                .supplierReference(supplierReference)
+                .orderNumber(number)
                 .entryDate(entryDate)
                 .orderDate(orderDate)
-                .period(period)
-                .sellerName(sellerName)
-                .project(project)
-                .property(property)
+                .supplier(supplier)
+                .buyer(buyer)
                 .atPath(atPath)
                 .approvedBy(approvedBy)
                 .approvedOn(approvedOn)
@@ -68,22 +62,20 @@ public class OrderRepository {
 
     @Programmatic
     public Order findOrCreate(
-            final String reference,
+            final String supplierReference,
             final String number,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final TimeInterval period,
-            final String sellerName,
-            final Project project,
-            final Property property,
+            final Party supplier,
+            final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
-        Order order = findByReference(reference);
+        Order order = findByReference(supplierReference);
         if (order == null) {
-            order = create(reference, number, entryDate, orderDate,
-                    period, sellerName, project, property, atPath,
-                    approvedBy, approvedOn);
+            order = create(supplierReference, number, entryDate, orderDate,
+                    supplier, buyer,
+                    atPath, approvedBy, approvedOn);
         }
         return order;
     }
