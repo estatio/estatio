@@ -50,8 +50,6 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
-import org.estatio.fixture.project.ProgramForGra;
-import org.estatio.fixture.project.ProgramForKal;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
 
@@ -91,8 +89,6 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PropertyForGraIt());
         executionContext.executeChild(this, new PropertyForVivFr());
         executionContext.executeChild(this, new PropertyForHanSe());
-        executionContext.executeChild(this, new ProgramForGra());
-        executionContext.executeChild(this, new ProgramForKal());
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
 

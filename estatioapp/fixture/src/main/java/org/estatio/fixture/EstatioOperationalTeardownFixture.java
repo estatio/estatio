@@ -91,7 +91,6 @@ import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRole;
 import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRole;
 import org.estatio.numerator.dom.impl.Numerator;
 
 public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
@@ -110,11 +109,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
     protected void deleteAllDirect() {
 
-        deleteFrom(ProgramRole.class);
-        deleteFrom(ProjectRole.class);
-        deleteFrom(BusinessCase.class);
         deleteFrom(Project.class);
-        deleteFrom(Program.class);
 
         deleteFrom(BudgetCalculationResultLink.class);
         deleteFrom(BudgetCalculationResult.class);

@@ -19,16 +19,27 @@
 
 package org.estatio.app.menus.project;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.repository.RepositoryService;
+
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
@@ -54,6 +65,35 @@ public class ProjectMenu {
         return projectRepository.findProject(searchStr);
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public Project newProject(
+            final String reference,
+            final String name,
+            final @Nullable LocalDate startDate,
+            final @Nullable LocalDate endDate,
+            final @Nullable BigDecimal budgetedAmount,
+            final ApplicationTenancy applicationTenancy) {
+        return projectRepository.create(reference, name, startDate, endDate, budgetedAmount, applicationTenancy.getPath());
+    }
+
+    public ApplicationTenancy default5NewProject() {
+        final String usersAtPath = meService.me().getAtPath();
+        // can't use ApplicationTenancyRepository#findByPath because that uses uniqueMatch, and there might not be any match.
+        return repositoryService.firstMatch(
+                new QueryDefault<>(ApplicationTenancy.class, "findByPath", "path", usersAtPath));
+    }
+
+    public List<ApplicationTenancy> choices5NewProject() {
+        return applicationTenancyRepository.allTenancies();
+    }
+
     @Inject
     ProjectRepository projectRepository;
+    @Inject
+    ApplicationTenancyRepository applicationTenancyRepository;
+    @Inject
+    RepositoryService repositoryService;
+    @Inject
+    MeService meService;
 }

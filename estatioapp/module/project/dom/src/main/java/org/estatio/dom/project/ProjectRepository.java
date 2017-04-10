@@ -28,11 +28,11 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.currency.Currency;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -57,38 +57,42 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     }
 
     @Programmatic
-    public List<Project> findByProgram(final Program program) {
-        return allMatches("findByProgram", "program", program);
-    }
-
-    @Programmatic
-    public Project newProject(
+    public Project create(
             final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Currency currency,
-            final BigDecimal estimatedCost,
-            final ProjectPhase projectPhase,
-            final Program program) {
-        // Create project instance
-        Project project = getContainer().newTransientInstance(Project.class);
-        // Set values
+            final BigDecimal budgetedAmount,
+            final String atPath) {
+
+        Project project = repositoryService.instantiate(Project.class);
         project.setReference(reference);
         project.setName(name);
         project.setStartDate(startDate);
         project.setEndDate(endDate);
-        project.setProgram(program);
-        project.setCurrency(currency);
-        project.setEstimatedCost(estimatedCost);
-        project.setProjectPhase(projectPhase);
-        // Persist it
-        persist(project);
-        // Return it
+        project.setBudgetedAmount(budgetedAmount);
+        project.setAtPath(atPath);
+
+        repositoryService.persist(project);
+
+        return project;
+    }
+
+    @Programmatic
+    public Project findOrCreate(
+            final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal budgetedAmount,
+            final String atPath) {
+        Project project = findByReference(reference);
+        if(project == null) {
+            project = create(reference, name, startDate, endDate, budgetedAmount, atPath);
+        }
         return project;
     }
 
     @Inject
-    ProgramRepository programRepository;
-
+    RepositoryService repositoryService;
 }

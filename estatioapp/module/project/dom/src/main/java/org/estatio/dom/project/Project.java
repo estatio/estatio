@@ -19,8 +19,6 @@
 package org.estatio.dom.project;
 
 import java.math.BigDecimal;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -37,28 +35,25 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.with.WithReferenceUnique;
+import org.incode.module.docfragment.dom.types.AtPathType;
 
 import org.estatio.dom.UdoDomainObject;
-import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
-import org.estatio.dom.currency.Currency;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,10 +71,7 @@ import lombok.Setter;
 				+ "WHERE reference == :reference "),
 		@Query(name = "matchByReferenceOrName", language = "JDOQL", value = "SELECT "
 				+ "FROM org.estatio.dom.project.Project "
-				+ "WHERE reference.matches(:matcher) || name.matches(:matcher) "),
-		@Query(name = "findByProgram", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.dom.project.Project "
-				+ "WHERE program == :program ") })
+				+ "WHERE reference.matches(:matcher) || name.matches(:matcher) ") })
 @DomainObject(
 		editing = Editing.DISABLED,
 		objectType = "org.estatio.dom.project.Project"		// TODO: externalize mapping
@@ -91,35 +83,24 @@ public class Project extends UdoDomainObject<Project> implements
 		super("reference, name, startDate");
 	}
 
-	//region > identificatiom
 	public TranslatableString title() {
 		return TranslatableString.tr("{name}", "name", "[" + getReference() + "] " + getName());
 	}
-	//endregion
-	// //////////////////////////////////////
 
-	@Column(allowsNull = "false")
+
+	@Column(length = ReferenceType.Meta.MAX_LEN, allowsNull = "false")
 	@Property(regexPattern = ReferenceType.Meta.REGEX)
 	@PropertyLayout(describedAs = "Unique reference code for this project")
-	@MemberOrder(sequence="1")
 	@Getter @Setter
 	private String reference;
 
-	// //////////////////////////////////////
-
-	@Column(allowsNull = "false")
-	@MemberOrder(sequence="2")
+	@Column(length = NameType.Meta.MAX_LEN, allowsNull = "false")
     @Getter @Setter
     private String name;
 
-	// //////////////////////////////////////
-
 	@Column(allowsNull = "true")
-	@MemberOrder(sequence="3")
     @Getter @Setter
     private LocalDate startDate;
-
-	// //////////////////////////////////////
 
 	@Column(allowsNull = "true")
 	@Persistent
@@ -127,139 +108,15 @@ public class Project extends UdoDomainObject<Project> implements
     @Getter @Setter
     private LocalDate endDate;
 
-	// //////////////////////////////////////
-
-	@Column(name = "programId", allowsNull = "false")
-	@Property(hidden = Where.REFERENCES_PARENT)
-    @Getter @Setter
-    private Program program;
-
-	// //////////////////////////////////////
-
-	@MemberOrder(sequence = "5")
-	@Column(allowsNull = "true")
-    @Getter @Setter
-    private String relatedObject;
-
-	@Column(allowsNull = "true", name="currencyId")
-	@MemberOrder(sequence="6")
-    @Getter @Setter
-	private Currency currency;
-
-	// //////////////////////////////////////
-
 	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
 	@MemberOrder(sequence="7")
     @Getter @Setter
-    private BigDecimal estimatedCost;
+    private BigDecimal budgetedAmount;
 
-	// //////////////////////////////////////
-
-	@Column(allowsNull = "true")
-	@MemberOrder(sequence="4.5")
-    @Getter @Setter
-    private ProjectPhase projectPhase;
-
-//	public Project postponeOneWeek(
-//			@ParameterLayout(named = "Reason") String reason) {
-//		setStartDate(getStartDate().plusWeeks(1));
-//		return this;
-//	}
-
-	// //////////////////////////////////////
-	
-    //TODO: decouple sorted set [momentarily needed by code in  ProjectRole getPredecessor() etc.
-
-	@javax.jdo.annotations.Persistent(mappedBy = "project")
-	private SortedSet<ProjectRole> roles = new TreeSet<>();
-
-	@CollectionLayout(render = RenderType.EAGERLY, hidden = Where.EVERYWHERE)
-	public SortedSet<ProjectRole> getRoles() {
-		return roles;
-	}
-
-	// public void setRoles(final SortedSet<ProjectRole> roles) {
-	// this.roles = roles;
-	// }
-	
-	// //////////////////////////////////////
-	
-	public Project updateDates(
-			@Parameter(optionality=Optionality.OPTIONAL)
-			@ParameterLayout(named = "Start date")
-			final LocalDate startDate,
-			@Parameter(optionality=Optionality.OPTIONAL)
-			@ParameterLayout(named = "End date")
-			final LocalDate endDate
-			){
-		
-		this.setStartDate(startDate);
-		this.setEndDate(endDate);
-		return this;
-	}
-	
-	public LocalDate default0UpdateDates(){
-		return this.getStartDate();
-	}
-	
-	public LocalDate default1UpdateDates(){
-		return this.getEndDate();
-	}
-	
-	public String validateUpdateDates(final LocalDate startDate, final LocalDate endDate){
-		
-		if (startDate.isAfter(endDate)) {
-			return "Start date cannot be later than End date";
-		}
-		
-		return null;
-	}	
-	
-	// //////////////////////////////////////
-	
-	public Project updateCost(
-			@Parameter(optionality=Optionality.OPTIONAL)
-			@ParameterLayout(named = "Currency")
-			final Currency currency,
-			@Parameter(optionality=Optionality.OPTIONAL)
-			@ParameterLayout(named = "Estimated cost")
-			final BigDecimal estimatedCost
-			){
-		
-		this.setCurrency(currency);;
-		this.setEstimatedCost(estimatedCost);
-		return this;
-	}
-	
-	public Currency default0UpdateCost(){
-		return this.getCurrency();
-	}
-	
-	public BigDecimal default1UpdateCost(){
-		return this.getEstimatedCost();
-	}
-	
-	// //////////////////////////////////////
-	
-	public Project changeProject(
-			@ParameterLayout(named = "Project name")
-			final String name,
-			@ParameterLayout(named = "Project phase")
-			final ProjectPhase projectPhase){
-		this.setName(name);
-		this.setProjectPhase(projectPhase);
-		return this;
-	}
-	
-	public String default0ChangeProject(){
-		return this.getName();
-	}
-	
-	public ProjectPhase default1ChangeProject(){
-		return this.getProjectPhase();
-	}
-
-	// //////////////////////////////////////
+	@Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
+	@Getter @Setter
+	@Property(hidden = Where.EVERYWHERE)
+	private String atPath;
 
 	@PropertyLayout(
 			named = "Application Level",
@@ -267,13 +124,13 @@ public class Project extends UdoDomainObject<Project> implements
 			hidden = Where.PARENTED_TABLES
 	)
 	public ApplicationTenancy getApplicationTenancy() {
-		return getProgram().getApplicationTenancy();
+		return applicationTenancyRepository.findByPath(getAtPath());
 	}
 
-	// //////////////////////////////////////
+
+
 
 	@Inject
-	public ProjectRoleRepository projectRoleRepository;
+	ApplicationTenancyRepository applicationTenancyRepository;
 
-	// //////////////////////////////////////
 }
