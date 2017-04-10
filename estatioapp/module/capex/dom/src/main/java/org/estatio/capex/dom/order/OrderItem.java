@@ -13,6 +13,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -24,7 +26,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
-import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
@@ -78,7 +79,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final TimeInterval period,
+            final LocalDate startDate,
+            final LocalDate endDate,
             final Property property,
             final Project project
     ) {
@@ -90,7 +92,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.vatAmount = vatAmount;
         this.grossAmount = grossAmount;
         this.tax = tax;
-        this.period =period;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.property = property;
         this.project = project;
     }
@@ -125,7 +128,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @Getter @Setter
     @Column(allowsNull = "false")
-    private TimeInterval period;
+    private LocalDate startDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDate endDate;
 
     @Getter @Setter
     @Column(allowsNull = "true")

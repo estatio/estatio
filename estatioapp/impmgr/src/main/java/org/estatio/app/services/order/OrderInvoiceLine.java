@@ -28,8 +28,6 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.capex.dom.time.TimeInterval;
-import org.estatio.capex.dom.time.TimeIntervalRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.OrganisationRepository;
@@ -315,7 +313,9 @@ public class OrderInvoiceLine {
             final Property property = inferPropertyFrom(line.projectReference);
             final Party buyer =  partyRepository.findPartyByReference(property.getExternalReference());
             final String atPath = "/FRA";
-            final TimeInterval timeInterval = timeIntervalRepository.findByName(line.period);
+
+            final LocalDate startDate = determineStartDateFrom(line.period);
+            final LocalDate endDate = startDate.plusYears(1).minusDays(1);
 
             if(property == null) {
                 return line;
@@ -338,11 +338,15 @@ public class OrderInvoiceLine {
             order.addItem(
                     chargeObj, line.orderDescription,
                     line.netAmount, line.vatAmount, line.grossAmount,
-                    taxObj, timeInterval, property, project);
+                    taxObj, startDate, endDate, property, project);
 
             IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, line.getOrderDate(), line.getOrderDate());
 
             return line;
+        }
+
+        private LocalDate determineStartDateFrom(final String period) {
+            return new LocalDate(Integer.parseInt(period.substring(1)), 7, 1);
         }
 
         private Party determineSupplier() {
@@ -391,8 +395,6 @@ public class OrderInvoiceLine {
         IncomingChargeRepository incomingChargeRepository;
         @Inject
         TaxRepository taxRepository;
-        @Inject
-        TimeIntervalRepository timeIntervalRepository;
         @Inject
         PartyRepository partyRepository;
         @Inject

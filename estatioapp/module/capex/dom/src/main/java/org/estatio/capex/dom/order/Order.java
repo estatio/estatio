@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Project;
@@ -132,12 +131,13 @@ public class Order extends UdoDomainObject2<Order> {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final TimeInterval period,
+            final LocalDate startDate,
+            final LocalDate endDate,
             final org.estatio.dom.asset.Property property,
             final Project project
     ) {
         orderItemRepository.findOrCreate(
-                this, charge, description, netAmount, vatAmount, grossAmount, tax, period, property, project);
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
     }
 
