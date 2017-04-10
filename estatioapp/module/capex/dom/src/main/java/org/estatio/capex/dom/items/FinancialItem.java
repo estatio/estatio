@@ -2,8 +2,9 @@ package org.estatio.capex.dom.items;
 
 import java.math.BigDecimal;
 
+import org.joda.time.LocalDate;
+
 import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
@@ -25,7 +26,9 @@ public interface FinancialItem {
      */
     IncomingCharge getCharge();
 
-    TimeInterval getPeriod();
+    LocalDate getStartDate();
+
+    LocalDate getEndDate();
 
     /**
      * Optional

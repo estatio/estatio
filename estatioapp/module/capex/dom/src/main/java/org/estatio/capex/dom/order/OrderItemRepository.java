@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -12,7 +14,6 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.time.TimeInterval;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
@@ -44,7 +45,8 @@ public class OrderItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final TimeInterval period,
+            final LocalDate startDate,
+            final LocalDate endDate,
             final Property property,
             final Project project) {
         final OrderItem orderItem = OrderItem.builder()
@@ -55,7 +57,8 @@ public class OrderItemRepository {
                 .vatAmount(vatAmount)
                 .grossAmount(grossAmount)
                 .tax(tax)
-                .period(period)
+                .startDate(startDate)
+                .endDate(endDate)
                 .property(property)
                 .project(project)
                 .build();
@@ -73,13 +76,15 @@ public class OrderItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final TimeInterval period,
+            final LocalDate startDate,
+            final LocalDate endDate,
             final Property property,
             final Project project
     ) {
         OrderItem orderItem = findByOrderAndCharge(order, charge);
         if (orderItem == null) {
-            orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, period, property, project);
+            orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
+                    property, project);
         }
         return orderItem;
     }
