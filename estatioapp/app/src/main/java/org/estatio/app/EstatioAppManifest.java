@@ -18,6 +18,7 @@ import org.incode.module.base.services.calendar.CalendarService;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.fixture.EstatioCapexFixtureModule;
+import org.estatio.charge.EstatioChargeModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
@@ -106,6 +107,7 @@ public class EstatioAppManifest implements AppManifest {
                         EstatioBankMandateDomModule.class,
                         EstatioBudgetingDomModule.class,
                         EstatioBudgetAssignmentDomModule.class,
+                        EstatioChargeModule.class,
                         EstatioChargeDomModule.class,
                         EstatioCapexDomModule.class,
                         EstatioCurrencyDomModule.class,

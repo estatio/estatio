@@ -95,7 +95,7 @@ public class ChargeRepository_Test {
         @Test
         public void happyCase() {
 
-            chargeRepository.allCharges();
+            chargeRepository.listAll();
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
@@ -145,7 +145,9 @@ public class ChargeRepository_Test {
                 }
             });
 
-            final Charge newCharge = chargeRepository.newCharge(newApplicationTenancy("/it"), "CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
+            final Charge newCharge = chargeRepository.upsert("CG-REF", "CG-Name", "CG-Description",
+                    newApplicationTenancy("/it"), Applicability.IN_AND_OUT, tax, chargeGroup
+            );
             assertThat(newCharge.getReference()).isEqualTo("CG-REF");
             assertThat(newCharge.getName()).isEqualTo("CG-Name");
             assertThat(newCharge.getDescription()).isEqualTo("CG-Description");
@@ -157,7 +159,9 @@ public class ChargeRepository_Test {
         public void newCharge_whenDoesExist() {
             existingCharge = new Charge();
 
-            final Charge newCharge = chargeRepository.newCharge(newApplicationTenancy("/it"), "CG-REF", "Some other description", "Some other code", null, null);
+            final Charge newCharge = chargeRepository.upsert("CG-REF", "Some other description", "Some other code",
+                    newApplicationTenancy("/it"), Applicability.IN_AND_OUT, null, null
+            );
             assertThat(newCharge).isEqualTo(existingCharge);
         }
 

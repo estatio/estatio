@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.charge;
+package org.estatio.charge.dom.menu;
 
 import java.util.List;
 

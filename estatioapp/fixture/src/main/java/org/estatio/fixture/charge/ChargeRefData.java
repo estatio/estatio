@@ -28,6 +28,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
@@ -145,46 +146,49 @@ public class ChargeRefData extends FixtureScript {
 
             createCharge(chargeGroupRent, country2AlphaCode + CHARGE_SUFFIX_RENT,
                     "Rent" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE,
                     "Service Charge 1" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE2,
                     "Service Charge 2" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
+
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_1,
                     "Incoming Charge 1" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.INCOMING, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_2,
                     "Incoming Charge 2" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.INCOMING, executionContext);
             createCharge(chargeGroupServiceCharge, country2AlphaCode + CHARGE_SUFFIX_INCOMING_CHARGE_3,
                     "Incoming Charge 3" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.INCOMING, executionContext);
+
             createCharge(chargeGroupTurnoverRent, country2AlphaCode + CHARGE_SUFFIX_TURNOVER_RENT,
                     "Turnover Rent" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupPercentage, country2AlphaCode + CHARGE_SUFFIX_PERCENTAGE,
                     "Percentage" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupDeposit, country2AlphaCode + CHARGE_SUFFIX_DEPOSIT,
                     "Deposit" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupDiscount, country2AlphaCode + CHARGE_SUFFIX_DISCOUNT,
                     "Discount" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupEntryFee, country2AlphaCode + CHARGE_SUFFIX_ENTRY_FEE,
                     "Entry Fee" + countryName,
-                    taxReference, executionContext);
-            createCharge(chargeGroupTax, country2AlphaCode + CHARGE_SUFFIX_TAX,
-                    "Tax" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
             createCharge(chargeGroupServiceChargeIndexable, country2AlphaCode + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE,
                     "Service Charge Indexable" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.OUTGOING, executionContext);
+
+            createCharge(chargeGroupTax, country2AlphaCode + CHARGE_SUFFIX_TAX,
+                    "Tax" + countryName,
+                    taxReference, Applicability.IN_AND_OUT, executionContext);
             createCharge(chargeGroupMarketing, country2AlphaCode + CHARGE_SUFFIX_MARKETING,
                     "Marketing" + countryName,
-                    taxReference, executionContext);
+                    taxReference, Applicability.IN_AND_OUT, executionContext);
         }
     }
 
@@ -202,6 +206,7 @@ public class ChargeRefData extends FixtureScript {
             final String chargeReference,
             final String description,
             final String taxReference,
+            final Applicability applicability,
             final ExecutionContext executionContext) {
 
         final String code = chargeReference;
@@ -209,8 +214,8 @@ public class ChargeRefData extends FixtureScript {
         final Tax tax = taxRepository.findByReference(taxReference);
         final ApplicationTenancy taxApplicationTenancy = tax.getApplicationTenancy();
 
-        final Charge charge = chargeRepository.newCharge(
-                taxApplicationTenancy, chargeReference, description, code, tax, chargeGroup);
+        final Charge charge = chargeRepository.upsert(
+                chargeReference, description, code, taxApplicationTenancy, applicability, tax, chargeGroup);
 
         return executionContext.addResult(this, charge.getReference(), charge);
     }

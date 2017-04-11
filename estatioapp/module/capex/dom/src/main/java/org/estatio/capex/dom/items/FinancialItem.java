@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
@@ -24,7 +24,7 @@ public interface FinancialItem {
     /**
      * Mandatory
      */
-    IncomingCharge getIncomingCharge();
+    Charge getCharge();
 
     LocalDate getStartDate();
 
