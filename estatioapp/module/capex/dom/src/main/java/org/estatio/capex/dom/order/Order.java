@@ -75,20 +75,20 @@ public class Order extends UdoDomainObject2<Order> {
     @Builder
     public Order(
             final String orderNumber,
-            final String supplierReference,
+            final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final Party supplier,
+            final Party seller,
             final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
         this();
         this.orderNumber = orderNumber;
-        this.supplierReference = supplierReference;
+        this.sellerOrderReference = sellerOrderReference;
         this.entryDate = entryDate;
         this.orderDate = orderDate;
-        this.supplier = supplier;
+        this.seller = seller;
         this.buyer = buyer;
         this.atPath = atPath;
         this.approvedBy = approvedBy;
@@ -101,7 +101,7 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Column(allowsNull = "true")
     @Getter @Setter
-    private String supplierReference;
+    private String sellerOrderReference;
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -111,11 +111,11 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private LocalDate orderDate;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "sellerId")
     @Getter @Setter
-    private Party supplier;
+    private Party seller;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "buyerId")
     @Getter @Setter
     private Party buyer;
 

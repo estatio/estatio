@@ -31,12 +31,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
-        identityType = IdentityType.DATASTORE,
-        schema = "capex",
-        table = "IncomingInvoiceItem"
+        identityType = IdentityType.DATASTORE
+
+        // unused since rolled-up to superclass:
+        //,schema = "capex"
+        //,table = "IncomingInvoiceItem"
 )
 @javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.SUBCLASS_TABLE)
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Queries({
         @Query(
                 name = "findByInvoiceAndCharge", language = "JDOQL",

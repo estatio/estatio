@@ -1,4 +1,4 @@
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -39,6 +41,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
 @XmlRootElement(name = "orderInvoiceLine")
@@ -47,7 +50,7 @@ import lombok.Setter;
                 "sheetName",
                 "rowNumber",
                 "status",
-                "supplierName",
+                "sellerOrderReference",
                 "charge",
                 "entryDate",
                 "orderDate",
@@ -72,6 +75,7 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.app.services.order.OrderInvoiceLine"
 )
+@XmlAccessorType(XmlAccessType.FIELD)
 @AllArgsConstructor
 public class OrderInvoiceLine {
 
@@ -81,218 +85,127 @@ public class OrderInvoiceLine {
 
     public OrderInvoiceLine() {}
 
-    @Setter
+    @XmlElement(required = false)
+    @Getter @Setter
     @MemberOrder(sequence = "1")
     private String sheetName;
 
     @XmlElement(required = false)
-    public String getSheetName() {
-        return sheetName;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "2")
     private Integer rowNumber;
 
     @XmlElement(required = false)
-    public Integer getRowNumber() {
-        return rowNumber;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "3")
     private String status;
 
     @XmlElement(required = false)
-    public String getStatus() {
-        return status;
-    }
-
-    @Setter
-    private String supplierName;
-
-    @XmlElement(required = false)
-    public String getSupplierName() {
-        return supplierName;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "4")
     private String charge;
 
     @XmlElement(required = false)
-    public String getCharge() {
-        return charge;
-    }
+    @Getter @Setter
+    @MemberOrder(sequence = "4")
+    private String sellerOrderReference;
 
-
-    @Setter
+    @XmlElement(required = false)
+    @Getter @Setter
     @MemberOrder(sequence = "5")
     private LocalDate entryDate;
 
     @XmlElement(required = false)
-    public LocalDate getEntryDate() {
-        return entryDate;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "6")
     private LocalDate orderDate;
 
     @XmlElement(required = false)
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "7")
     private String seller;
 
     @XmlElement(required = false)
-    public String getSeller() {
-        return seller;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "8")
     private String orderDescription;
 
     @XmlElement(required = false)
-    public String getOrderDescription() {
-        return orderDescription;
-    }
-
-    @Setter
+    @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "9")
     private BigDecimal netAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getNetAmount() {
-        return netAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "10")
     private BigDecimal vatAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getVatAmount() {
-        return vatAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "11")
     private BigDecimal grossAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getGrossAmount() {
-        return grossAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "12")
     private String orderApprovedBy;
 
     @XmlElement(required = false)
-    public String getOrderApprovedBy() {
-        return orderApprovedBy;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "13")
     private LocalDate orderApprovedOn;
 
     @XmlElement(required = false)
-    public LocalDate getOrderApprovedOn() {
-        return orderApprovedOn;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "14")
     private String projectReference;
 
     @XmlElement(required = false)
-    public String getProjectReference() {
-        return projectReference;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "15")
     private String period;
 
     @XmlElement(required = false)
-    public String getPeriod() {
-        return period;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "16")
     private String tax;
 
     @XmlElement(required = false)
-    public String getTax() {
-        return tax;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "17")
     private String invoiceNumber;
 
     @XmlElement(required = false)
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "18")
     private String invoiceDescription;
 
     @XmlElement(required = false)
-    public String getInvoiceDescription() {
-        return invoiceDescription;
-    }
-
-    @Setter
+    @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "19")
     private BigDecimal invoiceNetAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getInvoiceNetAmount() {
-        return invoiceNetAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "20")
     private BigDecimal invoiceVatAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getInvoiceVatAmount() {
-        return invoiceVatAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "21")
     @Column(scale = 2)
     private BigDecimal invoiceGrossAmount;
 
     @XmlElement(required = false)
-    public BigDecimal getInvoiceGrossAmount() {
-        return invoiceGrossAmount;
-    }
-
-    @Setter
+    @Getter @Setter
     @MemberOrder(sequence = "22")
     private String invoiceTax;
 
-    @XmlElement(required = false)
-    public String getInvoiceTax() {
-        return invoiceTax;
-    }
 
     /**
      * Using a mixin so can continue to use lombok's @AllArgsConstructor
@@ -329,7 +242,7 @@ public class OrderInvoiceLine {
             if(isOrder) {
                 Order order = orderRepository.findOrCreate(
                         orderNumber,
-                        line.getSupplierName(),
+                        line.getSeller(),
                         line.entryDate,
                         line.orderDate,
                         supplier,
@@ -351,7 +264,7 @@ public class OrderInvoiceLine {
                 final LocalDate dueDate = line.getOrderDate();
                 IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate);
 
-                final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.invoiceNumber);
+                final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.getInvoiceNumber());
                 final Tax invoiceTax = taxRepository.findByReference(line.invoiceTax);
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax, startDate, endDate, property, project);
@@ -360,21 +273,33 @@ public class OrderInvoiceLine {
             return line;
         }
 
+        public String disableAct() {
+            return "OK".equals(line.status) ? null : "Cannot apply: " + line.status;
+        }
+
         private LocalDate determineStartDateFrom(final String period) {
             return new LocalDate(Integer.parseInt(period.substring(1)), 7, 1);
         }
 
         private Party determineSupplier() {
-            Party party = partyRepository.matchPartyByReferenceOrName(line.supplierName);
+            Party party = partyRepository.matchPartyByReferenceOrName(line.seller);
             Country france = countryRepository.findCountry("FRA");
+
             if (party==null){
+
                 RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
-                party = organisationRepository.newOrganisation(generator.generateRandomCode().toUpperCase(), false, line.supplierName, france);
+                String orgReference = generator.generateRandomCode();
+
+                boolean useNumeratorForReference = false;
+                String name = line.seller;
+                Country country = france;
+
+                party = organisationRepository.newOrganisation(orgReference.toUpperCase(), useNumeratorForReference, name, country);
             }
             return party;
         }
 
-        private final Pattern projectReferencePattern = Pattern.compile("^([^-])+[-].*$");
+        private final Pattern projectReferencePattern = Pattern.compile("^([^-]+)[-].*$");
         private Property inferPropertyFrom(final String projectReference) {
             final Matcher matcher = projectReferencePattern.matcher(projectReference);
             if(!matcher.matches()) {
@@ -385,7 +310,16 @@ public class OrderInvoiceLine {
         }
 
         private Project lookupProject() {
-            return projectRepository.findByReference(line.projectReference);
+
+            final String reference = line.projectReference;
+            final String name = line.projectReference;
+            final LocalDate startDate = null;
+            final LocalDate endDate = null;
+            final BigDecimal budgetedAmount = null;
+            final String atPath = "/FRA";
+            final Project parent = null;
+
+            return projectRepository.findOrCreate(reference, name, startDate, endDate, budgetedAmount, atPath, parent);
         }
 
         String determineOrderNumber() {
@@ -433,11 +367,8 @@ public class OrderInvoiceLine {
                 }
                 return buf.toString();
             }
-
         }
-
     }
-    
-    
+
 }
 

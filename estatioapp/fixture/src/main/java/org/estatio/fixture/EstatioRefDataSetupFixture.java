@@ -23,6 +23,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.incode.module.country.fixture.StatesRefData;
 
+import org.estatio.capex.fixture.charge.IncomingChargeFixture;
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
@@ -45,6 +46,7 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, "taxes", new TaxVatStdForAllCountries());
         executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
         executionContext.executeChild(this, "charges", new ChargeRefData());
+        executionContext.executeChild(this, "incomingCharges", new IncomingChargeFixture());
         executionContext.executeChild(this, "indexs", new IndexRefData());
         executionContext.executeChild(this, "docFrags", new DocFragmentDemoFixture());
 

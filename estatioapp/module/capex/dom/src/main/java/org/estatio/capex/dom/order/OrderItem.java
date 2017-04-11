@@ -98,11 +98,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.project = project;
     }
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "orderId")
     @Getter @Setter
     private Order order;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "chargeId")
     @Getter @Setter
     private Charge charge;
 
@@ -122,7 +122,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private BigDecimal grossAmount;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name = "taxId")
     @Getter @Setter
     private Tax tax;
 
@@ -134,12 +134,12 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "false")
     private LocalDate endDate;
 
+    @Column(allowsNull = "true", name = "propertyId")
     @Getter @Setter
-    @Column(allowsNull = "true")
     private Property property;
 
+    @Column(allowsNull = "true", name = "projectId")
     @Getter @Setter
-    @Column(allowsNull = "true")
     private Project project;
 
     @PropertyLayout(

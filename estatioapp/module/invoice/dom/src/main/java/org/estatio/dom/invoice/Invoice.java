@@ -113,7 +113,7 @@ import lombok.Setter;
                         "WHERE seller == :seller " +
                         "ORDER BY invoiceDate DESC"),
         @javax.jdo.annotations.Query(
-                name = "findByInvoiceNumber", language = "JDOQL",
+                name = "findMatchingInvoiceNumber", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE invoiceNumber.matches(:invoiceNumber) "

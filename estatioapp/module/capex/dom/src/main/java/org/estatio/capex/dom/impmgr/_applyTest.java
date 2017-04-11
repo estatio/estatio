@@ -1,4 +1,4 @@
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;

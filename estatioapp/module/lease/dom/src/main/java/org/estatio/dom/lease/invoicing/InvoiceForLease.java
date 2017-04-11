@@ -489,7 +489,7 @@ public class InvoiceForLease
             if (numerator != null) {
                 final String invoiceNumber = numerator.lastIncrementStr();
                 if (invoiceNumber != null) {
-                    List<Invoice> result = invoiceRepository.findByInvoiceNumber(invoiceNumber);
+                    List<Invoice> result = invoiceRepository.findMatchingInvoiceNumber(invoiceNumber);
                     if (result.size() > 0) {
                         final Invoice invoice = result.get(0);
                         if (invoice.getInvoiceDate().isAfter(invoiceDate)) {

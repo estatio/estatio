@@ -63,7 +63,7 @@ public class ProjectRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void returnAllProjects() throws Exception {
             // when
-            List<Project> allProjects = projectRepository.allProjects();
+            List<Project> allProjects = projectRepository.listAll();
 
             // then
             assertThat(allProjects.size(), is(3));

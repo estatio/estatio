@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import java.util.ArrayList;
 import java.util.List;

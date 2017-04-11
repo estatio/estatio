@@ -61,8 +61,8 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
     }
 
     @Programmatic
-    public List<Invoice> findByInvoiceNumber(final String invoiceNumber) {
-        return allMatches("findByInvoiceNumber",
+    public List<Invoice> findMatchingInvoiceNumber(final String invoiceNumber) {
+        return allMatches("findMatchingInvoiceNumber",
                 "invoiceNumber", invoiceNumber);
     }
 

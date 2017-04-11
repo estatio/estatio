@@ -36,20 +36,20 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final String number,
-            final String supplierReference,
+            final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final Party supplier,
+            final Party seller,
             final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
         final Order order = Order.builder()
                 .orderNumber(number)
-                .supplierReference(supplierReference)
+                .sellerOrderReference(sellerOrderReference)
                 .entryDate(entryDate)
                 .orderDate(orderDate)
-                .supplier(supplier)
+                .seller(seller)
                 .buyer(buyer)
                 .atPath(atPath)
                 .approvedBy(approvedBy)
@@ -63,18 +63,18 @@ public class OrderRepository {
     @Programmatic
     public Order findOrCreate(
             final String number,
-            final String supplierReference,
+            final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
-            final Party supplier,
+            final Party seller,
             final Party buyer,
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
         Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(number, supplierReference, entryDate, orderDate,
-                    supplier, buyer, atPath, approvedBy, approvedOn);
+            order = create(number, sellerOrderReference, entryDate, orderDate,
+                    seller, buyer, atPath, approvedBy, approvedOn);
         }
         return order;
     }

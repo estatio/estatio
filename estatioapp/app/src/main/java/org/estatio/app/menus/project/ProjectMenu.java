@@ -57,7 +57,7 @@ public class ProjectMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Project> allProjects() {
-        return projectRepository.allProjects();
+        return projectRepository.listAll();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -90,7 +90,7 @@ public class ProjectMenu {
     }
 
     public List<Project> choices6NewProject(){
-        return projectRepository.allProjects();
+        return projectRepository.listAll();
     }
 
     @Inject
