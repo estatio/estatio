@@ -384,6 +384,7 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+
     public LeaseItem copy(
             final LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
@@ -414,7 +415,7 @@ public class LeaseItem
     }
 
     public List<Charge> choices3Copy() {
-        return chargeRepository.chargesForCountry(this.getApplicationTenancy());
+        return chargeRepository.outgoingChargesForCountry(this.getApplicationTenancy());
     }
 
     public String validateCopy(
@@ -495,10 +496,6 @@ public class LeaseItem
     @Getter @Setter
     private Charge charge;
 
-    public List<Charge> choicesCharge() {
-        return chargeRepository.listAll();
-    }
-
     // //////////////////////////////////////
 
     public LeaseItem changeCharge(final Charge charge) {
@@ -511,7 +508,7 @@ public class LeaseItem
     }
 
     public List<Charge> choices0ChangeCharge() {
-        return chargeRepository.chargesForCountry(getApplicationTenancyPath());
+        return chargeRepository.outgoingChargesForCountry(getApplicationTenancy());
     }
 
 

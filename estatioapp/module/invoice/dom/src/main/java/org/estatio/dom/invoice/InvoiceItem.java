@@ -21,7 +21,6 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -143,10 +142,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
     @Getter @Setter
     private Charge charge;
-
-    public List<Charge> choicesCharge() {
-        return chargeRepository.listAll();
-    }
 
     // //////////////////////////////////////
 

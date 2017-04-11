@@ -75,7 +75,13 @@ import lombok.experimental.UtilityClass;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.charge.Charge "
-                        + "WHERE reference == :reference")
+                        + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByApplicabilities", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.charge.Charge "
+                        + "WHERE applicability == :applicability1"
+                        + "   || applicability == :applicability2" )
 })
 @DomainObject(
         bounded = true,

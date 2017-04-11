@@ -60,6 +60,7 @@ import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -175,24 +176,41 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public PartitionItem createPartitionItemForBudgeting(final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+    public PartitionItem createPartitionItemForBudgeting(
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage) {
         return partitionItemRepository.newPartitionItem(getBudget().getPartitioningForBudgeting(), charge, keyTable, this, percentage);
     }
 
-    public List<KeyTable> choices1CreatePartitionItemForBudgeting(final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+    public List<Charge> choices0CreatePartitionItemForBudgeting() {
+        return chargeRepository.allOutgoing();
+    }
+
+    public List<KeyTable> choices1CreatePartitionItemForBudgeting() {
         return keyTableRepository.findByBudget(getBudget());
     }
 
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public PartitionItem createPartitionItemForActuals(final Partitioning partitioning, final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+    public PartitionItem createPartitionItemForActuals(
+            final Partitioning partitioning,
+            final Charge charge,
+            final KeyTable keyTable,
+            final BigDecimal percentage) {
         return partitionItemRepository.newPartitionItem(partitioning, charge, keyTable, this, percentage);
     }
 
-    public List<Partitioning> choices0CreatePartitionItemForActuals(final Partitioning partitioning, final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+    public List<Partitioning> choices0CreatePartitionItemForActuals() {
         return partitioningRepository.findByBudgetAndType(getBudget(), BudgetCalculationType.ACTUAL);
     }
 
-    public List<KeyTable> choices2CreatePartitionItemForActuals(final Partitioning partitioning, final Charge charge, final KeyTable keyTable, final BigDecimal percentage) {
+    public List<Charge> choices1CreatePartitionItemForActuals() {
+        return chargeRepository.allOutgoing();
+    }
+
+    public List<KeyTable> choices2CreatePartitionItemForActuals() {
         return keyTableRepository.findByBudget(getBudget());
     }
 
@@ -243,5 +261,9 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Inject
     private BudgetItemValueRepository budgetItemValueRepository;
+
+    @Inject
+    private ChargeRepository chargeRepository;
+
 
 }

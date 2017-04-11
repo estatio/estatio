@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
@@ -42,7 +43,6 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -61,6 +61,7 @@ import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
@@ -245,8 +246,10 @@ public class InvoiceForLease
                 final Charge charge,
                 final BigDecimal quantity,
                 final BigDecimal netAmount,
-                final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-                final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+                @Nullable
+                final LocalDate startDate,
+                @Nullable
+                final LocalDate endDate) {
 
             InvoiceItemForLease invoiceItem = invoiceItemForLeaseRepository.newInvoiceItem(invoice, invoice.getDueDate());
 
@@ -270,6 +273,10 @@ public class InvoiceForLease
                 invoiceItemForLease.setFixedAsset(invoice.getLease().primaryOccupancy().get().getUnit());
             }
             return invoiceItemForLease;
+        }
+
+        public List<Charge> choices0$$() {
+            return chargeRepository.allOutgoing();
         }
 
         public BigDecimal default1$$() {
@@ -301,14 +308,17 @@ public class InvoiceForLease
             return invoice.isImmutable() ? "Cannot add new item" : null;
         }
 
-        @javax.inject.Inject
+        @Inject
         FragmentRenderService fragmentRenderService;
 
-        @javax.inject.Inject
+        @Inject
         InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
 
-        @javax.inject.Inject
+        @Inject
         MessageService messageService;
+
+        @Inject
+        ChargeRepository chargeRepository;
 
     }
 
