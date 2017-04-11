@@ -62,7 +62,7 @@
                 <ns2:property id="emailAddresses"/>
             </ns2:fieldSet>
         </col>
-        <col span="8" unreferencedCollections="true">
+        <col span="8">
 
             <tabGroup>
                 <tab name="Communication Channels">
@@ -82,6 +82,15 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Roles">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="roles" defaultView="table">
+                                <ns2:action id="addRole"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
                 <tab name="Previous Names">
                     <row>
                         <col span="12">
@@ -90,18 +99,13 @@
                     </row>
                 </tab>
             </tabGroup>
-
-            <ns2:collection id="currentLeases">
-                <ns2:action id="allLeases"/>
-            </ns2:collection>
-            <ns2:collection id="currentBankMandates"/>
-            <ns2:collection id="financialAccounts">
-                <ns2:action id="newBankAccount"/>
-            </ns2:collection>
-            <ns2:collection id="registrations"/>
-            <ns2:collection id="agreements"/>
-            <ns2:collection id="invoicesFrom"/>
-            <ns2:collection id="invoicesTo"/>
         </col>
     </row>
+    <row>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true">
+            </tabGroup>
+        </col>
+    </row>
+
 </grid>

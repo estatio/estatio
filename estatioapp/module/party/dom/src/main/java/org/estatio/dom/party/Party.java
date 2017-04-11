@@ -18,9 +18,16 @@
  */
 package org.estatio.dom.party;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
@@ -29,8 +36,10 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -40,6 +49,11 @@ import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.party.role.PartyRole;
+import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -149,8 +163,38 @@ public abstract class Party
         return party != this ? null : "Cannot replace a party with itself";
     }
 
+    @Persistent(mappedBy = "party", dependentElement = "true")
+    private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
-    // //////////////////////////////////////
+    @MemberOrder(sequence = "1")
+    public SortedSet<PartyRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(final SortedSet<PartyRole> roles) {
+        this.roles = roles;
+    }
+
+    @MemberOrder(name = "roles", sequence = "1")
+    public Party addRole(final PartyRoleType roleType){
+        partyRoleRepository.findOrCreate(this, roleType);
+        return this;
+    }
+
+    public List<PartyRoleType>  choices0AddRole(){
+        final List<PartyRoleType> partyRoleTypes = getRoles().stream().map(x -> x.getRoleType()).collect(Collectors.toList());
+        return partyRoleTypeRepository.listAll().stream().filter(x -> !partyRoleTypes.contains(x)).collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public void addRole(final PartyRoleTypeData partyRoleTypeData){
+        partyRoleRepository.findOrCreate(this, partyRoleTypeData);
+    }
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
 
     public static class NameType {
 

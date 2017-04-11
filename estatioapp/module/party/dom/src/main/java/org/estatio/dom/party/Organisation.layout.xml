@@ -28,6 +28,20 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Registrations">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Registrations" id="registrations">
+                                <ns2:property id="vatCode"/>
+                                <ns2:property id="fiscalCode"/>
+                                <ns2:property id="chamberOfCommerceCode">
+                                    <ns2:action id="change" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+
+                        </col>
+                    </row>
+                </tab>
                 <tab name="Application Level">
                     <row>
                         <col span="12">
@@ -54,13 +68,6 @@
                     </row>
                 </tab>
             </tabGroup>
-            <ns2:fieldSet name="Registrations" id="registrations">
-                <ns2:property id="vatCode"/>
-                <ns2:property id="fiscalCode"/>
-                <ns2:property id="chamberOfCommerceCode">
-                    <ns2:action id="change" position="BELOW"/>
-                </ns2:property>
-            </ns2:fieldSet>
             <ns2:fieldSet name="Communication" id="communication">
                 <ns2:property id="emailAddresses"/>
                 <ns2:property id="phoneNumbers"/>
@@ -85,6 +92,15 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Roles">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="roles" defaultView="table">
+                                <ns2:action id="addRole"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
                 <tab name="Previous Names">
                     <row>
                         <col span="12">
@@ -93,19 +109,6 @@
                     </row>
                 </tab>
             </tabGroup>
-            <ns2:collection id="currentLeases">
-                <ns2:action id="allLeases"/>
-            </ns2:collection>
-            <ns2:collection id="currentBankMandates">
-                <ns2:action id="allBankMandates"/>
-            </ns2:collection>
-            <ns2:collection id="financialAccounts">
-                <ns2:action id="newBankAccount"/>
-            </ns2:collection>
-            <ns2:collection id="registrations"/>
-            <ns2:collection id="agreements"/>
-            <ns2:collection id="invoicesFrom"/>
-            <ns2:collection id="invoicesTo"/>
         </col>
     </row>
     <row>

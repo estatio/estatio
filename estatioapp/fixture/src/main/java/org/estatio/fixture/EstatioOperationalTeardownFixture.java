@@ -86,6 +86,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
+import org.estatio.dom.party.role.PartyRole;
 import org.estatio.dom.project.BusinessCase;
 import org.estatio.dom.project.Program;
 import org.estatio.dom.project.ProgramRole;
@@ -185,6 +186,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(OrganisationPreviousName.class);
         deleteFrom(PartyRegistration.class);
         deleteFrom(PartyRelationship.class);
+        deleteFrom(PartyRole.class);
         deleteFrom(Organisation.class);
         deleteFrom(Person.class);
         deleteFrom(Party.class);

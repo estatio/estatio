@@ -41,8 +41,10 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypeData;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
@@ -50,6 +52,8 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
 public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
@@ -63,11 +67,17 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public void init(final Map<String, String> properties) {
         super.init(properties);
         final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.TENANT, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.LANDLORD, agreementType);
-        agreementRoleTypeRepository.findOrCreate(LeaseConstants.AgreementRoleType.MANAGER, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS, agreementType);
-        agreementRoleCommunicationChannelTypeRepository.findOrCreate(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS, agreementType);
+        for (AgreementRoleTypeData agreementRoleTypeData : LeaseConstants.AgreementRoleType.values()){
+            agreementRoleTypeRepository.findOrCreate(agreementRoleTypeData, agreementType);
+        }
+        for (AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelTypeData : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
+            agreementRoleCommunicationChannelTypeRepository.findOrCreate(agreementRoleCommunicationChannelTypeData, agreementType);
+        }
+        for (PartyRoleTypeData partyRoleTypeData : LeaseConstants.PartyRoleTypeEnum.values()){
+            partyRoleTypeRepository.findOrCreate(partyRoleTypeData);
+        }
+
+
     }
 
     @Programmatic
@@ -202,4 +212,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Inject
     private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
+    @Inject
+    private PartyRoleTypeRepository partyRoleTypeRepository;
 }

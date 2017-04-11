@@ -88,11 +88,23 @@ public abstract class LeaseAbstract extends FixtureScript {
             boolean createLeaseUnitAndTags,
             Party manager, ExecutionContext fixtureResults) {
         return createLeaseWithOccupancyEndDate(
-                reference, name, unitReference,
-                brand, brandCoverage, countryOfOriginRef,
-                sector, activity, landlordReference, tenantReference,
-                startDate, endDate, null,
-                createManagerRole, createLeaseUnitAndTags, manager, fixtureResults
+                reference,
+                name,
+                unitReference,
+                brand,
+                brandCoverage,
+                countryOfOriginRef,
+                sector,
+                activity,
+                landlordReference,
+                tenantReference,
+                startDate,
+                endDate,
+                null,
+                createManagerRole,
+                createLeaseUnitAndTags,
+                manager,
+                fixtureResults
         );
     }
 
@@ -115,7 +127,9 @@ public abstract class LeaseAbstract extends FixtureScript {
 
         Unit unit = unitRepository.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
+        landlord.addRole(LeaseConstants.PartyRoleTypeEnum.LANDLORD);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
+        tenant.addRole(LeaseConstants.PartyRoleTypeEnum.TENANT);
 
         final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
                 ApplicationTenancyConstants.GLOBAL_PATH));
@@ -132,7 +146,7 @@ public abstract class LeaseAbstract extends FixtureScript {
         fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
-            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.MANAGER.getTitle()), manager, null, null);
+            final AgreementRole role = lease.createRole(agreementRoleTypeRepository.find(LeaseConstants.AgreementRoleType.MANAGER), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
@@ -192,7 +206,7 @@ public abstract class LeaseAbstract extends FixtureScript {
             final CommunicationChannelType channelType) {
 
         final AgreementRoleType inRoleOfTenant =
-                agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
+                agreementRoleTypeRepository.find(LeaseConstants.AgreementRoleType.TENANT);
         final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
                 agreementRoleCommunicationChannelTypeRepository.find(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS);
 
