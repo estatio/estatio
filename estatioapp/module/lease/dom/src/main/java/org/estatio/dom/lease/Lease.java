@@ -484,7 +484,7 @@ public class Lease
     }
 
     public List<Charge> choices2NewItem() {
-        return chargeRepository.chargesForCountry(this.getApplicationTenancy());
+        return chargeRepository.outgoingChargesForCountry(this.getApplicationTenancy());
     }
 
     public LeaseConstants.AgreementRoleType default1NewItem(){

@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -58,7 +59,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     }
 
 
-
     @Builder
     public IncomingInvoice(
             final String invoiceNumber,
@@ -77,19 +77,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setDueDate(dueDate);
     }
 
-    //region > compareTo, toString
-    @Override
-    public int compareTo(final IncomingInvoice other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "number");
-    }
-
-    @Override
-    public String toString() {
-        return org.apache.isis.applib.util.ObjectContracts.toString(this, "number");
-    }
-
+    @Programmatic
     public void addItem(
             final IncomingInvoice invoice,
+            // this should be an incoming charge
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
@@ -105,7 +96,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
                 tax, startDate, endDate, property, project
         );
     }
-    //endregion
+
 
     @Inject
     private IncomingInvoiceItemRepository incomingInvoiceItemRepository;

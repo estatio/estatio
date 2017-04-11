@@ -21,12 +21,14 @@ package org.estatio.dom.charge;
 import java.util.List;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -108,6 +110,33 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
     @Programmatic
     public List<Charge> listAll() {
         return allInstances();
+    }
+
+    @Programmatic
+    public List<Charge> allOutgoing() {
+        return allMatches(
+                new QueryDefault<>(Charge.class,
+                        "findByApplicabilities",
+                        "applicability1", Applicability.IN_AND_OUT,
+                        "applicability2", Applicability.OUTGOING));
+    }
+
+    @Programmatic
+    public List<Charge> allIncoming() {
+        return allMatches(
+                new QueryDefault<>(Charge.class,
+                        "findByApplicabilities",
+                        "applicability1", Applicability.IN_AND_OUT,
+                        "applicability2", Applicability.INCOMING));
+    }
+
+    @Programmatic
+    public List<Charge> outgoingChargesForCountry(final ApplicationTenancy countryOrLowerLevel) {
+        final List<Charge> charges = chargesForCountry(countryOrLowerLevel);
+        return Lists.newArrayList(
+                FluentIterable.from(charges)
+                        .filter(x -> x.getApplicability().supportsOutgoing())
+        );
     }
 
     @Programmatic

@@ -74,6 +74,7 @@ import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -154,6 +155,10 @@ public class Budget extends UdoDomainObject2<Budget>
             final BigDecimal budgetedValue,
             final Charge charge) {
         return budgetItemRepository.newBudgetItem(this, budgetedValue, charge);
+    }
+
+    public List<Charge> choices1NewBudgetItem() {
+        return chargeRepository.allIncoming();
     }
 
     public String validateNewBudgetItem(
@@ -356,5 +361,9 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     private BudgetCalculationService budgetCalculationService;
+
+    @Inject
+    private ChargeRepository chargeRepository;
+
 
 }
