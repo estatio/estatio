@@ -37,6 +37,7 @@ public class Charge_Test {
                     .withFixture(pojos(ChargeGroup.class))
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(ApplicationTenancy.class))
+                    .withFixture(pojos(Charge.class))
                     .exercise(new Charge());
         }
 

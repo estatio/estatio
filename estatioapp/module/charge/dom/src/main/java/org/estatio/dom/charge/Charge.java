@@ -52,6 +52,7 @@ import org.estatio.dom.tax.Tax;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -131,10 +132,18 @@ public class Charge
     private Charge parent;
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = ChargeReferenceType.Meta.MAX_LEN)
     @Property(regexPattern = ReferenceType.Meta.REGEX, editing = Editing.DISABLED)
     @Getter @Setter
     private String reference;
+
+    @UtilityClass
+    public static class ChargeReferenceType {
+        @UtilityClass
+        public static class Meta {
+            public final static int MAX_LEN = 36;
+        }
+    }
 
     @Programmatic
     public String getReference4() {
