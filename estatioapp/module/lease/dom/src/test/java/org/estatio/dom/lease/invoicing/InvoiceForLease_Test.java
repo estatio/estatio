@@ -130,7 +130,7 @@ public class InvoiceForLease_Test {
     void allowingMockInvoicesToReturnInvoice(final String invoiceNumber, final LocalDate invoiceDate) {
         context.checking(new Expectations() {
             {
-                allowing(mockInvoiceRepository).findByInvoiceNumber(with(any(String.class)));
+                allowing(mockInvoiceRepository).findMatchingInvoiceNumber(with(any(String.class)));
                 will(returnValue(Arrays.asList(new InvoiceForLease() {
                     @Override
                     public String getInvoiceNumber() {

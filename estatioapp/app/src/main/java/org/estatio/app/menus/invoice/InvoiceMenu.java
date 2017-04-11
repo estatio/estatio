@@ -142,7 +142,7 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesByInvoiceNumber(
             final String invoiceNumber) {
-        return invoiceRepository.findByInvoiceNumber(invoiceNumber);
+        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber);
     }
 
 

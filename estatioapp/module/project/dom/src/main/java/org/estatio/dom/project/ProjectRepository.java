@@ -42,7 +42,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
     }
 
     @Programmatic
-    public List<Project> allProjects() {
+    public List<Project> listAll() {
         return allInstances();
     }
 

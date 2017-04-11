@@ -8,7 +8,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
 
 import org.joda.time.LocalDate;
 
@@ -28,12 +27,13 @@ import org.estatio.dom.tax.Tax;
 import lombok.Builder;
 
 @PersistenceCapable(
-        identityType = IdentityType.DATASTORE,
-        schema = "capex",
-        table = "IncomingInvoice"
+        identityType = IdentityType.DATASTORE
+        // unused since rolled-up to superclass:
+        //,schema = "capex"
+        //,table = "IncomingInvoice"
 )
 @javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.SUBCLASS_TABLE)
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(
         "capex.IncomingInvoice"
 )
@@ -44,7 +44,8 @@ import lombok.Builder;
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE invoiceNumber == :invoiceNumber ")
 })
-@Unique(name = "IncomingInvoice_number_UNQ", members = { "number" })
+// unused, since rolled-up
+//@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "capex.IncomingInvoice"

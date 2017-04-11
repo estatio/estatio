@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 
 @DomainService(
@@ -63,8 +64,7 @@ public class OrderInvoiceImportMenu {
 
         final List<OrderInvoiceLine> lines = orderInvoiceImportService.createLines(sheetName, spreadSheet);
 
-        final OrderInvoiceSheet sheet = new OrderInvoiceSheet();
-
+        final OrderInvoiceSheet sheet = factoryService.instantiate(OrderInvoiceSheet.class);
         sheet.setLines(lines);
 
         return sheet;
@@ -75,10 +75,10 @@ public class OrderInvoiceImportMenu {
     }
 
 
-
-
-
     @Inject
     private OrderInvoiceImportService orderInvoiceImportService;
+
+    @Inject
+    private FactoryService factoryService;
 
 }

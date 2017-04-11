@@ -1,11 +1,14 @@
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.applib.annotation.Action;
@@ -22,6 +25,7 @@ import lombok.Setter;
                 "lines"
         }
 )
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OrderInvoiceSheet {
 
     @XmlElementWrapper
@@ -38,14 +42,20 @@ public class OrderInvoiceSheet {
     public OrderInvoiceSheet apply() {
 
         for (OrderInvoiceLine line : lines) {
-            factoryService.mixin(OrderInvoiceLine._apply.class, line).act();
+            OrderInvoiceLine._apply applyMixin = factoryService.mixin(OrderInvoiceLine._apply.class, line);
+            if(applyMixin.disableAct() == null) {
+                applyMixin.act();
+            }
         }
 
         return this;
     }
 
+    @XmlTransient
     @Inject
     OrderInvoiceImportService orderInvoiceImportService;
+
+    @XmlTransient
     @Inject
     FactoryService factoryService;
 

@@ -1,4 +1,4 @@
-package org.estatio.app.services.order;
+package org.estatio.capex.dom.impmgr;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -324,7 +324,9 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                 "FRF",
                 "FRO",
                 "FRR",
-                "FRS"
+                "FRS",
+                "GBR-VATSTD",   // added for Open source version, integ testing
+                "NLD-VATSTD"
         );
         if (taxToUse()!=null && !taxcodes.contains(taxToUse())){
             b.append("tax unknown; ");
