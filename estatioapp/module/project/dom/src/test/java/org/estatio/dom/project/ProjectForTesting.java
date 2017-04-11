@@ -21,5 +21,4 @@ package org.estatio.dom.project;
 
 public class ProjectForTesting extends Project {
 
-
 }

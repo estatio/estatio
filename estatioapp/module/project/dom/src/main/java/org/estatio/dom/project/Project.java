@@ -19,6 +19,8 @@
 package org.estatio.dom.project;
 
 import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -127,8 +129,13 @@ public class Project extends UdoDomainObject<Project> implements
 		return applicationTenancyRepository.findByPath(getAtPath());
 	}
 
+	@Persistent(mappedBy = "parent", dependentElement = "true")
+	@Getter @Setter
+	private SortedSet<Project> children = new TreeSet<Project>();
 
-
+	@Column(allowsNull = "true")
+	@Getter @Setter
+	private Project parent;
 
 	@Inject
 	ApplicationTenancyRepository applicationTenancyRepository;
