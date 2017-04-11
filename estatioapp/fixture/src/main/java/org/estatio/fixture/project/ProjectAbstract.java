@@ -39,8 +39,8 @@ public abstract class ProjectAbstract extends FixtureScript {
             final LocalDate endDate,
             final BigDecimal estimatedCost,
             final String atPath,
-            final ExecutionContext fixtureResults) {
-        Project project = projectRepository.create(reference, name, startDate, endDate, estimatedCost, atPath);
+            final Project parent, final ExecutionContext fixtureResults) {
+        Project project = projectRepository.create(reference, name, startDate, endDate, estimatedCost, atPath, parent);
         return fixtureResults.addResult(this, project.getReference(), project);
     }
 

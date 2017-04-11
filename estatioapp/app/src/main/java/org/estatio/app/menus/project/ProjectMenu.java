@@ -73,8 +73,9 @@ public class ProjectMenu {
             final @Nullable LocalDate startDate,
             final @Nullable LocalDate endDate,
             final @Nullable BigDecimal budgetedAmount,
-            final ApplicationTenancy applicationTenancy) {
-        return projectRepository.create(reference, name, startDate, endDate, budgetedAmount, applicationTenancy.getPath());
+            final ApplicationTenancy applicationTenancy,
+            final @Nullable Project parent) {
+        return projectRepository.create(reference, name, startDate, endDate, budgetedAmount, applicationTenancy.getPath(), parent);
     }
 
     public ApplicationTenancy default5NewProject() {
@@ -86,6 +87,10 @@ public class ProjectMenu {
 
     public List<ApplicationTenancy> choices5NewProject() {
         return applicationTenancyRepository.allTenancies();
+    }
+
+    public List<Project> choices6NewProject(){
+        return projectRepository.allProjects();
     }
 
     @Inject

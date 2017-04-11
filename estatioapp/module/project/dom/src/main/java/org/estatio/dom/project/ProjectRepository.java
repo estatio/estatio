@@ -63,7 +63,8 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedAmount,
-            final String atPath) {
+            final String atPath,
+            final Project parent) {
 
         Project project = repositoryService.instantiate(Project.class);
         project.setReference(reference);
@@ -72,6 +73,7 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         project.setEndDate(endDate);
         project.setBudgetedAmount(budgetedAmount);
         project.setAtPath(atPath);
+        project.setParent(parent);
 
         repositoryService.persist(project);
 
@@ -85,10 +87,11 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedAmount,
-            final String atPath) {
+            final String atPath,
+            final Project parent) {
         Project project = findByReference(reference);
         if(project == null) {
-            project = create(reference, name, startDate, endDate, budgetedAmount, atPath);
+            project = create(reference, name, startDate, endDate, budgetedAmount, atPath, parent);
         }
         return project;
     }
