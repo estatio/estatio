@@ -1,3 +1,5 @@
+<#setting number_format=",##0.00">
+<#setting locale="it">
 <b>OGGETTO</b>:<#t>
  ${leasePropertyName}<#rt>
  /<#rt>

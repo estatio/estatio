@@ -679,11 +679,11 @@ public class DocFragments_for_Invoicing_Test {
 
             item1 = new InvoiceItemForLease();
             item1.setCharge(charge1);
-            item1.setGrossAmount(new BigDecimal("123.45"));
+            item1.setGrossAmount(new BigDecimal("1234.56"));
 
             item2 = new InvoiceItemForLease();
             item2.setCharge(charge2);
-            item2.setGrossAmount(new BigDecimal("543.21"));
+            item2.setGrossAmount(new BigDecimal("6543.21"));
 
             items.add(item1);
             items.add(item2);
@@ -829,7 +829,7 @@ public class DocFragments_for_Invoicing_Test {
                         + "Come a Voi già noto, la fatturazione relativa al Charge 1 e Charge 2, verrà effettuata alla stessa data stabilita per il pagamento ."
                         + "<br /><br />"
                         + "Pertanto, Vi invitiamo a voler predisporre il pagamento a mezzo bonifico bancario sul conto corrente intestato "
-                            + "alla Some Seller Some Bank - Some Iban per l'importo di <b>€ 666.66</b> con scadenza 12-03-2016 così suddiviso:");
+                            + "alla Some Seller Some Bank - Some Iban per l'importo di <b>€ 7.777,77</b> con scadenza 12-03-2016 così suddiviso:");
             }
         }
     }
