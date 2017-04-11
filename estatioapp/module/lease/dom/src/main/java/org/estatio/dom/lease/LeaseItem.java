@@ -496,7 +496,7 @@ public class LeaseItem
     private Charge charge;
 
     public List<Charge> choicesCharge() {
-        return chargeRepository.allCharges();
+        return chargeRepository.listAll();
     }
 
     // //////////////////////////////////////

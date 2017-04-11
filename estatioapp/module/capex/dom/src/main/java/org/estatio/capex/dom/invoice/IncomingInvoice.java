@@ -17,8 +17,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Project;
@@ -90,7 +90,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
 
     public void addItem(
             final IncomingInvoice invoice,
-            final IncomingCharge charge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,

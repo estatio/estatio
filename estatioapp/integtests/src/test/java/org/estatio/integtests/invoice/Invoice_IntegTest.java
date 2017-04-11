@@ -121,7 +121,7 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
             buyer = partyRepository.findPartyByReference(OrganisationForPoisonGb.REF);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
-            charge = chargeRepository.allCharges().get(0);
+            charge = chargeRepository.listAll().get(0);
             currency = currencyRepository.allCurrencies().get(0);
         }
 

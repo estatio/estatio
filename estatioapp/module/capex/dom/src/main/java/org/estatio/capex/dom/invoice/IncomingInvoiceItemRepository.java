@@ -13,8 +13,8 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
@@ -25,13 +25,13 @@ import org.estatio.dom.tax.Tax;
 public class IncomingInvoiceItemRepository {
 
     @Programmatic
-    public IncomingInvoiceItem findByInvoiceAndIncomingCharge(final IncomingInvoice invoice, final IncomingCharge incomingCharge) {
+    public IncomingInvoiceItem findByInvoiceAndCharge(final IncomingInvoice invoice, final Charge charge) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findByInvoiceAndIncomingCharge",
+                        "findByInvoiceAndCharge",
                         "invoice", invoice,
-                        "incomingCharge", incomingCharge
+                        "charge", charge
                 ));
     }
 
@@ -39,7 +39,7 @@ public class IncomingInvoiceItemRepository {
     @Programmatic
     public IncomingInvoiceItem create(
             final IncomingInvoice invoice,
-            final IncomingCharge charge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -51,7 +51,7 @@ public class IncomingInvoiceItemRepository {
             final Project project) {
         final IncomingInvoiceItem invoiceItem = IncomingInvoiceItem.builder()
                 .invoice(invoice)
-                .incomingCharge(charge)
+                .charge(charge)
                 .description(description)
                 .netAmount(netAmount)
                 .vatAmount(vatAmount)
@@ -70,7 +70,7 @@ public class IncomingInvoiceItemRepository {
     @Programmatic
     public IncomingInvoiceItem findOrCreate(
             final IncomingInvoice invoice,
-            final IncomingCharge charge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -81,7 +81,7 @@ public class IncomingInvoiceItemRepository {
             final Property property,
             final Project project
     ) {
-        IncomingInvoiceItem invoiceItem = findByInvoiceAndIncomingCharge(invoice, charge);
+        IncomingInvoiceItem invoiceItem = findByInvoiceAndCharge(invoice, charge);
         if (invoiceItem == null) {
             invoiceItem = create(invoice, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
                     property, project);

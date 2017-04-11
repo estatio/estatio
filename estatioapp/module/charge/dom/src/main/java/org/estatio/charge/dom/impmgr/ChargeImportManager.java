@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.app.services.budget;
+package org.estatio.charge.dom.impmgr;
 
 import java.util.List;
 

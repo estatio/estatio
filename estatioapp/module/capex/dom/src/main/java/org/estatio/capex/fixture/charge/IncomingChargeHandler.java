@@ -7,17 +7,24 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.charge.IncomingChargeRepository;
+import org.estatio.dom.charge.Applicability;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
 
 public class IncomingChargeHandler implements FixtureAwareRowHandler<IncomingChargeHandler> {
 
+    /**
+     * Also used as the reference and as the description.
+     */
     @Getter @Setter
     private String name;
 
+    /**
+     * The name/reference of the parent.
+     */
     @Getter @Setter
     private String parent;
 
@@ -46,14 +53,14 @@ public class IncomingChargeHandler implements FixtureAwareRowHandler<IncomingCha
 
     }
 
-    private IncomingCharge handle(final IncomingChargeHandler previousRow) {
-        final IncomingCharge parentObj = incomingChargeRepository.findByName(parent);
+    private Charge handle(final IncomingChargeHandler previousRow) {
+        final Charge parentObj = chargeRepository.findByReference(parent);
 
-        return incomingChargeRepository.findOrCreate(name, parentObj, atPath);
+        return chargeRepository.upsert(name, parentObj, atPath, Applicability.INCOMING);
     }
 
     @Inject
-    IncomingChargeRepository incomingChargeRepository;
+    ChargeRepository chargeRepository;
 
 }
 

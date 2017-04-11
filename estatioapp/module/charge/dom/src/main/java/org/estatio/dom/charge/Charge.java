@@ -18,8 +18,13 @@
  */
 package org.estatio.dom.charge;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -111,7 +116,20 @@ public class Charge
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = Applicability.Meta.MAX_LEN)
+    @Getter @Setter
+    private Applicability applicability;
+
+
+    @Persistent(mappedBy = "parent", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<Charge> children = new TreeSet<>();
+
+    @Column(allowsNull = "true", name = "parentId")
+    @Getter @Setter
+    private Charge parent;
+
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @Property(regexPattern = ReferenceType.Meta.REGEX, editing = Editing.DISABLED)
@@ -135,39 +153,41 @@ public class Charge
         }
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = DescriptionType.Meta.MAX_LEN)
     @PropertyLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
     @Getter @Setter
     private String description;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
-    @Getter @Setter
+    // @Getter
+    @Setter
     private String externalReference;
 
-    // //////////////////////////////////////
+    public String getExternalReference() {
+        return externalReference;
+    }
 
-    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
-    @Getter @Setter
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
+    //@Getter
+    @Setter
     private Tax tax;
 
-    // //////////////////////////////////////
+    public Tax getTax() {
+        return tax;
+    }
 
-    @javax.jdo.annotations.Column(name = "groupId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "groupId", allowsNull = "true")
     @Getter @Setter
     private ChargeGroup group;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)

@@ -12,9 +12,9 @@ import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.charge.IncomingChargeRepository;
 import org.estatio.capex.fixture.charge.IncomingChargeFixture;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -58,24 +58,24 @@ public class IncomingCharge_IntegTest extends EstatioIntegrationTest {
             });
 
             // then
-            final List<IncomingCharge> incomingCharges = incomingChargeRepository.listAll();
-            assertThat(incomingCharges).isNotEmpty();
+            final List<Charge> charges = chargeRepository.listAll();
+            assertThat(charges).isNotEmpty();
 
             // and when
-            final IncomingCharge france = incomingChargeRepository.findByName("FRANCE");
+            final Charge france = chargeRepository.findByReference("FRANCE");
 
             // then
             assertThat(france).isNotNull();
-            final SortedSet<IncomingCharge> franceChildren = france.getChildren();
+            final SortedSet<Charge> franceChildren = france.getChildren();
             assertThat(franceChildren).isNotEmpty();
             assertThat(france.getParent()).isNull();
 
             // and when
-            final IncomingCharge marketing = incomingChargeRepository.findByName("MARKETING");
+            final Charge marketing = chargeRepository.findByReference("MARKETING");
 
             // then
             assertThat(marketing).isNotNull();
-            final SortedSet<IncomingCharge> marketingChildren = marketing.getChildren();
+            final SortedSet<Charge> marketingChildren = marketing.getChildren();
             assertThat(marketingChildren).isEmpty();
             assertThat(marketing.getParent()).isEqualTo(france);
 
@@ -83,6 +83,6 @@ public class IncomingCharge_IntegTest extends EstatioIntegrationTest {
     }
 
     @Inject
-    IncomingChargeRepository incomingChargeRepository;
+    ChargeRepository chargeRepository;
 
 }

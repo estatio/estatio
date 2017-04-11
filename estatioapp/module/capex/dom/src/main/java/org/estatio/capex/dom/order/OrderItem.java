@@ -23,12 +23,12 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
@@ -49,14 +49,14 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findByOrderAndIncomingCharge", language = "JDOQL",
+                name = "findByOrderAndCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE order == :order "
-                        + "   && incomingCharge == :incomingCharge ")
+                        + "   && charge == :charge ")
 })
 
-@Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "incomingCharge" })
+@Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "charge" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "capex.OrderItem"
@@ -67,13 +67,13 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public OrderItem() {
-        super("order,incomingCharge");
+        super("order,charge");
     }
 
     @Builder
     public OrderItem(
             final Order order,
-            final IncomingCharge charge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -86,7 +86,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     ) {
         this();
         this.order = order;
-        this.incomingCharge = charge;
+        this.charge = charge;
         this.description = description;
         this.netAmount = netAmount;
         this.vatAmount = vatAmount;
@@ -104,7 +104,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingCharge incomingCharge;
+    private Charge charge;
 
     @Column(allowsNull = "false")
     @Getter @Setter

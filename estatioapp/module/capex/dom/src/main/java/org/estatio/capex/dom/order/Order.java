@@ -30,8 +30,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
@@ -125,7 +125,7 @@ public class Order extends UdoDomainObject2<Order> {
 
     @Programmatic
     public void addItem(
-            final IncomingCharge charge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,

@@ -7,6 +7,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
 
 import org.joda.time.LocalDate;
 
@@ -17,10 +18,10 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
@@ -37,6 +38,12 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUBCLASS_TABLE)
 @Queries({
+        @Query(
+                name = "findByInvoiceAndCharge", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE invoice == :invoice "
+                        + "   && charge == :charge ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -53,7 +60,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Builder
     public IncomingInvoiceItem(
             final IncomingInvoice invoice,
-            final IncomingCharge incomingCharge,
+            final Charge charge,
             final String description,
             final BigDecimal netAmount,
             final BigDecimal vatAmount,
@@ -65,7 +72,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final Project project
             ){
         setInvoice(invoice);
-        setIncomingCharge(incomingCharge);
+        setCharge(charge);
         setStartDate(startDate);
         setEndDate(endDate);
         setDescription(description);
@@ -86,10 +93,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public FinancialItemType getType() {
         return FinancialItemType.INVOICED;
     }
-
-    @Column(allowsNull = "false")
-    @Getter @Setter
-    private IncomingCharge incomingCharge;
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)

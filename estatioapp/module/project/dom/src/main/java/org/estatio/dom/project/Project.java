@@ -133,7 +133,7 @@ public class Project extends UdoDomainObject<Project> implements
 	@Getter @Setter
 	private SortedSet<Project> children = new TreeSet<Project>();
 
-	@Column(allowsNull = "true")
+	@Column(allowsNull = "true", name = "parentId")
 	@Getter @Setter
 	private Project parent;
 

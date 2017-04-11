@@ -145,7 +145,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     private Charge charge;
 
     public List<Charge> choicesCharge() {
-        return chargeRepository.allCharges();
+        return chargeRepository.listAll();
     }
 
     // //////////////////////////////////////

@@ -1,4 +1,4 @@
-package org.estatio.app.services.budget;
+package org.estatio.charge.dom.impmgr;
 
 import java.util.List;
 
@@ -14,13 +14,16 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
+import org.estatio.charge.dom.menu.ChargeMenu;
 import org.estatio.dom.Importable;
+import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
@@ -68,10 +71,8 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String externalReference;
 
-//    @Override
-//    public List<Class> importAfter() {
-//        return Lists.newArrayList(TaxImport.class);
-//    }
+    @Getter @Setter
+    private Applicability applicability;
 
     @Programmatic
     @Override
@@ -93,8 +94,12 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
+        final Applicability applicability = this.applicability != null ? this.applicability : Applicability.IN_AND_OUT;
+
         final Tax tax = taxRepository.findOrCreate(taxReference, taxReference, applicationTenancy);
-        final Charge charge = chargeRepository.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
+
+        final Charge charge = wrap(chargeMenu)
+                .newCharge(applicationTenancy, reference, name, description, tax, chargeGroup, applicability);
 
         charge.setExternalReference(externalReference);
         charge.setSortOrder(sortOrder);
@@ -111,11 +116,21 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return chargeGroup;
     }
 
+    private <T> T wrap(final T obj) {
+        return wrapperFactory.wrap(obj);
+    }
+
     @Inject
     private ApplicationTenancyRepository securityApplicationTenancyRepository;
 
     @Inject
     private TaxRepository taxRepository;
+
+    @Inject
+    private ChargeMenu chargeMenu;
+
+    @Inject
+    private WrapperFactory wrapperFactory;
 
     @Inject
     private ChargeRepository chargeRepository;

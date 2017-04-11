@@ -16,11 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.charge;
+package org.estatio.charge.dom.menu;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -30,15 +35,16 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeRepository;
@@ -64,21 +70,42 @@ public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
             final ApplicationTenancy applicationTenancy,
             @Parameter(
                     regexPattern = ReferenceType.Meta.REGEX,
-                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
-            @ParameterLayout(named = "Reference")
+                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION
+            )
             final String reference,
-            @ParameterLayout(named = "Name")
             final String name,
-            @ParameterLayout(named = "Description")
+            final String description,
+            @Nullable
+            final Tax tax,
+            @Nullable
+            final ChargeGroup chargeGroup,
+            final Applicability applicability) {
+
+        return chargeRepository.upsert(reference, name, description, applicationTenancy, applicability,
+                tax, chargeGroup);
+    }
+
+    public String validateNewCharge(
+            final ApplicationTenancy applicationTenancy,
+            final String reference,
+            final String name,
             final String description,
             final Tax tax,
-            final ChargeGroup chargeGroup) {
-
-        return chargeRepository.newCharge(applicationTenancy, reference, name, description, tax, chargeGroup);
+            final ChargeGroup chargeGroup,
+            final Applicability applicability) {
+        if(applicability.supportsOutgoing()) {
+            if(tax == null) {
+                return "Charges used for outgoing must have a tax";
+            }
+            if(chargeGroup == null) {
+                return "Charges used for outgoing must have a charge group";
+            }
+        }
+        return null;
     }
 
     public List<ApplicationTenancy> choices0NewCharge() {
-        return estatioApplicationTenancyRepository.allCountryTenancies();
+        return allCountryTenancies();
     }
 
     // //////////////////////////////////////
@@ -86,17 +113,38 @@ public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
     public List<Charge> allCharges() {
-        return chargeRepository.allCharges();
+        return chargeRepository.listAll();
     }
 
 
     // //////////////////////////////////////
 
-    @Inject
-    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+
+
+    public List<ApplicationTenancy> allCountryTenancies() {
+        return Lists.newArrayList(
+                Iterables.filter(
+                        applicationTenancies.allTenancies(), Predicates.isCountry()));
+    }
+
+    public static class Predicates {
+        private Predicates() {
+        }
+
+        public static Predicate<ApplicationTenancy> isCountry() {
+            return candidate -> ApplicationTenancyLevel.of(candidate).isCountry();
+        }
+    }
+
+
+    // //////////////////////////////////////
+
 
     @Inject
-    private ChargeRepository chargeRepository;
+    ChargeRepository chargeRepository;
+
+    @Inject
+    ApplicationTenancyRepository applicationTenancies;
 
 
 }

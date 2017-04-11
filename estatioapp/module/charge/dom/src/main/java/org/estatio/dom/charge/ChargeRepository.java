@@ -26,17 +26,13 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.ReferenceType;
-
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.tax.Tax;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.dom.tax.Tax;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Charge.class)
 public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
@@ -48,32 +44,69 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
     // //////////////////////////////////////
 
     @Programmatic
-    public Charge newCharge(
+    public Charge upsert(
+            final String reference,
+            final String name,
+            final String description,
             final ApplicationTenancy applicationTenancy,
-            final @ParameterLayout(named = "Reference") @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION) String reference,
-            final @ParameterLayout(named = "Name") String name,
-            final @ParameterLayout(named = "Description") String description,
+            final Applicability applicability,
             final Tax tax,
             final ChargeGroup chargeGroup) {
+        final String atPath = applicationTenancy.getPath();
+
         Charge charge = findByReference(reference);
         if (charge == null) {
-            charge = newTransientInstance();
-            charge.setReference(reference);
-            persist(charge);
+            charge = create(reference, name, description, atPath, applicability);
         }
-        charge.setApplicationTenancyPath(applicationTenancy.getPath());
+
+        charge.setApplicability(applicability);
+        charge.setApplicationTenancyPath(atPath);
         charge.setName(name);
         charge.setDescription(description);
+
         charge.setTax(tax);
         charge.setGroup(chargeGroup);
+
         return charge;
     }
 
+    private Charge create(
+            final String reference,
+            final String name,
+            final String description,
+            final String atPath,
+            final Applicability applicability) {
+        final Charge charge;
+        charge = newTransientInstance();
+        charge.setReference(reference);
+        charge.setApplicability(applicability);
+        charge.setName(name);
+        charge.setDescription(description);
+        charge.setApplicationTenancyPath(atPath);
+        persist(charge);
+        return charge;
+    }
+
+    @Programmatic
+    public Charge upsert(
+            final String reference,
+            final Charge parentIfAny,
+            final String atPath,
+            final Applicability applicability) {
+
+        Charge charge = findByReference(reference);
+        if (charge == null) {
+            charge = create(reference, reference, reference, atPath, applicability);
+        }
+        charge.setParent(parentIfAny);
+
+        return null;
+    }
 
     // //////////////////////////////////////
 
     @Programmatic
-    public List<Charge> allCharges() {
+    public List<Charge> listAll() {
         return allInstances();
     }
 
@@ -112,7 +145,5 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
                 "findByReference",
                 "reference", reference);
     }
-
-
 
 }

@@ -15,54 +15,19 @@ hide empty members
 ''''''''''''''''''''''''''''''''''''''''''''''
 
 interface FinancialItem << Fact >> #yellow {
+    startDate: LocalDate
+    endDate: LocalDate
     value(): BigDecimal
-    rolledUp(): BigDecimal
-    remaining(): BigDecimal
 }
 
-enum FinancialItemType #cyan  {
-    BUDGETED
-    ORDERED
-    INVOICED
-}
-
-FinancialItemType <-- FinancialItem
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
-class CodaElement5 #pink {
+class CodaElement5 #cyan {
     el5Code
 }
-note right #lightgray: fact + its dimensions\nmap to Coda
 
 FinancialItem <--> "0..*" CodaElement5
-
-''''''''''''''''''''''''''''''''''''''''''''''
-
-class IncomingCharge << Dimension >> #cyan {
-}
-
-
-IncomingCharge "parent/child" <---> IncomingCharge
-
-
-
-''''''''''''''''''''''''''''''''''''''''''''''
-enum CalendarType #cyan {
-    NATURAL,
-    FINANCIAL
-}
-
-class TimeInterval << Dimension >>  #cyan {
-    name: String  
-    startDate: Date
-    endDate: Date
-}
-note right #lightgray: both calendar\nand financial\ntime intervals\neg F2014, 2015Q1,\neg 2015-03, 2015-03-17\nand two hierarchies
-
-TimeInterval "parent/child\n" <---> TimeInterval
-
-CalendarType <-- TimeInterval
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -70,7 +35,34 @@ class Tax << Dimension >> #cyan {
 
 }
 
-Tax "parent/child" <---> Tax
+Tax "parent\n/child" <---> Tax
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+enum Applicability #cyan  {
+    INCOMING
+    OUTGOING
+    IN_AND_OUT
+    supportsIncoming()
+    supportsOutgoing()
+}
+
+class ChargeGroup #cyan {
+    reference
+}
+
+
+class Charge << Dimension >> #cyan {
+    reference
+    externalReference
+}
+note right #lightgray: tax,\nexternalReference,\nand chargeGroup\nare applicable\nonly to outgoing
+
+
+Charge "parent/\nchild" <---> Charge
+Tax <-.- Charge
+ChargeGroup <-.- Charge
+Applicability <-.- Charge
 
 
 
@@ -82,7 +74,7 @@ class Project << Dimension >> #lightgreen {
 class ProjectItem #lightgreen implements FinancialItem {
 }
 
-Project "parent/child" <---> Project
+Project "parent\n/child" <---> Project
 
 Project <--> "0..*" ProjectItem
 
@@ -94,7 +86,7 @@ class FixedAsset << Dimension >> #lightgreen {
 }
 
 
-FixedAsset "parent/child" <---> FixedAsset
+FixedAsset "parent\n/child" <---> FixedAsset
 
 
 
@@ -127,16 +119,32 @@ Party "\nseller" <-- Invoice
 ''''''''''''''''''''''''''''''''''''''''''''''
 
 class Order #lightgreen  {
+    entryDate
+    orderDate
+    orderNumber
+    approvedOn
+    approvedBy
 }
 
 class OrderItem #lightgreen implements FinancialItem {
-    
+    startDate
+    endDate
+    description
+    netAmount: BigDecimal
+    vatAmount: BigDecimal
+    grossAmount: BigDecimal
+    charge: Charge
+    tax: Tax
+    property: Property
+    project: Project
 }
 
 Order <--> "0..*" OrderItem
 
 
+Party "  buyer" <-- Order
 Party "  supplier" <-- Order
+
 
 
 
@@ -186,14 +194,19 @@ IncomingInvoiceItem <-- OrderInvoiceLink
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
+enum FinancialItemType #cyan  {
+    BUDGETED
+    ORDERED
+    INVOICED
+}
 
 Project <-.- FinancialItem
 FixedAsset <-.- FinancialItem
 Tax <-.- FinancialItem
-IncomingCharge <--- FinancialItem
-TimeInterval <--- FinancialItem
+Charge <--- FinancialItem
+FinancialItemType <-- FinancialItem
 
-CalendarType <--- FinancialItem
+
 
 
 --

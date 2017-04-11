@@ -22,14 +22,14 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.capex.dom.charge.IncomingCharge;
-import org.estatio.capex.dom.charge.IncomingChargeRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -324,7 +324,7 @@ public class OrderInvoiceLine {
             final boolean isOrder = line.entryDate != null;
             final boolean isInvoice = line.invoiceNumber != null;
 
-            final IncomingCharge chargeObj = incomingChargeRepository.findByName(line.charge);
+            final Charge chargeObj = chargeRepository.findByReference(line.charge);
 
             if(isOrder) {
                 Order order = orderRepository.findOrCreate(
@@ -407,7 +407,7 @@ public class OrderInvoiceLine {
         @Inject
         ProjectRepository projectRepository;
         @Inject
-        IncomingChargeRepository incomingChargeRepository;
+        ChargeRepository chargeRepository;
         @Inject
         TaxRepository taxRepository;
         @Inject
