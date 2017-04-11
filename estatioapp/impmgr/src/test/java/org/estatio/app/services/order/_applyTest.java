@@ -3,7 +3,6 @@ package org.estatio.app.services.order;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,8 +22,7 @@ public class _applyTest {
     private OrderRepository orderRepository;
 
     @Test
-    @Ignore
-    public void act() throws Exception {
+    public void determine_ordernumber_works() throws Exception {
 
         // given
         OrderInvoiceLine line = new OrderInvoiceLine();
