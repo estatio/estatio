@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.lease.Lease;
 
-@Mixin(method = "exec")
+@Mixin
 public class Lease_guarantees {
 
     private final Lease lease;
@@ -24,14 +24,12 @@ public class Lease_guarantees {
         this.lease = lease;
     }
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(render = RenderType.LAZILY)
-    public List<Guarantee> exec() {
+    public List<Guarantee> guarantees() {
         return leaseGuaranteeService.guarantees(lease);
     }
-
 
     @Inject
     LeaseGuaranteeService leaseGuaranteeService;

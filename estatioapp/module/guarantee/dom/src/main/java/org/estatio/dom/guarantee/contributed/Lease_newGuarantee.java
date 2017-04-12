@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -18,7 +19,7 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 
-@Mixin(method = "exec")
+@Mixin
 public class Lease_newGuarantee {
 
     private final Lease lease;
@@ -27,9 +28,9 @@ public class Lease_newGuarantee {
         this.lease = lease;
     }
 
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Guarantee exec(
+    @MemberOrder(name = "guarantees", sequence = "1")
+    public Guarantee newGuarantee(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX) String reference,
             final String name,
             final GuaranteeType guaranteeType,
