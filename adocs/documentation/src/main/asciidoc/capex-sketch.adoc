@@ -112,8 +112,8 @@ class Party #lightgreen {
 }
 note right #lightgray: eventually expect Party\nto also be 1 or 2 dimensions\n(debtor and/or creditor)
 
-Party "buyer  " <-- Invoice
-Party "\nseller" <-- Invoice
+Party "\n\n\nbuyer" <-- Invoice
+Party "\n\n\n  seller" <-- Invoice
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -142,8 +142,8 @@ class OrderItem #lightgreen implements FinancialItem {
 Order <--> "0..*" OrderItem
 
 
-Party "  buyer" <-- Order
-Party "  supplier" <-- Order
+Party "buyer" <-- Order
+Party "seller" <-- Order
 
 
 
@@ -151,13 +151,15 @@ Party "  supplier" <-- Order
 ''''''''''''''''''''''''''''''''''''''''''''''
 
 abstract class Invoice #pink {
-    dueDate: Date
-    invoiceDate: Date
+    dueDate: LocalDate
+    invoiceDate: LocalDate
     amount: BigDecimal
 }
 
 class IncomingInvoice #pink extends Invoice  {
-    received: Date
+    received: LocalDate
+    paymentMethod
+    status
 }
 
 
@@ -165,32 +167,30 @@ class IncomingInvoiceItem #pink  implements FinancialItem  {
 }
 
 
-IncomingInvoice *---> "1..*  " IncomingInvoiceItem
+IncomingInvoice *---> "1..*" IncomingInvoiceItem
 
 
 
 class Document #lightgreen {
+
 }
 
 
-IncomingInvoice --> Document
+class PaperclipForIncomingInvoice #pink {
+
+}
+
+Document <-- "0..1         " PaperclipForIncomingInvoice
+IncomingInvoice <-- PaperclipForIncomingInvoice
 
 
 class PaymentLine #lightgray {
 }
 
 
-IncomingInvoice --> "0..*" PaymentLine
+IncomingInvoice --> "0..* " PaymentLine
 
-
-''''''''''''''''''''''''''''''''''''''''''''''
-
-class OrderInvoiceLink #pink {
-
-}
-
-OrderItem <-- OrderInvoiceLink
-IncomingInvoiceItem <-- OrderInvoiceLink
+OrderItem <-- IncomingInvoiceItem
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
