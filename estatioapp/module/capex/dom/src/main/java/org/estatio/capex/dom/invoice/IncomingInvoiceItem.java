@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -26,7 +27,6 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,8 +59,8 @@ import lombok.Setter;
 )
 public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implements FinancialItem {
 
-    @Builder
     public IncomingInvoiceItem(
+            final BigInteger sequence,
             final IncomingInvoice invoice,
             final Charge charge,
             final String description,
@@ -68,19 +68,26 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
+            final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
             final org.estatio.dom.asset.Property property,
             final Project project
-            ){
+    ){
+        setSequence(sequence);
+
         setInvoice(invoice);
         setCharge(charge);
-        setStartDate(startDate);
-        setEndDate(endDate);
         setDescription(description);
+
         setNetAmount(netAmount);
         setVatAmount(vatAmount);
         setGrossAmount(grossAmount);
+
+        setDueDate(dueDate);
+        setStartDate(startDate);
+        setEndDate(endDate);
+
         setTax(tax);
         setFixedAsset(property);
         setProject(project);

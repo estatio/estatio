@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -110,13 +111,19 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
             List<OrderInvoiceLine> lines = sheet.getLines();
             assertThat(lines).isNotEmpty();
 
+            orders = orderRepository.listAll();
             assertThat(orders).isEmpty();
 
 
             // when
             sheet.apply();
 
-            // then
+
+            // then orders, invoices and supporting projecs created.
+            orders = orderRepository.listAll();
+            incomingInvoices = incomingInvoiceRepository.listAll();
+            projects = projectRepository.listAll();
+
             assertThat(orders).isNotEmpty();
             assertThat(incomingInvoices).isNotEmpty();
             assertThat(projects).isNotEmpty();
@@ -129,5 +136,8 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
         }
 
     }
+
+    @Inject
+    TransactionService transactionService;
 
 }

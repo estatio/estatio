@@ -44,17 +44,7 @@ public class OrderRepository {
             final String atPath,
             final String approvedBy,
             final LocalDate approvedOn) {
-        final Order order = Order.builder()
-                .orderNumber(number)
-                .sellerOrderReference(sellerOrderReference)
-                .entryDate(entryDate)
-                .orderDate(orderDate)
-                .seller(seller)
-                .buyer(buyer)
-                .atPath(atPath)
-                .approvedBy(approvedBy)
-                .approvedOn(approvedOn)
-                .build();
+        final Order order = new Order(number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvedBy, approvedOn);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persist(order);
         return order;

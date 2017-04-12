@@ -30,6 +30,8 @@ import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
+import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -105,8 +107,6 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
     protected void deleteAllDirect() {
 
-        deleteFrom(Project.class);
-
         deleteFrom(BudgetCalculationResultLink.class);
         deleteFrom(BudgetCalculationResult.class);
         deleteFrom(BudgetCalculationRun.class);
@@ -121,10 +121,23 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(KeyTable.class);
         deleteFrom(Budget.class);
 
-        deleteFrom(PaperclipForInvoice.class);
-        deleteFrom(InvoiceItem.class);
         deleteFrom(InvoiceAttribute.class);
+        deleteFrom(PaperclipForInvoice.class);
+
+        // these subclasses are rolled up...
+//        deleteFrom(InvoiceItemForLease.class);
+//        deleteFrom(InvoiceForLease.class);
+//
+//        deleteFrom(IncomingInvoiceItem.class);
+//        deleteFrom(IncomingInvoice.class);
+
+        deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);
+
+        deleteFrom(OrderItem.class);
+        deleteFrom(Order.class);
+
+        deleteFrom(Project.class);
 
         deleteFrom(EventSourceLinkForBreakOption.class);
         deleteFrom(EventSourceLink.class);

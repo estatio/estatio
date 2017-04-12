@@ -11,6 +11,8 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -39,15 +41,11 @@ public class IncomingInvoiceRepository {
             final Party buyer,
             final Party seller,
             final LocalDate invoiceDate,
-            final LocalDate dueDate) {
-        final IncomingInvoice invoice = IncomingInvoice.builder()
-                .invoiceNumber(invoiceNumber)
-                .atPath(atPath)
-                .seller(seller)
-                .buyer(buyer)
-                .invoiceDate(invoiceDate)
-                .dueDate(dueDate)
-                .build();
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final InvoiceStatus invoiceStatus) {
+        final IncomingInvoice invoice =
+                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persist(invoice);
         return invoice;
@@ -60,10 +58,12 @@ public class IncomingInvoiceRepository {
             final Party buyer,
             final Party seller,
             final LocalDate invoiceDate,
-            final LocalDate dueDate) {
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final InvoiceStatus invoiceStatus) {
         IncomingInvoice invoice = findByInvoiceNumber(invoiceNumber);
         if (invoice == null) {
-            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate);
+            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus);
         }
         return invoice;
     }

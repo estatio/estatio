@@ -1,4 +1,4 @@
-package org.estatio.capex.integtests.charge;
+package org.estatio.integtests.capex;
 
 import java.util.List;
 import java.util.SortedSet;

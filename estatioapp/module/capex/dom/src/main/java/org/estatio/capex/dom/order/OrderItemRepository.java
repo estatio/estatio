@@ -30,7 +30,7 @@ public class OrderItemRepository {
                 new QueryDefault<>(
                         OrderItem.class,
                         "findByOrderAndCharge",
-                        "order", order,
+                        "ordr", order,
                         "charge", charge
                 ));
     }
@@ -49,19 +49,11 @@ public class OrderItemRepository {
             final LocalDate endDate,
             final Property property,
             final Project project) {
-        final OrderItem orderItem = OrderItem.builder()
-                .order(order)
-                .charge(charge)
-                .description(description)
-                .netAmount(netAmount)
-                .vatAmount(vatAmount)
-                .grossAmount(grossAmount)
-                .tax(tax)
-                .startDate(startDate)
-                .endDate(endDate)
-                .property(property)
-                .project(project)
-                .build();
+        final OrderItem orderItem =
+                new OrderItem(
+                        order,charge, description,
+                        netAmount, vatAmount, grossAmount,
+                        tax, startDate, endDate, property, project );
         serviceRegistry2.injectServicesInto(orderItem);
         repositoryService.persistAndFlush(orderItem);
         return orderItem;

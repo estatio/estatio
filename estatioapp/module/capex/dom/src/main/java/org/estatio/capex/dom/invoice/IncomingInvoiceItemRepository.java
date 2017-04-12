@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 
@@ -38,6 +39,7 @@ public class IncomingInvoiceItemRepository {
 
     @Programmatic
     public IncomingInvoiceItem create(
+            final BigInteger sequence,
             final IncomingInvoice invoice,
             final Charge charge,
             final String description,
@@ -45,23 +47,12 @@ public class IncomingInvoiceItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
+            final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
             final Project project) {
-        final IncomingInvoiceItem invoiceItem = IncomingInvoiceItem.builder()
-                .invoice(invoice)
-                .charge(charge)
-                .description(description)
-                .netAmount(netAmount)
-                .vatAmount(vatAmount)
-                .grossAmount(grossAmount)
-                .tax(tax)
-                .startDate(startDate)
-                .endDate(endDate)
-                .property(property)
-                .project(project)
-                .build();
+        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
         return invoiceItem;
@@ -69,6 +60,7 @@ public class IncomingInvoiceItemRepository {
 
     @Programmatic
     public IncomingInvoiceItem findOrCreate(
+            final BigInteger sequence,
             final IncomingInvoice invoice,
             final Charge charge,
             final String description,
@@ -76,6 +68,7 @@ public class IncomingInvoiceItemRepository {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
+            final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
@@ -83,7 +76,8 @@ public class IncomingInvoiceItemRepository {
     ) {
         IncomingInvoiceItem invoiceItem = findByInvoiceAndCharge(invoice, charge);
         if (invoiceItem == null) {
-            invoiceItem = create(invoice, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
+            invoiceItem = create(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate,
+                    startDate, endDate,
                     property, project);
         }
         return invoiceItem;
