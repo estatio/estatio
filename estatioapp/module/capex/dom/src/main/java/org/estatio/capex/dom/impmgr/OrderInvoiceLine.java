@@ -28,6 +28,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
@@ -224,7 +227,7 @@ public class OrderInvoiceLine {
             final Party supplier = determineSupplier();
             final Project project = lookupProject();
             final Property property = inferPropertyFrom(line.projectReference);
-            final Party buyer =  partyRepository.findPartyByReference(property.getExternalReference());
+            final Party buyer =  deriveBuyerFrom(property);
             final String atPath = "/FRA";
 
             final LocalDate startDate = determineStartDateFrom(line.period);
@@ -271,6 +274,11 @@ public class OrderInvoiceLine {
             }
 
             return line;
+        }
+
+        private Party deriveBuyerFrom(final Property property) {
+            FixedAssetRole role = fixedAssetRoleRepository.findRole(property, FixedAssetRoleType.PROPERTY_OWNER);
+            return role!=null ? role.getParty() : null;
         }
 
         public String disableAct() {
@@ -352,6 +360,8 @@ public class OrderInvoiceLine {
         CountryRepository countryRepository;
         @Inject
         IncomingInvoiceRepository incomingInvoiceRepository;
+        @Inject
+        FixedAssetRoleRepository fixedAssetRoleRepository;
 
 
         public static class RandomCodeGenerator10Chars {
