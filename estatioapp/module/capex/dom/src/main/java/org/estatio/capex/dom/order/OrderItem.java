@@ -52,11 +52,11 @@ import lombok.Setter;
                 name = "findByOrderAndCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
-                        + "WHERE order == :order "
+                        + "WHERE ordr == :ordr "
                         + "   && charge == :charge ")
 })
 
-@Unique(name = "OrderItem_order_charge_UNQ", members = { "order", "charge" })
+@Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "capex.OrderItem"
@@ -67,12 +67,11 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public OrderItem() {
-        super("order,charge");
+        super("ordr,charge");
     }
 
-    @Builder
     public OrderItem(
-            final Order order,
+            final Order ordr,
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
@@ -85,7 +84,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             final Project project
     ) {
         this();
-        this.order = order;
+        this.ordr = ordr;
         this.charge = charge;
         this.description = description;
         this.netAmount = netAmount;
@@ -98,9 +97,12 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.project = project;
     }
 
+    /**
+     * Renamed from 'order' to avoid reserve keyword issues.
+     */
     @Column(allowsNull = "false", name = "orderId")
     @Getter @Setter
-    private Order order;
+    private Order ordr;
 
     @Column(allowsNull = "false", name = "chargeId")
     @Getter @Setter
@@ -148,7 +150,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     )
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getOrder().getApplicationTenancy();
+        return getOrdr().getApplicationTenancy();
     }
 
 
@@ -170,19 +172,5 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
     //endregion
 
-
-    //region > compareTo, toString
-    @Override
-    public int compareTo(final OrderItem other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "number");
-    }
-
-    @Override
-    public String toString() {
-        return org.apache.isis.applib.util.ObjectContracts.toString(this, "number");
-    }
-
-
-    //endregion
 
 }

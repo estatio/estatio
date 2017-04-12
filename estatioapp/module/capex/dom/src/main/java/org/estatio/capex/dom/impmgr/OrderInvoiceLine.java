@@ -35,6 +35,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -265,12 +267,18 @@ public class OrderInvoiceLine {
             if(isInvoice) {
                 final LocalDate invoiceDate = line.getOrderDate();
                 final LocalDate dueDate = line.getOrderDate();
-                IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate);
+                final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
+                final InvoiceStatus invoiceStatus = InvoiceStatus.HISTORIC; // migrating historic data...
+
+                IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(
+                        line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
+                        invoiceStatus);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.getInvoiceNumber());
-                final Tax invoiceTax = taxRepository.findByReference(line.invoiceTax);
+                final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());
 
-                invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax, startDate, endDate, property, project);
+                invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
+                        dueDate, startDate, endDate, property, project);
             }
 
             return line;

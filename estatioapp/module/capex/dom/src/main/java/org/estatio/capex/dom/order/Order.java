@@ -72,7 +72,6 @@ public class Order extends UdoDomainObject2<Order> {
         super("reference");
     }
 
-    @Builder
     public Order(
             final String orderNumber,
             final String sellerOrderReference,
@@ -119,7 +118,7 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private Party buyer;
 
-    @Persistent(mappedBy = "order", dependentElement = "true")
+    @Persistent(mappedBy = "ordr", dependentElement = "true")
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
 

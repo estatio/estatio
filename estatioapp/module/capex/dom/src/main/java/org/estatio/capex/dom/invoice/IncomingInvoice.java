@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
@@ -20,11 +21,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.tax.Tax;
-
-import lombok.Builder;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -59,16 +60,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         super("invoiceNumber");
     }
 
-
-    @Builder
     public IncomingInvoice(
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
             final Party seller,
             final LocalDate invoiceDate,
-            final LocalDate dueDate
-            ){
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final InvoiceStatus invoiceStatus){
         super("invoiceNumber");
         setInvoiceNumber(invoiceNumber);
         setApplicationTenancyPath(atPath);
@@ -76,6 +76,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setSeller(seller);
         setInvoiceDate(invoiceDate);
         setDueDate(dueDate);
+        setPaymentMethod(paymentMethod);
+        setStatus(invoiceStatus);
     }
 
     @Programmatic
@@ -88,13 +90,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final LocalDate startDate,
+            final LocalDate dueDate, final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
             final Project project
     ) {
-        incomingInvoiceItemRepository.findOrCreate(invoice, charge, description, netAmount, vatAmount, grossAmount,
-                tax, startDate, endDate, property, project
+        final BigInteger sequence = nextItemSequence();
+        incomingInvoiceItemRepository.findOrCreate(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount,
+                tax, dueDate, startDate, endDate, property, project
         );
     }
 
