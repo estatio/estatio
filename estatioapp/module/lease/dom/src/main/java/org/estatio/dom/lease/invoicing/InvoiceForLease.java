@@ -549,7 +549,7 @@ public class InvoiceForLease
             final InvoiceAttributeName attributeName) {
         final InvoiceAttributesVM vm = new InvoiceAttributesVM(invoice);
         updateAttribute(attributeName,
-                fragmentRenderService.render(vm, attributeName.getFragmentName()), false);
+                fragmentRenderService.render(vm, attributeName.getFragmentName()), InvoiceAttributeAction.UPDATE);
         return vm;
     }
 

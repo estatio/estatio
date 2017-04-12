@@ -28,8 +28,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.base.dom.utils.StringUtils;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
 public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {

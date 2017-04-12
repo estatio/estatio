@@ -74,6 +74,7 @@ import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.party.Party;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -171,8 +172,6 @@ public abstract class Invoice<T extends Invoice<T>>
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-    // //////////////////////////////////////
-
     public String title() {
         if (getInvoiceNumber() != null) {
             return String.format("Invoice %s", getInvoiceNumber());
@@ -183,8 +182,6 @@ public abstract class Invoice<T extends Invoice<T>>
         return String.format("Temp *%08d (%s)", Integer.parseInt(getId()), getBuyer().getName());
     }
 
-    // //////////////////////////////////////
-
     @Property(hidden = Where.OBJECT_FORMS)
     public String getNumber() {
         return ObjectUtils.firstNonNull(
@@ -192,8 +189,6 @@ public abstract class Invoice<T extends Invoice<T>>
                 getCollectionNumber(),
                 title());
     }
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
     @Getter @Setter
@@ -242,17 +237,33 @@ public abstract class Invoice<T extends Invoice<T>>
             @Parameter(maxLength = NotesType.Meta.MAX_LEN)
             @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
             final String value,
-            boolean overridden
+            InvoiceAttributeAction action
     ){
         final InvoiceAttribute invoiceAttribute = invoiceAttributeRepository.findByInvoiceAndName(this, name);
         if (invoiceAttribute == null) {
-            invoiceAttributeRepository.newAttribute(this, name, value, overridden);
+            invoiceAttributeRepository.newAttribute(this, name, value, action.isOverride());
         } else {
+            if (action.isForceful())
             invoiceAttribute.setValue(value);
-            invoiceAttribute.setOverridden(overridden);
+            invoiceAttribute.setOverridden(action.isOverride());
         }
         return this;
     }
+
+    @AllArgsConstructor
+    public enum InvoiceAttributeAction {
+        UPDATE(false, false),
+        RESET(false, true),
+        OVERRIDE(true, true);
+
+        @Getter
+        private boolean override;
+
+        @Getter
+        private boolean forceful;
+
+    }
+
 
     @Inject protected
     InvoiceAttributeRepository invoiceAttributeRepository;
@@ -485,7 +496,7 @@ public abstract class Invoice<T extends Invoice<T>>
                 @Parameter(maxLength = NotesType.Meta.MAX_LEN, optionality = Optionality.OPTIONAL)
                 @ParameterLayout(multiLine = Invoice.DescriptionType.Meta.MULTI_LINE)
                 final String overrideWith) {
-            invoice.updateAttribute(this.invoiceAttributeName, overrideWith, true);
+            invoice.updateAttribute(this.invoiceAttributeName, overrideWith, InvoiceAttributeAction.OVERRIDE);
             return invoice;
         }
 
@@ -518,7 +529,7 @@ public abstract class Invoice<T extends Invoice<T>>
             invoice.updateAttribute(
                     invoiceAttributeName,
                     fragmentRenderService.render(domainObject, invoiceAttributeName.getFragmentName()),
-                    false);
+                    InvoiceAttributeAction.RESET);
             return invoice;
         }
 
