@@ -11,9 +11,9 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,5 +92,21 @@ public class InvoiceItemForLeaseDtoFactory_Test {
         assertThat(invoiceItemDto.getFixedAssetReference()).isEqualTo("XXX");
         assertThat(invoiceItemDto.getOccupancyBrand()).isEqualTo("BRAND");
     }
+
+    @Test
+    public void fall_back_to_date_when_effective_is_empty() throws Exception {
+        //Given
+        assertThat(invoiceItem.getEffectiveStartDate()).isNull();
+        assertThat(invoiceItem.getStartDate()).isNull();
+        final LocalDate startDate = new LocalDate(2016, 1, 1);
+
+        // When
+        invoiceItem.setStartDate(startDate);
+        InvoiceItemDto invoiceItemDto = new InvoiceItemForLeaseDtoFactory().newDto(invoiceItem);
+        // Then
+        assertThat(invoiceItemDto.getStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
+        assertThat(invoiceItemDto.getEffectiveStartDate().toString()).isEqualTo("2016-01-01T00:00:00.000Z");
+    }
+
 
 }
