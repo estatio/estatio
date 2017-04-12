@@ -40,11 +40,10 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
-import org.incode.module.document.dom.impl.docs.DocumentSort;
-import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -87,19 +86,15 @@ public class Invoice_attachSupportingDocument {
         //
         // now we create the receiptDoc, and attach to the invoice
         //
-        String name = determineName(blob, fileName);
-
-        final Document supportingDoc = documentRepository.create(
-                supportingDocumentType, this.invoice.getAtPath(), name, blob.getMimeType().getBaseType());
+        String documentName = determineName(blob, fileName);
 
         // unlike documents that are generated from a template (where we call documentTemplate#render), in this case
         // we have the actual bytes; so we just set up the remaining state of the document manually.
-        supportingDoc.setRenderedAt(clockService.nowAsDateTime());
-        supportingDoc.setState(DocumentState.RENDERED);
-        supportingDoc.setSort(DocumentSort.BLOB);
-        supportingDoc.setBlobBytes(blob.getBytes());
 
-        paperclipRepository.attach(supportingDoc, PaperclipRoleNames.SUPPORTING_DOCUMENT, invoice);
+
+        final Document supportingDoc = documentService.createAndAttachDocumentForBlob(
+                supportingDocumentType, this.invoice.getAtPath(), documentName, blob,
+                PaperclipRoleNames.SUPPORTING_DOCUMENT, this.invoice);
 
 
         //
@@ -109,8 +104,11 @@ public class Invoice_attachSupportingDocument {
             paperclipRepository.attach(supportingDoc, roleName, unsentDocument);
         }
 
-        return invoice;
+        return this.invoice;
     }
+
+    @Inject
+    DocumentService documentService;
 
     private List<DocumentAbstract> findUnsentDocumentsFor(
             final Invoice invoice,
