@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
@@ -10,76 +11,123 @@
         </col>
     </row>
     <row>
-        <col span="5">
-            <row>
-                <col span="12">
-                    <ns2:fieldSet name="Asset" id="asset" unreferencedProperties="true">
-                        <ns2:property id="reference"/>
-                        <ns2:property id="name"/>
-                        <ns2:property id="type"/>
-                        <ns2:property id="property"/>
-                        <ns2:property id="externalReference">
-                            <ns2:action id="changeAsset" position="BELOW"/>
-                        </ns2:property>
-                    </ns2:fieldSet>
-                    <ns2:fieldSet name="Dates" id="dates">
-                        <ns2:property id="startDate"/>
-                        <ns2:property id="endDate">
-                            <ns2:action id="changeDates" position="BELOW"/>
-                            <ns2:action id="resetDates" position="BELOW">
-                                <ns2:named>Clear</ns2:named>
-                            </ns2:action>
-                        </ns2:property>
-                    </ns2:fieldSet>
-                    <ns2:fieldSet name="Areas" id="areas">
-                        <ns2:property id="area"/>
-                        <ns2:property id="storageArea"/>
-                        <ns2:property id="salesArea"/>
-                        <ns2:property id="mezzanineArea"/>
-                        <ns2:property id="dehorsArea">
-                            <ns2:action id="changeAreas" position="BELOW"/>
-                        </ns2:property>
-                    </ns2:fieldSet>
-                    <ns2:fieldSet name="Application Level" id="applicationLevel">
-                        <ns2:property id="applicationTenancy"/>
-                    </ns2:fieldSet>
-                    <ns2:fieldSet name="Metadata" id="metadata">
-                        <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                        <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                        <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                        <ns2:property id="id"/>
-                        <ns2:property id="versionSequence"/>
-                        <ns2:property id="datanucleusId"/>
-                        <ns2:property id="datanucleusVersionLong"/>
-                        <ns2:property id="datanucleusVersionTimestamp"/>
-                    </ns2:fieldSet>
-
-                </col>
-            </row>
+        <col span="4">
             <tabGroup>
-                <tab name="Application Level">
+                <tab name="General">
                     <row>
                         <col span="12">
+                            <ns2:fieldSet name="Asset" id="asset">
+                                <ns2:property id="reference"/>
+                                <ns2:property id="name"/>
+                                <ns2:property id="type"/>
+                                <ns2:property id="property"/>
+                                <ns2:property id="externalReference">
+                                    <ns2:action id="changeAsset" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Dates" id="dates">
+                                <ns2:property id="startDate"/>
+                                <ns2:property id="endDate">
+                                    <ns2:action id="changeDates" position="BELOW"/>
+                                    <ns2:action id="resetDates" position="BELOW">
+                                        <ns2:named>Clear</ns2:named>
+                                    </ns2:action>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Areas">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Areas" id="areas">
+                                <ns2:property id="area"/>
+                                <ns2:property id="storageArea"/>
+                                <ns2:property id="salesArea"/>
+                                <ns2:property id="mezzanineArea"/>
+                                <ns2:property id="dehorsArea">
+                                    <ns2:action id="changeAreas" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+
                         </col>
                     </row>
                 </tab>
                 <tab name="Metadata">
                     <row>
                         <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="atPath"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"></ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+
+            </tabGroup>
+        </col>
+        <col span="8">
+            <tabGroup>
+                <tab name="Occupancies">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="occupancies"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Roles">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="roles">
+                                <ns2:action id="newRole"/>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Registrations">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="registrations"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Communication Channels">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="communicationChannels"/>
                         </col>
                     </row>
                 </tab>
             </tabGroup>
         </col>
-        <col span="7" unreferencedCollections="true">
-            <ns2:collection id="occupancies"/>
-            <ns2:collection id="accounts"/>
-            <ns2:collection id="registrations"/>
-            <ns2:collection id="communicationChannels"/>
-            <ns2:collection id="roles">
-                <ns2:action id="newRole"/>
-            </ns2:collection>
-            <ns2:collection id="documents"/>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row>
+                        <col span="12"></col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
     </row>
 </grid>

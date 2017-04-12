@@ -3,7 +3,6 @@
       xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <row>
         <col span="12" unreferencedActions="true">
-
             <ns2:domainObject/>
             <ns2:action id="calculateInvoicesForProperty"/>
             <ns2:action id="newDocument"/>
@@ -19,11 +18,11 @@
         </col>
     </row>
     <row>
-        <col span="12">
+        <col span="4">
             <tabGroup>
                 <tab name="Property">
                     <row>
-                        <col span="6">
+                        <col span="12">
                             <ns2:fieldSet name="Property" id="asset">
                                 <ns2:action id="changeFullName" position="PANEL_DROPDOWN"/>
                                 <ns2:action id="changeExternalReference" position="PANEL_DROPDOWN"/>
@@ -34,18 +33,6 @@
                                 <ns2:property id="type"/>
                                 <ns2:property id="area"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Ownership" id="ownership">
-                                <ns2:property id="fullOwnership"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="6">
-                            <ns2:fieldSet name="Location" id="location">
-                                <ns2:property id="city"/>
-                                <ns2:property id="country"/>
-                                <ns2:property id="location">
-                                    <ns2:action id="lookupLocation" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
                             <ns2:fieldSet name="Dates" id="dates">
                                 <ns2:property id="acquireDate"/>
                                 <ns2:property id="openingDate"/>
@@ -53,7 +40,22 @@
                                     <ns2:action id="dispose" position="BELOW"/>
                                 </ns2:property>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                            <ns2:fieldSet name="Ownership" id="ownership">
+                                <ns2:property id="fullOwnership"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Location">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Location" id="location">
+                                <ns2:property id="city"/>
+                                <ns2:property id="country"/>
+                                <ns2:property id="location">
+                                    <ns2:action id="lookupLocation" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
                         </col>
                     </row>
                 </tab>
@@ -63,8 +65,6 @@
                             <ns2:collection id="classifications"/>
                         </col>
                     </row>
-                </tab>
-                <tab name="Display Ordering">
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Display Ordering" id="ordering">
@@ -73,18 +73,18 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Application level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
+                <tab name="Other">
+                    <row><col span="12">
+                        <ns2:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                    </col></row>
                 </tab>
                 <tab name="Metadata">
                     <row>
                         <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="atPath"/>
+                            </ns2:fieldSet>
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -100,48 +100,13 @@
                 </tab>
             </tabGroup>
         </col>
-    </row>
+        <col span="8">
 
-    <row>
-        <col span="12">
             <tabGroup>
-                <tab name="Units">
+                <tab name="Owners">
                     <row>
                         <col span="12">
-                            <ns2:collection id="vacantUnits" defaultView="table" paged="6"/>
-                        </col>
-                    </row>
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="units" defaultView="table" paged="6"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Invoicing">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Invoicing" id="invoicing"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Accounts">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="accounts" defaultView="table"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Budgets">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="budgets" defaultView="table"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="CommunicationChannels">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="communicationChannels" defaultView="table"/>
+                            <ns2:collection id="owners" defaultView="table"/>
                         </col>
                     </row>
                 </tab>
@@ -154,31 +119,45 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Vacant Units">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="vacantUnits" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Units">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="units" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Communication Channels">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="communicationChannels" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
                 <tab name="Registrations">
                     <row>
                         <col span="12">
                             <ns2:collection id="registrations" defaultView="table"/>
-                            <ns2:collection id="findServiceChargeDatesByProperty" defaultView="table"/>
                         </col>
                     </row>
                 </tab>
-                <tab name="Owners">
+            </tabGroup>
+
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
                     <row>
                         <col span="12">
-                            <ns2:collection id="owners" defaultView="table"/>
                         </col>
-                    </row>
-                </tab>
-                <tab name="Documents">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="documents" defaultView="table"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Other">
-                    <row>
-                        <col span="12" unreferencedCollections="true"/>
                     </row>
                 </tab>
             </tabGroup>

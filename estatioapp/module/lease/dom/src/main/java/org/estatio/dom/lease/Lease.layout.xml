@@ -104,7 +104,7 @@
                 </ns2:property>
             </ns2:fieldSet>
         </col>
-        <col span="6" unreferencedCollections="true">
+        <col span="6">
             <ns2:collection id="items">
                 <ns2:action id="changePaymentMethodForAll" />
                 <ns2:action id="newItem"/>
@@ -118,18 +118,12 @@
             <ns2:collection id="breakOptions">
                 <ns2:action id="newBreakOption"/>
             </ns2:collection>
-            <ns2:collection id="invoices"/>
-            <ns2:collection id="guarantees">
-                <ns2:action id="newGuarantee"/>
-            </ns2:collection>
-            <ns2:collection id="BudgetOverrides">
-                <ns2:action id="newForfaitOverride"/>
-                <ns2:action id="newCeilingOverride"/>
-                <ns2:action id="newFixedOverride"/>
-            </ns2:collection>
-            <ns2:collection id="BudgetCalculationRuns">
-                <ns2:action id="downloadBudgetCalculationsForLease"/>
-            </ns2:collection>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true">
+            </tabGroup>
         </col>
     </row>
 </grid>

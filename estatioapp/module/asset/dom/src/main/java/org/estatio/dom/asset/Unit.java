@@ -176,6 +176,7 @@ public class Unit
         return isActiveOn(getClockService().now());
     }
 
+    @Programmatic
     public boolean isActiveOn(final LocalDate date) {
         return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
     }
