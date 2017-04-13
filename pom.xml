@@ -65,9 +65,7 @@ language governing permissions and limitations under the License.
 
     <properties>
         <!--          1.14.0.20170319-1823 is based on Wicket 7 -->
-        <!--
         <isis.version>1.14.0.20170319-1823</isis.version>
-        -->
 
         <isis-module-command.version>1.14.0</isis-module-command.version>
         <isis-module-excel.version>1.14.2</isis-module-excel.version>
@@ -84,8 +82,8 @@ language governing permissions and limitations under the License.
 
         <isis-metamodel-paraname8.version>1.14.0</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.14.0</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.14.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-excel.version>1.14.0.20170413-1058</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.14.0.20170413-1136</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.14.0</isis-wicket-gmap3.version>
 
         <incode-module-base.version>1.14.0</incode-module-base.version>
