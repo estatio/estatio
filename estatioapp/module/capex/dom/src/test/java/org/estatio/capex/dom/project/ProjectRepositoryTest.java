@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.project;
+package org.estatio.capex.dom.project;
 
 import java.util.List;
 

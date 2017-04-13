@@ -24,7 +24,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.project.Project;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @PersistenceCapable(

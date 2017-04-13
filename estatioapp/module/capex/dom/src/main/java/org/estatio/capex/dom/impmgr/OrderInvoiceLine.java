@@ -43,8 +43,8 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 
@@ -270,6 +270,8 @@ public class OrderInvoiceLine {
                         chargeObj, line.orderDescription,
                         line.netAmount, line.vatAmount, line.grossAmount,
                         tax, startDate, endDate, property, project);
+
+                project.addItem(chargeObj, chargeObj.getDescription(), null, null, null, property, null);
             }
 
             IncomingInvoice invoice = null;
@@ -348,11 +350,10 @@ public class OrderInvoiceLine {
             final String name = line.projectReference;
             final LocalDate startDate = null;
             final LocalDate endDate = null;
-            final BigDecimal budgetedAmount = null;
             final String atPath = "/FRA";
             final Project parent = null;
 
-            return projectRepository.findOrCreate(reference, name, startDate, endDate, budgetedAmount, atPath, parent);
+            return projectRepository.findOrCreate(reference, name, startDate, endDate, atPath, parent);
         }
 
         @Inject

@@ -16,7 +16,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.project.Project;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(

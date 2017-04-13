@@ -41,8 +41,8 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -75,7 +75,7 @@ public class ProjectMenu {
             final @Nullable BigDecimal budgetedAmount,
             final ApplicationTenancy applicationTenancy,
             final @Nullable Project parent) {
-        return projectRepository.create(reference, name, startDate, endDate, budgetedAmount, applicationTenancy.getPath(), parent);
+        return projectRepository.create(reference, name, startDate, endDate, applicationTenancy.getPath(), parent);
     }
 
     public ApplicationTenancy default5NewProject() {

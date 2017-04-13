@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.project;
+package org.estatio.capex.dom.project;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
@@ -40,6 +40,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -48,7 +49,6 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.with.WithReferenceUnique;
@@ -56,27 +56,29 @@ import org.incode.module.docfragment.dom.types.AtPathType;
 
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
 		identityType = IdentityType.DATASTORE
-		,schema = "dbo"	// Isis' ObjectSpecId inferred from @DomainObject#objectType
+		,schema = "capex" //TODO: adapt SQL script or move back to dbo
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Unique(members={"reference"})
 @Queries({
 		@Query(name = "findByReference", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.dom.project.Project "
+				+ "FROM org.estatio.capex.dom.project.Project "
 				+ "WHERE reference == :reference "),
 		@Query(name = "matchByReferenceOrName", language = "JDOQL", value = "SELECT "
-				+ "FROM org.estatio.dom.project.Project "
+				+ "FROM org.estatio.capex.dom.project.Project "
 				+ "WHERE reference.matches(:matcher) || name.matches(:matcher) ") })
 @DomainObject(
 		editing = Editing.DISABLED,
-		objectType = "org.estatio.dom.project.Project"		// TODO: externalize mapping
+		objectType = "org.estatio.capex.dom.project.Project"
 )
 public class Project extends UdoDomainObject<Project> implements
 		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
@@ -110,11 +112,6 @@ public class Project extends UdoDomainObject<Project> implements
     @Getter @Setter
     private LocalDate endDate;
 
-	@Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
-	@MemberOrder(sequence="7")
-    @Getter @Setter
-    private BigDecimal budgetedAmount;
-
 	@Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
 	@Getter @Setter
 	@Property(hidden = Where.EVERYWHERE)
@@ -129,6 +126,10 @@ public class Project extends UdoDomainObject<Project> implements
 		return applicationTenancyRepository.findByPath(getAtPath());
 	}
 
+	@Persistent(mappedBy = "project", dependentElement = "true")
+	@Getter @Setter
+	private SortedSet<ProjectItem> items = new TreeSet<>();
+
 	@Persistent(mappedBy = "parent", dependentElement = "true")
 	@Getter @Setter
 	private SortedSet<Project> children = new TreeSet<Project>();
@@ -137,7 +138,24 @@ public class Project extends UdoDomainObject<Project> implements
 	@Getter @Setter
 	private Project parent;
 
+	@Programmatic
+	public void addItem(
+			final Charge charge,
+			final String description,
+			final BigDecimal budgetedAmount,
+			final LocalDate startDate,
+			final LocalDate endDate,
+			final org.estatio.dom.asset.Property property,
+			final Tax tax
+	) {
+		projectItemRepository.findOrCreate(
+				this, charge, description, budgetedAmount, startDate, endDate, property, tax);
+	}
+
 	@Inject
 	ApplicationTenancyRepository applicationTenancyRepository;
+
+	@Inject
+	ProjectItemRepository projectItemRepository;
 
 }

@@ -46,8 +46,8 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -152,6 +152,9 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
             assertThat(links.get(1).getInvoiceItem()).isEqualTo(invoiceItem2);
             assertThat(links.get(2).getOrderItem()).isEqualTo(orderItem2);
             assertThat(links.get(2).getInvoiceItem()).isEqualTo(invoiceItem3);
+
+            Project project = projects.get(0);
+            assertThat(project.getItems().size()).isEqualTo(2);
 
         }
 

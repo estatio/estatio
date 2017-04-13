@@ -16,9 +16,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.project;
+package org.estatio.capex.dom.project;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,7 +61,6 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
-            final BigDecimal budgetedAmount,
             final String atPath,
             final Project parent) {
 
@@ -71,7 +69,6 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         project.setName(name);
         project.setStartDate(startDate);
         project.setEndDate(endDate);
-        project.setBudgetedAmount(budgetedAmount);
         project.setAtPath(atPath);
         project.setParent(parent);
 
@@ -86,12 +83,11 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
-            final BigDecimal budgetedAmount,
             final String atPath,
             final Project parent) {
         Project project = findByReference(reference);
         if(project == null) {
-            project = create(reference, name, startDate, endDate, budgetedAmount, atPath, parent);
+            project = create(reference, name, startDate, endDate, atPath, parent);
         }
         return project;
     }

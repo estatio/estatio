@@ -24,7 +24,7 @@ import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.project.Project;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;

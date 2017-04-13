@@ -29,10 +29,9 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.project.Project;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

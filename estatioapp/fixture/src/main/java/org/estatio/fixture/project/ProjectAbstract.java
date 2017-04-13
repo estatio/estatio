@@ -27,8 +27,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 
 public abstract class ProjectAbstract extends FixtureScript {
 
@@ -40,7 +40,7 @@ public abstract class ProjectAbstract extends FixtureScript {
             final BigDecimal estimatedCost,
             final String atPath,
             final Project parent, final ExecutionContext fixtureResults) {
-        Project project = projectRepository.create(reference, name, startDate, endDate, estimatedCost, atPath, parent);
+        Project project = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
         return fixtureResults.addResult(this, project.getReference(), project);
     }
 

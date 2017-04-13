@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.project.Project;
-import org.estatio.dom.project.ProjectRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
