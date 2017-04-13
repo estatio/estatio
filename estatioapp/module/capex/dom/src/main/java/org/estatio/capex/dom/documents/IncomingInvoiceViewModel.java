@@ -28,9 +28,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.eventbus.Subscribe;
+
+import org.axonframework.eventhandling.annotation.EventHandler;
+
+import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
 
@@ -49,13 +57,40 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class IncomingInvoiceViewModel {
 
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class CssHighlighter extends AbstractSubscriber {
+
+        @EventHandler
+        @Subscribe
+        public void on(Document.CssClassUiEvent ev) {
+            if(getContext() == null) {
+                return;
+            }
+            if(ev.getSource() == getContext().getSelected()) {
+                ev.setCssClass("selected");
+            }
+        }
+
+        private IncomingInvoiceViewModel getContext() {
+            return (IncomingInvoiceViewModel) scratchpad.get("context");
+        }
+        void setContext(final IncomingInvoiceViewModel viewModel) {
+            scratchpad.put("context", viewModel);
+        }
+
+        @Inject
+        Scratchpad scratchpad;
+    }
+
     public String title() {
+        cssHighlighter.setContext(this);
         Document selected = getSelected();
         return selected != null ? titleService.titleOf(selected): "No documents";
     }
 
     public List<Document> getDocuments() {
-        return documentRepository.findOrphaned();
+        return documentRepository.findWithNoPaperclips();
     }
 
 
@@ -102,6 +137,10 @@ public class IncomingInvoiceViewModel {
         return getIdx() == getNumObjects() - 1 ? "At end" : null;
     }
 
+
+    @XmlTransient
+    @javax.inject.Inject
+    CssHighlighter cssHighlighter;
 
     @XmlTransient
     @Inject

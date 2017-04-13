@@ -45,10 +45,8 @@ public enum DocumentTypeData {
     COVER_NOTE_INVOICE("COVER-NOTE-INVOICE", "Email Cover Note for Invoice"),
 
     // primary docs
-    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice",
-                        "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER),
-    INVOICE("INVOICE", "Invoice",
-                        "Merged Invoices.pdf", COVER_NOTE_INVOICE),
+    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice", "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER, null),
+    INVOICE("INVOICE", "Invoice", "Merged Invoices.pdf", COVER_NOTE_INVOICE, null),
 
     // supporting docs
     SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE),
@@ -59,7 +57,10 @@ public enum DocumentTypeData {
     // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
     INVOICES("INVOICES", "Invoices overview"),
     INVOICES_PRELIM("INVOICES-PRELIM", "Preliminary letter for Invoices"),
-    INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller");
+    INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller"),
+
+    INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null),
+    ;
 
     private final String ref;
     private final String name;

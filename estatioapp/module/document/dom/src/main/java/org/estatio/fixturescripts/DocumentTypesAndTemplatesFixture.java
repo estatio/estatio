@@ -22,6 +22,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
+import org.estatio.fixture.documents.DocumentTypeFSForIncomingInvoices;
 import org.estatio.fixture.documents.RenderingStrategies;
 
 public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript {
@@ -41,6 +42,7 @@ public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript 
 
         executionContext.executeChild(this, new RenderingStrategies());
         executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
+        executionContext.executeChild(this, new DocumentTypeFSForIncomingInvoices());
 
     }
 

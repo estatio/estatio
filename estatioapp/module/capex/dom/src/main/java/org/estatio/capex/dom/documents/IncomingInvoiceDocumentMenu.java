@@ -45,7 +45,7 @@ public class IncomingInvoiceDocumentMenu {
     public IncomingInvoiceViewModel incomingInvoices() {
         IncomingInvoiceViewModel viewModel = factoryService.instantiate(IncomingInvoiceViewModel.class);
 
-        final List<Document> documents = documentRepository.findOrphaned();
+        final List<Document> documents = documentRepository.findWithNoPaperclips();
         if (!documents.isEmpty()) {
             viewModel.setIdx(0);
         }

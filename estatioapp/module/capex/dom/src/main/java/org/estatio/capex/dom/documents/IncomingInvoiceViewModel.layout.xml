@@ -26,13 +26,14 @@
                     <action id="clearHints" hidden="EVERYWHERE"/>
                     <action id="downloadLayoutXml" hidden="EVERYWHERE"/>
                     <action id="rebuildMetamodel" hidden="EVERYWHERE"/>
-                    <action id="previous"/>
-                    <action id="next"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <collection id="documents" defaultView="table"/>
+                    <collection id="documents" defaultView="table">
+                        <action id="previous"/>
+                        <action id="next"/>
+                    </collection>
                 </bs3:col>
             </bs3:row>
         </bs3:col>
