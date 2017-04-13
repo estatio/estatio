@@ -19,17 +19,20 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
@@ -37,7 +40,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "capex",
+        schema = "dbo",
         table = "OrderItem"
 )
 @DatastoreIdentity(
@@ -64,6 +67,10 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
+
+    public String title() {
+        return TitleBuilder.start().withParent(getOrdr()).withName(getCharge()).toString();
+    }
 
     public OrderItem() {
         super("ordr,charge");
@@ -101,6 +108,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
      */
     @Column(allowsNull = "false", name = "orderId")
     @Getter @Setter
+    @PropertyLayout(named = "order")
     private Order ordr;
 
     @Column(allowsNull = "false", name = "chargeId")
@@ -156,6 +164,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     //region > FinancialItem impl'n (not otherwise implemented by the entity's properties)
     @Override
+    @Programmatic
     public BigDecimal value() {
         return getNetAmount();
     }

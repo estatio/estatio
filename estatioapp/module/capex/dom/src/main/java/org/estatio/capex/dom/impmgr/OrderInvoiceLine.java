@@ -280,7 +280,7 @@ public class OrderInvoiceLine {
                 final LocalDate invoiceDate = line.getOrderDate();
                 final LocalDate dueDate = line.getOrderDate();
                 final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
-                final InvoiceStatus invoiceStatus = InvoiceStatus.HISTORIC; // migrating historic data...
+                final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
 
                 invoice = incomingInvoiceRepository.findOrCreate(
                         line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,

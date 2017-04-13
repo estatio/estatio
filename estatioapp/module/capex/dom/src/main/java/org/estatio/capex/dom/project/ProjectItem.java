@@ -35,11 +35,13 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.MoneyType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
@@ -54,7 +56,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
 		identityType = IdentityType.DATASTORE
-		,schema = "capex"
+		,schema = "dbo"
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -70,6 +72,10 @@ import lombok.Setter;
 		objectType = "org.estatio.capex.dom.project.ProjectItem"
 )
 public class ProjectItem extends UdoDomainObject<ProjectItem> implements FinancialItem {
+
+	public String title(){
+		return TitleBuilder.start().withParent(getProject()).withName(getCharge()).toString();
+	}
 
 	public ProjectItem() {
 		super("project, charge");
@@ -105,7 +111,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 
 	@Column(allowsNull = "true", name = "taxId")
 	@Getter @Setter
-	private Tax tax; //TODO: does tax makes sense on a project item?
+	private Tax tax;
 
 	@PropertyLayout(
 			named = "Application Level",
@@ -117,6 +123,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	}
 
 	@Override
+	@Programmatic
 	public BigDecimal value() {
 		return getBudgetedAmount();
 	}

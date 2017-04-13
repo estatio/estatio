@@ -9,18 +9,16 @@
     <row>
         <col span="6">
             <tabGroup>
-                <tab name="Invoice item">
+                <tab name="Order item">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Invoice item" id="invoiceItem">
-                                <ns2:property id="invoice"/>
+                            <ns2:fieldSet name="Order item" id="orderItem">
+                                <ns2:property id="ordr"/>
                                 <ns2:property id="description"/>
-                                <ns2:property id="dueDate"/>
                                 <ns2:property id="netAmount"/>
                                 <ns2:property id="vatAmount"/>
                                 <ns2:property id="grossAmount"/>
                                 <ns2:property id="tax"/>
-
                             </ns2:fieldSet>
                         </col>
                     </row>

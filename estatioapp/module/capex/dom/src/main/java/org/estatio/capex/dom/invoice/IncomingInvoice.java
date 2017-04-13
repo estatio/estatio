@@ -16,21 +16,24 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
         // unused since rolled-up to superclass:
-        //,schema = "capex"
+        //,schema = "dbo"
         //,table = "IncomingInvoice"
 )
 @javax.jdo.annotations.Inheritance(
@@ -80,6 +83,24 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setStatus(invoiceStatus);
     }
 
+    @MemberOrder(name="items", sequence = "1")
+    public IncomingInvoice addItem(
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Property property,
+            final Project project
+    ) {
+        addItem(this, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project);
+        return this;
+    }
+
     @Programmatic
     public void addItem(
             final IncomingInvoice invoice,
@@ -90,9 +111,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final BigDecimal vatAmount,
             final BigDecimal grossAmount,
             final Tax tax,
-            final LocalDate dueDate, final LocalDate startDate,
+            final LocalDate dueDate,
+            final LocalDate startDate,
             final LocalDate endDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final Property property,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final Project project
     ) {
         final BigInteger sequence = nextItemSequence();

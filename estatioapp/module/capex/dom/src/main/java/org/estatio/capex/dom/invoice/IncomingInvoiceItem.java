@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
@@ -34,7 +35,7 @@ import lombok.Setter;
         identityType = IdentityType.DATASTORE
 
         // unused since rolled-up to superclass:
-        //,schema = "capex"
+        //,schema = "dbo"
         //,table = "IncomingInvoiceItem"
 )
 @javax.jdo.annotations.Inheritance(
@@ -94,6 +95,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Override
+    @Programmatic
     public BigDecimal value() {
         return getNetAmount();
     }
@@ -110,6 +112,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Getter @Setter
     @Column(allowsNull = "true")
+    @Property(hidden = Where.REFERENCES_PARENT)
     private Project project;
 
 }

@@ -40,17 +40,18 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.docfragment.dom.types.AtPathType;
 
@@ -64,7 +65,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
 		identityType = IdentityType.DATASTORE
-		,schema = "capex" //TODO: adapt SQL script or move back to dbo
+		,schema = "dbo"
 )
 @DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -78,7 +79,8 @@ import lombok.Setter;
 				+ "WHERE reference.matches(:matcher) || name.matches(:matcher) ") })
 @DomainObject(
 		editing = Editing.DISABLED,
-		objectType = "org.estatio.capex.dom.project.Project"
+		objectType = "org.estatio.capex.dom.project.Project",
+		autoCompleteRepository = ProjectRepository.class
 )
 public class Project extends UdoDomainObject<Project> implements
 		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
@@ -86,11 +88,10 @@ public class Project extends UdoDomainObject<Project> implements
 	public Project() {
 		super("reference, name, startDate");
 	}
-
-	public TranslatableString title() {
-		return TranslatableString.tr("{name}", "name", "[" + getReference() + "] " + getName());
+	
+	public String title(){
+		return TitleBuilder.start().withReference(getReference()).withName(getName()).toString();
 	}
-
 
 	@Column(length = ReferenceType.Meta.MAX_LEN, allowsNull = "false")
 	@Property(regexPattern = ReferenceType.Meta.REGEX)
@@ -138,18 +139,23 @@ public class Project extends UdoDomainObject<Project> implements
 	@Getter @Setter
 	private Project parent;
 
-	@Programmatic
-	public void addItem(
+	@MemberOrder(name="items", sequence = "1")
+	public Project addItem(
 			final Charge charge,
 			final String description,
+			@Parameter(optionality = Optionality.OPTIONAL)
 			final BigDecimal budgetedAmount,
+			@Parameter(optionality = Optionality.OPTIONAL)
 			final LocalDate startDate,
+			@Parameter(optionality = Optionality.OPTIONAL)
 			final LocalDate endDate,
 			final org.estatio.dom.asset.Property property,
+			@Parameter(optionality = Optionality.OPTIONAL)
 			final Tax tax
 	) {
 		projectItemRepository.findOrCreate(
 				this, charge, description, budgetedAmount, startDate, endDate, property, tax);
+		return this;
 	}
 
 	@Inject

@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.app.menus.project;
+package org.estatio.capex.dom.project;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,12 +41,9 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRepository;
-
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.app.menus.project.ProjectMenu"
+        objectType = "org.estatio.capex.dom.project.ProjectMenu"
 )
 @DomainServiceLayout(
         menuOrder = "35",

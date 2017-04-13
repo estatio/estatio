@@ -17,7 +17,7 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "capex",
+        schema = "dbo",
         table = "OrderItemInvoiceItemLink"
 )
 @javax.jdo.annotations.DatastoreIdentity(

@@ -9,18 +9,13 @@
     <row>
         <col span="6">
             <tabGroup>
-                <tab name="Invoice item">
+                <tab name="Project item">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Invoice item" id="invoiceItem">
-                                <ns2:property id="invoice"/>
+                            <ns2:fieldSet name="Project item" id="projectItem">
+                                <ns2:property id="project"/>
                                 <ns2:property id="description"/>
-                                <ns2:property id="dueDate"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
-                                <ns2:property id="tax"/>
-
+                                <ns2:property id="budgetedAmount"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -31,7 +26,6 @@
                             <ns2:fieldSet name="Dimensions" id="dimensions">
                                 <ns2:property id="charge"/>
                                 <ns2:property id="fixedAsset"/>
-                                <ns2:property id="project"/>
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
                                 <ns2:property id="type"/>

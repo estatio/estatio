@@ -23,17 +23,21 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
+
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Party;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
@@ -41,7 +45,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "capex",
+        schema = "dbo",
         table = "Order"
 )
 @DatastoreIdentity(
@@ -69,6 +73,10 @@ public class Order extends UdoDomainObject2<Order> {
 
     public Order() {
         super("reference");
+    }
+
+    public String title() {
+        return TitleBuilder.start().withReference(getOrderNumber()).toString();
     }
 
     public Order(
@@ -121,22 +129,28 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
 
-    @Programmatic
-    public void addItem(
+    @MemberOrder(name="items", sequence = "1")
+    public Order addItem(
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal vatAmount,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal grossAmount,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final Tax tax,
             final LocalDate startDate,
             final LocalDate endDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final org.estatio.dom.asset.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final Project project
     ) {
         orderItemRepository.findOrCreate(
                 this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
+        return this;
     }
 
 

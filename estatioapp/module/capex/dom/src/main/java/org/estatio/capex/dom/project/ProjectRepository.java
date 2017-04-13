@@ -92,6 +92,14 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return project;
     }
 
+    public List<Project> autoComplete(final String searchPhrase) {
+
+        final String refRegex = StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*"));
+        return allMatches("matchByReferenceOrName",
+                "matcher", refRegex
+        );
+    }
+
     @Inject
     RepositoryService repositoryService;
 }

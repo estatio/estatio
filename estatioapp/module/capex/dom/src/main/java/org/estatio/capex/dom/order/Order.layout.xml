@@ -7,34 +7,18 @@
         </col>
     </row>
     <row>
-        <col span="6">
+        <col span="4">
             <tabGroup>
-                <tab name="Invoice item">
+                <tab name="Order">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Invoice item" id="invoiceItem">
-                                <ns2:property id="invoice"/>
+                            <ns2:fieldSet name="Order" id="order">
+                                <ns2:property id="orderNumber"/>
+                                <ns2:property id="buyer"/>
+                                <ns2:property id="seller"/>
+                                <ns2:property id="sellerOrderReference"/>
+                                <ns2:property id="orderDate"/>
                                 <ns2:property id="description"/>
-                                <ns2:property id="dueDate"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
-                                <ns2:property id="tax"/>
-
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Dimensions">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Dimensions" id="dimensions">
-                                <ns2:property id="charge"/>
-                                <ns2:property id="fixedAsset"/>
-                                <ns2:property id="project"/>
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate"/>
-                                <ns2:property id="type"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -49,6 +33,9 @@
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
                                 <ns2:property id="datanucleusVersionLong"/>
                                 <ns2:property id="datanucleusVersionTimestamp"/>
                             </ns2:fieldSet>
@@ -58,7 +45,16 @@
                 </tab>
             </tabGroup>
         </col>
-        <col span="6">
+        <col span="8">
+            <tabGroup>
+                <tab name="Items">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="items" defaultView="table"></ns2:collection>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
     </row>
     <row>
