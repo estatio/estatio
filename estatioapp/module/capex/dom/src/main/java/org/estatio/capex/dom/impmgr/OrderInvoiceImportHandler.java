@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -12,6 +14,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelMetaDataEnabled;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
+
+import org.estatio.capex.dom.order.OrderRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +29,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     @Getter @Setter
     private String status;
     @Getter @Setter
-    private String orderNumber;
+    private String orderNumber; // can be populated; called sellerOrderReference on OrderInvoiceLine
     @Getter @Setter
     private String charge;
     @Getter @Setter
@@ -64,6 +68,8 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     private BigDecimal invoiceGrossAmount;
     @Getter @Setter
     private String invoiceTax;
+    @Getter @Setter
+    private String orderReference; // generated here; called order number on OrderInvoiceLine
 
     /**
      * To allow for usage within fixture scripts also.
@@ -79,13 +85,14 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
 
     public OrderInvoiceLine handle(final OrderInvoiceImportHandler previousRow){
 
+        // try to derive order date
         if (getOrderDate()==null) {
             setOrderDate(getEntryDate());
         }
 
         if (previousRow != null) {
 
-            // support sparse population for orderdate (or derived)
+            // support sparse population for order date (or derived)
             if (getOrderDate() == null && previousRow.getOrderDate() != null){
                 setOrderDate(previousRow.getOrderDate());
             }
@@ -106,8 +113,11 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                 setTax(previousRow.getTax());
             }
 
-            // copy seller and order description when multiple invoice lines
+            // copy or generate order reference and copy seller and order description when multiple invoice lines
             if (getEntryDate()==null && invoiceNumberToUse()!=null){
+                if (previousRow.getOrderNumber()!=null){
+                    setOrderReference(previousRow.getOrderReference());
+                }
                 if (getSeller()==null && previousRow.getSeller()!=null){
                     setSeller(previousRow.getSeller());
                 }
@@ -115,6 +125,11 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                     setOrderDescription(previousRow.getOrderDescription());
                 }
             }
+        }
+
+        // try to generate order reference unless one is passed through from previous row
+        if (getOrderReference()==null && getOrderDate()!=null){
+            setOrderReference(determineOrderNumber());
         }
 
         OrderInvoiceLine lineItem = null;
@@ -125,7 +140,8 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                     getExcelRowNumber(),
                     validateRow(),
                     getCharge(),
-                    clean(getOrderNumber()),
+                    getOrderReference(), // called order number on OrderInvoiceLine
+                    clean(getOrderNumber()), // called sellerOrderReference on OrderInvoiceLine
                     getEntryDate(),
                     getOrderDate(),
                     getSeller(),
@@ -342,6 +358,18 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
         return b.length()==0 ? "OK" : b.toString();
     }
 
+    String determineOrderNumber() {
+        Integer counter = 1;
+        String suffix = "-".concat(String.format("%03d", counter));
+        String result = getOrderDate().toString().replace("-","").concat(suffix);
+        while (orderRepository.findByOrderNumber(result)!=null){
+            counter = counter + 1;
+            suffix = "-".concat(String.format("%03d", counter));
+            result = getOrderDate().toString().replace("-","").concat(suffix);
+        }
+        return result;
+    }
+
     @Override
     public void handleRow(final OrderInvoiceImportHandler previousRow) {
 
@@ -350,6 +378,9 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
             }
 
     }
+
+    @Inject
+    OrderRepository orderRepository;
 
 }
 

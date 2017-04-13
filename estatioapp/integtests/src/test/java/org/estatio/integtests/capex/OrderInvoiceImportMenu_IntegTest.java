@@ -39,9 +39,13 @@ import org.estatio.capex.dom.impmgr.OrderInvoiceImportMenu;
 import org.estatio.capex.dom.impmgr.OrderInvoiceLine;
 import org.estatio.capex.dom.impmgr.OrderInvoiceSheet;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.dom.project.Project;
 import org.estatio.dom.project.ProjectRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -80,6 +84,8 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
         @Inject
         OrderInvoiceImportMenu orderInvoiceImportMenu;
 
+        @Inject OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
         @Before
         public void setUp() throws Exception {
 
@@ -92,10 +98,12 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
             List<Order> orders = orderRepository.listAll();
             List<IncomingInvoice> incomingInvoices = incomingInvoiceRepository.listAll();
             List<Project> projects = projectRepository.listAll();
+            List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.listAll();
 
             assertThat(orders).isEmpty();
             assertThat(incomingInvoices).isEmpty();
             assertThat(projects).isEmpty();
+            assertThat(links).isEmpty();
 
             // when
             final Blob blob =
@@ -119,14 +127,31 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
             sheet.apply();
 
 
-            // then orders, invoices and supporting projecs created.
+            // then orders, invoices and supporting projects created and invoices are linked back to orders.
             orders = orderRepository.listAll();
             incomingInvoices = incomingInvoiceRepository.listAll();
             projects = projectRepository.listAll();
+            links = orderItemInvoiceItemLinkRepository.listAll();
 
             assertThat(orders).isNotEmpty();
             assertThat(incomingInvoices).isNotEmpty();
             assertThat(projects).isNotEmpty();
+            assertThat(links).isNotEmpty();
+
+            assertThat(links.size()).isEqualTo(3);
+
+            OrderItem orderItem1 = orders.get(0).getItems().first();
+            OrderItem orderItem2 = orders.get(1).getItems().first();
+            IncomingInvoiceItem invoiceItem1 = (IncomingInvoiceItem) incomingInvoices.get(0).getItems().first();
+            IncomingInvoiceItem invoiceItem2 = (IncomingInvoiceItem) incomingInvoices.get(1).getItems().first();
+            IncomingInvoiceItem invoiceItem3 = (IncomingInvoiceItem) incomingInvoices.get(2).getItems().first();
+
+            assertThat(links.get(0).getOrderItem()).isEqualTo(orderItem1);
+            assertThat(links.get(0).getInvoiceItem()).isEqualTo(invoiceItem1);
+            assertThat(links.get(1).getOrderItem()).isEqualTo(orderItem1);
+            assertThat(links.get(1).getInvoiceItem()).isEqualTo(invoiceItem2);
+            assertThat(links.get(2).getOrderItem()).isEqualTo(orderItem2);
+            assertThat(links.get(2).getInvoiceItem()).isEqualTo(invoiceItem3);
 
         }
 

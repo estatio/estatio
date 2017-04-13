@@ -13,7 +13,7 @@ import org.estatio.capex.dom.order.OrderRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class _applyTest {
+public class OrderInvoiceImportHandlerTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -25,8 +25,9 @@ public class _applyTest {
     public void determine_ordernumber_works() throws Exception {
 
         // given
-        OrderInvoiceLine line = new OrderInvoiceLine();
-        line.setOrderDate(new LocalDate(2017,01,31));
+        OrderInvoiceImportHandler handler = new OrderInvoiceImportHandler();
+        handler.setOrderDate(new LocalDate(2017,01,31));
+        handler.orderRepository = orderRepository;
 
         // expect
         context.checking(new Expectations() {
@@ -40,9 +41,7 @@ public class _applyTest {
         });
 
         // when
-        OrderInvoiceLine._apply lineWithMixin = new OrderInvoiceLine._apply(line);
-        lineWithMixin.orderRepository = orderRepository;
-        String orderNumber = lineWithMixin.determineOrderNumber();
+        String orderNumber = handler.determineOrderNumber();
 
         // then
         assertThat(orderNumber).isEqualTo("20170131-002");

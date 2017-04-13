@@ -25,9 +25,12 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -57,6 +60,7 @@ import lombok.Setter;
                 "status",
                 "sellerOrderReference",
                 "charge",
+                "orderNumber",
                 "entryDate",
                 "orderDate",
                 "seller",
@@ -109,6 +113,11 @@ public class OrderInvoiceLine {
     @Getter @Setter
     @MemberOrder(sequence = "4")
     private String charge;
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    @MemberOrder(sequence = "4")
+    private String orderNumber;
 
     @XmlElement(required = false)
     @Getter @Setter
@@ -225,7 +234,6 @@ public class OrderInvoiceLine {
         @Action()
         @ActionLayout(contributed= Contributed.AS_ACTION)
         public OrderInvoiceLine act() {
-            final String orderNumber = determineOrderNumber();
             final Party supplier = determineSupplier();
             final Project project = lookupProject();
             final Property property = inferPropertyFrom(line.projectReference);
@@ -246,7 +254,7 @@ public class OrderInvoiceLine {
 
             if(isOrder) {
                 Order order = orderRepository.findOrCreate(
-                        orderNumber,
+                        line.getOrderNumber(),
                         line.getSeller(),
                         line.entryDate,
                         line.orderDate,
@@ -264,13 +272,15 @@ public class OrderInvoiceLine {
                         tax, startDate, endDate, property, project);
             }
 
+            IncomingInvoice invoice = null;
+
             if(isInvoice) {
                 final LocalDate invoiceDate = line.getOrderDate();
                 final LocalDate dueDate = line.getOrderDate();
                 final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
                 final InvoiceStatus invoiceStatus = InvoiceStatus.HISTORIC; // migrating historic data...
 
-                IncomingInvoice invoice = incomingInvoiceRepository.findOrCreate(
+                invoice = incomingInvoiceRepository.findOrCreate(
                         line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
                         invoiceStatus);
 
@@ -279,6 +289,13 @@ public class OrderInvoiceLine {
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
                         dueDate, startDate, endDate, property, project);
+            }
+
+            // match invoice item to order item
+            if(isInvoice && invoice!=null) {
+                OrderItem orderItem = orderRepository.findByOrderNumber(line.getOrderNumber()).getItems().first();
+                IncomingInvoiceItem invoiceItem = (IncomingInvoiceItem) invoice.getItems().first();
+                orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, invoiceItem);
             }
 
             return line;
@@ -338,18 +355,6 @@ public class OrderInvoiceLine {
             return projectRepository.findOrCreate(reference, name, startDate, endDate, budgetedAmount, atPath, parent);
         }
 
-        String determineOrderNumber() {
-            Integer counter = 1;
-            String suffix = "-".concat(String.format("%03d", counter));
-            String result = line.getOrderDate().toString().replace("-","").concat(suffix);
-            while (orderRepository.findByOrderNumber(result)!=null){
-                counter = counter + 1;
-                suffix = "-".concat(String.format("%03d", counter));
-                result = line.getOrderDate().toString().replace("-","").concat(suffix);
-            }
-            return result;
-        }
-
         @Inject
         OrderRepository orderRepository;
         @Inject
@@ -370,6 +375,8 @@ public class OrderInvoiceLine {
         IncomingInvoiceRepository incomingInvoiceRepository;
         @Inject
         FixedAssetRoleRepository fixedAssetRoleRepository;
+        @Inject
+        OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 
         public static class RandomCodeGenerator10Chars {

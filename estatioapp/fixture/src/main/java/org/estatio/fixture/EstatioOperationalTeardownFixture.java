@@ -32,6 +32,7 @@ import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -89,9 +90,6 @@ import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.role.PartyRole;
-import org.estatio.dom.project.BusinessCase;
-import org.estatio.dom.project.Program;
-import org.estatio.dom.project.ProgramRole;
 import org.estatio.dom.project.Project;
 import org.estatio.numerator.dom.impl.Numerator;
 
@@ -135,6 +133,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 //        deleteFrom(IncomingInvoiceItem.class);
 //        deleteFrom(IncomingInvoice.class);
 
+        deleteFrom(OrderItemInvoiceItemLink.class);
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);
 
