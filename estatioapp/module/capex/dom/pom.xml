@@ -106,8 +106,12 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-tax</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.isisaddons.wicket.pdfjs</groupId>
+            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+        </dependency>
 
-		<!-- provided -->
+        <!-- provided -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -137,6 +141,10 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-numerator</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.pdfjs</groupId>
+            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
         </dependency>
 
     </dependencies>

@@ -115,6 +115,11 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
         </dependency>
 

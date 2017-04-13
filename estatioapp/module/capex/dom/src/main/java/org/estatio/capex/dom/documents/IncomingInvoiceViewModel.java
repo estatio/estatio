@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
@@ -41,6 +42,8 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
@@ -95,7 +98,7 @@ public class IncomingInvoiceViewModel {
 
 
     @XmlTransient
-//    @PdfJsViewer(initialPageNum = 1, initialScale = 1.0d, initialHeight = 600)
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._1_00, initialHeight = 600)
     public Blob getBlob() {
         return getSelected() != null ? getSelected().getBlob() : null;
     }
