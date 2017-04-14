@@ -360,6 +360,8 @@ public class DocFragments_for_Invoicing_Test {
         Brand brand;
 
         InvoiceForLease invoice;
+        InvoiceItemForLease invoiceItemForLease;
+        Unit unit;
 
         InvoiceAttributesVM vm;
 
@@ -383,6 +385,13 @@ public class DocFragments_for_Invoicing_Test {
             brand = new Brand();
             brand.setName("Some brand");
             // have deliberately NOT set brand on occupancy
+
+
+            unit = new Unit();
+            unit.setName("123");
+
+            invoiceItemForLease = new InvoiceItemForLease();
+            invoiceItemForLease.setFixedAsset(unit);
 
             invoice = new InvoiceForLease();
             invoice.setLease(lease);
@@ -412,7 +421,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(
-                            String.format("Contratto di affitto di ramo d'azienda con effetto dal 01-04-2017%n%n"));
+                            String.format("Contratto di affitto di ramo d'azienda con effetto dal 01-04-2017"));
 
                 }
             }
@@ -430,7 +439,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .isEqualTo(String.format("Contratto di commodato con effetto dal 01-04-2017%n%n"));
+                            .isEqualTo(String.format("Contratto di commodato con effetto dal 01-04-2017"));
 
                 }
             }
@@ -448,7 +457,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
+                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017"));
 
                 }
             }
@@ -466,7 +475,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .isEqualTo(String.format("Contratto di locazione con effetto dal 01-04-2017%n%n"));
+                            .isEqualTo(String.format("Contratto di locazione con effetto dal 01-04-2017"));
 
                 }
             }
@@ -484,7 +493,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(
-                            String.format("Contratto di locazione di spazio con effetto dal 01-04-2017%n%n"));
+                            String.format("Contratto di locazione di spazio con effetto dal 01-04-2017"));
 
                 }
             }
@@ -494,6 +503,8 @@ public class DocFragments_for_Invoicing_Test {
 
                 // given
                 invoice.setFixedAsset(fixedAsset);
+                invoice.getItems().add(invoiceItemForLease);
+
 
                 for (String leaseType : Arrays.asList("AD", "OA", "PA", "SA")) {
 
@@ -505,7 +516,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .endsWith(String.format("con effetto dal 01-04-2017 - Esercizio Commerciale%n%n"));
+                            .endsWith(String.format("con effetto dal 01-04-2017 - Esercizio Commerciale 123"));
                 }
             }
 
@@ -514,6 +525,8 @@ public class DocFragments_for_Invoicing_Test {
 
                 // given
                 invoice.setFixedAsset(fixedAsset);
+                invoice.getItems().add(invoiceItemForLease);
+
 
                 for (String leaseType : Arrays.asList("CG", "CO", "LO", "PR", "OL", "PL", "SL")) {
 
@@ -524,7 +537,7 @@ public class DocFragments_for_Invoicing_Test {
                     final String rendered = freeMarkerService.render(templateName, templateText, vm);
 
                     // then
-                    Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Unità%n%n"));
+                    Assertions.assertThat(rendered).endsWith(String.format("con effetto dal 01-04-2017 - Unità 123"));
                 }
             }
 
@@ -533,6 +546,7 @@ public class DocFragments_for_Invoicing_Test {
 
                 // given
                 invoice.setFixedAsset(fixedAsset);
+                invoice.getItems().add(invoiceItemForLease);
 
                 for (String leaseType : Arrays.asList("DH")) {
 
@@ -544,7 +558,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .endsWith(String.format("con effetto dal 01-04-2017 - Spazio Commerciale%n%n"));
+                            .endsWith(String.format("con effetto dal 01-04-2017 - Spazio Commerciale 123"));
                 }
             }
 
@@ -564,7 +578,7 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered)
-                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017%n%n"));
+                            .isEqualTo(String.format("Contratto di concessione con effetto dal 01-04-2017"));
                 }
             }
 
@@ -585,7 +599,31 @@ public class DocFragments_for_Invoicing_Test {
 
                     // then
                     Assertions.assertThat(rendered).isEqualTo(
-                            String.format("Contratto di concessione Some brand con effetto dal 01-04-2017%n%n"));
+                            String.format("Contratto di concessione con effetto dal 01-04-2017 - Insegna: Some brand"));
+                }
+            }
+
+            @Test
+            public void when_has_occupancy_with_brand_and_unit() throws Exception {
+
+                // given
+                occupancy.setBrand(brand);
+                lease.setOccupancies(occupancies);
+                invoice.setFixedAsset(fixedAsset);
+                invoice.getItems().add(invoiceItemForLease);
+
+
+                for (String leaseType : Arrays.asList("DH")) {
+
+                    // given
+                    this.leaseType.setReference(leaseType);
+
+                    // when
+                    final String rendered = freeMarkerService.render(templateName, templateText, vm);
+
+                    // then
+                    Assertions.assertThat(rendered).isEqualTo(
+                            String.format("Contratto di concessione con effetto dal 01-04-2017 - Insegna: Some brand - Spazio Commerciale 123"));
                 }
             }
 
