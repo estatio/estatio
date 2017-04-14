@@ -269,6 +269,7 @@ public class InvoiceForLease
             if (invoice.getLease() != null && invoice.getLease().primaryOccupancy().isPresent()) {
                 invoiceItemForLease.setFixedAsset(invoice.getLease().primaryOccupancy().get().getUnit());
             }
+            invoice.updateDescriptions();
             return invoiceItemForLease;
         }
 
