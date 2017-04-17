@@ -374,6 +374,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     }
 
     String determineOrderNumber2() {
+        if (getProjectReference()==null) return null;
         final Pattern projectReferencePattern = Pattern.compile("^([^-]+)[-].*$");
         final Matcher matcher = projectReferencePattern.matcher(getProjectReference());
         if(!matcher.matches()) {
