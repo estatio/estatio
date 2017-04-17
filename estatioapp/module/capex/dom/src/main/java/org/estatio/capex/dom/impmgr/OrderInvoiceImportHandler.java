@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -372,8 +374,15 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     }
 
     String determineOrderNumber2() {
+        final Pattern projectReferencePattern = Pattern.compile("^([^-]+)[-].*$");
+        final Matcher matcher = projectReferencePattern.matcher(getProjectReference());
+        if(!matcher.matches()) {
+            return null;
+        }
+        final String propertyReference = matcher.group(1);
         String suffix = "-".concat(String.format("%03d", getExcelRowNumber()));
-        String result = getOrderDate().toString().replace("-","").concat(suffix);
+        String prefix = propertyReference.concat("-");
+        String result = prefix.concat(getOrderDate().toString().replace("-","")).concat(suffix);
         return result;
     }
 
