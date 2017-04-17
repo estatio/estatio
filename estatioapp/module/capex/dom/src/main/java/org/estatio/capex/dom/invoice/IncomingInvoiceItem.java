@@ -111,7 +111,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private FixedAsset fixedAsset;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name="projectId")
     @Property(hidden = Where.REFERENCES_PARENT)
     private Project project;
 

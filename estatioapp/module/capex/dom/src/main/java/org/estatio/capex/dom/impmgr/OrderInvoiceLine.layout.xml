@@ -7,8 +7,12 @@
     <row>
         <col span="12">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="orderNumber" />
+                <ns2:property id="sheetName" />
+                <ns2:property id="rowNumber" />
+                <ns2:property id="status" />
                 <ns2:property id="charge" />
+                <ns2:property id="orderNumber" />
+                <ns2:property id="sellerOrderReference" />
                 <ns2:property id="entryDate" />
                 <ns2:property id="orderDate" />
                 <ns2:property id="seller" />

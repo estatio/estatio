@@ -18,7 +18,7 @@
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true"/>
         </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
-            <cpt:collection id="lines"/>
+            <cpt:collection id="lines" defaultView="table"/>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

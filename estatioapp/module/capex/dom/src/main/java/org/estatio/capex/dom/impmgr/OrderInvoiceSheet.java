@@ -28,6 +28,10 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderInvoiceSheet {
 
+    public String title(){
+        return "Order and invoice import";
+    }
+
     @XmlElementWrapper
     @XmlElement(name = "line")
     @Getter @Setter
