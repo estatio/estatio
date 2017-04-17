@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
@@ -42,7 +43,7 @@ public class OrderInvoiceSheet {
         return orderInvoiceImportService.createSheet(lines);
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, publishing = Publishing.DISABLED)
     public OrderInvoiceSheet apply() {
 
         for (OrderInvoiceLine line : lines) {
