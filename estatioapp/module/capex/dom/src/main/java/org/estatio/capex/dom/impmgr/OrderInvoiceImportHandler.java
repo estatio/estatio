@@ -115,7 +115,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
 
             // copy or generate order reference and copy seller and order description when multiple invoice lines
             if (getEntryDate()==null && invoiceNumberToUse()!=null){
-                if (previousRow.getOrderNumber()!=null){
+                if (previousRow.getOrderReference()!=null){
                     setOrderReference(previousRow.getOrderReference());
                 }
                 if (getSeller()==null && previousRow.getSeller()!=null){
@@ -129,7 +129,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
 
         // try to generate order reference unless one is passed through from previous row
         if (getOrderReference()==null && getOrderDate()!=null){
-            setOrderReference(determineOrderNumber());
+            setOrderReference(determineOrderNumber2());
         }
 
         OrderInvoiceLine lineItem = null;
@@ -358,6 +358,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
         return b.length()==0 ? "OK" : b.toString();
     }
 
+    // TODO: this method is of no use here, because orders are created on OrderInvoiceLine; replaced by determineOrderNumber2
     String determineOrderNumber() {
         Integer counter = 1;
         String suffix = "-".concat(String.format("%03d", counter));
@@ -367,6 +368,12 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
             suffix = "-".concat(String.format("%03d", counter));
             result = getOrderDate().toString().replace("-","").concat(suffix);
         }
+        return result;
+    }
+
+    String determineOrderNumber2() {
+        String suffix = "-".concat(String.format("%03d", getExcelRowNumber()));
+        String result = getOrderDate().toString().replace("-","").concat(suffix);
         return result;
     }
 
