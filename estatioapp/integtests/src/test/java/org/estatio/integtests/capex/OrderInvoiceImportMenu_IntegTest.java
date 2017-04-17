@@ -112,7 +112,7 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
                              readBytesFrom("OrderInvoiceImportForDemo.xlsx"));
 
             OrderInvoiceSheet sheet =
-                    orderInvoiceImportMenu.importOrdersAndInvoices2("OXFORD", blob);
+                    orderInvoiceImportMenu.importOrdersAndInvoices("OXFORD", blob);
 
 
             // then creates lines but not yet any orders etc

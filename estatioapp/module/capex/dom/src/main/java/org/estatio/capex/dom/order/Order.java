@@ -72,7 +72,7 @@ import lombok.Setter;
 public class Order extends UdoDomainObject2<Order> {
 
     public Order() {
-        super("reference");
+        super("orderNumber");
     }
 
     public String title() {

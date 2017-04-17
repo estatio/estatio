@@ -204,7 +204,7 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private String collectionNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = InvoiceNumberType.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = 128)
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private String invoiceNumber;

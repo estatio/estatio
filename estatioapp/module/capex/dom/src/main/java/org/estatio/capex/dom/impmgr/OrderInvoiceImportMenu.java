@@ -21,11 +21,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.value.Blob;
 
@@ -40,8 +42,9 @@ import org.apache.isis.applib.value.Blob;
 public class OrderInvoiceImportMenu {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    public Blob importOrdersAndInvoices(
+    @ActionLayout(hidden = Where.EVERYWHERE) // method is used in integ test
+    @MemberOrder(sequence = "2")
+    public Blob importOrdersAndInvoicesTestSheet(
             final String sheetName,
             final Blob spreadSheet) {
         final List<OrderInvoiceLine> lines = orderInvoiceImportService.createLines(sheetName, spreadSheet);
@@ -50,7 +53,7 @@ public class OrderInvoiceImportMenu {
         return orderInvoiceImportService.createSheet(lines);
     }
 
-    public String default0ImportOrdersAndInvoices(){
+    public String default0ImportOrdersAndInvoicesTestSheet(){
         return "budget travaux";
     }
 
@@ -58,7 +61,7 @@ public class OrderInvoiceImportMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
-    public OrderInvoiceSheet importOrdersAndInvoices2(
+    public OrderInvoiceSheet importOrdersAndInvoices(
             final String sheetName,
             final Blob spreadSheet) {
 
@@ -70,7 +73,7 @@ public class OrderInvoiceImportMenu {
         return sheet;
     }
 
-    public String default0ImportOrdersAndInvoices2(){
+    public String default0ImportOrdersAndInvoices(){
         return "budget travaux";
     }
 
