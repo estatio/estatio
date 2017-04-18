@@ -21,6 +21,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -108,7 +109,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
      */
     @Column(allowsNull = "false", name = "orderId")
     @Getter @Setter
-    @PropertyLayout(named = "order")
+    @PropertyLayout(named = "order", hidden = Where.REFERENCES_PARENT)
     private Order ordr;
 
     @Column(allowsNull = "false", name = "chargeId")
@@ -144,6 +145,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private LocalDate endDate;
 
     @Column(allowsNull = "true", name = "propertyId")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Property property;
 
@@ -153,7 +155,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @PropertyLayout(
             named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
+            describedAs = "Determines those users for whom this object is available to view and/or modify.",
+            hidden = Where.EVERYWHERE
     )
     @Override
     public ApplicationTenancy getApplicationTenancy() {

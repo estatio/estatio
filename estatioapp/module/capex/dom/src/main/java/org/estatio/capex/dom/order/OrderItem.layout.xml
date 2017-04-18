@@ -7,25 +7,17 @@
         </col>
     </row>
     <row>
-        <col span="6">
+        <col span="12">
             <tabGroup>
                 <tab name="Order item">
                     <row>
-                        <col span="12">
+                        <col span="4">
                             <ns2:fieldSet name="Order item" id="orderItem">
                                 <ns2:property id="ordr"/>
                                 <ns2:property id="description"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
-                                <ns2:property id="tax"/>
                             </ns2:fieldSet>
                         </col>
-                    </row>
-                </tab>
-                <tab name="Dimensions">
-                    <row>
-                        <col span="12">
+                        <col span="4">
                             <ns2:fieldSet name="Dimensions" id="dimensions">
                                 <ns2:property id="charge"/>
                                 <ns2:property id="fixedAsset"/>
@@ -35,6 +27,14 @@
                                 <ns2:property id="type"/>
                             </ns2:fieldSet>
                         </col>
+                        <col span="4">
+                            <ns2:fieldSet name="Amounts" id="amounts">
+                                <ns2:property id="netAmount"/>
+                                <ns2:property id="vatAmount"/>
+                                <ns2:property id="tax"/>
+                                <ns2:property id="grossAmount"/>
+                            </ns2:fieldSet>
+                        </col>
                     </row>
                 </tab>
                 <tab name="Other">
@@ -42,7 +42,7 @@
                         <col span="12">
                             <ns2:fieldSet name="Application Tenancy" id="general">
                                 <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>

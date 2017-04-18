@@ -122,6 +122,7 @@ public class Order extends UdoDomainObject2<Order> {
     private Party seller;
 
     @Column(allowsNull = "false", name = "buyerId")
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
 
