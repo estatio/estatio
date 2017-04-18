@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -81,9 +82,21 @@ public class OrderItemRepository {
         return orderItem;
     }
 
+    @Programmatic
+    public List<OrderItem> findByProjectAndCharge(final Project project, final Charge charge) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findByProjectAndCharge",
+                        "project", project,
+                        "charge", charge
+                ));
+    }
 
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+
 }

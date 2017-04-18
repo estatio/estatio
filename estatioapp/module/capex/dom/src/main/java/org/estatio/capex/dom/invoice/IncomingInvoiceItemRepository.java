@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,9 +15,9 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -83,9 +84,21 @@ public class IncomingInvoiceItemRepository {
         return invoiceItem;
     }
 
+    @Programmatic
+    public List<IncomingInvoiceItem> findByProjectAndCharge(final Project project, final Charge charge) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByProjectAndCharge",
+                        "project", project,
+                        "charge", charge
+                ));
+    }
+
 
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
 }

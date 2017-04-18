@@ -40,13 +40,16 @@ import org.estatio.capex.dom.impmgr.OrderInvoiceLine;
 import org.estatio.capex.dom.impmgr.OrderInvoiceSheet;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectItem;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -79,12 +82,19 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
         private IncomingInvoiceRepository incomingInvoiceRepository;
 
         @Inject
+        private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+        @Inject
         private ProjectRepository projectRepository;
 
         @Inject
-        OrderInvoiceImportMenu orderInvoiceImportMenu;
+        private OrderInvoiceImportMenu orderInvoiceImportMenu;
 
-        @Inject OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+        @Inject
+        private OrderItemRepository orderItemRepository;
+
+        @Inject
+        private OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
         @Before
         public void setUp() throws Exception {
@@ -155,6 +165,10 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
 
             Project project = projects.get(0);
             assertThat(project.getItems().size()).isEqualTo(2);
+
+            ProjectItem projectItem = project.getItems().first();
+            assertThat(orderItemRepository.findByProjectAndCharge(project, projectItem.getCharge()).size()).isEqualTo(1);
+            assertThat(incomingInvoiceItemRepository.findByProjectAndCharge(project, projectItem.getCharge()).size()).isEqualTo(2);
 
         }
 

@@ -56,6 +56,12 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE ordr == :ordr "
+                        + "   && charge == :charge "),
+        @Query(
+                name = "findByProjectAndCharge", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE project == :project "
                         + "   && charge == :charge ")
 })
 

@@ -46,6 +46,12 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
                         + "WHERE invoice == :invoice "
+                        + "   && charge == :charge "),
+        @Query(
+                name = "findByProjectAndCharge", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE project == :project "
                         + "   && charge == :charge ")
 })
 @DomainObject(
