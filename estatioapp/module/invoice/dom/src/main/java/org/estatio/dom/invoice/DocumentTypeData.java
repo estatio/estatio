@@ -45,21 +45,23 @@ public enum DocumentTypeData {
     COVER_NOTE_INVOICE("COVER-NOTE-INVOICE", "Email Cover Note for Invoice"),
 
     // primary docs
-    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice", "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER, null),
-    INVOICE("INVOICE", "Invoice", "Merged Invoices.pdf", COVER_NOTE_INVOICE, null),
+    PRELIM_LETTER("PRELIM-LETTER", "Preliminary letter for Invoice", "Merged Preliminary Letters.pdf", COVER_NOTE_PRELIM_LETTER, null, Nature.OUTGOING),
+    INVOICE("INVOICE", "Invoice", "Merged Invoices.pdf", COVER_NOTE_INVOICE, null, Nature.OUTGOING),
 
     // supporting docs
-    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE),
-    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE),
-    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER),
-    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER),
+    SUPPLIER_RECEIPT("SUPPLIER-RECEIPT", "Supplier Receipt (for Invoice)", null, null, INVOICE, null),
+    TAX_REGISTER("TAX-REGISTER", "Tax Register (for Invoice)", null, null, INVOICE, null),
+    CALCULATION("CALCULATION", "Calculation (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
+    SPECIAL_COMMUNICATION("SPECIAL-COMMUNICATION", "Special Communication (for Preliminary Letter)", null, null, PRELIM_LETTER, null),
 
     // preview only, applicable to InvoiceSummaryForPropertyDueDateStatus.class
     INVOICES("INVOICES", "Invoices overview"),
     INVOICES_PRELIM("INVOICES-PRELIM", "Preliminary letter for Invoices"),
     INVOICES_FOR_SELLER("INVOICES-FOR-SELLER", "Preliminary Invoice for Seller"),
 
-    INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null),
+    INCOMING("INCOMING", "Incoming", "Merged Incoming.pdf", null, null, Nature.INCOMING),
+    INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null, Nature.INCOMING),
+    INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
     ;
 
     private final String ref;
@@ -67,21 +69,34 @@ public enum DocumentTypeData {
     private final String mergedFileName;
     private final DocumentTypeData coverNote;
     private final DocumentTypeData supports;
+    private final Nature nature;
+
+    public boolean isIncoming() {
+        return nature == Nature.INCOMING;
+    }
+
+    enum Nature {
+        INCOMING,
+        OUTGOING,
+        NOT_SPECIFIED
+    }
 
     DocumentTypeData(final String ref, final String name) {
-        this(ref, name, null, null, null);
+        this(ref, name, null, null, null, Nature.NOT_SPECIFIED);
     }
 
-    DocumentTypeData(final String ref, final String name, final String mergedFileName, final DocumentTypeData coverNote) {
-        this(ref, name, mergedFileName, coverNote, null);
-    }
-
-    DocumentTypeData(final String ref, final String name, final String mergedFileName, final DocumentTypeData coverNote, final DocumentTypeData supports) {
+    DocumentTypeData(
+            final String ref, final String name,
+            final String mergedFileName,
+            final DocumentTypeData coverNote,
+            final DocumentTypeData supports,
+            final Nature nature) {
         this.ref = ref;
         this.name = name;
         this.mergedFileName = mergedFileName;
         this.coverNote = coverNote;
         this.supports = supports;
+        this.nature = nature;
     }
 
     /**

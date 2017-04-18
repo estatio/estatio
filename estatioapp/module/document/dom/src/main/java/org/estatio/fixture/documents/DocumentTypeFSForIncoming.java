@@ -18,28 +18,13 @@
  */
 package org.estatio.fixture.documents;
 
-import org.joda.time.LocalDate;
-
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public class DocumentTypeFSForIncomingInvoices extends DocumentTemplateFSAbstract {
+public class DocumentTypeFSForIncoming extends DocumentTemplateFSAbstract {
 
-
-    public static final String URL = "${reportServerBaseUrl}";
-
-    private LocalDate templateDateIfAny;
-
-    public DocumentTypeFSForIncomingInvoices() {
-        this(null);
-    }
-
-    public DocumentTypeFSForIncomingInvoices(
-            final LocalDate templateDateIfAny) {
-        this.templateDateIfAny = templateDateIfAny;
-    }
 
     protected DocumentType upsertType(
             DocumentTypeData documentTypeData,
@@ -50,7 +35,9 @@ public class DocumentTypeFSForIncomingInvoices extends DocumentTemplateFSAbstrac
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
+        upsertType(DocumentTypeData.INCOMING, executionContext);
         upsertType(DocumentTypeData.INCOMING_INVOICE, executionContext);
+        upsertType(DocumentTypeData.INCOMING_ORDER, executionContext);
     }
 
 

@@ -92,7 +92,7 @@ language governing permissions and limitations under the License.
         <incode-module-communications.version>1.14.7</incode-module-communications.version>
         <incode-module-country.version>1.14.0</incode-module-country.version>
         <incode-module-docfragment.version>1.14.0</incode-module-docfragment.version>
-        <incode-module-document.version>1.14.8</incode-module-document.version>
+        <incode-module-document.version>1.14.9</incode-module-document.version>
         <incode-module-docrendering-freemarker.version>1.14.0</incode-module-docrendering-freemarker.version>
         <incode-module-docrendering-stringinterpolator.version>1.14.0</incode-module-docrendering-stringinterpolator.version>
         <incode-module-docrendering-xdocreport.version>1.14.0</incode-module-docrendering-xdocreport.version>

@@ -23,24 +23,24 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <domainObject/>
-                    <action id="clearHints" hidden="EVERYWHERE"/>
-                    <action id="downloadLayoutXml" hidden="EVERYWHERE"/>
-                    <action id="rebuildMetamodel" hidden="EVERYWHERE"/>
+                    <action id="previous"/>
+                    <action id="next"/>
+                    <action id="all"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <collection id="incomingDocuments" defaultView="table">
-                        <action id="previous"/>
-                        <action id="next"/>
-                    </collection>
+                    <fieldSet name="Other" unreferencedProperties="true">
+                        <action id="clearHints" hidden="EVERYWHERE"/>
+                        <action id="downloadLayoutXml" hidden="EVERYWHERE"/>
+                        <action id="rebuildMetamodel" hidden="EVERYWHERE"/>
+                    </fieldSet>
                 </bs3:col>
             </bs3:row>
         </bs3:col>
         <bs3:col span="6">
-            <fieldSet name="Other" unreferencedProperties="true">
-                <property id="idx"/>
-                <property id="selected"/>
+            <fieldSet name="Document">
+                <property id="document"/>
                 <property id="blob"/>
             </fieldSet>
         </bs3:col>

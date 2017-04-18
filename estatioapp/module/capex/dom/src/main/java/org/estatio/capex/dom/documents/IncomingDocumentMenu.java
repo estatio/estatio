@@ -27,36 +27,27 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService2;
-import org.apache.isis.schema.common.v1.OidDto;
-
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "capex.IncomingInvoiceDocumentMenu"
+        objectType = "capex.IncomingDocumentMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         named = "Incoming invoices"
 )
-public class IncomingInvoiceDocumentMenu {
+public class IncomingDocumentMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public IncomingInvoiceViewModel incomingDocuments() {
-        final List<Document> documents = documentRepository.findWithNoPaperclips();
-        final Integer idx = !documents.isEmpty() ? 0 : null;
-        IncomingInvoiceViewModel viewModel = factory.create(documents, idx);
-
-        return viewModel;
+    public List<IncomingDocumentViewModel> incomingDocuments() {
+        return mapper.map(repository.findIncomingDocuments());
     }
 
     @Inject
-    IncomingInvoiceViewModel.Factory factory;
+    IncomingDocumentRepository repository;
 
     @Inject
-    DocumentRepository documentRepository;
+    IncomingDocumentViewModel.Mapper mapper;
+
 
 }

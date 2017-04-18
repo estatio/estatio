@@ -13,12 +13,14 @@ import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService2;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.urlencoding.UrlEncodingService;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 
-import org.estatio.capex.dom.documents.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.IncomingDocumentViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
@@ -32,13 +34,23 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
     private final Map<InstanceKey, Integer> pageNumByInstanceKey = Maps.newHashMap();
 
     @Override
-    public PdfJsViewerAdvisor.Advice advise(final InstanceKey instanceKey) {
+    public PdfJsViewerAdvisor.Advice advise(InstanceKey instanceKey) {
         if(instanceKey == null) {
             return null;
         }
+        instanceKey = simplify(instanceKey);
+
         Advice advice = adviceFor(instanceKey);
         dump("advise", instanceKey);
         return advice;
+    }
+
+    private InstanceKey simplify(InstanceKey instanceKey) {
+        InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
+        if(typeKey.getObjectType().startsWith("capex.")) {
+            instanceKey = new InstanceKey("capex", instanceKey.getIdentifier(), typeKey.getPropertyId(), typeKey.getUserName());
+        }
+        return instanceKey;
     }
 
     private Advice adviceFor(final InstanceKey instanceKey) {
@@ -51,7 +63,7 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
         return new Advice(pageNumber, typeAdvice);
     }
 
-    private Advice.TypeAdvice typeAdviceFor(final InstanceKey.TypeKey typeKey) {
+    private Advice.TypeAdvice typeAdviceFor(InstanceKey.TypeKey typeKey) {
         Advice.TypeAdvice typeAdvice = typeAdviceByTypeKey.get(typeKey);
         if(typeAdvice == null) {
             typeAdvice = new Advice.TypeAdvice(null, null);
@@ -61,13 +73,15 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
     }
 
     @Override
-    public void pageNumChangedTo(final InstanceKey instanceKey, final int pageNum) {
+    public void pageNumChangedTo(InstanceKey instanceKey, final int pageNum) {
+        instanceKey = simplify(instanceKey);
         pageNumByInstanceKey.put(instanceKey, pageNum);
         dump("pageNumChangedTo", instanceKey);
     }
 
     @Override
-    public void scaleChangedTo(final InstanceKey instanceKey, final Scale scale) {
+    public void scaleChangedTo(InstanceKey instanceKey, final Scale scale) {
+        instanceKey = simplify(instanceKey);
         InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
         Advice.TypeAdvice typeAdvice = typeAdviceFor(typeKey).withScale(scale);
         typeAdviceByTypeKey.put(typeKey, typeAdvice);
@@ -75,7 +89,9 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
     }
 
     @Override
-    public void heightChangedTo(final InstanceKey instanceKey, final int height) {
+    public void heightChangedTo(InstanceKey instanceKey, final int height) {
+        instanceKey = simplify(instanceKey);
+
         InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
         Advice.TypeAdvice typeAdvice = typeAdviceFor(typeKey).withHeight(height);
         typeAdviceByTypeKey.put(typeKey, typeAdvice);
@@ -100,18 +116,22 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
         String objectType = typeKey.getObjectType();
         if(Objects.equals(
                 objectType,
-                IncomingInvoiceViewModel.class.getName())) {
+                IncomingDocumentViewModel.class.getName())) {
 
             String identifier = instanceKey.getIdentifier();
             final String xmlStr = urlEncodingService.decode(identifier);
 
-            IncomingInvoiceViewModel homePageViewModel = jaxbService.fromXml(IncomingInvoiceViewModel.class, xmlStr);
+            IncomingDocumentViewModel viewModel = jaxbService.fromXml(IncomingDocumentViewModel.class, xmlStr);
 
-            return "homePageViewModel:"+homePageViewModel.getIdx();
+            final Bookmark bookmark = bookmarkService2.bookmarkFor(viewModel.getDocument());
+            return "homePageViewModel:"+bookmark.getIdentifier();
         } else {
             return instanceKey.asBookmark().toString();
         }
     }
+
+    @Inject
+    BookmarkService2 bookmarkService2;
 
     @Inject
     UrlEncodingService urlEncodingService;

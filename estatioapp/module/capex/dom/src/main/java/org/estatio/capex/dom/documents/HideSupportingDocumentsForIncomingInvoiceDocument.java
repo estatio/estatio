@@ -22,34 +22,34 @@ public class HideSupportingDocumentsForIncomingInvoiceDocument extends AbstractS
     @EventHandler
     @Subscribe
     public void on(T_documents.ActionDomainEvent ev) {
-        hideIfIncomingInvoiceDocument(ev);
+        hideIfIncomingDocument(ev);
     }
 
     @EventHandler
     @Subscribe
     public void on(Document_backgroundCommands.ActionDomainEvent ev) {
-        hideIfIncomingInvoiceDocument(ev);
+        hideIfIncomingDocument(ev);
     }
 
     @EventHandler
     @Subscribe
     public void on(Document_communicationAttachments.ActionDomainEvent ev) {
-        hideIfIncomingInvoiceDocument(ev);
+        hideIfIncomingDocument(ev);
     }
 
     @EventHandler
     @Subscribe
     public void on(Document_communications.ActionDomainEvent ev) {
-        hideIfIncomingInvoiceDocument(ev);
+        hideIfIncomingDocument(ev);
     }
 
-    private void hideIfIncomingInvoiceDocument(final org.apache.isis.applib.services.eventbus.ActionDomainEvent ev) {
+    private void hideIfIncomingDocument(final org.apache.isis.applib.services.eventbus.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case HIDE:
             Object mixedIn = ev.getMixedIn();
             if (mixedIn instanceof Document) {
                 Document document = (Document) mixedIn;
-                if (DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
+                if (DocumentTypeData.docTypeDataFor(document).isIncoming()) {
                     ev.hide();
                 }
             }
