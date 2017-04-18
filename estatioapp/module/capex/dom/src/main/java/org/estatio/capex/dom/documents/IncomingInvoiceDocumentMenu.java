@@ -27,7 +27,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService2;
+import org.apache.isis.schema.common.v1.OidDto;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
@@ -44,18 +46,15 @@ public class IncomingInvoiceDocumentMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public IncomingInvoiceViewModel incomingDocuments() {
-        IncomingInvoiceViewModel viewModel = factoryService.instantiate(IncomingInvoiceViewModel.class);
-
         final List<Document> documents = documentRepository.findWithNoPaperclips();
-        if (!documents.isEmpty()) {
-            viewModel.setIdx(0);
-        }
+        final Integer idx = !documents.isEmpty() ? 0 : null;
+        IncomingInvoiceViewModel viewModel = factory.create(documents, idx);
 
         return viewModel;
     }
 
     @Inject
-    FactoryService factoryService;
+    IncomingInvoiceViewModel.Factory factory;
 
     @Inject
     DocumentRepository documentRepository;

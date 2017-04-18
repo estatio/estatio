@@ -24,21 +24,28 @@ import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.AbstractSubscriber;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
@@ -54,12 +61,146 @@ import lombok.Setter;
 @XmlRootElement(name = "toDoItemDto")
 @XmlType(
         propOrder = {
-                "idx"
+                "idx",
+                "documents"
+//                "documentOids"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
-public class IncomingInvoiceViewModel {
+public class IncomingInvoiceViewModel
+                implements Comparable<IncomingInvoiceViewModel> {
 
+    public IncomingInvoiceViewModel() {}
+    public IncomingInvoiceViewModel(final List<Document> documents, final Integer idx) {
+        setDocuments(documents);
+        setIdx(idx);
+    }
+
+    public String title() {
+        Document selected = getSelected();
+        return getSelected() != null ? titleService.titleOf(selected): "No incoming documents";
+    }
+
+    public List<IncomingInvoiceViewModel> getIncomingDocuments() {
+        List<IncomingInvoiceViewModel> viewModels = Lists.newArrayList();
+        List<Document> documents = getDocuments();
+        for (int i = 0; i < documents.size(); i++) {
+            IncomingInvoiceViewModel viewModel = i == getIdx() ? this : new IncomingInvoiceViewModel(documents, i);
+            viewModels.add(viewModel);
+        }
+        return viewModels;
+    }
+
+    @Collection(hidden = Where.EVERYWHERE)
+    @XmlElementWrapper
+    @XmlElement
+    @Getter @Setter
+    private List<Document> documents = Lists.newArrayList();
+
+    @Property(hidden = Where.ALL_TABLES)
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._1_00, initialHeight = 600)
+    public Blob getBlob() {
+
+        // HACK: only displayed on forms, so use to set the context of which object is being rendered.
+        cssHighlighter.setContext(this);
+
+        return getSelected() != null ? getSelected().getBlob() : null;
+    }
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    private Integer idx;
+
+    public Document getSelected() {
+        if(getIdx() == null) {
+            return null;
+        }
+        return getDocuments().get(getIdx());
+    }
+
+    @Override
+    public int compareTo(final IncomingInvoiceViewModel o) {
+        if(idx == null && o.idx != null) { return -1; }
+        if(idx != null && o.idx == null) { return +1; }
+        return idx - o.idx;
+    }
+
+    @Override public boolean equals(final Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        final IncomingInvoiceViewModel that = (IncomingInvoiceViewModel) o;
+
+        return idx != null ? idx.equals(that.idx) : that.idx == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return idx != null ? idx.hashCode() : 0;
+    }
+
+    @Mixin(method="act")
+    public static class previous {
+        private final IncomingInvoiceViewModel viewModel;
+        public previous(final IncomingInvoiceViewModel viewModel) {
+            this.viewModel = viewModel;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        public IncomingInvoiceViewModel act() {
+            return factory.create(viewModel.getDocuments(), viewModel.getIdx()-1);
+        }
+
+        public String disableAct() {
+            if(viewModel.getIdx() == null) {
+                return "No documents";
+            }
+            return viewModel.getIdx() == 0 ? "At start" : null;
+        }
+
+        @XmlTransient
+        @Inject
+        Factory factory;
+    }
+    
+    @Mixin(method="act")
+    public static class next {
+        private final IncomingInvoiceViewModel viewModel;
+        public next(final IncomingInvoiceViewModel viewModel) {
+            this.viewModel = viewModel;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        public IncomingInvoiceViewModel act() {
+            return factory.create(viewModel.getDocuments(), viewModel.getIdx()+1);
+        }
+
+        public String disableAct() {
+            if(viewModel.getIdx() == null) {
+                return "No documents";
+            }
+            return viewModel.getIdx() == viewModel.getDocuments().size() - 1 ? "At end" : null;
+        }
+
+        @XmlTransient
+        @Inject
+        Factory factory;
+    }
+
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class Factory {
+
+        @Programmatic
+        public IncomingInvoiceViewModel create(final List<Document> documents, final Integer idx) {
+            IncomingInvoiceViewModel viewModel = new IncomingInvoiceViewModel(documents, idx);
+            serviceRegistry.injectServicesInto(viewModel);
+            return viewModel;
+        }
+
+        @Inject
+        ServiceRegistry2 serviceRegistry;
+    }
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class CssHighlighter extends AbstractSubscriber {
@@ -86,76 +227,23 @@ public class IncomingInvoiceViewModel {
         Scratchpad scratchpad;
     }
 
-    public String title() {
-        cssHighlighter.setContext(this);
-        Document selected = getSelected();
-        return selected != null ? titleService.titleOf(selected): "No documents";
-    }
-
-    public List<Document> getDocuments() {
-        return documentRepository.findWithNoPaperclips();
-    }
-
 
     @XmlTransient
-    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._1_00, initialHeight = 600)
-    public Blob getBlob() {
-        return getSelected() != null ? getSelected().getBlob() : null;
-    }
-
-
-    @XmlTransient
-    @Property(hidden = Where.EVERYWHERE)
-    public int getNumObjects() {
-        return getDocuments().size();
-    }
-
-
-    @XmlElement(required = true)
-    @Getter @Setter
-    private int idx;
-
-
-    public Document getSelected() {
-        return getNumObjects() >= getIdx() + 1 ? getDocuments().get(getIdx()) : null;
-    }
-
-
-    public IncomingInvoiceViewModel previous() {
-        final IncomingInvoiceViewModel viewModel = factoryService.instantiate(IncomingInvoiceViewModel.class);
-        viewModel.setIdx(getIdx()-1);
-        return viewModel;
-    }
-    public String disablePrevious() {
-        return getIdx() == 0 ? "At start" : null;
-    }
-
-
-    public IncomingInvoiceViewModel next() {
-        final IncomingInvoiceViewModel viewModel = factoryService.instantiate(IncomingInvoiceViewModel.class);
-        viewModel.setIdx(getIdx()+1);
-        return viewModel;
-    }
-    public String disableNext() {
-        return getIdx() == getNumObjects() - 1 ? "At end" : null;
-    }
-
-
-    @XmlTransient
-    @javax.inject.Inject
+    @Inject
     CssHighlighter cssHighlighter;
 
     @XmlTransient
     @Inject
-    FactoryService factoryService;
+    Factory factory;
 
-    @Inject
     @XmlTransient
+    @Inject
     DocumentRepository documentRepository;
 
     @Inject
     @XmlTransient
     TitleService titleService;
+
 
 
 }
