@@ -18,26 +18,16 @@
  */
 package org.estatio.integtests.capex;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import com.google.common.io.Resources;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.xactn.TransactionService;
-import org.apache.isis.applib.value.Blob;
-
-import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.capex.dom.impmgr.OrderInvoiceImportMenu;
-import org.estatio.capex.dom.impmgr.OrderInvoiceLine;
-import org.estatio.capex.dom.impmgr.OrderInvoiceSheet;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -51,15 +41,16 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectItem;
 import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
+public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
 
-    public static class LoadFixtures extends OrderInvoiceImportMenu_IntegTest {
+    public static class LoadFixtures extends OrderInvoiceImport_IntegTest {
 
         @Before
         public void setupData() {
@@ -116,26 +107,12 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
             assertThat(links).isEmpty();
 
             // when
-            final Blob blob =
-                    new Blob("OrderInvoiceImportForDemo.xlsx",
-                             ExcelService.XSLX_MIME_TYPE,
-                             readBytesFrom("OrderInvoiceImportForDemo.xlsx"));
-
-            OrderInvoiceSheet sheet =
-                    orderInvoiceImportMenu.importOrdersAndInvoices("OXFORD", blob);
-
-
-            // then creates lines but not yet any orders etc
-            List<OrderInvoiceLine> lines = sheet.getLines();
-            assertThat(lines).isNotEmpty();
-
-            orders = orderRepository.listAll();
-            assertThat(orders).isEmpty();
-
-
-            // when
-            sheet.apply();
-
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new OrderInvoiceFixture());
+                }
+            });
 
             // then orders, invoices and supporting projects created and invoices are linked back to orders.
             orders = orderRepository.listAll();
@@ -172,14 +149,6 @@ public class OrderInvoiceImportMenu_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        private byte[] readBytesFrom(final String resourceName) throws IOException {
-            URL resource = Resources.getResource(getClass(), resourceName);
-            return Resources.toByteArray(resource);
-        }
-
     }
-
-    @Inject
-    TransactionService transactionService;
 
 }
