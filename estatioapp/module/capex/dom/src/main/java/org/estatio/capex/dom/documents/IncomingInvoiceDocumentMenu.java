@@ -37,12 +37,13 @@ import org.incode.module.document.dom.impl.docs.DocumentRepository;
         objectType = "capex.IncomingInvoiceDocumentMenu"
 )
 @DomainServiceLayout(
-        named = "Documents"
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        named = "Incoming invoices"
 )
 public class IncomingInvoiceDocumentMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public IncomingInvoiceViewModel incomingInvoices() {
+    public IncomingInvoiceViewModel incomingDocuments() {
         IncomingInvoiceViewModel viewModel = factoryService.instantiate(IncomingInvoiceViewModel.class);
 
         final List<Document> documents = documentRepository.findWithNoPaperclips();

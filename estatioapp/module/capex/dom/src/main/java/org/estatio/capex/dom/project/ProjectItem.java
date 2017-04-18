@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -82,6 +83,7 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	}
 
 	@Column(allowsNull = "false", name = "projectId")
+	@PropertyLayout(hidden = Where.REFERENCES_PARENT)
 	@Getter @Setter
 	private Project project;
 
