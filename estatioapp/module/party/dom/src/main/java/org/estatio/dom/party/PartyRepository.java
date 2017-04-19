@@ -20,6 +20,8 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
@@ -31,6 +33,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
 public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
@@ -64,6 +69,28 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
         return firstMatch("findByReference", "reference", reference);
     }
 
+    @Programmatic
+    public List<Party> findByRoleTypeData(final PartyRoleTypeData partyRoleTypeData){
+        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(partyRoleTypeData);
+        return findByRoleType(partyRoleType);
+    }
+
+    @Programmatic
+    public List<Party> findByRoleType(final PartyRoleType partyRoleType){
+        return allMatches("findByRoleType", "roleType", partyRoleType);
+    }
+
+    @Programmatic
+    public List<Party> findByRoleTypeDataAndReferenceOrName(final PartyRoleTypeData partyRoleTypeData, final String referenceOrName){
+        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(partyRoleTypeData);
+        return findByRoleTypeAndReferenceOrName(partyRoleType, referenceOrName);
+    }
+
+    @Programmatic
+    public List<Party> findByRoleTypeAndReferenceOrName(final PartyRoleType partyRoleType, final String referenceOrName){
+        return allMatches("findByRoleType", "roleType", partyRoleType, "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+    }
+
     // //////////////////////////////////////
 
     @Action(hidden = Where.EVERYWHERE)
@@ -86,5 +113,9 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
             return "Reference should be unique; does similar party already exist?";
         return null;
     }
+
+    @Inject PartyRoleTypeRepository roleTypeRepository;
+
+
 
 }
