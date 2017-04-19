@@ -139,7 +139,7 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             //Then
             final List<Party> partyList = partyRepository.findByRoleTypeDataAndReferenceOrName(
                     PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE,
-                    ".*ello.*");
+                    "*ello*");
             assertThat(partyList.size()).isEqualTo(1);
         }
     }

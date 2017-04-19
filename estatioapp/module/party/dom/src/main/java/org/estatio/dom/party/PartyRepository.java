@@ -88,7 +88,7 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
 
     @Programmatic
     public List<Party> findByRoleTypeAndReferenceOrName(final PartyRoleType partyRoleType, final String referenceOrName){
-        return allMatches("findByRoleType", "roleType", partyRoleType, "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+        return allMatches("findByRoleTypeAndReferenceOrName", "roleType", partyRoleType, "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     // //////////////////////////////////////
