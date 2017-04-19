@@ -20,7 +20,7 @@ import org.apache.isis.applib.services.urlencoding.UrlEncodingService;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 
-import org.estatio.capex.dom.documents.IncomingDocumentViewModel;
+import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {

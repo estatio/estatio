@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
@@ -44,6 +45,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
@@ -90,6 +92,7 @@ import lombok.Setter;
 })
 @DomainObject(autoCompleteRepository = PropertyRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Property
         extends FixedAsset<Property>
         implements Locatable, WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {

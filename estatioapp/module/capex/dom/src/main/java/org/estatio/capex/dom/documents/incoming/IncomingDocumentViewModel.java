@@ -16,27 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.incoming;
 
-import java.util.List;
-
-import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.HasDocumentAbstract;
+
 @DomainObject(
-        objectType = "capex.IncomingDocumentViewModel"
+        // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
+        objectType = "org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel"
 )
 @XmlRootElement(name = "incomingInvoice")
 @XmlType(
@@ -52,24 +45,4 @@ public class IncomingDocumentViewModel extends HasDocumentAbstract {
     }
 
 
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class Mapper {
-
-        @Programmatic
-        public IncomingDocumentViewModel map(final Document document) {
-            return serviceRegistry2.injectServicesInto(new IncomingDocumentViewModel(document));
-        }
-
-        @Programmatic
-        public List<IncomingDocumentViewModel> map(final List<Document> documents) {
-            return Lists.newArrayList(
-                    FluentIterable.from(documents)
-                            .transform(doc -> map(doc))
-                            .toList());
-        }
-
-        @Inject
-        ServiceRegistry2 serviceRegistry2;
-
-    }
 }

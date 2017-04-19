@@ -28,6 +28,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Sets;
 
@@ -47,6 +48,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
@@ -103,6 +105,7 @@ import lombok.Setter;
         autoCompleteAction = "autoComplete"
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public abstract class FixedAsset<X extends FixedAsset<X>>
         extends UdoDomainObject2<X>
         implements WithNameComparable<X>, WithReferenceUnique, CommunicationChannelOwner {

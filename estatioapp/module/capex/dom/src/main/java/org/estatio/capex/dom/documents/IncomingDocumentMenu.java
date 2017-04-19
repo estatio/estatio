@@ -39,15 +39,15 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 public class IncomingDocumentMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<IncomingDocumentViewModel> incomingDocuments() {
-        return mapper.map(repository.findIncomingDocuments());
+    public List<HasDocumentAbstract> incomingDocuments() {
+        return factory.map(repository.findIncomingDocuments());
     }
 
     @Inject
     IncomingDocumentRepository repository;
 
     @Inject
-    IncomingDocumentViewModel.Mapper mapper;
+    HasDocumentAbstract.Factory factory;
 
 
 }

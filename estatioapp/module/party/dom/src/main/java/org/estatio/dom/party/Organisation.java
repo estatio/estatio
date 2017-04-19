@@ -24,6 +24,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
@@ -36,6 +37,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -53,6 +55,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")
 @DomainObject(editing = Editing.DISABLED)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Organisation
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {

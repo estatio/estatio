@@ -31,8 +31,8 @@ public class HasDocument_previous {
             domainEvent = ActionDomainEvent.class
     )
     @ActionLayout(cssClassFa = "step-backward")
-    public IncomingDocumentViewModel act() {
-        return mapper.map(previousDocument());
+    public HasDocumentAbstract act() {
+        return factory.map(previousDocument());
     }
 
     private Document previousDocument() {
@@ -65,5 +65,5 @@ public class HasDocument_previous {
     DocumentRepository repository;
 
     @Inject
-    IncomingDocumentViewModel.Mapper mapper;
+    HasDocumentAbstract.Factory factory;
 }

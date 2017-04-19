@@ -34,8 +34,8 @@ public class HasDocument_all {
             domainEvent = ActionDomainEvent.class
     )
     @ActionLayout(cssClassFa = "list")
-    public List<IncomingDocumentViewModel> act() {
-        return mapper.map(repository.findIncomingDocuments());
+    public List<HasDocumentAbstract> act() {
+        return factory.map(repository.findIncomingDocuments());
     }
 
     public String disableAct() {
@@ -46,6 +46,6 @@ public class HasDocument_all {
     IncomingDocumentRepository repository;
 
     @Inject
-    IncomingDocumentViewModel.Mapper mapper;
+    HasDocumentAbstract.Factory factory;
 
 }

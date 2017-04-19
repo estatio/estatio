@@ -31,8 +31,8 @@ public class HasDocument_next {
             domainEvent = ActionDomainEvent.class
     )
     @ActionLayout(cssClassFa = "step-forward")
-    public IncomingDocumentViewModel act() {
-        return mapper.map(nextDocument());
+    public HasDocumentAbstract act() {
+        return factory.map(nextDocument());
     }
 
     private Document nextDocument() {
@@ -65,6 +65,6 @@ public class HasDocument_next {
     DocumentRepository repository;
 
     @Inject
-    IncomingDocumentViewModel.Mapper mapper;
+    HasDocumentAbstract.Factory factory;
 
 }
