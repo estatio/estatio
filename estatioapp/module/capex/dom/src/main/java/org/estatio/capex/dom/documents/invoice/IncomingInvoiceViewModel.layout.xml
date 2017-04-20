@@ -37,6 +37,9 @@
                         <bs3:tab name="Invoice">
                             <bs3:row>
                                 <bs3:col span="12">
+                                    <fieldSet name="Matching order" unreferencedProperties="false">
+                                        <property id="order"/>
+                                    </fieldSet>
                                     <fieldSet name="Invoice" unreferencedProperties="false">
                                         <property id="invoiceNumber"/>
                                         <property id="buyer"/>
@@ -47,14 +50,16 @@
                                     </fieldSet>
                                     <fieldSet name="Invoice Item" unreferencedProperties="false">
                                         <property id="description"/>
-                                        <property id="charge"/>
-                                        <property id="effectiveStartDate"/>
-                                        <property id="effectiveEndDate"/>
-                                        <property id="quantity"/>
                                         <property id="netAmount"/>
                                         <property id="vatAmount"/>
                                         <property id="tax"/>
                                         <property id="grossAmount"/>
+                                    </fieldSet>
+                                    <fieldSet name="Dimensions" unreferencedProperties="false">
+                                        <property id="charge"/>
+                                        <property id="fixedAsset"/>
+                                        <property id="project"/>
+                                        <property id="period"/>
                                     </fieldSet>
                                 </bs3:col>
                             </bs3:row>

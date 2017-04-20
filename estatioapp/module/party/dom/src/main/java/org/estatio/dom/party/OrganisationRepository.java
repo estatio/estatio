@@ -74,6 +74,7 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
         organisation.setReference(refToUse);
         organisation.setName(name);
         persist(organisation);
+        getContainer().flush();
         return organisation;
     }
 

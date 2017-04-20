@@ -18,8 +18,6 @@
  */
 package org.estatio.capex.dom.documents.invoice;
 
-import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,13 +29,9 @@ import org.apache.isis.applib.annotation.DomainObject;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.HasBuyer;
-import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasSeller;
-import org.estatio.dom.charge.Charge;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,10 +51,11 @@ import lombok.Setter;
                 "dueDate",
                 "paymentMethod",
                 "description",
+                "order",
+                "fixedAsset",
+                "project",
+                "period",
                 "charge",
-                "effectiveStartDate",
-                "effectiveEndDate",
-                "quantity",
                 "netAmount",
                 "vatAmount",
                 "tax",
@@ -69,7 +64,7 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingInvoiceViewModel extends HasDocumentAbstract implements HasBuyer, HasSeller {
+public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public IncomingInvoiceViewModel() {}
     public IncomingInvoiceViewModel(final Document document) {
@@ -78,32 +73,12 @@ public class IncomingInvoiceViewModel extends HasDocumentAbstract implements Has
 
     private String invoiceNumber;
 
-    private Organisation buyer;
-
-    private Organisation seller;
-
     private LocalDate invoiceDate;
 
     private LocalDate dueDate;
 
     private PaymentMethod paymentMethod;
 
-    private String description;
-
-    private Charge charge;
-
-    private LocalDate effectiveStartDate;
-
-    private LocalDate effectiveEndDate;
-
-    private Integer quantity;
-
-    private BigDecimal netAmount;
-
-    private BigDecimal vatAmount;
-
-    private Tax tax;
-
-    private BigDecimal grossAmount;
+    private Order order;
 
 }

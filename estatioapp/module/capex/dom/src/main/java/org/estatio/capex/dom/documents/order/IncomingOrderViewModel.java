@@ -18,8 +18,6 @@
  */
 package org.estatio.capex.dom.documents.order;
 
-import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,14 +30,7 @@ import org.apache.isis.applib.annotation.Editing;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.HasBuyer;
-import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasSeller;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.tax.Tax;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -71,7 +62,7 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingOrderViewModel extends HasDocumentAbstract implements HasBuyer, HasSeller {
+public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public IncomingOrderViewModel() {}
     public IncomingOrderViewModel(final Document document) {
@@ -80,30 +71,8 @@ public class IncomingOrderViewModel extends HasDocumentAbstract implements HasBu
 
     private String orderNumber;
 
-    private Organisation buyer;
-
-    private Organisation seller;
-
     private String sellerOrderReference;
 
     private LocalDate orderDate;
-
-    private String description;
-
-    private Charge charge;
-
-    private FixedAsset<?> fixedAsset;
-
-    private Project project;
-
-    private String period;
-
-    private BigDecimal netAmount;
-
-    private BigDecimal vatAmount;
-
-    private Tax tax;
-
-    private BigDecimal grossAmount;
 
 }

@@ -46,14 +46,16 @@
                                     </fieldSet>
                                     <fieldSet name="Order Item" unreferencedProperties="false">
                                         <property id="description"/>
-                                        <property id="charge"/>
-                                        <property id="fixedAsset"/>
-                                        <property id="project"/>
-                                        <property id="period"/>
                                         <property id="netAmount"/>
                                         <property id="vatAmount"/>
                                         <property id="tax"/>
                                         <property id="grossAmount"/>
+                                    </fieldSet>
+                                    <fieldSet name="Dimensions" unreferencedProperties="false">
+                                        <property id="charge"/>
+                                        <property id="fixedAsset"/>
+                                        <property id="project"/>
+                                        <property id="period"/>
                                     </fieldSet>
                                 </bs3:col>
                             </bs3:row>
