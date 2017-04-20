@@ -6,9 +6,9 @@ import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocumentAbstract_categorizeAsUnknown extends HasDocumentAbstract_categorizeAbstract {
+public class HasDocumentAbstract_resetCategorization extends HasDocumentAbstract_categorizeAbstract {
 
-    public HasDocumentAbstract_categorizeAsUnknown(final HasDocumentAbstract hasDocument) {
+    public HasDocumentAbstract_resetCategorization(final HasDocumentAbstract hasDocument) {
         super(hasDocument, DocumentTypeData.INCOMING, IncomingDocumentViewModel.class);
     }
 

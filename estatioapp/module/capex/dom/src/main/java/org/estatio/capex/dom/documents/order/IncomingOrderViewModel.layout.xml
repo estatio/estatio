@@ -28,7 +28,7 @@
                     <action id="all"/>
                     <action id="categorizeAsOrder"/>
                     <action id="categorizeAsInvoice"/>
-                    <action id="categorizeAsUnknown"/>
+                    <action id="resetCategorization"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
