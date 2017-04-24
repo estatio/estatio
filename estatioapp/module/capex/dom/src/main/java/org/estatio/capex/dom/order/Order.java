@@ -59,7 +59,17 @@ import lombok.Setter;
                 name = "findByOrderNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
-                        + "WHERE orderNumber == :orderNumber ")
+                        + "WHERE orderNumber == :orderNumber "),
+        @Query(
+                name = "matchByOrderNumber", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE orderNumber.matches(:orderNumber) "),
+        @Query(
+                name = "findBySeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE seller == :seller ")
 })
 @Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
@@ -137,7 +147,6 @@ public class Order extends UdoDomainObject2<Order> {
             final BigDecimal netAmount,
             @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal vatAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
             final BigDecimal grossAmount,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Tax tax,

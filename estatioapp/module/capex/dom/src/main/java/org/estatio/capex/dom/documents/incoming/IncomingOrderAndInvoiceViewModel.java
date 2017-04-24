@@ -175,6 +175,10 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         return this;
     }
 
+    public BigDecimal default0ChangeNetAmount(){
+        return getNetAmount();
+    }
+
     private BigDecimal vatAmount;
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -190,6 +194,10 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         return this;
     }
 
+    public BigDecimal default0ChangeVatAmount(){
+        return getVatAmount();
+    }
+
     private Tax tax;
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -203,6 +211,10 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         calculateVat();
         determineAmounts();
         return this;
+    }
+
+    public Tax default0findTax(){
+        return getTax();
     }
 
     private BigDecimal grossAmount;
@@ -222,6 +234,83 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         calculateVat();
         determineAmounts();
         return this;
+    }
+
+    public BigDecimal default0ChangeGrossAmount(){
+        return getGrossAmount();
+    }
+
+    public IncomingOrderAndInvoiceViewModel changeDimensions(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Charge charge,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Property property,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Project project,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String period
+    ){
+        setCharge(charge);
+        setFixedAsset(property);
+        setProject(project);
+        setPeriod(period);
+        return this;
+    }
+
+    public Charge default0ChangeDimensions(){
+        return getCharge();
+    }
+
+    public Property default1ChangeDimensions(){
+        return (Property) getFixedAsset();
+    }
+
+    public Project default2ChangeDimensions(){
+        return getProject();
+    }
+
+    public String default3ChangeDimensions(){
+        return getPeriod();
+    }
+
+    public IncomingOrderAndInvoiceViewModel changeItemDetails(
+            final String description,
+            final BigDecimal netAmount,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BigDecimal vatAmount,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Tax tax,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BigDecimal grossAmount
+    ){
+        setDescription(description);
+        setNetAmount(netAmount);
+        setVatAmount(vatAmount);
+        setTax(tax);
+        setGrossAmount(grossAmount);
+        calculateVat();
+        determineAmounts();
+        return this;
+    }
+
+    public String default0ChangeItemDetails(){
+        return getDescription();
+    }
+
+    public BigDecimal default1ChangeItemDetails(){
+        return getNetAmount();
+    }
+
+    public BigDecimal default2ChangeItemDetails(){
+        return getVatAmount();
+    }
+
+    public Tax default3ChangeItemDetails(){
+        return getTax();
+    }
+
+    public BigDecimal default4ChangeItemDetails(){
+        return getGrossAmount();
     }
 
     // ////////////////////////////////////
@@ -255,20 +344,44 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
     }
 
     @Programmatic
-    boolean hasTax(){
+    public boolean hasTax(){
         return getTax()==null ? false : true;
     }
     @Programmatic
-    boolean hasNet(){
+    public boolean hasNet(){
         return getNetAmount()==null ? false : true;
     }
     @Programmatic
-    boolean hasVat(){
+    public boolean hasVat(){
         return getVatAmount()==null ? false : true;
     }
     @Programmatic
-    boolean hasGross(){
+    public boolean hasGross(){
         return getGrossAmount()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasCharge(){
+        return getCharge()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasBuyer(){
+        return getBuyer()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasSeller(){
+        return getSeller()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasFixedAsset(){
+        return getFixedAsset()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasProject(){
+        return getProject()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasDescription(){
+        return getDescription()==null ? false : true;
     }
 
     @Inject

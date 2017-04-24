@@ -93,10 +93,37 @@ public class OrderItemRepository {
                 ));
     }
 
+    @Programmatic
+    public List<OrderItem> findByCharge(final Charge charge) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findByCharge",
+                        "charge", charge
+                ));
+    }
+
+    @Programmatic
+    public List<OrderItem> matchByDescription(final String description) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "matchByDescription",
+                        "description", description
+                ));
+    }
+
+    public List<OrderItem> findByProject(final Project project) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findByProject",
+                        "project", project
+                ));
+    }
+
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
-
-
 }

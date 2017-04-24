@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.order;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -11,6 +13,9 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.base.dom.utils.StringUtils;
+
+import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -31,6 +36,16 @@ public class OrderRepository {
                         Order.class,
                         "findByOrderNumber",
                         "orderNumber", orderNumber));
+    }
+
+    @Programmatic
+    public List<Order> matchByOrderNumber(final String orderNumber) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(orderNumber);
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "matchByOrderNumber",
+                        "orderNumber", pattern));
     }
 
     @Programmatic
@@ -69,8 +84,18 @@ public class OrderRepository {
         return order;
     }
 
+    @Programmatic
+    public List<Order> findBySeller(final Organisation seller) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findBySeller",
+                        "seller", seller));
+    }
+
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
 }

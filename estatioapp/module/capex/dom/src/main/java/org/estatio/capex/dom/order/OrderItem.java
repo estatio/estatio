@@ -62,7 +62,22 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE project == :project "
-                        + "   && charge == :charge ")
+                        + "   && charge == :charge "),
+        @Query(
+                name = "findByCharge", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE charge == :charge "),
+        @Query(
+                name = "matchByDescription", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE description.matches(:description) "),
+        @Query(
+                name = "findByProject", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE project == :project ")
 })
 
 @Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" })

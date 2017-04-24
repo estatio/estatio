@@ -45,6 +45,7 @@
                                         <property id="orderDate"/>
                                     </fieldSet>
                                     <fieldSet name="Order Item" unreferencedProperties="false">
+                                        <action id="changeItemDetails"/>
                                         <property id="description"/>
                                         <property id="netAmount"/>
                                         <property id="vatAmount"/>
@@ -52,6 +53,7 @@
                                         <property id="grossAmount"/>
                                     </fieldSet>
                                     <fieldSet name="Dimensions" unreferencedProperties="false">
+                                        <action id="changeDimensions"/>
                                         <property id="charge"/>
                                         <property id="fixedAsset"/>
                                         <property id="project"/>
