@@ -44,7 +44,7 @@ public class OrderInvoiceImportReport {
                     if (orderItem.getPeriod().equals(period)) {
                         numberOfOrderlines = numberOfOrderlines + 1;
                         orderNetTotal = orderNetTotal.add(orderItem.getNetAmount());
-                        orderVatTotal = orderVatTotal.add(orderItem.getVatAmount());
+                        orderVatTotal = orderItem.getVatAmount()==null ? orderVatTotal : orderVatTotal.add(orderItem.getVatAmount());
                         orderGrossTotal = orderGrossTotal.add(orderItem.getGrossAmount());
                     }
                 }
@@ -52,7 +52,7 @@ public class OrderInvoiceImportReport {
                     if (invoiceItem.getPeriod().equals(period)) {
                         numberOfinvoicelines = numberOfinvoicelines + 1;
                         invoiceNetTotal = invoiceNetTotal.add(invoiceItem.getNetAmount());
-                        invoiceVatTotal = invoiceVatTotal.add(invoiceItem.getVatAmount());
+                        invoiceVatTotal = invoiceItem.getVatAmount()==null ? invoiceVatTotal : invoiceVatTotal.add(invoiceItem.getVatAmount());
                         invoiceGrossTotal = invoiceGrossTotal.add(invoiceItem.getGrossAmount());
                     }
                 }
