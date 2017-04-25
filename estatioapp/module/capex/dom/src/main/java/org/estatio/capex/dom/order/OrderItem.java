@@ -26,10 +26,13 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.AbstractInterval;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
@@ -203,6 +206,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return getProperty();
     }
     //endregion
+
+    @Programmatic
+    public String getPeriod(){
+        return PeriodUtil.periodFromInterval(new LocalDateInterval(getStartDate(), getEndDate(), AbstractInterval.IntervalEnding.INCLUDING_END_DATE));
+    }
 
 
 }

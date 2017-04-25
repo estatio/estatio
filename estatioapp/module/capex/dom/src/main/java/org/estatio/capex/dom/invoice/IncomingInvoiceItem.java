@@ -22,10 +22,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
@@ -52,7 +53,12 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
                         + "WHERE project == :project "
-                        + "   && charge == :charge ")
+                        + "   && charge == :charge "),
+        @Query(
+                name = "findByProject", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE project == :project ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -120,5 +126,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Column(allowsNull = "true", name="projectId")
     @Property(hidden = Where.REFERENCES_PARENT)
     private Project project;
+
+    @Programmatic
+    public String getPeriod(){
+        return PeriodUtil.periodFromInterval(getInterval());
+    }
 
 }

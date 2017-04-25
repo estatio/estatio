@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="projectReference" />
+                <ns2:property id="period" />
+                <ns2:property id="numberOfOrders" />
+                <ns2:property id="orderNetTotal" />
+                <ns2:property id="orderVatTotal" />
+                <ns2:property id="orderGrossTotal" />
+                <ns2:property id="numberOfInvoices" />
+                <ns2:property id="invoiceNetTotal" />
+                <ns2:property id="invoiceVatTotal" />
+                <ns2:property id="invoiceGrossTotal" />
+            </ns2:fieldSet>
+        </col>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
+        </col>
+    </row>
+</grid>

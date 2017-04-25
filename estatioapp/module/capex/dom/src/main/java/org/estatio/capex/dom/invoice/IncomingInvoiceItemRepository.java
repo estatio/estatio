@@ -37,7 +37,6 @@ public class IncomingInvoiceItemRepository {
                 ));
     }
 
-
     @Programmatic
     public IncomingInvoiceItem create(
             final BigInteger sequence,
@@ -95,6 +94,20 @@ public class IncomingInvoiceItemRepository {
                 ));
     }
 
+    @Programmatic
+    public List<IncomingInvoiceItem> findByProject(final Project project) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByProject",
+                        "project", project
+                ));
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> listAll() {
+        return repositoryService.allInstances(IncomingInvoiceItem.class);
+    }
 
     @Inject
     RepositoryService repositoryService;

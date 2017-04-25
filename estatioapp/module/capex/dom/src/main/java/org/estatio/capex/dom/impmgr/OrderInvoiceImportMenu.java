@@ -77,6 +77,12 @@ public class OrderInvoiceImportMenu {
         return "budget travaux";
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public OrderInvoiceImportReport reportImportResults(){
+        return new OrderInvoiceImportReport();
+    }
+
 
     @Inject
     private OrderInvoiceImportService orderInvoiceImportService;

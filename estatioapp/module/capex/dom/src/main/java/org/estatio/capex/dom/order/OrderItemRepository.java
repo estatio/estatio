@@ -113,6 +113,7 @@ public class OrderItemRepository {
                 ));
     }
 
+    @Programmatic
     public List<OrderItem> findByProject(final Project project) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
@@ -122,8 +123,15 @@ public class OrderItemRepository {
                 ));
     }
 
+    @Programmatic
+    public List<OrderItem> listAll() {
+        return repositoryService.allInstances(OrderItem.class);
+    }
+
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+
 }
