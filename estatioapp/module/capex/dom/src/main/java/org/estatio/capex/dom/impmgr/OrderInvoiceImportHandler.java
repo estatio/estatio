@@ -357,6 +357,12 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
         if (getPeriod()!=null && !getPeriod().matches("F\\d{4}")){
             b.append("period unknown; ");
         }
+
+        //project reference validation
+        if (getProjectReference()!=null && !getProjectReference().matches("^([^-]+)[-].*$")){
+            b.append("project reference not correct; ");
+        }
+
         return b.length()==0 ? "OK" : b.toString();
     }
 
