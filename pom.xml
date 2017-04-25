@@ -64,8 +64,8 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <!--          1.14.0.20170419-1425 is based on Wicket 7 -->
-        <isis.version>1.14.0.20170419-1425</isis.version>
+        <!--          1.14.0.20170425-0740 is based on Wicket 7 -->
+        <isis.version>1.14.0.20170425-0740</isis.version>
 
         <isis-module-command.version>1.14.0</isis-module-command.version>
         <isis-module-excel.version>1.14.2</isis-module-excel.version>
