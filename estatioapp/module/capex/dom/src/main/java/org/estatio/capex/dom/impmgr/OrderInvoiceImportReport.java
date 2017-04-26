@@ -29,8 +29,8 @@ public class OrderInvoiceImportReport {
 
     public List<OrderInvoiceImportReportLine> getLines(){
         List<OrderInvoiceImportReportLine> result = new ArrayList<>();
-        Integer numberOfOrderlines = 0;
-        Integer numberOfinvoicelines = 0;
+        Integer numberOfOrderlines;
+        Integer numberOfinvoicelines;
         BigDecimal orderNetTotal;
         BigDecimal orderVatTotal;
         BigDecimal orderGrossTotal;
@@ -40,6 +40,8 @@ public class OrderInvoiceImportReport {
 
         for (Project project : projectRepository.listAll()) {
             for (String period : periodsPresent(project)) {
+                numberOfOrderlines = 0;
+                numberOfinvoicelines = 0;
                 orderNetTotal = BigDecimal.ZERO;
                 orderVatTotal = BigDecimal.ZERO;
                 orderGrossTotal = BigDecimal.ZERO;
