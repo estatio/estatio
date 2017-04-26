@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -20,6 +22,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -31,6 +34,8 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -43,8 +48,6 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 
@@ -227,6 +230,7 @@ public class OrderInvoiceLine {
      */
     @Mixin(method="act")
     public static class _apply {
+        private static final Logger LOG = LoggerFactory.getLogger(OrderInvoiceLine.class);
         private final OrderInvoiceLine line;
         public _apply(final OrderInvoiceLine line) {
             this.line = line;
@@ -295,9 +299,16 @@ public class OrderInvoiceLine {
 
             // match invoice item to order item
             if(isInvoice && invoice!=null) {
-                OrderItem orderItem = orderRepository.findByOrderNumber(line.getOrderNumber()).getItems().first();
-                IncomingInvoiceItem invoiceItem = (IncomingInvoiceItem) invoice.getItems().first();
-                orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, invoiceItem);
+                Order order = orderRepository.findByOrderNumber(line.getOrderNumber());
+                if (order!=null) {
+                    OrderItem orderItem = order.getItems().first();
+                    IncomingInvoiceItem invoiceItem = (IncomingInvoiceItem) invoice.getItems().first();
+                    orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, invoiceItem);
+                } else {
+                    final String message = String.format("Matching order for invoice with number %s not found", line.getInvoiceNumber()) ;
+                    messageService.warnUser(message);
+                    LOG.info(message);
+                }
             }
 
             return line;
@@ -378,6 +389,8 @@ public class OrderInvoiceLine {
         FixedAssetRoleRepository fixedAssetRoleRepository;
         @Inject
         OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+        @Inject
+        MessageService messageService;
 
 
         public static class RandomCodeGenerator10Chars {

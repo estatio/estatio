@@ -21,7 +21,7 @@ public class OrderInvoiceImportReportLine {
 
     private String period;
 
-    private Integer numberOfOrders;
+    private Integer numberOfOrderItems;
 
     private BigDecimal orderNetTotal;
 
@@ -29,7 +29,7 @@ public class OrderInvoiceImportReportLine {
 
     private BigDecimal orderGrossTotal;
 
-    private Integer numberOfInvoices;
+    private Integer numberOfInvoiceItems;
 
     private BigDecimal invoiceNetTotal;
 
