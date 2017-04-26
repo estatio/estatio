@@ -31,15 +31,21 @@ public class OrderInvoiceImportReport {
         List<OrderInvoiceImportReportLine> result = new ArrayList<>();
         Integer numberOfOrderlines = 0;
         Integer numberOfinvoicelines = 0;
-        BigDecimal orderNetTotal = BigDecimal.ZERO;
-        BigDecimal orderVatTotal = BigDecimal.ZERO;
-        BigDecimal orderGrossTotal = BigDecimal.ZERO;
-        BigDecimal invoiceNetTotal = BigDecimal.ZERO;
-        BigDecimal invoiceVatTotal = BigDecimal.ZERO;
-        BigDecimal invoiceGrossTotal = BigDecimal.ZERO;
+        BigDecimal orderNetTotal;
+        BigDecimal orderVatTotal;
+        BigDecimal orderGrossTotal;
+        BigDecimal invoiceNetTotal;
+        BigDecimal invoiceVatTotal;
+        BigDecimal invoiceGrossTotal;
 
         for (Project project : projectRepository.listAll()) {
             for (String period : periodsPresent(project)) {
+                orderNetTotal = BigDecimal.ZERO;
+                orderVatTotal = BigDecimal.ZERO;
+                orderGrossTotal = BigDecimal.ZERO;
+                invoiceNetTotal = BigDecimal.ZERO;
+                invoiceVatTotal = BigDecimal.ZERO;
+                invoiceGrossTotal = BigDecimal.ZERO;
                 for (OrderItem orderItem : orderItemRepository.findByProject(project)) {
                     if (orderItem.getPeriod().equals(period)) {
                         numberOfOrderlines = numberOfOrderlines + 1;
