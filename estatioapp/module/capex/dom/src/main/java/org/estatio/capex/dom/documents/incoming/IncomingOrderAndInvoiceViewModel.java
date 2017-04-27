@@ -213,7 +213,7 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         return this;
     }
 
-    public Tax default0findTax(){
+    public Tax default0FindTax(){
         return getTax();
     }
 
@@ -378,6 +378,10 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
     @Programmatic
     public boolean hasProject(){
         return getProject()==null ? false : true;
+    }
+    @Programmatic
+    public boolean hasPeriod(){
+        return getPeriod()==null ? false : true;
     }
     @Programmatic
     public boolean hasDescription(){
