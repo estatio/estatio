@@ -49,6 +49,7 @@ public abstract class HasDocumentAbstract_categorizeAbstract {
         viewModel.setDocument(document);
         try {
             ((IncomingOrderAndInvoiceViewModel) viewModel).setFixedAsset(property);
+            paperclipRepository.attach(document,null, property);
         } catch (Exception e){
             // do nothing
         }

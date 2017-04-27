@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.dom.asset.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,8 +66,8 @@ import lombok.Setter;
 public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public IncomingOrderViewModel() {}
-    public IncomingOrderViewModel(final Document document) {
-        super(document);
+    public IncomingOrderViewModel(final Document document, final FixedAsset fixedAsset) {
+        super(document, fixedAsset);
     }
 
     private String orderNumber;

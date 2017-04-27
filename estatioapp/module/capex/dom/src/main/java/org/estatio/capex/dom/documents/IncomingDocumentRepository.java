@@ -18,6 +18,7 @@
  */
 package org.estatio.capex.dom.documents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,13 +33,18 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @DomainService(
-        nature = NatureOfService.DOMAIN
+        nature = NatureOfService.DOMAIN,
+        objectType = "org.estatio.capex.dom.documents.IncomingDocumentRepository"
 )
-public class IncomingDocumentRepository {
+public class IncomingDocumentRepository extends DocumentRepository {
 
     @Programmatic
     public List<Document> findIncomingDocuments() {
@@ -50,7 +56,7 @@ public class IncomingDocumentRepository {
     }
 
     private List<Document> doFindIncomingDocuments() {
-        final List<Document> documents = documentRepository.findWithNoPaperclips();
+        final List<Document> documents = findWithNoPaperclips();
         return Lists.newArrayList(
                 FluentIterable.from(documents)
                 .filter(document -> DocumentTypeData.docTypeDataFor(document).isIncoming())
@@ -58,10 +64,60 @@ public class IncomingDocumentRepository {
         );
     }
 
-    @Inject
-    DocumentRepository documentRepository;
+    @Programmatic
+    public List<Document> findIncomingOrders() {
+        return queryResultsCache.execute(
+                this::doFindIncomingOrders,
+                IncomingDocumentRepository.class,
+                "findIncomingOrders"
+        );
+    }
+
+    private List<Document> doFindIncomingOrders() {
+        final List<Document> documents = findAttachedToFixedAsset();
+        return Lists.newArrayList(
+                FluentIterable.from(documents)
+                        .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_ORDER)
+                        .toList()
+        );
+    }
+
+    @Programmatic
+    public List<Document> findIncomingInvoices() {
+        return queryResultsCache.execute(
+                this::doFindIncomingInvoices,
+                IncomingDocumentRepository.class,
+                "findIncomingInvoices"
+        );
+    }
+
+    private List<Document> doFindIncomingInvoices() {
+        final List<Document> documents = findAttachedToFixedAsset();
+        return Lists.newArrayList(
+                FluentIterable.from(documents)
+                        .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_INVOICE)
+                        .toList()
+        );
+    }
+
+    // TODO: tackle this (and the filtering on DocumentType?) at db level
+    private List<Document> findAttachedToFixedAsset() {
+        List<Document> result = new ArrayList<>();
+        for (FixedAsset asset : propertyRepository.allProperties()){
+            for (Paperclip paperclip : paperclipRepository.findByAttachedTo(asset)){
+                result.add((Document) paperclip.getDocument());
+            }
+        }
+        return result;
+    }
 
     @Inject
     QueryResultsCache queryResultsCache;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
+
+    @Inject
+    PropertyRepository propertyRepository;
 
 }

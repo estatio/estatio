@@ -42,11 +42,13 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
+import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 import lombok.Getter;
@@ -97,10 +99,10 @@ public abstract class HasDocumentAbstract implements HasDocument {
 
         private HasDocumentAbstract createFor(final Document document) {
             if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
-                return new IncomingOrderViewModel(document);
+                return new IncomingOrderViewModel(document, paperclipRepository.paperclipAttaches(document, FixedAsset.class));
             }
             if(DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
-                return new IncomingInvoiceViewModel(document);
+                return new IncomingInvoiceViewModel(document, paperclipRepository.paperclipAttaches(document, FixedAsset.class));
             }
             if(DocumentTypeData.INCOMING.isDocTypeFor(document)) {
                 return new IncomingDocumentViewModel(document);
@@ -119,6 +121,9 @@ public abstract class HasDocumentAbstract implements HasDocument {
 
         @Inject
         ServiceRegistry2 serviceRegistry2;
+
+        @Inject
+        PaperclipRepository paperclipRepository;
 
     }
 

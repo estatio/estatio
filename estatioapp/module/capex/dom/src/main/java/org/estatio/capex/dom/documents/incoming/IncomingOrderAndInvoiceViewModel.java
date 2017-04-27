@@ -39,8 +39,9 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     public IncomingOrderAndInvoiceViewModel() {}
 
-    public IncomingOrderAndInvoiceViewModel(final Document document) {
+    public IncomingOrderAndInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
         super(document);
+        this.fixedAsset = fixedAsset;
     }
 
     private Organisation buyer;

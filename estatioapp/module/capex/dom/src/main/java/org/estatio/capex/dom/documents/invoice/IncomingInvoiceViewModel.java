@@ -50,6 +50,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Organisation;
 
@@ -88,8 +89,8 @@ import lombok.Setter;
 public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public IncomingInvoiceViewModel() {}
-    public IncomingInvoiceViewModel(final Document document) {
-        super(document);
+    public IncomingInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
+        super(document, fixedAsset);
     }
 
     private String invoiceNumber;
@@ -264,7 +265,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
             if (!hasFixedAsset()){
                 setFixedAsset(orderItem.getFixedAsset());
             }
-            // todo: copy period from order item
+            if (!hasPeriod()){
+                setPeriod(orderItem.getPeriod());
+            }
         }
     }
 

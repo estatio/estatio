@@ -43,6 +43,16 @@ public class IncomingDocumentMenu {
         return factory.map(repository.findIncomingDocuments());
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<HasDocumentAbstract> incomingOrders() {
+        return factory.map(repository.findIncomingOrders());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<HasDocumentAbstract> incomingInvoices() {
+        return factory.map(repository.findIncomingInvoices());
+    }
+
     @Inject
     IncomingDocumentRepository repository;
 
