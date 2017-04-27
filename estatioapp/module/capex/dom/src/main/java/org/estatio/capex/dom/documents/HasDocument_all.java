@@ -7,13 +7,12 @@ import javax.inject.Inject;
 import org.apache.isis.applib.IsisApplibModule;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-@Mixin(method = "act")
+// @Mixin(method = "act")
 public class HasDocument_all {
 
     public static class ActionDomainEvent extends IsisApplibModule.ActionDomainEvent<HasDocument_all> {

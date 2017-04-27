@@ -65,16 +65,16 @@ public class IncomingDocumentRepository extends DocumentRepository {
     }
 
     @Programmatic
-    public List<Document> findIncomingOrders() {
+    public List<Document> findUnclassifiedIncomingOrders() {
         return queryResultsCache.execute(
-                this::doFindIncomingOrders,
+                this::doFindUnclassifiedIncomingOrders,
                 IncomingDocumentRepository.class,
-                "findIncomingOrders"
+                "findUnclassifiedIncomingOrders"
         );
     }
 
-    private List<Document> doFindIncomingOrders() {
-        final List<Document> documents = findAttachedToFixedAsset();
+    private List<Document> doFindUnclassifiedIncomingOrders() {
+        final List<Document> documents = findAttachedToExactlyOneFixedAssetOnly();
         return Lists.newArrayList(
                 FluentIterable.from(documents)
                         .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_ORDER)
@@ -83,16 +83,16 @@ public class IncomingDocumentRepository extends DocumentRepository {
     }
 
     @Programmatic
-    public List<Document> findIncomingInvoices() {
+    public List<Document> findUnclassifiedIncomingInvoices() {
         return queryResultsCache.execute(
-                this::doFindIncomingInvoices,
+                this::doFindUnclassifiedIncomingInvoices,
                 IncomingDocumentRepository.class,
-                "findIncomingInvoices"
+                "findUnclassifiedIncomingInvoices"
         );
     }
 
-    private List<Document> doFindIncomingInvoices() {
-        final List<Document> documents = findAttachedToFixedAsset();
+    private List<Document> doFindUnclassifiedIncomingInvoices() {
+        final List<Document> documents = findAttachedToExactlyOneFixedAssetOnly();
         return Lists.newArrayList(
                 FluentIterable.from(documents)
                         .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_INVOICE)
@@ -101,11 +101,14 @@ public class IncomingDocumentRepository extends DocumentRepository {
     }
 
     // TODO: tackle this (and the filtering on DocumentType?) at db level
-    private List<Document> findAttachedToFixedAsset() {
+    private List<Document> findAttachedToExactlyOneFixedAssetOnly() {
         List<Document> result = new ArrayList<>();
         for (FixedAsset asset : propertyRepository.allProperties()){
             for (Paperclip paperclip : paperclipRepository.findByAttachedTo(asset)){
-                result.add((Document) paperclip.getDocument());
+                Document document = (Document) paperclip.getDocument();
+                if (paperclipRepository.findByDocument(document).size()==1) {
+                    result.add(document);
+                }
             }
         }
         return result;

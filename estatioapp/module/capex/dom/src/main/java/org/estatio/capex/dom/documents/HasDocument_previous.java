@@ -7,14 +7,13 @@ import javax.inject.Inject;
 import org.apache.isis.applib.IsisApplibModule;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
-@Mixin(method = "act")
+// @Mixin(method = "act")
 public class HasDocument_previous {
 
     public static class ActionDomainEvent extends IsisApplibModule.ActionDomainEvent<HasDocument_all> {

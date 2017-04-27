@@ -17,6 +17,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
@@ -33,9 +34,16 @@ public class HasDocumentAbstract_resetCategorization {
     public HasDocument act() {
         Document document = hasDocument.getDocument();
         document.setType(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
-        HasDocument orderViewModel = doCreate(document);
 
-        return serviceRegistry2.injectServicesInto(orderViewModel);
+        // delete paperclip
+        List<Paperclip> paperclipsToDelete = paperclipRepository.findByDocument(document);
+        for (Paperclip paperclip : paperclipsToDelete){
+            paperclipRepository.delete(paperclip);
+        }
+
+        HasDocument incomingDocumentViewModel = doCreate(document);
+
+        return serviceRegistry2.injectServicesInto(incomingDocumentViewModel);
     }
 
     protected HasDocument doCreate(final Document document) {
@@ -51,7 +59,12 @@ public class HasDocumentAbstract_resetCategorization {
     public String disableAct() {
         final Document document = hasDocument.getDocument();
         final List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
-        return paperclips.isEmpty() ? null : "Document has been already been categorized";
+        for (Paperclip paperclip : paperclips){
+            if (!FixedAsset.class.isAssignableFrom(paperclip.getAttachedTo().getClass())){
+                return "Document has been already been categorized";
+            }
+        }
+        return null;
     }
 
     @Inject

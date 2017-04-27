@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Incoming invoices"
+        named = "Documents"
 )
 public class IncomingDocumentMenu {
 
@@ -44,13 +44,13 @@ public class IncomingDocumentMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<HasDocumentAbstract> incomingOrders() {
-        return factory.map(repository.findIncomingOrders());
+    public List<HasDocumentAbstract> incomingOrderDocuments() {
+        return factory.map(repository.findUnclassifiedIncomingOrders());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<HasDocumentAbstract> incomingInvoices() {
-        return factory.map(repository.findIncomingInvoices());
+    public List<HasDocumentAbstract> incomingInvoiceDocuments() {
+        return factory.map(repository.findUnclassifiedIncomingInvoices());
     }
 
     @Inject
