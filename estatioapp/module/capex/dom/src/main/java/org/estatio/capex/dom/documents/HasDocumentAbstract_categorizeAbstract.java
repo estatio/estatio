@@ -15,6 +15,8 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 public abstract class HasDocumentAbstract_categorizeAbstract {
@@ -31,20 +33,25 @@ public abstract class HasDocumentAbstract_categorizeAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "folder-open-o")
-    public HasDocument act() {
+    public HasDocument act(final Property property) {
         Document document = hasDocument.getDocument();
         if(documentTypeData != null) {
             document.setType(documentTypeData.findUsing(documentTypeRepository));
         }
 
-        HasDocument orderViewModel = doCreate(document);
+        HasDocument orderViewModel = doCreate(document, property);
 
         return serviceRegistry2.injectServicesInto(orderViewModel);
     }
 
-    protected HasDocument doCreate(final Document document) {
+    protected HasDocument doCreate(final Document document, final Property property) {
         HasDocumentAbstract viewModel = factoryService.instantiate(viewModelClass);
         viewModel.setDocument(document);
+        try {
+            ((IncomingOrderAndInvoiceViewModel) viewModel).setFixedAsset(property);
+        } catch (Exception e){
+            // do nothing
+        }
         return viewModel;
     }
 
