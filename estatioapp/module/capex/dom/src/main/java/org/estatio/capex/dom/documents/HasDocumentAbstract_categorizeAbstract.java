@@ -72,9 +72,10 @@ public abstract class HasDocumentAbstract_categorizeAbstract {
     }
 
     public boolean hideAct() {
-        return viewModelClass.isAssignableFrom(hasDocument.getClass());
+        return viewModelClass.isAssignableFrom(hasDocument.getClass()) || disableAct()!=null ? true : false;
     }
 
+    // TODO: this action probably can be removed after user feedback (and hideAct() adapted)
     public String disableAct() {
         final Document document = hasDocument.getDocument();
         final List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
