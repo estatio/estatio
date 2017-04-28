@@ -38,6 +38,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <fieldSet name="Order" unreferencedProperties="false">
+                                        <action id="changeOrderDetails"/>
                                         <property id="orderNumber"/>
                                         <property id="buyer"/>
                                         <property id="seller"/>

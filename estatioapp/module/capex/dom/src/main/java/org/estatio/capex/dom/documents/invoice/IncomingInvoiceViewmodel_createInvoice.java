@@ -69,8 +69,8 @@ public class IncomingInvoiceViewmodel_createInvoice {
                 getViewmodel().getGrossAmount(),
                 getViewmodel().getTax(),
                 getViewmodel().getDueDate(),
-                PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate(),
-                PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate(),
+                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate() : null,
+                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate() : null,
                 (Property) getViewmodel().getFixedAsset(),
                 getViewmodel().getProject()
         );

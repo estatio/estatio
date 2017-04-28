@@ -62,8 +62,8 @@ public class IncomingOrderViewmodel_createOrder {
                 getViewmodel().getVatAmount(),
                 getViewmodel().getGrossAmount(),
                 getViewmodel().getTax(),
-                PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate(),
-                PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate(),
+                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate() : null,
+                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate() : null,
                 (Property) getViewmodel().getFixedAsset(),
                 getViewmodel().getProject()
         );

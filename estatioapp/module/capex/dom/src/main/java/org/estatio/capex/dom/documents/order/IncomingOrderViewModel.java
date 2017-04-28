@@ -25,13 +25,18 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.party.Organisation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -75,5 +80,45 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
     private String sellerOrderReference;
 
     private LocalDate orderDate;
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    public IncomingOrderViewModel changeOrderDetails(
+            final String orderNumber,
+            final Organisation buyer,
+            final Organisation seller,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String sellerOrderReference,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final LocalDate orderDate
+    ){
+        setOrderNumber(orderNumber);
+        setBuyer(buyer);
+        setSeller(seller);
+        setSellerOrderReference(sellerOrderReference);
+        setOrderDate(orderDate);
+        return this;
+    }
+
+    public String default0ChangeOrderDetails(){
+        return getOrderNumber();
+    }
+
+    public Organisation default1ChangeOrderDetails(){
+        return getBuyer();
+    }
+
+    public Organisation default2ChangeOrderDetails(){
+        return getSeller();
+    }
+
+    public String default3ChangeOrderDetails(){
+        return getSellerOrderReference();
+    }
+
+    public LocalDate default4ChangeOrderDetails(){
+        return getOrderDate();
+    }
 
 }
