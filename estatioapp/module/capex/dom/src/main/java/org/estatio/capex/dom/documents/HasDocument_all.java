@@ -12,6 +12,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
+// TODO: remove class
 // @Mixin(method = "act")
 public class HasDocument_all {
 

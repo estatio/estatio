@@ -21,6 +21,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -160,6 +161,12 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         setPeriod(period);
         return this;
     }
+    public String validateChangePeriod(final String period){
+        if (!PeriodUtil.isValidPeriod(period)){
+            return "Not a valid period";
+        }
+        return null;
+    }
 
     private BigDecimal netAmount;
     @Action(
@@ -272,6 +279,15 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     public String default3ChangeDimensions(){
         return getPeriod();
+    }
+
+    public String validateChangeDimensions(
+            final Charge charge,
+            final Property property,
+            final Project project,
+            final String period
+    ) {
+        return validateChangePeriod(period);
     }
 
     public IncomingOrderAndInvoiceViewModel changeItemDetails(

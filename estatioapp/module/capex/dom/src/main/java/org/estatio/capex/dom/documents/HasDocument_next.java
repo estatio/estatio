@@ -13,6 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
+// TODO: remove class
 // @Mixin(method = "act")
 public class HasDocument_next {
 
