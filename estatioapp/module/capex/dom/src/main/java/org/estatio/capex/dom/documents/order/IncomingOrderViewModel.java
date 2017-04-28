@@ -134,9 +134,6 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         if (getSeller()==null){
             buffer.append("seller, ");
         }
-        if (getSeller()==null){
-            buffer.append("seller, ");
-        }
         if (getDescription()==null){
             buffer.append("description, ");
         }
