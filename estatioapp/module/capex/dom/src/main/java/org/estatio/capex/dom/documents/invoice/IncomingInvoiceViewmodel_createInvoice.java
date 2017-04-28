@@ -48,6 +48,10 @@ public class IncomingInvoiceViewmodel_createInvoice {
         return true;
     }
 
+    public String disableCreateInvoice(){
+        return getViewmodel().minimalRequiredDataToComplete();
+    }
+
     private IncomingInvoice doCreate(){
         // create invoice
         IncomingInvoice incomingInvoice = incomingInvoiceRepository.findOrCreate(

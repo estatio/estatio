@@ -41,6 +41,10 @@ public class IncomingOrderViewmodel_createOrder {
         return true;
     }
 
+    public String disableCreateOrder(){
+        return getViewmodel().minimalRequiredDataToComplete();
+    }
+
     private Order doCreate(){
         // create order
         Order order = orderRepository.findOrCreate(

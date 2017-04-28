@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -119,6 +120,43 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public LocalDate default4ChangeOrderDetails(){
         return getOrderDate();
+    }
+
+    @Programmatic
+    public String minimalRequiredDataToComplete(){
+        StringBuffer buffer = new StringBuffer();
+        if (getOrderNumber()==null){
+            buffer.append("order number, ");
+        }
+        if (getBuyer()==null){
+            buffer.append("buyer, ");
+        }
+        if (getSeller()==null){
+            buffer.append("seller, ");
+        }
+        if (getSeller()==null){
+            buffer.append("seller, ");
+        }
+        if (getDescription()==null){
+            buffer.append("description, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+        if (getCharge()==null){
+            buffer.append("charge, ");
+        }
+        if (getPeriod()==null){
+            buffer.append("period, ");
+        }
+        if (buffer.length()==0){
+            return null;
+        } else {
+            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
+        }
     }
 
 }

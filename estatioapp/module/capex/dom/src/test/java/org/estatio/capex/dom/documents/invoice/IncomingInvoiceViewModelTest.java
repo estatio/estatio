@@ -1,11 +1,13 @@
 package org.estatio.capex.dom.documents.invoice;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -16,6 +18,7 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Organisation;
 
 public class IncomingInvoiceViewModelTest {
@@ -107,6 +110,39 @@ public class IncomingInvoiceViewModelTest {
 
         // then
         Assertions.assertThat(result.size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void minimalRequiredDataToComplete() throws Exception {
+
+        // given
+        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel();
+
+        // when
+        String result = vm.minimalRequiredDataToComplete();
+
+        // then
+        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, due date, payment method, net amount, gross amount required");
+
+        // and when
+        vm.setInvoiceNumber("123");
+        vm.setNetAmount(new BigDecimal("100"));
+        result = vm.minimalRequiredDataToComplete();
+
+        // then
+        Assertions.assertThat(result).isEqualTo("buyer, seller, due date, payment method, gross amount required");
+
+        // and when
+        vm.setBuyer(new Organisation());
+        vm.setSeller(new Organisation());
+        vm.setDueDate(new LocalDate());
+        vm.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        vm.setGrossAmount(BigDecimal.ZERO);
+        result = vm.minimalRequiredDataToComplete();
+
+        // then
+        Assertions.assertThat(result).isNull();
 
     }
 

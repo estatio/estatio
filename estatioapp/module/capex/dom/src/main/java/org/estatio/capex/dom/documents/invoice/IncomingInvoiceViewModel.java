@@ -272,6 +272,38 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     }
 
     @Programmatic
+    public String minimalRequiredDataToComplete(){
+        StringBuffer buffer = new StringBuffer();
+        if (getInvoiceNumber()==null){
+            buffer.append("invoice number, ");
+        }
+        if (getBuyer()==null){
+            buffer.append("buyer, ");
+        }
+        if (getSeller()==null){
+            buffer.append("seller, ");
+        }
+        if (getDueDate()==null){
+            buffer.append("due date, ");
+        }
+        if (getPaymentMethod()==null){
+            buffer.append("payment method, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+        if (buffer.length()==0){
+            return null;
+        } else {
+            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
+        }
+    }
+
+
+    @Programmatic
     public boolean hasOrderItem(){
         return getOrderItem()==null ? false : true;
     }
