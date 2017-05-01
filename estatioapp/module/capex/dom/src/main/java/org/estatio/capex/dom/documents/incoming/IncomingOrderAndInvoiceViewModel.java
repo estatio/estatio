@@ -163,7 +163,7 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
     }
     public String validateChangePeriod(final String period){
         if (!PeriodUtil.isValidPeriod(period)){
-            return "Not a valid period";
+            return "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)";
         }
         return null;
     }

@@ -11,6 +11,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -46,6 +47,7 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus) {
         final IncomingInvoice invoice =
                 new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus);
+        invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persist(invoice);
         return invoice;
@@ -72,5 +74,7 @@ public class IncomingInvoiceRepository {
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+    @Inject
+    CurrencyRepository currencyRepository;
 
 }

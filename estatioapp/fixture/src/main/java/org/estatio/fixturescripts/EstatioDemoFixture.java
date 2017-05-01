@@ -30,6 +30,7 @@ import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.fixture.budget.PartitionItemsForOxf;
+import org.estatio.fixture.documents.incoming.IncomingPdfFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
 import org.estatio.fixture.financial.BankAccountForAcmeNl;
@@ -103,6 +104,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new CreateInvoiceNumerators());
 
         executionContext.executeChild(this, new OrderInvoiceFixture());
+
+        executionContext.executeChild(this, new IncomingPdfFixture());
 
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();
