@@ -274,8 +274,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
     }
 
-    @Programmatic
-    public String minimalRequiredDataToComplete(){
+    String minimalRequiredDataToComplete(){
         StringBuffer buffer = new StringBuffer();
         if (getInvoiceNumber()==null){
             buffer.append("invoice number, ");

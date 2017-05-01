@@ -125,8 +125,7 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         return getOrderDate();
     }
 
-
-    public String minimalRequiredDataToComplete(){
+    String minimalRequiredDataToComplete(){
         StringBuilder buffer = new StringBuilder();
         if (getOrderNumber()==null){
             buffer.append("order number, ");

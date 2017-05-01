@@ -7,10 +7,13 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -94,6 +97,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
         }
 
+        @Rule
+        public ExpectedException expectedException = ExpectedException.none();
+
         @Test
         public void complete_scenario_test(){
             findIncomingDocuments_works();
@@ -129,8 +135,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void classificationAsOrder_works() {
 
             // given
-            _categorizeAsOrder = new HasDocumentAbstract_categorizeAsOrder(incomingDocumentViewModel1);
-            serviceRegistry2.injectServicesInto(_categorizeAsOrder);
+            _categorizeAsOrder = wrap(factoryService.mixin(HasDocumentAbstract_categorizeAsOrder.class, incomingDocumentViewModel1));
 
             // when gotoNext is set to true
             IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel) _categorizeAsOrder.act(propertyForOxf, true);
@@ -165,8 +170,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void classificationAsinvoice_works() {
 
             // given
-            _categorizeAsInvoice = new HasDocumentAbstract_categorizeAsInvoice(incomingDocumentViewModel2);
-            serviceRegistry2.injectServicesInto(_categorizeAsInvoice);
+            _categorizeAsInvoice = wrap(factoryService.mixin(HasDocumentAbstract_categorizeAsInvoice.class, incomingDocumentViewModel2));
 
             // when
             _categorizeAsInvoice.act(propertyForOxf, true);
@@ -195,9 +199,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void resetClassification_works() {
 
             // given
-            _resetCategorization = new HasDocumentAbstract_resetCategorization(incomingInvoiceViewModel);
-            serviceRegistry2.injectServicesInto(_resetCategorization);
-
+            _resetCategorization = wrap(factoryService.mixin(HasDocumentAbstract_resetCategorization.class, incomingInvoiceViewModel));
             assertThat(incomingDocuments.size()).isEqualTo(0);
 
             // when
@@ -225,11 +227,16 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void createOrder_works(){
 
             // given
-            assertThat(incomingOrderViewModel.minimalRequiredDataToComplete()).isEqualTo("order number, buyer, seller, description, net amount, gross amount, charge, period required");
-            _createOrder = new IncomingOrderViewmodel_createOrder(incomingOrderViewModel);
-            serviceRegistry2.injectServicesInto(_createOrder);
+            _createOrder = wrap(factoryService.mixin(IncomingOrderViewmodel_createOrder.class, incomingOrderViewModel));
+
+            // expect
+            expectedException.expect(DisabledException.class);
+            expectedException.expectMessage("Reason: order number, buyer, seller, description, net amount, gross amount, charge, period required");
 
             // when
+            _createOrder.createOrder(false);
+
+            // and when
             incomingOrderViewModel.createSeller("SELLER-REF", false, "Seller name", greatBritain);
             seller = (Organisation) partyRepository.findPartyByReference("SELLER-REF");
             incomingOrderViewModel.changeOrderDetails(orderNumber, (Organisation) buyer, seller, null, null);
@@ -289,15 +296,21 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             incomingInvoiceViewModel = (IncomingInvoiceViewModel) _categorizeAsInvoice.act(propertyForOxf, false);
             transactionService.nextTransaction();
 
-            _createInvoice = new IncomingInvoiceViewmodel_createInvoice(incomingInvoiceViewModel);
-            serviceRegistry2.injectServicesInto(_createInvoice);
+            _createInvoice = wrap(factoryService.mixin(IncomingInvoiceViewmodel_createInvoice.class, incomingInvoiceViewModel));
 
             // when
             // link to order item
             OrderItemWrapper orderItemWrapper = new OrderItemWrapper(orderCreated.getOrderNumber(), orderCreated.getItems().first().getCharge());
             incomingInvoiceViewModel.modifyOrderItem(orderItemWrapper);
 
-            assertThat(incomingInvoiceViewModel.minimalRequiredDataToComplete()).isEqualTo("invoice number, due date, payment method required");
+            // expect
+            expectedException.expect(DisabledException.class);
+            expectedException.expectMessage("Reason: invoice number, due date, payment method required");
+
+            // when
+            _createInvoice.createInvoice(false);
+
+            // and when
             final String invoiceNumber = "321";
             incomingInvoiceViewModel.setInvoiceNumber(invoiceNumber);
             final LocalDate dueDate = new LocalDate(2016, 2, 14);
@@ -373,11 +386,11 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
     ChargeRepository chargeRepository;
 
     @Inject
-    ServiceRegistry2 serviceRegistry2;
-
-    @Inject
     DocumentTypeRepository documentTypeRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject
+    FactoryService factoryService;
 }
