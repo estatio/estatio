@@ -3,15 +3,19 @@ package org.estatio.capex.dom.documents.incoming;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.validation.constraints.Digits;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
@@ -34,9 +38,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-@XmlTransient // so not mapped
+@XmlTransient // abstract class so do not map
+@XmlAccessorType(XmlAccessType.FIELD)
 @Setter @Getter
-public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
+public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     public IncomingOrderAndInvoiceViewModel() {}
 
@@ -45,195 +50,93 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         this.fixedAsset = fixedAsset;
     }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Organisation buyer;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "buyer", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeBuyer(
-            final Organisation buyer
-    ) {
-        setBuyer(buyer);
-        return this;
-    }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Organisation seller;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "seller", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeSeller(
-            final Organisation seller
-    ) {
-        setSeller(seller);
-        return this;
-    }
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "seller", sequence = "2")
     public IncomingOrderAndInvoiceViewModel createSeller(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
-            final boolean useNumereratorForReference,
+            final boolean useNumeratorForReference,
             final String name,
             final Country country) {
         Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumereratorForReference, name, country);
+                .newOrganisation(reference, useNumeratorForReference, name, country);
         setSeller(organisation);
         return this;
     }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String description;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "description", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeDescription(final String description){
-        setDescription(description);
-        return this;
-    }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Charge charge;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "charge", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel findCharge(final Charge charge){
-        setCharge(charge);
-        return this;
-    }
-
-    public List<Charge> choices0FindCharge(){
+    public List<Charge> choicesCharge(){
         return chargeRepository.allIncoming();
     }
 
+
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private FixedAsset<?> fixedAsset;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "fixedAsset", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel findFixedAsset(final Property property){
-        setFixedAsset(property);
-        return this;
-    }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Project project;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "project", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel findProject(final Project project){
-        setProject(project);
-        return this;
-    }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "period", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changePeriod(final String period){
-        setPeriod(period);
-        return this;
-    }
-    public String validateChangePeriod(final String period){
-        if (!PeriodUtil.isValidPeriod(period)){
-            return "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)";
-        }
-        return null;
+
+    public String validatePeriod(final String period) {
+        return !PeriodUtil.isValidPeriod(period)
+                ? "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)"
+                : null;
     }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal netAmount;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "netAmount", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeNetAmount(final BigDecimal netAmount){
+    @Digits(integer=13, fraction = 2)
+    public BigDecimal getNetAmount() {
+        return netAmount;
+    }
+    public void modifyNetAmount(BigDecimal netAmount) {
         setNetAmount(netAmount);
         calculateVat();
         determineAmounts();
-        return this;
     }
 
-    public BigDecimal default0ChangeNetAmount(){
-        return getNetAmount();
-    }
-
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal vatAmount;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "vatAmount", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeVatAmount(final BigDecimal vatAmount){
+    @Digits(integer=13, fraction = 2)
+    public BigDecimal getVatAmount() {
+        return vatAmount;
+    }
+    public void modifyVatAmount(BigDecimal vatAmount) {
         setVatAmount(vatAmount);
         calculateVat();
         determineAmounts();
-        return this;
     }
 
-    public BigDecimal default0ChangeVatAmount(){
-        return getVatAmount();
-    }
-
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Tax tax;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "tax", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel findTax(final Tax tax){
+    public void modifyTax(Tax tax) {
         setTax(tax);
         calculateVat();
         determineAmounts();
-        return this;
     }
 
-    public Tax default0FindTax(){
-        return getTax();
-    }
 
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @PropertyLayout(promptStyle = PromptStyle.INLINE)
     private BigDecimal grossAmount;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "grossAmount", sequence = "1")
-    public IncomingOrderAndInvoiceViewModel changeGrossAmount(final BigDecimal grossAmount){
+    @Digits(integer=13, fraction = 2)
+    public BigDecimal getGrossAmount() {
+        return grossAmount;
+    }
+    public void modifyGrossAmount(BigDecimal grossAmount) {
         setGrossAmount(grossAmount);
         if (getNetAmount()==null){
             final BigDecimal valueToUse = getVatAmount()!=null ? grossAmount.subtract(getVatAmount()):getGrossAmount();
@@ -241,12 +144,9 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         }
         calculateVat();
         determineAmounts();
-        return this;
     }
 
-    public BigDecimal default0ChangeGrossAmount(){
-        return getGrossAmount();
-    }
+    // ////////////////////////////////////
 
     public IncomingOrderAndInvoiceViewModel changeDimensions(
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -287,17 +187,19 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
             final Project project,
             final String period
     ) {
-        return validateChangePeriod(period);
+        return validatePeriod(period);
     }
+
+    // ////////////////////////////////////
 
     public IncomingOrderAndInvoiceViewModel changeItemDetails(
             final String description,
             final BigDecimal netAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final BigDecimal vatAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final Tax tax,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final BigDecimal grossAmount
     ){
         setDescription(description);
@@ -332,7 +234,6 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     // ////////////////////////////////////
 
-    @Programmatic
     void determineAmounts(){
         if (hasVat() && hasNet() && !hasGross()){
             setGrossAmount(getNetAmount().add(getVatAmount()));
@@ -351,7 +252,6 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     }
 
-    @Programmatic
     void calculateVat(){
         if (hasTax() && hasNet() && !hasVat() && !hasGross()){
             BigDecimal grossAmount = getTax().grossFromNet(getNetAmount(), clockService.now());
@@ -360,49 +260,38 @@ public class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
         }
     }
 
-    @Programmatic
-    public boolean hasTax(){
-        return getTax()==null ? false : true;
+    protected boolean hasTax(){
+        return getTax() != null;
     }
-    @Programmatic
-    public boolean hasNet(){
-        return getNetAmount()==null ? false : true;
+    protected boolean hasNet(){
+        return getNetAmount() != null;
     }
-    @Programmatic
-    public boolean hasVat(){
-        return getVatAmount()==null ? false : true;
+    protected boolean hasVat(){
+        return getVatAmount() != null;
     }
-    @Programmatic
-    public boolean hasGross(){
-        return getGrossAmount()==null ? false : true;
+    protected boolean hasGross(){
+        return getGrossAmount() != null;
     }
-    @Programmatic
-    public boolean hasCharge(){
-        return getCharge()==null ? false : true;
+    protected boolean hasCharge(){
+        return getCharge() != null;
     }
-    @Programmatic
-    public boolean hasBuyer(){
-        return getBuyer()==null ? false : true;
+    protected boolean hasBuyer(){
+        return getBuyer() != null;
     }
-    @Programmatic
-    public boolean hasSeller(){
-        return getSeller()==null ? false : true;
+    protected boolean hasSeller(){
+        return getSeller() != null;
     }
-    @Programmatic
-    public boolean hasFixedAsset(){
-        return getFixedAsset()==null ? false : true;
+    protected boolean hasFixedAsset(){
+        return getFixedAsset() != null;
     }
-    @Programmatic
-    public boolean hasProject(){
-        return getProject()==null ? false : true;
+    protected boolean hasProject(){
+        return getProject() != null;
     }
-    @Programmatic
-    public boolean hasPeriod(){
-        return getPeriod()==null ? false : true;
+    protected boolean hasPeriod(){
+        return getPeriod() != null;
     }
-    @Programmatic
-    public boolean hasDescription(){
-        return getDescription()==null ? false : true;
+    protected boolean hasDescription(){
+        return getDescription() != null;
     }
 
     @Inject

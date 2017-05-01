@@ -34,13 +34,13 @@ import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -93,12 +93,16 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         super(document, fixedAsset);
     }
 
+    @Property(editing = Editing.ENABLED)
     private String invoiceNumber;
 
+    @Property(editing = Editing.ENABLED)
     private LocalDate invoiceDate;
 
+    @Property(editing = Editing.ENABLED)
     private LocalDate dueDate;
 
+    @Property(editing = Editing.ENABLED)
     private PaymentMethod paymentMethod;
 
 //    private OrderItem orderItem;
@@ -122,32 +126,30 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 //        return orderItemsForAutoComplete(searchString);
 //    }
 
-    // TODO: this wrapper is done because of
+
+
+    // TODO: EST-1244: this wrapper is done because of:
     // Error marshalling domain object to XML; domain object class is ''org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel''
     // A cycle is detected in the object graph. This will cause infinitely deep XML: Organisation{name=Hello World Properties} -> PartyRole{party=HELLOWORLD_GB, roleType=PartyRoleType{title=Landlord}} -> Organisation{name=Hello World Properties}]
+
+    //
+    // Dan says: the fix for this is to add the annotation '@XmlJavaTypeAdapter(PersistentEntityAdapter.class)' to
+    // the entity being referenced (OrderItem).  You can see that we do this with Charge, for example.   What happens is
+    // that the XML contains the OID of the referenced object, rather than trying to serialize out the object's state.
+    //
+
+    @Property(editing = Editing.ENABLED)
     private OrderItemWrapper orderItem;
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            position = ActionLayout.Position.RIGHT
-    )
-    @MemberOrder(name = "orderItem", sequence = "1")
-    public IncomingInvoiceViewModel findOrderItem(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final OrderItemWrapper orderItem
-    ) {
+    public void modifyOrderItem(OrderItemWrapper orderItem) {
         setOrderItem(orderItem);
         autoFillIn();
-        return this;
     }
-
-    public List<OrderItemWrapper> autoComplete0FindOrderItem(@MinLength(3) final String searchString){
-        List<OrderItemWrapper> result1 = new ArrayList<>();
+    public List<OrderItemWrapper> autoCompleteOrderItem(@MinLength(3) final String searchString){
+        List<OrderItemWrapper> items = new ArrayList<>();
         for (OrderItem item : orderItemsForAutoComplete(searchString)){
-            result1.add(new OrderItemWrapper(item.getOrdr().getOrderNumber(), item.getCharge()));
+            items.add(new OrderItemWrapper(item.getOrdr().getOrderNumber(), item.getCharge()));
         }
-        return result1;
+        return items;
     }
 
     List<OrderItem> orderItemsForAutoComplete(final String searchString){
@@ -184,6 +186,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
         return result;
     }
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT

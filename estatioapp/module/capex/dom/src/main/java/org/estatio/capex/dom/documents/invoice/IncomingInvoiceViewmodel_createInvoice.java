@@ -32,7 +32,7 @@ import lombok.Getter;
 public class IncomingInvoiceViewmodel_createInvoice {
 
     @Getter
-    private IncomingInvoiceViewModel viewmodel;
+    private final IncomingInvoiceViewModel viewmodel;
 
     public IncomingInvoiceViewmodel_createInvoice(final IncomingInvoiceViewModel viewModel) {
         this.viewmodel = viewModel;

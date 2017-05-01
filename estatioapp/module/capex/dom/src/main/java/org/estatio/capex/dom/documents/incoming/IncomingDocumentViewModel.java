@@ -18,6 +18,8 @@
  */
 package org.estatio.capex.dom.documents.incoming;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -37,6 +39,7 @@ import org.estatio.capex.dom.documents.HasDocumentAbstract;
                 "document"
         }
 )
+@XmlAccessorType(XmlAccessType.FIELD)
 public class IncomingDocumentViewModel extends HasDocumentAbstract {
 
     public IncomingDocumentViewModel() {}

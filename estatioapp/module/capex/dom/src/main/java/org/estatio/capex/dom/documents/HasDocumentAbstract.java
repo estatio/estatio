@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.google.common.collect.FluentIterable;
@@ -54,7 +56,8 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import lombok.Getter;
 import lombok.Setter;
 
-@XmlTransient // so not mapped
+@XmlTransient // abstract class so do not map
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class HasDocumentAbstract implements HasDocument {
 
     public HasDocumentAbstract() {}

@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--
-  Licensed to the Apache Software Foundation (ASF) under one
-  or more contributor license agreements.  See the NOTICE file
-  distributed with this work for additional information
-  regarding copyright ownership.  The ASF licenses this file
-  to you under the Apache License, Version 2.0 (the
-  "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
-
-         http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
--->
-<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/component" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <bs3:row>
         <bs3:col span="4">
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
-                    <domainObject/>
-                    <action id="previous"/>
-                    <action id="next"/>
-                    <action id="all"/>
-                    <action id="categorizeAsOrder"/>
-                    <action id="categorizeAsInvoice"/>
-                    <action id="resetCategorization"/>
+                    <cpt:domainObject/>
+                    <cpt:action id="previous">
+                        <cpt:metadataError>No such action</cpt:metadataError>
+                    </cpt:action>
+                    <cpt:action id="next">
+                        <cpt:metadataError>No such action</cpt:metadataError>
+                    </cpt:action>
+                    <cpt:action id="all">
+                        <cpt:metadataError>No such action</cpt:metadataError>
+                    </cpt:action>
+                    <cpt:action id="recentAuditEntries"/>
+                    <cpt:action id="findChangesByDate"/>
+                    <cpt:action id="recentChanges"/>
+                    <cpt:action id="links"/>
+                    <cpt:action id="createInvoice"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -37,55 +27,60 @@
                         <bs3:tab name="Invoice">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Matching order item" unreferencedProperties="false">
-                                        <property id="orderItem"/>
-                                    </fieldSet>
-                                    <fieldSet name="Invoice" unreferencedProperties="false">
-                                        <action id="changeInvoiceDetails"/>
-                                        <property id="invoiceNumber"/>
-                                        <property id="buyer"/>
-                                        <property id="seller"/>
-                                        <property id="invoiceDate"/>
-                                        <property id="dueDate"/>
-                                        <property id="paymentMethod"/>
-                                    </fieldSet>
-                                    <fieldSet name="Invoice Item" unreferencedProperties="false">
-                                        <action id="changeItemDetails"/>
-                                        <property id="description"/>
-                                        <property id="netAmount"/>
-                                        <property id="vatAmount"/>
-                                        <property id="tax"/>
-                                        <property id="grossAmount"/>
-                                    </fieldSet>
-                                    <fieldSet name="Dimensions" unreferencedProperties="false">
-                                        <action id="changeDimensions"/>
-                                        <property id="charge"/>
-                                        <property id="fixedAsset"/>
-                                        <property id="project"/>
-                                        <property id="period"/>
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Matching order item" id="matchingorderitem" unreferencedProperties="false">
+                                        <cpt:property id="orderItem" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Invoice" id="invoice" unreferencedProperties="false">
+                                        <cpt:action id="changeInvoiceDetails" position="PANEL"/>
+                                        <cpt:property id="invoiceNumber" promptStyle="INLINE"/>
+                                        <cpt:property id="buyer" promptStyle="INLINE"/>
+                                        <cpt:property id="seller" promptStyle="INLINE">
+                                            <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="invoiceDate" promptStyle="INLINE"/>
+                                        <cpt:property id="dueDate" promptStyle="INLINE"/>
+                                        <cpt:property id="paymentMethod" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Invoice Item" id="invoiceItem" unreferencedProperties="false">
+                                        <cpt:action id="changeItemDetails" position="PANEL"/>
+                                        <cpt:property id="description" promptStyle="INLINE"/>
+                                        <cpt:property id="netAmount" promptStyle="INLINE"/>
+                                        <cpt:property id="vatAmount" promptStyle="INLINE"/>
+                                        <cpt:property id="tax" promptStyle="INLINE"/>
+                                        <cpt:property id="grossAmount" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Dimensions" id="dimensions" unreferencedProperties="false">
+                                        <cpt:action id="changeDimensions" position="PANEL"/>
+                                        <cpt:property id="charge" promptStyle="INLINE"/>
+                                        <cpt:property id="fixedAsset" promptStyle="INLINE"/>
+                                        <cpt:property id="project" promptStyle="INLINE"/>
+                                        <cpt:property id="period" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
                         <bs3:tab name="Document">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Document details" unreferencedProperties="false">
-                                        <action id="clearHints" position="PANEL_DROPDOWN"/>
-                                        <action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                        <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
-                                        <property id="document"/>
-                                        <property id="type"/>
-                                        <property id="createdAt"/>
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Document details" id="documentdetails" unreferencedProperties="false">
+                                        <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="document"/>
+                                        <cpt:property id="type">
+                                            <cpt:action id="categorizeAsOrder"/>
+                                            <cpt:action id="categorizeAsInvoice"/>
+                                            <cpt:action id="resetCategorization"/>
+                                        </cpt:property>
+                                        <cpt:property id="createdAt"/>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
                         <bs3:tab name="Other">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Other" unreferencedProperties="true">
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -94,12 +89,12 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="8">
-            <fieldSet name="PDF">
-                <property id="blob"/>
-            </fieldSet>
+            <cpt:fieldSet name="PDF" id="pDF">
+                <cpt:property id="blob"/>
+            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="12"  unreferencedCollections="true"/>
+        <bs3:col span="12" unreferencedCollections="true"/>
     </bs3:row>
 </bs3:grid>

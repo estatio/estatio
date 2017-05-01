@@ -25,11 +25,12 @@ import lombok.Getter;
 public class IncomingOrderViewmodel_createOrder {
 
     @Getter
-    private IncomingOrderViewModel viewmodel;
+    private final IncomingOrderViewModel viewmodel;
 
     public IncomingOrderViewmodel_createOrder(final IncomingOrderViewModel viewModel) {
         this.viewmodel = viewModel;
     }
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Object createOrder(final boolean goToNext){

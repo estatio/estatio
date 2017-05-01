@@ -26,9 +26,6 @@
                     <action id="previous"/>
                     <action id="next"/>
                     <action id="all"/>
-                    <action id="categorizeAsOrder"/>
-                    <action id="categorizeAsInvoice"/>
-                    <action id="resetCategorization"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -39,26 +36,28 @@
                                 <bs3:col span="12">
                                     <fieldSet name="Order" unreferencedProperties="false">
                                         <action id="changeOrderDetails"/>
-                                        <property id="orderNumber"/>
-                                        <property id="buyer"/>
-                                        <property id="seller"/>
-                                        <property id="sellerOrderReference"/>
-                                        <property id="orderDate"/>
+                                        <property id="orderNumber" promptStyle="INLINE"/>
+                                        <property id="buyer" promptStyle="INLINE"/>
+                                        <property id="seller" promptStyle="INLINE">
+                                            <action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </property>
+                                        <property id="sellerOrderReference" promptStyle="INLINE"/>
+                                        <property id="orderDate" promptStyle="INLINE"/>
                                     </fieldSet>
                                     <fieldSet name="Order Item" unreferencedProperties="false">
                                         <action id="changeItemDetails"/>
-                                        <property id="description"/>
-                                        <property id="netAmount"/>
-                                        <property id="vatAmount"/>
-                                        <property id="tax"/>
-                                        <property id="grossAmount"/>
+                                        <property id="description" promptStyle="INLINE"/>
+                                        <property id="netAmount" promptStyle="INLINE"/>
+                                        <property id="vatAmount" promptStyle="INLINE"/>
+                                        <property id="tax" promptStyle="INLINE"/>
+                                        <property id="grossAmount" promptStyle="INLINE"/>
                                     </fieldSet>
                                     <fieldSet name="Dimensions" unreferencedProperties="false">
                                         <action id="changeDimensions"/>
-                                        <property id="charge"/>
-                                        <property id="fixedAsset"/>
-                                        <property id="project"/>
-                                        <property id="period"/>
+                                        <property id="charge" promptStyle="INLINE"/>
+                                        <property id="fixedAsset" promptStyle="INLINE"/>
+                                        <property id="project" promptStyle="INLINE"/>
+                                        <property id="period" promptStyle="INLINE"/>
                                     </fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -71,7 +70,11 @@
                                         <action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                         <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                                         <property id="document"/>
-                                        <property id="type"/>
+                                        <property id="type">
+                                            <action id="categorizeAsOrder"/>
+                                            <action id="categorizeAsInvoice"/>
+                                            <action id="resetCategorization"/>
+                                        </property>
                                         <property id="createdAt"/>
                                     </fieldSet>
                                 </bs3:col>

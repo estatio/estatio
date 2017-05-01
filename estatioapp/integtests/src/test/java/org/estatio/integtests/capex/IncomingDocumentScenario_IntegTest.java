@@ -295,7 +295,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // when
             // link to order item
             OrderItemWrapper orderItemWrapper = new OrderItemWrapper(orderCreated.getOrderNumber(), orderCreated.getItems().first().getCharge());
-            incomingInvoiceViewModel.findOrderItem(orderItemWrapper);
+            incomingInvoiceViewModel.modifyOrderItem(orderItemWrapper);
 
             assertThat(incomingInvoiceViewModel.minimalRequiredDataToComplete()).isEqualTo("invoice number, due date, payment method required");
             final String invoiceNumber = "321";

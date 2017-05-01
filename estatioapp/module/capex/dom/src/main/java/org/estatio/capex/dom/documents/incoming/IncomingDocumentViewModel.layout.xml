@@ -26,8 +26,6 @@
                     <action id="previous"/>
                     <action id="next"/>
                     <action id="all"/>
-                    <action id="categorizeAsOrder"/>
-                    <action id="categorizeAsInvoice"/>
                     <action id="resetCategorization"/>
                 </bs3:col>
             </bs3:row>
@@ -41,7 +39,10 @@
                                         <action id="clearHints" position="PANEL_DROPDOWN"/>
                                         <action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                         <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
-                                        <property id="document"/>
+                                        <property id="document">
+                                            <action id="categorizeAsOrder" promptStyle="DIALOG"/>
+                                            <action id="categorizeAsInvoice" promptStyle="DIALOG"/>
+                                        </property>
                                         <property id="type"/>
                                         <property id="createdAt"/>
                                     </fieldSet>

@@ -31,7 +31,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
         objectType = "org.estatio.capex.dom.documents.invoice.OrderItemWrapper"
 )
 @XmlRootElement(name = "orderItemWrapper")

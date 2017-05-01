@@ -18,6 +18,7 @@
  */
 package org.estatio.capex.dom.documents.order;
 
+import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,9 +29,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -76,11 +75,15 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         super(document, fixedAsset);
     }
 
+    @Property(editing = Editing.ENABLED)
     private String orderNumber;
 
+    @Property(editing = Editing.ENABLED)
     private String sellerOrderReference;
 
+    @Property(editing = Editing.ENABLED)
     private LocalDate orderDate;
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -89,9 +92,9 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
             final String orderNumber,
             final Organisation buyer,
             final Organisation seller,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final String sellerOrderReference,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final LocalDate orderDate
     ){
         setOrderNumber(orderNumber);
@@ -122,9 +125,9 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         return getOrderDate();
     }
 
-    @Programmatic
+
     public String minimalRequiredDataToComplete(){
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         if (getOrderNumber()==null){
             buffer.append("order number, ");
         }
@@ -149,11 +152,10 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         if (getPeriod()==null){
             buffer.append("period, ");
         }
-        if (buffer.length()==0){
-            return null;
-        } else {
-            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
-        }
+        final int buflen = buffer.length();
+        return buflen != 0
+                ? buffer.replace(buflen - 2, buflen, " required").toString()
+                : null;
     }
 
 }
