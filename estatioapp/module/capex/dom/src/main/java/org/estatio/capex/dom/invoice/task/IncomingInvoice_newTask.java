@@ -1,20 +1,24 @@
 package org.estatio.capex.dom.invoice.task;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class IncomingInvoice_newTask
-        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> {
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+
+    public static class ActionDomainEvent extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoice_newTask> { }
 
     private final IncomingInvoice incomingInvoice;
 
@@ -22,14 +26,18 @@ public class IncomingInvoice_newTask
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Action()
+    @Action(
+            domainEvent = ActionDomainEvent.class
+    )
     @MemberOrder(name = "tasks", sequence = "1")
     @Override
-    public Task<?> newTask(
+    public TaskForIncomingInvoice newTask(
             final EstatioRole assignTo,
-            final String description,
-            final IncomingInvoiceTransition taskTransition) {
-        return repository.create(incomingInvoice, taskTransition, assignTo, description);
+            final IncomingInvoiceTransition taskTransition,
+            @Nullable
+            final String description) {
+        return repository
+                .create(incomingInvoice, taskTransition, assignTo, description);
     }
 
     @Inject

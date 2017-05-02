@@ -1,7 +1,8 @@
-package org.estatio.capex.dom.invoice.rule;
+package org.estatio.capex.dom.documents.state;
 
 import lombok.Getter;
 
+// TODO: currently unused; to tie in with TaskState would require Document implementing TaskStateOwner
 @Getter
 public enum IncomingDocumentTransition {
 

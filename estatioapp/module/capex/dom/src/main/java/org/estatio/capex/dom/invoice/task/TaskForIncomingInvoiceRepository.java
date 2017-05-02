@@ -8,9 +8,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -38,6 +41,18 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
                         TaskForIncomingInvoice.class,
                         "findByInvoice",
                         "invoice", invoice));
+    }
+
+    @Programmatic
+    public List<? extends Task<?, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState>> findByInvoiceAndTransition(
+            final IncomingInvoice invoice,
+            final IncomingInvoiceTransition transition) {
+        return allMatches(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        TaskForIncomingInvoice.class,
+                        "findByInvoiceAndTransition",
+                        "invoice", invoice,
+                        "transition", transition));
     }
 
     @Programmatic
@@ -71,16 +86,18 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
             final IncomingInvoiceTransition transition,
             final EstatioRole assignTo,
             final String description) {
-        final TaskForIncomingInvoice task = newTransientInstance(TaskForIncomingInvoice.class);
+        final TaskForIncomingInvoice task = repositoryService.instantiate(TaskForIncomingInvoice.class);
         task.setInvoice(invoice);
         task.setAssignedTo(assignTo);
         task.setTransition(transition);
         task.setDescription(description);
         task.setCreatedOn(clockService.nowAsLocalDateTime());
-        persistIfNotAlready(task);
+        repositoryService.persistAndFlush(task);
         return task;
     }
 
+    @Inject
+    RepositoryService repositoryService;
     @Inject
     ClockService clockService;
 

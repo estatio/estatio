@@ -1,23 +1,30 @@
-package org.estatio.capex.dom.invoice.rule;
+package org.estatio.capex.dom.invoice.state;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
-import org.estatio.capex.dom.invoice.task.NewTaskMixin;
+import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
+import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.TaskTransition;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 
 @Getter
 public enum IncomingInvoiceTransition
-        implements TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> {
+        implements TaskTransition<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
 
     INSTANTIATING(
             (IncomingInvoiceState)null,
@@ -29,27 +36,36 @@ public enum IncomingInvoiceTransition
             EstatioRole.PROJECT_MANAGER) {
 
         @Override
-        public Task<?> newTaskIfApplicable(
+        public boolean canApply(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.hasProject();
+        }
+
+        @Override
+        public TaskForIncomingInvoice createTask(
                 final IncomingInvoice domainObject,
-                final WrapperFactory wrapperFactory,
-                final FactoryService factoryService) {
-            return domainObject.hasProject()
-                    ? super.newTaskIfApplicable(domainObject, wrapperFactory, factoryService)
-                    : null;
+                final ServiceRegistry2 serviceRegistry2) {
+            // TODO: customise the generated task, eg adding in the fixed project somehow
+            return super.createTask(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceState.NEW,
             IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER,
             EstatioRole.ASSET_MANAGER) {
+
         @Override
-        public Task<?> newTaskIfApplicable(
+        public boolean canApply(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return !domainObject.hasProject() && domainObject.hasFixedAsset();
+        }
+
+        @Override
+        public TaskForIncomingInvoice createTask(
                 final IncomingInvoice domainObject,
-                final WrapperFactory wrapperFactory,
-                final FactoryService factoryService) {
-            return !domainObject.hasProject() && domainObject.hasFixedAsset()
-                    ? super.newTaskIfApplicable(domainObject, wrapperFactory, factoryService)
-                    : null;
+                final ServiceRegistry2 serviceRegistry2) {
+            // TODO: customise the generated task, eg adding in the fixed asset somehow
+            return super.createTask(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
@@ -93,27 +109,38 @@ public enum IncomingInvoiceTransition
     }
 
     @Override
-    public Task<?> newTaskIfApplicable(
+    public boolean canApply(
             final IncomingInvoice domainObject,
-            final WrapperFactory wrapperFactory,
-            final FactoryService factoryService) {
+            final ServiceRegistry2 serviceRegistry2) {
+        return true;
+    }
+
+    @Override
+    public TaskForIncomingInvoice createTask(
+            final IncomingInvoice domainObject,
+            final ServiceRegistry2 serviceRegistry2) {
+        final WrapperFactory wrapperFactory = serviceRegistry2.lookupService(WrapperFactory.class);
+        final FactoryService factoryService = serviceRegistry2.lookupService(FactoryService.class);
         final EstatioRole taskRoleRequiredIfAny = this.getTaskRoleRequiredIfAny();
         return taskRoleRequiredIfAny != null
                     ? wrapperFactory.wrap(factoryService.mixin(IncomingInvoice_newTask.class, domainObject))
-                                    .newTask(taskRoleRequiredIfAny, "", this)
+                                    .newTask(taskRoleRequiredIfAny, this, "")
                     : null;
     }
 
-    @Override
-    public void preApply(
-            final IncomingInvoice domainObject,
-            final TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> transition) {
-    }
 
-    @Override
-    public void postApply(
-            final IncomingInvoice domainObject,
-            final TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> transition) {
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TaskForIncomingInvoiceCompletionSubscriber
+            extends TaskCompletionSubscriberAbstract<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+
+        @Override
+        protected List<Task<?, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState>> findTasksByDomainObjectAndTransition(
+                final IncomingInvoice domainObject, final IncomingInvoiceTransition taskTransition) {
+            return (List)repository.findByInvoiceAndTransition(domainObject, taskTransition);
+        }
+
+        @Inject
+        TaskForIncomingInvoiceRepository repository;
     }
 
     @Override

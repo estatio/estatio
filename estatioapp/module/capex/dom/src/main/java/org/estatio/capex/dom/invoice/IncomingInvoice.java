@@ -23,10 +23,10 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.rule.TaskState;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.task.TaskStateOwner;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -65,7 +65,8 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class IncomingInvoice extends Invoice<IncomingInvoice> implements TaskState.Owner<IncomingInvoice, IncomingInvoiceState> {
+public class IncomingInvoice extends Invoice<IncomingInvoice> implements
+        TaskStateOwner<IncomingInvoice, IncomingInvoiceState> {
 
     public IncomingInvoice() {
         super("invoiceNumber");

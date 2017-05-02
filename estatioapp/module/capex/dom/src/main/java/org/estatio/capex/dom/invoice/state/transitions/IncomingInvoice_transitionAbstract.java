@@ -1,14 +1,13 @@
-package org.estatio.capex.dom.invoice.rule.transitions;
+package org.estatio.capex.dom.invoice.state.transitions;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
-import org.estatio.capex.dom.invoice.rule.TaskTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.task.TaskTransition;
 
 public abstract class IncomingInvoice_transitionAbstract {
 
@@ -24,17 +23,15 @@ public abstract class IncomingInvoice_transitionAbstract {
 
     @Action()
     public IncomingInvoice $$(){
-        TaskTransition.Util.apply(transition, incomingInvoice, wrapperFactory, factoryService);
+        TaskTransition.Util.apply(incomingInvoice, transition, serviceRegistry2);
         return incomingInvoice;
     }
 
     public boolean hide$$() {
-        return !TaskTransition.Util.canApply(transition, incomingInvoice);
+        return !TaskTransition.Util.canApply(incomingInvoice, transition, serviceRegistry2);
     }
 
     @Inject
-    private FactoryService factoryService;
-    @Inject
-    private WrapperFactory wrapperFactory;
+    private ServiceRegistry2 serviceRegistry2;
 
 }

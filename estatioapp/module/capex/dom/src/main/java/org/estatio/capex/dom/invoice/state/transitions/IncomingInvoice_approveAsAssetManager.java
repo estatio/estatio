@@ -1,11 +1,11 @@
-package org.estatio.capex.dom.invoice.rule.transitions;
+package org.estatio.capex.dom.invoice.state.transitions;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
 
 @Mixin
 public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_transitionAbstract {

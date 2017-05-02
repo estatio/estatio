@@ -8,7 +8,8 @@ import javax.jdo.annotations.Query;
 import org.apache.isis.applib.annotation.DomainObject;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -29,6 +30,12 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice "
                         + "WHERE invoice == :invoice"),
         @Query(
+                name = "findByInvoiceAndTransition", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice "
+                        + "WHERE invoice == :invoice && "
+                        + "transition == :transition "),
+        @Query(
                 name = "findByInvoiceAndAssignedTo", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice "
@@ -45,7 +52,8 @@ import lombok.Setter;
 })
 
 @DomainObject(objectType = "invoice.TaskForIncomingInvoice" )
-public class TaskForIncomingInvoice extends Task<TaskForIncomingInvoice> /* implements ApprovableTask */ {
+public class TaskForIncomingInvoice
+        extends Task<TaskForIncomingInvoice, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -55,5 +63,9 @@ public class TaskForIncomingInvoice extends Task<TaskForIncomingInvoice> /* impl
     @Getter @Setter
     private IncomingInvoice invoice;
 
+    @Override
+    protected IncomingInvoice getDomainObject() {
+        return getInvoice();
+    }
 
 }
