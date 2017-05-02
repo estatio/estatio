@@ -29,7 +29,7 @@ public abstract class IncomingInvoice_transitionAbstract {
     }
 
     public boolean hide$$() {
-        return !TaskTransition.Util.isFromState(transition, incomingInvoice.getIncomingInvoiceState());
+        return !TaskTransition.Util.canApply(transition, incomingInvoice);
     }
 
     @Inject

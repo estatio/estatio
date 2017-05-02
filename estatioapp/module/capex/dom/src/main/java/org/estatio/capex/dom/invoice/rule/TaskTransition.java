@@ -106,6 +106,16 @@ public interface TaskTransition<DO extends TaskState.Owner<DO, S>, S extends Tas
             taskTransition.postApply(domainObject, taskTransition);
             return task;
         }
+
+        public static <TT extends TaskTransition<DO, S, TT>,
+                S extends TaskState<DO, S>,
+                DO extends TaskState.Owner<DO, S>>
+        boolean canApply(
+                final TT transition,
+                final DO domainObject) {
+            // TODO: need to beef this up, to also take into account the state of the domain object
+            return TaskTransition.Util.isFromState(transition, domainObject.getTaskState());
+        }
     }
 
 
