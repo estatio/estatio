@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -67,11 +68,13 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
     @Programmatic
     public TaskForIncomingInvoice create(
             final IncomingInvoice invoice,
+            final IncomingInvoiceTransition transition,
             final EstatioRole assignTo,
             final String description) {
         final TaskForIncomingInvoice task = newTransientInstance(TaskForIncomingInvoice.class);
         task.setInvoice(invoice);
         task.setAssignedTo(assignTo);
+        task.setTransition(transition);
         task.setDescription(description);
         task.setCreatedOn(clockService.nowAsLocalDateTime());
         persistIfNotAlready(task);

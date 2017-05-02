@@ -5,14 +5,16 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
-public class IncomingInvoice_newTask {
+public class IncomingInvoice_newTask
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> {
 
     private final IncomingInvoice incomingInvoice;
 
@@ -22,13 +24,12 @@ public class IncomingInvoice_newTask {
 
     @Action()
     @MemberOrder(name = "tasks", sequence = "1")
-    public IncomingInvoice newTask(
-            EstatioRole assignTo,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            String description
-    ) {
-        repository.create(incomingInvoice, assignTo, description);
-        return incomingInvoice;
+    @Override
+    public Task<?> newTask(
+            final EstatioRole assignTo,
+            final String description,
+            final IncomingInvoiceTransition taskTransition) {
+        return repository.create(incomingInvoice, taskTransition, assignTo, description);
     }
 
     @Inject

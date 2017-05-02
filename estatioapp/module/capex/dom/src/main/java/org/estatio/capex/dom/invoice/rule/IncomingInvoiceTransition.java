@@ -4,20 +4,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
-
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
+import org.estatio.capex.dom.invoice.task.NewTaskMixin;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 
 @Getter
-public enum IncomingInvoiceTransition {
+public enum IncomingInvoiceTransition
+        implements TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> {
 
     INSTANTIATING(
             (IncomingInvoiceState)null,
@@ -26,11 +22,21 @@ public enum IncomingInvoiceTransition {
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceState.NEW,
             IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
-            EstatioRole.PROJECT_MANAGER),
+            EstatioRole.PROJECT_MANAGER) {
+        @Override
+        public boolean appliesTo(final IncomingInvoice domainObject) {
+            return domainObject.hasProject();
+        }
+    },
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceState.NEW,
             IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER,
-            EstatioRole.ASSET_MANAGER),
+            EstatioRole.ASSET_MANAGER) {
+        @Override
+        public boolean appliesTo(final IncomingInvoice domainObject) {
+            return !domainObject.hasProject() && domainObject.hasFixedAsset();
+        }
+    },
     APPROVE_AS_COUNTRY_DIRECTOR(
             Arrays.asList(
                     IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
@@ -71,54 +77,31 @@ public enum IncomingInvoiceTransition {
         this(Collections.singletonList(fromState), toState, taskRoleRequiredIfAny);
     }
 
-    public void apply(
-            final IncomingInvoice invoice,
-            final WrapperFactory wrapperFactory,
-            final FactoryService factoryService) {
-
-        // transition the domain object to its next state
-        invoice.setIncomingInvoiceState(toState);
-
-        // for wherever we might go next, create a task if it needs one.
-        // TODO: we will add some further preconditions so that only a single transition returns
-        final List<IncomingInvoiceTransition> transitions =
-                taskTransitionsFrom(toState);
-        for (IncomingInvoiceTransition transition : transitions) {
-            wrapperFactory.wrap(
-                    factoryService.mixin(IncomingInvoice_newTask.class, invoice))
-                    .newTask(transition.taskRoleRequiredIfAny, "");
-        }
+    @Override
+    public boolean appliesTo(final IncomingInvoice domainObject) {
+        return true;
     }
 
-    public boolean isFromState(final IncomingInvoiceState incomingInvoiceState) {
-        return fromStates == null || fromStates.contains(incomingInvoiceState);
+    @Override
+    public Class<? extends NewTaskMixin<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition>> newTaskMixin() {
+        return IncomingInvoice_newTask.class;
     }
 
-    @Programmatic
-    public List<IncomingInvoiceTransition> transitionsFrom(IncomingInvoiceState fromState) {
-        List<IncomingInvoiceTransition> transitions = Lists.newArrayList();
-        final IncomingInvoiceTransition[] values = values();
-        for (IncomingInvoiceTransition value : values) {
-            if(value.fromStates == null || value.fromStates.contains(fromState)) {
-                transitions.add(value);
-            }
-        }
-        return transitions;
+    @Override
+    public void preApply(
+            final IncomingInvoice domainObject,
+            final TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> transition) {
     }
 
-    @Programmatic
-    public List<IncomingInvoiceTransition> taskTransitionsFrom(IncomingInvoiceState fromState) {
-        List<IncomingInvoiceTransition> transitions = Lists.newArrayList();
-        final IncomingInvoiceTransition[] values = values();
-        for (IncomingInvoiceTransition value : values) {
-            if(value.fromStates == null || value.fromStates.contains(fromState)) {
-                // TODO: perhaps remove some duplication using a Predicate ?
-                if(value.taskRoleRequiredIfAny != null) {
-                    transitions.add(value);
-                }
-            }
-        }
-        return transitions;
+    @Override
+    public void postApply(
+            final IncomingInvoice domainObject,
+            final TaskTransition<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition> transition) {
+    }
+
+    @Override
+    public List<IncomingInvoiceTransition> allValues() {
+        return Arrays.asList(values());
     }
 
 }

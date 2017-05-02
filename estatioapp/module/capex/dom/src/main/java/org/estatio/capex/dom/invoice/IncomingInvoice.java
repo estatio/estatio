@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.rule.TaskState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -62,7 +63,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class IncomingInvoice extends Invoice<IncomingInvoice> {
+public class IncomingInvoice extends Invoice<IncomingInvoice> implements TaskState.Owner<IncomingInvoice, IncomingInvoiceState> {
 
     public IncomingInvoice() {
         super("invoiceNumber");
@@ -146,6 +147,31 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     @Getter @Setter
     @Column(allowsNull = "false")
     private IncomingInvoiceState incomingInvoiceState;
+
+    //region > taskstate.owner
+    @Override
+    public IncomingInvoiceState getTaskState() {
+        return getIncomingInvoiceState();
+    }
+
+    @Override
+    public void setTaskState(final IncomingInvoiceState taskState) {
+        setIncomingInvoiceState(taskState);
+    }
+
+    @Programmatic
+    public boolean hasProject() {
+        // TODO
+        return false;
+    }
+
+    @Programmatic
+    public boolean hasFixedAsset() {
+        // TODO
+        return false;
+    }
+
+    //endregion
 
     @Inject
     private IncomingInvoiceItemRepository incomingInvoiceItemRepository;

@@ -8,6 +8,7 @@ import javax.jdo.annotations.Query;
 import org.apache.isis.applib.annotation.DomainObject;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.rule.IncomingInvoiceTransition;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -44,7 +45,11 @@ import lombok.Setter;
 })
 
 @DomainObject(objectType = "invoice.TaskForIncomingInvoice" )
-public class TaskForIncomingInvoice extends Task<TaskForIncomingInvoice> implements ApprovableTask {
+public class TaskForIncomingInvoice extends Task<TaskForIncomingInvoice> /* implements ApprovableTask */ {
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private IncomingInvoiceTransition transition;
 
     @Column(allowsNull = "false")
     @Getter @Setter
