@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.documents.incoming;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -27,7 +28,11 @@ import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleRepository;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.party.Organisation;
@@ -83,6 +88,16 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private FixedAsset<?> fixedAsset;
+
+    public List<Property> choicesFixedAsset(){
+        List<Property> result = new ArrayList<>();
+        if (getBuyer()!=null) {
+            for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleType.PROPERTY_OWNER)){
+                result.add((Property) role.getAsset());
+            }
+        }
+        return result.size()>0 ? result : propertyRepository.allProperties();
+    }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Project project;
@@ -179,6 +194,10 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     public String default3ChangeDimensions(){
         return getPeriod();
+    }
+
+    public List<Property> choices1ChangeDimensions() {
+        return choicesFixedAsset();
     }
 
     public String validateChangeDimensions(
@@ -311,5 +330,17 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     ClockService clockService;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    PropertyRepository propertyRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
 }

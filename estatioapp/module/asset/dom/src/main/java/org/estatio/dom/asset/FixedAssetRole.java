@@ -89,7 +89,12 @@ import lombok.Setter;
                 name = "findAllForProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.FixedAssetRole "
-                        + "WHERE asset == :asset")
+                        + "WHERE asset == :asset"),
+        @javax.jdo.annotations.Query(
+                name = "findByPartyAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE party == :party && type == :type")
 })
 @DomainObject(
         objectType = "org.estatio.dom.asset.FixedAssetRole"

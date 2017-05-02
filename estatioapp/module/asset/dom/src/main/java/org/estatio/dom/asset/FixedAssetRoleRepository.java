@@ -84,4 +84,12 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
                 "party", party,
                 "type", type);
     }
+
+    public List<FixedAssetRole> findByPartyAndType(
+            final Party party,
+            final FixedAssetRoleType type) {
+        return allMatches("findByPartyAndType",
+                "party", party,
+                "type", type);
+    }
 }
