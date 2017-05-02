@@ -27,16 +27,16 @@
                         <bs3:tab name="Invoice">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <cpt:fieldSet name="Matching order item" id="matchingorderitem" unreferencedProperties="false">
+                                    <cpt:fieldSet name="Seller and matching order item" id="matchingorderitem" unreferencedProperties="false">
+                                        <cpt:property id="seller" promptStyle="INLINE">
+                                            <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
                                         <cpt:property id="orderItem" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Invoice" id="invoice" unreferencedProperties="false">
                                         <cpt:action id="changeInvoiceDetails" position="PANEL"/>
                                         <cpt:property id="invoiceNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
-                                        <cpt:property id="seller" promptStyle="INLINE">
-                                            <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
-                                        </cpt:property>
                                         <cpt:property id="invoiceDate" promptStyle="INLINE"/>
                                         <cpt:property id="dueDate" promptStyle="INLINE"/>
                                         <cpt:property id="paymentMethod" promptStyle="INLINE"/>

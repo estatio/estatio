@@ -105,28 +105,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     @Property(editing = Editing.ENABLED)
     private PaymentMethod paymentMethod;
 
-//    private OrderItem orderItem;
-//    @Action(
-//            semantics = SemanticsOf.IDEMPOTENT
-//    )
-//    @ActionLayout(
-//            position = ActionLayout.Position.RIGHT
-//    )
-//    @MemberOrder(name = "orderItem", sequence = "1")
-//    public IncomingInvoiceViewModel findOrderItem(
-//            @Parameter(optionality = Optionality.OPTIONAL)
-//            final OrderItem orderItem
-//    ) {
-//        setOrderItem(orderItem);
-//        autoFillIn();
-//        return this;
-//    }
-//
-//    public List<OrderItem> autoComplete0FindOrderItem(@MinLength(3) final String searchString){
-//        return orderItemsForAutoComplete(searchString);
-//    }
-
-
+    public PaymentMethod defaultPaymentMethod(){
+        return getPaymentMethod();
+    }
 
     // TODO: EST-1244: this wrapper is done because of:
     // Error marshalling domain object to XML; domain object class is ''org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel''
@@ -156,9 +137,11 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         List<OrderItem> result = new ArrayList<>();
 
         for (Order order : orderRepository.matchByOrderNumber(searchString)){
-            for (OrderItem item : order.getItems()){
-                if (!result.contains(item)){
-                    result.add(item);
+            if (hasSeller() && order.getSeller().equals(getSeller())) {
+                for (OrderItem item : order.getItems()) {
+                    if (!result.contains(item)) {
+                        result.add(item);
+                    }
                 }
             }
         }
