@@ -6,7 +6,12 @@ import org.apache.isis.applib.security.UserMemento;
 public enum EstatioRole {
 
     USER("estatio-user", "user"),
-    ADMINISTRATOR("estatio-admin", "admin");
+    ADMINISTRATOR("estatio-admin", "admin"),
+    COUNTRY_DIRECTOR("Country Director", "country_director"),
+    ASSET_MANAGER("Asset Manager", "asset_manager"),
+    PROPERTY_MANAGER("Property Manager", "property_manager"),
+    PROJECT_MANAGER("Project Manager", "project_manager"),
+    TREASURER("Treasurer", "treasurer");
 
     private String roleName;
     private String suffix;

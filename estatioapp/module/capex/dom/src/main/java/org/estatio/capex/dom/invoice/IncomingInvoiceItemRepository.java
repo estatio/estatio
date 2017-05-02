@@ -76,9 +76,20 @@ public class IncomingInvoiceItemRepository {
     ) {
         IncomingInvoiceItem invoiceItem = findByInvoiceAndCharge(invoice, charge);
         if (invoiceItem == null) {
-            invoiceItem = create(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate,
-                    startDate, endDate,
-                    property, project);
+            invoiceItem = create(
+                    sequence,
+                    invoice,
+                    charge,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    dueDate,
+                    startDate,
+                    endDate,
+                    property,
+                    project);
         }
         return invoiceItem;
     }

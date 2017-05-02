@@ -6,9 +6,11 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -24,9 +26,9 @@ import org.estatio.dom.party.Party;
 )
 public class IncomingInvoiceMenu {
 
+    @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> allInvoices(){
         return incomingInvoiceRepository.listAll();
-
     }
 
     public IncomingInvoice newInvoice(

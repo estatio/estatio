@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -21,6 +22,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -29,6 +31,9 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -81,6 +86,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setDueDate(dueDate);
         setPaymentMethod(paymentMethod);
         setStatus(invoiceStatus);
+        setIncomingInvoiceState(IncomingInvoiceState.RECEIVED);
     }
 
     @MemberOrder(name="items", sequence = "1")
@@ -120,11 +126,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final Project project
     ) {
         final BigInteger sequence = nextItemSequence();
-        incomingInvoiceItemRepository.findOrCreate(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount,
-                tax, dueDate, startDate, endDate, property, project
+        incomingInvoiceItemRepository.findOrCreate(
+                sequence,
+                invoice,
+                charge,
+                description,
+                netAmount,
+                vatAmount,
+                grossAmount,
+                tax,
+                dueDate,
+                startDate,
+                endDate,
+                property,
+                project
         );
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private IncomingInvoiceState incomingInvoiceState;
 
     @Inject
     private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
