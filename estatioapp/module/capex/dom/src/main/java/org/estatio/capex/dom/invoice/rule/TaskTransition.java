@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
-import org.estatio.capex.dom.invoice.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -33,6 +32,13 @@ public interface TaskTransition<DO extends TaskState.Owner<DO, S>, S extends Tas
     @Programmatic
     EstatioRole getTaskRoleRequiredIfAny();
 
+    @Programmatic
+    Task<?> newTaskIfApplicable(
+            DO domainObject,
+            final WrapperFactory wrapperFactory,
+            final FactoryService factoryService);
+
+    List<TT> allValues();
 
     class Util {
 
@@ -91,13 +97,10 @@ public interface TaskTransition<DO extends TaskState.Owner<DO, S>, S extends Tas
                 if(taskRole == null) {
                     continue;
                 }
-                if(!candidateTransition.appliesTo(domainObject)) {
-                    continue;
+                task = candidateTransition.newTaskIfApplicable(domainObject, wrapperFactory, factoryService);
+                if(task != null) {
+                    break;
                 }
-                final Class<? extends NewTaskMixin<DO,S,TT>> mixinClass = candidateTransition.newTaskMixin();
-                final NewTaskMixin<DO,S,TT> mixin = factoryService.mixin(mixinClass, domainObject);
-                task = wrapperFactory.wrap(mixin).newTask(taskRole, "", candidateTransition);
-                break;
             }
 
             taskTransition.postApply(domainObject, taskTransition);
@@ -105,11 +108,5 @@ public interface TaskTransition<DO extends TaskState.Owner<DO, S>, S extends Tas
         }
     }
 
-    boolean appliesTo(DO domainObject);
-
-    List<TT> allValues();
-
-    @Programmatic
-    Class<? extends NewTaskMixin<DO, S, TT>> newTaskMixin();
 
 }

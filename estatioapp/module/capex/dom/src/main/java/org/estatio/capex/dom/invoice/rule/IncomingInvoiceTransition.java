@@ -4,9 +4,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
+
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
 import org.estatio.capex.dom.invoice.task.NewTaskMixin;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -23,9 +27,15 @@ public enum IncomingInvoiceTransition
             IncomingInvoiceState.NEW,
             IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
             EstatioRole.PROJECT_MANAGER) {
+
         @Override
-        public boolean appliesTo(final IncomingInvoice domainObject) {
-            return domainObject.hasProject();
+        public Task<?> newTaskIfApplicable(
+                final IncomingInvoice domainObject,
+                final WrapperFactory wrapperFactory,
+                final FactoryService factoryService) {
+            return domainObject.hasProject()
+                    ? super.newTaskIfApplicable(domainObject, wrapperFactory, factoryService)
+                    : null;
         }
     },
     APPROVE_AS_ASSET_MANAGER(
@@ -33,8 +43,13 @@ public enum IncomingInvoiceTransition
             IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER,
             EstatioRole.ASSET_MANAGER) {
         @Override
-        public boolean appliesTo(final IncomingInvoice domainObject) {
-            return !domainObject.hasProject() && domainObject.hasFixedAsset();
+        public Task<?> newTaskIfApplicable(
+                final IncomingInvoice domainObject,
+                final WrapperFactory wrapperFactory,
+                final FactoryService factoryService) {
+            return !domainObject.hasProject() && domainObject.hasFixedAsset()
+                    ? super.newTaskIfApplicable(domainObject, wrapperFactory, factoryService)
+                    : null;
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
@@ -78,13 +93,15 @@ public enum IncomingInvoiceTransition
     }
 
     @Override
-    public boolean appliesTo(final IncomingInvoice domainObject) {
-        return true;
-    }
-
-    @Override
-    public Class<? extends NewTaskMixin<IncomingInvoice, IncomingInvoiceState, IncomingInvoiceTransition>> newTaskMixin() {
-        return IncomingInvoice_newTask.class;
+    public Task<?> newTaskIfApplicable(
+            final IncomingInvoice domainObject,
+            final WrapperFactory wrapperFactory,
+            final FactoryService factoryService) {
+        final EstatioRole taskRoleRequiredIfAny = this.getTaskRoleRequiredIfAny();
+        return taskRoleRequiredIfAny != null
+                    ? wrapperFactory.wrap(factoryService.mixin(IncomingInvoice_newTask.class, domainObject))
+                                    .newTask(taskRoleRequiredIfAny, "", this)
+                    : null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -24,6 +25,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.rule.IncomingInvoiceState;
 import org.estatio.capex.dom.invoice.rule.TaskState;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -161,8 +163,19 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements TaskSta
 
     @Programmatic
     public boolean hasProject() {
-        // TODO
+        final SortedSet<IncomingInvoiceItem> items = getItemsRaw();
+        for (IncomingInvoiceItem item : items) {
+            final Project project = item.getProject();
+            if(project != null) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    // cheating
+    private SortedSet getItemsRaw() {
+        return getItems();
     }
 
     @Programmatic
@@ -175,5 +188,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements TaskSta
 
     @Inject
     private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    @Inject
+    private OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 }
