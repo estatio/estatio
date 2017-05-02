@@ -86,7 +86,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setDueDate(dueDate);
         setPaymentMethod(paymentMethod);
         setStatus(invoiceStatus);
-        setIncomingInvoiceState(IncomingInvoiceState.RECEIVED);
+        setIncomingInvoiceState(IncomingInvoiceState.NEW);
     }
 
     @MemberOrder(name="items", sequence = "1")
