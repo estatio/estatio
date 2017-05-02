@@ -10,6 +10,7 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.capex.dom.task.Task;
 
+// TODO: UNUSED, should probably delete...
 public abstract class TaskStateOwner_transitionAbstract<TT extends TaskTransition<DO, S, TT>, S extends TaskState<DO, S>, DO extends TaskState.Owner<DO, S>> {
 
     protected final DO owner;

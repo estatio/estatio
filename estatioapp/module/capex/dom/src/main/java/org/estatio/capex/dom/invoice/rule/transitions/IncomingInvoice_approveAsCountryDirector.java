@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.invoice.rule.transitions;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -10,6 +12,12 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
 
     public IncomingInvoice_approveAsCountryDirector(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceTransition.APPROVE_AS_COUNTRY_DIRECTOR);
+    }
+
+    @Action()
+    @MemberOrder(sequence = "3")
+    public IncomingInvoice $$() {
+        return super.$$();
     }
 
 }

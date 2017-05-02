@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.invoice.rule.transitions;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -12,4 +14,9 @@ public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_trans
         super(incomingInvoice, IncomingInvoiceTransition.APPROVE_AS_ASSET_MANAGER);
     }
 
+    @Action()
+    @MemberOrder(sequence = "2.1")
+    public IncomingInvoice $$() {
+        return super.$$();
+    }
 }

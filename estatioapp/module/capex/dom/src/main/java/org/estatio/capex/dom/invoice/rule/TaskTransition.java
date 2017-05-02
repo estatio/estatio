@@ -65,7 +65,7 @@ public interface TaskTransition<DO extends TaskState.Owner<DO, S>, S extends Tas
             final List<TT> transitions = Lists.newArrayList();
             final List<TT> allTransitions = prototype.allValues();
             for (TT transition : allTransitions) {
-                if (isFromState(prototype, fromState)) {
+                if (isFromState(transition, fromState)) {
                     continue;
                 }
                 transitions.add(transition);
