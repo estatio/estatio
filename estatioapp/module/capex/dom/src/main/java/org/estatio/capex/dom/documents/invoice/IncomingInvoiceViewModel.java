@@ -88,7 +88,9 @@ import lombok.Setter;
 @Getter @Setter
 public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
-    public IncomingInvoiceViewModel() {}
+    public IncomingInvoiceViewModel() {
+        setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+    }
     public IncomingInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
         super(document, fixedAsset);
     }
