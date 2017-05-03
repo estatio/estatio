@@ -29,7 +29,7 @@ import org.estatio.dom.budgeting.budget.BudgetRepository;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Budgets",
+        named = "Projects",
         menuOrder = "70"
 )
 public class BudgetMenu {

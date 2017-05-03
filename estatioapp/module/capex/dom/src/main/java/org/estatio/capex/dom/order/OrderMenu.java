@@ -19,7 +19,7 @@ import org.estatio.dom.party.Party;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Orders"
+        named = "Invoices In"
 )
 public class OrderMenu {
 

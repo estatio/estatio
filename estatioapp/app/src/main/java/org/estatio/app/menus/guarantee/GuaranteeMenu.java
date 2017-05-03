@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
@@ -46,11 +47,10 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
-import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named = "Guarantees",
+        named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "75"
 )

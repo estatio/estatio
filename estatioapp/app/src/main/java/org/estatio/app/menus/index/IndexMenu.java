@@ -46,7 +46,7 @@ import org.estatio.dom.index.IndexRepository;
         objectType = "org.estatio.app.menus.index.IndexMenu"
 )
 @DomainServiceLayout(
-        named = "Indices",
+        named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.2"
 )
