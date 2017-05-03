@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -41,7 +39,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
         super(LeaseTermSubscriptions.class);
     }
 
-    @Subscribe
+    @com.google.common.eventbus.Subscribe
     @Programmatic
     public void on(final LeaseItem.ChangeInvoicingFrequencyEvent ev) {
         final LeaseItem sourceLeaseItem = ev.getSource();

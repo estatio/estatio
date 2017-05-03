@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
@@ -194,8 +192,7 @@ public interface TaskTransition<
             TS extends TaskState<DO, TS>
         > extends AbstractSubscriber {
 
-        @org.axonframework.eventhandling.annotation.EventHandler
-        @Subscribe
+        @com.google.common.eventbus.Subscribe
         public void on(TaskTransition.Event<DO, TT, TS> event) {
             if(event.getEventPhase() == AbstractDomainEvent.Phase.EXECUTING) {
                 final TT taskTransition = event.getTaskTransition();

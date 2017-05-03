@@ -23,14 +23,13 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
-import org.estatio.dom.UdoDomainService;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+
+import org.estatio.dom.UdoDomainService;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -41,7 +40,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainService<Communic
         super(CommunicationChannelSubscriptions.class);
     }
 
-    @Subscribe
+    @com.google.common.eventbus.Subscribe
     public void on(final CommunicationChannel.RemoveEvent ev) {
         CommunicationChannel sourceCommunicationChannel = ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();

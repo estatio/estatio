@@ -20,8 +20,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -48,7 +46,7 @@ public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFacto
     // //////////////////////////////////////
 
     @Programmatic
-    @Subscribe
+    @com.google.common.eventbus.Subscribe
     public void on(final IndexValue.UpdateEvent ev) {
         for (LeaseTermForIndexable term : findByIndexAndDate(ev.getSource().getIndexBase().getIndex(), ev.getSource().getStartDate())) {
             term.verify();

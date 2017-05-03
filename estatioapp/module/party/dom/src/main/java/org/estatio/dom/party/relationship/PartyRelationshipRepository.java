@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
@@ -88,7 +86,7 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
 
     // //////////////////////////////////////
 
-    @Subscribe
+    @com.google.common.eventbus.Subscribe
     @Programmatic
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = ev.getSource();

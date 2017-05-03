@@ -20,15 +20,14 @@ package org.estatio.dom.communications;
 
 import javax.inject.Inject;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+
+import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -43,7 +42,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFac
     }
 
 
-    @Subscribe
+    @com.google.common.eventbus.Subscribe
     @Programmatic
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = ev.getSource();

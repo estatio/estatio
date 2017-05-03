@@ -21,8 +21,6 @@ package org.estatio.dom.asset;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.eventbus.Subscribe;
-
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
@@ -51,7 +49,7 @@ public class CommunicationChannelOwnerLinkForFixedAsset extends CommunicationCha
     public static class InstantiationSubscriber extends AbstractSubscriber {
 
         @Programmatic
-        @Subscribe
+        @com.google.common.eventbus.Subscribe
         public void on(final CommunicationChannelOwnerLink.InstantiateEvent ev) {
             if(ev.getPolymorphicReference() instanceof FixedAsset) {
                 ev.setSubtype(CommunicationChannelOwnerLinkForFixedAsset.class);

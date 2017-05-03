@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -38,9 +39,17 @@ public class IncomingInvoiceViewmodel_createInvoice {
         this.viewmodel = viewModel;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public static class ActionDomainEvent
+            extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoiceViewmodel_createInvoice> {}
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ActionDomainEvent.class
+    )
     public Object createInvoice(final boolean goToNext){
         IncomingInvoice incomingInvoice = doCreate();
+        // make the newly created invoice available to any subscribers of this action's domain event.
+        this.viewmodel.incomingInvoice = incomingInvoice;
         return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : incomingInvoice;
     }
 

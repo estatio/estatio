@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
@@ -42,10 +43,13 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
@@ -81,7 +85,8 @@ import lombok.Setter;
                 "netAmount",
                 "vatAmount",
                 "tax",
-                "grossAmount"
+                "grossAmount",
+                "incomingInvoice"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -95,12 +100,20 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         super(document, fixedAsset);
     }
 
+    /**
+     * Populated once this view model is actioned; stored just so can be read by subscribers on this
+     * view model's mixin actions.
+     */
+    @Property(hidden = Where.EVERYWHERE) IncomingInvoice incomingInvoice;
+
     @Property(editing = Editing.ENABLED)
     private String invoiceNumber;
 
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
     private LocalDate invoiceDate;
 
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
     private LocalDate dueDate;
 

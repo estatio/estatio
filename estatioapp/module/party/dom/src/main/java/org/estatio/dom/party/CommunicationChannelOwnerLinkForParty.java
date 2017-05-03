@@ -20,7 +20,7 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
-import com.google.common.eventbus.Subscribe;
+
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
+
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
 
@@ -47,7 +48,7 @@ public class CommunicationChannelOwnerLinkForParty extends CommunicationChannelO
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class InstantiationSubscriber extends AbstractSubscriber {
         @Programmatic
-        @Subscribe
+        @com.google.common.eventbus.Subscribe
         public void on(final InstantiateEvent ev) {
             if(ev.getPolymorphicReference() instanceof Party) {
                 ev.setSubtype(CommunicationChannelOwnerLinkForParty.class);

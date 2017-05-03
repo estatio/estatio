@@ -11,6 +11,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
@@ -22,6 +23,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -65,6 +67,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements
         TaskStateOwner<IncomingInvoice, IncomingInvoiceState> {
 
