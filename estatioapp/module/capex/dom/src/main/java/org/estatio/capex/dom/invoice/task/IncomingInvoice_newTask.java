@@ -10,13 +10,13 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class IncomingInvoice_newTask
-        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
 
     public static class ActionDomainEvent extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoice_newTask> { }
 
@@ -33,7 +33,7 @@ public class IncomingInvoice_newTask
     @Override
     public TaskForIncomingInvoice newTask(
             final EstatioRole assignTo,
-            final IncomingInvoiceTransition taskTransition,
+            final IncomingInvoiceTransitionType taskTransition,
             @Nullable
             final String description) {
         return repository

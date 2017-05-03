@@ -62,8 +62,8 @@ public class OrderRepository {
         final Order order = new Order(number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvedBy, approvedOn);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
-        // TODO: make Order implement TaskState.Owner
-        // TaskTransition.Util.apply(order, IncomingInvoiceTransition.INSTANTIATING, serviceRegistry2);
+        // TODO: make Order implement State.Owner
+        // StateTransitionType.Util.apply(order, IncomingInvoiceTransitionType.INSTANTIATING, serviceRegistry2);
         return order;
     }
 

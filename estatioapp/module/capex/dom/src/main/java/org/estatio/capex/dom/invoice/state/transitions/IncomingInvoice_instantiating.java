@@ -5,13 +5,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 
 @Mixin
 public class IncomingInvoice_instantiating extends IncomingInvoice_transitionAbstract {
 
     public IncomingInvoice_instantiating(IncomingInvoice incomingInvoice) {
-        super(incomingInvoice, IncomingInvoiceTransition.INSTANTIATING);
+        super(incomingInvoice, IncomingInvoiceTransitionType.INSTANTIATING);
     }
 
     @Action()

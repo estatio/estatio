@@ -9,8 +9,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
-import org.estatio.capex.dom.task.TaskTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
+import org.estatio.capex.dom.task.StateTransitionType;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
@@ -26,7 +26,7 @@ public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
             transactionService.flushTransaction();
 
             // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
-            TaskTransition.Util.apply(incomingInvoice, IncomingInvoiceTransition.INSTANTIATING, serviceRegistry2);
+            StateTransitionType.Util.apply(incomingInvoice, IncomingInvoiceTransitionType.INSTANTIATING, serviceRegistry2);
             break;
         }
     }

@@ -6,29 +6,29 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
-import org.estatio.capex.dom.task.TaskTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
+import org.estatio.capex.dom.task.StateTransitionType;
 
 public abstract class IncomingInvoice_transitionAbstract {
 
     protected final IncomingInvoice incomingInvoice;
-    protected final IncomingInvoiceTransition transition;
+    protected final IncomingInvoiceTransitionType transition;
 
     public IncomingInvoice_transitionAbstract(
             final IncomingInvoice incomingInvoice,
-            final IncomingInvoiceTransition transition) {
+            final IncomingInvoiceTransitionType transition) {
         this.incomingInvoice = incomingInvoice;
         this.transition = transition;
     }
 
     @Action()
     public IncomingInvoice $$(){
-        TaskTransition.Util.apply(incomingInvoice, transition, serviceRegistry2);
+        StateTransitionType.Util.apply(incomingInvoice, transition, serviceRegistry2);
         return incomingInvoice;
     }
 
     public boolean hide$$() {
-        return !TaskTransition.Util.canApply(incomingInvoice, transition, serviceRegistry2);
+        return !StateTransitionType.Util.canApply(incomingInvoice, transition, serviceRegistry2);
     }
 
     @Inject

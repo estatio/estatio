@@ -12,7 +12,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.roles.EstatioRole;
@@ -44,9 +44,9 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
     }
 
     @Programmatic
-    public List<? extends Task<?, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState>> findByInvoiceAndTransition(
+    public List<? extends Task<?, IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState>> findByInvoiceAndTransition(
             final IncomingInvoice invoice,
-            final IncomingInvoiceTransition transition) {
+            final IncomingInvoiceTransitionType transition) {
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         TaskForIncomingInvoice.class,
@@ -83,7 +83,7 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
     @Programmatic
     public TaskForIncomingInvoice create(
             final IncomingInvoice invoice,
-            final IncomingInvoiceTransition transition,
+            final IncomingInvoiceTransitionType transition,
             final EstatioRole assignTo,
             final String description) {
         final TaskForIncomingInvoice task = repositoryService.instantiate(TaskForIncomingInvoice.class);

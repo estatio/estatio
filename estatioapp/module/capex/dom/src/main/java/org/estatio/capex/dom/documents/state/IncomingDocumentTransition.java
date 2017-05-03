@@ -2,7 +2,7 @@ package org.estatio.capex.dom.documents.state;
 
 import lombok.Getter;
 
-// TODO: currently unused; to tie in with TaskState would require Document implementing TaskStateOwner
+// TODO: currently unused; to tie in with TaskState would require Document implementing StateOwner
 @Getter
 public enum IncomingDocumentTransition {
 

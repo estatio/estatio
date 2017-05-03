@@ -28,7 +28,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.task.TaskStateOwner;
+import org.estatio.capex.dom.task.StateOwner;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -69,7 +69,7 @@ import lombok.Setter;
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements
-        TaskStateOwner<IncomingInvoice, IncomingInvoiceState> {
+        StateOwner<IncomingInvoice, IncomingInvoiceState> {
 
     public IncomingInvoice() {
         super("invoiceNumber");

@@ -14,21 +14,21 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
 import org.estatio.dom.roles.EstatioRole;
 
-public interface TaskTransition<
-                        DO extends TaskStateOwner<DO, TS>,
-                        TT extends TaskTransition<DO, TT, TS>,
-                        TS extends TaskState<DO, TS>> {
+public interface StateTransitionType<
+                        SO extends StateOwner<SO, S>,
+                        ST extends StateTransitionType<SO, ST, S>,
+                        S extends State<SO, S>> {
 
     @Programmatic
-    List<TS> getFromStates();
+    List<S> getFromStates();
 
     @Programmatic
-    TS getToState();
+    S getToState();
 
     /**
      * All available instances of this class, used to search for the following transition.
      */
-    List<TT> allValues();
+    List<ST> allValues();
 
 
     /**
@@ -41,7 +41,7 @@ public interface TaskTransition<
      * </p>
      */
     @Programmatic
-    boolean canApply(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
+    boolean canApply(final SO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
      * The {@link EstatioRole task role}, if any, that any {@link Task} wrapping this transition must be routed to.
@@ -56,17 +56,17 @@ public interface TaskTransition<
 
     /**
      * Only called if {@link #assignTaskTo()} is non-null, and
-     * {@link #canApply(TaskStateOwner, ServiceRegistry2)} also returns <tt>true</tt>.
+     * {@link #canApply(StateOwner, ServiceRegistry2)} also returns <tt>true</tt>.
      *
      * <p>
      *     Typically implementations might want to cache results from
-     *     {@link #canApply(TaskStateOwner, ServiceRegistry2)} (lookup {@link QueryResultsCache} from provided
+     *     {@link #canApply(StateOwner, ServiceRegistry2)} (lookup {@link QueryResultsCache} from provided
      *     {@link ServiceRegistry2}).
      * </p>
      */
     @Programmatic
-    Task<?, DO, TT, TS> createTask(
-            final DO domainObject,
+    Task<?, SO, ST, S> createTask(
+            final SO domainObject,
             final ServiceRegistry2 serviceRegistry2);
 
     class Util {
@@ -86,9 +86,9 @@ public interface TaskTransition<
          * @return
          */
         public static <
-                DO extends TaskStateOwner<DO, TS>,
-                TT extends TaskTransition<DO, TT, TS>,
-                TS extends TaskState<DO, TS>
+                DO extends StateOwner<DO, TS>,
+                TT extends StateTransitionType<DO, TT, TS>,
+                TS extends State<DO, TS>
         > boolean canApply(
                 final DO domainObject,
                 final TT candidateTransition,
@@ -101,7 +101,7 @@ public interface TaskTransition<
          * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
          *
          * <p>
-         *     Only called if {@link #canApply(TaskStateOwner, ServiceRegistry2)}
+         *     Only called if {@link #canApply(StateOwner, ServiceRegistry2)}
          * </p>
          * @param domainObject
          * @param taskTransition - the transition being applied
@@ -109,9 +109,9 @@ public interface TaskTransition<
          * @return
          */
         public static <
-                DO extends TaskStateOwner<DO, TS>,
-                TT extends TaskTransition<DO, TT, TS>,
-                TS extends TaskState<DO, TS>
+                DO extends StateOwner<DO, TS>,
+                TT extends StateTransitionType<DO, TT, TS>,
+                TS extends State<DO, TS>
         > Task<?, DO, TT, TS> apply(
                 final DO domainObject,
                 final TT taskTransition,
@@ -149,9 +149,9 @@ public interface TaskTransition<
             return task;
         }
 
-        static <DO extends TaskStateOwner<DO, TS>,
-                TT extends TaskTransition<DO, TT, TS>,
-                TS extends TaskState<DO, TS>
+        static <DO extends StateOwner<DO, TS>,
+                TT extends StateTransitionType<DO, TT, TS>,
+                TS extends State<DO, TS>
         > boolean isFromState(
                 final TT taskTransition,
                 final TS fromState) {
@@ -162,10 +162,10 @@ public interface TaskTransition<
     }
 
     class Event<
-            DO extends TaskStateOwner<DO, TS>,
-            TT extends TaskTransition<DO, TT, TS>,
-            TS extends TaskState<DO, TS>
-            > extends AbstractDomainEvent<TaskTransition<DO, TT, ?>> {
+            DO extends StateOwner<DO, TS>,
+            TT extends StateTransitionType<DO, TT, TS>,
+            TS extends State<DO, TS>
+            > extends AbstractDomainEvent<StateTransitionType<DO, TT, ?>> {
 
         private final DO domainObject;
         private final TT taskTransition;
@@ -187,13 +187,13 @@ public interface TaskTransition<
     }
 
     abstract class TaskCompletionSubscriberAbstract<
-            DO extends TaskStateOwner<DO, TS>,
-            TT extends TaskTransition<DO, TT, TS>,
-            TS extends TaskState<DO, TS>
+            DO extends StateOwner<DO, TS>,
+            TT extends StateTransitionType<DO, TT, TS>,
+            TS extends State<DO, TS>
         > extends AbstractSubscriber {
 
         @com.google.common.eventbus.Subscribe
-        public void on(TaskTransition.Event<DO, TT, TS> event) {
+        public void on(StateTransitionType.Event<DO, TT, TS> event) {
             if(event.getEventPhase() == AbstractDomainEvent.Phase.EXECUTING) {
                 final TT taskTransition = event.getTaskTransition();
                 final DO domainObject = event.getDomainObject();

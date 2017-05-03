@@ -17,15 +17,15 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
+import org.estatio.capex.dom.task.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.TaskTransition;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 
 @Getter
-public enum IncomingInvoiceTransition
-        implements TaskTransition<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+public enum IncomingInvoiceTransitionType
+        implements StateTransitionType<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
 
     INSTANTIATING(
             (IncomingInvoiceState)null,
@@ -101,14 +101,14 @@ public enum IncomingInvoiceTransition
     private final List<IncomingInvoiceState> fromStates;
     private final IncomingInvoiceState toState;
 
-    IncomingInvoiceTransition(
+    IncomingInvoiceTransitionType(
             final List<IncomingInvoiceState> fromState,
             final IncomingInvoiceState toState) {
         this.fromStates = fromState;
         this.toState = toState;
     }
 
-    IncomingInvoiceTransition(
+    IncomingInvoiceTransitionType(
             final IncomingInvoiceState fromState,
             final IncomingInvoiceState toState
     ) {
@@ -147,11 +147,11 @@ public enum IncomingInvoiceTransition
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class TaskForIncomingInvoiceCompletionSubscriber
-            extends TaskCompletionSubscriberAbstract<IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+            extends TaskCompletionSubscriberAbstract<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
 
         @Override
-        protected List<Task<?, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState>> findTasksByDomainObjectAndTransition(
-                final IncomingInvoice domainObject, final IncomingInvoiceTransition taskTransition) {
+        protected List<Task<?, IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState>> findTasksByDomainObjectAndTransition(
+                final IncomingInvoice domainObject, final IncomingInvoiceTransitionType taskTransition) {
             return (List)repository.findByInvoiceAndTransition(domainObject, taskTransition);
         }
 
@@ -160,7 +160,7 @@ public enum IncomingInvoiceTransition
     }
 
     @Override
-    public List<IncomingInvoiceTransition> allValues() {
+    public List<IncomingInvoiceTransitionType> allValues() {
         return Arrays.asList(values());
     }
 

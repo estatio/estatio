@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -86,7 +86,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             final IncomingInvoice invoice = incomingInvoiceRepository.create("TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
 
             // When
-            taskForIncomingInvoiceRepository.create(invoice, IncomingInvoiceTransition.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");
+            taskForIncomingInvoiceRepository.create(invoice, IncomingInvoiceTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");
 
             //Then
 

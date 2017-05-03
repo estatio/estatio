@@ -54,9 +54,9 @@ import lombok.Setter;
 @DomainObject(objectType = "task.Task")
 public abstract class Task<
         T extends Task<T, DO, TT, TS>,
-        DO extends TaskStateOwner<DO, TS>,
-        TT extends TaskTransition<DO, TT, TS>,
-        TS extends TaskState<DO, TS>
+        DO extends StateOwner<DO, TS>,
+        TT extends StateTransitionType<DO, TT, TS>,
+        TS extends State<DO, TS>
         > implements Comparable<T> {
 
     protected abstract DO getDomainObject();
@@ -67,9 +67,9 @@ public abstract class Task<
     @Mixin(method="act")
     public static class execute<
             T extends Task<T, DO, TT, TS>,
-            DO extends TaskStateOwner<DO, TS>,
-            TT extends TaskTransition<DO, TT, TS>,
-            TS extends TaskState<DO, TS>
+            DO extends StateOwner<DO, TS>,
+            TT extends StateTransitionType<DO, TT, TS>,
+            TS extends State<DO, TS>
             > {
         private final T task;
         public execute(final T task ) {
@@ -79,7 +79,7 @@ public abstract class Task<
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed= Contributed.AS_ACTION)
         public DO act() {
-            TaskTransition.Util.apply(task.getDomainObject(), task.getTransition(), serviceRegistry);
+            StateTransitionType.Util.apply(task.getDomainObject(), task.getTransition(), serviceRegistry);
             return task.getDomainObject();
         }
         public String disableAct() {

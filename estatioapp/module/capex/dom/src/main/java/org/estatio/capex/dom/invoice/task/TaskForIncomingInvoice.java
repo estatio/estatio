@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -53,11 +53,11 @@ import lombok.Setter;
 
 @DomainObject(objectType = "invoice.TaskForIncomingInvoice" )
 public class TaskForIncomingInvoice
-        extends Task<TaskForIncomingInvoice, IncomingInvoice, IncomingInvoiceTransition, IncomingInvoiceState> {
+        extends Task<TaskForIncomingInvoice, IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingInvoiceTransition transition;
+    private IncomingInvoiceTransitionType transition;
 
     @Column(allowsNull = "false")
     @Getter @Setter
