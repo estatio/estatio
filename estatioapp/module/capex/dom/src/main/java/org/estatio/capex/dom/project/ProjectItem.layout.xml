@@ -7,25 +7,26 @@
         </col>
     </row>
     <row>
-        <col span="6">
+        <col span="12">
             <tabGroup>
                 <tab name="Project item">
                     <row>
-                        <col span="12">
+                        <col span="4">
                             <ns2:fieldSet name="Project item" id="projectItem">
                                 <ns2:property id="project"/>
                                 <ns2:property id="description"/>
-                                <ns2:property id="budgetedAmount"/>
                             </ns2:fieldSet>
                         </col>
-                    </row>
-                </tab>
-                <tab name="Dimensions">
-                    <row>
-                        <col span="12">
+                        <col span="4">
+                            <ns2:fieldSet name="Amount" id="amount">
+                                <ns2:property id="budgetedAmount"/>
+                                <ns2:property id="tax"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <col span="4">
                             <ns2:fieldSet name="Dimensions" id="dimensions">
                                 <ns2:property id="charge"/>
-                                <ns2:property id="fixedAsset"/>
+                                <ns2:property id="property"/>
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
                                 <ns2:property id="type"/>
@@ -38,7 +39,7 @@
                         <col span="12">
                             <ns2:fieldSet name="Application Tenancy" id="general">
                                 <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -51,8 +52,6 @@
                     </row>
                 </tab>
             </tabGroup>
-        </col>
-        <col span="6">
         </col>
     </row>
     <row>

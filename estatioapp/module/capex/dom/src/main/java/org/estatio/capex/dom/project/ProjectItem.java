@@ -111,15 +111,13 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Getter @Setter
 	private Property property;
 
+	@PropertyLayout(hidden = Where.ALL_TABLES)
 	@Column(allowsNull = "true", name = "taxId")
 	@Getter @Setter
 	private Tax tax;
 
-	@PropertyLayout(
-			named = "Application Level",
-			describedAs = "Determines those users for whom this object is available to view and/or modify."
-	)
 	@Override
+	@Programmatic
 	public ApplicationTenancy getApplicationTenancy() {
 		return getProject().getApplicationTenancy();
 	}
@@ -131,11 +129,13 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	}
 
 	@Override
+	@Programmatic
 	public FinancialItemType getType() {
 		return FinancialItemType.BUDGETED;
 	}
 
 	@Override
+	@Programmatic
 	public FixedAsset<?> getFixedAsset() {
 		return getProperty();
 	}
