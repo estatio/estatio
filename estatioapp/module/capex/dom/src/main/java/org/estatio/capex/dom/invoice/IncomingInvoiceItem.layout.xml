@@ -32,8 +32,19 @@
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:property id="netAmount"/>
                                 <ns2:property id="vatAmount"/>
-                                <ns2:property id="tax"/>
+                                <ns2:property id="tax">
+                                    <ns2:action id="changeTax" hidden="EVERYWHERE"/>
+                                </ns2:property>
                                 <ns2:property id="grossAmount"/>
+                            </ns2:fieldSet>
+                        </col>
+                        <!--temporarily hides actions for demo purposes TODO: bring them to subclass-->
+                        <col span="0">
+                            <ns2:fieldSet name="hidden" id="hidden">
+                                <ns2:action id="remove"/>
+                                <ns2:action id="changeDescription"/>
+                                <ns2:action id="changeEffectiveDates"/>
+                                <ns2:action id="verify"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
