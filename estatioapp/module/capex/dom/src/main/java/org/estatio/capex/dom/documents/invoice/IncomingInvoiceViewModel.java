@@ -152,11 +152,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         List<OrderItem> result = new ArrayList<>();
 
         for (Order order : orderRepository.matchByOrderNumber(searchString)){
-            if (hasSeller() && order.getSeller().equals(getSeller())) {
-                for (OrderItem item : order.getItems()) {
-                    if (!result.contains(item)) {
-                        result.add(item);
-                    }
+            for (OrderItem item : order.getItems()) {
+                if (!result.contains(item)) {
+                    result.add(item);
                 }
             }
         }

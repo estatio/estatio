@@ -16,8 +16,8 @@ public class PeriodUtil {
         LocalDate endDate = null;
         if (financialYearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(1,5));
-            startDate = new LocalDate(year, 07, 01);
-            endDate = new LocalDate(year+1, 06, 30);
+            startDate = new LocalDate(year-1, 07, 01);
+            endDate = new LocalDate(year, 06, 30);
         }
         if (yearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(0,4));
@@ -28,12 +28,12 @@ public class PeriodUtil {
     }
 
     public static String periodFromInterval(final LocalDateInterval interval){
-        LocalDate startDate = interval.startDate();
+        LocalDate endDate = interval.endDate();
         if (matchesCalendarYear(interval)){
-            return String.valueOf(startDate.getYear());
+            return String.valueOf(endDate.getYear());
         }
         if (matchesFinancialYear(interval)){
-            return "F".concat(String.valueOf(startDate.getYear()));
+            return "F".concat(String.valueOf(endDate.getYear()));
         }
         return null;
     }
