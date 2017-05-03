@@ -83,7 +83,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
 
-            final IncomingInvoice invoice = incomingInvoiceRepository.create("TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW);
+            final IncomingInvoice invoice = incomingInvoiceRepository.create("TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
 
             // When
             taskForIncomingInvoiceRepository.create(invoice, IncomingInvoiceTransition.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");

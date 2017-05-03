@@ -122,7 +122,7 @@ public class IncomingInvoiceViewModelTest {
         String result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, due date, net amount, gross amount required");
+        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, date received, due date, net amount, gross amount required");
 
         // and when
         vm.setInvoiceNumber("123");
@@ -130,11 +130,12 @@ public class IncomingInvoiceViewModelTest {
         result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("buyer, seller, due date, gross amount required");
+        Assertions.assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount required");
 
         // and when
         vm.setBuyer(new Organisation());
         vm.setSeller(new Organisation());
+        vm.setDateReceived(new LocalDate());
         vm.setDueDate(new LocalDate());
         vm.setGrossAmount(BigDecimal.ZERO);
         result = vm.minimalRequiredDataToComplete();

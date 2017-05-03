@@ -10,6 +10,8 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -37,10 +39,12 @@ public class IncomingInvoiceMenu {
             final Party seller,
             final LocalDate dueDate,
             final LocalDate invoiceDate,
-            final PaymentMethod paymentMethod
+            final PaymentMethod paymentMethod,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final LocalDate dateReceived
     ){
         final String atPath = "/FRA";
-        return incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, InvoiceStatus.NEW);
+        return incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, InvoiceStatus.NEW, dateReceived, null);
     }
 
     @Inject

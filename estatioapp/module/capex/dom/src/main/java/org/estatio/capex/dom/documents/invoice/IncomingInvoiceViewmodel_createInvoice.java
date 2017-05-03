@@ -71,7 +71,9 @@ public class IncomingInvoiceViewmodel_createInvoice {
                 getViewmodel().getInvoiceDate(),
                 getViewmodel().getDueDate(),
                 getViewmodel().getPaymentMethod(),
-                InvoiceStatus.NEW
+                InvoiceStatus.NEW,
+                getViewmodel().getDateReceived(),
+                getViewmodel().getNotCorrect()
         );
         // create invoice item
         incomingInvoice.addItem(

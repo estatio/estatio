@@ -37,9 +37,11 @@
                                         <cpt:action id="changeInvoiceDetails" position="PANEL"/>
                                         <cpt:property id="invoiceNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
+                                        <cpt:property id="dateReceived" promptStyle="INLINE"/>
                                         <cpt:property id="invoiceDate" promptStyle="INLINE"/>
                                         <cpt:property id="dueDate" promptStyle="INLINE"/>
                                         <cpt:property id="paymentMethod" promptStyle="INLINE"/>
+                                        <cpt:property id="notCorrect" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Invoice Item" id="invoiceItem" unreferencedProperties="false">
                                         <cpt:action id="changeItemDetails" position="PANEL"/>

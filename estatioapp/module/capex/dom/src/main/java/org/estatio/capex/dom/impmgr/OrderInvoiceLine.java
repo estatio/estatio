@@ -288,7 +288,7 @@ public class OrderInvoiceLine {
 
                 invoice = incomingInvoiceRepository.findOrCreate(
                         line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
-                        invoiceStatus);
+                        invoiceStatus, null, null);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.getInvoiceNumber());
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());

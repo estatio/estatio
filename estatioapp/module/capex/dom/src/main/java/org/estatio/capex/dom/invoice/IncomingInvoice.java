@@ -83,7 +83,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
             final LocalDate invoiceDate,
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus){
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dateReceived,
+            final Boolean notCorrect){
         super("invoiceNumber");
         setInvoiceNumber(invoiceNumber);
         setApplicationTenancyPath(atPath);
@@ -93,7 +95,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
         setDueDate(dueDate);
         setPaymentMethod(paymentMethod);
         setStatus(invoiceStatus);
+        setDateReceived(dateReceived);
         setIncomingInvoiceState(IncomingInvoiceState.NEW);
+        setNotCorrect(notCorrect);
     }
 
     @MemberOrder(name="items", sequence = "1")
@@ -153,6 +157,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
     @Getter @Setter
     @Column(allowsNull = "false")
     private IncomingInvoiceState incomingInvoiceState;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Boolean notCorrect;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate dateReceived;
 
     //region > taskstate.owner
     @Override

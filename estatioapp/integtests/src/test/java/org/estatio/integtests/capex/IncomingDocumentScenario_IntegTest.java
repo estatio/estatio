@@ -185,6 +185,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             incomingInvoiceViewModel = (IncomingInvoiceViewModel) incomingInvoices.get(0);
             assertThat(incomingInvoiceViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
             assertThat(incomingInvoiceViewModel.getDocument().getType()).isEqualTo(INCOMING_INVOICE);
+            assertThat(incomingInvoiceViewModel.getDateReceived()).isNotNull();
+            assertThat(incomingInvoiceViewModel.getDateReceived()).isEqualTo(incomingInvoiceViewModel.getDocument().getCreatedAt().toLocalDate());
 
             // document is linked to property
             assertThat(paperclipRepository.findByAttachedTo(propertyForOxf).size()).isEqualTo(2);
@@ -355,6 +357,10 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             Document doc = incomingInvoiceViewModel.getDocument();
             assertThat(paperclip.getDocument()).isEqualTo(doc);
+
+            // by default date received is derived from document
+            assertThat(invoiceCreated.getDateReceived()).isNotNull();
+            assertThat(invoiceCreated.getDateReceived()).isEqualTo(doc.getCreatedAt().toLocalDate());
 
             // incoming invoices is empty
             incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());

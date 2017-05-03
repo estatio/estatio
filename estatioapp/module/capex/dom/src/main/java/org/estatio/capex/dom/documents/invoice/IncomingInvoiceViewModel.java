@@ -73,6 +73,7 @@ import lombok.Setter;
                 "invoiceNumber",
                 "buyer",
                 "seller",
+                "dateReceived",
                 "invoiceDate",
                 "dueDate",
                 "paymentMethod",
@@ -86,6 +87,7 @@ import lombok.Setter;
                 "vatAmount",
                 "tax",
                 "grossAmount",
+                "notCorrect",
                 "incomingInvoice"
         }
 )
@@ -98,6 +100,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     }
     public IncomingInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
         super(document, fixedAsset);
+        setDateReceived(document.getCreatedAt().toLocalDate());
     }
 
     /**
@@ -111,6 +114,18 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
+    private LocalDate dateReceived;
+
+    public LocalDate defaultDateReceived(){
+        return getDateReceived()==null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    }
+
+    private LocalDate dateReceivedDerivedFromDocument() {
+        return getDocument().getCreatedAt().toLocalDate();
+    }
+
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
+    @Property(editing = Editing.ENABLED)
     private LocalDate invoiceDate;
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
@@ -119,6 +134,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     @Property(editing = Editing.ENABLED)
     private PaymentMethod paymentMethod;
+
+    @Property(editing = Editing.ENABLED)
+    private Boolean notCorrect;
 
     public PaymentMethod defaultPaymentMethod(){
         return getPaymentMethod();
@@ -193,6 +211,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
             final Organisation buyer,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Organisation seller,
+            final LocalDate dateReceived,
             @Parameter(optionality = Optionality.OPTIONAL)
             final LocalDate invoiceDate,
             final LocalDate dueDate,
@@ -202,6 +221,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         setInvoiceNumber(invoiceNumber);
         setBuyer(buyer);
         setSeller(seller);
+        setDateReceived(dateReceived);
         setInvoiceDate(invoiceDate);
         setDueDate(dueDate);
         setPaymentMethod(paymentMethod);
@@ -221,14 +241,18 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     }
 
     public LocalDate default3ChangeInvoiceDetails(){
-        return getInvoiceDate();
+        return getDateReceived()==null ? dateReceivedDerivedFromDocument() : getDateReceived();
     }
 
     public LocalDate default4ChangeInvoiceDetails(){
+        return getInvoiceDate();
+    }
+
+    public LocalDate default5ChangeInvoiceDetails(){
         return getDueDate();
     }
 
-    public PaymentMethod default5ChangeInvoiceDetails(){
+    public PaymentMethod default6ChangeInvoiceDetails(){
         return getPaymentMethod()==null ? PaymentMethod.BANK_TRANSFER : getPaymentMethod();
     }
 
@@ -280,6 +304,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
         if (getSeller()==null){
             buffer.append("seller, ");
+        }
+        if (getDateReceived()==null){
+            buffer.append("date received, ");
         }
         if (getDueDate()==null){
             buffer.append("due date, ");

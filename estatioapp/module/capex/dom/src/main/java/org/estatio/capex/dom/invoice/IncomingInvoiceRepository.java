@@ -44,9 +44,11 @@ public class IncomingInvoiceRepository {
             final LocalDate invoiceDate,
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus) {
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dateReceived,
+            final Boolean notCorrect) {
         final IncomingInvoice invoice =
-                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus);
+                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, notCorrect);
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persist(invoice);
@@ -63,10 +65,12 @@ public class IncomingInvoiceRepository {
             final LocalDate invoiceDate,
             final LocalDate dueDate,
             final PaymentMethod paymentMethod,
-            final InvoiceStatus invoiceStatus) {
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dateReceived,
+            final Boolean notCorrect) {
         IncomingInvoice invoice = findByInvoiceNumber(invoiceNumber);
         if (invoice == null) {
-            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus);
+            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, notCorrect);
         }
         return invoice;
     }
