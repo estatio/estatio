@@ -10,7 +10,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.task.StateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionType;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {

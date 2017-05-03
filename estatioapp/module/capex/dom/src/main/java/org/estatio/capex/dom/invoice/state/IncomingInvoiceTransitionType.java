@@ -17,7 +17,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
-import org.estatio.capex.dom.task.StateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 

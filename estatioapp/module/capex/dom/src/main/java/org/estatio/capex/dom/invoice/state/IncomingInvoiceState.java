@@ -1,7 +1,7 @@
 package org.estatio.capex.dom.invoice.state;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.task.State;
+import org.estatio.capex.dom.state.State;
 
 public enum IncomingInvoiceState
         implements State<IncomingInvoice, IncomingInvoiceState> {

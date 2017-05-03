@@ -28,7 +28,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.task.StateOwner;
+import org.estatio.capex.dom.state.StateOwner;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -168,13 +168,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
 
     //region > taskstate.owner
     @Override
-    public IncomingInvoiceState getTaskState() {
+    public IncomingInvoiceState getState() {
         return getIncomingInvoiceState();
     }
 
     @Override
-    public void setTaskState(final IncomingInvoiceState taskState) {
-        setIncomingInvoiceState(taskState);
+    public void setState(final IncomingInvoiceState state) {
+        setIncomingInvoiceState(state);
     }
 
     @Programmatic

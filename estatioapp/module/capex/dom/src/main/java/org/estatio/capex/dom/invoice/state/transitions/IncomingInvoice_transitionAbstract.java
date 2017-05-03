@@ -7,7 +7,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.task.StateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionType;
 
 public abstract class IncomingInvoice_transitionAbstract {
 

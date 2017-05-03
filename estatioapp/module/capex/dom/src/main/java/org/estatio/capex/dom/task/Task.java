@@ -25,6 +25,9 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.user.UserService;
 
+import org.estatio.capex.dom.state.State;
+import org.estatio.capex.dom.state.StateOwner;
+import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;

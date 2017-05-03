@@ -1,13 +1,13 @@
-package org.estatio.capex.dom.task;
+package org.estatio.capex.dom.state;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
 public interface StateOwner<DO extends StateOwner<DO, S>, S extends State<DO, S>> {
 
     @Programmatic
-    S getTaskState();
+    S getState();
 
     @Programmatic
-    void setTaskState(S taskState);
+    void setState(S state);
 
 }

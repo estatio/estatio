@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.task;
+package org.estatio.capex.dom.state;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 public interface StateTransitionType<
@@ -93,7 +94,7 @@ public interface StateTransitionType<
                 final DO domainObject,
                 final TT candidateTransition,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isFromState(candidateTransition, domainObject.getTaskState()) &&
+            return isFromState(candidateTransition, domainObject.getState()) &&
                     candidateTransition.canApply(domainObject, serviceRegistry2);
         }
 
@@ -125,7 +126,7 @@ public interface StateTransitionType<
 
             // transition the domain object to its next state
             final TS nextState = taskTransition.getToState();
-            domainObject.setTaskState(nextState);
+            domainObject.setState(nextState);
 
             // for wherever we might go next, we spin through all possible transitions,
             // and create a task for the first one that applies to this particular domain object.
