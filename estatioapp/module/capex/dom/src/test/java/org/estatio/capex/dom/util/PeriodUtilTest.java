@@ -18,7 +18,7 @@ public class PeriodUtilTest {
         period = "F2017M01";
         // then
         Assertions.assertThat(PeriodUtil.yearFromPeriod(period).toString())
-                .isEqualTo("2017-07-01/2018-07-01");
+                .isEqualTo("2016-07-01/2017-07-01");
 
         // when
         period = "2017Q1";
@@ -66,8 +66,8 @@ public class PeriodUtilTest {
                 .isEqualTo("2017");
 
         // when
-        startDate = new LocalDate(2017,07,01);
-        endDate = new LocalDate(2018, 06,30);
+        startDate = new LocalDate(2016,07,01);
+        endDate = new LocalDate(2017, 06,30);
         interval = new LocalDateInterval(startDate, endDate);
 
         // then
@@ -93,8 +93,8 @@ public class PeriodUtilTest {
                 .isNull();
 
         // when
-        startDate = new LocalDate(2017,07,01);
-        endDate = new LocalDate(2018, 06,29);
+        startDate = new LocalDate(2016,07,01);
+        endDate = new LocalDate(2017, 06,29);
         interval = new LocalDateInterval(startDate, endDate);
 
         // then

@@ -18,7 +18,6 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Organisation;
 
 public class IncomingInvoiceViewModelTest {
@@ -123,7 +122,7 @@ public class IncomingInvoiceViewModelTest {
         String result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, due date, payment method, net amount, gross amount required");
+        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, due date, net amount, gross amount required");
 
         // and when
         vm.setInvoiceNumber("123");
@@ -131,13 +130,12 @@ public class IncomingInvoiceViewModelTest {
         result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("buyer, seller, due date, payment method, gross amount required");
+        Assertions.assertThat(result).isEqualTo("buyer, seller, due date, gross amount required");
 
         // and when
         vm.setBuyer(new Organisation());
         vm.setSeller(new Organisation());
         vm.setDueDate(new LocalDate());
-        vm.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
         vm.setGrossAmount(BigDecimal.ZERO);
         result = vm.minimalRequiredDataToComplete();
 
