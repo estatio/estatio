@@ -25,8 +25,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.user.UserService;
 
-import org.estatio.capex.dom.state.State;
-import org.estatio.capex.dom.state.StateOwner;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -55,35 +53,22 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.task.Task ")
 })
 @DomainObject(objectType = "task.Task")
-public abstract class Task<
-        T extends Task<T, DO, TT, TS>,
-        DO extends StateOwner<DO, TS>,
-        TT extends StateTransitionType<DO, TT, TS>,
-        TS extends State<DO, TS>
-        > implements Comparable<T> {
-
-    protected abstract DO getDomainObject();
-
-    protected abstract TT getTransition();
-
+public class Task implements Comparable<Task> {
 
     @Mixin(method="act")
-    public static class execute<
-            T extends Task<T, DO, TT, TS>,
-            DO extends StateOwner<DO, TS>,
-            TT extends StateTransitionType<DO, TT, TS>,
-            TS extends State<DO, TS>
-            > {
-        private final T task;
-        public execute(final T task ) {
+    public static class execute {
+
+        private final Task task;
+        public execute(final Task task ) {
             this.task = task;
         }
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed= Contributed.AS_ACTION)
-        public DO act() {
-            StateTransitionType.Util.apply(task.getDomainObject(), task.getTransition(), serviceRegistry);
-            return task.getDomainObject();
+        public Object act() {
+            final Object obj = domainObjectFor(task);
+            StateTransitionType.Util.apply(obj, transitionTypeFor(task), serviceRegistry);
+            return obj;
         }
         public String disableAct() {
             return task.isCompleted()
@@ -91,6 +76,15 @@ public abstract class Task<
                     : null;
         }
 
+        private Object domainObjectFor(Task task) {
+            // TODO
+            return null;
+        }
+
+        private StateTransitionType transitionTypeFor(Task task) {
+            // TODO
+            return null;
+        }
 
         @Inject
         private ServiceRegistry2 serviceRegistry;

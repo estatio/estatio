@@ -19,26 +19,26 @@ import org.estatio.dom.roles.EstatioRole;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        repositoryFor = TaskForIncomingInvoice.class
+        repositoryFor = StateTransitionForIncomingInvoice.class
 )
-public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFactory<TaskForIncomingInvoice> {
+public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFactory<StateTransitionForIncomingInvoice> {
 
     public TaskForIncomingInvoiceRepository() {
-        super(TaskForIncomingInvoiceRepository.class, TaskForIncomingInvoice.class);
+        super(TaskForIncomingInvoiceRepository.class, StateTransitionForIncomingInvoice.class);
     }
 
     @Programmatic
-    public java.util.List<TaskForIncomingInvoice> listAll() {
-        return allInstances(TaskForIncomingInvoice.class);
+    public java.util.List<StateTransitionForIncomingInvoice> listAll() {
+        return allInstances(StateTransitionForIncomingInvoice.class);
     }
 
     @Programmatic
-    public List<TaskForIncomingInvoice> findByInvoice(
+    public List<StateTransitionForIncomingInvoice> findByInvoice(
             final IncomingInvoice invoice
     ) {
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
-                        TaskForIncomingInvoice.class,
+                        StateTransitionForIncomingInvoice.class,
                         "findByInvoice",
                         "invoice", invoice));
     }
@@ -49,44 +49,44 @@ public class TaskForIncomingInvoiceRepository extends UdoDomainRepositoryAndFact
             final IncomingInvoiceTransitionType transition) {
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
-                        TaskForIncomingInvoice.class,
+                        StateTransitionForIncomingInvoice.class,
                         "findByInvoiceAndTransition",
                         "invoice", invoice,
                         "transition", transition));
     }
 
     @Programmatic
-    public List<TaskForIncomingInvoice> findByInvoiceAndRole(
+    public List<StateTransitionForIncomingInvoice> findByInvoiceAndRole(
             final IncomingInvoice invoice,
             final EstatioRole assignedTo
     ) {
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
-                        TaskForIncomingInvoice.class,
+                        StateTransitionForIncomingInvoice.class,
                         "findByInvoiceAndAssignedTo",
                         "invoice", invoice, "assignedTo", assignedTo));
     }
 
     @Programmatic
-    public List<TaskForIncomingInvoice> findByInvoiceAndRoleAndNotCompleted(
+    public List<StateTransitionForIncomingInvoice> findByInvoiceAndRoleAndNotCompleted(
             final IncomingInvoice invoice,
             final EstatioRole assignedTo
     ) {
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
-                        TaskForIncomingInvoice.class,
+                        StateTransitionForIncomingInvoice.class,
                         "findByInvoice",
                         "invoice", invoice, "assignedTo", assignedTo));
     }
 
 
     @Programmatic
-    public TaskForIncomingInvoice create(
+    public StateTransitionForIncomingInvoice create(
             final IncomingInvoice invoice,
             final IncomingInvoiceTransitionType transition,
             final EstatioRole assignTo,
             final String description) {
-        final TaskForIncomingInvoice task = repositoryService.instantiate(TaskForIncomingInvoice.class);
+        final StateTransitionForIncomingInvoice task = repositoryService.instantiate(StateTransitionForIncomingInvoice.class);
         task.setInvoice(invoice);
         task.setAssignedTo(assignTo);
         task.setTransition(transition);

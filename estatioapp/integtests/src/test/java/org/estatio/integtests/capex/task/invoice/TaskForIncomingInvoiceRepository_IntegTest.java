@@ -31,7 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
+import org.estatio.capex.dom.invoice.task.StateTransitionForIncomingInvoice;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -90,7 +90,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             //Then
 
-            final List<TaskForIncomingInvoice> tasks =  taskForIncomingInvoiceRepository.findByInvoice(invoice);
+            final List<StateTransitionForIncomingInvoice> tasks =  taskForIncomingInvoiceRepository.findByInvoice(invoice);
 
             assertThat(tasks.size()).isEqualTo(1);
         }

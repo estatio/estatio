@@ -23,7 +23,7 @@ public class IncomingInvoice_tasks {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<TaskForIncomingInvoice> tasks() {
+    public List<StateTransitionForIncomingInvoice> tasks() {
         return repository.findByInvoice(incomingInvoice);
     }
 

@@ -12,6 +12,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
 import org.estatio.capex.dom.task.NewTaskMixin;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
@@ -31,7 +32,7 @@ public class IncomingInvoice_newTask
     )
     @MemberOrder(name = "tasks", sequence = "1")
     @Override
-    public TaskForIncomingInvoice newTask(
+    public Task newTask(
             final EstatioRole assignTo,
             final IncomingInvoiceTransitionType taskTransition,
             @Nullable

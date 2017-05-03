@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
-import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoice;
+import org.estatio.capex.dom.invoice.task.StateTransitionForIncomingInvoice;
 import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
@@ -132,7 +132,7 @@ public enum IncomingInvoiceTransitionType
     }
 
     @Override
-    public TaskForIncomingInvoice createTask(
+    public StateTransitionForIncomingInvoice createTask(
             final IncomingInvoice domainObject,
             final ServiceRegistry2 serviceRegistry2) {
         final WrapperFactory wrapperFactory = serviceRegistry2.lookupService(WrapperFactory.class);

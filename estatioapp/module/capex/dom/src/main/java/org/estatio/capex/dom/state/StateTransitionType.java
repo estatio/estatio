@@ -16,9 +16,8 @@ import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 public interface StateTransitionType<
-                        SO extends StateOwner<SO, S>,
-                        ST extends StateTransitionType<SO, ST, S>,
-                        S extends State<SO, S>> {
+                        STT extends StateTransitionType<STT, S>,
+                        S extends State<S>> {
 
     @Programmatic
     List<S> getFromStates();
@@ -29,7 +28,7 @@ public interface StateTransitionType<
     /**
      * All available instances of this class, used to search for the following transition.
      */
-    List<ST> allValues();
+    List<STT> allValues();
 
 
     /**
@@ -42,7 +41,7 @@ public interface StateTransitionType<
      * </p>
      */
     @Programmatic
-    boolean canApply(final SO domainObject, final ServiceRegistry2 serviceRegistry2);
+    boolean canApply(final Object domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
      * The {@link EstatioRole task role}, if any, that any {@link Task} wrapping this transition must be routed to.
@@ -57,17 +56,17 @@ public interface StateTransitionType<
 
     /**
      * Only called if {@link #assignTaskTo()} is non-null, and
-     * {@link #canApply(StateOwner, ServiceRegistry2)} also returns <tt>true</tt>.
+     * {@link #canApply(Object, ServiceRegistry2)} also returns <tt>true</tt>.
      *
      * <p>
      *     Typically implementations might want to cache results from
-     *     {@link #canApply(StateOwner, ServiceRegistry2)} (lookup {@link QueryResultsCache} from provided
+     *     {@link #canApply(Object, ServiceRegistry2)} (lookup {@link QueryResultsCache} from provided
      *     {@link ServiceRegistry2}).
      * </p>
      */
     @Programmatic
-    Task<?, SO, ST, S> createTask(
-            final SO domainObject,
+    Task createTask(
+            final Object domainObject,
             final ServiceRegistry2 serviceRegistry2);
 
     class Util {
@@ -82,20 +81,20 @@ public interface StateTransitionType<
          * </p>
          *
          * @param domainObject
-         * @param candidateTransition
+         * @param candidateTransitionType
          * @param serviceRegistry2
          * @return
          */
         public static <
-                DO extends StateOwner<DO, TS>,
-                TT extends StateTransitionType<DO, TT, TS>,
-                TS extends State<DO, TS>
+                STT extends StateTransitionType<STT, S>,
+                S extends State<S>
         > boolean canApply(
-                final DO domainObject,
-                final TT candidateTransition,
+                final Object domainObject,
+                final S fromState,
+                final STT candidateTransitionType,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isFromState(candidateTransition, domainObject.getState()) &&
-                    candidateTransition.canApply(domainObject, serviceRegistry2);
+            return isFromState(candidateTransitionType, fromState) &&
+                    candidateTransitionType.canApply(domainObject, serviceRegistry2);
         }
 
         /**
@@ -105,34 +104,33 @@ public interface StateTransitionType<
          *     Only called if {@link #canApply(StateOwner, ServiceRegistry2)}
          * </p>
          * @param domainObject
-         * @param taskTransition - the transition being applied
+         * @param transitionType - the transition being applied
          * @param serviceRegistry2 - lookup other services if necessary
          * @return
          */
         public static <
-                DO extends StateOwner<DO, TS>,
-                TT extends StateTransitionType<DO, TT, TS>,
-                TS extends State<DO, TS>
-        > Task<?, DO, TT, TS> apply(
-                final DO domainObject,
-                final TT taskTransition,
+                STT extends StateTransitionType<STT, S>,
+                S extends State<S>
+        > Task apply(
+                final Object domainObject,
+                final STT transitionType,
                 final ServiceRegistry2 serviceRegistry2) {
 
             final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
-            final Event<DO, TT, TS> event = new Event<>(domainObject, taskTransition);
+            final Event<STT, S> event = new Event<>(domainObject, transitionType);
 
             event.setEventPhase(AbstractDomainEvent.Phase.EXECUTING);
             eventBusService.post(event);
 
             // transition the domain object to its next state
-            final TS nextState = taskTransition.getToState();
+            final S nextState = transitionType.getToState();
             domainObject.setState(nextState);
 
             // for wherever we might go next, we spin through all possible transitions,
             // and create a task for the first one that applies to this particular domain object.
-            Task<?, DO, TT, TS> task = null;
-            final List<TT> allTransitions = taskTransition.allValues();
-            for (TT candidateNextTransition : allTransitions) {
+            Task task = null;
+            final List<STT> allTransitionsTypes = transitionType.allValues();
+            for (STT candidateNextTransition : allTransitionsTypes) {
                 if (candidateNextTransition.assignTaskTo() == null) {
                     continue;
                 }
@@ -163,43 +161,41 @@ public interface StateTransitionType<
     }
 
     class Event<
-            DO extends StateOwner<DO, TS>,
-            TT extends StateTransitionType<DO, TT, TS>,
-            TS extends State<DO, TS>
-            > extends AbstractDomainEvent<StateTransitionType<DO, TT, ?>> {
+            STT extends StateTransitionType<STT, S>,
+            S extends State<S>
+            > extends AbstractDomainEvent<StateTransitionType<STT, S>> {
 
-        private final DO domainObject;
-        private final TT taskTransition;
+        private final Object domainObject;
+        private final STT transitionType;
 
         public Event(
-                final DO domainObject,
-                final TT taskTransition) {
-            this.taskTransition = taskTransition;
+                final Object domainObject,
+                final STT transitionType) {
+            this.transitionType = transitionType;
             this.domainObject = domainObject;
         }
 
-        public TT getTaskTransition() {
-            return taskTransition;
+        public STT getTransitionType() {
+            return transitionType;
         }
 
-        public DO getDomainObject() {
+        public Object getDomainObject() {
             return domainObject;
         }
     }
 
     abstract class TaskCompletionSubscriberAbstract<
-            DO extends StateOwner<DO, TS>,
-            TT extends StateTransitionType<DO, TT, TS>,
-            TS extends State<DO, TS>
+            STT extends StateTransitionType<STT, S>,
+            S extends State<S>
         > extends AbstractSubscriber {
 
         @com.google.common.eventbus.Subscribe
-        public void on(StateTransitionType.Event<DO, TT, TS> event) {
+        public void on(StateTransitionType.Event<STT, S> event) {
             if(event.getEventPhase() == AbstractDomainEvent.Phase.EXECUTING) {
-                final TT taskTransition = event.getTaskTransition();
-                final DO domainObject = event.getDomainObject();
-                final List<Task<?, DO, TT, TS>> tasks =
-                        findTasksByDomainObjectAndTransition(domainObject, taskTransition);
+                final STT transitionType = event.getTransitionType();
+                final Object domainObject = event.getDomainObject();
+                final List<Task> tasks =
+                        findTasksByDomainObjectAndTransition(domainObject, transitionType);
                 for (final Task task : tasks) {
                     task.completed();
                 }
@@ -209,7 +205,7 @@ public interface StateTransitionType<
         /**
          * Mandatory hook
          */
-        protected abstract List<Task<?, DO, TT, TS>> findTasksByDomainObjectAndTransition(final DO domainObject, final TT taskTransition);
+        protected abstract List<Task> findTasksByDomainObjectAndTransition(final Object domainObject, final STT transitionType);
 
         @Inject
         TaskForIncomingInvoiceRepository repository;
