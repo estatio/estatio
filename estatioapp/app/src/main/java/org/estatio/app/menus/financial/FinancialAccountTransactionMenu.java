@@ -40,7 +40,7 @@ import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 )
 @DomainServiceLayout(
         menuOrder = "30",
-        named = "Accounts"
+        named = "Finance"
 )
 public class FinancialAccountTransactionMenu {
 

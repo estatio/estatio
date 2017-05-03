@@ -42,7 +42,7 @@ import org.estatio.dom.bankmandate.BankMandateRepository;
     nature = NatureOfService.VIEW_MENU_ONLY
 )
 @DomainServiceLayout(
-        named = "Accounts",
+        named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.2"
 )

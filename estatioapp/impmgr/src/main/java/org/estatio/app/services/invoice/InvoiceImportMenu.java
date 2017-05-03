@@ -36,7 +36,7 @@ import org.estatio.dom.asset.Property;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Invoices"
+        named = "Invoices Out"
 )
 public class InvoiceImportMenu {
 

@@ -40,7 +40,7 @@ import org.estatio.dom.party.Party;
         objectType = "org.estatio.app.menus.financial.FinancialAccountMenu"
 )
 @DomainServiceLayout(
-        named = "Finace",
+        named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "30.1")
 public class FinancialAccountMenu {

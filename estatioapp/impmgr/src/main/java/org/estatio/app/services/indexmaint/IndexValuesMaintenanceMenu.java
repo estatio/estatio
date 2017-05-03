@@ -48,7 +48,7 @@ import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(
-        named="Indices",
+        named="Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "60.1"
 )

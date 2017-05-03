@@ -43,7 +43,7 @@ import org.estatio.dom.party.Party;
         nature = NatureOfService.VIEW_MENU_ONLY,
         objectType = "org.estatio.app.menus.financial.BankAccountMenu"
 )
-@DomainServiceLayout(named = "Accounts", menuOrder = "30")
+@DomainServiceLayout(named = "Finance", menuOrder = "30")
 public class BankAccountMenu {
 
     public String iconName() {
