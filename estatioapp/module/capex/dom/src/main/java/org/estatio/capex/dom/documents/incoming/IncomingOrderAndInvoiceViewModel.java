@@ -93,7 +93,9 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
         List<Property> result = new ArrayList<>();
         if (getBuyer()!=null) {
             for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleType.PROPERTY_OWNER)){
-                result.add((Property) role.getAsset());
+                if (role.getAsset().getClass().isAssignableFrom(Property.class)) {
+                    result.add((Property) role.getAsset());
+                }
             }
         }
         return result.size()>0 ? result : propertyRepository.allProperties();
