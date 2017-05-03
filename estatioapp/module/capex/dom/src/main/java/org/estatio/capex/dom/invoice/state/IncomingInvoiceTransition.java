@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
@@ -28,12 +29,17 @@ public enum IncomingInvoiceTransition
 
     INSTANTIATING(
             (IncomingInvoiceState)null,
-            IncomingInvoiceState.NEW,
-            null),
+            IncomingInvoiceState.NEW
+    ),
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceState.NEW,
-            IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
-            EstatioRole.PROJECT_MANAGER) {
+            IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER
+    ) {
+
+        @Override
+        public EstatioRole assignTaskTo() {
+            return EstatioRole.PROJECT_MANAGER;
+        }
 
         @Override
         public boolean canApply(
@@ -41,71 +47,81 @@ public enum IncomingInvoiceTransition
             return domainObject.hasProject();
         }
 
-        @Override
-        public TaskForIncomingInvoice createTask(
-                final IncomingInvoice domainObject,
-                final ServiceRegistry2 serviceRegistry2) {
-            // TODO: customise the generated task, eg adding in the fixed project somehow
-            return super.createTask(domainObject, serviceRegistry2);
-        }
     },
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceState.NEW,
-            IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER,
-            EstatioRole.ASSET_MANAGER) {
+            IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER
+    ) {
+
+        @Override
+        public EstatioRole assignTaskTo() {
+            return EstatioRole.ASSET_MANAGER;
+        }
 
         @Override
         public boolean canApply(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return !domainObject.hasProject() && domainObject.hasFixedAsset();
         }
-
-        @Override
-        public TaskForIncomingInvoice createTask(
-                final IncomingInvoice domainObject,
-                final ServiceRegistry2 serviceRegistry2) {
-            // TODO: customise the generated task, eg adding in the fixed asset somehow
-            return super.createTask(domainObject, serviceRegistry2);
-        }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
             Arrays.asList(
                     IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER),
-            IncomingInvoiceState.APPROVED_BY_COUNTRY_DIRECTOR,
-            EstatioRole.COUNTRY_DIRECTOR),
+            IncomingInvoiceState.APPROVED_BY_COUNTRY_DIRECTOR
+    ) {
+        @Override
+        public EstatioRole assignTaskTo() {
+            return EstatioRole.COUNTRY_DIRECTOR;
+        }
+    },
     APPROVE_AS_TREASURER(
             IncomingInvoiceState.APPROVED_BY_COUNTRY_DIRECTOR,
-            IncomingInvoiceState.APPROVED_BY_TREASURER,
-            EstatioRole.TREASURER),
+            IncomingInvoiceState.APPROVED_BY_TREASURER
+    ) {
+        @Override
+        public EstatioRole assignTaskTo() {
+            return EstatioRole.TREASURER;
+        }
+    },
     PAY(
             IncomingInvoiceState.APPROVED_BY_TREASURER,
-            IncomingInvoiceState.PAID,
-            EstatioRole.TREASURER),
+            IncomingInvoiceState.PAID
+    ) {
+        @Override
+        public EstatioRole assignTaskTo() {
+            return EstatioRole.TREASURER;
+        }
+    },
     CANCEL(
             (IncomingInvoiceState)null,
-            IncomingInvoiceState.CANCELLED,
-            null);
+            IncomingInvoiceState.CANCELLED
+    );
 
     private final List<IncomingInvoiceState> fromStates;
     private final IncomingInvoiceState toState;
-    private final EstatioRole taskRoleRequiredIfAny;
 
     IncomingInvoiceTransition(
             final List<IncomingInvoiceState> fromState,
-            final IncomingInvoiceState toState,
-            final EstatioRole taskRoleRequiredIfAny) {
+            final IncomingInvoiceState toState) {
         this.fromStates = fromState;
         this.toState = toState;
-        this.taskRoleRequiredIfAny = taskRoleRequiredIfAny;
     }
 
     IncomingInvoiceTransition(
             final IncomingInvoiceState fromState,
-            final IncomingInvoiceState toState,
-            final EstatioRole taskRoleRequiredIfAny
+            final IncomingInvoiceState toState
     ) {
-        this(Collections.singletonList(fromState), toState, taskRoleRequiredIfAny);
+        this(Collections.singletonList(fromState), toState);
+    }
+
+    /**
+     * No {@link Task} will be created unless this method is overridden.
+     */
+    @Programmatic
+    @Override
+    public EstatioRole assignTaskTo() {
+        return null;
     }
 
     @Override
@@ -121,7 +137,7 @@ public enum IncomingInvoiceTransition
             final ServiceRegistry2 serviceRegistry2) {
         final WrapperFactory wrapperFactory = serviceRegistry2.lookupService(WrapperFactory.class);
         final FactoryService factoryService = serviceRegistry2.lookupService(FactoryService.class);
-        final EstatioRole taskRoleRequiredIfAny = this.getTaskRoleRequiredIfAny();
+        final EstatioRole taskRoleRequiredIfAny = this.assignTaskTo();
         return taskRoleRequiredIfAny != null
                     ? wrapperFactory.wrap(factoryService.mixin(IncomingInvoice_newTask.class, domainObject))
                                     .newTask(taskRoleRequiredIfAny, this, "")

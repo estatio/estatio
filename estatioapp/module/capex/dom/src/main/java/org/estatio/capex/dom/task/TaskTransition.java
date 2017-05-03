@@ -37,7 +37,7 @@ public interface TaskTransition<
      * <p>
      *     The domain object's current state will, at least, be compatible with <i>this</i> transition's
      *     {@link #getFromStates() from state}(s).  It is <i>not</i> necessary for there to be any
-     *     {@link #getTaskRoleRequiredIfAny() task role} associated with this transition, however.
+     *     {@link #assignTaskTo() task role} associated with this transition, however.
      * </p>
      */
     @Programmatic
@@ -52,10 +52,10 @@ public interface TaskTransition<
      * </p>
      */
     @Programmatic
-    EstatioRole getTaskRoleRequiredIfAny();
+    EstatioRole assignTaskTo();
 
     /**
-     * Only called if {@link #getTaskRoleRequiredIfAny()} is non-null, and
+     * Only called if {@link #assignTaskTo()} is non-null, and
      * {@link #canApply(TaskStateOwner, ServiceRegistry2)} also returns <tt>true</tt>.
      *
      * <p>
@@ -132,7 +132,7 @@ public interface TaskTransition<
             Task<?, DO, TT, TS> task = null;
             final List<TT> allTransitions = taskTransition.allValues();
             for (TT candidateNextTransition : allTransitions) {
-                if (candidateNextTransition.getTaskRoleRequiredIfAny() == null) {
+                if (candidateNextTransition.assignTaskTo() == null) {
                     continue;
                 }
                 if (!canApply(domainObject, candidateNextTransition, serviceRegistry2)) {
