@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -101,6 +102,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     public IncomingInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
         super(document, fixedAsset);
         setDateReceived(document.getCreatedAt().toLocalDate());
+        setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
     }
 
     /**
@@ -214,7 +216,10 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
             final LocalDate dateReceived,
             @Parameter(optionality = Optionality.OPTIONAL)
             final LocalDate invoiceDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final LocalDate dueDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Integer dueInNumberOfDaysFromNow,
             @Parameter(optionality = Optionality.OPTIONAL)
             final PaymentMethod paymentMethod
     ){
@@ -224,6 +229,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         setDateReceived(dateReceived);
         setInvoiceDate(invoiceDate);
         setDueDate(dueDate);
+        if (dueInNumberOfDaysFromNow!=null){
+            setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
+        }
         setPaymentMethod(paymentMethod);
         return this;
     }
@@ -252,7 +260,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         return getDueDate();
     }
 
-    public PaymentMethod default6ChangeInvoiceDetails(){
+    public PaymentMethod default7ChangeInvoiceDetails(){
         return getPaymentMethod()==null ? PaymentMethod.BANK_TRANSFER : getPaymentMethod();
     }
 
@@ -344,5 +352,11 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     OrderRepository orderRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private ClockService clockService;
 
 }
