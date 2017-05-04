@@ -1,7 +1,11 @@
 package org.estatio.capex.dom.invoice.state;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
@@ -15,19 +19,26 @@ import org.estatio.capex.dom.task.Task;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(
-        schema = "incomingInvoice"
+@PersistenceCapable(
+        identityType = IdentityType.DATASTORE,
+        schema = "incomingInvoice",
+        table = "IncomingInvoiceStateTransition"
+)
+@DatastoreIdentity(
+        strategy = IdGeneratorStrategy.IDENTITY,
+        column = "id"
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
         @Query(
-                name = "findByInvoiceAndTransitionAndTaskCompleted", language = "JDOQL",
+                name = "findByInvoiceAndTransitionTypeAndTaskCompleted", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
                         + "WHERE invoice == :invoice "
                         + "&& transitionType == :transitionType "
-                        + "&& this.task.completed == :completed "
+                        + "&& task.completed == :taskCompleted "
+                        + "ORDER BY task.createdOn DESC "
         ),
         @Query(
                 name = "findByInvoice", language = "JDOQL",
@@ -35,6 +46,12 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
                         + "WHERE invoice == :invoice "
                         + "ORDER BY task.createdOn DESC "
+        ),
+        @Query(
+                name = "findByTask", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
+                        + "WHERE task == :task "
         ),
 })
 @DomainObject(objectType = "incomingInvoice.IncomingInvoiceStateTransition" )

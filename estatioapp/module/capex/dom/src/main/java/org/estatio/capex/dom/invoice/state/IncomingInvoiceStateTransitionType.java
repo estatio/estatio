@@ -96,7 +96,11 @@ public enum IncomingInvoiceStateTransitionType
         }
     },
     CANCEL(
-            (IncomingInvoiceState)null,
+            Arrays.asList(
+                    IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER,
+                    IncomingInvoiceState.APPROVED_BY_ASSET_MANAGER,
+                    IncomingInvoiceState.APPROVED_BY_COUNTRY_DIRECTOR,
+                    IncomingInvoiceState.APPROVED_BY_TREASURER),
             IncomingInvoiceState.CANCELLED
     );
 
@@ -114,7 +118,7 @@ public enum IncomingInvoiceStateTransitionType
             final IncomingInvoiceState fromState,
             final IncomingInvoiceState toState
     ) {
-        this(Collections.singletonList(fromState), toState);
+        this(fromState != null ? Collections.singletonList(fromState): null, toState);
     }
 
     /**
@@ -199,11 +203,22 @@ public enum IncomingInvoiceStateTransitionType
         public IncomingInvoiceStateTransition findIncomplete(
                 final IncomingInvoice incomingInvoice,
                 final IncomingInvoiceStateTransitionType transitionType) {
-            return repository.findByInvoiceAndTransitionTypeAndTaskCompleted(incomingInvoice, transitionType, false);
+            final List<IncomingInvoiceStateTransition> incompleteTransitions = repository
+                    .findByInvoiceAndTransitionTypeAndTaskCompleted(incomingInvoice, transitionType, false);
+            // REVIEW: because we passed complete=false, there should be at most one.
+            // what do we do if more than one were to be returned?
+            // the query returns the most recent (ORDER BY created DESC), so we should in this case get the
+            // most relevant, but even so...
+            return firstOf(incompleteTransitions);
         }
 
-        @Override public IncomingInvoiceStateTransition findFor(final Task task) {
-            return null;
+        private static <T> T firstOf(final List<T> list) {
+            return list.isEmpty() ? null : list.get(0);
+        }
+
+        @Override
+        public IncomingInvoiceStateTransition findFor(final Task task) {
+            return repository.findByTask(task);
         }
 
         @Inject

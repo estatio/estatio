@@ -39,8 +39,8 @@ public class StateTransitionService {
     ST findIncomplete(
             final DO domainObject,
             final STT transitionType) {
-        StateTransitionServiceSupport<DO, ST, STT, S> support = supportFor(transitionType);
-        return support.findIncomplete(domainObject, transitionType);
+        StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(transitionType);
+        return supportService.findIncomplete(domainObject, transitionType);
     }
 
     @Programmatic
@@ -57,14 +57,17 @@ public class StateTransitionService {
                 "find", task);
     }
 
+    /**
+     * factored out so can be cached.
+     */
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > ST doFindFor(final Task task) {
-        StateTransitionServiceSupport support = supportFor(task.getTransitionObjectType());
-        return (ST) support.findFor(task);
+            > ST doFindFor(final Task task) {
+        StateTransitionServiceSupport supportService = supportFor(task.getTransitionObjectType());
+        return (ST) supportService.findFor(task);
     }
 
     /**
@@ -86,6 +89,38 @@ public class StateTransitionService {
     }
 
     /**
+     * Applies the state transition to the domain object that it refers to, marking the 
+     * {@link StateTransition#getTask() corresponding} {@link Task} as {@link Task#setCompleted(boolean) complete}, and creating the next state transition/task if one is required.
+     *
+     * <p>
+     *     If the state transition does not apply to the current state of the referred domain object, or
+     *     if the state transition's corresponding task is already complete, then does nothing and returns null.
+     * </p>
+     *
+     * @param stateTransition - expected to for a task still incomplete, and applicable to its domain object's state
+     * @param comment - used to complete the task.
+     *
+     * @return - the next state transition, or null if the one provided one
+     */
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > ST apply(
+            final ST stateTransition,
+            final String comment) {
+
+        if(stateTransition.getTask().isCompleted()) {
+            return null;
+        }
+
+        final DO domainObject = stateTransition.getDomainObject();
+        final STT transitionType = stateTransition.getTransitionType();
+        return apply(domainObject, transitionType, comment);
+    }
+
+    /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
      *
      * @param domainObject - the domain object whose
@@ -103,31 +138,7 @@ public class StateTransitionService {
             final STT transitionType,
             final String comment) {
 
-        final ST incompleteTransition = findIncomplete(domainObject, transitionType);
-        if(incompleteTransition == null) {
-            return null;
-        }
 
-        return apply(incompleteTransition, comment);
-    }
-
-    /**
-     *
-     * @param stateTransition - expected to be incomplete, otherwise is a no-op
-     * @param comment
-     * @return - the next state transition, or null if the provided one could not be applied.
-     */
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > ST apply(
-            final ST stateTransition,
-            final String comment) {
-
-        final DO domainObject = stateTransition.getDomainObject();
-        final STT transitionType = stateTransition.getTransitionType();
 
         S currentState = transitionType.currentStateOf(domainObject);
 
@@ -136,10 +147,11 @@ public class StateTransitionService {
             return null;
         }
 
+        final ST correspondingTransitionIfAny = findIncomplete(domainObject, transitionType);
 
         final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
-
-        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(stateTransition);
+        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, transitionType,
+                correspondingTransitionIfAny);
 
         // transitioning
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONING);
@@ -147,7 +159,10 @@ public class StateTransitionService {
 
         // transition
         transitionType.applyTo(domainObject, serviceRegistry2);
-        stateTransition.getTask().completed(comment);
+
+        if(correspondingTransitionIfAny != null) {
+            correspondingTransitionIfAny.getTask().completed(comment);
+        }
 
         // for wherever we might go next, we spin through all possible transitions,
         // and create a task for the first one that applies to this particular domain object.
@@ -172,8 +187,10 @@ public class StateTransitionService {
         return nextTransition;
     }
 
+
     // ////////////////////////////////////
 
+    // REVIEW: we could cache the result, perhaps (it's idempotent)
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
@@ -192,7 +209,7 @@ public class StateTransitionService {
         throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found for " + transitionType);
     }
 
-
+    // REVIEW: we could cache the result, perhaps (it's idempotent)
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,

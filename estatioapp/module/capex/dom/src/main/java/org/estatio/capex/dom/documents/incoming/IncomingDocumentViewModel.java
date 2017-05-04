@@ -18,12 +18,14 @@
  */
 package org.estatio.capex.dom.documents.incoming;
 
+import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.services.bookmark.BookmarkService2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -46,6 +48,5 @@ public class IncomingDocumentViewModel extends HasDocumentAbstract {
     public IncomingDocumentViewModel(final Document document) {
         super(document);
     }
-
 
 }

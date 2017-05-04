@@ -37,6 +37,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.bookmark.BookmarkService2;
+import org.apache.isis.applib.services.hint.HintStore;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
@@ -58,7 +60,7 @@ import lombok.Setter;
 
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class HasDocumentAbstract implements HasDocument {
+public abstract class HasDocumentAbstract implements HasDocument, HintStore.HintIdProvider {
 
     public HasDocumentAbstract() {}
     public HasDocumentAbstract(final Document document) {
@@ -68,6 +70,8 @@ public abstract class HasDocumentAbstract implements HasDocument {
     public String title() {
         return getDocument().getName();
     }
+
+
 
     @Getter @Setter
     protected Document document;
@@ -80,16 +84,34 @@ public abstract class HasDocumentAbstract implements HasDocument {
         return getDocument().getCreatedAt();
     }
 
+
+
     @Property(hidden = Where.ALL_TABLES)
     @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
     public Blob getBlob() {
         return getDocument() != null ? getDocument().getBlob() : null;
     }
 
+    /**
+     * For view models with inline property edits, allows the focus to stay on the same field after OK.
+     */
+    @Override
+    public String hintId() {
+        return  bookmarkService2.bookmarkFor(getDocument()).toString();
+    }
+
+
+    /////////////////////////////////
+
+    @XmlTransient
+    @Inject
+    protected BookmarkService2 bookmarkService2;
+
     @XmlTransient
     @Inject
     protected TitleService titleService;
 
+    /////////////////////////////////
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class Factory {

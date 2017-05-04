@@ -20,4 +20,6 @@ public interface StateTransition<
 
     STT getTransitionType();
 
+    //endregion
+
 }

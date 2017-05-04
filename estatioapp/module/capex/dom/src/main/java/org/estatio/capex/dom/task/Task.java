@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -26,10 +25,11 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 
@@ -92,6 +92,7 @@ public class Task implements Comparable<Task> {
      *     The value held is the {@link org.apache.isis.applib.services.metamodel.MetaModelService3#toObjectType(Class) object type} of the corresponding {@link StateTransition}.
      * </p>
      */
+    @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     @Column(allowsNull = "false")
     private String transitionObjectType;
@@ -103,6 +104,10 @@ public class Task implements Comparable<Task> {
     @Column(allowsNull = "false")
     @Getter @Setter
     private boolean completed;
+    // because code completion in IntelliJ doesn't pick this up...
+    public boolean isCompleted() {
+        return completed;
+    }
 
     @Getter @Setter
     @Column(allowsNull = "true")

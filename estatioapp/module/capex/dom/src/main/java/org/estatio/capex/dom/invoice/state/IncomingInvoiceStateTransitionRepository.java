@@ -28,13 +28,12 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
         super(IncomingInvoiceStateTransitionRepository.class, IncomingInvoiceStateTransition.class);
     }
 
-    // REVIEW: what if multiple task/transitions are found?  This code
     @Programmatic
-    public IncomingInvoiceStateTransition findByInvoiceAndTransitionTypeAndTaskCompleted(
+    public List<IncomingInvoiceStateTransition> findByInvoiceAndTransitionTypeAndTaskCompleted(
             final IncomingInvoice invoice,
             final IncomingInvoiceStateTransitionType transitionType,
             final boolean taskCompleted) {
-        return uniqueMatch(
+        return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         IncomingInvoiceStateTransition.class,
                         "findByInvoiceAndTransitionTypeAndTaskCompleted",
@@ -51,6 +50,15 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
                         IncomingInvoiceStateTransition.class,
                         "findByInvoice",
                         "invoice", incomingInvoice));
+    }
+
+    @Programmatic
+    public IncomingInvoiceStateTransition findByTask(final Task task) {
+        return firstMatch(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        IncomingInvoiceStateTransition.class,
+                        "findByTask",
+                        "task", task));
     }
 
     /**

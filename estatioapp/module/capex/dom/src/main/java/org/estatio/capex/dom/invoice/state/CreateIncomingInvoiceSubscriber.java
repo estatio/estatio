@@ -19,7 +19,6 @@ public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
     public void on(IncomingInvoiceViewmodel_createInvoice.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
-            ev.getReturnValue();
             final IncomingInvoiceViewModel viewModel = (IncomingInvoiceViewModel) ev.getMixedIn();
             final IncomingInvoice incomingInvoice = viewModel.getIncomingInvoice();
 
