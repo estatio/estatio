@@ -36,17 +36,6 @@ public interface StateTransitionType<
     @Programmatic
     S getToState();
 
-    /**
-     * Obtains the current state of the domain object.
-     *
-     * <p>
-     *     Any instance of the {@link StateTransitionType} will be able to perform this, not merely the type corresponding
-     *     to a current pending {@link StateTransition transition} of the domain object.
-     * </p>
-     */
-    @Programmatic
-    S currentStateOf(DO domainObject);
-
 
     /**
      * Whether the provided domain object can make <i>this</i> type of transition.
@@ -94,6 +83,6 @@ public interface StateTransitionType<
     @Programmatic
     ST createTransition(
             final DO domainObject,
-            final ServiceRegistry2 serviceRegistry2);
+            final ServiceRegistry2 serviceRegistry2, final S fromState);
 
 }

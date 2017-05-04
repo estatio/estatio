@@ -63,7 +63,7 @@ public class OrderRepository {
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
         // TODO: make Order implement State.Owner
-        // StateTransitionType.Util.apply(order, IncomingInvoiceTransitionType.INSTANTIATING, serviceRegistry2);
+        // StateTransitionType.Util.apply(order, IncomingInvoiceTransitionType.INSTANTIATED, serviceRegistry2);
         return order;
     }
 

@@ -27,10 +27,19 @@ public enum IncomingInvoiceStateTransitionType
         implements StateTransitionType<
                 IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
-    INSTANTIATING(
+    // a "pseudo" transition; won't ever see this persisted by IIST.
+    INSTANTIATE(
             (IncomingInvoiceState)null,
             IncomingInvoiceState.NEW
-    ),
+    ){
+        // can never apply the pseudo-state (so not selected as the 'next' state)
+        @Override
+        public boolean canApply(
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
+            return false;
+        }
+    },
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceState.NEW,
             IncomingInvoiceState.APPROVED_BY_PROJECT_MANAGER
@@ -153,29 +162,23 @@ public enum IncomingInvoiceStateTransitionType
     }
 
     @Override
-    public IncomingInvoiceState currentStateOf(final IncomingInvoice domainObject) {
-        return domainObject.getIncomingInvoiceState();
-    }
-
-    @Override
-    public void applyTo(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-        domainObject.setIncomingInvoiceState(getToState());
+    public void applyTo(
+            final IncomingInvoice domainObject,
+            final ServiceRegistry2 serviceRegistry2) {
+        // nothing to do....
     }
 
     @Override
     public IncomingInvoiceStateTransition createTransition(
             final IncomingInvoice incomingInvoice,
-            final ServiceRegistry2 serviceRegistry2) {
+            final ServiceRegistry2 serviceRegistry2, final IncomingInvoiceState fromState) {
 
         final IncomingInvoiceStateTransitionRepository repository =
                 serviceRegistry2.lookupService(IncomingInvoiceStateTransitionRepository.class);
 
-        final EstatioRole assignTo = this.assignTaskTo(serviceRegistry2);
-        if(assignTo == null) {
-            return null;
-        }
+        final EstatioRole assignToIfAny = this.assignTaskTo(serviceRegistry2);
 
-        return repository.create(incomingInvoice, this, assignTo, Enums.getFriendlyNameOf(this));
+        return repository.create(incomingInvoice, this, fromState, assignToIfAny, Enums.getFriendlyNameOf(this));
     }
 
 
@@ -195,25 +198,28 @@ public enum IncomingInvoiceStateTransitionType
         }
 
         @Override
+        public IncomingInvoiceStateTransition currentTransitionOf(final IncomingInvoice incomingInvoice) {
+            return repository.findByInvoiceAndIncomplete(incomingInvoice);
+        }
+
+        @Override
+        public IncomingInvoiceState currentStateOf(
+                final IncomingInvoice domainObject) {
+            final IncomingInvoiceStateTransition currentTransitionIfAny = currentTransitionOf(domainObject);
+            return currentTransitionIfAny != null
+                    ? currentTransitionIfAny.getFromState()
+                    : IncomingInvoiceState.NEW;
+        }
+
+        @Override
         public IncomingInvoiceStateTransitionType[] allTransitionTypes() {
             return IncomingInvoiceStateTransitionType.values();
         }
 
         @Override
         public IncomingInvoiceStateTransition findIncomplete(
-                final IncomingInvoice incomingInvoice,
-                final IncomingInvoiceStateTransitionType transitionType) {
-            final List<IncomingInvoiceStateTransition> incompleteTransitions = repository
-                    .findByInvoiceAndTransitionTypeAndTaskCompleted(incomingInvoice, transitionType, false);
-            // REVIEW: because we passed complete=false, there should be at most one.
-            // what do we do if more than one were to be returned?
-            // the query returns the most recent (ORDER BY created DESC), so we should in this case get the
-            // most relevant, but even so...
-            return firstOf(incompleteTransitions);
-        }
-
-        private static <T> T firstOf(final List<T> list) {
-            return list.isEmpty() ? null : list.get(0);
+                final IncomingInvoice incomingInvoice) {
+            return repository.findByInvoiceAndIncomplete(incomingInvoice);
         }
 
         @Override
@@ -222,10 +228,10 @@ public enum IncomingInvoiceStateTransitionType
         }
 
         @Inject
-        private IncomingInvoiceStateTransitionRepository repository;
+        IncomingInvoiceStateTransitionRepository repository;
 
         @Inject
-        private MetaModelService3 metaModelServicwe3;
+        MetaModelService3 metaModelServicwe3;
 
     }
 

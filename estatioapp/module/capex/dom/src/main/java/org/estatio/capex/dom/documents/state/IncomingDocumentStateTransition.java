@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.state;
+package org.estatio.capex.dom.documents.state;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -12,7 +12,8 @@ import javax.jdo.annotations.Query;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.incode.module.document.dom.impl.docs.Document;
+
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.task.Task;
 
@@ -21,8 +22,8 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "incomingInvoice",
-        table = "IncomingInvoiceStateTransition"
+        schema = "incomingDocument",
+        table = "IncomingDocumentStateTransition"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -32,42 +33,40 @@ import lombok.Setter;
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
         @Query(
-                name = "findByInvoice", language = "JDOQL",
+                name = "findByDocumentAndTransitionTypeAndTaskCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
+                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
                         + "WHERE invoice == :invoice "
-                        // REVIEW: need to figure out how to order.
-                        // One option is simply to have createdOn in the transition object.
-                        // + "ORDER BY task.createdOn DESC "
+                        + "&& transitionType == :transitionType "
+                        + "&& task.completed == :taskCompleted "
+                        + "ORDER BY task.createdOn DESC "
         ),
         @Query(
-                name = "findByInvoiceAndIncomplete", language = "JDOQL",
+                name = "findByDocument", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
+                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
                         + "WHERE invoice == :invoice "
-                        + "&& toState == null "
+                        + "ORDER BY task.createdOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
+                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
                         + "WHERE task == :task "
         ),
 })
-@DomainObject(objectType = "incomingInvoice.IncomingInvoiceStateTransition" )
-public class IncomingInvoiceStateTransition
+@DomainObject(objectType = "incomingDocument.IncomingDocumentStateTransition" )
+public class IncomingDocumentStateTransition
         implements
-        StateTransition<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
+        StateTransition<Document, IncomingDocumentStateTransition, IncomingDocumentStateTransitionType, IncomingDocumentState> {
 
-    public IncomingInvoiceStateTransition(
-            final IncomingInvoiceStateTransitionType transitionType,
-            final IncomingInvoice invoice,
-            final IncomingInvoiceState fromState,
-            final Task taskIfAny) {
-        this.invoice = invoice;
+    public IncomingDocumentStateTransition(
+            final IncomingDocumentStateTransitionType transitionType,
+            final Document document,
+            final Task task) {
         this.transitionType = transitionType;
-        this.fromState = fromState;
-        this.task = taskIfAny;
+        this.document = document;
+        this.task = task;
     }
 
     /**
@@ -76,22 +75,22 @@ public class IncomingInvoiceStateTransition
      */
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingInvoiceState fromState;
+    private IncomingDocumentState fromState;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingInvoiceStateTransitionType transitionType;
+    private IncomingDocumentStateTransitionType transitionType;
 
     /**
      * If null, then this transition is not yet complete.
      */
     @Column(allowsNull = "true")
     @Getter @Setter
-    private IncomingInvoiceState toState;
+    private IncomingDocumentState toState;
 
-    @Column(allowsNull = "false", name = "invoiceId")
+    @Column(allowsNull = "false", name = "documentId")
     @Getter @Setter
-    private IncomingInvoice invoice;
+    private Document document;
 
     /**
      * Not every transition necessarily has a task.
@@ -102,8 +101,8 @@ public class IncomingInvoiceStateTransition
 
     @Programmatic
     @Override
-    public IncomingInvoice getDomainObject() {
-        return getInvoice();
+    public Document getDomainObject() {
+        return getDocument();
     }
 
     @Programmatic
@@ -111,4 +110,5 @@ public class IncomingInvoiceStateTransition
     public void completed() {
         setToState(getTransitionType().getToState());
     }
+
 }

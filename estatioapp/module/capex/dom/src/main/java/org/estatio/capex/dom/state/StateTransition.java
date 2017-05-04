@@ -18,8 +18,11 @@ public interface StateTransition<
 
     Task getTask();
 
+    S getFromState();
+
     STT getTransitionType();
 
-    //endregion
+    S getToState();
 
+    void completed();
 }

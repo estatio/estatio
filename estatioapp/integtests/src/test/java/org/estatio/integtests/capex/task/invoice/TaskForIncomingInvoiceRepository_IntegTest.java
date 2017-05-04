@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
@@ -87,7 +88,8 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             // When
             incomingInvoiceStateTransitionRepository
-                    .create(invoice, IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");
+                    .create(invoice, IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, IncomingInvoiceState.NEW,
+                            EstatioRole.COUNTRY_DIRECTOR, "Some description");
 
             //Then
 

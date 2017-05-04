@@ -25,7 +25,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.FixedAsset;
@@ -95,7 +94,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setPaymentMethod(paymentMethod);
         setStatus(invoiceStatus);
         setDateReceived(dateReceived);
-        setIncomingInvoiceState(IncomingInvoiceState.NEW);
         setNotCorrect(notCorrect);
     }
 
@@ -152,10 +150,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
                 project
         );
     }
-
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private IncomingInvoiceState incomingInvoiceState;
 
     @Getter @Setter
     @Column(allowsNull = "true")

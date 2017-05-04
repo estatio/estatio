@@ -25,7 +25,7 @@ public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
             transactionService.flushTransaction();
 
             // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
-            stateTransitionService.apply(incomingInvoice, IncomingInvoiceStateTransitionType.INSTANTIATING, null);
+            stateTransitionService.apply(incomingInvoice, IncomingInvoiceStateTransitionType.INSTANTIATE, null);
             break;
         }
     }

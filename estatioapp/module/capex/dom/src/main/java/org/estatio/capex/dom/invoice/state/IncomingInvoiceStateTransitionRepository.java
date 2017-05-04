@@ -29,20 +29,6 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
     }
 
     @Programmatic
-    public List<IncomingInvoiceStateTransition> findByInvoiceAndTransitionTypeAndTaskCompleted(
-            final IncomingInvoice invoice,
-            final IncomingInvoiceStateTransitionType transitionType,
-            final boolean taskCompleted) {
-        return allMatches(
-                new org.apache.isis.applib.query.QueryDefault<>(
-                        IncomingInvoiceStateTransition.class,
-                        "findByInvoiceAndTransitionTypeAndTaskCompleted",
-                        "invoice", invoice,
-                        "transitionType", transitionType,
-                        "taskCompleted", taskCompleted));
-    }
-
-    @Programmatic
     public List<IncomingInvoiceStateTransition> findByInvoice(
             final IncomingInvoice incomingInvoice) {
         return allMatches(
@@ -51,6 +37,18 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
                         "findByInvoice",
                         "invoice", incomingInvoice));
     }
+
+    @Programmatic
+    public IncomingInvoiceStateTransition findByInvoiceAndIncomplete(final IncomingInvoice incomingInvoice) {
+        // can't be uniqueMatch, because for the very first call to StateTransitionService#apply, called on an
+        // INSTANTIATED event, there won't yet be any StateTransitions for this invoice
+        return firstMatch(
+                new org.apache.isis.applib.query.QueryDefault<>(
+                        IncomingInvoiceStateTransition.class,
+                        "findByInvoiceAndIncomplete",
+                        "invoice", incomingInvoice));
+    }
+
 
     @Programmatic
     public IncomingInvoiceStateTransition findByTask(final Task task) {
@@ -68,17 +66,23 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
     public IncomingInvoiceStateTransition create(
             final IncomingInvoice invoice,
             final IncomingInvoiceStateTransitionType transitionType,
-            final EstatioRole assignTo,
-            final String description) {
+            final IncomingInvoiceState fromState,
+            final EstatioRole taskAssignToIfAny,
+            final String taskDescription) {
 
         final String transitionObjectType = metaModelService3.toObjectType(IncomingInvoiceStateTransition.class);
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
 
-        final Task task = new Task(assignTo, description, transitionObjectType, createdOn);
-        repositoryService.persist(task);
+        final Task task;
+        if(taskAssignToIfAny != null) {
+            task = new Task(taskAssignToIfAny, taskDescription, transitionObjectType, createdOn);
+            repositoryService.persist(task);
+        } else {
+            task = null;
+        }
 
         final IncomingInvoiceStateTransition stateTransition =
-                new IncomingInvoiceStateTransition(transitionType, invoice, task);
+                new IncomingInvoiceStateTransition(transitionType, invoice, fromState, task);
         repositoryService.persistAndFlush(stateTransition);
 
         return stateTransition;

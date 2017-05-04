@@ -36,15 +36,18 @@ public class IncomingInvoice_newTask
     @Override
     public Task newTask(
             final EstatioRole assignTo,
-            final IncomingInvoiceStateTransitionType taskTransition,
+            final IncomingInvoiceStateTransitionType transitionType,
             @Nullable
             final String description) {
-        final IncomingInvoiceStateTransition stateTransition = repository
-                .create(incomingInvoice, taskTransition, assignTo, description);
+        final IncomingInvoiceState currState = supportService.currentStateOf(incomingInvoice);
+        final IncomingInvoiceStateTransition stateTransition =
+                repository.create(incomingInvoice, transitionType, currState, assignTo, description);
         return stateTransition.getTask();
     }
 
     @Inject
     IncomingInvoiceStateTransitionRepository repository;
+    @Inject
+    IncomingInvoiceStateTransitionType.SupportService supportService;
 
 }

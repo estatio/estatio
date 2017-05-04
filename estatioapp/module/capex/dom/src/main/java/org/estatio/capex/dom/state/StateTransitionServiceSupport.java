@@ -40,6 +40,19 @@ public interface StateTransitionServiceSupport <
     boolean supports(final String transitionType);
 
     /**
+     * Supports {@link StateTransitionService#currentTransitionOf(Object, StateTransitionType)}.
+     */
+    @Programmatic
+    ST currentTransitionOf(DO domainObject);
+
+    /**
+     * Supports {@link StateTransitionService#currentStateOf(Object, StateTransitionType)}.
+     * @return
+     */
+    @Programmatic
+    S currentStateOf(DO domainObject);
+
+    /**
      * All available instances of {@link StateTransitionType}.
      *
      * <p>
@@ -49,11 +62,11 @@ public interface StateTransitionServiceSupport <
     @Programmatic
     STT[] allTransitionTypes();
 
-
+    /**
+     * Supports {@link StateTransitionService#findIncomplete(Object, StateTransitionType)}.
+     */
     @Programmatic
-    ST findIncomplete(
-            final DO domainObject,
-            final STT transitionType);
+    ST findIncomplete(DO domainObject);
 
     @Programmatic
     ST findFor(Task task);
