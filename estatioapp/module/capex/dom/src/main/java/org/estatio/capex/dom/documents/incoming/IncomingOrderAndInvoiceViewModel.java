@@ -26,6 +26,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
@@ -103,6 +104,10 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Project project;
+
+    public List<Project> choicesProject(){
+        return getFixedAsset()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getFixedAsset());
+    }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
@@ -196,6 +201,10 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     public String default3ChangeDimensions(){
         return getPeriod();
+    }
+
+    public List<Charge> choices0ChangeDimensions() {
+        return choicesCharge();
     }
 
     public List<Property> choices1ChangeDimensions() {
@@ -344,5 +353,11 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    ProjectRepository projectRepository;
 
 }

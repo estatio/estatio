@@ -18,6 +18,7 @@
  */
 package org.estatio.capex.dom.project;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -27,6 +28,9 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,6 +78,57 @@ public class ProjectRepositoryTest {
             assertThat(finderInteraction.getQueryName()).isEqualTo("matchByReferenceOrName");
             assertThat(finderInteraction.getArgumentsByParameterName().get("matcher")).isEqualTo((Object) "(?i)some.search.*Phrase");
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
+        }
+
+    }
+
+    public static class FindByFixedAsset extends ProjectRepositoryTest {
+
+        List<Project> projectsFound;
+
+        @Test
+        public void findByFixedAsset_works() {
+
+            // given
+            Property propertyToFind = new Property();
+            Property otherProperty = new Property();
+            Unit someUnit = new Unit();
+
+            Project project1 = new Project();
+            ProjectItem item1_1 = new ProjectItem();
+            item1_1.setProperty(propertyToFind);
+            project1.getItems().add(item1_1);
+            ProjectItem item1_2 = new ProjectItem();
+            item1_2.setProperty(propertyToFind);
+            project1.getItems().add(item1_2);
+            ProjectItem item1_3 = new ProjectItem();
+            item1_3.setProperty(otherProperty);
+            project1.getItems().add(item1_3);
+
+            Project project2 = new Project();
+            ProjectItem item2_1 = new ProjectItem();
+            item2_1.setProperty(otherProperty);
+            project2.getItems().add(item2_1);
+
+            projectRepository = new ProjectRepository(){
+                @Override
+                public List<Project> listAll(){
+                    return Arrays.asList(project1, project2);
+                }
+            };
+
+            // when
+            projectsFound = projectRepository.findByFixedAsset(propertyToFind);
+
+            // then
+            assertThat(projectsFound.size()).isEqualTo(1);
+            assertThat(projectsFound.get(0)).isEqualTo(project1);
+
+            // and when
+            projectsFound = projectRepository.findByFixedAsset(someUnit);
+
+            // then
+            assertThat(projectsFound.size()).isEqualTo(0);
         }
 
     }

@@ -18,7 +18,9 @@
  */
 package org.estatio.capex.dom.project;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(repositoryFor = Project.class, nature = NatureOfService.DOMAIN)
 public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
@@ -98,6 +101,18 @@ public class ProjectRepository extends UdoDomainRepositoryAndFactory<Project> {
         return allMatches("matchByReferenceOrName",
                 "matcher", refRegex
         );
+    }
+
+    public List<Project> findByFixedAsset(final FixedAsset fixedAsset){
+        List<Project> result = new ArrayList<>();
+        for (Project project : listAll()){
+            List<ProjectItem> itemsFound = project.getItems().stream().filter(x->x.getFixedAsset()==fixedAsset).collect(Collectors.toList());
+            if (itemsFound.size()>0){
+                result.add(project);
+                continue;
+            }
+        }
+        return result;
     }
 
     @Inject
