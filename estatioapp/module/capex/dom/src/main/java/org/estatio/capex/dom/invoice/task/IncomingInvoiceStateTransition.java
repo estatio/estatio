@@ -6,6 +6,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
-        "invoice.IncomingInvoiceStateTransition"
+        "capex.IncomingInvoiceStateTransition"
 )
 @Queries({
         @Query(
@@ -38,21 +39,21 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition "
                         + "WHERE invoice == :invoice "
-                        + "ORDER BY createdOn DESC "
+                        + "ORDER BY task.createdOn DESC "
         ),
 })
 
-@DomainObject(objectType = "invoice.IncomingInvoiceStateTransition" )
+@DomainObject(objectType = "capex.IncomingInvoiceStateTransition" )
 public class IncomingInvoiceStateTransition
         implements
         StateTransition<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
     public IncomingInvoiceStateTransition(
             final IncomingInvoiceStateTransitionType transitionType,
-            final IncomingInvoice domainObject,
+            final IncomingInvoice invoice,
             final Task task) {
         this.transitionType = transitionType;
-        this.domainObject = domainObject;
+        this.invoice = invoice;
         this.task = task;
     }
 
@@ -60,12 +61,17 @@ public class IncomingInvoiceStateTransition
     @Getter @Setter
     private IncomingInvoiceStateTransitionType transitionType;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "invoiceId")
     @Getter @Setter
-    private IncomingInvoice domainObject;
+    private IncomingInvoice invoice;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "taskId")
     @Getter @Setter
     private Task task;
 
+    @Programmatic
+    @Override
+    public IncomingInvoice getDomainObject() {
+        return getInvoice();
+    }
 }

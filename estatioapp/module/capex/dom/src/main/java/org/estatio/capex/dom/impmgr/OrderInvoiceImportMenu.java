@@ -33,7 +33,7 @@ import org.apache.isis.applib.value.Blob;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.app.services.order.OrderInvoiceImportMenu"
+        objectType = "orders.OrderInvoiceImportMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

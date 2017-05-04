@@ -62,10 +62,10 @@ import lombok.Setter;
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "capex.IncomingInvoiceItem"
+        objectType = "incomingInvoice.IncomingInvoiceItem"
 )
 @javax.jdo.annotations.Discriminator(
-        "capex.IncomingInvoiceItem"
+        "incomingInvoice.IncomingInvoiceItem"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT

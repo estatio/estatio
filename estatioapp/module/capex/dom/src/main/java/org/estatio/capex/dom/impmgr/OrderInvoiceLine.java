@@ -85,7 +85,7 @@ import lombok.Setter;
         }
 )
 @DomainObject(
-        objectType = "org.estatio.app.services.order.OrderInvoiceLine"
+        objectType = "orders.OrderInvoiceLine"
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @AllArgsConstructor

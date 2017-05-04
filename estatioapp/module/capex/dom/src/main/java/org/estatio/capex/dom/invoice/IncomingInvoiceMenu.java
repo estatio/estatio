@@ -20,7 +20,7 @@ import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.capex.dom.invoice.IncomingInvoiceMenu"
+        objectType = "incomingInvoice.IncomingInvoiceMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

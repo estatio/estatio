@@ -50,7 +50,7 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
         return allMatches(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         IncomingInvoiceStateTransition.class,
-                        "findTasksByInvoice",
+                        "findByInvoice",
                         "invoice", incomingInvoice));
     }
 

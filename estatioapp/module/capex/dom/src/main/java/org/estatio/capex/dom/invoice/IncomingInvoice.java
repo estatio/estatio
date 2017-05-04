@@ -49,7 +49,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(
-        "capex.IncomingInvoice"
+        "incomingInvoice.IncomingInvoice"
 )
 @Queries({
         @Query(
@@ -62,7 +62,7 @@ import lombok.Setter;
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "capex.IncomingInvoice"
+        objectType = "incomingInvoice.IncomingInvoice"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT

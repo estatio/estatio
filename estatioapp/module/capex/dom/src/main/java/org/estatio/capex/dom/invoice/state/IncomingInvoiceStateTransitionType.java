@@ -39,7 +39,7 @@ public enum IncomingInvoiceStateTransitionType
     ) {
 
         @Override
-        public EstatioRole assignTaskTo() {
+        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
             return EstatioRole.PROJECT_MANAGER;
         }
 
@@ -57,7 +57,7 @@ public enum IncomingInvoiceStateTransitionType
     ) {
 
         @Override
-        public EstatioRole assignTaskTo() {
+        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
             return EstatioRole.ASSET_MANAGER;
         }
 
@@ -75,7 +75,7 @@ public enum IncomingInvoiceStateTransitionType
             IncomingInvoiceState.APPROVED_BY_COUNTRY_DIRECTOR
     ) {
         @Override
-        public EstatioRole assignTaskTo() {
+        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
             return EstatioRole.COUNTRY_DIRECTOR;
         }
     },
@@ -84,7 +84,7 @@ public enum IncomingInvoiceStateTransitionType
             IncomingInvoiceState.APPROVED_BY_TREASURER
     ) {
         @Override
-        public EstatioRole assignTaskTo() {
+        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
             return EstatioRole.TREASURER;
         }
     },
@@ -93,7 +93,7 @@ public enum IncomingInvoiceStateTransitionType
             IncomingInvoiceState.PAID
     ) {
         @Override
-        public EstatioRole assignTaskTo() {
+        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
             return EstatioRole.TREASURER;
         }
     },
@@ -121,13 +121,28 @@ public enum IncomingInvoiceStateTransitionType
 
     /**
      * No {@link Task} will be created unless this method is overridden.
+     *
+     * @param serviceRegistry2 -to lookup domain services etc
      */
     @Programmatic
     @Override
-    public EstatioRole assignTaskTo() {
+    public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
         return null;
     }
 
+    /**
+     * By default, all transitions are assumed to apply (with respect to their {@link #getFromStates() from} and
+     * {@link #getToState() to} states <i>unless</i> this method is overridden to further constrain whether a
+     * transition applies to a <i>particular</i> domain object.
+     *
+     * <p>
+     *     In practice, this means that this is method is overridden when there is a decision to be made and the
+     *     next state to transition to depends upon the state of the domain object
+     * </p>
+     *
+     * @param domainObject - being transitioned.
+     * @param serviceRegistry2 -to lookup domain services etc
+     */
     @Override
     public boolean canApply(
             final IncomingInvoice domainObject,
@@ -141,7 +156,7 @@ public enum IncomingInvoiceStateTransitionType
     }
 
     @Override
-    public void applyTo(final IncomingInvoice domainObject) {
+    public void applyTo(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
         domainObject.setIncomingInvoiceState(getToState());
     }
 

@@ -45,7 +45,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "dbo",
+        schema = "orders",
         table = "Order"
 )
 @DatastoreIdentity(
@@ -74,7 +74,7 @@ import lombok.Setter;
 @Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "capex.Order"
+        objectType = "orders.Order"
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT

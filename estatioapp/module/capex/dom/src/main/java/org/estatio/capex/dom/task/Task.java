@@ -46,11 +46,6 @@ import lombok.Setter;
         identityType = IdentityType.DATASTORE,
         schema = "dbo"
 )
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.VALUE_MAP,
-        column = "discriminator",
-        value = "org.estatio.capex.dom.task.Task"
-)
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
@@ -155,11 +150,7 @@ public class Task implements Comparable<Task> {
         }
 
         @Inject
-        private ServiceRegistry2 serviceRegistry;
-
-        @Inject
-        private StateTransitionService stateTransitionService;
-
+        StateTransitionService stateTransitionService;
     }
 
     /**

@@ -19,7 +19,7 @@ import org.estatio.capex.dom.project.ProjectRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.capex.dom.impmgr.OrderInvoiceImportReport"
+        objectType = "orders.OrderInvoiceImportReport"
 )
 public class OrderInvoiceImportReport {
 

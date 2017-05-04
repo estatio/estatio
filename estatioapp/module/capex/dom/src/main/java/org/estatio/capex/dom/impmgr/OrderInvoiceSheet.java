@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
@@ -25,6 +26,9 @@ import lombok.Setter;
         propOrder = {
                 "lines"
         }
+)
+@DomainObject(
+        objectType = "orders.OrderInvoiceSheet"
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderInvoiceSheet {

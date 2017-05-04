@@ -15,7 +15,7 @@ import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.capex.dom.order.OrderMenu"
+        objectType = "orders.OrderMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

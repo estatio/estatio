@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.capex.dom.impmgr.OrderInvoiceImportReportLine"
+        objectType = "orders.OrderInvoiceImportReportLine"
 )
 @Getter @Setter
 @AllArgsConstructor

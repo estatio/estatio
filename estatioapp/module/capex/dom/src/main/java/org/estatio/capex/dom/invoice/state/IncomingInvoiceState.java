@@ -10,5 +10,5 @@ public enum IncomingInvoiceState
     APPROVED_BY_COUNTRY_DIRECTOR,
     APPROVED_BY_TREASURER,
     PAID,
-    CANCELLED;
+    CANCELLED
 }

@@ -146,7 +146,7 @@ public class StateTransitionService {
         eventBusService.post(event);
 
         // transition
-        transitionType.applyTo(domainObject);
+        transitionType.applyTo(domainObject, );
         stateTransition.getTask().completed(comment);
 
         // for wherever we might go next, we spin through all possible transitions,

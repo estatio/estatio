@@ -9,6 +9,14 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
+/**
+ * An identified sequence of {@link State} transitions, in other words a <i>state transition chart</i>.
+ *
+ * <p>
+ * Intended to be implemented by an enum; for this reason an instance of {@link ServiceRegistry2} is passed into
+ * most methods (so that the implementation can lookup domain services etc to do its work).
+ * </p>
+ */
 public interface StateTransitionType<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
@@ -53,13 +61,13 @@ public interface StateTransitionType<
      *
      *     The domain object's current state will, at least, be compatible with <i>this</i> transition's
      *     {@link #getFromStates() from state}(s).  It is <i>not</i> necessary for there to be any
-     *     {@link #assignTaskTo() task role} associated with this transition, however.
+     *     {@link #assignTaskTo(ServiceRegistry2) task role} associated with this transition, however.
      * </p>
      */
     @Programmatic
     boolean canApply(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
-    void applyTo(DO domainObject);
+    void applyTo(DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
      * The {@link EstatioRole task role}, if any, that any {@link Task} wrapping this transition must be routed to.
@@ -68,12 +76,13 @@ public interface StateTransitionType<
      *     Said another way: a {@link Task} can only created as a wrapper around this transition if a
      *     {@link EstatioRole task role} has been provided.
      * </p>
+     * @param serviceRegistry2
      */
     @Programmatic
-    EstatioRole assignTaskTo();
+    EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2);
 
     /**
-     * Only called if {@link #assignTaskTo()} is non-null, and
+     * Only called if {@link #assignTaskTo(ServiceRegistry2)} is non-null, and
      * {@link #canApply(Object, ServiceRegistry2)} also returns <tt>true</tt>.
      *
      * <p>
