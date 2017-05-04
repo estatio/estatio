@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "capex.IncomingDocumentMenu"
+        objectType = "incomingDocument.IncomingDocumentMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

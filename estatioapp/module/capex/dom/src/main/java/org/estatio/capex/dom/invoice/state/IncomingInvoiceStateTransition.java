@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.task;
+package org.estatio.capex.dom.invoice.state;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -9,8 +9,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.task.Task;
 
@@ -18,18 +16,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
-        schema = "dbo"
+        schema = "incomingInvoice"
 )
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(
-        "capex.IncomingInvoiceStateTransition"
-)
 @Queries({
         @Query(
                 name = "findByInvoiceAndTransitionAndTaskCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition "
+                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
                         + "WHERE invoice == :invoice "
                         + "&& transitionType == :transitionType "
                         + "&& this.task.completed == :completed "
@@ -37,13 +32,12 @@ import lombok.Setter;
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition "
+                        + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
                         + "WHERE invoice == :invoice "
                         + "ORDER BY task.createdOn DESC "
         ),
 })
-
-@DomainObject(objectType = "capex.IncomingInvoiceStateTransition" )
+@DomainObject(objectType = "incomingInvoice.IncomingInvoiceStateTransition" )
 public class IncomingInvoiceStateTransition
         implements
         StateTransition<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {

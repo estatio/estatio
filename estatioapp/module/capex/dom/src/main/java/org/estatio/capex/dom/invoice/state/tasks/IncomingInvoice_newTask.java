@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.task;
+package org.estatio.capex.dom.invoice.state.tasks;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -10,6 +10,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;

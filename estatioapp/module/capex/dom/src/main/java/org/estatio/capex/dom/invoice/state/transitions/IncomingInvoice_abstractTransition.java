@@ -10,12 +10,12 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.state.StateTransitionService;
 
-public abstract class IncomingInvoice_transitionAbstract {
+public abstract class IncomingInvoice_abstractTransition {
 
     protected final IncomingInvoice incomingInvoice;
     protected final IncomingInvoiceStateTransitionType transitionType;
 
-    protected IncomingInvoice_transitionAbstract(
+    protected IncomingInvoice_abstractTransition(
             final IncomingInvoice incomingInvoice,
             final IncomingInvoiceStateTransitionType transitionType) {
         this.incomingInvoice = incomingInvoice;

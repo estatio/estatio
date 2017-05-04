@@ -15,8 +15,6 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition;
-import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupport;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
@@ -168,7 +166,7 @@ public enum IncomingInvoiceStateTransitionType
         final IncomingInvoiceStateTransitionRepository repository =
                 serviceRegistry2.lookupService(IncomingInvoiceStateTransitionRepository.class);
 
-        final EstatioRole assignTo = this.assignTaskTo();
+        final EstatioRole assignTo = this.assignTaskTo(serviceRegistry2);
         if(assignTo == null) {
             return null;
         }

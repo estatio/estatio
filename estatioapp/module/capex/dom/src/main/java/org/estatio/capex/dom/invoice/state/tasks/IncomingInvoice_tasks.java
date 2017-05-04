@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.task;
+package org.estatio.capex.dom.invoice.state.tasks;
 
 import java.util.List;
 
@@ -12,15 +12,16 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.TaskRepository;
 
 @Mixin
 public class IncomingInvoice_tasks {
 
     private final IncomingInvoice incomingInvoice;
 
-    public IncomingInvoice_tasks(IncomingInvoice incomingInvoice) {
+    public IncomingInvoice_tasks(final IncomingInvoice incomingInvoice) {
         this.incomingInvoice = incomingInvoice;
     }
 

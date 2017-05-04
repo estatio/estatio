@@ -10,7 +10,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 
 @Mixin
-public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_transitionAbstract {
+public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_abstractTransition {
 
     public IncomingInvoice_approveAsAssetManager(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceStateTransitionType.APPROVE_AS_ASSET_MANAGER);

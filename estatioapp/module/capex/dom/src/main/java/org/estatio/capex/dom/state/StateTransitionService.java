@@ -146,7 +146,7 @@ public class StateTransitionService {
         eventBusService.post(event);
 
         // transition
-        transitionType.applyTo(domainObject, );
+        transitionType.applyTo(domainObject, serviceRegistry2);
         stateTransition.getTask().completed(comment);
 
         // for wherever we might go next, we spin through all possible transitions,
@@ -154,7 +154,7 @@ public class StateTransitionService {
         ST nextTransition = null;
         final STT[] allTransitionsTypes = supportFor(transitionType).allTransitionTypes();
         for (STT candidateNextTransitionType : allTransitionsTypes) {
-            if (candidateNextTransitionType.assignTaskTo() == null) {
+            if (candidateNextTransitionType.assignTaskTo(serviceRegistry2) == null) {
                 continue;
             }
             if (!canApply(domainObject, candidateNextTransitionType)) {
@@ -203,9 +203,9 @@ public class StateTransitionService {
         if(supportServices == null) {
             throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found");
         }
-        for (final StateTransitionServiceSupport support : supportServices) {
-            if(support.supports(transitionType)) {
-                return support;
+        for (final StateTransitionServiceSupport supportService : supportServices) {
+            if(supportService.supports(transitionType)) {
+                return supportService;
             }
         }
         throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found for " + transitionType);

@@ -10,7 +10,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 
 @Mixin
-public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_transitionAbstract {
+public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_abstractTransition {
 
     public IncomingInvoice_approveAsCountryDirector(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);

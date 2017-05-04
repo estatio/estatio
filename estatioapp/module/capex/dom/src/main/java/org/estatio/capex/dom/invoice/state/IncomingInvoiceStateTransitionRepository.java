@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.task;
+package org.estatio.capex.dom.invoice.state;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.roles.EstatioRole;

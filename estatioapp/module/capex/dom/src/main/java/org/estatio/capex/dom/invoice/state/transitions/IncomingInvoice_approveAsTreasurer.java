@@ -10,7 +10,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 
 @Mixin
-public class IncomingInvoice_approveAsTreasurer extends IncomingInvoice_transitionAbstract {
+public class IncomingInvoice_approveAsTreasurer extends IncomingInvoice_abstractTransition {
 
     public IncomingInvoice_approveAsTreasurer(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceStateTransitionType.APPROVE_AS_TREASURER);
