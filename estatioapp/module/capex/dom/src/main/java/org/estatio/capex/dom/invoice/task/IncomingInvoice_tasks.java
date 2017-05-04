@@ -9,8 +9,11 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.TaskRepository;
 
 @Mixin
 public class IncomingInvoice_tasks {
@@ -23,12 +26,16 @@ public class IncomingInvoice_tasks {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<StateTransitionForIncomingInvoice> tasks() {
-        return repository.findByInvoice(incomingInvoice);
+    public List<Task> tasks() {
+        final List<IncomingInvoiceStateTransition> transitions = repository.findByInvoice(incomingInvoice);
+        return Task.from(transitions);
     }
 
     @Inject
-    TaskForIncomingInvoiceRepository repository;
+    IncomingInvoiceStateTransitionRepository repository;
+
+    @Inject
+    BookmarkService bookmarkService;
 
 
 }

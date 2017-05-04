@@ -30,9 +30,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.invoice.task.StateTransitionForIncomingInvoice;
-import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
+import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition;
+import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransitionRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -70,7 +70,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
         private PartyRepository partyRepository;
 
         @Inject
-        private TaskForIncomingInvoiceRepository taskForIncomingInvoiceRepository;
+        private IncomingInvoiceStateTransitionRepository incomingInvoiceStateTransitionRepository;
 
         @Before
         public void setUp() throws Exception {
@@ -86,11 +86,12 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             final IncomingInvoice invoice = incomingInvoiceRepository.create("TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
 
             // When
-            taskForIncomingInvoiceRepository.create(invoice, IncomingInvoiceTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");
+            incomingInvoiceStateTransitionRepository
+                    .create(invoice, IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, EstatioRole.COUNTRY_DIRECTOR, "Some description");
 
             //Then
 
-            final List<StateTransitionForIncomingInvoice> tasks =  taskForIncomingInvoiceRepository.findByInvoice(invoice);
+            final List<IncomingInvoiceStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByInvoice(invoice);
 
             assertThat(tasks.size()).isEqualTo(1);
         }

@@ -28,7 +28,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.state.StateOwner;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -68,8 +68,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class IncomingInvoice extends Invoice<IncomingInvoice> implements
-        StateOwner<IncomingInvoice, IncomingInvoiceState> {
+public class IncomingInvoice extends Invoice<IncomingInvoice> {
 
     public IncomingInvoice() {
         super("invoiceNumber");
@@ -166,16 +165,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
     @Column(allowsNull = "true")
     private LocalDate dateReceived;
 
-    //region > taskstate.owner
-    @Override
-    public IncomingInvoiceState getState() {
-        return getIncomingInvoiceState();
-    }
 
-    @Override
-    public void setState(final IncomingInvoiceState state) {
-        setIncomingInvoiceState(state);
-    }
+    // region: supporting state transitions.
 
     @Programmatic
     public boolean hasProject() {
@@ -189,15 +180,20 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements
         return false;
     }
 
+    @Programmatic
+    public boolean hasFixedAsset() {
+        final SortedSet<IncomingInvoiceItem> items = getItemsRaw();
+        for (IncomingInvoiceItem item : items) {
+            FixedAsset fixedAsset = item.getFixedAsset();
+            if(fixedAsset != null) {
+                return true;
+            }
+        }
+        return false;
+    }
     // cheating
     private SortedSet getItemsRaw() {
         return getItems();
-    }
-
-    @Programmatic
-    public boolean hasFixedAsset() {
-        // TODO
-        return false;
     }
 
     //endregion

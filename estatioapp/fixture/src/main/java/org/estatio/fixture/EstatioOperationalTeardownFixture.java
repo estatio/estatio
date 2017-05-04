@@ -30,7 +30,7 @@ import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
-import org.estatio.capex.dom.invoice.task.StateTransitionForIncomingInvoice;
+import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -136,7 +136,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 //        deleteFrom(IncomingInvoiceItem.class);
 //        deleteFrom(IncomingInvoice.class);
 
-        deleteFrom(StateTransitionForIncomingInvoice.class);
+        deleteFrom(IncomingInvoiceStateTransition.class);
         deleteFrom(OrderItemInvoiceItemLink.class);
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);

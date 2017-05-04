@@ -3,20 +3,21 @@ package org.estatio.capex.dom.invoice.state;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.task.IncomingInvoice_newTask;
-import org.estatio.capex.dom.invoice.task.StateTransitionForIncomingInvoice;
-import org.estatio.capex.dom.invoice.task.TaskForIncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransition;
+import org.estatio.capex.dom.invoice.task.IncomingInvoiceStateTransitionRepository;
+import org.estatio.capex.dom.state.StateTransitionServiceSupport;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
@@ -24,8 +25,9 @@ import org.estatio.dom.roles.EstatioRole;
 import lombok.Getter;
 
 @Getter
-public enum IncomingInvoiceTransitionType
-        implements StateTransitionType<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
+public enum IncomingInvoiceStateTransitionType
+        implements StateTransitionType<
+                IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
     INSTANTIATING(
             (IncomingInvoiceState)null,
@@ -43,7 +45,8 @@ public enum IncomingInvoiceTransitionType
 
         @Override
         public boolean canApply(
-                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
             return domainObject.hasProject();
         }
 
@@ -60,7 +63,8 @@ public enum IncomingInvoiceTransitionType
 
         @Override
         public boolean canApply(
-                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
             return !domainObject.hasProject() && domainObject.hasFixedAsset();
         }
     },
@@ -101,14 +105,14 @@ public enum IncomingInvoiceTransitionType
     private final List<IncomingInvoiceState> fromStates;
     private final IncomingInvoiceState toState;
 
-    IncomingInvoiceTransitionType(
+    IncomingInvoiceStateTransitionType(
             final List<IncomingInvoiceState> fromState,
             final IncomingInvoiceState toState) {
         this.fromStates = fromState;
         this.toState = toState;
     }
 
-    IncomingInvoiceTransitionType(
+    IncomingInvoiceStateTransitionType(
             final IncomingInvoiceState fromState,
             final IncomingInvoiceState toState
     ) {
@@ -132,36 +136,69 @@ public enum IncomingInvoiceTransitionType
     }
 
     @Override
-    public StateTransitionForIncomingInvoice createTask(
-            final IncomingInvoice domainObject,
+    public IncomingInvoiceState currentStateOf(final IncomingInvoice domainObject) {
+        return domainObject.getIncomingInvoiceState();
+    }
+
+    @Override
+    public void applyTo(final IncomingInvoice domainObject) {
+        domainObject.setIncomingInvoiceState(getToState());
+    }
+
+    @Override
+    public IncomingInvoiceStateTransition createTransition(
+            final IncomingInvoice incomingInvoice,
             final ServiceRegistry2 serviceRegistry2) {
-        final WrapperFactory wrapperFactory = serviceRegistry2.lookupService(WrapperFactory.class);
-        final FactoryService factoryService = serviceRegistry2.lookupService(FactoryService.class);
-        final EstatioRole taskRoleRequiredIfAny = this.assignTaskTo();
-        return taskRoleRequiredIfAny != null
-                    ? wrapperFactory.wrap(factoryService.mixin(IncomingInvoice_newTask.class, domainObject))
-                                    .newTask(taskRoleRequiredIfAny, this, "")
-                    : null;
+
+        final IncomingInvoiceStateTransitionRepository repository =
+                serviceRegistry2.lookupService(IncomingInvoiceStateTransitionRepository.class);
+
+        final EstatioRole assignTo = this.assignTaskTo();
+        if(assignTo == null) {
+            return null;
+        }
+
+        return repository.create(incomingInvoice, this, assignTo, Enums.getFriendlyNameOf(this));
     }
 
 
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TaskForIncomingInvoiceCompletionSubscriber
-            extends TaskCompletionSubscriberAbstract<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
+    public static class SupportService implements StateTransitionServiceSupport<
+            IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
         @Override
-        protected List<Task<?, IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState>> findTasksByDomainObjectAndTransition(
-                final IncomingInvoice domainObject, final IncomingInvoiceTransitionType taskTransition) {
-            return (List)repository.findByInvoiceAndTransition(domainObject, taskTransition);
+        public boolean supports(final StateTransitionType<?, ?, ?, ?> transitionType) {
+            return transitionType instanceof IncomingInvoiceStateTransitionType;
+        }
+
+        @Override
+        public boolean supports(final String transitionType) {
+            String objectType = metaModelServicwe3.toObjectType(IncomingInvoiceStateTransition.class);
+            return Objects.equals(objectType, transitionType);
+        }
+
+        @Override
+        public IncomingInvoiceStateTransitionType[] allTransitionTypes() {
+            return IncomingInvoiceStateTransitionType.values();
+        }
+
+        @Override
+        public IncomingInvoiceStateTransition findIncomplete(
+                final IncomingInvoice incomingInvoice,
+                final IncomingInvoiceStateTransitionType transitionType) {
+            return repository.findByInvoiceAndTransitionTypeAndTaskCompleted(incomingInvoice, transitionType, false);
+        }
+
+        @Override public IncomingInvoiceStateTransition findFor(final Task task) {
+            return null;
         }
 
         @Inject
-        TaskForIncomingInvoiceRepository repository;
-    }
+        private IncomingInvoiceStateTransitionRepository repository;
 
-    @Override
-    public List<IncomingInvoiceTransitionType> allValues() {
-        return Arrays.asList(values());
+        @Inject
+        private MetaModelService3 metaModelServicwe3;
+
     }
 
 }

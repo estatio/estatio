@@ -1,16 +1,16 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.invoice.state;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_createInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
@@ -26,15 +26,15 @@ public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
             transactionService.flushTransaction();
 
             // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
-            StateTransitionType.Util.apply(incomingInvoice, IncomingInvoiceTransitionType.INSTANTIATING, serviceRegistry2);
+            stateTransitionService.apply(incomingInvoice, IncomingInvoiceStateTransitionType.INSTANTIATING, null);
             break;
         }
     }
 
     @Inject
-    TransactionService transactionService;
+    StateTransitionService stateTransitionService;
 
     @Inject
-    ServiceRegistry2 serviceRegistry2;
+    TransactionService transactionService;
 
 }

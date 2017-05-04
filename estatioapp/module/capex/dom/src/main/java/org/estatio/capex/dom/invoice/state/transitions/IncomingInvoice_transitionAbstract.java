@@ -1,37 +1,42 @@
 package org.estatio.capex.dom.invoice.state.transitions;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
-import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionService;
 
 public abstract class IncomingInvoice_transitionAbstract {
 
     protected final IncomingInvoice incomingInvoice;
-    protected final IncomingInvoiceTransitionType transition;
+    protected final IncomingInvoiceStateTransitionType transitionType;
 
-    public IncomingInvoice_transitionAbstract(
+    protected IncomingInvoice_transitionAbstract(
             final IncomingInvoice incomingInvoice,
-            final IncomingInvoiceTransitionType transition) {
+            final IncomingInvoiceStateTransitionType transitionType) {
         this.incomingInvoice = incomingInvoice;
-        this.transition = transition;
+        this.transitionType = transitionType;
     }
 
     @Action()
-    public IncomingInvoice $$(){
-        StateTransitionType.Util.apply(incomingInvoice, transition, serviceRegistry2);
+    public IncomingInvoice $$(
+                            @Nullable
+                            final String comment){
+        stateTransitionService.apply(incomingInvoice, transitionType, comment);
         return incomingInvoice;
     }
 
     public boolean hide$$() {
-        return !StateTransitionType.Util.canApply(incomingInvoice, transition, serviceRegistry2);
+        return !stateTransitionService.canApply(incomingInvoice, transitionType);
     }
 
     @Inject
     private ServiceRegistry2 serviceRegistry2;
+    @Inject
+    private StateTransitionService stateTransitionService;
 
 }

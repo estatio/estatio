@@ -10,14 +10,14 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceTransitionType;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class IncomingInvoice_newTask
-        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceTransitionType, IncomingInvoiceState> {
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
     public static class ActionDomainEvent extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoice_newTask> { }
 
@@ -34,14 +34,15 @@ public class IncomingInvoice_newTask
     @Override
     public Task newTask(
             final EstatioRole assignTo,
-            final IncomingInvoiceTransitionType taskTransition,
+            final IncomingInvoiceStateTransitionType taskTransition,
             @Nullable
             final String description) {
-        return repository
+        final IncomingInvoiceStateTransition stateTransition = repository
                 .create(incomingInvoice, taskTransition, assignTo, description);
+        return stateTransition.getTask();
     }
 
     @Inject
-    TaskForIncomingInvoiceRepository repository;
+    IncomingInvoiceStateTransitionRepository repository;
 
 }

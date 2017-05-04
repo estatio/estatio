@@ -4,7 +4,7 @@ import lombok.Getter;
 
 // TODO: currently unused; to tie in with TaskState would require Document implementing StateOwner
 @Getter
-public enum IncomingDocumentTransition {
+public enum IncomingDocumentTransitionType {
 
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentState.NEW,
@@ -16,7 +16,7 @@ public enum IncomingDocumentTransition {
     private final IncomingDocumentState fromState;
     private final IncomingDocumentState toState;
 
-    IncomingDocumentTransition(
+    IncomingDocumentTransitionType(
             final IncomingDocumentState fromState,
             final IncomingDocumentState toState) {
 
