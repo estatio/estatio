@@ -31,10 +31,9 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -72,7 +71,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
         private PartyRepository partyRepository;
 
         @Inject
-        private IncomingInvoiceStateTransitionRepository incomingInvoiceStateTransitionRepository;
+        private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
         @Before
         public void setUp() throws Exception {
@@ -90,13 +89,13 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             // When
             incomingInvoiceStateTransitionRepository
                     .create(invoice,
-                            IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
-                            IncomingInvoiceState.NEW,
+                            IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_COUNTRY_DIRECTOR,
+                            IncomingInvoiceApprovalState.NEW,
                             EstatioRole.COUNTRY_DIRECTOR,
-                            Enums.getFriendlyNameOf(IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
+                            Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_COUNTRY_DIRECTOR));
 
             // Then
-            final List<IncomingInvoiceStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
+            final List<IncomingInvoiceApprovalStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
 
             assertThat(tasks.size()).isEqualTo(1);
         }

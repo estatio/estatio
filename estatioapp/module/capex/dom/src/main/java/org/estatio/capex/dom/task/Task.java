@@ -33,7 +33,7 @@ import org.apache.isis.applib.types.DescriptionType;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.state.StateTransitionChart;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -111,7 +111,7 @@ public class Task implements Comparable<Task> {
     public static class execute<
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             > {
 
@@ -150,7 +150,7 @@ public class Task implements Comparable<Task> {
     public static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     > List<Task> from(final List<ST> transitions) {
         return Lists.newArrayList(

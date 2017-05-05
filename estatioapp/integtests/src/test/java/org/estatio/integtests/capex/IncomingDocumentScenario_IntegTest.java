@@ -34,14 +34,13 @@ import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewmodel_createOrder;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
-import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsAssetManager;
-import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsCountryDirector;
-import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsTreasurer;
-import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_pay;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
+import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
+import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsTreasurer;
+import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_pay;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -365,13 +364,13 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
             // transitions
-            final List<IncomingInvoiceStateTransition> transitions =
+            final List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(1);
-            final IncomingInvoiceStateTransition transition = transitions.get(0);
+            final IncomingInvoiceApprovalStateTransition transition = transitions.get(0);
             assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
-            assertThat(transition.getFromState()).isEqualTo(IncomingInvoiceState.NEW);
-            assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceStateTransitionType.APPROVE_AS_ASSET_MANAGER);
+            assertThat(transition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+            assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_ASSET_MANAGER);
             assertThat(transition.getCreatedOn()).isNotNull();
             assertThat(transition.getToState()).isNull();
             assertThat(transition.getCompletedOn()).isNull();
@@ -390,10 +389,10 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         private void stateTransition_works() {
 
-            List<IncomingInvoiceStateTransition> transitions =
+            List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(1);
-            final IncomingInvoiceStateTransition transition1 = transitions.get(0);
+            final IncomingInvoiceApprovalStateTransition transition1 = transitions.get(0);
 
             final IncomingInvoice_approveAsAssetManager _approveAsAssetMgr = wrap(
                     mixin(IncomingInvoice_approveAsAssetManager.class, invoiceCreated));
@@ -415,7 +414,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(2);
-            final IncomingInvoiceStateTransition transition2 = transitions.get(1);
+            final IncomingInvoiceApprovalStateTransition transition2 = transitions.get(1);
             assertThat(transition2.getFromState()).isEqualTo(transition1.getToState());
             assertThat(transition2.getCreatedOn()).isNotNull();
             assertThat(transition2.getToState()).isNull();
@@ -437,9 +436,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition2.getToState()).isNotNull();
 
             transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(3);
-            final IncomingInvoiceStateTransition transition3 = transitions.get(2);
+            final IncomingInvoiceApprovalStateTransition transition3 = transitions.get(2);
             assertThat(transition3.getFromState()).isEqualTo(transition2.getToState());
             assertThat(transition3.getToState()).isNull();
 
@@ -454,9 +453,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition3.getToState()).isNotNull();
 
             transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(4);
-            final IncomingInvoiceStateTransition transition4 = transitions.get(3);
+            final IncomingInvoiceApprovalStateTransition transition4 = transitions.get(3);
             assertThat(transition4.getFromState()).isEqualTo(transition3.getToState());
             assertThat(transition4.getToState()).isNull();
 
@@ -471,18 +470,18 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition4.getToState()).isNotNull();
 
             transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(4);
 
             // TODO: state returns to new; Maybe we need an 'end state'?
-            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceStateTransitionType.PAY)).isEqualTo(IncomingInvoiceState.NEW);
-            assertThat(stateTransitionService.canApply(invoiceCreated, IncomingInvoiceStateTransitionType.APPROVE_AS_ASSET_MANAGER)).isFalse();
+            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionChart.PAY)).isEqualTo(IncomingInvoiceApprovalState.NEW);
+            assertThat(stateTransitionService.canApply(invoiceCreated, IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_ASSET_MANAGER)).isFalse();
         }
 
 
     }
 
-    @Inject IncomingInvoiceStateTransitionRepository incomingInvoiceStateTransitionRepository;
+    @Inject IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
     @Inject
     IncomingDocumentRepository repository;

@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.state.tasks;
+package org.estatio.capex.dom.invoice.approval.tasks;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -10,18 +10,16 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionTypeSupportService;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class IncomingInvoice_newTask
-        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionChart, IncomingInvoiceApprovalState> {
 
     public static class ActionDomainEvent extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoice_newTask> { }
 
@@ -38,20 +36,20 @@ public class IncomingInvoice_newTask
     @Override
     public Task newTask(
             final EstatioRole assignTo,
-            final IncomingInvoiceStateTransitionType transitionType,
+            final IncomingInvoiceApprovalStateTransitionChart transitionType,
             @Nullable
             final String description) {
-        final IncomingInvoiceState currState = supportService.currentStateOf(incomingInvoice);
+        final IncomingInvoiceApprovalState currState = supportService.currentStateOf(incomingInvoice);
 
         final String taskDescription = Enums.getFriendlyNameOf(transitionType);
-        final IncomingInvoiceStateTransition stateTransition =
+        final IncomingInvoiceApprovalStateTransition stateTransition =
                 repository.create(incomingInvoice, transitionType, currState, assignTo, taskDescription);
         return stateTransition.getTask();
     }
 
     @Inject
-    IncomingInvoiceStateTransitionRepository repository;
+    IncomingInvoiceApprovalStateTransition.Repository repository;
     @Inject
-    IncomingInvoiceStateTransitionTypeSupportService supportService;
+    IncomingInvoiceApprovalStateTransitionChart.SupportService supportService;
 
 }

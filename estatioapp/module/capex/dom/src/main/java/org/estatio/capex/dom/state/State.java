@@ -1,7 +1,7 @@
 package org.estatio.capex.dom.state;
 
 /**
- * Enumerates individual states with respect to some {@link StateTransitionType state transition chart}.
+ * Enumerates individual states with respect to some {@link StateTransitionChart state transition chart}.
  *
  * <p>
  *     Intended to be implemented by an enum.

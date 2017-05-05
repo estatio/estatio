@@ -10,7 +10,7 @@ import org.estatio.dom.roles.EstatioRole;
 public interface StateTransitionRepository<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionType<DO, ST, STT, S>,
+        STT extends StateTransitionChart<DO, ST, STT, S>,
         S extends State<S>
         > {
 

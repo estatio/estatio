@@ -12,7 +12,7 @@ import org.estatio.capex.dom.task.Task;
 public abstract class StateTransitionAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
-        STT extends StateTransitionType<DO, ST, STT, S>,
+        STT extends StateTransitionChart<DO, ST, STT, S>,
         S extends State<S>
         > implements StateTransition<DO,ST,STT,S> {
 

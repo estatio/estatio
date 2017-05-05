@@ -17,7 +17,7 @@ import org.estatio.capex.dom.task.Task;
 public abstract class StateTransitionServiceSupportAbstract<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionType<DO, ST, STT, S>,
+        STT extends StateTransitionChart<DO, ST, STT, S>,
         S extends State<S>
         > implements StateTransitionServiceSupport<DO, ST, STT, S> {
 
@@ -36,7 +36,7 @@ public abstract class StateTransitionServiceSupportAbstract<
     }
 
     @Override
-    public boolean supports(final StateTransitionType<?, ?, ?, ?> transitionType) {
+    public boolean supports(final StateTransitionChart<?, ?, ?, ?> transitionType) {
         return stateTransitionTypeClass.isAssignableFrom(transitionType.getClass());
     }
 

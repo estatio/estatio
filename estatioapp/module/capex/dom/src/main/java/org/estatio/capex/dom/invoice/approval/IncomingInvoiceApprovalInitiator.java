@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.state;
+package org.estatio.capex.dom.invoice.approval;
 
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
+public class IncomingInvoiceApprovalInitiator extends AbstractSubscriber {
 
     @com.google.common.eventbus.Subscribe
     public void on(IncomingInvoiceViewmodel_createInvoice.ActionDomainEvent ev) {
@@ -25,7 +25,7 @@ public class CreateIncomingInvoiceSubscriber extends AbstractSubscriber {
             transactionService.flushTransaction();
 
             // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
-            stateTransitionService.apply(incomingInvoice, IncomingInvoiceStateTransitionType.INSTANTIATE, null);
+            stateTransitionService.apply(incomingInvoice, IncomingInvoiceApprovalStateTransitionChart.INSTANTIATE, null);
             break;
         }
     }

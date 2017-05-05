@@ -33,7 +33,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             >
     ST findIncomplete(
@@ -47,7 +47,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             >
     ST findFor(final Task task) {
@@ -63,7 +63,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             > ST doFindFor(final Task task) {
         StateTransitionServiceSupport supportService = supportFor(task.getTransitionObjectType());
@@ -77,7 +77,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     > boolean canApply(
             final DO domainObject,
@@ -90,7 +90,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     >  boolean canApplyFromState(
             final DO domainObject,
@@ -110,13 +110,13 @@ public class StateTransitionService {
      * </p>
      *
      * @param domainObject
-     * @param prototype - to specify which {@link StateTransitionType transition type} we are interested in.
+     * @param prototype - to specify which {@link StateTransitionChart transition type} we are interested in.
      */
     @Programmatic
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     >  S currentStateOf(
             final DO domainObject,
@@ -137,7 +137,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     > ST currentTransitionOf(
             final DO domainObject,
@@ -147,8 +147,11 @@ public class StateTransitionService {
     }
 
     /**
-     * Applies the state transition to the domain object that it refers to, marking the 
-     * {@link StateTransition#getTask() corresponding} {@link Task} as {@link Task#setCompleted(boolean) complete}, and creating the next state transition/task if one is required.
+     * Applies the state transition to the domain object that it refers to, marks the transition as
+     * {@link StateTransition#getCompletedOn() complete} and for {@link StateTransition#getTask() corresponding}
+     * {@link Task} (if there is one), also marks it as {@link Task#getCompletedBy()} complete}.
+     * If there are further available {@link StateTransition}s, then one is created (again, with a corresponding
+     * {@link Task} if required).
      *
      * <p>
      *     If the state transition does not apply to the current state of the referred domain object, or
@@ -163,7 +166,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             > ST apply(
             final ST stateTransition,
@@ -189,7 +192,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
     > ST apply(
             final DO domainObject,
@@ -254,7 +257,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             >
     StateTransitionServiceSupport<DO,ST,STT,S> supportFor(final STT transitionType) {
@@ -273,7 +276,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             >
     StateTransitionServiceSupport<DO,ST,STT,S> supportFor(final String transitionType) {
@@ -291,7 +294,7 @@ public class StateTransitionService {
     private static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
+            STT extends StateTransitionChart<DO, ST, STT, S>,
             S extends State<S>
             > boolean canTransitionFrom(
                 final S fromState,

@@ -9,17 +9,17 @@ import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 /**
- * An identified sequence of {@link State} transitions, in other words a <i>state transition chart</i>.
+ * An identified sequence of {@link State} transitions.
  *
  * <p>
  * Intended to be implemented by an enum; for this reason an instance of {@link ServiceRegistry2} is passed into
  * most methods (so that the implementation can lookup domain services etc to do its work).
  * </p>
  */
-public interface StateTransitionType<
+public interface StateTransitionChart<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionType<DO, ST, STT, S>,
+        STT extends StateTransitionChart<DO, ST, STT, S>,
         S extends State<S>
         > {
 

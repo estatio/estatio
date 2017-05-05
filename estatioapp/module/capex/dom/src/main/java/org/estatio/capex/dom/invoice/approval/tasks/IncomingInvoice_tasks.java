@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.state.tasks;
+package org.estatio.capex.dom.invoice.approval.tasks;
 
 import java.util.List;
 
@@ -12,8 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
 
 @Mixin
@@ -28,12 +27,12 @@ public class IncomingInvoice_tasks {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Task> tasks() {
-        final List<IncomingInvoiceStateTransition> transitions = repository.findByDomainObject(incomingInvoice);
+        final List<IncomingInvoiceApprovalStateTransition> transitions = repository.findByDomainObject(incomingInvoice);
         return Task.from(transitions);
     }
 
     @Inject
-    IncomingInvoiceStateTransitionRepository repository;
+    IncomingInvoiceApprovalStateTransition.Repository repository;
 
     @Inject
     BookmarkService bookmarkService;

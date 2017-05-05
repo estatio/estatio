@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.state;
+package org.estatio.capex.dom.invoice.approval;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -12,10 +12,13 @@ import javax.jdo.annotations.Query;
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.document.dom.impl.docs.Document;
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
+import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -23,8 +26,8 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "incomingDocument",
-        table = "IncomingDocumentStateTransition"
+        schema = "incomingInvoice",
+        table = "IncomingInvoiceApprovalStateTransition"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -36,33 +39,32 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
-                        + "WHERE document == :domainObject "
+                        + "FROM org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition "
+                        + "WHERE invoice == :domainObject "
                         + "ORDER BY createdOn DESC "
         ),
         @Query(
-                name = "findByDocumentAndIncomplete", language = "JDOQL",
+                name = "findByDomainObjectAndIncomplete", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
-                        + "WHERE document == :domainObject "
+                        + "FROM org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition "
+                        + "WHERE invoice == :domainObject "
                         + "&& toState == null "
                         + "ORDER BY createdOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
+                        + "FROM org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition "
                         + "WHERE task == :task "
         ),
 })
-@DomainObject(objectType = "incomingDocument.IncomingDocumentStateTransition" )
-public class IncomingDocumentStateTransition
+@DomainObject(objectType = "incomingInvoice.IncomingInvoiceApprovalStateTransition" )
+public class IncomingInvoiceApprovalStateTransition
         extends StateTransitionAbstract<
-                    Document,
-                    IncomingDocumentStateTransition,
-                    IncomingDocumentStateTransitionType,
-                    IncomingDocumentState> {
-
+                    IncomingInvoice,
+        IncomingInvoiceApprovalStateTransition,
+        IncomingInvoiceApprovalStateTransitionChart,
+        IncomingInvoiceApprovalState> {
 
     /**
      * For the first transition, represents the initial state of the domain object
@@ -70,22 +72,22 @@ public class IncomingDocumentStateTransition
      */
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingDocumentState fromState;
+    private IncomingInvoiceApprovalState fromState;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingDocumentStateTransitionType transitionType;
+    private IncomingInvoiceApprovalStateTransitionChart transitionType;
 
     /**
      * If null, then this transition is not yet complete.
      */
     @Column(allowsNull = "true")
     @Getter @Setter
-    private IncomingDocumentState toState;
+    private IncomingInvoiceApprovalState toState;
 
-    @Column(allowsNull = "false", name = "documentId")
+    @Column(allowsNull = "false", name = "invoiceId")
     @Getter @Setter
-    private Document document;
+    private IncomingInvoice invoice;
 
 
     /**
@@ -103,16 +105,33 @@ public class IncomingDocumentStateTransition
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
 
+
     @Programmatic
     @Override
-    public Document getDomainObject() {
-        return getDocument();
+    public IncomingInvoice getDomainObject() {
+        return getInvoice();
     }
 
     @Programmatic
     @Override
-    public void setDomainObject(final Document domainObject) {
-        setDomainObject(domainObject);
+    public void setDomainObject(final IncomingInvoice domainObject) {
+        setInvoice(domainObject);
     }
 
+    @DomainService(
+            nature = NatureOfService.DOMAIN,
+            repositoryFor = IncomingInvoiceApprovalStateTransition.class
+    )
+    public static class Repository
+            extends StateTransitionRepositoryAbstract<
+                    IncomingInvoice,
+            IncomingInvoiceApprovalStateTransition,
+            IncomingInvoiceApprovalStateTransitionChart,
+            IncomingInvoiceApprovalState> {
+
+        public Repository() {
+            super(IncomingInvoiceApprovalStateTransition.class);
+        }
+
+    }
 }

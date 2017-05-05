@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.state.transitions;
+package org.estatio.capex.dom.invoice.approval.transitions;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -7,17 +7,17 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
 import org.estatio.capex.dom.state.StateTransitionService;
 
 public abstract class IncomingInvoice_abstractTransition {
 
     protected final IncomingInvoice incomingInvoice;
-    protected final IncomingInvoiceStateTransitionType transitionType;
+    protected final IncomingInvoiceApprovalStateTransitionChart transitionType;
 
     protected IncomingInvoice_abstractTransition(
             final IncomingInvoice incomingInvoice,
-            final IncomingInvoiceStateTransitionType transitionType) {
+            final IncomingInvoiceApprovalStateTransitionChart transitionType) {
         this.incomingInvoice = incomingInvoice;
         this.transitionType = transitionType;
     }
