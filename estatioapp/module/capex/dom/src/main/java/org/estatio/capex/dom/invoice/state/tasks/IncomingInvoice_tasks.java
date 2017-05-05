@@ -28,7 +28,7 @@ public class IncomingInvoice_tasks {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Task> tasks() {
-        final List<IncomingInvoiceStateTransition> transitions = repository.findByInvoice(incomingInvoice);
+        final List<IncomingInvoiceStateTransition> transitions = repository.findByDomainObject(incomingInvoice);
         return Task.from(transitions);
     }
 

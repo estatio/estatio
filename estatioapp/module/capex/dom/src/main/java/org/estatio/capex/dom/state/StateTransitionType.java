@@ -3,7 +3,6 @@ package org.estatio.capex.dom.state;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.task.Task;
@@ -41,21 +40,31 @@ public interface StateTransitionType<
      * Whether the provided domain object can make <i>this</i> type of transition.
      *
      * <p>
-     *     At a minimum the implementation should check that the type of the domain object is compatible with the
-     *     implementation of this {@link StateTransitionType}.
+     *     By default, all transitions are assumed to apply (with respect to their {@link #getFromStates() from} and
+     *     {@link #getToState() to} states <i>unless</i> this method is overridden to further constrain whether a
+     *     transition applies to a <i>particular</i> domain object.
      * </p>
      *
      * <p>
-     *     REVIEW: these words out of date...
-     *
-     *     The domain object's current state will, at least, be compatible with <i>this</i> transition's
-     *     {@link #getFromStates() from state}(s).  It is <i>not</i> necessary for there to be any
-     *     {@link #assignTaskTo(ServiceRegistry2) task role} associated with this transition, however.
+     *     In practice, this means that this is method is overridden when there is a decision to be made and the
+     *     next state to transition to depends upon the state of the domain object
      * </p>
+     *
+     * @param domainObject - being transitioned.
+     * @param serviceRegistry2 -to lookup domain services etc
      */
     @Programmatic
     boolean canApply(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
+    /**
+     * Allows the type to apply changes to the target domain object if necessary.
+     *
+     * <p>
+     *     For implementations that hold the relevant state entirely in the corresponding {@link StateTransition}, this
+     *     method will be a no-op.  However, some implementations might want to "push" the current state onto the
+     *     domain object (for convenience or as a performance optimisation); in which case this is the place to do it.
+     * </p>
+     */
     void applyTo(DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
@@ -65,24 +74,25 @@ public interface StateTransitionType<
      *     Said another way: a {@link Task} can only created as a wrapper around this transition if a
      *     {@link EstatioRole task role} has been provided.
      * </p>
+     *
      * @param serviceRegistry2
      */
     @Programmatic
     EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2);
 
     /**
-     * Only called if {@link #assignTaskTo(ServiceRegistry2)} is non-null, and
-     * {@link #canApply(Object, ServiceRegistry2)} also returns <tt>true</tt>.
+     * Creates a new {@link StateTransition transition} for the domain object.
      *
      * <p>
-     *     Typically implementations might want to cache results from
-     *     {@link #canApply(Object, ServiceRegistry2)} (lookup {@link QueryResultsCache} from provided
-     *     {@link ServiceRegistry2}).
+     *     This method is only intended to be called by {@link StateTransitionService}, which checks that the
+     *     domain object is already in the specified fromState, and can otherwise be
+     *     {@link #canApply(Object, ServiceRegistry2) applied}.
      * </p>
      */
     @Programmatic
     ST createTransition(
             final DO domainObject,
-            final ServiceRegistry2 serviceRegistry2, final S fromState);
+            final S fromState,
+            final ServiceRegistry2 serviceRegistry2);
 
 }

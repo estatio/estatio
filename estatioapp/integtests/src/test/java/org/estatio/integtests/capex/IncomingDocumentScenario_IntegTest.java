@@ -366,7 +366,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // transitions
             final List<IncomingInvoiceStateTransition> transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(1);
             final IncomingInvoiceStateTransition transition = transitions.get(0);
             assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
@@ -391,7 +391,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void stateTransition_works() {
 
             List<IncomingInvoiceStateTransition> transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(1);
             final IncomingInvoiceStateTransition transition1 = transitions.get(0);
 
@@ -413,7 +413,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition1.getTask().getCompletedBy()).isNotNull();
 
             transitions =
-                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(2);
             final IncomingInvoiceStateTransition transition2 = transitions.get(1);
             assertThat(transition2.getFromState()).isEqualTo(transition1.getToState());

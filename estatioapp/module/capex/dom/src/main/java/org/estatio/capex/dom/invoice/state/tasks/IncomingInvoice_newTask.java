@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -13,6 +14,7 @@ import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
+import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionTypeSupportService;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
@@ -40,14 +42,16 @@ public class IncomingInvoice_newTask
             @Nullable
             final String description) {
         final IncomingInvoiceState currState = supportService.currentStateOf(incomingInvoice);
+
+        final String taskDescription = Enums.getFriendlyNameOf(transitionType);
         final IncomingInvoiceStateTransition stateTransition =
-                repository.create(incomingInvoice, transitionType, currState, assignTo, description);
+                repository.create(incomingInvoice, transitionType, currState, assignTo, taskDescription);
         return stateTransition.getTask();
     }
 
     @Inject
     IncomingInvoiceStateTransitionRepository repository;
     @Inject
-    IncomingInvoiceStateTransitionType.SupportService supportService;
+    IncomingInvoiceStateTransitionTypeSupportService supportService;
 
 }

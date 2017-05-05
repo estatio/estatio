@@ -1,7 +1,6 @@
 package org.estatio.capex.dom.state;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.Column;
 
 import org.joda.time.LocalDateTime;
 
@@ -10,12 +9,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.capex.dom.task.Task;
 
-import lombok.Getter;
-import lombok.Setter;
-
-/**
- * A convenience adapter class for {@link StateTransition}.
- */
 public abstract class StateTransitionAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
@@ -36,7 +29,7 @@ public abstract class StateTransitionAbstract<
         setDomainObject(domainObject);
         setTransitionType(transitionType);
         setFromState(fromState);
-        this.task = taskIfAny;
+        setTask(taskIfAny);
     }
 
 
@@ -55,20 +48,15 @@ public abstract class StateTransitionAbstract<
     public abstract S getToState();
     public abstract void setToState(S toState);
 
-    /**
-     * Not every transition necessarily has a task.
-     */
-    @Column(allowsNull = "true", name = "taskId")
-    @Getter @Setter
-    private Task task;
+    @Override
+    public abstract Task getTask();
+    public abstract void setTask(final Task task);
 
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private LocalDateTime createdOn;
+    public abstract LocalDateTime getCreatedOn();
+    public abstract void setCreatedOn(final LocalDateTime createdOn);
 
-    @Getter @Setter
-    @Column(allowsNull = "true")
-    private LocalDateTime completedOn;
+    public abstract LocalDateTime getCompletedOn();
+    public abstract void setCompletedOn(final LocalDateTime completedOn);
 
 
     public boolean isCompleted() {

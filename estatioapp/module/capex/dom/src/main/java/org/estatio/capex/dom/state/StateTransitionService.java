@@ -235,7 +235,7 @@ public class StateTransitionService {
             if (!canApplyFromState(domainObject, candidateNextTransitionType, currentState)) {
                 continue;
             }
-            nextTransition = candidateNextTransitionType.createTransition(domainObject, serviceRegistry2, currentState);
+            nextTransition = candidateNextTransitionType.createTransition(domainObject, currentState, serviceRegistry2);
             if (nextTransition != null) {
                 break;
             }

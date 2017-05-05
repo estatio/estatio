@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -88,12 +89,14 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             // When
             incomingInvoiceStateTransitionRepository
-                    .create(invoice, IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR, IncomingInvoiceState.NEW,
-                            EstatioRole.COUNTRY_DIRECTOR, "Some description");
+                    .create(invoice,
+                            IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
+                            IncomingInvoiceState.NEW,
+                            EstatioRole.COUNTRY_DIRECTOR,
+                            Enums.getFriendlyNameOf(IncomingInvoiceStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
 
-            //Then
-
-            final List<IncomingInvoiceStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByInvoice(invoice);
+            // Then
+            final List<IncomingInvoiceStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
 
             assertThat(tasks.size()).isEqualTo(1);
         }

@@ -9,12 +9,13 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
-
-import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -33,20 +34,19 @@ import lombok.Setter;
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
         @Query(
-                name = "findByDocumentAndTransitionTypeAndTaskCompleted", language = "JDOQL",
+                name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
-                        + "WHERE invoice == :invoice "
-                        + "&& transitionType == :transitionType "
-                        + "&& task.completed == :taskCompleted "
-                        + "ORDER BY task.createdOn DESC "
+                        + "WHERE document == :domainObject "
+                        + "ORDER BY createdOn DESC "
         ),
         @Query(
-                name = "findByDocument", language = "JDOQL",
+                name = "findByDocumentAndIncomplete", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.documents.state.IncomingDocumentStateTransition "
-                        + "WHERE invoice == :invoice "
-                        + "ORDER BY task.createdOn DESC "
+                        + "WHERE document == :domainObject "
+                        + "&& toState == null "
+                        + "ORDER BY createdOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
@@ -57,17 +57,12 @@ import lombok.Setter;
 })
 @DomainObject(objectType = "incomingDocument.IncomingDocumentStateTransition" )
 public class IncomingDocumentStateTransition
-        implements
-        StateTransition<Document, IncomingDocumentStateTransition, IncomingDocumentStateTransitionType, IncomingDocumentState> {
+        extends StateTransitionAbstract<
+                    Document,
+                    IncomingDocumentStateTransition,
+                    IncomingDocumentStateTransitionType,
+                    IncomingDocumentState> {
 
-    public IncomingDocumentStateTransition(
-            final IncomingDocumentStateTransitionType transitionType,
-            final Document document,
-            final Task task) {
-        this.transitionType = transitionType;
-        this.document = document;
-        this.task = task;
-    }
 
     /**
      * For the first transition, represents the initial state of the domain object
@@ -92,12 +87,21 @@ public class IncomingDocumentStateTransition
     @Getter @Setter
     private Document document;
 
+
     /**
      * Not every transition necessarily has a task.
      */
     @Column(allowsNull = "true", name = "taskId")
     @Getter @Setter
     private Task task;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private LocalDateTime createdOn;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDateTime completedOn;
 
     @Programmatic
     @Override
@@ -107,8 +111,8 @@ public class IncomingDocumentStateTransition
 
     @Programmatic
     @Override
-    public void completed() {
-        setToState(getTransitionType().getToState());
+    public void setDomainObject(final Document domainObject) {
+        setDomainObject(domainObject);
     }
 
 }

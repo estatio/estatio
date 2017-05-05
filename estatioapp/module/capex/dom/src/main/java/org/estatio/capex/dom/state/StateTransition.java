@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.state;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.task.Task;
@@ -25,6 +27,10 @@ public interface StateTransition<
     STT getTransitionType();
 
     S getToState();
+
+    LocalDateTime getCreatedOn();
+
+    LocalDateTime getCompletedOn();
 
     @Programmatic
     void completed();

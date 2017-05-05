@@ -9,6 +9,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -32,20 +34,19 @@ import lombok.Setter;
         strategy = InheritanceStrategy.NEW_TABLE)
 @Queries({
         @Query(
-                name = "findByInvoice", language = "JDOQL",
+                name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
-                        + "WHERE invoice == :invoice "
-                        // REVIEW: need to figure out how to order.
-                        // One option is simply to have createdOn in the transition object.
-                        // + "ORDER BY task.createdOn DESC "
+                        + "WHERE invoice == :domainObject "
+                        + "ORDER BY createdOn DESC "
         ),
         @Query(
-                name = "findByInvoiceAndIncomplete", language = "JDOQL",
+                name = "findByDomainObjectAndIncomplete", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition "
-                        + "WHERE invoice == :invoice "
+                        + "WHERE invoice == :domainObject "
                         + "&& toState == null "
+                        + "ORDER BY createdOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
@@ -56,16 +57,11 @@ import lombok.Setter;
 })
 @DomainObject(objectType = "incomingInvoice.IncomingInvoiceStateTransition" )
 public class IncomingInvoiceStateTransition
-        extends
-        StateTransitionAbstract<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
-
-    public IncomingInvoiceStateTransition(
-            final IncomingInvoiceStateTransitionType transitionType,
-            final IncomingInvoice invoice,
-            final IncomingInvoiceState fromState,
-            final Task taskIfAny) {
-        super(invoice, transitionType, fromState, taskIfAny);
-    }
+        extends StateTransitionAbstract<
+                    IncomingInvoice,
+                    IncomingInvoiceStateTransition,
+                    IncomingInvoiceStateTransitionType,
+                    IncomingInvoiceState> {
 
     /**
      * For the first transition, represents the initial state of the domain object
@@ -89,6 +85,22 @@ public class IncomingInvoiceStateTransition
     @Column(allowsNull = "false", name = "invoiceId")
     @Getter @Setter
     private IncomingInvoice invoice;
+
+
+    /**
+     * Not every transition necessarily has a task.
+     */
+    @Column(allowsNull = "true", name = "taskId")
+    @Getter @Setter
+    private Task task;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private LocalDateTime createdOn;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDateTime completedOn;
 
 
     @Programmatic
