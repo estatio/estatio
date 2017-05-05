@@ -7,12 +7,11 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -100,9 +99,6 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             charge_for_works = chargeRepository.findByReference("WORKS");
             euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
         }
-
-        @Rule
-        public ExpectedException expectedException = ExpectedException.none();
 
         @Test
         public void complete_scenario_test(){
@@ -236,12 +232,12 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // given
             _createOrder = wrap(factoryService.mixin(IncomingOrderViewmodel_createOrder.class, incomingOrderViewModel));
 
-//            // expect
-//            expectedException.expect(DisabledException.class);
-//            expectedException.expectMessage("Reason: order number, buyer, seller, description, net amount, gross amount, charge, period required");
-//
-//            // when
-//            _createOrder.createOrder(false);
+            // when
+            try {
+                _createOrder.createOrder(false);
+            } catch (DisabledException e){
+                assertThat(e.getMessage()).contains("Reason: order number, buyer, seller, description, net amount, gross amount, charge, period required");
+            }
 
             // and when
             incomingOrderViewModel.createSeller("SELLER-REF", false, "Seller name", greatBritain);
@@ -310,22 +306,20 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             OrderItemWrapper orderItemWrapper = new OrderItemWrapper(orderCreated.getOrderNumber(), orderCreated.getItems().first().getCharge());
             incomingInvoiceViewModel.modifyOrderItem(orderItemWrapper);
 
-//            // expect
-//            expectedException.expect(DisabledException.class);
-//            expectedException.expectMessage("Reason: invoice number, due date, payment method required");
-//
-//            // when
-//            _createInvoice.createInvoice(false);
+            // when
+            try {
+                _createInvoice.createInvoice(false);
+            } catch (DisabledException e){
+                assertThat(e.getMessage()).contains("Reason: invoice number, date received, due date required");
+            }
 
             // and when
             final String invoiceNumber = "321";
             incomingInvoiceViewModel.setInvoiceNumber(invoiceNumber);
             final LocalDate dueDate = new LocalDate(2016, 2, 14);
             incomingInvoiceViewModel.setDueDate(dueDate);
-            final LocalDate dateReceivedDate = new LocalDate(2016, 2, 14);
+            final LocalDate dateReceivedDate = new LocalDate(2016, 2, 1);
             incomingInvoiceViewModel.setDateReceived(dateReceivedDate);
-            final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER;
-            incomingInvoiceViewModel.setPaymentMethod(paymentMethod);
 
             invoiceCreated = (IncomingInvoice) _createInvoice.createInvoice(false);
             transactionService.nextTransaction();
@@ -339,7 +333,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(invoiceCreated.getAtPath()).isEqualTo(buyer.getAtPath());
             assertThat(invoiceCreated.getCurrency()).isEqualTo(euro);
             assertThat(invoiceCreated.getDueDate()).isEqualTo(dueDate);
-            assertThat(invoiceCreated.getPaymentMethod()).isEqualTo(paymentMethod);
+            assertThat(invoiceCreated.getDateReceived()).isEqualTo(dateReceivedDate);
+            assertThat(invoiceCreated.getPaymentMethod()).isEqualTo(PaymentMethod.BANK_TRANSFER); // set by default
             assertThat(invoiceCreated.getInvoiceDate()).isNull();
 
             assertThat(invoiceCreated.getItems().size()).isEqualTo(1);
@@ -364,12 +359,6 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             Document doc = incomingInvoiceViewModel.getDocument();
             assertThat(paperclip.getDocument()).isEqualTo(doc);
-
-            // by default date received is derived from document
-            assertThat(invoiceCreated.getDateReceived()).isNotNull();
-
-            // REVIEW: JODO
-            // assertThat(invoiceCreated.getDateReceived()).isEqualTo(doc.getCreatedAt().toLocalDate());
 
             // transitions
             final List<IncomingInvoiceStateTransition> transitions =
