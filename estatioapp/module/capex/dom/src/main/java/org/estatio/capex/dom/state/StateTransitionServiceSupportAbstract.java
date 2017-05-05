@@ -17,7 +17,7 @@ import org.estatio.capex.dom.task.Task;
 public abstract class StateTransitionServiceSupportAbstract<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > implements StateTransitionServiceSupport<DO, ST, STT, S> {
 
@@ -36,7 +36,7 @@ public abstract class StateTransitionServiceSupportAbstract<
     }
 
     @Override
-    public boolean supports(final StateTransitionChart<?, ?, ?, ?> transitionType) {
+    public boolean supports(final StateTransitionType<?, ?, ?, ?> transitionType) {
         return stateTransitionTypeClass.isAssignableFrom(transitionType.getClass());
     }
 
@@ -47,26 +47,26 @@ public abstract class StateTransitionServiceSupportAbstract<
     }
 
     @Override
-    public ST currentTransitionOf(final DO domainObject) {
-        return getRepository().findByDomainObjectAndIncomplete(domainObject);
+    public ST pendingTransitionOf(final DO domainObject) {
+        return getRepository().findByDomainObjectAndCompleted(domainObject, false);
+    }
+
+    @Override
+    public ST mostRecentlyCompletedTransitionOf(final DO domainObject) {
+        return getRepository().findByDomainObjectAndCompleted(domainObject, true);
     }
 
     @Override
     public S currentStateOf(final DO domainObject) {
-        final ST currentTransitionIfAny = currentTransitionOf(domainObject);
-        return currentTransitionIfAny != null
-                ? currentTransitionIfAny.getFromState()
+        final ST mostRecentlyCompletedTransitionIfAny = mostRecentlyCompletedTransitionOf(domainObject);
+        return mostRecentlyCompletedTransitionIfAny != null
+                ? mostRecentlyCompletedTransitionIfAny.getToState()
                 : initialState;
     }
 
     @Override
     public STT[] allTransitionTypes() {
         return stateTransitionTypeClass.getEnumConstants();
-    }
-
-    @Override
-    public ST findIncomplete(final DO domainObject) {
-        return getRepository().findByDomainObjectAndIncomplete(domainObject);
     }
 
     @Override

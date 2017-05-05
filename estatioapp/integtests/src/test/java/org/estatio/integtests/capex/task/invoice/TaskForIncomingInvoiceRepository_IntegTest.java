@@ -33,7 +33,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -89,10 +89,10 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             // When
             incomingInvoiceStateTransitionRepository
                     .create(invoice,
-                            IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_COUNTRY_DIRECTOR,
+                            IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
                             IncomingInvoiceApprovalState.NEW,
                             EstatioRole.COUNTRY_DIRECTOR,
-                            Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_COUNTRY_DIRECTOR));
+                            Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
 
             // Then
             final List<IncomingInvoiceApprovalStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);

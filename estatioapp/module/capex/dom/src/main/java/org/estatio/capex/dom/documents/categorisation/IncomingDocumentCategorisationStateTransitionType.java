@@ -15,19 +15,19 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.StateTransitionChart;
+import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 
 @Getter
-public enum IncomingDocumentCategorisationStateChart
-        implements StateTransitionChart<
-                                Document,
-                IncomingDocumentCategorisationStateTransition,
-                IncomingDocumentCategorisationStateChart,
-                IncomingDocumentCategorisationState> {
+public enum IncomingDocumentCategorisationStateTransitionType
+        implements StateTransitionType<
+                                        Document,
+                        IncomingDocumentCategorisationStateTransition,
+        IncomingDocumentCategorisationStateTransitionType,
+                        IncomingDocumentCategorisationState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATING(
@@ -44,14 +44,14 @@ public enum IncomingDocumentCategorisationStateChart
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;
 
-    IncomingDocumentCategorisationStateChart(
+    IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
             final IncomingDocumentCategorisationState toState) {
         this.fromStates = fromState;
         this.toState = toState;
     }
 
-    IncomingDocumentCategorisationStateChart(
+    IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
             final IncomingDocumentCategorisationState toState
     ) {
@@ -102,11 +102,11 @@ public enum IncomingDocumentCategorisationStateChart
     public static class SupportService extends StateTransitionServiceSupportAbstract<
                         Document,
             IncomingDocumentCategorisationStateTransition,
-            IncomingDocumentCategorisationStateChart,
+            IncomingDocumentCategorisationStateTransitionType,
             IncomingDocumentCategorisationState> {
 
         public SupportService() {
-            super(IncomingDocumentCategorisationStateChart.class, IncomingDocumentCategorisationStateTransition.class,
+            super(IncomingDocumentCategorisationStateTransitionType.class, IncomingDocumentCategorisationStateTransition.class,
                     IncomingDocumentCategorisationState.NEW);
         }
 
@@ -114,7 +114,7 @@ public enum IncomingDocumentCategorisationStateChart
         protected StateTransitionRepository<
                 Document,
                 IncomingDocumentCategorisationStateTransition,
-                IncomingDocumentCategorisationStateChart,
+                IncomingDocumentCategorisationStateTransitionType,
                 IncomingDocumentCategorisationState
                 > getRepository() {
             return repository;

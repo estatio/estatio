@@ -15,7 +15,7 @@ import lombok.Getter;
 public class TaskAndTransition<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > {
     private final Task task;
@@ -29,7 +29,7 @@ public class TaskAndTransition<
     public static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > List<TaskAndTransition<DO,ST,STT,S>> from(List<Object[]> resultList) {
         List<TaskAndTransition<DO,ST,STT,S>> results = Lists.newArrayList();
@@ -42,7 +42,7 @@ public class TaskAndTransition<
     public static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
     > TaskAndTransition<DO,ST,STT,S> from(Object[] result) {
         return new TaskAndTransition<DO, ST, STT, S>((Task)result[0], (ST)result[1]);

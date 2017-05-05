@@ -8,46 +8,21 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.task.Task;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionService {
 
-    /**
-     * Finds the current (incomplete) {@link StateTransition} (if any) for the supplied domain object and transition type.
-     * From this a corresponding {@link Task} may be found.
-     *
-     * <p>
-     *     It is not guaranteed that there will necessarily <i>be</i> such a {@link StateTransition}; we don't mandate
-     *     that every
-     * </p>
-     *
-     * <p>
-     *     REVIEW: what if there are - somehow - more than one such found?  For now, uses #uniqueMatch so will fail fast; is this appropriate???
-     * </p>
-     */
     @Programmatic
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
-            S extends State<S>
-            >
-    ST findIncomplete(
-            final DO domainObject,
-            final STT transitionType) {
-        StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(transitionType);
-        return supportService.findIncomplete(domainObject);
-    }
-
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             >
     ST findFor(final Task task) {
@@ -63,7 +38,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > ST doFindFor(final Task task) {
         StateTransitionServiceSupport supportService = supportFor(task.getTransitionObjectType());
@@ -77,7 +52,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
     > boolean canApply(
             final DO domainObject,
@@ -90,7 +65,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
     >  boolean canApplyFromState(
             final DO domainObject,
@@ -110,13 +85,13 @@ public class StateTransitionService {
      * </p>
      *
      * @param domainObject
-     * @param prototype - to specify which {@link StateTransitionChart transition type} we are interested in.
+     * @param prototype - to specify which {@link StateTransitionType transition type} we are interested in.
      */
     @Programmatic
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
     >  S currentStateOf(
             final DO domainObject,
@@ -126,7 +101,25 @@ public class StateTransitionService {
     }
 
     /**
-     * Obtain the current transition of the domain object, which will be the
+     * Overload of {@link #currentStateOf(Object, StateTransitionType)}, but using the class of the
+     * {@link StateTransition} rather than a prototype value of the {@link StateTransitionType}.
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  S currentStateOf(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
+        return supportService.currentStateOf(domainObject);
+    }
+
+
+    /**
+     * Obtain the pending (incomplete) transition of the domain object, which will be the
      * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
      * {@link StateTransition#getToState() to state} is null.
      *
@@ -137,13 +130,68 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > ST currentTransitionOf(
+    > ST pendingTransitionOf(
             final DO domainObject,
             final STT prototype) {
         final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(prototype);
-        return supportService.currentTransitionOf(domainObject);
+        return supportService.pendingTransitionOf(domainObject);
+    }
+
+    /**
+     * Overload of {@link #pendingTransitionOf(Object, StateTransitionType)}, but using the class of the
+     * {@link StateTransition} rather than a prototype value of the {@link StateTransitionType}.
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > ST pendingTransitionOf(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
+        return supportService.pendingTransitionOf(domainObject);
+    }
+
+    /**
+     * Obtain the most recently completed transition of the domain object, which will be the
+     * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
+     * {@link StateTransition#getToState() to state} is null.
+     *
+     * @param domainObject
+     * @return the current transition, or possibly null for the very first (INSTANTIATE) transition
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST mostRecentlyCompletedTransitionOf(
+            final DO domainObject,
+            final STT prototype) {
+        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(prototype);
+        return supportService.mostRecentlyCompletedTransitionOf(domainObject);
+    }
+
+    /**
+     * Overload of {@link #mostRecentlyCompletedTransitionOf(Object, StateTransitionType)}, but using the class of the
+     * {@link StateTransition} rather than a prototype value of the {@link StateTransitionType}.
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST mostRecentlyCompletedTransitionOf(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
+        return supportService.mostRecentlyCompletedTransitionOf(domainObject);
     }
 
     /**
@@ -166,7 +214,7 @@ public class StateTransitionService {
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > ST apply(
             final ST stateTransition,
@@ -185,54 +233,73 @@ public class StateTransitionService {
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
      *
      * @param domainObject - the domain object whose
-     * @param transitionType - the type of transition being applied (but can be null for very first time)
+     * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
      * @param comment
      */
     @Programmatic
     public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
     > ST apply(
             final DO domainObject,
-            final STT transitionType,
+            final STT requiredTransitionType,
             final String comment) {
 
-        S currentState = currentStateOf(domainObject, transitionType);
-        if(!canTransitionFrom(currentState, transitionType)) {
+        S currentState = currentStateOf(domainObject, requiredTransitionType);
+        if(!canTransitionFrom(currentState, requiredTransitionType)) {
             // cannot apply this state
             return null;
         }
 
-        final ST incompleteTransitionIfAny = findIncomplete(domainObject, transitionType);
+        ST pendingTransitionIfAny = pendingTransitionOf(domainObject, requiredTransitionType);
 
-        final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
-        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, transitionType,
-                incompleteTransitionIfAny);
+        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, requiredTransitionType,
+                pendingTransitionIfAny);
+
+        if(pendingTransitionIfAny != null) {
+            final STT pendingType = pendingTransitionIfAny.getTransitionType();
+            if(pendingType != requiredTransitionType) {
+                // we're heading in a different direction than was set up
+                // eg we're doing a cancel instead of an approve.
+
+                final Task taskIfAny = pendingTransitionIfAny.getTask();
+
+                // ... remove the pending, and its task too (if it has one)
+                repositoryService.remove(pendingTransitionIfAny);
+                if(taskIfAny != null) {
+                    repositoryService.removeAndFlush(taskIfAny);
+                }
+
+                // ... and create a new one in its stead
+                pendingTransitionIfAny = requiredTransitionType.createTransition(domainObject, currentState, serviceRegistry2);
+            }
+        }
 
         // transitioning
+        final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONING);
         eventBusService.post(event);
 
         // transition
-        transitionType.applyTo(domainObject, serviceRegistry2);
+        requiredTransitionType.applyTo(domainObject, serviceRegistry2);
 
-        if(incompleteTransitionIfAny != null) {
-            incompleteTransitionIfAny.completed();
-            final Task taskIfAny = incompleteTransitionIfAny.getTask();
+        if(pendingTransitionIfAny != null) {
+            pendingTransitionIfAny.completed();
+            final Task taskIfAny = pendingTransitionIfAny.getTask();
             if(taskIfAny != null) {
                 taskIfAny.completed(comment);
             }
         }
 
         // update the state of the domain object to be toState of the transition that's just completed
-        currentState = transitionType.getToState();
+        currentState = requiredTransitionType.getToState();
 
         // for wherever we might go next, we spin through all possible transitions,
         // and create a task for the first one that applies to this particular domain object.
         ST nextTransition = null;
-        final STT[] allTransitionsTypes = supportFor(transitionType).allTransitionTypes();
+        final STT[] allTransitionsTypes = supportFor(requiredTransitionType).allTransitionTypes();
         for (STT candidateNextTransitionType : allTransitionsTypes) {
 
             if (!canApplyFromState(domainObject, candidateNextTransitionType, currentState)) {
@@ -257,7 +324,7 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             >
     StateTransitionServiceSupport<DO,ST,STT,S> supportFor(final STT transitionType) {
@@ -276,7 +343,19 @@ public class StateTransitionService {
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >
+    StateTransitionServiceSupport<DO,ST,STT,S> supportFor(final Class<ST> stateTransitionClass) {
+        final String transitionType = metaModelService3.toObjectType(stateTransitionClass);
+        return supportFor(transitionType);
+    }
+
+    // REVIEW: we could cache the result, perhaps (it's idempotent)
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             >
     StateTransitionServiceSupport<DO,ST,STT,S> supportFor(final String transitionType) {
@@ -294,7 +373,7 @@ public class StateTransitionService {
     private static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionChart<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > boolean canTransitionFrom(
                 final S fromState,
@@ -312,5 +391,12 @@ public class StateTransitionService {
 
     @Inject
     QueryResultsCache queryResultsCache;
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    MetaModelService3 metaModelService3;
+
 
 }

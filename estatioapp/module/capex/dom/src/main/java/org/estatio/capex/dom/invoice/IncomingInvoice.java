@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -61,13 +62,18 @@ import lombok.Setter;
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "incomingInvoice.IncomingInvoice"
+        objectType = "incomingInvoice.IncomingInvoice",
+        persistedLifecycleEvent = IncomingInvoice.ObjectPersistedEvent.class
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> {
+
+    public static class ObjectPersistedEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
+    }
 
     public IncomingInvoice() {
         super("invoiceNumber");
@@ -158,6 +164,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate dateReceived;
+
+
+
+    // need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    @Override
+    public InvoiceStatus getStatus() {
+        return super.getStatus();
+    }
 
 
     // region: supporting state transitions.

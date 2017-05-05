@@ -7,13 +7,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 
 @Mixin
 public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_abstractTransition {
 
     public IncomingInvoice_approveAsCountryDirector(IncomingInvoice incomingInvoice) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_COUNTRY_DIRECTOR);
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
     }
 
     @Action()

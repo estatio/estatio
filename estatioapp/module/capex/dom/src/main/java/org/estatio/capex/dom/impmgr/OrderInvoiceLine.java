@@ -30,12 +30,14 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -295,6 +297,11 @@ public class OrderInvoiceLine {
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
                         dueDate, startDate, endDate, property, project);
+
+                // assume these are not yet approved, so create as 'NEW'
+                stateTransitionService.apply(
+                        invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+
             }
 
             // match invoice item to order item
@@ -391,6 +398,8 @@ public class OrderInvoiceLine {
         OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
         @Inject
         MessageService messageService;
+        @Inject
+        StateTransitionService stateTransitionService;
 
 
         public static class RandomCodeGenerator10Chars {

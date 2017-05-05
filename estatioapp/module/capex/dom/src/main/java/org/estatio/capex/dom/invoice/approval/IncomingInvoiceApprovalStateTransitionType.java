@@ -13,7 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.state.StateTransitionChart;
+import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.task.Task;
@@ -22,12 +22,12 @@ import org.estatio.dom.roles.EstatioRole;
 import lombok.Getter;
 
 @Getter
-public enum IncomingInvoiceApprovalStateTransitionChart
-        implements StateTransitionChart<
-                                IncomingInvoice,
-        IncomingInvoiceApprovalStateTransition,
-        IncomingInvoiceApprovalStateTransitionChart,
-        IncomingInvoiceApprovalState> {
+public enum IncomingInvoiceApprovalStateTransitionType
+        implements StateTransitionType<
+                                        IncomingInvoice,
+                IncomingInvoiceApprovalStateTransition,
+                IncomingInvoiceApprovalStateTransitionType,
+                IncomingInvoiceApprovalState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
@@ -100,6 +100,7 @@ public enum IncomingInvoiceApprovalStateTransitionChart
     },
     CANCEL(
             Arrays.asList(
+                    IncomingInvoiceApprovalState.NEW,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
@@ -110,14 +111,14 @@ public enum IncomingInvoiceApprovalStateTransitionChart
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;
 
-    IncomingInvoiceApprovalStateTransitionChart(
+    IncomingInvoiceApprovalStateTransitionType(
             final List<IncomingInvoiceApprovalState> fromState,
             final IncomingInvoiceApprovalState toState) {
         this.fromStates = fromState;
         this.toState = toState;
     }
 
-    IncomingInvoiceApprovalStateTransitionChart(
+    IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
             final IncomingInvoiceApprovalState toState
     ) {
@@ -167,10 +168,10 @@ public enum IncomingInvoiceApprovalStateTransitionChart
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends StateTransitionServiceSupportAbstract<
-            IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionChart, IncomingInvoiceApprovalState> {
+            IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionType, IncomingInvoiceApprovalState> {
 
         public SupportService() {
-            super(IncomingInvoiceApprovalStateTransitionChart.class, IncomingInvoiceApprovalStateTransition.class,
+            super(IncomingInvoiceApprovalStateTransitionType.class, IncomingInvoiceApprovalStateTransition.class,
                     IncomingInvoiceApprovalState.NEW);
         }
 
@@ -178,7 +179,7 @@ public enum IncomingInvoiceApprovalStateTransitionChart
         protected StateTransitionRepository<
                 IncomingInvoice,
                 IncomingInvoiceApprovalStateTransition,
-                IncomingInvoiceApprovalStateTransitionChart,
+                IncomingInvoiceApprovalStateTransitionType,
                 IncomingInvoiceApprovalState
                 > getRepository() {
             return repository;

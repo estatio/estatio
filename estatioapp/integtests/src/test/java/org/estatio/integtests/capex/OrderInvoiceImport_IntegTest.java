@@ -32,6 +32,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
@@ -87,6 +88,9 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
         @Inject
         private OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
+        @Inject
+        private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceApprovalStateTransitionRepository;
+
         @Before
         public void setUp() throws Exception {
 
@@ -119,12 +123,16 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
             incomingInvoices = incomingInvoiceRepository.listAll();
             projects = projectRepository.listAll();
             links = orderItemInvoiceItemLinkRepository.listAll();
+            final List<IncomingInvoiceApprovalStateTransition> invoiceTransitions =
+                    incomingInvoiceApprovalStateTransitionRepository.listAll();
 
             assertThat(orders).isNotEmpty();
             assertThat(incomingInvoices).isNotEmpty();
             assertThat(projects).isNotEmpty();
             assertThat(links).isNotEmpty();
+            assertThat(invoiceTransitions).isNotEmpty();
 
+            assertThat(invoiceTransitions.size()).isGreaterThanOrEqualTo(incomingInvoices.size());
             assertThat(links.size()).isEqualTo(3);
 
             OrderItem orderItem1 = orders.get(0).getItems().first();

@@ -41,15 +41,15 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition "
                         + "WHERE invoice == :domainObject "
-                        + "ORDER BY createdOn DESC "
+                        + "ORDER BY completedOn DESC "
         ),
         @Query(
-                name = "findByDomainObjectAndIncomplete", language = "JDOQL",
+                name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition "
                         + "WHERE invoice == :domainObject "
-                        + "&& toState == null "
-                        + "ORDER BY createdOn DESC "
+                        + "&& completed == :completed "
+                        + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
@@ -63,7 +63,7 @@ public class IncomingInvoiceApprovalStateTransition
         extends StateTransitionAbstract<
                     IncomingInvoice,
         IncomingInvoiceApprovalStateTransition,
-        IncomingInvoiceApprovalStateTransitionChart,
+        IncomingInvoiceApprovalStateTransitionType,
         IncomingInvoiceApprovalState> {
 
     /**
@@ -76,7 +76,7 @@ public class IncomingInvoiceApprovalStateTransition
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingInvoiceApprovalStateTransitionChart transitionType;
+    private IncomingInvoiceApprovalStateTransitionType transitionType;
 
     /**
      * If null, then this transition is not yet complete.
@@ -105,6 +105,9 @@ public class IncomingInvoiceApprovalStateTransition
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
 
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private boolean completed;
 
     @Programmatic
     @Override
@@ -126,7 +129,7 @@ public class IncomingInvoiceApprovalStateTransition
             extends StateTransitionRepositoryAbstract<
                     IncomingInvoice,
             IncomingInvoiceApprovalStateTransition,
-            IncomingInvoiceApprovalStateTransitionChart,
+            IncomingInvoiceApprovalStateTransitionType,
             IncomingInvoiceApprovalState> {
 
         public Repository() {

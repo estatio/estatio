@@ -7,13 +7,21 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_createInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class IncomingInvoiceApprovalInitiator extends AbstractSubscriber {
+public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends AbstractSubscriber {
+
+    //
+    // TODO: should get rid of this when the upstream document state is implemented.
+    //
+    // (think it's not a harm to have both, behaviour of STS is kinda idempotent).
+    //
 
     @com.google.common.eventbus.Subscribe
     public void on(IncomingInvoiceViewmodel_createInvoice.ActionDomainEvent ev) {
@@ -25,10 +33,13 @@ public class IncomingInvoiceApprovalInitiator extends AbstractSubscriber {
             transactionService.flushTransaction();
 
             // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
-            stateTransitionService.apply(incomingInvoice, IncomingInvoiceApprovalStateTransitionChart.INSTANTIATE, null);
+            stateTransitionService.apply(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
             break;
         }
     }
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
     @Inject
     StateTransitionService stateTransitionService;

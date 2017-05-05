@@ -4,21 +4,25 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 public interface StateTransitionRepository<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > {
+
+    @Programmatic
+    List<ST> listAll();
 
     @Programmatic
     List<ST> findByDomainObject(DO domainObject);
 
     @Programmatic
-    ST findByDomainObjectAndIncomplete(final DO domainObject);
+    ST findByDomainObjectAndCompleted(final DO domainObject, final boolean whetherCompleted);
 
     @Programmatic
     ST findByTask(final Task task);

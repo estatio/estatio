@@ -12,27 +12,27 @@ import org.estatio.capex.dom.task.Task;
 public interface StateTransitionServiceSupport <
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > {
 
     /**
-     * Whether this service supports the provided {@link StateTransitionChart}.
+     * Whether this service supports the provided {@link StateTransitionType}.
      *
      * <p>
-     *  For every such implementation of {@link StateTransitionChart} the expectation is that precisely one service
+     *  For every such implementation of {@link StateTransitionType} the expectation is that precisely one service
      *  supports it.
      * </p>
      */
     @Programmatic
-    boolean supports(final StateTransitionChart<?,?,?,?> transitionType);
+    boolean supports(final StateTransitionType<?,?,?,?> transitionType);
 
     /**
      * Whether this service supports the provided transition type (being the
      * {@link DomainObject#objectType() object type} of the corresponding implementation of {@link StateTransition}).
      *
      * <p>
-     *  For every such implementation of {@link StateTransitionChart} the expectation is that precisely one service
+     *  For every such implementation of {@link StateTransitionType} the expectation is that precisely one service
      *  supports it.
      * </p>
      */
@@ -40,33 +40,34 @@ public interface StateTransitionServiceSupport <
     boolean supports(final String transitionType);
 
     /**
-     * Supports {@link StateTransitionService#currentTransitionOf(Object, StateTransitionChart)}.
+     * Supports {@link StateTransitionService#pendingTransitionOf(Object, StateTransitionType)}.
      */
     @Programmatic
-    ST currentTransitionOf(DO domainObject);
+    ST pendingTransitionOf(DO domainObject);
 
     /**
-     * Supports {@link StateTransitionService#currentStateOf(Object, StateTransitionChart)}.
+     * Supports {@link StateTransitionService#pendingTransitionOf(Object, StateTransitionType)}.
+     */
+    @Programmatic
+    ST mostRecentlyCompletedTransitionOf(DO domainObject);
+
+    /**
+     * Supports {@link StateTransitionService#currentStateOf(Object, StateTransitionType)}.
      * @return
      */
     @Programmatic
     S currentStateOf(DO domainObject);
 
     /**
-     * All available instances of {@link StateTransitionChart}.
+     * All available instances of {@link StateTransitionType}.
      *
      * <p>
-     *      Used to search for next {@link StateTransitionChart transition (type)}s that might occur from a given approval.
+     *      Used to search for next {@link StateTransitionType transition (type)}s that might occur from a given approval.
      * </p>
      */
     @Programmatic
     STT[] allTransitionTypes();
 
-    /**
-     * Supports {@link StateTransitionService#findIncomplete(Object, StateTransitionChart)}.
-     */
-    @Programmatic
-    ST findIncomplete(DO domainObject);
 
     @Programmatic
     ST findFor(Task task);

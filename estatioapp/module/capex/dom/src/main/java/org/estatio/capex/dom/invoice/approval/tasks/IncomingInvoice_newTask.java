@@ -12,14 +12,14 @@ import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.task.NewTaskMixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
 @Mixin
 public class IncomingInvoice_newTask
-        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionChart, IncomingInvoiceApprovalState> {
+        implements NewTaskMixin<IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionType, IncomingInvoiceApprovalState> {
 
     public static class ActionDomainEvent extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoice_newTask> { }
 
@@ -36,7 +36,7 @@ public class IncomingInvoice_newTask
     @Override
     public Task newTask(
             final EstatioRole assignTo,
-            final IncomingInvoiceApprovalStateTransitionChart transitionType,
+            final IncomingInvoiceApprovalStateTransitionType transitionType,
             @Nullable
             final String description) {
         final IncomingInvoiceApprovalState currState = supportService.currentStateOf(incomingInvoice);
@@ -50,6 +50,6 @@ public class IncomingInvoice_newTask
     @Inject
     IncomingInvoiceApprovalStateTransition.Repository repository;
     @Inject
-    IncomingInvoiceApprovalStateTransitionChart.SupportService supportService;
+    IncomingInvoiceApprovalStateTransitionType.SupportService supportService;
 
 }

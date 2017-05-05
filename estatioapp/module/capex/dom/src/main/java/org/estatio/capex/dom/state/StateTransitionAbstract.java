@@ -6,13 +6,15 @@ import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.util.Enums;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.capex.dom.task.Task;
 
 public abstract class StateTransitionAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > implements StateTransition<DO,ST,STT,S> {
 
@@ -32,6 +34,27 @@ public abstract class StateTransitionAbstract<
         setTask(taskIfAny);
     }
 
+    public String title() {
+        final StringBuilder buf = new StringBuilder();
+        if (isCompleted()) {
+            buf.append(nameOf(getToState()));
+            if(getTask() != null) {
+                buf.append(" (").append(getTask().getCompletedBy()).append(")");
+            }
+            // buf.append(" on ").append(getCompletedOn());
+        } else {
+            buf.append("Pending: ");
+            buf.append(nameOf(getTransitionType()));
+        }
+        return buf.toString();
+    }
+
+    private static String nameOf(final Object obj) {
+        if(obj instanceof Enum) {
+            return Enums.getFriendlyNameOf((Enum<?>) obj);
+        } else
+            return obj.toString();
+    }
 
     @Programmatic
     public abstract DO getDomainObject();
@@ -58,18 +81,21 @@ public abstract class StateTransitionAbstract<
     public abstract LocalDateTime getCompletedOn();
     public abstract void setCompletedOn(final LocalDateTime completedOn);
 
-
-    public boolean isCompleted() {
-        return getCompletedOn() != null;
-    }
+    public abstract boolean isCompleted();
+    public abstract void setCompleted(boolean completed);
 
     @Programmatic
     @Override
     public void completed() {
         setCompletedOn(clockService.nowAsLocalDateTime());
+        setCompleted(true);
         setToState(getTransitionType().getToState());
     }
 
+
+    public String toString() {
+        return ObjectContracts.toString(this, "fromState","transitionType","toState","domainObject");
+    }
 
     ///////////////
 

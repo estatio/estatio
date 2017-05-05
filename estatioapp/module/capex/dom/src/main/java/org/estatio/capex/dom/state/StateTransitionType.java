@@ -16,10 +16,10 @@ import org.estatio.dom.roles.EstatioRole;
  * most methods (so that the implementation can lookup domain services etc to do its work).
  * </p>
  */
-public interface StateTransitionChart<
+public interface StateTransitionType<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > {
 

@@ -18,7 +18,7 @@ import org.estatio.dom.roles.EstatioRole;
 public abstract class StateTransitionRepositoryAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
-        STT extends StateTransitionChart<DO, ST, STT, S>,
+        STT extends StateTransitionType<DO, ST, STT, S>,
         S extends State<S>
         > implements StateTransitionRepository<DO,ST,STT,S> {
 
@@ -26,6 +26,12 @@ public abstract class StateTransitionRepositoryAbstract<
 
     public StateTransitionRepositoryAbstract(final Class<ST> stateTransitionClass) {
         this.stateTransitionClass = stateTransitionClass;
+    }
+
+    @Override
+    @Programmatic
+    public List<ST> listAll() {
+        return repositoryService.allInstances(stateTransitionClass);
     }
 
     @Override
@@ -40,14 +46,15 @@ public abstract class StateTransitionRepositoryAbstract<
 
     @Override
     @Programmatic
-    public ST findByDomainObjectAndIncomplete(final DO domainObject) {
+    public ST findByDomainObjectAndCompleted(final DO domainObject, final boolean completed) {
         // can't be uniqueMatch, because for the very first call to StateTransitionService#apply, called on an
         // INSTANTIATED event, there won't yet be any StateTransitions for this invoice
         return repositoryService.firstMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         stateTransitionClass,
-                        "findByDomainObjectAndIncomplete",
-                        "domainObject", domainObject));
+                        "findByDomainObjectAndCompleted",
+                        "domainObject", domainObject,
+                        "completed", completed ));
     }
 
 

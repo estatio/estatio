@@ -36,7 +36,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionChart;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsTreasurer;
@@ -370,7 +370,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             final IncomingInvoiceApprovalStateTransition transition = transitions.get(0);
             assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
             assertThat(transition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
-            assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_ASSET_MANAGER);
+            assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER);
             assertThat(transition.getCreatedOn()).isNotNull();
             assertThat(transition.getToState()).isNull();
             assertThat(transition.getCompletedOn()).isNull();
@@ -414,68 +414,89 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(2);
-            final IncomingInvoiceApprovalStateTransition transition2 = transitions.get(1);
-            assertThat(transition2.getFromState()).isEqualTo(transition1.getToState());
-            assertThat(transition2.getCreatedOn()).isNotNull();
-            assertThat(transition2.getToState()).isNull();
-            assertThat(transition2.getCompletedOn()).isNull();
-            assertThat(transition2.isCompleted()).isFalse();
 
-            assertThat(transition2.getTask()).isNotNull();
-            assertThat(transition2.getTask().getCompletedBy()).isNull();
-            assertThat(transition2.getTask().isCompleted()).isFalse();
+            IncomingInvoiceApprovalStateTransition completedTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
+            assertThat(transition1).isSameAs(completedTransition);
+
+            IncomingInvoiceApprovalStateTransition nextTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, false);
+            assertThat(nextTransition.getFromState()).isEqualTo(completedTransition.getToState());
+            assertThat(nextTransition.getCreatedOn()).isNotNull();
+            assertThat(nextTransition.getToState()).isNull();
+            assertThat(nextTransition.getCompletedOn()).isNull();
+            assertThat(nextTransition.isCompleted()).isFalse();
+
+            assertThat(nextTransition.getTask()).isNotNull();
+            assertThat(nextTransition.getTask().getCompletedBy()).isNull();
+            assertThat(nextTransition.getTask().isCompleted()).isFalse();
 
             // and when
             final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(
                     mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
 
+            getFixtureClock().addTime(1,0); // time moves on
             _approveAsCountryDirector.$$(null);
             transactionService.nextTransaction();
 
             // then
-            assertThat(transition2.getToState()).isNotNull();
+            assertThat(nextTransition.getToState()).isNotNull();
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(3);
-            final IncomingInvoiceApprovalStateTransition transition3 = transitions.get(2);
-            assertThat(transition3.getFromState()).isEqualTo(transition2.getToState());
-            assertThat(transition3.getToState()).isNull();
+
+            completedTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
+            assertThat(nextTransition).isSameAs(completedTransition);
+
+            nextTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, false);
+
+            assertThat(nextTransition.getFromState()).isEqualTo(completedTransition.getToState());
+            assertThat(nextTransition.getToState()).isNull();
 
             // and when
             final IncomingInvoice_approveAsTreasurer _approveAsTreasurer = wrap(
                     mixin(IncomingInvoice_approveAsTreasurer.class, invoiceCreated));
 
+            getFixtureClock().addTime(1,0); // time moves on
             _approveAsTreasurer.$$(null);
             transactionService.nextTransaction();
 
             // then
-            assertThat(transition3.getToState()).isNotNull();
+            assertThat(nextTransition.getToState()).isNotNull();
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(4);
-            final IncomingInvoiceApprovalStateTransition transition4 = transitions.get(3);
-            assertThat(transition4.getFromState()).isEqualTo(transition3.getToState());
-            assertThat(transition4.getToState()).isNull();
+
+            completedTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
+            assertThat(nextTransition).isSameAs(completedTransition);
+
+            nextTransition =
+                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, false);
+
+            assertThat(nextTransition.getFromState()).isEqualTo(completedTransition.getToState());
+            assertThat(nextTransition.getToState()).isNull();
 
             // and when (LAST transition)
             final IncomingInvoice_pay _pay = wrap(
                     mixin(IncomingInvoice_pay.class, invoiceCreated));
 
+            getFixtureClock().addTime(1,0); // time moves on
             _pay.$$(null);
             transactionService.nextTransaction();
 
             // then
-            assertThat(transition4.getToState()).isNotNull();
+            assertThat(nextTransition.getToState()).isNotNull();
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(4);
 
-            // TODO: state returns to new; Maybe we need an 'end state'?
-            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionChart.PAY)).isEqualTo(IncomingInvoiceApprovalState.NEW);
-            assertThat(stateTransitionService.canApply(invoiceCreated, IncomingInvoiceApprovalStateTransitionChart.APPROVE_AS_ASSET_MANAGER)).isFalse();
+            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.PAY)).isEqualTo(IncomingInvoiceApprovalState.PAID);
         }
 
 

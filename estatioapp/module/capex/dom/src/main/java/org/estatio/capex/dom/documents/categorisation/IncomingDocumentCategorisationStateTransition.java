@@ -43,15 +43,15 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition "
                         + "WHERE document == :domainObject "
-                        + "ORDER BY createdOn DESC "
+                        + "ORDER BY completedOn DESC "
         ),
         @Query(
-                name = "findByDocumentAndIncomplete", language = "JDOQL",
+                name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition "
                         + "WHERE document == :domainObject "
-                        + "&& toState == null "
-                        + "ORDER BY createdOn DESC "
+                        + "&& completed == :completed "
+                        + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
@@ -65,7 +65,7 @@ public class IncomingDocumentCategorisationStateTransition
         extends StateTransitionAbstract<
                     Document,
         IncomingDocumentCategorisationStateTransition,
-        IncomingDocumentCategorisationStateChart,
+        IncomingDocumentCategorisationStateTransitionType,
         IncomingDocumentCategorisationState> {
 
 
@@ -79,7 +79,7 @@ public class IncomingDocumentCategorisationStateTransition
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private IncomingDocumentCategorisationStateChart transitionType;
+    private IncomingDocumentCategorisationStateTransitionType transitionType;
 
     /**
      * If null, then this transition is not yet complete.
@@ -108,6 +108,10 @@ public class IncomingDocumentCategorisationStateTransition
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
 
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private boolean completed;
+
     @Programmatic
     @Override
     public Document getDomainObject() {
@@ -120,7 +124,6 @@ public class IncomingDocumentCategorisationStateTransition
         setDomainObject(domainObject);
     }
 
-
     @DomainService(
             nature = NatureOfService.DOMAIN,
             repositoryFor = IncomingInvoiceApprovalStateTransition.class
@@ -129,7 +132,7 @@ public class IncomingDocumentCategorisationStateTransition
             extends StateTransitionRepositoryAbstract<
                         Document,
                         IncomingDocumentCategorisationStateTransition,
-                        IncomingDocumentCategorisationStateChart,
+            IncomingDocumentCategorisationStateTransitionType,
                         IncomingDocumentCategorisationState> {
 
         public Repository() {
