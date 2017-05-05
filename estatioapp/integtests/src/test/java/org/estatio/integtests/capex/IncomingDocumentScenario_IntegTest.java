@@ -39,9 +39,13 @@ import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
 import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsAssetManager;
+import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsTreasurer;
+import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_pay;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
@@ -404,6 +408,57 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition2.getToState()).isNull();
 
 
+            // and when
+            final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(
+                    mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
+
+            _approveAsCountryDirector.$$(null);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(transition2.getToState()).isNotNull();
+
+            transitions =
+                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+            assertThat(transitions.size()).isEqualTo(3);
+            final IncomingInvoiceStateTransition transition3 = transitions.get(2);
+            assertThat(transition3.getFromState()).isEqualTo(transition2.getToState());
+            assertThat(transition3.getToState()).isNull();
+
+            // and when
+            final IncomingInvoice_approveAsTreasurer _approveAsTreasurer = wrap(
+                    mixin(IncomingInvoice_approveAsTreasurer.class, invoiceCreated));
+
+            _approveAsTreasurer.$$(null);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(transition3.getToState()).isNotNull();
+
+            transitions =
+                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+            assertThat(transitions.size()).isEqualTo(4);
+            final IncomingInvoiceStateTransition transition4 = transitions.get(3);
+            assertThat(transition4.getFromState()).isEqualTo(transition3.getToState());
+            assertThat(transition4.getToState()).isNull();
+
+            // and when (LAST transition)
+            final IncomingInvoice_pay _pay = wrap(
+                    mixin(IncomingInvoice_pay.class, invoiceCreated));
+
+            _pay.$$(null);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(transition4.getToState()).isNotNull();
+
+            transitions =
+                    incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
+            assertThat(transitions.size()).isEqualTo(4);
+
+            // TODO: state returns to new; Maybe we need an 'end state'?
+            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceStateTransitionType.PAY)).isEqualTo(IncomingInvoiceState.NEW);
+            assertThat(stateTransitionService.canApply(invoiceCreated, IncomingInvoiceStateTransitionType.APPROVE_AS_ASSET_MANAGER)).isFalse();
         }
 
 
@@ -440,4 +495,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 }
+
