@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.task.Task;
 
 @Mixin(method = "prop")
-public class StateTransition_object {
+public class Task_object {
 
     private final Task task;
-    public StateTransition_object(final Task task) {
+    public Task_object(final Task task) {
         this.task = task;
     }
 

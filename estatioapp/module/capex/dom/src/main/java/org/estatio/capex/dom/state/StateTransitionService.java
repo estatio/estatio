@@ -84,7 +84,18 @@ public class StateTransitionService {
             final STT candidateTransitionType) {
 
         final S currentStateIfAny = currentStateOf(domainObject, candidateTransitionType);
+        return canApplyFromState(domainObject, candidateTransitionType, currentStateIfAny);
+    }
 
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  boolean canApplyFromState(
+            final DO domainObject,
+            final STT candidateTransitionType,
+            final S currentStateIfAny) {
         return canTransitionFrom(currentStateIfAny, candidateTransitionType) &&
                candidateTransitionType.canApply(domainObject, serviceRegistry2);
     }
@@ -171,7 +182,7 @@ public class StateTransitionService {
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
      *
      * @param domainObject - the domain object whose
-     * @param transitionTypeIfAny - the type of transition being applied (but can be null for very first time)
+     * @param transitionType - the type of transition being applied (but can be null for very first time)
      * @param comment
      */
     @Programmatic
@@ -182,20 +193,19 @@ public class StateTransitionService {
             S extends State<S>
     > ST apply(
             final DO domainObject,
-            final STT transitionTypeIfAny,
+            final STT transitionType,
             final String comment) {
 
-        final S currentState = currentStateOf(domainObject, transitionTypeIfAny);
-
-        if(!canTransitionFrom(currentState, transitionTypeIfAny)) {
+        S currentState = currentStateOf(domainObject, transitionType);
+        if(!canTransitionFrom(currentState, transitionType)) {
             // cannot apply this state
             return null;
         }
 
-        final ST incompleteTransitionIfAny = findIncomplete(domainObject, transitionTypeIfAny);
+        final ST incompleteTransitionIfAny = findIncomplete(domainObject, transitionType);
 
         final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
-        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, transitionTypeIfAny,
+        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, transitionType,
                 incompleteTransitionIfAny);
 
         // transitioning
@@ -203,7 +213,7 @@ public class StateTransitionService {
         eventBusService.post(event);
 
         // transition
-        transitionTypeIfAny.applyTo(domainObject, serviceRegistry2);
+        transitionType.applyTo(domainObject, serviceRegistry2);
 
         if(incompleteTransitionIfAny != null) {
             incompleteTransitionIfAny.completed();
@@ -213,12 +223,16 @@ public class StateTransitionService {
             }
         }
 
+        // update the state of the domain object to be toState of the transition that's just completed
+        currentState = transitionType.getToState();
+
         // for wherever we might go next, we spin through all possible transitions,
         // and create a task for the first one that applies to this particular domain object.
         ST nextTransition = null;
-        final STT[] allTransitionsTypes = supportFor(transitionTypeIfAny).allTransitionTypes();
+        final STT[] allTransitionsTypes = supportFor(transitionType).allTransitionTypes();
         for (STT candidateNextTransitionType : allTransitionsTypes) {
-            if (!canApply(domainObject, candidateNextTransitionType)) {
+
+            if (!canApplyFromState(domainObject, candidateNextTransitionType, currentState)) {
                 continue;
             }
             nextTransition = candidateNextTransitionType.createTransition(domainObject, serviceRegistry2, currentState);

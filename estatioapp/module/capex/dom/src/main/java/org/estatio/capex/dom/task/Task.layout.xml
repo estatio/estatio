@@ -16,6 +16,7 @@
                                 <cpt:property id="description"/>
                                 <cpt:property id="assignedTo"/>
                                 <cpt:property id="object"/>
+                                <cpt:property id="transition"/>
                                 <cpt:property id="createdOn"/>
                             </cpt:fieldSet>
                         </bs3:col>

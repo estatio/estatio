@@ -39,7 +39,7 @@ import org.estatio.capex.dom.invoice.state.IncomingInvoiceState;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransition;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionRepository;
 import org.estatio.capex.dom.invoice.state.IncomingInvoiceStateTransitionType;
-import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsProjectManager;
+import org.estatio.capex.dom.invoice.state.transitions.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -398,11 +398,10 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transitions.size()).isEqualTo(1);
             final IncomingInvoiceStateTransition transition1 = transitions.get(0);
 
-            final IncomingInvoice_approveAsProjectManager _approve = wrap(
-                    mixin(IncomingInvoice_approveAsProjectManager.class, invoiceCreated));
+            final IncomingInvoice_approveAsAssetManager _approveAsAssetMgr = wrap(
+                    mixin(IncomingInvoice_approveAsAssetManager.class, invoiceCreated));
 
-            // when
-            _approve.$$(null);
+            _approveAsAssetMgr.$$(null);
             transactionService.nextTransaction();
 
             // then
@@ -412,7 +411,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
                     incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(2);
             final IncomingInvoiceStateTransition transition2 = transitions.get(1);
-            assertThat(transition2.getFromState()).isEqualTo(transition1.getTask());
+            assertThat(transition2.getFromState()).isEqualTo(transition1.getToState());
             assertThat(transition2.getToState()).isNull();
 
 

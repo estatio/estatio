@@ -97,9 +97,6 @@ public class Task implements Comparable<Task> {
     @Column(allowsNull = "false")
     private String transitionObjectType;
 
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private LocalDateTime createdOn;
 
     @Column(allowsNull = "false")
     @Getter @Setter
@@ -109,9 +106,16 @@ public class Task implements Comparable<Task> {
         return completed;
     }
 
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDateTime createdOn;
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
+
+
 
     @Getter @Setter
     @Column(allowsNull = "true")
