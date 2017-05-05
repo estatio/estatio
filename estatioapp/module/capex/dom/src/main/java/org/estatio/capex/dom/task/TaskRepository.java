@@ -7,6 +7,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+/***
+ * There is no "create" method here because tasks are only ever created in the context of state transitions.
+ */
 @DomainService(
         nature = NatureOfService.DOMAIN,
         repositoryFor = Task.class

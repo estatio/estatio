@@ -17,8 +17,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
-import org.joda.time.LocalDateTime;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -29,7 +27,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 
@@ -64,12 +61,10 @@ public class Task implements Comparable<Task> {
     public Task(
             final EstatioRole assignedTo,
             final String description,
-            final String transitionObjectType,
-            final LocalDateTime createdOn) {
+            final String transitionObjectType) {
         this.assignedTo = assignedTo;
         this.description = description;
         this.transitionObjectType = transitionObjectType;
-        this.createdOn = createdOn;
     }
 
     @Getter @Setter
@@ -98,22 +93,9 @@ public class Task implements Comparable<Task> {
     private String transitionObjectType;
 
 
-    @Column(allowsNull = "false")
-    @Getter @Setter
-    private boolean completed;
-    // because code completion in IntelliJ doesn't pick this up...
     public boolean isCompleted() {
-        return completed;
+        return getCompletedBy() != null;
     }
-
-
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private LocalDateTime createdOn;
-
-    @Getter @Setter
-    @Column(allowsNull = "true")
-    private LocalDateTime completedOn;
 
 
 
@@ -180,13 +162,9 @@ public class Task implements Comparable<Task> {
     @Programmatic
     public void completed(final String comment) {
 
-        final LocalDateTime completedOn = clockService.nowAsLocalDateTime();
         final String completedBy = userService.getUser().getName();
 
-        setCompleted(true);
-        setCompletedOn(completedOn);
         setCompletedBy(completedBy);
-
         setComment(comment);
     }
 
@@ -198,8 +176,5 @@ public class Task implements Comparable<Task> {
 
     @Inject
     UserService userService;
-
-    @Inject
-    ClockService clockService;
 
 }

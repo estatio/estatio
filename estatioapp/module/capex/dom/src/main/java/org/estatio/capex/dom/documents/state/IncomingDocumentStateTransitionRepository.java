@@ -76,7 +76,7 @@ public class IncomingDocumentStateTransitionRepository extends UdoDomainReposito
         final String transitionObjectType = metaModelService3.toObjectType(IncomingDocumentStateTransition.class);
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
 
-        final Task task = new Task(assignTo, description, transitionObjectType, createdOn);
+        final Task task = new Task(assignTo, description, transitionObjectType);
         repositoryService.persist(task);
 
         final IncomingDocumentStateTransition stateTransition =

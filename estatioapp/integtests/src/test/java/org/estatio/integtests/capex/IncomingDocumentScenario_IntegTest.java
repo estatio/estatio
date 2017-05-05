@@ -372,10 +372,14 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
             assertThat(transition.getFromState()).isEqualTo(IncomingInvoiceState.NEW);
             assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceStateTransitionType.APPROVE_AS_ASSET_MANAGER);
+            assertThat(transition.getCreatedOn()).isNotNull();
             assertThat(transition.getToState()).isNull();
+            assertThat(transition.getCompletedOn()).isNull();
+            assertThat(transition.isCompleted()).isFalse();
 
             // task
             assertThat(transition.getTask()).isNotNull();
+            assertThat(transition.getTask().getCompletedBy()).isNull();
             assertThat(transition.getTask().isCompleted()).isFalse();
 
             // incoming invoices is empty
@@ -399,14 +403,28 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // then
             assertThat(transition1.getToState()).isNotNull();
+            assertThat(transition1.getCreatedOn()).isNotNull();
+            assertThat(transition1.getToState()).isNotNull();
+            assertThat(transition1.getToState()).isEqualTo(transition1.getTransitionType().getToState());
+            assertThat(transition1.getCompletedOn()).isNotNull();
+            assertThat(transition1.isCompleted()).isTrue();
+
+            assertThat(transition1.getTask().isCompleted()).isTrue();
+            assertThat(transition1.getTask().getCompletedBy()).isNotNull();
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByInvoice(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(2);
             final IncomingInvoiceStateTransition transition2 = transitions.get(1);
             assertThat(transition2.getFromState()).isEqualTo(transition1.getToState());
+            assertThat(transition2.getCreatedOn()).isNotNull();
             assertThat(transition2.getToState()).isNull();
+            assertThat(transition2.getCompletedOn()).isNull();
+            assertThat(transition2.isCompleted()).isFalse();
 
+            assertThat(transition2.getTask()).isNotNull();
+            assertThat(transition2.getTask().getCompletedBy()).isNull();
+            assertThat(transition2.getTask().isCompleted()).isFalse();
 
             // and when
             final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(

@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.task.Task;
 
 import lombok.Getter;
@@ -56,18 +56,15 @@ import lombok.Setter;
 })
 @DomainObject(objectType = "incomingInvoice.IncomingInvoiceStateTransition" )
 public class IncomingInvoiceStateTransition
-        implements
-        StateTransition<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
+        extends
+        StateTransitionAbstract<IncomingInvoice, IncomingInvoiceStateTransition, IncomingInvoiceStateTransitionType, IncomingInvoiceState> {
 
     public IncomingInvoiceStateTransition(
             final IncomingInvoiceStateTransitionType transitionType,
             final IncomingInvoice invoice,
             final IncomingInvoiceState fromState,
             final Task taskIfAny) {
-        this.invoice = invoice;
-        this.transitionType = transitionType;
-        this.fromState = fromState;
-        this.task = taskIfAny;
+        super(invoice, transitionType, fromState, taskIfAny);
     }
 
     /**
@@ -93,12 +90,6 @@ public class IncomingInvoiceStateTransition
     @Getter @Setter
     private IncomingInvoice invoice;
 
-    /**
-     * Not every transition necessarily has a task.
-     */
-    @Column(allowsNull = "true", name = "taskId")
-    @Getter @Setter
-    private Task task;
 
     @Programmatic
     @Override
@@ -108,7 +99,8 @@ public class IncomingInvoiceStateTransition
 
     @Programmatic
     @Override
-    public void completed() {
-        setToState(getTransitionType().getToState());
+    public void setDomainObject(final IncomingInvoice domainObject) {
+        setInvoice(domainObject);
     }
+
 }

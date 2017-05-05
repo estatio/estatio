@@ -70,22 +70,26 @@ public class IncomingInvoiceStateTransitionRepository extends UdoDomainRepositor
             final EstatioRole taskAssignToIfAny,
             final String taskDescription) {
 
-        final String transitionObjectType = metaModelService3.toObjectType(IncomingInvoiceStateTransition.class);
-        final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
-
-        final Task task;
-        if(taskAssignToIfAny != null) {
-            task = new Task(taskAssignToIfAny, taskDescription, transitionObjectType, createdOn);
-            repositoryService.persist(task);
-        } else {
-            task = null;
-        }
+        final Task taskIfAny = createTaskIfRequired(taskAssignToIfAny, taskDescription);
 
         final IncomingInvoiceStateTransition stateTransition =
-                new IncomingInvoiceStateTransition(transitionType, invoice, fromState, task);
+                new IncomingInvoiceStateTransition(transitionType, invoice, fromState, taskIfAny);
+
+        final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
+        stateTransition.setCreatedOn(createdOn);
         repositoryService.persistAndFlush(stateTransition);
 
         return stateTransition;
+    }
+
+    private Task createTaskIfRequired(final EstatioRole taskAssignToIfAny, final String taskDescription) {
+        if (taskAssignToIfAny == null) {
+            return null;
+        }
+        final String transitionObjectType = metaModelService3.toObjectType(IncomingInvoiceStateTransition.class);
+        final Task task = new Task(taskAssignToIfAny, taskDescription, transitionObjectType);
+        repositoryService.persist(task);
+        return task;
     }
 
     @Inject

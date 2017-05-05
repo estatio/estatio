@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.state;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.capex.dom.task.Task;
 
 /**
@@ -24,5 +26,6 @@ public interface StateTransition<
 
     S getToState();
 
+    @Programmatic
     void completed();
 }
