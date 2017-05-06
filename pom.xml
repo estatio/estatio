@@ -88,7 +88,7 @@ language governing permissions and limitations under the License.
         <isis-wicket-excel.version>1.14.0.20170413-1058</isis-wicket-excel.version>
         <isis-wicket-fullcalendar2.version>1.14.0.20170413-1136</isis-wicket-fullcalendar2.version>
         <isis-wicket-gmap3.version>1.14.0.20170413-1206</isis-wicket-gmap3.version>
-        <isis-wicket-pdfjs.version>1.14.0.20170413-1308</isis-wicket-pdfjs.version>
+        <isis-wicket-pdfjs.version>1.14.0.20170506-0918</isis-wicket-pdfjs.version>
 
         <incode-module-base.version>1.14.0</incode-module-base.version>
         <incode-module-classification.version>1.14.0</incode-module-classification.version>
