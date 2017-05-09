@@ -33,7 +33,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -72,6 +74,7 @@ import lombok.Setter;
 		editing = Editing.DISABLED,
 		objectType = "org.estatio.capex.dom.project.ProjectItem"
 )
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class ProjectItem extends UdoDomainObject<ProjectItem> implements FinancialItem {
 
 	public String title(){

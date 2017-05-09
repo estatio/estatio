@@ -50,7 +50,8 @@
                 <tab name="Items">
                     <row>
                         <col span="12">
-                            <ns2:collection id="items" defaultView="table"></ns2:collection>
+                            <ns2:collection id="items" defaultView="table" />
+                            <ns2:collection id="roles" defaultView="table" />
                         </col>
                     </row>
                 </tab>

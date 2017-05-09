@@ -38,7 +38,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
@@ -60,6 +62,7 @@ import org.incode.module.docfragment.dom.types.AtPathType;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 
 import lombok.Getter;
@@ -84,6 +87,7 @@ import lombok.Setter;
 		objectType = "org.estatio.capex.dom.project.Project",
 		autoCompleteRepository = ProjectRepository.class
 )
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Project extends UdoDomainObject<Project> implements
 		WithReferenceUnique, WithApplicationTenancyGlobalAndCountry {
@@ -161,10 +165,29 @@ public class Project extends UdoDomainObject<Project> implements
 		return this;
 	}
 
+	@Persistent(mappedBy = "project")
+	@Getter @Setter
+	private SortedSet<ProjectRole> roles = new TreeSet<>();
+
+	@MemberOrder(name = "roles", sequence = "1")
+	public Project newRole(
+			final Party party,
+			final ProjectRoleType type,
+			@Parameter(optionality = Optionality.OPTIONAL)
+			final LocalDate startDate,
+			@Parameter(optionality = Optionality.OPTIONAL)
+			final LocalDate endDate){
+		projectRoleRepository.create(this, party, type, startDate, endDate);
+		return this;
+	}
+
 	@Inject
 	ApplicationTenancyRepository applicationTenancyRepository;
 
 	@Inject
 	ProjectItemRepository projectItemRepository;
+
+	@Inject
+	private ProjectRoleRepository projectRoleRepository;
 
 }

@@ -34,7 +34,7 @@ import org.estatio.dom.asset.Unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProjectRepositoryTest {
+public class ProjectRepository_Test {
 
     FinderInteraction finderInteraction;
 
@@ -66,7 +66,7 @@ public class ProjectRepositoryTest {
 
 
 
-    public static class FindProject extends ProjectRepositoryTest {
+    public static class FindProject extends ProjectRepository_Test {
 
         @Test
         public void happyCase() {
@@ -82,7 +82,7 @@ public class ProjectRepositoryTest {
 
     }
 
-    public static class FindByFixedAsset extends ProjectRepositoryTest {
+    public static class FindByFixedAsset extends ProjectRepository_Test {
 
         List<Project> projectsFound;
 
