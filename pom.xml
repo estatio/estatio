@@ -85,7 +85,7 @@ language governing permissions and limitations under the License.
 
         <incode-module-base.version>1.14.0</incode-module-base.version>
         <incode-module-classification.version>1.14.0</incode-module-classification.version>
-        <incode-module-communications.version>1.14.6</incode-module-communications.version>
+        <incode-module-communications.version>1.14.7.20170509-1506</incode-module-communications.version>
         <incode-module-country.version>1.14.0</incode-module-country.version>
         <incode-module-docfragment.version>1.14.0</incode-module-docfragment.version>
         <incode-module-document.version>1.14.6</incode-module-document.version>
