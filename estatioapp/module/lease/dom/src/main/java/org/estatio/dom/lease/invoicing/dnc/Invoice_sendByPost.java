@@ -44,7 +44,7 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an print.
@@ -52,7 +52,7 @@ import org.estatio.dom.invoice.Invoice;
 @Mixin
 public class Invoice_sendByPost extends Invoice_sendAbstract {
 
-    public Invoice_sendByPost(final Invoice invoice) {
+    public Invoice_sendByPost(final InvoiceForLease invoice) {
         super(invoice);
     }
 

@@ -51,7 +51,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an email.
@@ -59,7 +59,7 @@ import org.estatio.dom.invoice.Invoice;
 @Mixin
 public class Invoice_sendByEmail extends Invoice_sendAbstract {
 
-    public Invoice_sendByEmail(final Invoice invoice) {
+    public Invoice_sendByEmail(final InvoiceForLease invoice) {
         super(invoice);
     }
 

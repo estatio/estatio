@@ -53,13 +53,14 @@ import org.incode.module.document.dom.spi.DocumentAttachmentAdvisor;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
 public class Invoice_attachSupportingDocument {
 
-    private final Invoice invoice;
+    private final InvoiceForLease invoice;
 
-    public Invoice_attachSupportingDocument(final Invoice invoice) {
+    public Invoice_attachSupportingDocument(final InvoiceForLease invoice) {
         this.invoice = invoice;
     }
 
@@ -111,7 +112,7 @@ public class Invoice_attachSupportingDocument {
     DocumentService documentService;
 
     private List<DocumentAbstract> findUnsentDocumentsFor(
-            final Invoice invoice,
+            final InvoiceForLease invoice,
             final DocumentTypeData docTypeData) {
 
         final DocumentType documentType = docTypeData.findUsing(documentTypeRepository, queryResultsCache);

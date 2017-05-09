@@ -42,13 +42,13 @@ import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 public abstract class Invoice_sendAbstract {
 
-    final Invoice invoice;
+    final InvoiceForLease invoice;
 
-    public Invoice_sendAbstract(final Invoice invoice) {
+    public Invoice_sendAbstract(final InvoiceForLease invoice) {
         this.invoice = invoice;
     }
 

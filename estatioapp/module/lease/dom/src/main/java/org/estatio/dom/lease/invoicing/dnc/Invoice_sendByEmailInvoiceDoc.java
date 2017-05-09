@@ -21,12 +21,12 @@ package org.estatio.dom.lease.invoicing.dnc;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
 public class Invoice_sendByEmailInvoiceDoc extends Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByEmailInvoiceDoc(final Invoice invoice) {
+    public Invoice_sendByEmailInvoiceDoc(final InvoiceForLease invoice) {
         super(invoice, DocumentTypeData.INVOICE);
     }
 

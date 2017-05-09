@@ -35,14 +35,14 @@ import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an print.
  */
 public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
+    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
         super(invoice, documentTypeData);
     }
 

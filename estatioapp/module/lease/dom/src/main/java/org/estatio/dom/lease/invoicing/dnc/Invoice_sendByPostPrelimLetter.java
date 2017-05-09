@@ -21,12 +21,12 @@ package org.estatio.dom.lease.invoicing.dnc;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
 public class Invoice_sendByPostPrelimLetter extends Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByPostPrelimLetter(final Invoice invoice) {
+    public Invoice_sendByPostPrelimLetter(final InvoiceForLease invoice) {
         super(invoice, DocumentTypeData.PRELIM_LETTER);
     }
 

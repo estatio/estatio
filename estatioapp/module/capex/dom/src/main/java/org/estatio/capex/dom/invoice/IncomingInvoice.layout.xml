@@ -24,18 +24,13 @@
                                 <ns2:property id="notCorrect"/>
                             </ns2:fieldSet>
                         </col>
-                        <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass-->
+                        <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->
                         <col span="0">
                             <ns2:fieldSet name="hidden" id="hidden">
                                 <ns2:action id="updateAttribute"/>
                                 <ns2:action id="changePaymentMethod"/>
                                 <ns2:action id="remove"/>
-                                <ns2:action id="sendByPostInvoiceDoc"/>
-                                <ns2:action id="sendByPostPrelimLetter"/>
-                                <ns2:action id="attachSupportingDocument"/>
-                                <ns2:action id="sendByEmailPrelimLetter"/>
                                 <ns2:action id="changeDueDate"/>
-                                <ns2:action id="sendByEmailInvoiceDoc"/>
                                 <ns2:property id="status"/>
                             </ns2:fieldSet>
                         </col>
