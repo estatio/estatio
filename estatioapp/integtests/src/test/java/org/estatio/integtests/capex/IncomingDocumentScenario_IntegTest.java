@@ -28,10 +28,10 @@ import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorization;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_createInvoice;
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.documents.invoice.OrderItemWrapper;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
-import org.estatio.capex.dom.documents.order.IncomingOrderViewmodel_createOrder;
+import org.estatio.capex.dom.documents.order.IncomingOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -220,7 +220,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        IncomingOrderViewmodel_createOrder _createOrder;
+        IncomingOrderViewmodel_saveOrder _saveOrder;
         final String orderNumber = "123";
         Organisation seller;
         final String description = "Some order description";
@@ -233,11 +233,11 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         private void createOrder_works(){
 
             // given
-            _createOrder = wrap(factoryService.mixin(IncomingOrderViewmodel_createOrder.class, incomingOrderViewModel));
+            _saveOrder = wrap(factoryService.mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel));
 
             // when
             try {
-                _createOrder.createOrder(false);
+                _saveOrder.saveOrder(false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: order number, buyer, seller, description, net amount, gross amount, charge, period required");
             }
@@ -251,7 +251,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             incomingOrderViewModel.setCharge(charge_for_works);
             incomingOrderViewModel.setPeriod(period);
 
-            orderCreated = (Order) _createOrder.createOrder(false);
+            orderCreated = (Order) _saveOrder.saveOrder(false);
             transactionService.nextTransaction();
 
             // then
@@ -293,7 +293,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        IncomingInvoiceViewmodel_createInvoice _createInvoice;
+        IncomingInvoiceViewmodel_saveInvoice _saveInvoice;
         IncomingInvoice invoiceCreated;
 
         private void createInvoice_works(){
@@ -302,7 +302,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             incomingInvoiceViewModel = (IncomingInvoiceViewModel) _categorizeAsInvoice.act(propertyForOxf, false);
             transactionService.nextTransaction();
 
-            _createInvoice = wrap(factoryService.mixin(IncomingInvoiceViewmodel_createInvoice.class, incomingInvoiceViewModel));
+            _saveInvoice = wrap(factoryService.mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel));
 
             // when
             // link to order item
@@ -311,7 +311,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // when
             try {
-                _createInvoice.createInvoice(false);
+                _saveInvoice.saveInvoice(false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: invoice number, date received, due date required");
             }
@@ -324,7 +324,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             final LocalDate dateReceivedDate = new LocalDate(2016, 2, 1);
             incomingInvoiceViewModel.setDateReceived(dateReceivedDate);
 
-            invoiceCreated = (IncomingInvoice) _createInvoice.createInvoice(false);
+            invoiceCreated = (IncomingInvoice) _saveInvoice.saveInvoice(false);
             transactionService.nextTransaction();
 
             // then

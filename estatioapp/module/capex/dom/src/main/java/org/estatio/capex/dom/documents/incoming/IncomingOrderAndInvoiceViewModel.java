@@ -38,6 +38,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 
 import lombok.AccessLevel;
@@ -57,10 +58,10 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
-    private Organisation buyer;
+    private Party buyer;
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
-    private Organisation seller;
+    private Party seller;
 
 
     @Action(

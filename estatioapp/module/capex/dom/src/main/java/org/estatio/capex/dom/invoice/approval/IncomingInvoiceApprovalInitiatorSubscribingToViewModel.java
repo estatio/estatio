@@ -10,7 +10,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_createInvoice;
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 
@@ -24,7 +24,7 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
     //
 
     @com.google.common.eventbus.Subscribe
-    public void on(IncomingInvoiceViewmodel_createInvoice.ActionDomainEvent ev) {
+    public void on(IncomingInvoiceViewmodel_saveInvoice.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
             final IncomingInvoiceViewModel viewModel = (IncomingInvoiceViewModel) ev.getMixedIn();
@@ -32,7 +32,7 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
 
             transactionService.flushTransaction();
 
-            // an alternative design would be to just do this in IncomingInvoiceViewmodel_createInvoice#createInvoice method
+            // an alternative design would be to just do this in IncomingInvoiceViewmodel_saveInvoice#saveInvoice method
             stateTransitionService.apply(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
             break;
         }

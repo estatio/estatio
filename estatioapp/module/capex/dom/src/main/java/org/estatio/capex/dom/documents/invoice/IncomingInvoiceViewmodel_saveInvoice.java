@@ -30,34 +30,34 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import lombok.Getter;
 
 @Mixin
-public class IncomingInvoiceViewmodel_createInvoice {
+public class IncomingInvoiceViewmodel_saveInvoice {
 
     @Getter
     private final IncomingInvoiceViewModel viewmodel;
 
-    public IncomingInvoiceViewmodel_createInvoice(final IncomingInvoiceViewModel viewModel) {
+    public IncomingInvoiceViewmodel_saveInvoice(final IncomingInvoiceViewModel viewModel) {
         this.viewmodel = viewModel;
     }
 
     public static class ActionDomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoiceViewmodel_createInvoice> {}
+            extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoiceViewmodel_saveInvoice> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
-    public Object createInvoice(final boolean goToNext){
+    public Object saveInvoice(final boolean goToNext){
         IncomingInvoice incomingInvoice = doCreate();
         // make the newly created invoice available to any subscribers of this action's domain event.
         this.viewmodel.incomingInvoice = incomingInvoice;
         return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : incomingInvoice;
     }
 
-    public boolean default0CreateInvoice(){
+    public boolean default0SaveInvoice(){
         return true;
     }
 
-    public String disableCreateInvoice(){
+    public String disableSaveInvoice(){
         return getViewmodel().minimalRequiredDataToComplete();
     }
 

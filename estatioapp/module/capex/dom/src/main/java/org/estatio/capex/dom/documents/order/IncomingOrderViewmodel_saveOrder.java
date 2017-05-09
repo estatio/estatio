@@ -22,27 +22,27 @@ import org.estatio.dom.asset.Property;
 import lombok.Getter;
 
 @Mixin
-public class IncomingOrderViewmodel_createOrder {
+public class IncomingOrderViewmodel_saveOrder {
 
     @Getter
     private final IncomingOrderViewModel viewmodel;
 
-    public IncomingOrderViewmodel_createOrder(final IncomingOrderViewModel viewModel) {
+    public IncomingOrderViewmodel_saveOrder(final IncomingOrderViewModel viewModel) {
         this.viewmodel = viewModel;
     }
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Object createOrder(final boolean goToNext){
+    public Object saveOrder(final boolean goToNext){
         Order order = doCreate();
         return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : order;
     }
 
-    public boolean default0CreateOrder(){
+    public boolean default0SaveOrder(){
         return true;
     }
 
-    public String disableCreateOrder(){
+    public String disableSaveOrder(){
         return getViewmodel().minimalRequiredDataToComplete();
     }
 

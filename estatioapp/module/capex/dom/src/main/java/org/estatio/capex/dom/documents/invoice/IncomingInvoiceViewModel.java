@@ -57,7 +57,7 @@ import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -210,9 +210,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     public IncomingInvoiceViewModel changeInvoiceDetails(
             final String invoiceNumber,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final Organisation buyer,
+            final Party buyer,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final Organisation seller,
+            final Party seller,
             final LocalDate dateReceived,
             @Parameter(optionality = Optionality.OPTIONAL)
             final LocalDate invoiceDate,
@@ -240,11 +240,11 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         return getInvoiceNumber();
     }
 
-    public Organisation default1ChangeInvoiceDetails(){
+    public Party default1ChangeInvoiceDetails(){
         return getBuyer();
     }
 
-    public Organisation default2ChangeInvoiceDetails(){
+    public Party default2ChangeInvoiceDetails(){
         return getSeller();
     }
 
@@ -279,10 +279,10 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
                 setTax(orderItem.getTax());
             }
             if (!hasBuyer()){
-                setBuyer((Organisation) order.getBuyer());
+                setBuyer(order.getBuyer());
             }
             if (!hasSeller()){
-                setSeller((Organisation) order.getSeller());
+                setSeller(order.getSeller());
             }
             if (!hasDescription()){
                 setDescription(orderItem.getDescription());

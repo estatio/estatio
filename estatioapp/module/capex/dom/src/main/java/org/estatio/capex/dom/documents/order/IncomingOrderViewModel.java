@@ -38,7 +38,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -93,8 +93,8 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
     )
     public IncomingOrderViewModel changeOrderDetails(
             final String orderNumber,
-            final Organisation buyer,
-            final Organisation seller,
+            final Party buyer,
+            final Party seller,
             @Nullable
             final String sellerOrderReference,
             @Nullable
@@ -112,11 +112,11 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         return getOrderNumber();
     }
 
-    public Organisation default1ChangeOrderDetails(){
+    public Party default1ChangeOrderDetails(){
         return getBuyer();
     }
 
-    public Organisation default2ChangeOrderDetails(){
+    public Party default2ChangeOrderDetails(){
         return getSeller();
     }
 
