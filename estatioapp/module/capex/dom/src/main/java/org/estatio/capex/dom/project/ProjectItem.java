@@ -33,12 +33,16 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -118,6 +122,23 @@ public class ProjectItem extends UdoDomainObject<ProjectItem> implements Financi
 	@Column(allowsNull = "true", name = "taxId")
 	@Getter @Setter
 	private Tax tax;
+
+	@Action(semantics = SemanticsOf.IDEMPOTENT)
+	public ProjectItem amendAmount(
+			@Parameter(optionality = Optionality.OPTIONAL)
+			final BigDecimal add,
+			@Parameter(optionality = Optionality.OPTIONAL)
+			final BigDecimal subtract){
+		BigDecimal newAmount = getBudgetedAmount()!=null ? getBudgetedAmount() : BigDecimal.ZERO;
+		if (add!=null){
+			newAmount = newAmount.add(add);
+		}
+		if (subtract!=null){
+			newAmount = newAmount.subtract(subtract);
+		}
+		setBudgetedAmount(newAmount);
+		return this;
+	}
 
 	@Override
 	@Programmatic

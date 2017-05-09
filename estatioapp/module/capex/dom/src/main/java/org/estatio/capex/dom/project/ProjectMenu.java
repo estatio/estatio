@@ -19,7 +19,6 @@
 
 package org.estatio.capex.dom.project;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -69,24 +68,23 @@ public class ProjectMenu {
             final String name,
             final @Nullable LocalDate startDate,
             final @Nullable LocalDate endDate,
-            final @Nullable BigDecimal budgetedAmount,
             final ApplicationTenancy applicationTenancy,
             final @Nullable Project parent) {
         return projectRepository.create(reference, name, startDate, endDate, applicationTenancy.getPath(), parent);
     }
 
-    public ApplicationTenancy default5NewProject() {
+    public ApplicationTenancy default4NewProject() {
         final String usersAtPath = meService.me().getAtPath();
         // can't use ApplicationTenancyRepository#findByPath because that uses uniqueMatch, and there might not be any match.
         return repositoryService.firstMatch(
                 new QueryDefault<>(ApplicationTenancy.class, "findByPath", "path", usersAtPath));
     }
 
-    public List<ApplicationTenancy> choices5NewProject() {
+    public List<ApplicationTenancy> choices4NewProject() {
         return applicationTenancyRepository.allTenancies();
     }
 
-    public List<Project> choices6NewProject(){
+    public List<Project> choices5NewProject(){
         return projectRepository.listAll();
     }
 
