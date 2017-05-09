@@ -102,10 +102,15 @@ public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
     }
 
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
+    public List<Brand> findBrand(final String search) {
+        return brandRepository.matchByName(search);
+    }
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3")
     public List<Brand> allBrands() {
         return brandRepository.allBrands();
     }
