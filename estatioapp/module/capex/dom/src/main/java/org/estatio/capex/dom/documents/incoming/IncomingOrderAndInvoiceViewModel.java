@@ -32,8 +32,10 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
 import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.party.Organisation;
@@ -55,6 +57,24 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     public IncomingOrderAndInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
         super(document);
         this.fixedAsset = fixedAsset;
+        deriveBuyer();
+    }
+
+    private void deriveBuyer(){
+        Party ownerCandidate = null;
+        if (getFixedAsset()!=null){
+            for (FixedAssetOwnership fos: getFixedAsset().getOwners()){
+                if (fos.getOwnershipType()== OwnershipType.FULL){
+                    ownerCandidate = fos.getOwner();
+                    continue;
+                }
+            }
+        }
+        // temporary extra search until fixed asset ownership is fully in use
+        if (ownerCandidate==null && getFixedAsset().ownerCandidates().size()>0){
+            ownerCandidate = getFixedAsset().ownerCandidates().get(0).getParty();
+        }
+        setBuyer(ownerCandidate);
     }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)

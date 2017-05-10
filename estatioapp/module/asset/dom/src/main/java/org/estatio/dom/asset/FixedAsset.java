@@ -189,8 +189,12 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     }
 
     public List<Party> choices0AddOwner() {
-        List<FixedAssetRole> roles = fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleType.PROPERTY_OWNER);
-        return roles.stream().map(FixedAssetRole::getParty).collect(Collectors.toList());
+        return ownerCandidates().stream().map(FixedAssetRole::getParty).collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<FixedAssetRole> ownerCandidates() {
+        return fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleType.PROPERTY_OWNER);
     }
 
     public String validateAddOwner(final Party newOwner, final OwnershipType type) {

@@ -239,7 +239,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             try {
                 _saveOrder.saveOrder(false);
             } catch (DisabledException e){
-                assertThat(e.getMessage()).contains("Reason: order number, buyer, seller, description, net amount, gross amount, charge, period required");
+                assertThat(e.getMessage()).contains("Reason: order number, seller, description, net amount, gross amount, charge, period required");
             }
 
             // and when
