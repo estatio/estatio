@@ -73,7 +73,7 @@ public class IncomingInvoiceViewmodel_saveInvoice {
                 getViewmodel().getPaymentMethod(),
                 InvoiceStatus.NEW,
                 getViewmodel().getDateReceived(),
-                getViewmodel().getNotCorrect()
+                getViewmodel().getBankAccount()
         );
         // create invoice item
         incomingInvoice.addItem(

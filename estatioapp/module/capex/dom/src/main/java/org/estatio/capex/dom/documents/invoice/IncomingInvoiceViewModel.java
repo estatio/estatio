@@ -20,6 +20,7 @@ package org.estatio.capex.dom.documents.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -56,6 +57,7 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -74,6 +76,7 @@ import lombok.Setter;
                 "invoiceNumber",
                 "buyer",
                 "seller",
+                "bankAccount",
                 "dateReceived",
                 "invoiceDate",
                 "dueDate",
@@ -110,6 +113,21 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
      * view model's mixin actions.
      */
     @Property(hidden = Where.EVERYWHERE) IncomingInvoice incomingInvoice;
+
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    private BankAccount bankAccount;
+    public void modifyBankAccount(final BankAccount bankAccount){
+        setBankAccount(bankAccount);
+        setSeller(bankAccount.getOwner());
+    }
+
+    public List<BankAccount> autoCompleteBankAccount(@MinLength(3) final String searchString){
+        if (getSeller()!=null){
+            return bankAccountRepository.findBankAccountsByOwner(getSeller());
+        } else {
+            return bankAccountRepository.allBankAccounts().stream().filter(x->x.getReference().contains(searchString)).collect(Collectors.toList());
+        }
+    }
 
     @Property(editing = Editing.ENABLED)
     private String invoiceNumber;
@@ -186,6 +204,12 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         return result;
     }
 
+    @Override
+    public void modifySeller(final Party seller){
+        setSeller(seller);
+        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
+    }
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -209,6 +233,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         setInvoiceNumber(invoiceNumber);
         setBuyer(buyer);
         setSeller(seller);
+        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
         setDateReceived(dateReceived);
         setInvoiceDate(invoiceDate);
         setDueDate(dueDate);
@@ -266,6 +291,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
             }
             if (!hasSeller()){
                 setSeller(order.getSeller());
+                setBankAccount(getFirstBankAccountOfPartyOrNull(order.getSeller()));
             }
             if (!hasDescription()){
                 setDescription(orderItem.getDescription());
@@ -285,6 +311,11 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
     }
 
+    private BankAccount getFirstBankAccountOfPartyOrNull(final Party party){
+        return bankAccountRepository.findBankAccountsByOwner(party).size()>0 ?
+                bankAccountRepository.findBankAccountsByOwner(party).get(0) : null;
+    }
+
     String minimalRequiredDataToComplete(){
         StringBuffer buffer = new StringBuffer();
         if (getInvoiceNumber()==null){
@@ -295,6 +326,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
         if (getSeller()==null){
             buffer.append("seller, ");
+        }
+        if (getBankAccount()==null){
+            buffer.append("bank account, ");
         }
         if (getDateReceived()==null){
             buffer.append("date received, ");

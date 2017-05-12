@@ -50,6 +50,8 @@ import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -89,6 +91,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         DocumentType INCOMING;
         DocumentType INCOMING_ORDER;
         DocumentType INCOMING_INVOICE;
+        String fakeIban;
 
         @Before
         public void setUp(){
@@ -100,6 +103,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             greatBritain = countryRepository.findCountry(CountriesRefData.GBR);
             charge_for_works = chargeRepository.findByReference("WORKS");
             euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
+            fakeIban = "NL05ABNA0214875743";
         }
 
         @Test
@@ -242,7 +246,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             }
 
             // and when
-            incomingOrderViewModel.createSeller("SELLER-REF", false, "Seller name", greatBritain);
+            wrap(incomingOrderViewModel).createSeller("SELLER-REF", false, "Seller name", greatBritain, fakeIban);
             seller = (Organisation) partyRepository.findPartyByReference("SELLER-REF");
             incomingOrderViewModel.changeOrderDetails(orderNumber, buyer, seller, null, null);
             incomingOrderViewModel.changeItemDetails(description, netAmount, null, null, grossAmount);
@@ -330,6 +334,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(invoiceCreated).isNotNull();
             assertThat(invoiceCreated.getInvoiceNumber()).isEqualTo(invoiceNumber);
             assertThat(invoiceCreated.getSeller()).isEqualTo(seller);
+            BankAccount sellerBankAccount =  bankAccountRepository.findBankAccountsByOwner(seller).get(0);
+            assertThat(sellerBankAccount.getIban()).isEqualTo(fakeIban);
+            assertThat(invoiceCreated.getBankAccount()).isEqualTo(sellerBankAccount);
             assertThat(invoiceCreated.getBuyer()).isEqualTo(buyer);
             assertThat(invoiceCreated.getStatus()).isEqualTo(InvoiceStatus.NEW);
             assertThat(invoiceCreated.getAtPath()).isEqualTo(buyer.getAtPath());
@@ -535,5 +542,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject
+    BankAccountRepository bankAccountRepository;
 }
 

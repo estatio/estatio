@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -18,7 +17,12 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Party;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IncomingInvoiceViewModel_Test {
 
@@ -27,6 +31,9 @@ public class IncomingInvoiceViewModel_Test {
 
     @Mock
     private OrderRepository mockOrderRepository;
+
+    @Mock
+    private BankAccountRepository mockBankAccountRepository;
 
     @Test
     public void autoCompleteOrderItem_works(){
@@ -87,28 +94,28 @@ public class IncomingInvoiceViewModel_Test {
         result = vm.autoCompleteOrderItem("***");
 
         // then
-        Assertions.assertThat(result.size()).isEqualTo(4);
+        assertThat(result.size()).isEqualTo(4);
 
         // and when
         vm.setCharge(charge);
         result = vm.autoCompleteOrderItem("***");
 
         // then
-        Assertions.assertThat(result.size()).isEqualTo(3);
+        assertThat(result.size()).isEqualTo(3);
 
         // and when
         vm.setProject(project);
         result = vm.autoCompleteOrderItem("***");
 
         // then
-        Assertions.assertThat(result.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(2);
 
         // and when
         vm.setSeller(seller);
         result = vm.autoCompleteOrderItem("***");
 
         // then
-        Assertions.assertThat(result.size()).isEqualTo(1);
+        assertThat(result.size()).isEqualTo(1);
 
     }
 
@@ -122,7 +129,7 @@ public class IncomingInvoiceViewModel_Test {
         String result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("invoice number, buyer, seller, date received, due date, net amount, gross amount required");
+        assertThat(result).isEqualTo("invoice number, buyer, seller, bank account, date received, due date, net amount, gross amount required");
 
         // and when
         vm.setInvoiceNumber("123");
@@ -130,18 +137,73 @@ public class IncomingInvoiceViewModel_Test {
         result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount required");
+        assertThat(result).isEqualTo("buyer, seller, bank account, date received, due date, gross amount required");
 
         // and when
         vm.setBuyer(new Organisation());
         vm.setSeller(new Organisation());
+        vm.setBankAccount(new BankAccount());
         vm.setDateReceived(new LocalDate());
         vm.setDueDate(new LocalDate());
         vm.setGrossAmount(BigDecimal.ZERO);
         result = vm.minimalRequiredDataToComplete();
 
         // then
-        Assertions.assertThat(result).isNull();
+        assertThat(result).isNull();
+
+    }
+
+    @Test
+    public void autoCompleteBankAccount_works() throws Exception {
+
+        List<BankAccount> result;
+
+        // given
+        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel();
+        vm.bankAccountRepository = mockBankAccountRepository;
+
+        BankAccount acc1 = new BankAccount();
+        acc1.setReference("123");
+        BankAccount acc2 = new BankAccount();
+        acc2.setReference("345");
+
+        Party owner = new Organisation();
+        acc2.setOwner(owner);
+
+        // expect
+        context.checking(new Expectations() {
+            {
+                allowing(mockBankAccountRepository).allBankAccounts();
+                will(returnValue(Arrays.asList(
+                        acc1, acc2
+                )));
+                oneOf(mockBankAccountRepository).findBankAccountsByOwner(owner);
+                will(returnValue(Arrays.asList(
+                        acc2
+                )));
+            }
+
+        });
+
+        // when
+        result = vm.autoCompleteBankAccount("23");
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+
+        // and when
+        result = vm.autoCompleteBankAccount("3");
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+
+        // and when seller is set
+        vm.setSeller(owner);
+        result = vm.autoCompleteBankAccount("3");
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(acc2);
 
     }
 

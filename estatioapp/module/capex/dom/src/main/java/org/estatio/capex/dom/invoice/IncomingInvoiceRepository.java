@@ -12,6 +12,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -46,9 +47,9 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final Boolean notCorrect) {
+            final BankAccount bankAccount) {
         final IncomingInvoice invoice =
-                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, notCorrect);
+                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persist(invoice);
@@ -67,10 +68,10 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final Boolean notCorrect) {
+            final BankAccount bankAccount) {
         IncomingInvoice invoice = findByInvoiceNumber(invoiceNumber);
         if (invoice == null) {
-            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, notCorrect);
+            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }
         return invoice;
     }

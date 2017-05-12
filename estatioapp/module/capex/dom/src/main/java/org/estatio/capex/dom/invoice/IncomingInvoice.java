@@ -31,6 +31,7 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -89,7 +90,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final Boolean notCorrect){
+            final BankAccount bankAccount){
         super("invoiceNumber");
         setInvoiceNumber(invoiceNumber);
         setApplicationTenancyPath(atPath);
@@ -100,7 +101,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
         setPaymentMethod(paymentMethod);
         setStatus(invoiceStatus);
         setDateReceived(dateReceived);
-        setNotCorrect(notCorrect);
+        setBankAccount(bankAccount);
     }
 
     @MemberOrder(name="items", sequence = "1")
@@ -158,8 +159,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     }
 
     @Getter @Setter
-    @Column(allowsNull = "true")
-    private Boolean notCorrect;
+    @Column(allowsNull = "true", name = "bankAccountId")
+    private BankAccount bankAccount;
 
     @Getter @Setter
     @Column(allowsNull = "true")

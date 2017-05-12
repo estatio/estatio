@@ -16,12 +16,12 @@
                                 <ns2:property id="invoiceNumber"/>
                                 <ns2:property id="buyer"/>
                                 <ns2:property id="seller"/>
+                                <ns2:property id="bankAccount"/>
                                 <ns2:property id="dateReceived"/>
                                 <ns2:property id="invoiceDate"/>
                                 <ns2:property id="dueDate"/>
                                 <ns2:property id="paymentMethod"/>
                                 <ns2:property id="approvalState"/>
-                                <ns2:property id="notCorrect"/>
                             </ns2:fieldSet>
                         </col>
                         <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->

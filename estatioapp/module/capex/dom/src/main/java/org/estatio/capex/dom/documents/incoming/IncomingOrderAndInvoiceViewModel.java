@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
@@ -38,6 +39,8 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -82,7 +85,10 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Party seller;
-
+    // use of modify so can be overridden on IncomingInvoiceViewmodel
+    public void modifySeller(final Party seller){
+        setSeller(seller);
+    }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -91,11 +97,26 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumeratorForReference,
             final String name,
-            final Country country) {
+            final Country country,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String ibanNumber) {
         Organisation organisation = organisationRepository
                 .newOrganisation(reference, useNumeratorForReference, name, country);
         setSeller(organisation);
+        bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
         return this;
+    }
+
+    public String validateCreateSeller(
+            final String reference,
+            final boolean useNumeratorForReference,
+            final String name,
+            final Country country,
+            final String ibanNumber){
+        if (!IBANValidator.valid(ibanNumber)){
+            return TranslatableString.tr("%s is not a valid iban number", ibanNumber).toString();
+        }
+        return null;
     }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -380,5 +401,11 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     ProjectRepository projectRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    public BankAccountRepository bankAccountRepository; // public because of junit test
 
 }
