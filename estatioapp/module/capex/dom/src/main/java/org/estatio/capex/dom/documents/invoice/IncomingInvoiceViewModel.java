@@ -155,20 +155,13 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     //
 
     @Property(editing = Editing.ENABLED)
-    private OrderItemWrapper orderItem;
-    public void modifyOrderItem(OrderItemWrapper orderItem) {
+    private OrderItem orderItem;
+    public void modifyOrderItem(OrderItem orderItem) {
         setOrderItem(orderItem);
         autoFillIn();
     }
-    public List<OrderItemWrapper> autoCompleteOrderItem(@MinLength(3) final String searchString){
-        List<OrderItemWrapper> items = new ArrayList<>();
-        for (OrderItem item : orderItemsForAutoComplete(searchString)){
-            items.add(new OrderItemWrapper(item.getOrdr().getOrderNumber(), item.getCharge()));
-        }
-        return items;
-    }
 
-    List<OrderItem> orderItemsForAutoComplete(final String searchString){
+    public List<OrderItem> autoCompleteOrderItem(@MinLength(3) final String searchString){
         List<OrderItem> result = new ArrayList<>();
 
         for (Order order : orderRepository.matchByOrderNumber(searchString)){
@@ -268,7 +261,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     @Programmatic
     public void autoFillIn(){
         if (hasOrderItem()){
-            Order order = orderRepository.findByOrderNumber(getOrderItem().getOrderNumber());
+            Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
             OrderItem orderItem = orderItemRepository.findByOrderAndCharge(order, getOrderItem().getCharge());
             if (!(hasNet() && hasGross() && hasVat())){
                 setNetAmount(orderItem.getNetAmount());

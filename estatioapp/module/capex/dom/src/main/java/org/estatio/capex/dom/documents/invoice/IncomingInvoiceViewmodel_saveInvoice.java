@@ -93,7 +93,7 @@ public class IncomingInvoiceViewmodel_saveInvoice {
         paperclipRepository.attach(getViewmodel().getDocument(),null,incomingInvoice);
         // link to orderItem if applicable
         if (getViewmodel().getOrderItem()!=null){
-            Order orderFromWrapper = orderRepository.findByOrderNumber(getViewmodel().getOrderItem().getOrderNumber());
+            Order orderFromWrapper = orderRepository.findByOrderNumber(getViewmodel().getOrderItem().getOrdr().getOrderNumber());
             Charge chargeFromWrapper = getViewmodel().getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(orderFromWrapper, chargeFromWrapper);
             IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();

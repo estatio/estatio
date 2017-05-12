@@ -20,7 +20,7 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
 
-public class IncomingInvoiceViewModelTest {
+public class IncomingInvoiceViewModel_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -29,7 +29,7 @@ public class IncomingInvoiceViewModelTest {
     private OrderRepository mockOrderRepository;
 
     @Test
-    public void orderItemsForAutoComplete_Test(){
+    public void autoCompleteOrderItem_works(){
 
         List<OrderItem> result;
 
@@ -84,28 +84,28 @@ public class IncomingInvoiceViewModelTest {
         });
 
         // when
-        result = vm.orderItemsForAutoComplete("***");
+        result = vm.autoCompleteOrderItem("***");
 
         // then
         Assertions.assertThat(result.size()).isEqualTo(4);
 
         // and when
         vm.setCharge(charge);
-        result = vm.orderItemsForAutoComplete("***");
+        result = vm.autoCompleteOrderItem("***");
 
         // then
         Assertions.assertThat(result.size()).isEqualTo(3);
 
         // and when
         vm.setProject(project);
-        result = vm.orderItemsForAutoComplete("***");
+        result = vm.autoCompleteOrderItem("***");
 
         // then
         Assertions.assertThat(result.size()).isEqualTo(2);
 
         // and when
         vm.setSeller(seller);
-        result = vm.orderItemsForAutoComplete("***");
+        result = vm.autoCompleteOrderItem("***");
 
         // then
         Assertions.assertThat(result.size()).isEqualTo(1);

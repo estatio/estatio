@@ -29,7 +29,6 @@ import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
-import org.estatio.capex.dom.documents.invoice.OrderItemWrapper;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -306,8 +305,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // when
             // link to order item
-            OrderItemWrapper orderItemWrapper = new OrderItemWrapper(orderCreated.getOrderNumber(), orderCreated.getItems().first().getCharge());
-            incomingInvoiceViewModel.modifyOrderItem(orderItemWrapper);
+            OrderItem orderItem = orderCreated.getItems().first();
+            incomingInvoiceViewModel.modifyOrderItem(orderItem);
 
             // when
             try {
