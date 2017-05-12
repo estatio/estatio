@@ -40,7 +40,6 @@ public class PartitionItemsForOxf extends PartitionItemAbstact {
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new PropertyForOxfGb());
-        executionContext.executeChild(this, new ChargeRefData());
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningForOxf());
 
