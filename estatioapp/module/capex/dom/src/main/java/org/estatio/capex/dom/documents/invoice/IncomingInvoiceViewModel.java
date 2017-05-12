@@ -144,16 +144,6 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         return getPaymentMethod();
     }
 
-    // TODO: EST-1244: this wrapper is done because of:
-    // Error marshalling domain object to XML; domain object class is ''org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel''
-    // A cycle is detected in the object graph. This will cause infinitely deep XML: Organisation{name=Hello World Properties} -> PartyRole{party=HELLOWORLD_GB, roleType=PartyRoleType{title=Landlord}} -> Organisation{name=Hello World Properties}]
-
-    //
-    // Dan says: the fix for this is to add the annotation '@XmlJavaTypeAdapter(PersistentEntityAdapter.class)' to
-    // the entity being referenced (OrderItem).  You can see that we do this with Charge, for example.   What happens is
-    // that the XML contains the OID of the referenced object, rather than trying to serialize out the object's state.
-    //
-
     @Property(editing = Editing.ENABLED)
     private OrderItem orderItem;
     public void modifyOrderItem(OrderItem orderItem) {
