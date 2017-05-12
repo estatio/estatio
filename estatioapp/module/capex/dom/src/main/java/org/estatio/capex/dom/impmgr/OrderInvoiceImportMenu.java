@@ -58,7 +58,6 @@ public class OrderInvoiceImportMenu {
     }
 
 
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public OrderInvoiceSheet importOrdersAndInvoices(
@@ -83,6 +82,11 @@ public class OrderInvoiceImportMenu {
         return new OrderInvoiceImportReport();
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3")
+    public SupplierBankAccountImportManager importSellers(){
+        return new SupplierBankAccountImportManager();
+    }
 
     @Inject
     private OrderInvoiceImportService orderInvoiceImportService;

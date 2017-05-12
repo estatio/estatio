@@ -245,7 +245,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // and when
             incomingOrderViewModel.createSeller("SELLER-REF", false, "Seller name", greatBritain);
             seller = (Organisation) partyRepository.findPartyByReference("SELLER-REF");
-            incomingOrderViewModel.changeOrderDetails(orderNumber, (Organisation) buyer, seller, null, null);
+            incomingOrderViewModel.changeOrderDetails(orderNumber, buyer, seller, null, null);
             incomingOrderViewModel.changeItemDetails(description, netAmount, null, null, grossAmount);
 
             incomingOrderViewModel.setCharge(charge_for_works);
