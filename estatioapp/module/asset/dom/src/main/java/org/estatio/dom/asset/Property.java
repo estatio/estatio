@@ -155,6 +155,10 @@ public class Property
     @Getter @Setter
     private BigDecimal area;
 
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private Integer parkingSpaces;
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = ProperNameType.Meta.MAX_LEN)

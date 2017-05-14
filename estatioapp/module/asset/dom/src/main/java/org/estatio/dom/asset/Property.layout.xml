@@ -32,6 +32,7 @@
                                 <ns2:property id="externalReference"/>
                                 <ns2:property id="type"/>
                                 <ns2:property id="area"/>
+                                <ns2:property id="parkingSpaces"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Dates" id="dates">
                                 <ns2:property id="acquireDate"/>
