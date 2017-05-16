@@ -52,6 +52,7 @@
                         <bs3:tab name="Other">
                             <bs3:row>
                                 <bs3:col span="12">
+
                                     <fieldSet name="Other" unreferencedProperties="true">
                                     </fieldSet>
                                 </bs3:col>
@@ -63,7 +64,7 @@
         </bs3:col>
         <bs3:col span="8">
             <fieldSet name="PDF">
-                <property id="blob"/>
+                <property id="blob" unchanging="true"/>
             </fieldSet>
         </bs3:col>
     </bs3:row>

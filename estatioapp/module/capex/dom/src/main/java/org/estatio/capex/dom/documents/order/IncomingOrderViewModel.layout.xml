@@ -94,7 +94,7 @@
         </bs3:col>
         <bs3:col span="8">
             <fieldSet name="PDF">
-                <property id="blob"/>
+                <property id="blob" unchanging="true"/>
             </fieldSet>
         </bs3:col>
     </bs3:row>
