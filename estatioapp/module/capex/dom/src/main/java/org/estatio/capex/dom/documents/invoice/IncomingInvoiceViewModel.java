@@ -58,6 +58,7 @@ import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -127,6 +128,30 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         } else {
             return bankAccountRepository.allBankAccounts().stream().filter(x->x.getReference().contains(searchString)).collect(Collectors.toList());
         }
+    }
+
+    public IncomingOrderAndInvoiceViewModel createBankAccount(final String ibanNumber){
+        bankAccountRepository.newBankAccount(getSeller(), ibanNumber, null);
+        BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber); // this lookup is done instead of setting bankaccount right away for jaxb viewmodel recreation
+        setBankAccount(bankAccount);
+        return this;
+    }
+
+    public String validateCreateBankAccount(final String ibanNumber){
+        if (!IBANValidator.valid(ibanNumber)){
+            return String.format("%s is not a valid iban number", ibanNumber);
+        }
+        if (bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber)!=null){
+            return String.format("%s has already bank account with iban %s", getSeller().getName(), ibanNumber);
+        }
+        return null;
+    }
+
+    public String disableCreateBankAccount(){
+        if (!hasSeller()){
+            return "There is no seller specified";
+        }
+        return null;
     }
 
     @Property(editing = Editing.ENABLED)

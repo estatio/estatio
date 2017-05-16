@@ -21,32 +21,34 @@ import lombok.Setter;
 )
 public class SupplierImportLine {
 
+    public SupplierImportLine(){}
+
     public SupplierImportLine(
-            final String reference,
+            final String elmcode,
             final String name,
-            final String address,
-            final String city,
+            final String add1,
+            final String add3,
             final String postcode,
             final String country) {
-        this.reference = reference;
+        this.elmcode = elmcode;
         this.name = name;
-        this.address = address;
-        this.city = city;
+        this.add1 = add1;
+        this.add3 = add3;
         this.postcode = postcode;
         this.country = country;
     }
 
     @Getter @Setter
-    public String reference;
+    public String elmcode; // reference
 
     @Getter @Setter
     private String name;
 
     @Getter @Setter
-    private String address;
+    private String add1; // address
 
     @Getter @Setter
-    private String city;
+    private String add3; // city
 
     @Getter @Setter
     private String postcode;
@@ -57,7 +59,7 @@ public class SupplierImportLine {
     @Action
     public List<Object> importLine() {
 
-        Organisation organisation = supplierImportService.findOrCreateOrganisationAndAddressByName(getReference(), getName(), getAddress(), getPostcode(), getCity(), getCountry());
+        Organisation organisation = supplierImportService.findOrCreateOrganisationAndAddressByName(getElmcode(), getName(), getAdd1(), getPostcode(), getAdd3(), getCountry());
 
         return Lists.newArrayList(organisation);
 

@@ -19,7 +19,6 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
@@ -103,7 +102,9 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
         Organisation organisation = organisationRepository
                 .newOrganisation(reference, useNumeratorForReference, name, country);
         setSeller(organisation);
-        bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
+        if (ibanNumber != null) {
+            bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
+        }
         return this;
     }
 
@@ -113,8 +114,8 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
             final String name,
             final Country country,
             final String ibanNumber){
-        if (!IBANValidator.valid(ibanNumber)){
-            return TranslatableString.tr("%s is not a valid iban number", ibanNumber).toString();
+        if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
+            return String.format("%s is not a valid iban number", ibanNumber);
         }
         return null;
     }
@@ -127,7 +128,6 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     public List<Charge> choicesCharge(){
         return chargeRepository.allIncoming();
     }
-
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private FixedAsset<?> fixedAsset;

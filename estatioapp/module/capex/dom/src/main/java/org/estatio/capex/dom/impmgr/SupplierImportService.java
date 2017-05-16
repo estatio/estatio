@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -42,7 +41,7 @@ public class SupplierImportService {
         if (partyRepository.findParties(name).size()>0){
             organisation = (Organisation) partyRepository.findParties(name).get(0);
             if (partyRepository.findParties(name).size()>1){
-                String message = TranslatableString.tr("More than one seller found for %s; first found is taken", reference).toString();
+                String message = String.format("More than one seller found for %s; first found is taken", reference);
                 LOG.debug(message);
             }
         }

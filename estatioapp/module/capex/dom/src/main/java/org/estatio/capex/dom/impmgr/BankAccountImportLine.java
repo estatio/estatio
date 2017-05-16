@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.services.i18n.TranslatableString;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -27,20 +26,22 @@ import lombok.Setter;
 )
 public class BankAccountImportLine {
 
+    public BankAccountImportLine(){}
+
     public BankAccountImportLine(
             final String elmcode,
             final String bankName,
-            final String address,
-            final String city,
+            final String add1,
+            final String add2,
             final String postcode,
             final String country,
             final String acnum,
             final String swift,
             final String iban) {
-        this.supplierReference = elmcode;
+        this.elmcode = elmcode;
         this.acname = bankName;
-        this.address = address;
-        this.city = city;
+        this.add1 = add1;
+        this.add2 = add2;
         this.postcode = postcode;
         this.country = country;
         this.acnum = acnum;
@@ -49,16 +50,16 @@ public class BankAccountImportLine {
     }
 
     @Getter @Setter
-    public String supplierReference; // seller ref
+    public String elmcode; // seller ref
 
     @Getter @Setter
     private String acname; // bank name
 
     @Getter @Setter
-    private String address; // bank address
+    private String add1; // bank address
 
     @Getter @Setter
-    private String city; // bank city
+    private String add2; // bank city
 
     @Getter @Setter
     private String postcode;
@@ -84,15 +85,15 @@ public class BankAccountImportLine {
         Party bankParty = supplierImportService.findOrCreateOrganisationAndAddressByReference(
                 getSwift(),
                 getAcname(),
-                getAddress(),
+                getAdd1(),
                 getPostcode(),
-                getCity(),
+                getAdd2(),
                 getCountry());
 
-        Party owner = partyRepository.findPartyByReference(getSupplierReference());
+        Party owner = partyRepository.findPartyByReference(getElmcode());
 
         if (owner == null){
-            String message = TranslatableString.tr("No party found for %s while trying to create bank account", getSupplierReference()).toString();
+            String message = String.format("No party found for %s while trying to create bank account", getElmcode());
             LOG.debug(message);
             return null;
         }

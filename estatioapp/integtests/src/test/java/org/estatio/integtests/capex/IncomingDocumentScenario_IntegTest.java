@@ -246,7 +246,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             }
 
             // and when
-            wrap(incomingOrderViewModel).createSeller("SELLER-REF", false, "Seller name", greatBritain, fakeIban);
+            wrap(incomingOrderViewModel).createSeller("SELLER-REF", false, "Some seller", greatBritain, fakeIban);
             seller = (Organisation) partyRepository.findPartyByReference("SELLER-REF");
             incomingOrderViewModel.changeOrderDetails(orderNumber, buyer, seller, null, null);
             incomingOrderViewModel.changeItemDetails(description, netAmount, null, null, grossAmount);
@@ -308,9 +308,37 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             _saveInvoice = wrap(factoryService.mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel));
 
             // when
+            try {
+                _saveInvoice.saveInvoice(false);
+            } catch (DisabledException e){
+                assertThat(e.getMessage()).contains("Reason: invoice number, buyer, seller, bank account, date received, due date, net amount, gross amount required");
+            }
+
+            // when
+            try {
+                wrap(incomingInvoiceViewModel).createBankAccount("123");
+            } catch (DisabledException e){
+                assertThat(e.getMessage()).contains("Reason: There is no seller specified");
+            }
+
+            // when
             // link to order item
             OrderItem orderItem = orderCreated.getItems().first();
             incomingInvoiceViewModel.modifyOrderItem(orderItem);
+
+            // when
+            try {
+                wrap(incomingInvoiceViewModel).createBankAccount("123");
+            } catch (Exception e){
+                assertThat(e.getMessage()).contains("Reason: 123 is not a valid iban number");
+            }
+
+            // when
+            try {
+                wrap(incomingInvoiceViewModel).createBankAccount(fakeIban);
+            } catch (Exception e){
+                assertThat(e.getMessage()).contains("Reason: Some seller has already bank account with iban NL05ABNA0214875743");
+            }
 
             // when
             try {
