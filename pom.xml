@@ -64,7 +64,7 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.14.0.20170517-1123</isis.version>
+        <isis.version>1.14.0.20170517-1609</isis.version>
         <!--
         <isis.version>1.15.0-SNAPSHOT</isis.version>
         -->
