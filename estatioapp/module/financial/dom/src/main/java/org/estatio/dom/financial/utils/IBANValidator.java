@@ -26,10 +26,6 @@ public final class IBANValidator {
     
     private IBANValidator(){}
 
-    private static final int IBAN_LENGTH_MAX = 32;
-
-    private static final int IBAN_LENGTH_MIN = 15;
-
     private static final int SUFFIX_OFFSET = 4;
     
     private static final int A_ASCII = 97;
@@ -61,9 +57,8 @@ public final class IBANValidator {
     }
 
     public static boolean valid(final String iban) {
-        if (iban == null || 
-            iban.length() < IBAN_LENGTH_MIN || 
-            iban.length() > IBAN_LENGTH_MAX) {
+        if (iban == null ||
+            !iban.matches("[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}")) {
             return false;
         }
 

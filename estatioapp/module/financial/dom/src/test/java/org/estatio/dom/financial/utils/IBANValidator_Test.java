@@ -43,6 +43,8 @@ public class IBANValidator_Test {
         @Test
         public void sadCase() {
             assertThat(IBANValidator.valid("NLXXINGB0680433600")).isFalse();
+            assertThat(IBANValidator.valid("nl26INGB0680433600")).isFalse();
+            assertThat(IBANValidator.valid("NL26iNGB0680433600")).isFalse();
             assertThat(IBANValidator.valid("")).isFalse();
             assertThat(IBANValidator.valid("rubbish")).isFalse();
         }
