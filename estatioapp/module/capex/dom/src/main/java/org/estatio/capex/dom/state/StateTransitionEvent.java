@@ -13,7 +13,7 @@ import lombok.Setter;
  *     for this transition of the domain object's state.
  * </p>
  */
-public class StateTransitionEvent<
+public abstract class StateTransitionEvent<
         DO,
         ST extends StateTransition<DO, ST, STT, S>,
         STT extends StateTransitionType<DO, ST, STT, S>,
@@ -26,14 +26,17 @@ public class StateTransitionEvent<
     }
 
     private final DO domainObject;
-    private final STT transitionType;
     private final ST stateTransitionIfAny;
+    private final STT transitionType;
 
-    public StateTransitionEvent(final DO domainObject, final STT transitionType, final ST stateTransitionIfAny) {
+    public StateTransitionEvent(
+            final DO domainObject,
+            final ST stateTransitionIfAny,
+            final STT transitionType) {
         super(domainObject);
         this.domainObject = domainObject;
-        this.transitionType = transitionType;
         this.stateTransitionIfAny = stateTransitionIfAny;
+        this.transitionType = transitionType;
     }
 
     @Override
@@ -45,12 +48,12 @@ public class StateTransitionEvent<
         return domainObject;
     }
 
-    public STT getTransitionType() {
-        return transitionType;
-    }
-
     public ST getStateTransitionIfAny() {
         return (ST) getSource();
+    }
+
+    public STT getTransitionType() {
+        return transitionType;
     }
 
     @Getter @Setter

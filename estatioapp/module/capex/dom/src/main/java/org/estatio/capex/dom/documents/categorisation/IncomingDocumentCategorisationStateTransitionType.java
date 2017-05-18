@@ -13,6 +13,7 @@ import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
@@ -24,9 +25,9 @@ import lombok.Getter;
 @Getter
 public enum IncomingDocumentCategorisationStateTransitionType
         implements StateTransitionType<
-                                        Document,
+                        Document,
                         IncomingDocumentCategorisationStateTransition,
-        IncomingDocumentCategorisationStateTransitionType,
+                        IncomingDocumentCategorisationStateTransitionType,
                         IncomingDocumentCategorisationState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
@@ -56,6 +57,27 @@ public enum IncomingDocumentCategorisationStateTransitionType
             final IncomingDocumentCategorisationState toState
     ) {
         this(fromState != null ? Collections.singletonList(fromState): null, toState);
+    }
+
+    public static class IncomingDocumentCategorisationTransitionEvent
+            extends StateTransitionEvent<
+                        Document,
+                        IncomingDocumentCategorisationStateTransition,
+                        IncomingDocumentCategorisationStateTransitionType,
+                        IncomingDocumentCategorisationState> {
+        public IncomingDocumentCategorisationTransitionEvent(
+                final Document domainObject,
+                final IncomingDocumentCategorisationStateTransition stateTransitionIfAny,
+                final IncomingDocumentCategorisationStateTransitionType transitionType) {
+            super(domainObject, stateTransitionIfAny, transitionType);
+        }
+    }
+
+    @Override
+    public IncomingDocumentCategorisationTransitionEvent newStateTransitionEvent(
+            final Document domainObject,
+            final IncomingDocumentCategorisationStateTransition pendingTransitionIfAny) {
+        return new IncomingDocumentCategorisationTransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
     @Override

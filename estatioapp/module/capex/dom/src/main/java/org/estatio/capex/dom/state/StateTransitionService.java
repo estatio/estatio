@@ -255,8 +255,8 @@ public class StateTransitionService {
 
         ST pendingTransitionIfAny = pendingTransitionOf(domainObject, requiredTransitionType);
 
-        final StateTransitionEvent<DO, ST, STT, S> event = new StateTransitionEvent<>(domainObject, requiredTransitionType,
-                pendingTransitionIfAny);
+        final StateTransitionEvent<DO, ST, STT, S> event =
+                requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransitionIfAny);
 
         if(pendingTransitionIfAny != null) {
             final STT pendingType = pendingTransitionIfAny.getTransitionType();

@@ -13,6 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
@@ -120,9 +121,29 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
-            final IncomingInvoiceApprovalState toState
-    ) {
+            final IncomingInvoiceApprovalState toState) {
         this(fromState != null ? Collections.singletonList(fromState): null, toState);
+    }
+
+    public static class IncomingInvoiceApprovalTransitionEvent
+            extends StateTransitionEvent<
+                        IncomingInvoice,
+                        IncomingInvoiceApprovalStateTransition,
+                        IncomingInvoiceApprovalStateTransitionType,
+                        IncomingInvoiceApprovalState> {
+        public IncomingInvoiceApprovalTransitionEvent(
+                final IncomingInvoice domainObject,
+                final IncomingInvoiceApprovalStateTransition stateTransitionIfAny,
+                final IncomingInvoiceApprovalStateTransitionType transitionType) {
+            super(domainObject, stateTransitionIfAny, transitionType);
+        }
+    }
+
+    @Override
+    public IncomingInvoiceApprovalTransitionEvent newStateTransitionEvent(
+            final IncomingInvoice domainObject,
+            final IncomingInvoiceApprovalStateTransition pendingTransitionIfAny) {
+        return new IncomingInvoiceApprovalTransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
     @Override
@@ -189,4 +210,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
         IncomingInvoiceApprovalStateTransition.Repository repository;
 
     }
+
 }
+

@@ -95,4 +95,6 @@ public interface StateTransitionType<
             final S fromState,
             final ServiceRegistry2 serviceRegistry2);
 
+    @Programmatic
+    StateTransitionEvent<DO,ST,STT,S> newStateTransitionEvent(DO domainObject, ST pendingTransitionIfAny);
 }
