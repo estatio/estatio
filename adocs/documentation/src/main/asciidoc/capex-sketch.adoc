@@ -235,7 +235,6 @@ IncomingInvoice <-- PaperclipForIncomingInvoice
 
 class Payment #lightgreen {
     amount: BigDecimal
-    paidOn: LocalDate
 }
 note right #lightgray: payment method\nnot necessarily\nsame as that\nof invoice
 
