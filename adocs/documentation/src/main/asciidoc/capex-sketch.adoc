@@ -309,62 +309,61 @@ digraph {
 [plantuml,state-charts,png]
 --
 
-state "IncomingDocumentCategorisationStateTransitionType" as id_c {
-    state "NEW" as id_c_new
-    state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as id_c_caawp
-    state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as id_c_awde
+state "IncomingDocumentCategorisationStateTransitionType" as idc {
+    state "NEW" as idc_new
+    state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as idc_caawp
+    state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as idc_awde
 
-    [*] --> id_c_new: INSTANTIATING
-    id_c_new --> id_c_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
-    id_c_caawp --> id_c_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
+    [*] --> idc_new: INSTANTIATING
+    idc_new --> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
+    idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
+    idc_awde -down-> [*]
 }
 
-[*] --> id_c
-id_c_awde --> ii : IncomingDocumentToIncomingInvoiceSubscriber
+[*] --> idc
+idc --> a : IncomingDocumentToIncomingInvoiceSubscriber
 
-state "IncomingInvoice\nProcessing" as ii {
+state "Approval\n" as a {
 
-    state "IncomingInvoice\nApproval\nStateTransitionType" as ii_a {
-        state "NEW" as ii_a_new
-        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as ii_a_abcd
-        state "APPROVED_BY_ \n TREASURER" as ii_a_abt
-        state "PAID" as ii_a_p
+    state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
+        state "NEW" as iia_new
+        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+        state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_abpm
+        state "APPROVED_BY_ \n ASSET_MANAGER" as iia_abam
 
-        [*] --> ii_a_new : INSTANTIATE
+        [*] --> iia_new : INSTANTIATE
+        iia_new --> iia_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+        iia_new --> iia_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+        iia_abpm --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+        iia_abam --> iia_abcd
 
-        state "IncomingInvoice\nLocalApproval" as ii_a_la {
-            state "APPROVED_BY_ \n PROJECT_MANAGER" as ii_a_la_abpm
-            state "APPROVED_BY_ \n ASSET_MANAGER" as ii_a_la_abam
-            [*] -down-> ii_a_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            [*] -down->  ii_a_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
-        }
-
-        ii_a_new --> ii_a_la
-        ii_a_la --> ii_a_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-        ii_a_abcd --> ii_a_abt : APPROVE_AS_\nTREASURER
-        ii_a_abt --> ii_a_p : PAY
+        iia_abcd --> [*]
 
     }
-    [*] --> ii_a
+    [*] --> iia
     ||
-    state "IncomingInvoice\nBankAccountConfirmation\nStateTransitionType" as ii_b {
-        state "PENDING" as ii_b_pending
-        state "CONFIRMED" as ii_b_confirmed
+    state "BankAccount\nConfirmation\nStateTransitionType" as bbc {
+        state "BankAccountConfirmationPending" as bbc_pending
+        state "BankAccountConfirmation" as bbc_confirmed
 
-        [*] --> ii_b_pending: INSTANTIATE
-        ii_b_pending --> ii_b_confirmed: CONFIRM
+        [*] --> bbc_pending: INSTANTIATE
+        bbc_pending --> bbc_confirmed: CONFIRM
+        bbc_confirmed --> [*]
 
     }
-    [*] --> ii_b
-
+    [*] --> bbc : [new bank account to approve]
 }
 
-state "BankAccount\nConfirmation\nStateTransitionType" as ba_c {
-    state "BankAccountPending" as ba_c_pending
-    state "BankAccountConfirmed" as ba_c_confirmed
-    [*] --> ba_c_pending
-    ba_c_pending --> ba_c_confirmed
+state "PaymentProcessing" as pp {
+    state "NEW" as pp_new
+    state "APPROVED_BY_ \n TREASURER" as pp_abt
+    state "PAID" as pp_paid
+
+    [*] --> pp_new : INSTANTIATE
+    pp_new --> pp_abt : APPROVE_AS_\nTREASURER\n[bank account confirmed]
+    pp_abt --> pp_paid : PAY
+    pp_paid --> [*]
 }
 
-
+a --> pp
 --

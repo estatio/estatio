@@ -18,17 +18,16 @@ import org.estatio.capex.dom.state.StateTransitionService;
 public class PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalStateTransition extends AbstractSubscriber {
 
     @com.google.common.eventbus.Subscribe
-    public void on(IncomingInvoiceApprovalStateTransitionType.IncomingInvoiceApprovalTransitionEvent ev) {
+    public void on(IncomingInvoiceApprovalStateTransitionType.TransitionEvent ev) {
 
-            if (ev.getPhase()==StateTransitionEvent.Phase.TRANSITIONED &&
-                    ev.getTransitionType()==IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
-                    ){
-                IncomingInvoice invoice = ev.getDomainObject();
-                Payment newPayment = paymentRepository.create(invoice.getGrossAmount(), invoice, invoice.getPaymentMethod());
-                transactionService.flushTransaction();
-                stateTransitionService.apply(newPayment, PaymentApprovalStateTransitionType.INSTANTIATE, null);
-            }
-
+        if (ev.getPhase()==StateTransitionEvent.Phase.TRANSITIONED &&
+                ev.getTransitionType()==IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+                ){
+            IncomingInvoice invoice = ev.getDomainObject();
+            Payment newPayment = paymentRepository.create(invoice.getGrossAmount(), invoice, invoice.getPaymentMethod());
+            transactionService.flushTransaction();
+            stateTransitionService.apply(newPayment, PaymentApprovalStateTransitionType.INSTANTIATE, null);
+        }
     }
 
 

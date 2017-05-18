@@ -106,13 +106,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
         this(fromState != null ? Collections.singletonList(fromState): null, toState);
     }
 
-    public static class IncomingInvoiceApprovalTransitionEvent
+    public static class TransitionEvent
             extends StateTransitionEvent<
                         IncomingInvoice,
                         IncomingInvoiceApprovalStateTransition,
                         IncomingInvoiceApprovalStateTransitionType,
                         IncomingInvoiceApprovalState> {
-        public IncomingInvoiceApprovalTransitionEvent(
+        public TransitionEvent(
                 final IncomingInvoice domainObject,
                 final IncomingInvoiceApprovalStateTransition stateTransitionIfAny,
                 final IncomingInvoiceApprovalStateTransitionType transitionType) {
@@ -121,10 +121,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     @Override
-    public IncomingInvoiceApprovalTransitionEvent newStateTransitionEvent(
+    public TransitionEvent newStateTransitionEvent(
             final IncomingInvoice domainObject,
             final IncomingInvoiceApprovalStateTransition transitionIfAny) {
-        return new IncomingInvoiceApprovalTransitionEvent(domainObject, transitionIfAny, this);
+        return new TransitionEvent(domainObject, transitionIfAny, this);
     }
 
     @Override

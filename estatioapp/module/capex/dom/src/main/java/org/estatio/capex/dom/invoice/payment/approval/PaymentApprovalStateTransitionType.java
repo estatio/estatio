@@ -64,13 +64,13 @@ public enum PaymentApprovalStateTransitionType
         this(fromState != null ? Collections.singletonList(fromState): null, toState);
     }
 
-    public static class PaymentApprovalTransitionEvent
+    public static class TransitionEvent
             extends StateTransitionEvent<
                         Payment,
                         PaymentApprovalStateTransition,
                         PaymentApprovalStateTransitionType,
                         PaymentApprovalState> {
-        public PaymentApprovalTransitionEvent(
+        public TransitionEvent(
                 final Payment domainObject,
                 final PaymentApprovalStateTransition stateTransitionIfAny,
                 final PaymentApprovalStateTransitionType transitionType) {
@@ -79,10 +79,10 @@ public enum PaymentApprovalStateTransitionType
     }
 
     @Override
-    public PaymentApprovalTransitionEvent newStateTransitionEvent(
+    public TransitionEvent newStateTransitionEvent(
             final Payment domainObject,
             final PaymentApprovalStateTransition pendingTransitionIfAny) {
-        return new PaymentApprovalTransitionEvent(domainObject, pendingTransitionIfAny, this);
+        return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
     @Override

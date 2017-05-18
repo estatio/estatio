@@ -59,13 +59,13 @@ public enum IncomingDocumentCategorisationStateTransitionType
         this(fromState != null ? Collections.singletonList(fromState): null, toState);
     }
 
-    public static class IncomingDocumentCategorisationTransitionEvent
+    public static class TransitionEvent
             extends StateTransitionEvent<
                         Document,
                         IncomingDocumentCategorisationStateTransition,
                         IncomingDocumentCategorisationStateTransitionType,
                         IncomingDocumentCategorisationState> {
-        public IncomingDocumentCategorisationTransitionEvent(
+        public TransitionEvent(
                 final Document domainObject,
                 final IncomingDocumentCategorisationStateTransition stateTransitionIfAny,
                 final IncomingDocumentCategorisationStateTransitionType transitionType) {
@@ -74,10 +74,10 @@ public enum IncomingDocumentCategorisationStateTransitionType
     }
 
     @Override
-    public IncomingDocumentCategorisationTransitionEvent newStateTransitionEvent(
+    public TransitionEvent newStateTransitionEvent(
             final Document domainObject,
             final IncomingDocumentCategorisationStateTransition transitionIfAny) {
-        return new IncomingDocumentCategorisationTransitionEvent(domainObject, transitionIfAny, this);
+        return new TransitionEvent(domainObject, transitionIfAny, this);
     }
 
     @Override

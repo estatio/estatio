@@ -23,9 +23,8 @@ public abstract class Payment_abstractTransition {
     }
 
     @Action()
-    public Payment $$(
-                            @Nullable
-                            final String comment){
+    public Payment $$(@Nullable
+                      final String comment){
         stateTransitionService.apply(payment, transitionType, comment);
         return payment;
     }
