@@ -38,8 +38,10 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
-import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsTreasurer;
-import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_pay;
+import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.invoice.payment.PaymentRepository;
+import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
+import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -465,7 +467,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(nextTransition.getTask().getCompletedBy()).isNull();
             assertThat(nextTransition.getTask().isCompleted()).isFalse();
 
-            // and when
+            // and when (LAST transition)
             final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(
                     mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
 
@@ -479,62 +481,27 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions.size()).isEqualTo(3);
+            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR)).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
             completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
             assertThat(nextTransition).isSameAs(completedTransition);
 
-            nextTransition =
-                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, false);
+            assertThat(paymentRepository.findByInvoice(invoiceCreated).size()).isEqualTo(1);
+            Payment newPayment = paymentRepository.findByInvoice(invoiceCreated).get(0);
+            assertThat(newPayment.getAmount()).isEqualTo(invoiceCreated.getGrossAmount());
+            assertThat(newPayment.getInvoice()).isEqualTo(invoiceCreated);
+            assertThat(newPayment.getPaymentMethod()).isEqualTo(invoiceCreated.getPaymentMethod());
 
-            assertThat(nextTransition.getFromState()).isEqualTo(completedTransition.getToState());
-            assertThat(nextTransition.getToState()).isNull();
-
-            // and when
-            final IncomingInvoice_approveAsTreasurer _approveAsTreasurer = wrap(
-                    mixin(IncomingInvoice_approveAsTreasurer.class, invoiceCreated));
-
-            getFixtureClock().addTime(1,0); // time moves on
-            _approveAsTreasurer.$$(null);
-            transactionService.nextTransaction();
-
-            // then
-            assertThat(nextTransition.getToState()).isNotNull();
-
-            transitions =
-                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(4);
-
-            completedTransition =
-                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
-            assertThat(nextTransition).isSameAs(completedTransition);
-
-            nextTransition =
-                    incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, false);
-
-            assertThat(nextTransition.getFromState()).isEqualTo(completedTransition.getToState());
-            assertThat(nextTransition.getToState()).isNull();
-
-            // and when (LAST transition)
-            final IncomingInvoice_pay _pay = wrap(
-                    mixin(IncomingInvoice_pay.class, invoiceCreated));
-
-            getFixtureClock().addTime(1,0); // time moves on
-            _pay.$$(null);
-            transactionService.nextTransaction();
-
-            // then
-            assertThat(nextTransition.getToState()).isNotNull();
-
-            transitions =
-                    incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(4);
-
-            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.PAY)).isEqualTo(IncomingInvoiceApprovalState.PAID);
-        }
+            assertThat(paymentStateTransitionRepository.findByDomainObject(newPayment).size()).isEqualTo(1);
+            PaymentApprovalStateTransition transitionForPayment = paymentStateTransitionRepository.findByDomainObject(newPayment).get(0);
+            assertThat(transitionForPayment.getTransitionType()).isEqualTo(PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER);
+      }
 
 
     }
+
+    @Inject PaymentApprovalStateTransition.Repository paymentStateTransitionRepository;
 
     @Inject IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
@@ -573,5 +540,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     BankAccountRepository bankAccountRepository;
+
+    @Inject
+    PaymentRepository paymentRepository;
 }
 

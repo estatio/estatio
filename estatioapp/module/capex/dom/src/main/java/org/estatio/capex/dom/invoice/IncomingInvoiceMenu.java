@@ -14,6 +14,8 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.invoice.payment.PaymentRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -47,7 +49,16 @@ public class IncomingInvoiceMenu {
         return incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, InvoiceStatus.NEW, dateReceived, null);
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Payment> allPayments(){
+        return paymentRepository.listAll();
+    }
+
+
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    private PaymentRepository paymentRepository;
 
 }

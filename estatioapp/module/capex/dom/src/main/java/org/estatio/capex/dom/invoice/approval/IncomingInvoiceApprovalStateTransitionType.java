@@ -81,31 +81,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return EstatioRole.COUNTRY_DIRECTOR;
         }
     },
-    APPROVE_AS_TREASURER(
-            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            IncomingInvoiceApprovalState.APPROVED_BY_TREASURER
-    ) {
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.TREASURER;
-        }
-    },
-    PAY(
-            IncomingInvoiceApprovalState.APPROVED_BY_TREASURER,
-            IncomingInvoiceApprovalState.PAID
-    ) {
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.TREASURER;
-        }
-    },
     CANCEL(
             Arrays.asList(
                     IncomingInvoiceApprovalState.NEW,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-                    IncomingInvoiceApprovalState.APPROVED_BY_TREASURER),
+                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR),
             IncomingInvoiceApprovalState.CANCELLED
     );
 

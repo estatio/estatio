@@ -7,31 +7,15 @@
         </col>
     </row>
     <row>
-        <col span="4">
+        <col span="6">
             <tabGroup>
                 <tab name="Invoice">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Invoice" id="invoice">
-                                <ns2:property id="invoiceNumber"/>
-                                <ns2:property id="buyer"/>
-                                <ns2:property id="seller"/>
-                                <ns2:property id="bankAccount"/>
-                                <ns2:property id="dateReceived"/>
-                                <ns2:property id="invoiceDate"/>
-                                <ns2:property id="dueDate"/>
+                            <ns2:fieldSet name="Payment" id="payment">
+                                <ns2:property id="amount"/>
+                                <ns2:property id="invoice"/>
                                 <ns2:property id="paymentMethod"/>
-                                <ns2:property id="isCreditFor"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->
-                        <col span="0">
-                            <ns2:fieldSet name="hidden" id="hidden">
-                                <ns2:action id="updateAttribute"/>
-                                <ns2:action id="changePaymentMethod"/>
-                                <ns2:action id="remove"/>
-                                <ns2:action id="changeDueDate"/>
-                                <ns2:property id="status"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -53,17 +37,6 @@
                                 <ns2:property id="datanucleusVersionTimestamp"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-        <col span="8">
-            <tabGroup>
-                <tab name="Items">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="items" defaultView="table"></ns2:collection>
                         </col>
                     </row>
                 </tab>
