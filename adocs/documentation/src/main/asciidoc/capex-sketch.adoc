@@ -142,12 +142,19 @@ class OrderItem #lightgreen implements FinancialItem {
     project: Project
 }
 
+class PaperclipForOrder #lightgreen {
+
+}
+
 Order <--> "0..*" OrderItem
 
 
 Party "buyer" <-- Order
 Party "seller" <-- Order
 
+
+Document <-- "0..1         " PaperclipForOrder
+Order <-- PaperclipForOrder
 
 
 
@@ -177,6 +184,11 @@ class BankAccount #lightgreen {
 
 }
 
+class PaperclipForBankAccount #lightgreen {
+
+}
+
+
 
 
 class IncomingInvoiceItem #pink  implements FinancialItem  {
@@ -187,6 +199,11 @@ class OrderItemInvoiceItemLink #pink {
 
 }
 
+
+' some invoices will have credit note(s) pointing back to them
+IncomingInvoice "0..1" <-- "credit note" IncomingInvoice
+
+
 IncomingInvoiceItem <--- OrderItemInvoiceItemLink
 OrderItem <--- OrderItemInvoiceItemLink
 
@@ -195,6 +212,9 @@ PaymentMethod <--- IncomingInvoice
 
 
 BankAccount <-- IncomingInvoice
+
+Document <-- "0..1         " PaperclipForBankAccount
+BankAccount <-- PaperclipForBankAccount
 
 
 class Document #lightgreen {
@@ -220,7 +240,13 @@ class Payment #lightgreen {
 note right #lightgray: payment method\nnot necessarily\nsame as that\nof invoice
 
 
-IncomingInvoice <--- "0..* " Payment
+
+
+
+IncomingInvoice "payment" <--- "0..* " Payment
+note left #lightgray: can only refer to invoices,\nnot credit notes.\nif invoice has credit notes,\nthen we also derive\nthat the payment pays off\na those credit notes also
+
+
 
 PaymentMethod <--- Payment
 
