@@ -123,8 +123,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     @Override
     public IncomingInvoiceApprovalTransitionEvent newStateTransitionEvent(
             final IncomingInvoice domainObject,
-            final IncomingInvoiceApprovalStateTransition pendingTransitionIfAny) {
-        return new IncomingInvoiceApprovalTransitionEvent(domainObject, pendingTransitionIfAny, this);
+            final IncomingInvoiceApprovalStateTransition transitionIfAny) {
+        return new IncomingInvoiceApprovalTransitionEvent(domainObject, transitionIfAny, this);
     }
 
     @Override

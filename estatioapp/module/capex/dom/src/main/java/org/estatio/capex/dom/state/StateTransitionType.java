@@ -95,6 +95,20 @@ public interface StateTransitionType<
             final S fromState,
             final ServiceRegistry2 serviceRegistry2);
 
+    /**
+     * Creates a (transition-type specific implementation of) {@link StateTransitionEvent} for the
+     * {@link StateTransitionService} to emit onto the event bus.
+     *
+     * <p>
+     *     This makes for a better API for potential subscribers - rather than subscribing to the very generic
+     *     {@link StateTransitionEvent}, they can subscribe to the particular state transition "chart" that they are
+     *     interested in.
+     * </p>
+     *
+     * @param domainObject - upon which the state transition is occurring.
+     * @param transitionIfAny - the persistent {@link StateTransition} being completed.  The only time this is null is for the initial "pseudo" transition of the domain object to its initial state.
+     * @return
+     */
     @Programmatic
-    StateTransitionEvent<DO,ST,STT,S> newStateTransitionEvent(DO domainObject, ST pendingTransitionIfAny);
+    StateTransitionEvent<DO,ST,STT,S> newStateTransitionEvent(DO domainObject, ST transitionIfAny);
 }

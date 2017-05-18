@@ -255,9 +255,6 @@ public class StateTransitionService {
 
         ST pendingTransitionIfAny = pendingTransitionOf(domainObject, requiredTransitionType);
 
-        final StateTransitionEvent<DO, ST, STT, S> event =
-                requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransitionIfAny);
-
         if(pendingTransitionIfAny != null) {
             final STT pendingType = pendingTransitionIfAny.getTransitionType();
             if(pendingType != requiredTransitionType) {
@@ -276,6 +273,9 @@ public class StateTransitionService {
                 pendingTransitionIfAny = requiredTransitionType.createTransition(domainObject, currentState, serviceRegistry2);
             }
         }
+
+        final StateTransitionEvent<DO, ST, STT, S> event =
+                requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransitionIfAny);
 
         // transitioning
         final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);

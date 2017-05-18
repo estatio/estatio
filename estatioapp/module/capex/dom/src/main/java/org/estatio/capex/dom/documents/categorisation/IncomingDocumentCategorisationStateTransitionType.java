@@ -76,8 +76,8 @@ public enum IncomingDocumentCategorisationStateTransitionType
     @Override
     public IncomingDocumentCategorisationTransitionEvent newStateTransitionEvent(
             final Document domainObject,
-            final IncomingDocumentCategorisationStateTransition pendingTransitionIfAny) {
-        return new IncomingDocumentCategorisationTransitionEvent(domainObject, pendingTransitionIfAny, this);
+            final IncomingDocumentCategorisationStateTransition transitionIfAny) {
+        return new IncomingDocumentCategorisationTransitionEvent(domainObject, transitionIfAny, this);
     }
 
     @Override
