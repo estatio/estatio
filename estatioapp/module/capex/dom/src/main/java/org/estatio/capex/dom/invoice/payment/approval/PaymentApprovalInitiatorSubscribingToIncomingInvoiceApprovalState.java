@@ -15,7 +15,7 @@ import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalStateTransition extends AbstractSubscriber {
+public class PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalState extends AbstractSubscriber {
 
     @com.google.common.eventbus.Subscribe
     public void on(IncomingInvoiceApprovalStateTransitionType.TransitionEvent ev) {

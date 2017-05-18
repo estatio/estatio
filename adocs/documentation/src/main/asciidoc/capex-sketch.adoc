@@ -321,49 +321,56 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 }
 
 [*] --> idc
-idc --> a : IncomingDocumentToIncomingInvoiceSubscriber
+idc --> a : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
 
-state "Approval\n" as a {
+state "Invoice Approval" as a {
 
     state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
-        state "NEW" as iia_new
-        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
-        state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_abpm
-        state "APPROVED_BY_ \n ASSET_MANAGER" as iia_abam
 
-        [*] --> iia_new : INSTANTIATE
-        iia_new --> iia_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-        iia_new --> iia_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
-        iia_abpm --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-        iia_abam --> iia_abcd
+        state "Approval" as iia_a {
+            state "NEW" as iia_a_new
+            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_a_abpm
+            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_a_abam
+            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_a_abcd
 
-        iia_abcd --> [*]
+            [*] --> iia_a_new : INSTANTIATE
+            iia_a_new --> iia_a_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            iia_a_new --> iia_a_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+            iia_a_abpm --> iia_a_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+            iia_a_abam --> iia_a_abcd
+            iia_a_abcd --> [*]
+        }
+        state "CANCELLED" as iia_cancelled
 
+        [*] --> iia_a
+        iia_a --> iia_cancelled : CANCEL
+        iia_a --> [*]
     }
     [*] --> iia
     ||
-    state "BankAccount\nConfirmation\nStateTransitionType" as bbc {
-        state "BankAccountConfirmationPending" as bbc_pending
-        state "BankAccountConfirmation" as bbc_confirmed
+    state "BankAccount\nVerification\nStateTransitionType" as bbv {
+        state "PENDING" as bbv_pending
+        state "VERIFIED" as bbv_verified
+        state "CANCELLED" as bbv_cancelled
 
-        [*] --> bbc_pending: INSTANTIATE
-        bbc_pending --> bbc_confirmed: CONFIRM
-        bbc_confirmed --> [*]
-
+        [*] --> bbv_pending: INSTANTIATE
+        bbv_pending --> bbv_verified: VERIFY_\nBANK_ACCOUNT
+        bbv_pending --> bbv_cancelled: CANCEL
+        bbv_verified --> [*]
     }
-    [*] --> bbc : [new bank account to approve]
+    [*] --> bbv : [new bank account to verify]
 }
 
 state "PaymentProcessing" as pp {
     state "NEW" as pp_new
     state "APPROVED_BY_ \n TREASURER" as pp_abt
-    state "PAID" as pp_paid
+    state "CANCELLED" as pp_c
 
     [*] --> pp_new : INSTANTIATE
-    pp_new --> pp_abt : APPROVE_AS_\nTREASURER\n[bank account confirmed]
-    pp_abt --> pp_paid : PAY
-    pp_paid --> [*]
+    pp_new --> pp_abt : APPROVE_AS_\nTREASURER\n[bank account verified]
+    pp_new --> pp_c : CANCEL
+    pp_abt --> [*]
 }
 
-a --> pp
+a --> pp : PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalStateTransition
 --
