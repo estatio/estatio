@@ -35,7 +35,7 @@
                                             <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="bankAccount" promptStyle="INLINE">
-                                            <action id="createBankAccount" promptStyle="INLINE" position="RIGHT"/>
+                                            <cpt:action id="createBankAccount" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="invoiceNumber" promptStyle="INLINE"/>
                                         <cpt:property id="dateReceived" promptStyle="INLINE"/>

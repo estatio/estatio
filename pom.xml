@@ -64,10 +64,7 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.14.0.20170517-1609</isis.version>
-        <!--
-        <isis.version>1.15.0-SNAPSHOT</isis.version>
-        -->
+        <isis.version>1.14.0.20170518-0759</isis.version>
 
         <isis-module-command.version>1.14.0</isis-module-command.version>
         <isis-module-excel.version>1.14.2</isis-module-excel.version>
@@ -84,10 +81,10 @@ language governing permissions and limitations under the License.
 
         <isis-metamodel-paraname8.version>1.14.0</isis-metamodel-paraname8.version>
 
-        <isis-wicket-excel.version>1.14.0.20170516-1445</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.14.0.20170516-1444</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.14.0.20170516-1442</isis-wicket-gmap3.version>
-        <isis-wicket-pdfjs.version>1.14.0.20170516-1438</isis-wicket-pdfjs.version>
+        <isis-wicket-excel.version>1.14.0.20170518-0807</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.14.0.20170518-0806</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.14.0.20170518-0804</isis-wicket-gmap3.version>
+        <isis-wicket-pdfjs.version>1.14.0.20170518-0803</isis-wicket-pdfjs.version>
 
         <incode-module-base.version>1.14.0</incode-module-base.version>
         <incode-module-classification.version>1.14.0</incode-module-classification.version>
