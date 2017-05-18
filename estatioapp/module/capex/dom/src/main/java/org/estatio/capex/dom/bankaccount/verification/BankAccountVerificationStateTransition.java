@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.bankaccount.verification;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -16,18 +16,18 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "payment",
-        table = "PaymentApprovalStateTransition"
+        schema = "bankAccount",
+        table = "BankAccountVerificationStateTransition"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -39,32 +39,32 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
-                        + "WHERE payment == :domainObject "
+                        + "FROM org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
+                        + "WHERE bankAccount == :domainObject "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
-                        + "WHERE payment == :domainObject "
+                        + "FROM org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
+                        + "WHERE bankAccount == :domainObject "
                         + "&& completed == :completed "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
+                        + "FROM org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
                         + "WHERE task == :task "
         ),
 })
-@DomainObject(objectType = "payment.PaymentApprovalStateTransition" )
-public class PaymentApprovalStateTransition
+@DomainObject(objectType = "bankAccount.BankAccountVerificationStateTransition" )
+public class BankAccountVerificationStateTransition
         extends StateTransitionAbstract<
-        Payment,
-        PaymentApprovalStateTransition,
-        PaymentApprovalStateTransitionType,
-        PaymentApprovalState> {
+        BankAccount,
+        BankAccountVerificationStateTransition,
+        BankAccountVerificationStateTransitionType,
+        BankAccountVerificationState> {
 
     /**
      * For the first transition, represents the initial state of the domain object
@@ -72,22 +72,22 @@ public class PaymentApprovalStateTransition
      */
     @Column(allowsNull = "false")
     @Getter @Setter
-    private PaymentApprovalState fromState;
+    private BankAccountVerificationState fromState;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private PaymentApprovalStateTransitionType transitionType;
+    private BankAccountVerificationStateTransitionType transitionType;
 
     /**
      * If null, then this transition is not yet complete.
      */
     @Column(allowsNull = "true")
     @Getter @Setter
-    private PaymentApprovalState toState;
+    private BankAccountVerificationState toState;
 
-    @Column(allowsNull = "false", name = "paymentId")
+    @Column(allowsNull = "false", name = "bankAccountId")
     @Getter @Setter
-    private Payment payment;
+    private BankAccount bankAccount;
 
 
     /**
@@ -111,29 +111,29 @@ public class PaymentApprovalStateTransition
 
     @Programmatic
     @Override
-    public Payment getDomainObject() {
-        return getPayment();
+    public BankAccount getDomainObject() {
+        return getBankAccount();
     }
 
     @Programmatic
     @Override
-    public void setDomainObject(final Payment domainObject) {
-        setPayment(domainObject);
+    public void setDomainObject(final BankAccount domainObject) {
+        setBankAccount(domainObject);
     }
 
     @DomainService(
             nature = NatureOfService.DOMAIN,
-            repositoryFor = PaymentApprovalStateTransition.class
+            repositoryFor = BankAccountVerificationStateTransition.class
     )
     public static class Repository
             extends StateTransitionRepositoryAbstract<
-                    Payment,
-            PaymentApprovalStateTransition,
-            PaymentApprovalStateTransitionType,
-            PaymentApprovalState> {
+            BankAccount,
+            BankAccountVerificationStateTransition,
+            BankAccountVerificationStateTransitionType,
+            BankAccountVerificationState> {
 
         public Repository() {
-            super(PaymentApprovalStateTransition.class);
+            super(BankAccountVerificationStateTransition.class);
         }
 
     }
