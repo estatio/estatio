@@ -303,3 +303,68 @@ digraph {
   ARCHITECT [label="{<f0> LEGAL|<f1> value=75,000}" ];
 }
 ----
+
+== State charts
+
+[plantuml,state-charts,png]
+--
+
+state "IncomingDocumentCategorisationStateTransitionType" as id_c {
+    state "NEW" as id_c_new
+    state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as id_c_caawp
+    state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as id_c_awde
+
+    [*] --> id_c_new: INSTANTIATING
+    id_c_new --> id_c_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
+    id_c_caawp --> id_c_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
+}
+
+[*] --> id_c
+id_c_awde --> ii : IncomingDocumentToIncomingInvoiceSubscriber
+
+state "IncomingInvoice\nProcessing" as ii {
+
+    state "IncomingInvoice\nApproval\nStateTransitionType" as ii_a {
+        state "NEW" as ii_a_new
+        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as ii_a_abcd
+        state "APPROVED_BY_ \n TREASURER" as ii_a_abt
+        state "PAID" as ii_a_p
+
+        [*] --> ii_a_new : INSTANTIATE
+
+        state "IncomingInvoice\nLocalApproval" as ii_a_la {
+            state "APPROVED_BY_ \n PROJECT_MANAGER" as ii_a_la_abpm
+            state "APPROVED_BY_ \n ASSET_MANAGER" as ii_a_la_abam
+            [*] -down-> ii_a_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            [*] -down->  ii_a_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+        }
+
+        ii_a_new --> ii_a_la
+        ii_a_la --> ii_a_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+        ii_a_abcd --> ii_a_abt : APPROVE_AS_\nTREASURER
+        ii_a_abt --> ii_a_p : PAY
+
+    }
+    [*] --> ii_a
+    ||
+    state "IncomingInvoice\nBankAccountConfirmation\nStateTransitionType" as ii_b {
+        state "PENDING" as ii_b_pending
+        state "CONFIRMED" as ii_b_confirmed
+
+        [*] --> ii_b_pending: INSTANTIATE
+        ii_b_pending --> ii_b_confirmed: CONFIRM
+
+    }
+    [*] --> ii_b
+
+}
+
+state "BankAccount\nConfirmation\nStateTransitionType" as ba_c {
+    state "BankAccountPending" as ba_c_pending
+    state "BankAccountConfirmed" as ba_c_confirmed
+    [*] --> ba_c_pending
+    ba_c_pending --> ba_c_confirmed
+}
+
+
+--
