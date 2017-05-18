@@ -109,11 +109,14 @@ class ServiceChargeBudgetItem #lightgreen implements FinancialItem {
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 class Party #lightgreen {
+
 }
 note right #lightgray: eventually expect Party\nto also be 1 or 2 dimensions\n(debtor and/or creditor)
 
 Party "\n\n\nbuyer" <-- Invoice
 Party "\n\n\n  seller" <-- Invoice
+
+
 
 
 ''''''''''''''''''''''''''''''''''''''''''''''
@@ -156,19 +159,42 @@ abstract class Invoice #pink {
     amount: BigDecimal
 }
 
+enum PaymentMethod #cyan  {
+    DIRECT_DEBIT,
+    BILLING_ACCOUNT,
+    BANK_TRANSFER,
+    CASH,
+    CHEQUE
+}
+
+
 class IncomingInvoice #pink extends Invoice  {
     received: LocalDate
-    paymentMethod
     status
 }
+
+class BankAccount #lightgreen {
+
+}
+
 
 
 class IncomingInvoiceItem #pink  implements FinancialItem  {
 }
 
 
-IncomingInvoice *---> "1..*" IncomingInvoiceItem
+class OrderItemInvoiceItemLink #pink {
 
+}
+
+IncomingInvoiceItem <--- OrderItemInvoiceItemLink
+OrderItem <--- OrderItemInvoiceItemLink
+
+IncomingInvoice *---> "1..*" IncomingInvoiceItem
+PaymentMethod <--- IncomingInvoice
+
+
+BankAccount <-- IncomingInvoice
 
 
 class Document #lightgreen {
@@ -184,13 +210,23 @@ Document <-- "0..1         " PaperclipForIncomingInvoice
 IncomingInvoice <-- PaperclipForIncomingInvoice
 
 
-class PaymentLine #lightgray {
+''''''''''''''''''''''''''''''''''''''''''''''
+
+
+class Payment #lightgreen {
+    amount: BigDecimal
+    paidOn: LocalDate
 }
+note right #lightgray: payment method\nnot necessarily\nsame as that\nof invoice
 
 
-IncomingInvoice --> "0..* " PaymentLine
+IncomingInvoice <--- "0..* " Payment
 
-OrderItem <-- IncomingInvoiceItem
+PaymentMethod <--- Payment
+
+
+
+
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 
