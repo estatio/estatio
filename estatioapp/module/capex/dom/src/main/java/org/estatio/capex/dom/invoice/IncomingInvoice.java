@@ -168,7 +168,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private IncomingInvoice isCreditFor;
+    private IncomingInvoice relatesTo;
 
     // need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
