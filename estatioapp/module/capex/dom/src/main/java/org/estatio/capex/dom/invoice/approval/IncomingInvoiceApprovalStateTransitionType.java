@@ -85,8 +85,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             Arrays.asList(
                     IncomingInvoiceApprovalState.NEW,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR),
+                    IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.CANCELLED
     );
 

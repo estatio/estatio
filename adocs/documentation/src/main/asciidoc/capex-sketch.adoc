@@ -327,26 +327,25 @@ state "Invoice Approval" as a {
 
     state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
-        state "Approval" as iia_a {
-            state "NEW" as iia_a_new
-            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_a_abpm
-            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_a_abam
-            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_a_abcd
+        state "Local Approval" as iia_la {
+            state "NEW" as iia_la_new
+            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_la_abpm
+            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
 
-            [*] --> iia_a_new : INSTANTIATE
-            iia_a_new --> iia_a_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            iia_a_new --> iia_a_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
-            iia_a_abpm --> iia_a_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-            iia_a_abam --> iia_a_abcd
-            iia_a_abcd --> [*]
+            [*] --> iia_la_new : INSTANTIATE
+            iia_la_new --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            iia_la_new --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
         }
+        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
         state "CANCELLED" as iia_cancelled
 
-        [*] --> iia_a
-        iia_a --> iia_cancelled : CANCEL
-        iia_a --> [*]
+        [*] --> iia_la
+        iia_la_abam --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+        iia_la_abpm --> iia_abcd
+        iia_la --> iia_cancelled : CANCEL
     }
     [*] --> iia
+    iia_abcd --> [*]
     ||
     state "BankAccount\nVerification\nStateTransitionType" as bbv {
         state "PENDING" as bbv_pending
@@ -359,6 +358,7 @@ state "Invoice Approval" as a {
         bbv_verified --> [*]
     }
     [*] --> bbv : [new bank account to verify]
+    bbv --> [*]
 }
 
 state "PaymentProcessing" as pp {
@@ -371,6 +371,7 @@ state "PaymentProcessing" as pp {
     pp_new --> pp_c : CANCEL
     pp_abt --> [*]
 }
+pp -down-> [*]
 
 a --> pp : PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalStateTransition
 --
