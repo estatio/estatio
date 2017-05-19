@@ -52,10 +52,18 @@
                 <ns2:property id="branchCode"/>
                 <ns2:property id="accountNumber"/>
             </ns2:fieldSet>
-            <ns2:collection id="fixedAssets"/>
         </col>
-        <col span="12" unreferencedCollections="true">
-
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row>
+                        <col span="12">
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
     </row>
 </grid>

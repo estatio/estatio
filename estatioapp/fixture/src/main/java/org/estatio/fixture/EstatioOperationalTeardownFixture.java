@@ -73,6 +73,7 @@ import org.estatio.dom.event.EventSourceLink;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.PaperclipForBankAccount;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceAttribute;
@@ -140,7 +141,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 //        deleteFrom(IncomingInvoiceItem.class);
 //        deleteFrom(IncomingInvoice.class);
 
-        deleteFrom(BankAccountVerificationStateTransition.class);
+
         deleteFrom(PaymentApprovalStateTransition.class);
         deleteFrom(Payment.class);
         deleteFrom(IncomingInvoiceApprovalStateTransition.class);
@@ -180,6 +181,8 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(LeaseType.class);
         deleteFrom(BankMandate.class);
 
+        deleteFrom(BankAccountVerificationStateTransition.class);
+        deleteFrom(PaperclipForBankAccount.class);
         deleteFrom(FinancialAccountTransaction.class);
         deleteFrom(BankAccount.class);
         deleteFrom(FixedAssetFinancialAccount.class);
