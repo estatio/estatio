@@ -480,7 +480,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(3);
+            assertThat(transitions.size()).isEqualTo(2);
             assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR)).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
             completedTransition =
