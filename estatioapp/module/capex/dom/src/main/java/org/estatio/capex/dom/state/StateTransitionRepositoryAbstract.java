@@ -11,7 +11,6 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -88,7 +87,7 @@ public abstract class StateTransitionRepositoryAbstract<
         if (taskAssignToIfAny == null) {
             return null;
         }
-        final String transitionObjectType = metaModelService3.toObjectType(IncomingInvoiceApprovalStateTransition.class);
+        final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
         final Task task = new Task(taskAssignToIfAny, taskDescription, transitionObjectType);
         repositoryService.persist(task);
         return task;
