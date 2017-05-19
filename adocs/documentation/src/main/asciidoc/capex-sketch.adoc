@@ -317,61 +317,81 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
     [*] --> idc_new: INSTANTIATING
     idc_new --> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
     idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
-    idc_awde -down-> [*]
 }
+
+state "BankAccount\nVerification\nStateTransitionType" as bbv {
+    state "PENDING" as bbv_pending
+    state "VERIFIED" as bbv_verified
+    state "CANCELLED" as bbv_cancelled
+
+    [*] --> bbv_pending: INSTANTIATE
+    bbv_pending --> bbv_verified: VERIFY_\nBANK_ACCOUNT
+    bbv_pending --> bbv_cancelled: CANCEL
+    bbv_verified --> [*]
+}
+idc_caawp --right--> bbv : [new bank account to verify]
+
 
 [*] --> idc
-idc --> a : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
+idc_awde --> iip : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
 
-state "Invoice Approval" as a {
+state "IncomingInvoicePayableStateTransitionType" as iip {
 
-    state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
+    state "NOT_PAYABLE" as av {
 
-        state "Local Approval" as iia_la {
-            state "NEW" as iia_la_new
-            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_la_abpm
-            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
+        state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
-            [*] --> iia_la_new : INSTANTIATE
-            iia_la_new --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            iia_la_new --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+            state "Local Approval" as iia_la {
+                state "NEW" as iia_la_new
+                state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_la_abpm
+                state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
+
+                [*] --> iia_la_new : INSTANTIATE
+                iia_la_new --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+                iia_la_new --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+            }
+            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+            state "CANCELLED" as iia_cancelled
+
+            [*] --> iia_la
+            iia_la_abam --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+            iia_la_abpm --> iia_abcd
+            iia_la --> iia_cancelled : CANCEL
         }
-        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
-        state "CANCELLED" as iia_cancelled
+        [*] --> iia
+        iia_abcd --> [*]
+        ||
+        state "IncomingInvoice\nBankAccountCheck\nStateTransitionType" as iib {
+            state "PENDING" as iib_pending
+            state "CHECKED" as iib_checked
 
-        [*] --> iia_la
-        iia_la_abam --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-        iia_la_abpm --> iia_abcd
-        iia_la --> iia_cancelled : CANCEL
-    }
-    [*] --> iia
-    iia_abcd --> [*]
-    ||
-    state "BankAccount\nVerification\nStateTransitionType" as bbv {
-        state "PENDING" as bbv_pending
-        state "VERIFIED" as bbv_verified
-        state "CANCELLED" as bbv_cancelled
+            [*] --> iib_pending: INSTANTIATE
+            iib_pending --> iib_checked: ATTACH_EVIDENCE
+            iib_checked --> [*]
+        }
 
-        [*] --> bbv_pending: INSTANTIATE
-        bbv_pending --> bbv_verified: VERIFY_\nBANK_ACCOUNT
-        bbv_pending --> bbv_cancelled: CANCEL
-        bbv_verified --> [*]
+        [*] --> iib
+        iib --> [*]
     }
-    [*] --> bbv : [new bank account to verify]
-    bbv --> [*]
+    state "AWAITING_\nAPPROVAL" as iia_wa
+    state "AWAITING_\nCHECK" as iia_wb
+    state "PAYABLE" as iia_payable
+
+    av --> iia_wa : [invoice not yet approved]
+    av --> iia_wb : [bank account not yet checked]
+    iia_wa --> iia_payable: [invoice\napproved by CD]
+    iia_wb --> iia_payable: [bank account\nchecked]
+    av --> iia_payable: [approved by CD &&\nbank account checked]
+
+    note right of iia_payable #lightgrey
+      IncomingInvoicePayableSubscriber
+      automatically transitions to AWAITING or PAYABLE states,
+      based on upstream events from
+      IncomingInvoiceApprovalStateTransitionType or
+      IncomingInvoiceBankAccountCheckStateTransitionType
+    end note
+
+    [*] --> av
 }
 
-state "PaymentProcessing" as pp {
-    state "NEW" as pp_new
-    state "APPROVED_BY_ \n TREASURER" as pp_abt
-    state "CANCELLED" as pp_c
-
-    [*] --> pp_new : INSTANTIATE
-    pp_new --> pp_abt : APPROVE_AS_\nTREASURER\n[bank account verified]
-    pp_new --> pp_c : CANCEL
-    pp_abt --> [*]
-}
-pp -down-> [*]
-
-a --> pp : PaymentApprovalInitiatorSubscribingToIncomingInvoiceApprovalStateTransition
 --
