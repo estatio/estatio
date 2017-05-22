@@ -57,7 +57,12 @@ import lombok.Setter;
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE invoiceNumber == :invoiceNumber ")
+                        + "WHERE invoiceNumber == :invoiceNumber "),
+        @Query(
+                name = "findByBankAccount", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE bankAccount == :bankAccount ")
 })
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
@@ -124,7 +129,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
 
     @Programmatic
     public void addItem(
-            final IncomingInvoice invoice,
+            final IncomingInvoice invoice,   // REVIEW: this looks odd; why isn't this just gonna use 'this'?
             // this should be an incoming charge
             final Charge charge,
             final String description,

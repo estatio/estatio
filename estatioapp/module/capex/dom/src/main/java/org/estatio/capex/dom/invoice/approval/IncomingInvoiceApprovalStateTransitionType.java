@@ -34,13 +34,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
             IncomingInvoiceApprovalState.NEW,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()),
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    ),
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER)) {
+            TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER), StateTransitionStrategy.Util.next()
+    ) {
         @Override
         public boolean canApply(
                 final IncomingInvoice domainObject,
@@ -51,8 +51,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER)) {
+            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER), StateTransitionStrategy.Util.next()
+    ) {
         @Override
         public boolean canApply(
                 final IncomingInvoice domainObject,
@@ -65,16 +65,24 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR)),
+            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR),
+            StateTransitionStrategy.Util.next()
+    ),
+    CHECK_BANK_ACCOUNT(
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            IncomingInvoiceApprovalState.PAYABLE,
+            TaskAssignmentStrategy.Util.none(),
+            StateTransitionStrategy.Util.none()
+    ),
     CANCEL(
             Arrays.asList(
                     IncomingInvoiceApprovalState.NEW,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.CANCELLED,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none());
+            TaskAssignmentStrategy.Util.none(),
+            StateTransitionStrategy.Util.none()
+    );
 
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;
@@ -84,8 +92,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     IncomingInvoiceApprovalStateTransitionType(
             final List<IncomingInvoiceApprovalState> fromState,
             final IncomingInvoiceApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -95,10 +103,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
     IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
             final IncomingInvoiceApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy);
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
+                stateTransitionStrategy
+        );
     }
 
     public static class TransitionEvent

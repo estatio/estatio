@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
 
-@Mixin
+@Mixin(method="act")
 public class Payment_cancel extends Payment_abstractTransition {
 
     public Payment_cancel(Payment payment) {
@@ -18,8 +18,8 @@ public class Payment_cancel extends Payment_abstractTransition {
 
     @Action()
     @MemberOrder(sequence = "9")
-    public Payment $$(@Nullable final String comment) {
-        return super.$$(comment);
+    public Payment act(@Nullable final String comment) {
+        return super.act(comment);
     }
 
 

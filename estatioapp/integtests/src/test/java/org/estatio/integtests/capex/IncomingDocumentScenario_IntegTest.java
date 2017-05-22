@@ -501,8 +501,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(paymentStateTransitionRepository.findByDomainObject(newPayment).size()).isEqualTo(2);
             PaymentApprovalStateTransition transitionForPayment = paymentStateTransitionRepository.findByDomainObject(newPayment).get(0);
             assertThat(transitionForPayment.getTransitionType()).isEqualTo(PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER);
-      }
-
+        }
 
     }
 

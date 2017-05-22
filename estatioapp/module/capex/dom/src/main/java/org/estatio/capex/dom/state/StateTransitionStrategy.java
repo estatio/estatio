@@ -56,7 +56,7 @@ public interface StateTransitionStrategy<
                 for (STT candidateNextTransitionType : allTransitionsTypes) {
 
                     if (!stateTransitionService
-                            .canApplyFromState(domainObject, candidateNextTransitionType, currentState)) {
+                            .canTriggerFromState(domainObject, candidateNextTransitionType, currentState)) {
                         continue;
                     }
                     return candidateNextTransitionType;

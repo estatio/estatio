@@ -33,18 +33,18 @@ public enum PaymentApprovalStateTransitionType
     INSTANTIATE(
             (PaymentApprovalState)null,
             PaymentApprovalState.NEW,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()),
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    ),
     APPROVE_AS_TREASURER(
             PaymentApprovalState.NEW,
             PaymentApprovalState.APPROVED_BY_TREASURER,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)),
+            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER), StateTransitionStrategy.Util.none()
+    ),
     CANCEL(
             PaymentApprovalState.NEW,
             PaymentApprovalState.CANCELLED,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none());
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
+    );
 
     private final List<PaymentApprovalState> fromStates;
     private final PaymentApprovalState toState;
@@ -54,8 +54,9 @@ public enum PaymentApprovalStateTransitionType
     PaymentApprovalStateTransitionType(
             final List<PaymentApprovalState> fromState,
             final PaymentApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+
+            final StateTransitionStrategy stateTransitionStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -65,10 +66,11 @@ public enum PaymentApprovalStateTransitionType
     PaymentApprovalStateTransitionType(
             final PaymentApprovalState fromState,
             final PaymentApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy);
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
+                stateTransitionStrategy
+        );
     }
 
     public static class TransitionEvent

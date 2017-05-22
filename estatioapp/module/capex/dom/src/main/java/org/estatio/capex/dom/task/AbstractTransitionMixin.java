@@ -27,12 +27,12 @@ public abstract class AbstractTransitionMixin<
 
     @Action()
     public DO act(@Nullable final String comment) {
-        stateTransitionService.apply(domainObject, transitionType, comment);
+        stateTransitionService.trigger(domainObject, transitionType, comment);
         return domainObject;
     }
 
     public boolean hideAct() {
-        return !stateTransitionService.canApply(domainObject, transitionType);
+        return !stateTransitionService.canTrigger(domainObject, transitionType);
     }
 
     @Inject

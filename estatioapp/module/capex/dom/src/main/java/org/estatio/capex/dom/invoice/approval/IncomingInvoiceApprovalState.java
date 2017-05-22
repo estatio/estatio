@@ -7,5 +7,6 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     APPROVED_BY_ASSET_MANAGER,
     APPROVED_BY_PROJECT_MANAGER,
     APPROVED_BY_COUNTRY_DIRECTOR,
+    PAYABLE,
     CANCELLED
 }

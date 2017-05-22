@@ -11,17 +11,17 @@ import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class BankAccountVerificationStateSubscribers extends AbstractSubscriber {
+public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
 
     @com.google.common.eventbus.Subscribe
     public void toInstantiateWhen(BankAccount.PersistedLifecycleEvent ev) {
-        stateTransitionService.apply(ev.getSource(), BankAccountVerificationStateTransitionType.INSTANTIATE, null);
+        stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.INSTANTIATE, null);
     }
 
     @com.google.common.eventbus.Subscribe
     public void toResetWhen(BankAccount.ChangeEvent ev) {
         if(ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {
-            stateTransitionService.apply(ev.getSource(), BankAccountVerificationStateTransitionType.RESET, null);
+            stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.RESET, null);
         }
     }
 

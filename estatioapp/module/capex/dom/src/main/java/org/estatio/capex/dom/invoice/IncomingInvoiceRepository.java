@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -34,6 +36,15 @@ public class IncomingInvoiceRepository {
                         IncomingInvoice.class,
                         "findByInvoiceNumber",
                         "invoiceNumber", invoiceNumber));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findByBankAccount(final BankAccount bankAccount) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByBankAccount",
+                        "bankAccount", bankAccount));
     }
 
     @Programmatic

@@ -35,18 +35,18 @@ public enum BankAccountVerificationStateTransitionType
     INSTANTIATE(
             (BankAccountVerificationState)null,
             BankAccountVerificationState.PENDING,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()),
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    ),
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.PENDING,
             BankAccountVerificationState.VERIFIED,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)),
+            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER), StateTransitionStrategy.Util.none()
+    ),
     CANCEL(
             BankAccountVerificationState.PENDING,
             BankAccountVerificationState.CANCELLED,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none()),
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
+    ),
     RESET(
             Lists.newArrayList(
                     BankAccountVerificationState.PENDING,
@@ -54,8 +54,8 @@ public enum BankAccountVerificationStateTransitionType
                     BankAccountVerificationState.CANCELLED
             ),
             BankAccountVerificationState.PENDING,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none());
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    );
 
     private final List<BankAccountVerificationState> fromStates;
     private final BankAccountVerificationState toState;
@@ -65,8 +65,8 @@ public enum BankAccountVerificationStateTransitionType
     BankAccountVerificationStateTransitionType(
             final List<BankAccountVerificationState> fromState,
             final BankAccountVerificationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -76,19 +76,20 @@ public enum BankAccountVerificationStateTransitionType
     BankAccountVerificationStateTransitionType(
             final BankAccountVerificationState fromState,
             final BankAccountVerificationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy);
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
+                stateTransitionStrategy
+        );
     }
 
-    public static class BankAccountVerificationTransitionEvent
+    public static class TransitionEvent
             extends StateTransitionEvent<
                         BankAccount,
                         BankAccountVerificationStateTransition,
                         BankAccountVerificationStateTransitionType,
                         BankAccountVerificationState> {
-        public BankAccountVerificationTransitionEvent(
+        public TransitionEvent(
                 final BankAccount domainObject,
                 final BankAccountVerificationStateTransition stateTransitionIfAny,
                 final BankAccountVerificationStateTransitionType transitionType) {
@@ -102,10 +103,10 @@ public enum BankAccountVerificationStateTransitionType
     }
 
     @Override
-    public BankAccountVerificationTransitionEvent newStateTransitionEvent(
+    public TransitionEvent newStateTransitionEvent(
             final BankAccount domainObject,
             final BankAccountVerificationStateTransition pendingTransitionIfAny) {
-        return new BankAccountVerificationTransitionEvent(domainObject, pendingTransitionIfAny, this);
+        return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
     @Override

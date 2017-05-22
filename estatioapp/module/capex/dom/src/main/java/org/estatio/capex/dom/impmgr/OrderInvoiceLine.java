@@ -299,7 +299,7 @@ public class OrderInvoiceLine {
                         dueDate, startDate, endDate, property, project);
 
                 // assume these are not yet approved, so create as 'NEW'
-                stateTransitionService.apply(
+                stateTransitionService.trigger(
                         invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
 
             }

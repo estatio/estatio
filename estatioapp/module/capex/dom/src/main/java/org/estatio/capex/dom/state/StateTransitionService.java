@@ -55,12 +55,12 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > boolean canApply(
+    > boolean canTrigger(
             final DO domainObject,
             final STT candidateTransitionType) {
 
         final S currentStateIfAny = currentStateOf(domainObject, candidateTransitionType);
-        return canApplyFromState(domainObject, candidateTransitionType, currentStateIfAny);
+        return canTriggerFromState(domainObject, candidateTransitionType, currentStateIfAny);
     }
 
     @Programmatic
@@ -69,7 +69,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    >  boolean canApplyFromState(
+    >  boolean canTriggerFromState(
             final DO domainObject,
             final STT candidateTransitionType,
             final S currentStateIfAny) {
@@ -218,7 +218,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > ST apply(
+            > ST trigger(
             final ST stateTransition,
             final String comment) {
 
@@ -228,7 +228,7 @@ public class StateTransitionService {
 
         final DO domainObject = stateTransition.getDomainObject();
         final STT transitionType = stateTransition.getTransitionType();
-        return apply(domainObject, transitionType, comment);
+        return trigger(domainObject, transitionType, comment);
     }
 
     /**
@@ -244,7 +244,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > ST apply(
+    > ST trigger(
             final DO domainObject,
             final STT requiredTransitionType,
             final String comment) {
@@ -335,6 +335,7 @@ public class StateTransitionService {
 
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(event);
+
 
         return nextTransition;
     }

@@ -34,18 +34,18 @@ public enum IncomingDocumentCategorisationStateTransitionType
     INSTANTIATING(
             (IncomingDocumentCategorisationState)null,
             IncomingDocumentCategorisationState.NEW,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()),
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    ),
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM)),
+            TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM), StateTransitionStrategy.Util.next()
+    ),
     ASSOCIATE_WITH_DOMAIN_ENTITY(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.USER));
+            TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.none()
+    );
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;
@@ -55,8 +55,8 @@ public enum IncomingDocumentCategorisationStateTransitionType
     IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
             final IncomingDocumentCategorisationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -66,10 +66,11 @@ public enum IncomingDocumentCategorisationStateTransitionType
     IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
             final IncomingDocumentCategorisationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy);
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final StateTransitionStrategy stateTransitionStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
+                stateTransitionStrategy
+        );
     }
 
     @Override

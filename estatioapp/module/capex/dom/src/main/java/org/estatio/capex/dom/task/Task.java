@@ -128,7 +128,7 @@ public class Task implements Comparable<Task> {
                 final String comment) {
             ST stateTransition = stateTransitionService.findFor(task);
             DO domainObject = stateTransition.getDomainObject();
-            stateTransitionService.apply(stateTransition, comment);
+            stateTransitionService.trigger(stateTransition, comment);
             return domainObject;
         }
         public String disableAct() {

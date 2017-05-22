@@ -29,11 +29,11 @@ state "BankAccount\nVerification\nStateTransitionType" as bbv {
 
 }
 
-idc_caawp -right-> bbv : [new bank account to verify]
+idc_caawp -right-> bbv : [new bank account to verify] BankAccountVerificationStateSubscriber
 
 
 [*] -> idc
-idc_awde -> iia : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
+idc_awde -> iia : IncomingInvoiceApprovalStateSubscriber
 
 
 
@@ -59,10 +59,11 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
     state "PAYABLE" as iia_payable
     state "CANCELLED" as iia_cancelled
 
-    iia_abcd --> iia_payable : CHECK_\nBANK_ACCOUNT
+    iia_abcd --> iia_payable : CHECK_\nBANK_ACCOUNT [if bank account verified]
     iia_a --> iia_cancelled : CANCEL
 
 }
+bbv_verified --> iia_payable: IncomingInvoiceApprovalStateSubscriber
 iia_payable --> [*]
 
 --
