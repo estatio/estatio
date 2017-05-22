@@ -21,6 +21,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_categorizeAsInvoice;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_categorizeAsOrder;
@@ -68,6 +69,8 @@ import org.estatio.fixture.documents.incoming.IncomingPdfFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.NEW;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 
 public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
@@ -402,13 +405,12 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // transitions
             final List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(1);
+            assertThat(transitions.size()).isEqualTo(2);
             final IncomingInvoiceApprovalStateTransition transition = transitions.get(0);
             assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
-            assertThat(transition.getFromState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
-            assertThat(transition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER);
+
+            assertTransition(transition, NEW, APPROVE_AS_ASSET_MANAGER, null);
             assertThat(transition.getCreatedOn()).isNotNull();
-            assertThat(transition.getToState()).isNull();
             assertThat(transition.getCompletedOn()).isNull();
             assertThat(transition.isCompleted()).isFalse();
 
@@ -427,9 +429,11 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(1);
+            assertThat(transitions.size()).isEqualTo(2);
             final IncomingInvoiceApprovalStateTransition transition1 = transitions.get(0);
 
+            // when
+            getFixtureClock().addTime(0,1);
             final IncomingInvoice_approveAsAssetManager _approveAsAssetMgr = wrap(
                     mixin(IncomingInvoice_approveAsAssetManager.class, invoiceCreated));
 
@@ -449,7 +453,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(2);
+            assertThat(transitions.size()).isEqualTo(3);
 
             IncomingInvoiceApprovalStateTransition completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
@@ -468,6 +472,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(nextTransition.getTask().isCompleted()).isFalse();
 
             // and when (LAST transition)
+            getFixtureClock().addTime(0,1);
             final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(
                     mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
 
@@ -480,7 +485,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(2);
+            assertThat(transitions.size()).isEqualTo(3);
             assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR)).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
             completedTransition =
@@ -493,12 +498,36 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(newPayment.getInvoice()).isEqualTo(invoiceCreated);
             assertThat(newPayment.getPaymentMethod()).isEqualTo(invoiceCreated.getPaymentMethod());
 
-            assertThat(paymentStateTransitionRepository.findByDomainObject(newPayment).size()).isEqualTo(1);
+            assertThat(paymentStateTransitionRepository.findByDomainObject(newPayment).size()).isEqualTo(2);
             PaymentApprovalStateTransition transitionForPayment = paymentStateTransitionRepository.findByDomainObject(newPayment).get(0);
             assertThat(transitionForPayment.getTransitionType()).isEqualTo(PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER);
       }
 
 
+    }
+
+    static void assertTransition(
+            final IncomingInvoiceApprovalStateTransition transition,
+            final IncomingInvoiceApprovalState from,
+            final IncomingInvoiceApprovalStateTransitionType type,
+            final IncomingInvoiceApprovalState to) {
+
+        assertThat(transition.getTransitionType()).isEqualTo(type);
+        if(from != null) {
+            assertThat(transition.getFromState()).isEqualTo(from);
+        } else {
+            assertThat(transition.getFromState()).isNull();
+        }
+        if(to != null) {
+            assertThat(transition.getToState()).isEqualTo(to);
+        } else {
+            assertThat(transition.getToState()).isNull();
+        }
+    }
+
+    void assertState(final BankAccount bankAccount, final IncomingInvoiceApprovalState expected) {
+        assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
+                expected);
     }
 
     @Inject PaymentApprovalStateTransition.Repository paymentStateTransitionRepository;
