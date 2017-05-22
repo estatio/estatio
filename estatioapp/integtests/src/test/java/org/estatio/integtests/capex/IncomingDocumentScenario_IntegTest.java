@@ -39,10 +39,8 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
-import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.invoice.payment.PaymentRepository;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -485,22 +483,13 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(3);
+            assertThat(transitions.size()).isEqualTo(4);
             assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR)).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
             completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
             assertThat(nextTransition).isSameAs(completedTransition);
 
-            assertThat(paymentRepository.findByInvoice(invoiceCreated).size()).isEqualTo(1);
-            Payment newPayment = paymentRepository.findByInvoice(invoiceCreated).get(0);
-            assertThat(newPayment.getAmount()).isEqualTo(invoiceCreated.getGrossAmount());
-            assertThat(newPayment.getInvoice()).isEqualTo(invoiceCreated);
-            assertThat(newPayment.getPaymentMethod()).isEqualTo(invoiceCreated.getPaymentMethod());
-
-            assertThat(paymentStateTransitionRepository.findByDomainObject(newPayment).size()).isEqualTo(2);
-            PaymentApprovalStateTransition transitionForPayment = paymentStateTransitionRepository.findByDomainObject(newPayment).get(0);
-            assertThat(transitionForPayment.getTransitionType()).isEqualTo(PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER);
         }
 
     }
