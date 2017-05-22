@@ -101,7 +101,7 @@ public class BankAccount
     @Getter @Setter
     private String bic;
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @Action(semantics = SemanticsOf.IDEMPOTENT, domainEvent = BankAccount.ChangeEvent.class)
     public BankAccount change(
             @ParameterLayout(typicalLength = IbanType.Meta.MAX_LEN)
             final String iban,
@@ -159,6 +159,13 @@ public class BankAccount
         private static final long serialVersionUID = 1L;
     }
 
+    public static class ChangeEvent extends ActionDomainEvent<BankAccount> {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public static class CreateEvent extends ActionDomainEvent<BankAccount> {
+        private static final long serialVersionUID = 1L;
+    }
 
     public static class AccountNumberType {
 

@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -42,7 +43,7 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
         super(BankAccountRepository.class, BankAccount.class);
     }
 
-    @Programmatic
+    @Action(domainEvent = BankAccount.CreateEvent.class)
     public BankAccount newBankAccount(
             final Party owner,
             final String iban,
