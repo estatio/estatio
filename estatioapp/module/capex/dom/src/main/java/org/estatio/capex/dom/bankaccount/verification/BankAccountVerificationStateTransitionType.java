@@ -43,10 +43,7 @@ public enum BankAccountVerificationStateTransitionType
             StateTransitionStrategy.Util.none(),
             TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)),
     CANCEL(
-            Lists.newArrayList(
-                    BankAccountVerificationState.PENDING,
-                    BankAccountVerificationState.VERIFIED
-            ),
+            BankAccountVerificationState.PENDING,
             BankAccountVerificationState.CANCELLED,
             StateTransitionStrategy.Util.none(),
             TaskAssignmentStrategy.Util.none()),

@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -215,7 +216,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
         }
 
         @Test
-        public void cancel_when_verified() throws Exception {
+        public void cannot_cancel_when_verified() throws Exception {
 
             // given
             getFixtureClock().addTime(0,1);
@@ -228,18 +229,12 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitionsBefore.get(0), PENDING, VERIFY_BANK_ACCOUNT, VERIFIED);
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
+            // expect
+            expectedExceptions.expect(HiddenException.class);
+
             // when
             getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_cancel.class, this.bankAccount)).act(null);
-
-            // then
-            assertState(this.bankAccount, CANCELLED);
-
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(this.bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(3);
-            assertTransition(transitionsAfter.get(0), VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitionsAfter.get(1), PENDING, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitionsAfter.get(2), null, INSTANTIATE, PENDING);
         }
 
         @Test
