@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -27,7 +28,8 @@ import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev) {
         final StateTransitionEvent.Phase phase = ev.getPhase();
         if (phase == StateTransitionEvent.Phase.TRANSITIONED) {
@@ -63,7 +65,8 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         return null;
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(BankAccountVerificationStateTransitionType.TransitionEvent ev) {
         final StateTransitionEvent.Phase phase = ev.getPhase();
         if (phase == StateTransitionEvent.Phase.TRANSITIONED) {
@@ -93,7 +96,8 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         return incomingInvoiceRepository.findByBankAccount(bankAccount);
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoiceApprovalStateTransitionType.TransitionEvent ev) {
         final StateTransitionEvent.Phase phase = ev.getPhase();
         if (phase == StateTransitionEvent.Phase.TRANSITIONED) {

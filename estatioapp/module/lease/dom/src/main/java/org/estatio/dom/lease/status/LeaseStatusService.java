@@ -73,8 +73,8 @@ public class LeaseStatusService {
 
     // //////////////////////////////////////
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Lease.ResumeAllEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
@@ -84,8 +84,8 @@ public class LeaseStatusService {
         }
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Lease.SuspendAllEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
@@ -95,8 +95,8 @@ public class LeaseStatusService {
         }
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Lease.TerminateEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
@@ -106,8 +106,8 @@ public class LeaseStatusService {
         }
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Lease.ChangeDatesEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
@@ -119,8 +119,8 @@ public class LeaseStatusService {
 
     // //////////////////////////////////////
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(LeaseItem.ResumeEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
@@ -130,8 +130,8 @@ public class LeaseStatusService {
         }
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(LeaseItem.SuspendEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:

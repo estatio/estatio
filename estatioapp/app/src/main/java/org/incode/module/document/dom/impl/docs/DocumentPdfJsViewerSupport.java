@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.value.Blob;
@@ -58,7 +59,8 @@ public class DocumentPdfJsViewerSupport {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class DocumentBlobHideIfPdf extends AbstractSubscriber {
 
-        @com.google.common.eventbus.Subscribe
+        @Programmatic
+        @org.axonframework.eventhandling.annotation.EventHandler
         public void on(DocumentAbstract.BlobDomainEvent ev) {
             switch (ev.getEventPhase()) {
 

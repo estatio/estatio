@@ -39,8 +39,8 @@ public class BankAccountSubscriptions extends UdoDomainService<BankAccountSubscr
     }
 
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final BankAccount.RemoveEvent ev) {
         BankAccount sourceBankAccount = ev.getSource();
 

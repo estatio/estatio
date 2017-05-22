@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -23,7 +24,8 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
     // (think it's not a harm to have both, behaviour of STS is kinda idempotent).
     //
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoiceViewmodel_saveInvoice.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:

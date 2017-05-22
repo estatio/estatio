@@ -46,7 +46,7 @@ public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFacto
     // //////////////////////////////////////
 
     @Programmatic
-    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final IndexValue.UpdateEvent ev) {
         for (LeaseTermForIndexable term : findByIndexAndDate(ev.getSource().getIndexBase().getIndex(), ev.getSource().getStartDate())) {
             term.verify();

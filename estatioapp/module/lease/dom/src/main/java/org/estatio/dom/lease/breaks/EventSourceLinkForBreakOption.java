@@ -46,7 +46,7 @@ public class EventSourceLinkForBreakOption extends EventSourceLink {
     public static class InstantiationSubscriber extends AbstractSubscriber {
 
         @Programmatic
-        @com.google.common.eventbus.Subscribe
+        @org.axonframework.eventhandling.annotation.EventHandler
         public void on(final InstantiateEvent ev) {
             if(ev.getPolymorphicReference() instanceof BreakOption) {
                 ev.setSubtype(EventSourceLinkForBreakOption.class);

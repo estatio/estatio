@@ -40,8 +40,8 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
         super(PartySubscriptions.class);
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();

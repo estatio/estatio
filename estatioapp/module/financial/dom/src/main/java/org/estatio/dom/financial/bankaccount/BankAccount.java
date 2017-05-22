@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
+import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -58,6 +59,7 @@ import lombok.Setter;
 @DomainObject(editing = Editing.DISABLED
         , persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class
         , updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class
+        , removingLifecycleEvent = BankAccount.RemovingLifecycleEvent.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
@@ -66,6 +68,7 @@ public class BankAccount
 
     public static class PersistedLifecycleEvent extends ObjectPersistedEvent<BankAccount> {}
     public static class UpdatedLifecycleEvent extends ObjectUpdatedEvent<BankAccount> {}
+    public static class RemovingLifecycleEvent extends ObjectRemovingEvent<BankAccount> {}
 
     @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter

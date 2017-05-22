@@ -6,21 +6,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -36,16 +34,13 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoice_approvalState;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsProjectManager;
-import org.estatio.capex.dom.invoice.payment.PaymentRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.state.StateTransitionEvent;
-import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -90,6 +85,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
     @Before
     public void setupData() {
+
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
@@ -99,6 +95,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
                 executionContext.executeChild(this, new IncomingPdfFixture());
             }
         });
+
+        TickingFixtureClock.replaceExisting();
     }
 
     @Before
@@ -131,6 +129,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         assertThat(incomingInvoice).isNotNull();
         assertState(bankAccount, PENDING);
+
+    }
+
+    @After
+    public void tearDown() {
+        TickingFixtureClock.reinstateExisting();
     }
 
     @Test
@@ -194,7 +198,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NEW);
 
         // when
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
 
         // then
@@ -228,7 +231,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NEW);
 
         // when
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
 
         // then
@@ -256,7 +258,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         eventBusService.post(ev);
 
         // and given
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
 
         assertState(incomingInvoice, APPROVED_BY_PROJECT_MANAGER);
@@ -268,7 +269,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 
         // when
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
 
         // then
@@ -296,7 +296,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
 
         // and given
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
 
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
@@ -308,7 +307,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 
         // when
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
 
         // then
@@ -322,7 +320,6 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
     }
 
-    @Ignore() // not passing, we think, cos cannot nest event bus calls when using guava
     @Test
     public void approve_by_country_directory_once_approved_by_asset_manager_and_bank_account_is_verified() {
 
@@ -334,12 +331,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         eventBusService.post(ev);
 
         // and given the bank account is verified
-        getFixtureClock().addTime(0,1);
         wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
         assertState(bankAccount, VERIFIED);
 
         // and given
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
 
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
@@ -351,18 +346,17 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 
         // when
-        getFixtureClock().addTime(0,1);
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
 
         // then
-        assertState(incomingInvoice, PAYABLE);
-
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
         assertThat(transitionsAfter.size()).isEqualTo(4);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, PAYABLE);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
         assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
         assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+
+        assertState(incomingInvoice, PAYABLE);
 
     }
 
@@ -438,25 +432,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     CountryRepository countryRepository;
 
     @Inject
-    CurrencyRepository currencyRepository;
-
-    @Inject
     ChargeRepository chargeRepository;
 
     @Inject
-    DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    FactoryService factoryService;
-
-    @Inject
-    StateTransitionService stateTransitionService;
-
-    @Inject
     BankAccountRepository bankAccountRepository;
-
-    @Inject
-    PaymentRepository paymentRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;

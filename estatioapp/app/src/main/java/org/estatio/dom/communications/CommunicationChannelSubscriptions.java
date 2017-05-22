@@ -42,8 +42,8 @@ public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFac
     }
 
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();

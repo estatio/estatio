@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
@@ -42,7 +43,8 @@ public class CommunicationChannelSubscriptions extends UdoDomainService<Communic
         super(CommunicationChannelSubscriptions.class);
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final CommunicationChannel.RemoveEvent ev) {
         CommunicationChannel sourceCommunicationChannel = ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();

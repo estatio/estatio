@@ -3,6 +3,7 @@ package org.estatio.capex.dom.documents;
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.communications.dom.mixins.Document_communicationAttachments;
 import org.incode.module.communications.dom.mixins.Document_communications;
@@ -15,22 +16,26 @@ import org.estatio.dom.invoice.DocumentTypeData;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class HideSupportingDocumentsForIncomingInvoiceDocument extends AbstractSubscriber {
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(T_documents.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_backgroundCommands.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_communicationAttachments.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_communications.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }

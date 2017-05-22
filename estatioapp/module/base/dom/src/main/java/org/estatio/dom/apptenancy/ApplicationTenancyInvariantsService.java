@@ -55,20 +55,20 @@ public class ApplicationTenancyInvariantsService extends UdoDomainService<Applic
 
     // //////////////////////////////////////
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final ApplicationTenancyEventChanged ev) {
         on(ev, ApplicationTenancyEventChanged.class);
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final ApplicationTenancyEventMovedDown ev) {
         on(ev, ApplicationTenancyEventMovedDown.class);
     }
 
-    @com.google.common.eventbus.Subscribe
     @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final ApplicationTenancyEventMovedUp ev) {
         on(ev, ApplicationTenancyEventMovedUp.class);
     }

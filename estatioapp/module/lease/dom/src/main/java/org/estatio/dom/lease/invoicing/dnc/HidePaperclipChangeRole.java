@@ -22,13 +22,15 @@ package org.estatio.dom.lease.invoicing.dnc;
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class HidePaperclipChangeRole extends AbstractSubscriber {
 
-    @com.google.common.eventbus.Subscribe
+    @Programmatic
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Paperclip_changeRole.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {
         case HIDE:
