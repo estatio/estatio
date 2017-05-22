@@ -1,0 +1,65 @@
+= CAPEX State Charts
+:Notice: (c) 2017 Eurocommercial Properties Ltd.  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+:toc: right
+:_basedir: ./
+
+
+[plantuml,state-charts,png]
+--
+state "IncomingDocumentCategorisationStateTransitionType" as idc {
+    state "NEW" as idc_new
+    state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as idc_caawp
+    state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as idc_awde
+
+    [*] --> idc_new: INSTANTIATING
+    idc_new --> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
+    idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
+}
+
+state "BankAccount\nVerification\nStateTransitionType" as bbv {
+    state "PENDING" as bbv_pending
+    state "VERIFIED" as bbv_verified
+    state "CANCELLED" as bbv_cancelled
+
+    [*] --> bbv_pending: INSTANTIATE
+    bbv_pending --> bbv_verified: VERIFY_\nBANK_ACCOUNT
+    bbv_pending --> bbv_cancelled: CANCEL
+    bbv_verified --> [*]
+}
+idc_caawp --right--> bbv : [new bank account to verify]
+
+
+[*] --> idc
+idc_awde --> iia : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
+
+
+
+state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
+
+    state "Approval" as iia_a {
+        state "Local Approval" as iia_la {
+            state "NEW" as iia_la_new
+            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_la_abpm
+            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
+
+            [*] --> iia_la_new : INSTANTIATE
+            iia_la_new --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            iia_la_new --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+        }
+        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+
+        [*] --> iia_la
+        iia_la_abam --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+        iia_la_abpm --> iia_abcd
+
+    }
+    state "PAYABLE" as iia_payable
+    state "CANCELLED" as iia_cancelled
+
+    iia_abcd --> iia_payable : CHECK_\nBANK_ACCOUNT
+    iia_a --> iia_cancelled : CANCEL
+
+}
+iia_payable --> [*]
+
+--
