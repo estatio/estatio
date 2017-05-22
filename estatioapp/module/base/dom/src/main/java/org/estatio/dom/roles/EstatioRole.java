@@ -6,6 +6,7 @@ import org.apache.isis.applib.security.UserMemento;
 public enum EstatioRole {
 
     USER("estatio-user", "user"),
+    MAIL_ROOM("estatio-mailroom", "mailroom"),
     ADMINISTRATOR("estatio-admin", "admin"),
     COUNTRY_DIRECTOR("Country Director", "country_director"),
     ASSET_MANAGER("Asset Manager", "asset_manager"),

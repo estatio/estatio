@@ -433,7 +433,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             final IncomingInvoice_approveAsAssetManager _approveAsAssetMgr = wrap(
                     mixin(IncomingInvoice_approveAsAssetManager.class, invoiceCreated));
 
-            _approveAsAssetMgr.$$(null);
+            _approveAsAssetMgr.act(null);
             transactionService.nextTransaction();
 
             // then
@@ -472,7 +472,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
                     mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
 
             getFixtureClock().addTime(1,0); // time moves on
-            _approveAsCountryDirector.$$(null);
+            _approveAsCountryDirector.act(null);
             transactionService.nextTransaction();
 
             // then

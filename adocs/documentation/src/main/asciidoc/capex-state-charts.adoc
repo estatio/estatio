@@ -16,21 +16,24 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
     idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
 }
 
+
 state "BankAccount\nVerification\nStateTransitionType" as bbv {
     state "PENDING" as bbv_pending
     state "VERIFIED" as bbv_verified
     state "CANCELLED" as bbv_cancelled
 
-    [*] --> bbv_pending: INSTANTIATE
+    [*] -> bbv_pending: INSTANTIATE
     bbv_pending --> bbv_verified: VERIFY_\nBANK_ACCOUNT
-    bbv_pending --> bbv_cancelled: CANCEL
-    bbv_verified --> [*]
+    bbv_pending -> bbv_cancelled: CANCEL
+    bbv -down-> bbv_pending: RESET
+
 }
-idc_caawp --right--> bbv : [new bank account to verify]
+
+idc_caawp -right-> bbv : [new bank account to verify]
 
 
-[*] --> idc
-idc_awde --> iia : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
+[*] -> idc
+idc_awde -> iia : IncomingInvoiceApprovalInitiatorSubscribingToUpstreamDocumentState
 
 
 
@@ -43,14 +46,14 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
             state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
 
             [*] --> iia_la_new : INSTANTIATE
-            iia_la_new --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            iia_la_new --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+            iia_la_new -down-> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            iia_la_new -down-> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
         }
         state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
 
-        [*] --> iia_la
-        iia_la_abam --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-        iia_la_abpm --> iia_abcd
+        [*] -> iia_la
+        iia_la_abam -> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+        iia_la_abpm -> iia_abcd
 
     }
     state "PAYABLE" as iia_payable

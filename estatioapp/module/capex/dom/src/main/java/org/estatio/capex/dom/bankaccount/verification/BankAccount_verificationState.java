@@ -12,10 +12,10 @@ import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method="prop")
-public class BankAccount_approvalState {
+public class BankAccount_verificationState {
 
     private final BankAccount bankAccount;
-    public BankAccount_approvalState(final BankAccount bankAccount) {
+    public BankAccount_verificationState(final BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 

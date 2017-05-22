@@ -14,6 +14,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.roles.EstatioRole;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionService {
@@ -62,7 +63,8 @@ public class StateTransitionService {
         return canApplyFromState(domainObject, candidateTransitionType, currentStateIfAny);
     }
 
-    private <
+    @Programmatic
+    public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
@@ -253,29 +255,44 @@ public class StateTransitionService {
             return null;
         }
 
-        ST pendingTransitionIfAny = pendingTransitionOf(domainObject, requiredTransitionType);
+        ST pendingTransition = pendingTransitionOf(domainObject, requiredTransitionType);
 
-        if(pendingTransitionIfAny != null) {
-            final STT pendingType = pendingTransitionIfAny.getTransitionType();
+        if(pendingTransition != null) {
+            final STT pendingType = pendingTransition.getTransitionType();
             if(pendingType != requiredTransitionType) {
                 // we're heading in a different direction than was set up
                 // eg we're doing a cancel instead of an approve.
 
-                final Task taskIfAny = pendingTransitionIfAny.getTask();
+                final Task taskIfAny = pendingTransition.getTask();
 
                 // ... remove the pending, and its task too (if it has one)
-                repositoryService.remove(pendingTransitionIfAny);
+                repositoryService.remove(pendingTransition);
                 if(taskIfAny != null) {
                     repositoryService.removeAndFlush(taskIfAny);
                 }
 
-                // ... and create a new one in its stead
-                pendingTransitionIfAny = requiredTransitionType.createTransition(domainObject, currentState, serviceRegistry2);
+                pendingTransition = null;
             }
         }
 
+        // there may be no pending transition if either:
+        // (a) the most recently completed transition did not define a "next transition" (via StateTransitionType#getTransitionStrategy)
+        // (b) there was a pending transition, but was heading in the different direction and was just deleted (above)
+        if(pendingTransition == null) {
+
+            final TaskAssignmentStrategy taskAssignmentStrategy = requiredTransitionType.getTaskAssignmentStrategy();
+            EstatioRole assignToIfAny = null;
+            if (taskAssignmentStrategy != null) {
+                assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, requiredTransitionType, serviceRegistry2);
+            }
+
+            pendingTransition = requiredTransitionType.createTransition(domainObject, currentState,
+                    assignToIfAny, serviceRegistry2);
+
+        }
+
         final StateTransitionEvent<DO, ST, STT, S> event =
-                requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransitionIfAny);
+                requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransition);
 
         // transitioning
         final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
@@ -285,9 +302,9 @@ public class StateTransitionService {
         // transition
         requiredTransitionType.applyTo(domainObject, serviceRegistry2);
 
-        if(pendingTransitionIfAny != null) {
-            pendingTransitionIfAny.completed();
-            final Task taskIfAny = pendingTransitionIfAny.getTask();
+        if(pendingTransition != null) {
+            pendingTransition.completed();
+            final Task taskIfAny = pendingTransition.getTask();
             if(taskIfAny != null) {
                 taskIfAny.completed(comment);
             }
@@ -299,15 +316,20 @@ public class StateTransitionService {
         // for wherever we might go next, we spin through all possible transitions,
         // and create a task for the first one that applies to this particular domain object.
         ST nextTransition = null;
-        final STT[] allTransitionsTypes = supportFor(requiredTransitionType).allTransitionTypes();
-        for (STT candidateNextTransitionType : allTransitionsTypes) {
 
-            if (!canApplyFromState(domainObject, candidateNextTransitionType, currentState)) {
-                continue;
-            }
-            nextTransition = candidateNextTransitionType.createTransition(domainObject, currentState, serviceRegistry2);
-            if (nextTransition != null) {
-                break;
+        final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy =
+                requiredTransitionType.getTransitionStrategy();
+        if(transitionStrategy != null) {
+            STT nextTransitionType = transitionStrategy.nextTransitionType(domainObject, requiredTransitionType, serviceRegistry2);
+            if(nextTransitionType != null) {
+                final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
+                        nextTransitionType.getTaskAssignmentStrategy();
+                EstatioRole assignToIfAny = null;
+                if(taskAssignmentStrategy != null) {
+                    assignToIfAny = taskAssignmentStrategy
+                            .getAssignTo(domainObject, nextTransitionType, serviceRegistry2);
+                }
+                nextTransition = nextTransitionType.createTransition(domainObject, currentState,  assignToIfAny, serviceRegistry2);
             }
         }
 
@@ -321,7 +343,8 @@ public class StateTransitionService {
     // ////////////////////////////////////
 
     // REVIEW: we could cache the result, perhaps (it's idempotent)
-    private <
+    @Programmatic
+    public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
@@ -340,7 +363,8 @@ public class StateTransitionService {
     }
 
     // REVIEW: we could cache the result, perhaps (it's idempotent)
-    private <
+    @Programmatic
+    public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,

@@ -57,6 +57,15 @@ public interface StateTransitionType<
     boolean canApply(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
+     * How the {@link StateTransitionService} should search to create further pending transitions.
+     *
+     * Otherwise, the "to state" of the transition is considered to be an "end-point".
+     * @return true
+     */
+    @Programmatic
+    StateTransitionStrategy<DO, ST, STT, S> getTransitionStrategy();
+
+    /**
      * Allows the type to apply changes to the target domain object if necessary.
      *
      * <p>
@@ -68,20 +77,15 @@ public interface StateTransitionType<
     void applyTo(DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
-     * The {@link EstatioRole task role}, if any, that any {@link Task} wrapping this transition must be routed to.
-     *
-     * <p>
-     *     Said another way: a {@link Task} can only created as a wrapper around this transition if a
-     *     {@link EstatioRole task role} has been provided.
-     * </p>
-     *
-     * @param serviceRegistry2
+     * The algorithm to detemine which {@link EstatioRole task role}, if any, to assign to a {@link Task} wrapping this
+     * transition.
      */
     @Programmatic
-    EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2);
+    TaskAssignmentStrategy<DO, ST, STT, S> getTaskAssignmentStrategy();
+
 
     /**
-     * Creates a new {@link StateTransition transition} for the domain object.
+     * Creates a new {@link StateTransition transition}, and optionally {@link Task}, for the domain object.
      *
      * <p>
      *     This method is only intended to be called by {@link StateTransitionService}, which checks that the
@@ -93,6 +97,7 @@ public interface StateTransitionType<
     ST createTransition(
             final DO domainObject,
             final S fromState,
+            final EstatioRole assignToIfAny,
             final ServiceRegistry2 serviceRegistry2);
 
     /**

@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
@@ -16,8 +15,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
+import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -33,30 +33,48 @@ public enum IncomingDocumentCategorisationStateTransitionType
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATING(
             (IncomingDocumentCategorisationState)null,
-            IncomingDocumentCategorisationState.NEW
-    ),
+            IncomingDocumentCategorisationState.NEW,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()),
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentCategorisationState.NEW,
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY),
+            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM)),
     ASSOCIATE_WITH_DOMAIN_ENTITY(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY),;
+            IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY,
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.USER));
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;
+    private final StateTransitionStrategy stateTransitionStrategy;
+    private final TaskAssignmentStrategy taskAssignmentStrategy;
 
     IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
-            final IncomingDocumentCategorisationState toState) {
+            final IncomingDocumentCategorisationState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
+        this.stateTransitionStrategy = stateTransitionStrategy;
+        this.taskAssignmentStrategy = taskAssignmentStrategy;
     }
 
     IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
-            final IncomingDocumentCategorisationState toState
-    ) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState);
+            final IncomingDocumentCategorisationState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy);
+    }
+
+    @Override
+    public StateTransitionStrategy getTransitionStrategy() {
+        return stateTransitionStrategy;
     }
 
     public static class TransitionEvent
@@ -95,26 +113,16 @@ public enum IncomingDocumentCategorisationStateTransitionType
         // nothing to do....
     }
 
-    /**
-     * No {@link Task} will be created unless this method is overridden.
-     *
-     * @param serviceRegistry2 -to lookup domain services etc
-     */
-    @Programmatic
-    @Override
-    public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-        return null;
-    }
 
-    @Override public IncomingDocumentCategorisationStateTransition createTransition(
+    @Override
+    public IncomingDocumentCategorisationStateTransition createTransition(
             final Document domainObject,
             final IncomingDocumentCategorisationState fromState,
+            final EstatioRole assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingDocumentCategorisationStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingDocumentCategorisationStateTransition.Repository.class);
-
-        final EstatioRole assignToIfAny = this.assignTaskTo(serviceRegistry2);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
         return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
@@ -128,8 +136,8 @@ public enum IncomingDocumentCategorisationStateTransitionType
             IncomingDocumentCategorisationState> {
 
         public SupportService() {
-            super(IncomingDocumentCategorisationStateTransitionType.class, IncomingDocumentCategorisationStateTransition.class,
-                    IncomingDocumentCategorisationState.NEW);
+            super(IncomingDocumentCategorisationStateTransitionType.class, IncomingDocumentCategorisationStateTransition.class
+            );
         }
 
         @Override

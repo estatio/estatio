@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 
-@Mixin
+@Mixin(method = "act")
 public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_abstractTransition {
 
     public IncomingInvoice_approveAsAssetManager(IncomingInvoice incomingInvoice) {
@@ -18,7 +18,7 @@ public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_abstr
 
     @Action()
     @MemberOrder(sequence = "2.1")
-    public IncomingInvoice $$(@Nullable final String comment) {
-        return super.$$(comment);
+    public IncomingInvoice act(@Nullable final String comment) {
+        return super.act(comment);
     }
 }

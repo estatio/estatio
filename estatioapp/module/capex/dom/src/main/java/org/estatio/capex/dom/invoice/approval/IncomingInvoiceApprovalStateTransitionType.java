@@ -8,16 +8,16 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionEvent;
-import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.state.StateTransitionStrategy;
+import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -33,76 +33,72 @@ public enum IncomingInvoiceApprovalStateTransitionType
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
-            IncomingInvoiceApprovalState.NEW
-    ),
+            IncomingInvoiceApprovalState.NEW,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()),
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER
-    ) {
-
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.PROJECT_MANAGER;
-        }
-
+            IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER)) {
         @Override
         public boolean canApply(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
             return domainObject.hasProject();
         }
-
     },
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER
-    ) {
-
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.ASSET_MANAGER;
-        }
-
+            IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER)) {
         @Override
         public boolean canApply(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
-            return !domainObject.hasProject() && domainObject.hasFixedAsset();
+            return !APPROVE_AS_PROJECT_MANAGER.canApply(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
             Arrays.asList(
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
-            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR
-    ) {
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.COUNTRY_DIRECTOR;
-        }
-    },
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR)),
     CANCEL(
             Arrays.asList(
                     IncomingInvoiceApprovalState.NEW,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
-            IncomingInvoiceApprovalState.CANCELLED
-    );
+            IncomingInvoiceApprovalState.CANCELLED,
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.none());
 
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;
+    private final StateTransitionStrategy stateTransitionStrategy;
+    private final TaskAssignmentStrategy taskAssignmentStrategy;
 
     IncomingInvoiceApprovalStateTransitionType(
             final List<IncomingInvoiceApprovalState> fromState,
-            final IncomingInvoiceApprovalState toState) {
+            final IncomingInvoiceApprovalState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
+        this.stateTransitionStrategy = stateTransitionStrategy;
+        this.taskAssignmentStrategy = taskAssignmentStrategy;
     }
 
     IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
-            final IncomingInvoiceApprovalState toState) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState);
+            final IncomingInvoiceApprovalState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy);
     }
 
     public static class TransitionEvent
@@ -117,6 +113,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoiceApprovalStateTransitionType transitionType) {
             super(domainObject, stateTransitionIfAny, transitionType);
         }
+    }
+
+    @Override
+    public StateTransitionStrategy getTransitionStrategy() {
+        return stateTransitionStrategy;
     }
 
     @Override
@@ -141,27 +142,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
         // nothing to do....
     }
 
-    /**
-     * No {@link Task} will be created unless this method is overridden.
-     *
-     * @param serviceRegistry2 -to lookup domain services etc
-     */
-    @Programmatic
-    @Override
-    public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-        return null;
-    }
 
     @Override
     public IncomingInvoiceApprovalStateTransition createTransition(
             final IncomingInvoice domainObject,
             final IncomingInvoiceApprovalState fromState,
+            final EstatioRole assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingInvoiceApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingInvoiceApprovalStateTransition.Repository.class);
-
-        final EstatioRole assignToIfAny = this.assignTaskTo(serviceRegistry2);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
         return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
@@ -172,8 +162,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoice, IncomingInvoiceApprovalStateTransition, IncomingInvoiceApprovalStateTransitionType, IncomingInvoiceApprovalState> {
 
         public SupportService() {
-            super(IncomingInvoiceApprovalStateTransitionType.class, IncomingInvoiceApprovalStateTransition.class,
-                    IncomingInvoiceApprovalState.NEW);
+            super(IncomingInvoiceApprovalStateTransitionType.class, IncomingInvoiceApprovalStateTransition.class
+            );
         }
 
         @Override

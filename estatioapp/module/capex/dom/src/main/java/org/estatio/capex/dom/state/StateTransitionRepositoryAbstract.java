@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -48,6 +49,12 @@ public abstract class StateTransitionRepositoryAbstract<
     public ST findByDomainObjectAndCompleted(final DO domainObject, final boolean completed) {
         // can't be uniqueMatch, because for the very first call to StateTransitionService#apply, called on an
         // INSTANTIATED event, there won't yet be any StateTransitions for this invoice
+        final List<ST> sts = repositoryService.allMatches(
+                new QueryDefault<>(
+                        stateTransitionClass,
+                        "findByDomainObjectAndCompleted",
+                        "domainObject", domainObject,
+                        "completed", completed));
         return repositoryService.firstMatch(
                 new org.apache.isis.applib.query.QueryDefault<>(
                         stateTransitionClass,

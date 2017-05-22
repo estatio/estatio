@@ -9,11 +9,11 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
-@Mixin(method = "act")
-public class BankAccount_cancel extends BankAccount_abstractTransition {
+@Mixin(method="act")
+public class BankAccount_verify extends BankAccount_abstractTransition {
 
-    public BankAccount_cancel(BankAccount bankAccount) {
-        super(bankAccount, BankAccountVerificationStateTransitionType.CANCEL);
+    public BankAccount_verify(BankAccount bankAccount) {
+        super(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT);
     }
 
     @Action()

@@ -34,6 +34,8 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
+import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.country.dom.impl.Country;
@@ -53,11 +55,17 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(editing = Editing.DISABLED
+        , persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class
+        , updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class
+)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BankAccount
         extends FinancialAccount {
+
+    public static class PersistedLifecycleEvent extends ObjectPersistedEvent<BankAccount> {}
+    public static class UpdatedLifecycleEvent extends ObjectUpdatedEvent<BankAccount> {}
 
     @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter
@@ -101,7 +109,12 @@ public class BankAccount
     @Getter @Setter
     private String bic;
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT, domainEvent = BankAccount.ChangeEvent.class)
+    public static class ChangeEvent extends ActionDomainEvent<BankAccount> {}
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = ChangeEvent.class
+    )
     public BankAccount change(
             @ParameterLayout(typicalLength = IbanType.Meta.MAX_LEN)
             final String iban,
@@ -156,14 +169,6 @@ public class BankAccount
     }
 
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
-        private static final long serialVersionUID = 1L;
-    }
-
-    public static class ChangeEvent extends ActionDomainEvent<BankAccount> {
-        private static final long serialVersionUID = 1L;
-    }
-
-    public static class CreateEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
     }
 
@@ -255,4 +260,5 @@ public class BankAccount
         }
 
     }
+
 }

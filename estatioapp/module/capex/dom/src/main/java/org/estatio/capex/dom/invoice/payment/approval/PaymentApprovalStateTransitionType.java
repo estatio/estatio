@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
@@ -15,8 +14,9 @@ import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
+import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
@@ -32,36 +32,43 @@ public enum PaymentApprovalStateTransitionType
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
             (PaymentApprovalState)null,
-            PaymentApprovalState.NEW
-    ),
+            PaymentApprovalState.NEW,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()),
     APPROVE_AS_TREASURER(
             PaymentApprovalState.NEW,
-            PaymentApprovalState.APPROVED_BY_TREASURER
-    ) {
-        @Override
-        public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-            return EstatioRole.TREASURER;
-        }
-    },
+            PaymentApprovalState.APPROVED_BY_TREASURER,
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)),
     CANCEL(
             PaymentApprovalState.NEW,
-            PaymentApprovalState.CANCELLED
-    );
+            PaymentApprovalState.CANCELLED,
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.none());
 
     private final List<PaymentApprovalState> fromStates;
     private final PaymentApprovalState toState;
+    private final StateTransitionStrategy stateTransitionStrategy;
+    private final TaskAssignmentStrategy taskAssignmentStrategy;
 
     PaymentApprovalStateTransitionType(
             final List<PaymentApprovalState> fromState,
-            final PaymentApprovalState toState) {
+            final PaymentApprovalState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
+        this.stateTransitionStrategy = stateTransitionStrategy;
+        this.taskAssignmentStrategy = taskAssignmentStrategy;
     }
 
     PaymentApprovalStateTransitionType(
             final PaymentApprovalState fromState,
-            final PaymentApprovalState toState) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState);
+            final PaymentApprovalState toState,
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy);
     }
 
     public static class TransitionEvent
@@ -77,6 +84,12 @@ public enum PaymentApprovalStateTransitionType
             super(domainObject, stateTransitionIfAny, transitionType);
         }
     }
+
+    @Override
+    public StateTransitionStrategy getTransitionStrategy() {
+        return stateTransitionStrategy;
+    }
+
 
     @Override
     public TransitionEvent newStateTransitionEvent(
@@ -100,27 +113,16 @@ public enum PaymentApprovalStateTransitionType
         // nothing to do....
     }
 
-    /**
-     * No {@link Task} will be created unless this method is overridden.
-     *
-     * @param serviceRegistry2 -to lookup domain services etc
-     */
-    @Programmatic
-    @Override
-    public EstatioRole assignTaskTo(final ServiceRegistry2 serviceRegistry2) {
-        return null;
-    }
 
     @Override
     public PaymentApprovalStateTransition createTransition(
             final Payment domainObject,
             final PaymentApprovalState fromState,
+            final EstatioRole assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final PaymentApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(PaymentApprovalStateTransition.Repository.class);
-
-        final EstatioRole assignToIfAny = this.assignTaskTo(serviceRegistry2);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
         return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
@@ -131,8 +133,8 @@ public enum PaymentApprovalStateTransitionType
             Payment, PaymentApprovalStateTransition, PaymentApprovalStateTransitionType, PaymentApprovalState> {
 
         public SupportService() {
-            super(PaymentApprovalStateTransitionType.class, PaymentApprovalStateTransition.class,
-                    PaymentApprovalState.NEW);
+            super(PaymentApprovalStateTransitionType.class, PaymentApprovalStateTransition.class
+            );
         }
 
         @Override

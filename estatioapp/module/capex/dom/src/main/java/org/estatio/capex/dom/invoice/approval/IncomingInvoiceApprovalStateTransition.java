@@ -66,11 +66,12 @@ public class IncomingInvoiceApprovalStateTransition
         IncomingInvoiceApprovalStateTransitionType,
         IncomingInvoiceApprovalState> {
 
+
     /**
-     * For the first transition, represents the initial state of the domain object
-     * Thereafter, will hold the same value as the "to state" of the preceding transition.
+     * Null only for the first transition (which will be complete), thereafter is always populated and
+     * corresponds to the current state of the domain object.
      */
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Getter @Setter
     private IncomingInvoiceApprovalState fromState;
 
@@ -79,6 +80,7 @@ public class IncomingInvoiceApprovalStateTransition
     private IncomingInvoiceApprovalStateTransitionType transitionType;
 
     /**
+     * The most recent non-null value corresponds to the current state of the domain object.
      * If null, then this transition is not yet complete.
      */
     @Column(allowsNull = "true")
