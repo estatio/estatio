@@ -87,7 +87,7 @@ import lombok.Setter;
                 "fixedAsset",
                 "project",
                 "period",
-                "budget",
+                "budgetItem",
                 "charge",
                 "netAmount",
                 "vatAmount",

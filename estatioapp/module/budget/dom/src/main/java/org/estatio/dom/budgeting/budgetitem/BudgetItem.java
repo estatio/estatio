@@ -31,6 +31,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
@@ -43,6 +44,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -98,6 +100,7 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.dom.budgeting.budgetitem.BudgetItem"
 )
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BudgetItem extends UdoDomainObject2<BudgetItem>
         implements WithApplicationTenancyProperty, PartitionItemCreator {
 
