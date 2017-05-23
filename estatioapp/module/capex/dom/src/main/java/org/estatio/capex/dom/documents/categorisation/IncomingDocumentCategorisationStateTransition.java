@@ -28,7 +28,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "incomingDocument",
+        schema = "dbo",
         table = "IncomingDocumentCategorisationStateTransition"
 )
 @DatastoreIdentity(

@@ -46,7 +46,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "orders",
+        schema = "dbo",
         table = "Order"
 )
 @DatastoreIdentity(
