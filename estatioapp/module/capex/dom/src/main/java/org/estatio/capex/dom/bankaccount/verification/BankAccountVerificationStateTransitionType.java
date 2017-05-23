@@ -1,11 +1,10 @@
 package org.estatio.capex.dom.bankaccount.verification;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -48,7 +47,7 @@ public enum BankAccountVerificationStateTransitionType
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
     ),
     RESET(
-            Lists.newArrayList(
+            Arrays.asList(
                     BankAccountVerificationState.PENDING,
                     BankAccountVerificationState.VERIFIED,
                     BankAccountVerificationState.CANCELLED
