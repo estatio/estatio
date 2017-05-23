@@ -87,6 +87,7 @@ import lombok.Setter;
                 "fixedAsset",
                 "project",
                 "period",
+                "budget",
                 "charge",
                 "netAmount",
                 "vatAmount",
@@ -303,7 +304,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         if (hasOrderItem()){
             Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
             OrderItem orderItem = orderItemRepository.findByOrderAndCharge(order, getOrderItem().getCharge());
-            if (!(hasNet() && hasGross() && hasVat())){
+            if (!(hasNetAmount() && hasGrossAmount() && hasVatAmount())){
                 setNetAmount(orderItem.getNetAmount());
                 setVatAmount(orderItem.getVatAmount());
                 setGrossAmount(orderItem.getGrossAmount());

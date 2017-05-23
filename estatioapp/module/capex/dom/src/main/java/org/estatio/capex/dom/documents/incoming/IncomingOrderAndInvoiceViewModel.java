@@ -36,6 +36,8 @@ import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
+import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -64,7 +66,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     private void deriveBuyer(){
         Party ownerCandidate = null;
-        if (getFixedAsset()!=null){
+        if (hasFixedAsset()){
             for (FixedAssetOwnership fos: getFixedAsset().getOwners()){
                 if (fos.getOwnershipType()== OwnershipType.FULL){
                     ownerCandidate = fos.getOwner();
@@ -134,7 +136,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     public List<Property> choicesFixedAsset(){
         List<Property> result = new ArrayList<>();
-        if (getBuyer()!=null) {
+        if (hasBuyer()) {
             for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleType.PROPERTY_OWNER)){
                 if (role.getAsset().getClass().isAssignableFrom(Property.class)) {
                     result.add((Property) role.getAsset());
@@ -152,9 +154,21 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    private Budget budget;
+    public void modifyBudget(final Budget budget) {
+        setBudget(budget);
+        derivePeriodFromBudget();
+    }
+
+    public List<Budget> choicesBudget(){
+        return hasFixedAsset() ? budgetRepository.findByProperty((Property) getFixedAsset()) : budgetRepository.allBudgets();
+    }
+
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
 
     public String validatePeriod(final String period) {
+        if (period==null) return null; // period is optional
         return !PeriodUtil.isValidPeriod(period)
                 ? "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)"
                 : null;
@@ -192,7 +206,6 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
         determineAmounts();
     }
 
-
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @PropertyLayout(promptStyle = PromptStyle.INLINE)
     private BigDecimal grossAmount;
@@ -202,7 +215,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
     public void modifyGrossAmount(BigDecimal grossAmount) {
         setGrossAmount(grossAmount);
-        if (getNetAmount()==null){
+        if (!hasNetAmount()){
             final BigDecimal valueToUse = getVatAmount()!=null ? grossAmount.subtract(getVatAmount()):getGrossAmount();
             setNetAmount(valueToUse);
         }
@@ -220,12 +233,16 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
             @Parameter(optionality = Optionality.OPTIONAL)
             final Project project,
             @Parameter(optionality = Optionality.OPTIONAL)
+            final Budget budget,
+            @Parameter(optionality = Optionality.OPTIONAL)
             final String period
     ){
         setCharge(charge);
         setFixedAsset(property);
         setProject(project);
+        setBudget(budget);
         setPeriod(period);
+        derivePeriodFromBudget();
         return this;
     }
 
@@ -241,7 +258,11 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
         return getProject();
     }
 
-    public String default3ChangeDimensions(){
+    public Budget default3ChangeDimensions(){
+        return getBudget();
+    }
+
+    public String default4ChangeDimensions(){
         return getPeriod();
     }
 
@@ -253,10 +274,19 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
         return choicesFixedAsset();
     }
 
+    public List<Project> choices2ChangeDimensions() {
+        return choicesProject();
+    }
+
+    public List<Budget> choices3ChangeDimensions() {
+        return choicesBudget();
+    }
+
     public String validateChangeDimensions(
             final Charge charge,
             final Property property,
             final Project project,
+            final Budget budget,
             final String period
     ) {
         return validatePeriod(period);
@@ -307,17 +337,17 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     // ////////////////////////////////////
 
     void determineAmounts(){
-        if (hasVat() && hasNet() && !hasGross()){
+        if (hasVatAmount() && hasNetAmount() && !hasGrossAmount()){
             setGrossAmount(getNetAmount().add(getVatAmount()));
             return;
         }
 
-        if (hasVat() && hasGross() && !hasNet()){
+        if (hasVatAmount() && hasGrossAmount() && !hasNetAmount()){
             setNetAmount(getGrossAmount().subtract(getVatAmount()));
             return;
         }
 
-        if (hasNet() && hasGross() && !hasVat()){
+        if (hasNetAmount() && hasGrossAmount() && !hasVatAmount()){
             setVatAmount(getGrossAmount().subtract(getNetAmount()));
             return;
         }
@@ -325,23 +355,29 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
 
     void calculateVat(){
-        if (hasTax() && hasNet() && !hasVat() && !hasGross()){
+        if (hasTax() && hasNetAmount() && !hasVatAmount() && !hasGrossAmount()){
             BigDecimal grossAmount = getTax().grossFromNet(getNetAmount(), clockService.now());
             setVatAmount(grossAmount.subtract(getNetAmount()));
             return;
         }
     }
 
+    void derivePeriodFromBudget(){
+        if (hasBudget() && !hasPeriod()){
+            setPeriod(String.valueOf(getBudget().getBudgetYear()));
+        }
+    }
+
     protected boolean hasTax(){
         return getTax() != null;
     }
-    protected boolean hasNet(){
+    protected boolean hasNetAmount(){
         return getNetAmount() != null;
     }
-    protected boolean hasVat(){
+    protected boolean hasVatAmount(){
         return getVatAmount() != null;
     }
-    protected boolean hasGross(){
+    protected boolean hasGrossAmount(){
         return getGrossAmount() != null;
     }
     protected boolean hasCharge(){
@@ -358,6 +394,9 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
     protected boolean hasProject(){
         return getProject() != null;
+    }
+    protected boolean hasBudget(){
+        return getBudget() != null;
     }
     protected boolean hasPeriod(){
         return getPeriod() != null;
@@ -401,6 +440,12 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     ProjectRepository projectRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    BudgetRepository budgetRepository;
 
     @Inject
     @XmlTransient

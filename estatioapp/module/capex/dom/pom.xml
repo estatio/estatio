@@ -101,6 +101,11 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-project</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-budget</artifactId>
+        </dependency>
+
 		<dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-tax</artifactId>
@@ -142,10 +147,13 @@ language governing permissions and limitations under the License.
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.isisaddons.wicket.pdfjs</groupId>
             <artifactId>isis-wicket-pdfjs-cpt</artifactId>
         </dependency>
+
+
 
     </dependencies>
 

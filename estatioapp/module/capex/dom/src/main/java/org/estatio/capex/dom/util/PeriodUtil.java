@@ -39,7 +39,7 @@ public class PeriodUtil {
     }
 
     public static boolean isValidPeriod(final String period){
-        if (!yearFromPeriod(period).equals(new LocalDateInterval(null, null))){
+        if (period!=null && !yearFromPeriod(period).equals(new LocalDateInterval(null, null))){
             return true;
         }
         return false;
