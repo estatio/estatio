@@ -70,7 +70,8 @@ public class IncomingOrderViewmodel_saveOrder {
                 getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate() : null,
                 getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate() : null,
                 (Property) getViewmodel().getFixedAsset(),
-                getViewmodel().getProject()
+                getViewmodel().getProject(),
+                getViewmodel().getBudgetItem()
         );
         // attach document
         paperclipRepository.attach(getViewmodel().getDocument(),null,order);

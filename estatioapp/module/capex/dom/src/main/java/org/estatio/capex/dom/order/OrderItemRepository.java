@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
@@ -49,12 +50,13 @@ public class OrderItemRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project) {
+            final Project project,
+            final BudgetItem budgetItem) {
         final OrderItem orderItem =
                 new OrderItem(
                         order,charge, description,
                         netAmount, vatAmount, grossAmount,
-                        tax, startDate, endDate, property, project );
+                        tax, startDate, endDate, property, project, budgetItem);
         serviceRegistry2.injectServicesInto(orderItem);
         repositoryService.persistAndFlush(orderItem);
         return orderItem;
@@ -72,12 +74,12 @@ public class OrderItemRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project
-    ) {
+            final Project project,
+            final BudgetItem budgetItem) {
         OrderItem orderItem = findByOrderAndCharge(order, charge);
         if (orderItem == null) {
             orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
-                    property, project);
+                    property, project, budgetItem);
         }
         return orderItem;
     }

@@ -331,6 +331,9 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
             if (!hasFixedAsset()){
                 setFixedAsset(orderItem.getFixedAsset());
             }
+            if (!hasBudgetItem()){
+                setBudgetItem(orderItem.getBudgetItem());
+            }
             if (!hasPeriod()){
                 setPeriod(orderItem.getPeriod());
             }

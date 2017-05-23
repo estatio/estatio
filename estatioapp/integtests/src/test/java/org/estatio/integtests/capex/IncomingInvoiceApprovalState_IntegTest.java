@@ -370,7 +370,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
                 new BigDecimal("100.00"), new BigDecimal("20.00"), new BigDecimal("120.00"),
                 charge_for_works.getTax(),
                 incomingInvoice.getDueDate(), startDate, endDate,
-                propertyForOxf, project);
+                propertyForOxf, project, null);
     }
 
 

@@ -275,7 +275,7 @@ public class OrderInvoiceLine {
                 order.addItem(
                         chargeObj, line.orderDescription,
                         line.netAmount, line.vatAmount, line.grossAmount,
-                        tax, startDate, endDate, property, project);
+                        tax, startDate, endDate, property, project, null);
 
                 project.addItem(chargeObj, chargeObj.getDescription(), null, null, null, property, null);
             }
@@ -296,7 +296,7 @@ public class OrderInvoiceLine {
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
-                        dueDate, startDate, endDate, property, project);
+                        dueDate, startDate, endDate, property, project, null);
 
                 // assume these are not yet approved, so create as 'NEW'
                 stateTransitionService.trigger(

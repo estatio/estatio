@@ -30,6 +30,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
@@ -121,9 +122,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project
-    ) {
-        addItem(this, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project);
+            final Project project,
+            final BudgetItem budgetItem) {
+        addItem(this, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
         return this;
     }
 
@@ -143,7 +144,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             @Parameter(optionality = Optionality.OPTIONAL)
             final Property property,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project
+            final Project project,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BudgetItem budgetItem
     ) {
         final BigInteger sequence = nextItemSequence();
         incomingInvoiceItemRepository.findOrCreate(
@@ -159,8 +162,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
                 startDate,
                 endDate,
                 property,
-                project
-        );
+                project,
+                budgetItem);
     }
 
     @Getter @Setter

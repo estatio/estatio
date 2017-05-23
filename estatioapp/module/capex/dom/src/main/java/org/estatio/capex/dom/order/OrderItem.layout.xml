@@ -22,6 +22,7 @@
                                 <ns2:property id="charge"/>
                                 <ns2:property id="fixedAsset"/>
                                 <ns2:property id="project"/>
+                                <ns2:property id="budgetItem"/>
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
                                 <ns2:property id="type"/>

@@ -38,6 +38,7 @@ import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 
@@ -115,8 +116,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project
-    ) {
+            final Project project,
+            final BudgetItem budgetItem) {
         this();
         this.ordr = ordr;
         this.charge = charge;
@@ -129,6 +130,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.endDate = endDate;
         this.property = property;
         this.project = project;
+        this.budgetItem = budgetItem;
     }
 
     /**
@@ -179,6 +181,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true", name = "projectId")
     @Getter @Setter
     private Project project;
+
+    @Getter @Setter
+    @Column(allowsNull = "true", name="budgetItemId")
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
+    private BudgetItem budgetItem;
 
     @PropertyLayout(
             named = "Application Level",

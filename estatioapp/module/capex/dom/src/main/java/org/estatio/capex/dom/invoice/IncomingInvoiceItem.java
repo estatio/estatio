@@ -25,6 +25,7 @@ import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.tax.Tax;
@@ -85,8 +86,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final LocalDate startDate,
             final LocalDate endDate,
             final org.estatio.dom.asset.Property property,
-            final Project project
-    ){
+            final Project project,
+            final BudgetItem budgetItem){
         setSequence(sequence);
 
         setInvoice(invoice);
@@ -104,6 +105,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setTax(tax);
         setFixedAsset(property);
         setProject(project);
+        setBudgetItem(budgetItem);
     }
 
     @Override
@@ -126,6 +128,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Column(allowsNull = "true", name="projectId")
     @Property(hidden = Where.REFERENCES_PARENT)
     private Project project;
+
+    @Getter @Setter
+    @Column(allowsNull = "true", name="budgetItemId")
+    @Property(hidden = Where.REFERENCES_PARENT)
+    private BudgetItem budgetItem;
 
     @Programmatic
     public String getPeriod(){

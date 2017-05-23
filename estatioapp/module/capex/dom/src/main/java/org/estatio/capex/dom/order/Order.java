@@ -36,6 +36,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
@@ -155,10 +156,12 @@ public class Order extends UdoDomainObject2<Order> {
             @Parameter(optionality = Optionality.OPTIONAL)
             final org.estatio.dom.asset.Property property,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project
+            final Project project,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BudgetItem budgetItem
     ) {
         orderItemRepository.findOrCreate(
-                this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project);
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
         return this;
     }

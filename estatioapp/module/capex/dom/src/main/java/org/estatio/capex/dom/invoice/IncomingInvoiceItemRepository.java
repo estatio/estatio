@@ -17,6 +17,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 
@@ -51,8 +52,9 @@ public class IncomingInvoiceItemRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project) {
-        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project);
+            final Project project,
+            final BudgetItem budgetItem) {
+        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
         return invoiceItem;
@@ -72,8 +74,8 @@ public class IncomingInvoiceItemRepository {
             final LocalDate startDate,
             final LocalDate endDate,
             final Property property,
-            final Project project
-    ) {
+            final Project project,
+            final BudgetItem budgetItem) {
         IncomingInvoiceItem invoiceItem = findByInvoiceAndCharge(invoice, charge);
         if (invoiceItem == null) {
             invoiceItem = create(
@@ -89,7 +91,8 @@ public class IncomingInvoiceItemRepository {
                     startDate,
                     endDate,
                     property,
-                    project);
+                    project,
+                    budgetItem);
         }
         return invoiceItem;
     }
