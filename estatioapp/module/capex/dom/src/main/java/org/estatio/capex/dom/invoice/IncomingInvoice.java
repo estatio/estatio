@@ -175,7 +175,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     private LocalDate dateReceived;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name="invoiceId")
     private IncomingInvoice relatesTo;
 
     // need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
