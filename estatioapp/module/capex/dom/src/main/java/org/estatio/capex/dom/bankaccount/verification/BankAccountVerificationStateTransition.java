@@ -31,7 +31,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "bankAccount",
+        schema = "dbo",
         table = "BankAccountVerificationStateTransition"
 )
 @DatastoreIdentity(
