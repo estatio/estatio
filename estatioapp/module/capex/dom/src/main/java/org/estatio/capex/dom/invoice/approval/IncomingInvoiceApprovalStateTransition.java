@@ -26,7 +26,7 @@ import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
-        schema = "incomingInvoice",
+        schema = "dbo",
         table = "IncomingInvoiceApprovalStateTransition"
 )
 @DatastoreIdentity(
