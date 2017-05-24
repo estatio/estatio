@@ -21,6 +21,7 @@ package org.estatio.dom.lease.invoicing.ssrs;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -38,6 +39,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
@@ -49,6 +51,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
 
@@ -212,6 +215,19 @@ public class InvoiceAttributesVM implements WithApplicationTenancy {
             }
         }
         return buf.toString();
+    }
+
+    @Programmatic
+    public String getUnitName() {
+        final Optional<InvoiceItem> invoiceItemOptional = invoice.getItems().stream().findFirst();
+        if (invoiceItemOptional.isPresent()){
+            final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) invoiceItemOptional.get();
+            final FixedAsset fixedAsset = invoiceItem.getFixedAsset();
+            if (fixedAsset != null && fixedAsset instanceof Unit){
+                return fixedAsset.getName();
+            }
+        }
+        return null;
     }
 
     @Programmatic

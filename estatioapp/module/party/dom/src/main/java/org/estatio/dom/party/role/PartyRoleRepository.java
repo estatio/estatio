@@ -59,7 +59,7 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
     }
 
     public PartyRole findOrCreate(final Party party, final PartyRoleTypeData roleTypeData) {
-        return findOrCreate(party, roleTypeData.findUsing(partyRoleTypeRepository));
+        return findOrCreate(party, partyRoleTypeRepository.findOrCreate(roleTypeData));
     }
 
     private PartyRole createPartyRole(final Party party, final PartyRoleType roleType) {

@@ -1,5 +1,6 @@
 package org.estatio.dom.viewmodels;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,6 +75,15 @@ public class PropertyImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private LocalDate disposalDate;
 
+    @Getter @Setter
+    private BigDecimal grossLettableArea;
+
+    @Getter @Setter
+    private Integer parkingSpaces;
+
+    @Getter @Setter
+    private Integer displayOrder;
+
 
 //    @Override
 //    public List<Class> importAfter() {
@@ -111,6 +121,9 @@ public class PropertyImport implements ExcelFixtureRowHandler, Importable {
         property.setOpeningDate(openingDate);
         property.setExternalReference(externalReference);
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
+        property.setParkingSpaces(parkingSpaces);
+        property.setArea(grossLettableArea);
+        property.setDisplayOrder(displayOrder);
 
         return Lists.newArrayList(property);
     }

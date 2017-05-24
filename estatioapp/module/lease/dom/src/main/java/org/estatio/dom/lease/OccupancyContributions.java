@@ -27,35 +27,31 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.tags.Brand;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
 )
 public class OccupancyContributions {
 
-@Inject
-private OccupancyRepository occupancyRepository;
-
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @MemberOrder(name = "Occupancies", sequence = "10")
+    @CollectionLayout(defaultView = "table")
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Occupancy> occupancies(final Unit unit) {
         return occupancyRepository.findByUnit(unit);
     }
 
-    // //////////////////////////////////////
-
-    @CollectionLayout(render = RenderType.EAGERLY)
-    @ActionLayout(contributed = Contributed.AS_NEITHER) // Disable the cotrubution of this collection because there is a occupancy collection on Lease
+    @CollectionLayout(defaultView = "table")
     @Action(semantics = SemanticsOf.SAFE)
-    public List<Occupancy> occupancies(final Lease lease) {
-        return occupancyRepository.findByLease(lease);
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<Occupancy> occupancies(final Brand brand) {
+        return occupancyRepository.findByBrand(brand, true);
     }
+
+    @Inject private OccupancyRepository occupancyRepository;
 
 }

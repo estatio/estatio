@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -61,20 +62,17 @@ import org.estatio.dom.roles.EstatioRole;
 import lombok.Getter;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(
-        identityType = IdentityType.DATASTORE
-        ,schema = "dbo"    // Isis' ObjectSpecId inferred from @Discriminator
-)
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "dbo")
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.VALUE_MAP,
         column = "discriminator",
         value = "org.estatio.dom.party.Party")
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE,
-        column = "id")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Party_reference_UNQ", members = "reference")
@@ -96,7 +94,27 @@ import lombok.Setter;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
-                        + "WHERE reference == :reference") })
+                        + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByRoleType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Party "
+                        + "WHERE roles.contains(role) "
+                        + "&& (role.roleType == :roleType) "
+                        + "VARIABLES "
+                        + "org.estatio.dom.party.role.PartyRole role "
+                        + "ORDER BY reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByRoleTypeAndReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Party "
+                        + "WHERE roles.contains(role) "
+                        + "&& (role.roleType == :roleType) "
+                        + "&& (reference.matches(:referenceOrName) || name.matches(:referenceOrName)) "
+                        + "VARIABLES "
+                        + "org.estatio.dom.party.role.PartyRole role "
+                        + "ORDER BY reference")
+})
 @DomainObject(
         editing = Editing.DISABLED,
         autoCompleteAction = "autoComplete",

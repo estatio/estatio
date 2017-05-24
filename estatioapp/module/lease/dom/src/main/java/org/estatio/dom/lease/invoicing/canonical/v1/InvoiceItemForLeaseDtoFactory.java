@@ -9,18 +9,18 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.dto.DtoFactoryAbstract;
-import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.dto.DtoFactoryAbstract;
+import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -69,8 +69,8 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
 
         dto.setStartDate(asXMLGregorianCalendar(item.getStartDate()));
         dto.setEndDate(asXMLGregorianCalendar(item.getEndDate()));
-        dto.setEffectiveStartDate(asXMLGregorianCalendar(item.getEffectiveStartDate()));
-        dto.setEffectiveEndDate(asXMLGregorianCalendar(item.getEffectiveEndDate()));
+        dto.setEffectiveStartDate(asXMLGregorianCalendar(firstNonNull(item.getEffectiveStartDate(), item.getStartDate())));
+        dto.setEffectiveEndDate(asXMLGregorianCalendar(firstNonNull(item.getEffectiveEndDate(), item.getEndDate())));
 
         if (item  instanceof InvoiceItemForLease) {
             final InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) item;
@@ -107,4 +107,14 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
 
     @Inject
     DtoMappingHelper mappingHelper;
+
+    private org.joda.time.LocalDate firstNonNull(final org.joda.time.LocalDate... objects){
+        for (org.joda.time.LocalDate object : objects){
+            if (object != null) {
+                return object;
+            }
+        }
+        return null;
+    }
+
 }

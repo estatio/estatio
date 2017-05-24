@@ -18,6 +18,8 @@
  */
 package org.estatio.integtests.party;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Assert;
@@ -33,11 +35,10 @@ import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.party.role.PartyRole_IntegTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 public class PartyRepository_IntegTest extends EstatioIntegrationTest {
 
@@ -52,7 +53,6 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new PersonForJohnDoeNl());
                     executionContext.executeChild(this, new OrganisationForHelloWorldNl());
                 }
@@ -85,6 +85,65 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
 
     }
 
+    public static class FindByRoleType extends PartyRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                }
+            });
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+            //Given
+            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            assertThat(party).isNotNull();
+
+            //When
+            party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+
+            //Then
+            final List<Party> partyList = partyRepository.findByRoleTypeData(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+            assertThat(partyList.size()).isEqualTo(1);
+
+
+        }
+    }
+
+    public static class FindByRoleTypeAndReferenceOrName extends PartyRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                }
+            });
+        }
+
+        @Test
+        public void happyCase() throws Exception {
+            //Given
+            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+
+            //When
+            party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+
+            //Then
+            final List<Party> partyList = partyRepository.findByRoleTypeDataAndReferenceOrName(
+                    PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE,
+                    "*ello*");
+            assertThat(partyList.size()).isEqualTo(1);
+        }
+    }
+
     public static class FindPartyByReference extends PartyRepository_IntegTest {
 
         @Before
@@ -104,13 +163,13 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            assertThat(party, is(notNullValue()));
+            assertThat(party).isNotNull();
         }
 
         @Test
         public void canNotBeFound() throws Exception {
             final Party party = partyRepository.matchPartyByReferenceOrName("HELLO");
-            assertThat(party, is(nullValue()));
+            assertThat(party).isNull();
         }
 
     }

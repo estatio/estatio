@@ -11,28 +11,52 @@
     </row>
     <row>
         <col span="4">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="name"/>
-                <ns2:property id="group"/>
-                <ns2:property id="coverage"/>
-                <ns2:property id="countryOfOrigin">
-                    <ns2:action id="change" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="applicationTenancyPath"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                <ns2:property id="applicationTenancy"/>
-            </ns2:fieldSet>
-            <ns2:fieldSet name="Metadata" id="metadata">
-                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                <ns2:property id="id"/>
-                <ns2:property id="versionSequence"/>
-                <ns2:property id="datanucleusId"/>
-                <ns2:property id="datanucleusVersionLong"/>
-                <ns2:property id="datanucleusVersionTimestamp"/>
-            </ns2:fieldSet>
+            <tabGroup>
+                <tab name="Brand">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                                <ns2:action id="change" position="PANEL"/>
+                                <ns2:property id="name"/>
+                                <ns2:property id="group"/>
+                                <ns2:property id="coverage"/>
+                                <ns2:property id="countryOfOrigin"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="System">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationTenancyPath"/>
+                                <ns2:property id="atPath"/>
+                            </ns2:fieldSet>
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="id"/>
+                                <ns2:property id="versionSequence"/>
+                                <ns2:property id="datanucleusId"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+
+            </tabGroup>
         </col>
-        <col span="8" unreferencedCollections="true"/>
+        <col span="8"/>
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row></row>
+                </tab>
+            </tabGroup>
+        </col>
     </row>
 </grid>
