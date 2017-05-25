@@ -57,7 +57,10 @@
                                         <property id="charge" promptStyle="INLINE"/>
                                         <property id="fixedAsset" promptStyle="INLINE"/>
                                         <property id="project" promptStyle="INLINE"/>
-                                        <property id="budgetItem" promptStyle="INLINE"/>
+                                        <property id="budgetItem" promptStyle="INLINE">
+                                            <action id="createNextBudget" promptStyle="INLINE" position="RIGHT"/>
+                                            <action id="createBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                                        </property>
                                         <property id="period" promptStyle="INLINE"/>
                                     </fieldSet>
                                 </bs3:col>

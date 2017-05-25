@@ -2,6 +2,7 @@ package org.estatio.capex.dom.documents.incoming;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -182,6 +183,41 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
             }
         }
         return result;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingOrderAndInvoiceViewModel createBudgetItem(final Budget budget, final Charge charge){
+        budgetItemRepository.findOrCreateBudgetItem(budget, charge);
+        deriveChargeFromBudgetItem();
+        derivePeriodFromBudgetItem();
+        return this;
+    }
+
+    public List<Budget> choices0CreateBudgetItem(final Budget budget, final Charge charge){
+        if (hasFixedAsset()){
+            return budgetRepository.findByProperty((Property) getFixedAsset());
+        }
+        return budgetRepository.allBudgets();
+    }
+
+    public List<Charge> choices1CreateBudgetItem(final Budget budget, final Charge charge){
+        if (hasCharge()){
+            return Arrays.asList(getCharge());
+        }
+        return chargeRepository.allIncoming();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingOrderAndInvoiceViewModel createNextBudget(final Budget previousBudget){
+        previousBudget.createNextBudget();
+        return this;
+    }
+
+    public List<Budget> choices0CreateNextBudget(final Budget budget){
+        if (hasFixedAsset()){
+            return budgetRepository.findByProperty((Property) getFixedAsset());
+        }
+        return budgetRepository.allBudgets();
     }
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
