@@ -16,8 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.demo;
+package org.estatio.app.menus.prototype;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -30,14 +34,24 @@ import org.estatio.dom.UdoDomainService;
         named = "Prototyping",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,
         menuOrder = "900")
-public class DemoMenu extends UdoDomainService<DemoMenu> {
+public class PrototypeMenu extends UdoDomainService<PrototypeMenu> {
 
-    public DemoMenu() {
-        super(DemoMenu.class);
+    public PrototypeMenu() {
+        super(PrototypeMenu.class);
     }
 
 
+    // add any prototyping actions here...
 
-    // add any demo actions here...
+    /**
+     * As a simple convenience...
+     *
+     * @return
+     * @throws MalformedURLException
+     */
+    @Action
+    public URL openSwagger() throws MalformedURLException {
+        return new java.net.URL("http://localhost:8080/swagger-ui/index.html");
+    }
 
 }
