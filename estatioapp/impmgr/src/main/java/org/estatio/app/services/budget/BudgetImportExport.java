@@ -20,6 +20,7 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -96,30 +97,33 @@ public class BudgetImportExport implements Importable {
     private BigDecimal percentage;
 
 
-//    @Override
-//    public List<Class> importAfter() {
-//        return Lists.newArrayList();
-//    }
-
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
 
+        Charge incomingCharge = fetchCharge(getBudgetChargeReference());
+        BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
+        if (getInvoiceChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null && percentage!=null) {
+           findOrCreatePartitionItem(budgetItem);
+        }
+        return Lists.newArrayList(budgetItem.getBudget());
+    }
+
+    private BudgetItem findOrCreateBudgetAndBudgetItem(final Charge incomingCharge){
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
-        Charge sourceCharge = fetchCharge(getBudgetChargeReference());
-        Charge targetCharge = fetchCharge(getInvoiceChargeReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
-        KeyTable keyTable = findOrCreateKeyTable(budget, getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
-        PartitionItem partitionItem =
-                budget
-                        .findOrCreatePartitioningForBudgeting()
-                        .findOrCreateBudgetItem(sourceCharge)
-                        .updateOrCreateBudgetItemValue(budgetedValue, budgetStartDate, BudgetCalculationType.BUDGETED)
-                        .updateOrCreateBudgetItemValue(auditedValue, budgetEndDate, BudgetCalculationType.ACTUAL)
-                        .updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
+        BudgetItem budgetItem = budget
+                .findOrCreateBudgetItem(incomingCharge)
+                .updateOrCreateBudgetItemValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
+                .updateOrCreateBudgetItemValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.ACTUAL);
+        return budgetItem;
+    }
 
-        return Lists.newArrayList(budget);
+    private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem){
+        Charge targetCharge = fetchCharge(getInvoiceChargeReference());
+        KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
+        return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
     }
 
     private Charge fetchCharge(final String chargeReference) {
