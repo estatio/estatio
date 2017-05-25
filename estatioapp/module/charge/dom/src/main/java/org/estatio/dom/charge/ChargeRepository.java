@@ -175,4 +175,10 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
                 "reference", reference);
     }
 
+    public Charge findOrCreate(final String atPath, final String reference, final String name, final String description, Applicability applicability) {
+        final Charge charge = findByReference(reference);
+        if (charge != null)
+                return charge;
+        return create(reference,name,description, atPath, applicability);
+    }
 }

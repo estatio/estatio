@@ -140,7 +140,6 @@ public class Charge
     @Getter @Setter
     private Charge parent;
 
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = ChargeReferenceType.Meta.MAX_LEN)
     @Property(regexPattern = ReferenceType.Meta.REGEX, editing = Editing.DISABLED)
     @Getter @Setter
