@@ -33,13 +33,24 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.value.Blob;
 
+import org.isisaddons.module.security.app.user.MeService;
+
+import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
+import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.invoice.DocumentTypeData;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "incodeDocuments.DocumentMenu"
+)
 @DomainServiceLayout(
         named = "Documents",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
@@ -67,11 +78,36 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
 
-    @Inject
-    private ClockService clockService;
+
+
+    public static class UploadDomainEvent extends ActionDomainEvent<DocumentMenu> {}
+
+    @Action(domainEvent = UploadDomainEvent.class)
+    @MemberOrder(sequence = "2")
+    public Document upload(final Blob blob) {
+        final String name = blob.getName();
+        final DocumentType type = DocumentTypeData.INCOMING.findUsing(documentTypeRepository);
+        final String atPath = meService.me().getAtPath();
+
+        final Document document = documentService.createForBlob(type, atPath, name, blob);
+        return document;
+    }
+
+
 
     @Inject
-    private DocumentRepository documentRepository;
+    MeService meService;
 
+    @Inject
+    ClockService clockService;
+
+    @Inject
+    DocumentRepository documentRepository;
+
+    @Inject
+    DocumentTypeRepository documentTypeRepository;
+
+    @Inject
+    DocumentService documentService;
 
 }
