@@ -1,12 +1,16 @@
 package org.estatio.capex.dom.coda;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.dom.charge.Charge;
 
@@ -38,11 +42,12 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "CodaMapping_Alllllllll_UNQ", members = { "atPath", "documentType", "codaTransactionType", "charge", "projectFilter", "propertyFilter", "budgetFilter", "propertyIsFullyOwned", "periodStartDate", "periodEndDate", "startDate", "endDate", "codaElement"}),
+                name = "CodaMapping_Alllllllll_UNQ", members = { "atPath", "documentType", "codaTransactionType", "charge", "projectFilter", "propertyFilter", "budgetFilter", "propertyIsFullyOwned", "periodStartDate", "periodEndDate", "startDate", "endDate", "codaElement" }),
 })
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Setter @Getter
 public class CodaMapping {
-
 
     @Column(length = 50, allowsNull = "false")
     private String atPath;
@@ -50,33 +55,40 @@ public class CodaMapping {
     @Column(length = 50, allowsNull = "false")
     private DocumentType documentType;
 
+    @Column(length = 50, allowsNull = "false")
     private CodaTransactionType codaTransactionType;
 
-    @Column(length = 50, allowsNull = "false")
+    @Column(allowsNull = "false", name = "chargeId")
     private Charge charge;
 
+    @Column(length = 50, allowsNull = "false")
     private CodaMappingFilter propertyFilter;
 
+    @Column(length = 50, allowsNull = "false")
     private CodaMappingFilter projectFilter;
 
+    @Column(length = 50, allowsNull = "false")
     private CodaMappingFilter budgetFilter;
 
     private boolean propertyIsFullyOwned;
 
     @Column(allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
     private LocalDate periodStartDate;
 
     @Column(allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
     private LocalDate periodEndDate;
 
-    @Column(allowsNull = "false", length = 50, name = "codaElementId")
+    @Column(allowsNull = "false", name = "codaElementId")
     private CodaElement codaElement;
 
     @Column(allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
     private LocalDate startDate;
 
     @Column(allowsNull = "true")
+    @Property(optionality = Optionality.OPTIONAL)
     private LocalDate endDate;
-
 
 }
