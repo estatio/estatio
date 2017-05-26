@@ -9,10 +9,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.charge.Charge;
 
-@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = CodaMapping.class)
+@DomainService(
+        nature = NatureOfService.DOMAIN,
+        repositoryFor = CodaMapping.class)
 public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMapping> {
 
-    CodaMappingRepository() {
+    public CodaMappingRepository() {
         super(CodaMappingRepository.class, CodaMapping.class);
     }
 

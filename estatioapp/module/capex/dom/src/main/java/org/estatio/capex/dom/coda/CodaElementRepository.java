@@ -17,7 +17,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 )
 public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaElement> {
 
-    protected CodaElementRepository() {
+    public CodaElementRepository() {
         super(CodaElementRepository.class, CodaElement.class);
     }
 
