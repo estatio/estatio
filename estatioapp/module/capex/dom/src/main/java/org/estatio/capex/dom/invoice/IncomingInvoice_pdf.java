@@ -1,4 +1,7 @@
-package org.estatio.capex.dom.documents.categorisation.tasks;
+package org.estatio.capex.dom.invoice;
+
+import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -16,6 +19,9 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.task.Task;
@@ -39,9 +45,12 @@ public class IncomingInvoice_pdf {
     }
 
     Blob doProp() {
-        final IncomingDocumentCategorisationStateTransition stateTransition = repository.findByTask(task);
-        if (stateTransition != null) {
-            return stateTransition.getDocument().getBlob();
+        final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(this);
+        for (Paperclip paperclip : paperclips) {
+            final DocumentAbstract document = paperclip.getDocument();
+            if(Objects.equals(document.getMimeType(), "application/pdf")) {
+                return document.getBlob();
+            }
         }
         return null;
     }
@@ -51,9 +60,9 @@ public class IncomingInvoice_pdf {
     }
 
     @Inject
-    IncomingDocumentCategorisationStateTransition.Repository repository;
+    QueryResultsCache queryResultsCache;
 
     @Inject
-    QueryResultsCache queryResultsCache;
+    PaperclipRepository paperclipRepository;
 
 }

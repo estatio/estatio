@@ -9,19 +9,11 @@
     <row>
         <col span="4">
             <tabGroup>
-                <tab name="Invoice">
+                <tab name="General">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Invoice" id="invoice">
+                            <ns2:fieldSet name="General" id="general">
                                 <ns2:property id="invoiceNumber"/>
-                                <ns2:property id="buyer"/>
-                                <ns2:property id="seller"/>
-                                <ns2:property id="bankAccount"/>
-                                <ns2:property id="dateReceived"/>
-                                <ns2:property id="invoiceDate"/>
-                                <ns2:property id="dueDate"/>
-                                <ns2:property id="paymentMethod"/>
-                                <ns2:property id="isCreditFor"/>
                             </ns2:fieldSet>
                         </col>
                         <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->
@@ -36,13 +28,26 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Other">
+                <tab name="Application Tenancy">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Application Tenancy" id="general">
+                            <ns2:fieldSet name="Application Tenancy">
                                 <ns2:property id="applicationTenancy"/>
                                 <ns2:property id="atPath"/>
                             </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Other">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
                             <ns2:fieldSet name="Metadata" id="metadata">
                                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
@@ -52,11 +57,20 @@
                                 <ns2:property id="datanucleusVersionLong"/>
                                 <ns2:property id="datanucleusVersionTimestamp"/>
                             </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
                         </col>
                     </row>
                 </tab>
             </tabGroup>
+            <ns2:fieldSet name="Details" id="details">
+                <ns2:property id="buyer"/>
+                <ns2:property id="seller"/>
+                <ns2:property id="bankAccount"/>
+                <ns2:property id="dateReceived"/>
+                <ns2:property id="invoiceDate"/>
+                <ns2:property id="dueDate"/>
+                <ns2:property id="paymentMethod"/>
+                <ns2:property id="isCreditFor"/>
+            </ns2:fieldSet>
         </col>
         <col span="8">
             <tabGroup>
