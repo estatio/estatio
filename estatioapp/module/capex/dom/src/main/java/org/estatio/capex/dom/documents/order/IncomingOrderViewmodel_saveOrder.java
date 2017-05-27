@@ -12,6 +12,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.order.Order;
@@ -21,7 +22,7 @@ import org.estatio.dom.asset.Property;
 
 import lombok.Getter;
 
-@Mixin
+@Mixin(method = "act")
 public class IncomingOrderViewmodel_saveOrder {
 
     @Getter
@@ -32,17 +33,23 @@ public class IncomingOrderViewmodel_saveOrder {
     }
 
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Object saveOrder(final boolean goToNext){
+    public static class DomainEvent
+            extends EstatioCapexDomModule.ActionDomainEvent<IncomingOrderViewmodel_saveOrder> {}
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT,
+            domainEvent = DomainEvent.class
+    )
+    public Object act(final boolean goToNext){
         Order order = doCreate();
         return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : order;
     }
 
-    public boolean default0SaveOrder(){
+    public boolean default0Act(){
         return true;
     }
 
-    public String disableSaveOrder(){
+    public String disableAct(){
         return getViewmodel().minimalRequiredDataToComplete();
     }
 

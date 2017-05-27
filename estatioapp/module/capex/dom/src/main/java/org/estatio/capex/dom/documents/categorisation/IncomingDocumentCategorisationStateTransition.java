@@ -10,11 +10,21 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
 import org.joda.time.LocalDateTime;
+import org.wicketstuff.pdfjs.Scale;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -123,7 +133,7 @@ public class IncomingDocumentCategorisationStateTransition
     @Programmatic
     @Override
     public void setDomainObject(final Document domainObject) {
-        setDomainObject(domainObject);
+        setDocument(domainObject);
     }
 
     @DomainService(
@@ -141,6 +151,25 @@ public class IncomingDocumentCategorisationStateTransition
             super(IncomingDocumentCategorisationStateTransition.class);
         }
 
+    }
+
+
+    //region > _pdf (derived property)
+    @Mixin(method="prop")
+    public static class _pdf {
+        private final IncomingDocumentCategorisationStateTransition stateTransition;
+        public _pdf(final IncomingDocumentCategorisationStateTransition stateTransition) {
+            this.stateTransition = stateTransition;
+        }
+
+        public static class DomainEvent extends ActionDomainEvent<Document> {}
+
+        @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
+        @Action(semantics = SemanticsOf.SAFE, domainEvent = IncomingDocumentCategorisationStateTransition._pdf.DomainEvent.class)
+        @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+        public Blob prop() {
+            return stateTransition.getDocument().getBlob();
+        }
     }
 
 }

@@ -31,6 +31,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
@@ -144,6 +145,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
         deleteFrom(PaymentApprovalStateTransition.class);
         deleteFrom(Payment.class);
+
         deleteFrom(IncomingInvoiceApprovalStateTransition.class);
         deleteFrom(OrderItemInvoiceItemLink.class);
         deleteFrom(InvoiceItem.class);
@@ -215,6 +217,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(Person.class);
         deleteFrom(Party.class);
 
+        deleteFrom(IncomingDocumentCategorisationStateTransition.class);
         deleteFrom(PaperclipForDocument.class);
         deleteFrom(Paperclip.class);
         deleteFrom(Document.class);

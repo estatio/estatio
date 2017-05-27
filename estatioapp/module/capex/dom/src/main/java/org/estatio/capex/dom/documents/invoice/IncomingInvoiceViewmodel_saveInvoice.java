@@ -29,7 +29,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 
 import lombok.Getter;
 
-@Mixin
+@Mixin(method = "act")
 public class IncomingInvoiceViewmodel_saveInvoice {
 
     @Getter
@@ -46,18 +46,18 @@ public class IncomingInvoiceViewmodel_saveInvoice {
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
-    public Object saveInvoice(final boolean goToNext){
+    public Object act(final boolean goToNext){
         IncomingInvoice incomingInvoice = doCreate();
         // make the newly created invoice available to any subscribers of this action's domain event.
         this.viewmodel.incomingInvoice = incomingInvoice;
         return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : incomingInvoice;
     }
 
-    public boolean default0SaveInvoice(){
+    public boolean default0Act(){
         return true;
     }
 
-    public String disableSaveInvoice(){
+    public String disableAct(){
         return getViewmodel().minimalRequiredDataToComplete();
     }
 

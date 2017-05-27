@@ -16,12 +16,18 @@ import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.app.menus.documents.DocumentMenu;
+import org.estatio.capex.dom.documents.DocumentMenu;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 
 public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
 
@@ -39,7 +45,7 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
     }
 
     @Test
-    public void happyCase() throws Exception {
+    public void happy_case() throws Exception {
 
         // given
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
@@ -63,10 +69,45 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+
+        // and then also
+        final List<IncomingDocumentCategorisationStateTransition> transitions =
+                stateTransitionRepository.findByDomainObject(document);
+
+        assertThat(transitions).hasSize(2);
+        assertTransition(transitions.get(0),
+                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, null);
+        assertTransition(transitions.get(1),
+                null, INSTANTIATE, NEW);
+
     }
+
+
+    static void assertTransition(
+            final IncomingDocumentCategorisationStateTransition transition,
+            final IncomingDocumentCategorisationState from,
+            final IncomingDocumentCategorisationStateTransitionType type,
+            final IncomingDocumentCategorisationState to) {
+
+        assertThat(transition.getTransitionType()).isEqualTo(type);
+        if(from != null) {
+            assertThat(transition.getFromState()).isEqualTo(from);
+        } else {
+            assertThat(transition.getFromState()).isNull();
+        }
+        if(to != null) {
+            assertThat(transition.getToState()).isEqualTo(to);
+        } else {
+            assertThat(transition.getToState()).isNull();
+        }
+    }
+
 
     @Inject
     IncomingDocumentRepository repository;
+
+    @Inject
+    IncomingDocumentCategorisationStateTransition.Repository stateTransitionRepository;
 
     @Inject
     DocumentMenu documentMenu;

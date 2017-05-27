@@ -1,8 +1,5 @@
 package org.estatio.capex.dom.bankaccount.verification;
 
-import java.util.List;
-
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -18,8 +15,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
@@ -142,18 +137,5 @@ public class BankAccountVerificationStateTransition
             super(BankAccountVerificationStateTransition.class);
         }
 
-        @Programmatic
-        public void deleteFor(final BankAccount bankAccount) {
-            final List<BankAccountVerificationStateTransition> stateTransitions = findByDomainObject(bankAccount);
-            for (BankAccountVerificationStateTransition transition : stateTransitions) {
-                repositoryService.removeAndFlush(transition);
-            }
-            transactionService.flushTransaction();
-        }
-
-        @Inject
-        RepositoryService repositoryService;
-        @Inject
-        TransactionService transactionService;
     }
 }

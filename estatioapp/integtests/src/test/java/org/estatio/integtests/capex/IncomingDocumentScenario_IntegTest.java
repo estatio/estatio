@@ -23,10 +23,12 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_categorizeAsInvoice;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_categorizeAsOrder;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorization;
+import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAsInvoice;
+import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAsOrder;
+import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
@@ -37,8 +39,8 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsAssetManager;
-import org.estatio.capex.dom.invoice.approval.transitions.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsAssetManager;
+import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.capex.dom.invoice.payment.PaymentRepository;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
@@ -112,8 +114,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         @Test
         public void complete_scenario_test(){
             findIncomingDocuments_works();
-            classificationAsOrder_works();
-            classificationAsinvoice_works();
+            categoriseAsOrder_works();
+            categoriseAsInvoice_works();
             resetClassification_works();
             createOrder_works();
             createInvoice_works();
@@ -138,27 +140,37 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        HasDocumentAbstract_categorizeAsOrder _categorizeAsOrder;
-        List<HasDocumentAbstract> incomingOrders;
         IncomingOrderViewModel incomingOrderViewModel;
 
-        private void classificationAsOrder_works() {
+        private void categoriseAsOrder_works() {
 
             // given
-            _categorizeAsOrder = wrap(factoryService.mixin(HasDocumentAbstract_categorizeAsOrder.class, incomingDocumentViewModel1));
+            final Document document1 = incomingDocumentViewModel1.getDocument();
+            IncomingDocumentCategorisationState state = stateTransitionService
+                    .currentStateOf(document1, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when gotoNext is set to true
-            IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel) _categorizeAsOrder.act(propertyForOxf, true);
-            // then next is second viewmodel
+            IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel)
+                    wrap(mixin(HasDocumentAbstract_categoriseAsOrder.class, incomingDocumentViewModel1))
+                    .act(propertyForOxf, true);
+
+            // then state has changed
+            state = stateTransitionService
+                    .currentStateOf(document1, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+
+            // and also then next is second viewmodel
             assertThat(nextViewModel.getDocument()).isEqualTo(incomingDocumentViewModel2.getDocument());
 
             // and when
             transactionService.nextTransaction();
             incomingDocuments = factory.map(repository.findIncomingDocuments());
+
             // then
             assertThat(incomingDocuments.size()).isEqualTo(1);
 
-            incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
+            List<HasDocumentAbstract> incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
             assertThat(incomingOrders.size()).isEqualTo(1);
 
             incomingOrderViewModel = (IncomingOrderViewModel) incomingOrders.get(0);
@@ -173,20 +185,29 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        HasDocumentAbstract_categorizeAsInvoice _categorizeAsInvoice;
         List<HasDocumentAbstract> incomingInvoices;
         IncomingInvoiceViewModel incomingInvoiceViewModel;
 
-        private void classificationAsinvoice_works() {
+        private void categoriseAsInvoice_works() {
 
             // given
-            _categorizeAsInvoice = wrap(factoryService.mixin(HasDocumentAbstract_categorizeAsInvoice.class, incomingDocumentViewModel2));
+            final Document document2 = incomingDocumentViewModel2.getDocument();
+            IncomingDocumentCategorisationState state = stateTransitionService
+                    .currentStateOf(document2, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when
-            _categorizeAsInvoice.act(propertyForOxf, true);
+            wrap(mixin(HasDocumentAbstract_categoriseAsInvoice.class, incomingDocumentViewModel2))
+                    .act(propertyForOxf, true);
             transactionService.nextTransaction();
             incomingDocuments = factory.map(repository.findIncomingDocuments());
-            // then
+
+            // then state has changed
+            state = stateTransitionService
+                    .currentStateOf(document2, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+
+            // and also then
             assertThat(incomingDocuments.size()).isEqualTo(0);
 
             incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());
@@ -206,16 +227,14 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        HasDocumentAbstract_resetCategorization _resetCategorization;
 
         private void resetClassification_works() {
 
             // given
-            _resetCategorization = wrap(factoryService.mixin(HasDocumentAbstract_resetCategorization.class, incomingInvoiceViewModel));
             assertThat(incomingDocuments.size()).isEqualTo(0);
 
             // when
-            _resetCategorization.act();
+            wrap(mixin(HasDocumentAbstract_resetCategorisation.class, incomingInvoiceViewModel)).act();
             transactionService.nextTransaction();
 
             // then
@@ -226,7 +245,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
         }
 
-        IncomingOrderViewmodel_saveOrder _saveOrder;
+
         final String orderNumber = "123";
         Organisation seller;
         final String description = "Some order description";
@@ -234,16 +253,21 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         BigDecimal vatAmount;
         final BigDecimal grossAmount = new BigDecimal("120.00");
         final String period = "F2016";
+
         Order orderCreated;
 
         private void createOrder_works(){
 
             // given
-            _saveOrder = wrap(factoryService.mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel));
+            final Document document = incomingOrderViewModel.getDocument();
+            IncomingDocumentCategorisationState state = stateTransitionService
+                    .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // when
             try {
-                _saveOrder.saveOrder(false);
+                wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel)).
+                        act(false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: order number, seller, description, net amount, gross amount, charge, period required");
             }
@@ -257,7 +281,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             incomingOrderViewModel.setCharge(charge_for_works);
             incomingOrderViewModel.setPeriod(period);
 
-            orderCreated = (Order) _saveOrder.saveOrder(false);
+            this.orderCreated = (Order)
+                    wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel))
+                        .act(false);
             transactionService.nextTransaction();
 
             // then
@@ -279,6 +305,11 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(item.getStartDate()).isEqualTo(new LocalDate(2015,7,1));
             assertThat(item.getEndDate()).isEqualTo(new LocalDate(2016,6,30));
 
+            // document state
+            state = stateTransitionService
+                    .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY);
+
             // calculated when using method changeItemDetails
             vatAmount = new BigDecimal("20.00");
             assertThat(item.getVatAmount()).isEqualTo(vatAmount);
@@ -294,25 +325,31 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
             // incoming orders is empty
-            incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
+            List<HasDocumentAbstract> incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
             assertThat(incomingOrders.size()).isEqualTo(0);
 
         }
 
-        IncomingInvoiceViewmodel_saveInvoice _saveInvoice;
+
         IncomingInvoice invoiceCreated;
 
         private void createInvoice_works(){
 
             // given
-            incomingInvoiceViewModel = (IncomingInvoiceViewModel) _categorizeAsInvoice.act(propertyForOxf, false);
+            incomingInvoiceViewModel = (IncomingInvoiceViewModel)
+                    wrap(mixin(HasDocumentAbstract_categoriseAsInvoice.class, incomingDocumentViewModel2))
+                    .act(propertyForOxf, false);
             transactionService.nextTransaction();
 
-            _saveInvoice = wrap(factoryService.mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel));
+            final Document document = incomingInvoiceViewModel.getDocument();
+            IncomingDocumentCategorisationState state = stateTransitionService
+                    .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // when
             try {
-                _saveInvoice.saveInvoice(false);
+                wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
+                        .act(false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: invoice number, buyer, seller, bank account, date received, due date, net amount, gross amount required");
             }
@@ -345,7 +382,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // when
             try {
-                _saveInvoice.saveInvoice(false);
+                wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
+                        .act(false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: invoice number, date received, due date required");
             }
@@ -358,7 +396,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             final LocalDate dateReceivedDate = new LocalDate(2016, 2, 1);
             incomingInvoiceViewModel.setDateReceived(dateReceivedDate);
 
-            invoiceCreated = (IncomingInvoice) _saveInvoice.saveInvoice(false);
+            invoiceCreated = (IncomingInvoice) wrap(
+                    mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel)).act(false);
             transactionService.nextTransaction();
 
             // then
@@ -399,6 +438,11 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             Document doc = incomingInvoiceViewModel.getDocument();
             assertThat(paperclip.getDocument()).isEqualTo(doc);
+
+            // document state
+            state = stateTransitionService
+                    .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY);
 
             // transitions
             final List<IncomingInvoiceApprovalStateTransition> transitions =

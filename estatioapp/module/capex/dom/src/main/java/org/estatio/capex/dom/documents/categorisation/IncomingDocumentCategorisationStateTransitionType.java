@@ -31,7 +31,7 @@ public enum IncomingDocumentCategorisationStateTransitionType
                         IncomingDocumentCategorisationState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
-    INSTANTIATING(
+    INSTANTIATE(
             (IncomingDocumentCategorisationState)null,
             IncomingDocumentCategorisationState.NEW,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
@@ -45,7 +45,13 @@ public enum IncomingDocumentCategorisationStateTransitionType
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY,
             TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.none()
-    );
+    ),
+    RESET(
+            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
+            IncomingDocumentCategorisationState.NEW,
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    )
+    ;
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;

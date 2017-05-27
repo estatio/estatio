@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -25,6 +26,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.project.Project;
@@ -58,15 +60,21 @@ import lombok.Setter;
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
 @Setter @Getter
-public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
+public abstract class IncomingOrderAndInvoiceViewModel<T extends IncomingOrderAndInvoiceViewModel> extends HasDocumentAbstract {
 
     public IncomingOrderAndInvoiceViewModel() {}
 
-    public IncomingOrderAndInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
+    public IncomingOrderAndInvoiceViewModel(final Document document) {
         super(document);
-        this.fixedAsset = fixedAsset;
-        deriveBuyer();
     }
+
+    @Programmatic
+    public T init() {
+        setFixedAsset(paperclipRepository.paperclipAttaches(document, FixedAsset.class));
+        deriveBuyer();
+        return (T)this;
+    }
+
 
     private void deriveBuyer(){
         Party ownerCandidate = null;
@@ -521,5 +529,12 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     public BankAccountRepository bankAccountRepository; // public because of junit test
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    PaperclipRepository paperclipRepository;
+
 
 }

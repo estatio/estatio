@@ -32,8 +32,8 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
-import org.estatio.capex.dom.bankaccount.verification.transitions.BankAccount_cancel;
-import org.estatio.capex.dom.bankaccount.verification.transitions.BankAccount_verify;
+import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_cancel;
+import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;

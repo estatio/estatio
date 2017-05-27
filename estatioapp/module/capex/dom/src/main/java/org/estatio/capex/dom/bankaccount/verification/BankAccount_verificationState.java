@@ -1,33 +1,25 @@
 package org.estatio.capex.dom.bankaccount.verification;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method="prop")
-public class BankAccount_verificationState {
+public class BankAccount_verificationState
+        extends DomainObject_currentStateAbstract<
+                            BankAccount,
+                            BankAccountVerificationStateTransition,
+                            BankAccountVerificationStateTransitionType,
+                            BankAccountVerificationState> {
 
-    private final BankAccount bankAccount;
     public BankAccount_verificationState(final BankAccount bankAccount) {
-        this.bankAccount = bankAccount;
+        super(bankAccount, BankAccountVerificationStateTransition.class);
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+    // necessary because Isis' metamodel unable to infer return type from generic method
+    @Override
     public BankAccountVerificationState prop() {
-        return stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+        return super.prop();
     }
-    public boolean hide() {
-        return false;
-    }
-
-    @Inject
-    StateTransitionService stateTransitionService;
 }

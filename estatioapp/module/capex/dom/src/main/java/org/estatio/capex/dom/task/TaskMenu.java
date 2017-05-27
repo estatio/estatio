@@ -8,6 +8,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.estatio.dom.roles.EstatioRole;
+
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
         objectType = "task.TaskMenu"
@@ -19,8 +21,8 @@ public class TaskMenu {
         return taskRepository.listAll();
     }
 
-    public List<Task> myTasks(){
-        return taskRepository.listAll();
+    public List<Task> findTasksAssignedTo(EstatioRole estatioRole){
+        return taskRepository.findByAssignedTo(estatioRole);
     }
 
     @Inject

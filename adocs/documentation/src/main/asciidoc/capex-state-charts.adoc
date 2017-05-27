@@ -7,12 +7,16 @@
 [plantuml,state-charts,png]
 --
 state "IncomingDocumentCategorisationStateTransitionType" as idc {
+
     state "NEW" as idc_new
     state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as idc_caawp
+
     state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as idc_awde
 
     [*] --> idc_new: INSTANTIATING
-    idc_new --> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
+    idc_new -down-> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
+    idc_caawp -up-> idc_new : RESET
+
     idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
 }
 
@@ -29,10 +33,10 @@ state "BankAccount\nVerification\nStateTransitionType" as bbv {
 
 }
 
+[*] -> idc
+
 idc_caawp -right-> bbv : BankAccountVerificationStateSubscriber\n[new bank account to verify]
 
-
-[*] -> idc
 idc_awde -> iia : IncomingInvoiceApprovalStateSubscriber
 
 

@@ -5,6 +5,7 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="categorise" cssClassFa="folder-open-o"/>
                 </bs3:col>
             </bs3:row>
             <bs3:tabGroup>
@@ -59,17 +60,24 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Details">
                                 <cpt:property id="type"/>
-                                <cpt:property id="state"/>
+                                <cpt:property id="createdAt" hidden="ALL_TABLES"/>
                                 <cpt:property id="mimeType" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Dates">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Dates">
-                                <cpt:property id="createdAt" hidden="ALL_TABLES"/>
+                            <cpt:fieldSet name="Incoming">
+                                <cpt:property id="categorisationState">
+                                </cpt:property>
+                                <cpt:property id="pendingCategorisationTask"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Outgoing">
+                                <cpt:property id="state"/>
                                 <cpt:property id="renderedAt" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -111,7 +119,7 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="12">
-            <bs3:tabGroup>
+            <bs3:tabGroup  unreferencedCollections="true">
                 <bs3:tab name="Attachments">
                     <bs3:row>
                         <bs3:col span="12">
@@ -149,7 +157,7 @@
                 </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
-        <bs3:col span="12" unreferencedCollections="true">
+        <bs3:col span="12">
         </bs3:col>
     </bs3:row>
 </bs3:grid>

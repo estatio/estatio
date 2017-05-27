@@ -1,33 +1,25 @@
 package org.estatio.capex.dom.invoice.approval;
 
-import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
 
 @Mixin(method="prop")
-public class IncomingInvoice_approvalState {
+public class IncomingInvoice_approvalState
+        extends DomainObject_currentStateAbstract<
+                            IncomingInvoice,
+                            IncomingInvoiceApprovalStateTransition,
+                            IncomingInvoiceApprovalStateTransitionType,
+                            IncomingInvoiceApprovalState> {
 
-    private final IncomingInvoice incomingInvoice;
     public IncomingInvoice_approvalState(final IncomingInvoice incomingInvoice) {
-        this.incomingInvoice = incomingInvoice;
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+    // necessary because Isis' metamodel unable to infer return type from generic method
+    @Override
     public IncomingInvoiceApprovalState prop() {
-        return stateTransitionService.currentStateOf(incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
+        return super.prop();
     }
-    public boolean hide() {
-        return false;
-    }
-
-    @Inject
-    StateTransitionService stateTransitionService;
 }

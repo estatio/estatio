@@ -23,11 +23,13 @@ import java.util.Objects;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
@@ -130,7 +132,7 @@ public enum DocumentTypeData {
 
     }
 
-    public boolean isDocTypeFor(final Document document) {
+    public boolean isDocTypeFor(final DocumentAbstract<?> document) {
         return isDocTypeFor(document.getType());
     }
 
@@ -263,4 +265,39 @@ public enum DocumentTypeData {
                         .toList()
         );
     }
+
+    public static List<DocumentTypeData> incomingTypes() {
+        return natureOf(Nature.INCOMING);
+    }
+
+    public static List<DocumentTypeData> outgoingTypes() {
+        return natureOf(Nature.OUTGOING);
+    }
+
+    public static boolean hasIncomingType(final DocumentAbstract<?> document) {
+        return hasNatureOf(document, Nature.INCOMING);
+    }
+
+    static boolean hasNatureOf(final DocumentAbstract<?> document, final Nature nature) {
+        final List<DocumentTypeData> types = DocumentTypeData.natureOf(nature);
+        for (DocumentTypeData documentTypeData : types) {
+            if(documentTypeData.isDocTypeFor(document)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public static List<DocumentTypeData> natureOf(final Nature nature) {
+        List<DocumentTypeData> result = Lists.newArrayList();
+        for (DocumentTypeData documentTypeData : values()) {
+            if(documentTypeData.getNature() == nature) {
+                result.add(documentTypeData);
+            }
+        }
+        return ImmutableList.copyOf(result);
+    }
+
+
 }

@@ -12,11 +12,7 @@ import com.google.common.io.Resources;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.value.Blob;
 
-import org.incode.module.document.dom.api.DocumentService;
-import org.incode.module.document.dom.impl.types.DocumentType;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
-
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.capex.dom.documents.DocumentMenu;
 
 public class IncomingPdfFixture extends FixtureScript {
 
@@ -38,19 +34,12 @@ public class IncomingPdfFixture extends FixtureScript {
                 throw new RuntimeException(e);
             }
 
-            DocumentType documentType = DocumentTypeData.INCOMING.findUsing(documentTypeRepository);
-
-            documentService.createForBlob(documentType, "/FRA", resourceName, new Blob(resourceName, "application/pdf", bytes));
-
+            final Blob blob = new Blob(resourceName, "application/pdf", bytes);
+            wrap(documentMenu).upload(blob);
         }
     }
 
     @Inject
-    DocumentService documentService;
-
-    @Inject
-    DocumentTypeRepository documentTypeRepository;
-
-
+    DocumentMenu documentMenu;
 
 }

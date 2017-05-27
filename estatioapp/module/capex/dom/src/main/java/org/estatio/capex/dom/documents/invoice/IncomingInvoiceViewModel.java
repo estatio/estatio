@@ -56,7 +56,6 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -99,15 +98,22 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
+public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel<IncomingInvoiceViewModel> {
 
+    // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
     public IncomingInvoiceViewModel() {
         setPaymentMethod(PaymentMethod.BANK_TRANSFER);
     }
-    public IncomingInvoiceViewModel(final Document document, final FixedAsset fixedAsset) {
-        super(document, fixedAsset);
+
+    public IncomingInvoiceViewModel(final Document document) {
+        super(document);
         setDateReceived(document.getCreatedAt().toLocalDate());
         setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
+    }
+
+    @Override
+    public IncomingInvoiceViewModel init() {
+        return super.init();
     }
 
     /**

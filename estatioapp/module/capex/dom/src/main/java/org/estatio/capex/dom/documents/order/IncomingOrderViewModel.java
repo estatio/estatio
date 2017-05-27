@@ -37,7 +37,6 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
@@ -71,11 +70,16 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
+public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel<IncomingOrderViewModel> {
 
     public IncomingOrderViewModel() {}
-    public IncomingOrderViewModel(final Document document, final FixedAsset fixedAsset) {
-        super(document, fixedAsset);
+    public IncomingOrderViewModel(final Document document) {
+        super(document);
+    }
+
+    @Override
+    public IncomingOrderViewModel init() {
+        return super.init();
     }
 
     @Property(editing = Editing.ENABLED)

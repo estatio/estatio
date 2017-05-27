@@ -62,7 +62,7 @@ public class IncomingOrderViewModel_Test {
         asset.getOwners().add(ownership);
 
         // when
-        IncomingOrderViewModel vm = new IncomingOrderViewModel(null, asset);
+        IncomingOrderViewModel vm = new IncomingOrderViewModel(null);
 
         // then
         assertThat(vm.getBuyer()).isEqualTo(owner);

@@ -3,7 +3,6 @@ package org.estatio.capex.dom.task;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -18,14 +17,9 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.user.UserService;
@@ -33,7 +27,6 @@ import org.apache.isis.applib.types.DescriptionType;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
-import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -54,7 +47,13 @@ import lombok.Setter;
         @Query(
                 name = "find", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.task.Task ")
+                        + "FROM org.estatio.capex.dom.task.Task "),
+        @Query(
+                name = "findByAssignedTo", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE assignedTo == :assignedTo"
+        )
 })
 @DomainObject(objectType = "task.Task")
 public class Task implements Comparable<Task> {
@@ -108,41 +107,16 @@ public class Task implements Comparable<Task> {
     @Getter @Setter
     private String comment;
 
-    @Mixin(method="act")
-    public static class execute<
+    /**
+     * Convenience method to (naively) convert a list of {@link StateTransition}s to their corresponding {@link Task}.
+     */
+    public static <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > {
-
-        private final Task task;
-        public execute(final Task task ) {
-            this.task = task;
-        }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(contributed = Contributed.AS_ACTION)
-        public DO act(
-                @Nullable
-                final String comment) {
-            ST stateTransition = stateTransitionService.findFor(task);
-            DO domainObject = stateTransition.getDomainObject();
-            stateTransitionService.trigger(stateTransition, comment);
-            return domainObject;
-        }
-        public String disableAct() {
-            return task.isCompleted()
-                    ? String.format("Already completed (on %s by %s)", task.getCompletedBy(), task.getCompletedBy())
-                    : null;
-        }
-
-        private STT transitionTypeFor(Task task) {
-            return stateTransitionService.findFor(task);
-        }
-
-        @Inject
-        StateTransitionService stateTransitionService;
+    > Task from(final ST transition) {
+        return transition != null ? transition.getTask() : null;
     }
 
     /**

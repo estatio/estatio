@@ -139,8 +139,12 @@ public enum BankAccountVerificationStateTransitionType
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class SupportService extends StateTransitionServiceSupportAbstract<
-            BankAccount, BankAccountVerificationStateTransition, BankAccountVerificationStateTransitionType, BankAccountVerificationState> {
+    public static class SupportService
+            extends StateTransitionServiceSupportAbstract<
+                        BankAccount,
+                        BankAccountVerificationStateTransition,
+                        BankAccountVerificationStateTransitionType,
+                        BankAccountVerificationState> {
 
         public SupportService() {
             super(BankAccountVerificationStateTransitionType.class, BankAccountVerificationStateTransition.class

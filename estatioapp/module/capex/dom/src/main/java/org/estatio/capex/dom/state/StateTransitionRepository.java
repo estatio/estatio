@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -37,4 +36,11 @@ public interface StateTransitionRepository<
             final S fromState,
             final EstatioRole taskAssignToIfAny,
             final String taskDescription);
+
+    /**
+     * Removes all {@link StateTransition}s for the provided domain object.
+     */
+    @Programmatic
+    void deleteFor(DO domainObject);
+
 }

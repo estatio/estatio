@@ -75,9 +75,9 @@
                                         <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                                         <property id="document"/>
                                         <property id="type">
-                                            <action id="categorizeAsOrder"/>
-                                            <action id="categorizeAsInvoice"/>
-                                            <action id="resetCategorization"/>
+                                            <action id="categoriseAsOrder"/>
+                                            <action id="categoriseAsInvoice"/>
+                                            <action id="resetCategorisation"/>
                                         </property>
                                         <property id="createdAt"/>
                                     </fieldSet>

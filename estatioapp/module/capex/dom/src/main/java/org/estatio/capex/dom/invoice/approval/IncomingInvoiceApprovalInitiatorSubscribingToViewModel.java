@@ -35,7 +35,7 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
 
             transactionService.flushTransaction();
 
-            // an alternative design would be to just do this in IncomingInvoiceViewmodel_saveInvoice#saveInvoice method
+            // an alternative design would be to just do this in IncomingInvoiceViewmodel_saveInvoice#act method
             stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
             break;
         }

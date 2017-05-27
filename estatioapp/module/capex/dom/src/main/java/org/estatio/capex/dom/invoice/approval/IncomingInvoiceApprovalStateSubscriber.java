@@ -38,7 +38,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             final IncomingDocumentCategorisationStateTransitionType transitionType = ev.getTransitionType();
             switch (transitionType) {
 
-            case INSTANTIATING:
+            case INSTANTIATE:
                 break;
             case CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY:
                 break;
