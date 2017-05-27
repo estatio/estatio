@@ -16,6 +16,10 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 public class CodaElement {
 
+    public String title() {
+        return String.format("%s, %s,", getCode(), getName());
+    }
+
     @Getter @Setter @Column(allowsNull = "false", length = 12)
     private CodaElementLevel level;
 

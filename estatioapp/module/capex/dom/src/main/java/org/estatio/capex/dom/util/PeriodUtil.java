@@ -2,6 +2,9 @@ package org.estatio.capex.dom.util;
 
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 import org.joda.time.LocalDate;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -11,7 +14,11 @@ public class PeriodUtil {
     private static Pattern financialYearPattern = Pattern.compile("^F\\d{4}.*");
     private static Pattern yearPattern = Pattern.compile("^\\d{4}.*");
 
+    @Nullable
     public static LocalDateInterval yearFromPeriod(final String period){
+        if (period == null) {
+            return new LocalDateInterval(); // Interval with open start and end date
+        }
         LocalDate startDate = null;
         LocalDate endDate = null;
         if (financialYearPattern.matcher(period).matches()){
@@ -27,7 +34,7 @@ public class PeriodUtil {
         return new LocalDateInterval(startDate, endDate);
     }
 
-    public static String periodFromInterval(final LocalDateInterval interval){
+    public static String periodFromInterval(@NotNull final LocalDateInterval interval){
         LocalDate endDate = interval.endDate();
         if (matchesCalendarYear(interval)){
             return String.valueOf(endDate.getYear());

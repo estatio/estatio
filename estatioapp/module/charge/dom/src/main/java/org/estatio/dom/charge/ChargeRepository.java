@@ -32,6 +32,8 @@ import org.apache.isis.applib.query.QueryDefault;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.StringUtils;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.dom.tax.Tax;
@@ -175,10 +177,31 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
                 "reference", reference);
     }
 
+    @Programmatic
+    public List<Charge> matchOnReferenceOrName(final String regex) {
+        return allMatches("matchOnReferenceOrName",
+                "regex", regex);
+    }
+
+    @Programmatic
+    public List<Charge> findByApplicabilityAndMatchOnReferenceOrName(final String regex, Applicability applicability) {
+        return allMatches("findByApplicabilityAndMatchOnReferenceOrName",
+                "applicability1", applicability,
+                "applicability2", Applicability.IN_AND_OUT,
+                "regex", regex);
+    }
+
+    @Programmatic
+    public List<Charge> autoComplete(final String search){
+        return matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex("*"+search+"*"));
+    }
+
     public Charge findOrCreate(final String atPath, final String reference, final String name, final String description, Applicability applicability) {
         final Charge charge = findByReference(reference);
         if (charge != null)
                 return charge;
         return create(reference,name,description, atPath, applicability);
     }
+
+
 }

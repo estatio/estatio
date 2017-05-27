@@ -60,6 +60,9 @@
                                             <cpt:action id="createBudgetItem" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="period" promptStyle="INLINE"/>
+                                        <cpt:property id="codaMappings">
+                                            <cpt:action id="createCodaMapping" promptStyle="INLINE" position="RIGHT"/>
+                                       </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

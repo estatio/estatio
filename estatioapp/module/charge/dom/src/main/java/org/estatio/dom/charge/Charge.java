@@ -82,12 +82,29 @@ import lombok.experimental.UtilityClass;
                 name = "findByApplicabilities", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.charge.Charge "
-                        + "WHERE applicability == :applicability1"
-                        + "   || applicability == :applicability2" )
+                        + "WHERE "
+                        + "(applicability == :applicability1 || applicability == :applicability2) "
+                        + "ORDER BY reference" ),
+        @javax.jdo.annotations.Query(
+                name = "matchOnReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.charge.Charge "
+                        + "WHERE "
+                        + "(reference.matches(:regex) || name.matches(:regex)) "
+                        + "ORDER BY reference"),
+        @javax.jdo.annotations.Query(
+                name = "findByApplicabilityAndMatchOnReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.charge.Charge "
+                        + "WHERE "
+                        + "(applicability == :applicability1 || applicability == :applicability2) "
+                        + "&& (reference.matches(:regex) || name.matches(:regex)) "
+                        + "ORDER BY reference"),
 })
 @DomainObject(
-        bounded = true,
-        objectType = "org.estatio.dom.charge.Charge"
+        objectType = "org.estatio.dom.charge.Charge",
+        autoCompleteRepository = ChargeRepository.class,
+        bounded = true
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Charge

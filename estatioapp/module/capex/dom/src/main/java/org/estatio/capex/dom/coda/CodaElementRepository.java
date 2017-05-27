@@ -70,8 +70,11 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
             final String name) {
         Optional<CodaElement> codaElement = findByLevelAndCode(level, code);
 
-        if (codaElement.isPresent()) {
+        if (!codaElement.isPresent()) {
             return create(level, code, name);
+
+
+
         } else {
             return codaElement.get();
         }

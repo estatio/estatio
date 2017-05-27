@@ -81,34 +81,40 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     private ExcelFixture2 excelFixture2;
 
     @Override public void handleRow(final CodaMappingImport previousRow) {
-        DocumentType documentTypeEnum = DocumentType.valueOf(documentType);
 
-        CodaElement codaElement = codaElementRepository.findOrCreate(CodaElementLevel.LEVEL_5, el5Code, el5Name);
-        Charge charge = chargeRepository.findOrCreate(atPath, chargeReference != null ? chargeReference : chargeNameToReference(chargeName), chargeName, null, Applicability.INCOMING);
+        atPath = atPath == null ? previousRow.atPath : atPath;
 
-        final LocalDateInterval interval = PeriodUtil.yearFromPeriod(period);
+        if (documentType != null && chargeName != null) {
+            DocumentType documentTypeEnum = DocumentType.valueOf(documentType);
 
-        final CodaTransactionType codaTransactionType = valueOfElseDefault(transactionType, CodaTransactionType.STAT);
+            CodaElement codaElement = codaElementRepository.findOrCreate(CodaElementLevel.LEVEL_5, el5Code, el5Name);
+            Charge charge = chargeRepository.findOrCreate(atPath, chargeReference != null ? chargeReference : chargeNameToReference(chargeName), chargeName, "", Applicability.INCOMING);
 
-        final CodaMappingFilter hasProject = valueOfElseDefault(this.hasProject, CodaMappingFilter.AMBIGUOUS);
-        final CodaMappingFilter hasProperty = valueOfElseDefault(this.hasProperty, CodaMappingFilter.AMBIGUOUS);
-        final CodaMappingFilter hasBudget = valueOfElseDefault(this.hasBudget, CodaMappingFilter.AMBIGUOUS);
-        codaMappingRepository.findOrCreate(
-                atPath,
-                documentTypeEnum,
-                codaTransactionType,
-                charge,
-                hasProject,
-                hasProperty,
-                hasBudget,
-                asBoolean(propertyIsFullyOwned, true),
-                interval.startDate(),
-                interval.endDate(),
-                startDate,
-                endDate,
-                codaElement);
+            final LocalDateInterval interval = period == null ? new LocalDateInterval() : PeriodUtil.yearFromPeriod(period);
 
+            final CodaTransactionType codaTransactionType = valueOfElseDefault(transactionType, CodaTransactionType.STAT);
+
+            final CodaMappingFilter hasProject = valueOfElseDefault(this.hasProject, CodaMappingFilter.AMBIGUOUS);
+            final CodaMappingFilter hasProperty = valueOfElseDefault(this.hasProperty, CodaMappingFilter.AMBIGUOUS);
+            final CodaMappingFilter hasBudget = valueOfElseDefault(this.hasBudget, CodaMappingFilter.AMBIGUOUS);
+
+            codaMappingRepository.findOrCreate(
+                    atPath,
+                    documentTypeEnum,
+                    codaTransactionType,
+                    charge,
+                    hasProject,
+                    hasProperty,
+                    hasBudget,
+                    asBoolean(propertyIsFullyOwned, true),
+                    interval.startDate(),
+                    interval.endDate(),
+                    startDate,
+                    endDate,
+                    codaElement);
+        }
     }
+
 
     private boolean asBoolean(final String stringValue, final boolean defaultValue) {
         return stringValue == null ? defaultValue : parseBoolean2(stringValue);
@@ -123,7 +129,7 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     }
 
     private String chargeNameToReference(final String chargeName) {
-        return chargeName.replace(" ","_").toUpperCase();
+        return chargeName.toUpperCase();
     }
 
     @Inject ChargeRepository chargeRepository;

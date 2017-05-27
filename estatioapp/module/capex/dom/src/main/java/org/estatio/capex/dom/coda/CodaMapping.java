@@ -21,7 +21,7 @@ import lombok.Setter;
 @PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "dbo")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByAlllllllll", language = "JDOQL",
+                name = "findByAll", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.coda.CodaMapping "
                         + "WHERE "

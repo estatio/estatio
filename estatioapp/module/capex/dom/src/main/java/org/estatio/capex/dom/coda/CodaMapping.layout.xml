@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="General" id="general">
+                                <cpt:property id="charge" hidden="REFERENCES_PARENT"/>
+                                <cpt:property id="codaElement" hidden="REFERENCES_PARENT"/>
+                                <cpt:property id="codaTransactionType" hidden="REFERENCES_PARENT"/>
+                                <cpt:property id="propertyFilter"/>
+                                <cpt:property id="propertyIsFullyOwned"/>
+                                <cpt:property id="projectFilter"/>
+                                <cpt:property id="budgetFilter"/>
+                                <cpt:property id="documentType"/>
+                                <cpt:property id="periodStartDate"/>
+                                <cpt:property id="periodEndDate"/>
+                                <cpt:property id="startDate" hidden="ALL_TABLES"/>
+                                <cpt:property id="endDate" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="System">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8"/>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row></bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>
