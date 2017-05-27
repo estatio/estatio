@@ -60,6 +60,7 @@ public class DocumentPdfJsViewerSupport {
     public static class DocumentBlobHideIfPdf extends AbstractSubscriber {
 
         @Programmatic
+        @com.google.common.eventbus.Subscribe
         @org.axonframework.eventhandling.annotation.EventHandler
         public void on(DocumentAbstract.BlobDomainEvent ev) {
             switch (ev.getEventPhase()) {

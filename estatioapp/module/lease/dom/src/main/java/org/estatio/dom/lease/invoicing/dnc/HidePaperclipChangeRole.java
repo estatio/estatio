@@ -30,6 +30,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 public class HidePaperclipChangeRole extends AbstractSubscriber {
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Paperclip_changeRole.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {

@@ -40,6 +40,7 @@ public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscripti
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final LeaseItem.ChangeInvoicingFrequencyEvent ev) {
         final LeaseItem sourceLeaseItem = ev.getSource();

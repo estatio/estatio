@@ -44,6 +44,7 @@ public class CommunicationChannelSubscriptions extends UdoDomainService<Communic
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final CommunicationChannel.RemoveEvent ev) {
         CommunicationChannel sourceCommunicationChannel = ev.getSource();

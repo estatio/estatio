@@ -51,6 +51,7 @@ public class VetoDocumentDeleteIfSent extends UdoDomainRepositoryAndFactory<Comm
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Document_delete.ActionDomainEvent ev) {
         final Document document = (Document) ev.getMixedIn();

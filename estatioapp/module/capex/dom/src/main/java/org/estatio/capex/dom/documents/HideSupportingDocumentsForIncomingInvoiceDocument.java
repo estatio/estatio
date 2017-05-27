@@ -17,24 +17,28 @@ import org.estatio.dom.invoice.DocumentTypeData;
 public class HideSupportingDocumentsForIncomingInvoiceDocument extends AbstractSubscriber {
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(T_documents.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_backgroundCommands.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_communicationAttachments.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(Document_communications.ActionDomainEvent ev) {
         hideIfIncomingDocument(ev);

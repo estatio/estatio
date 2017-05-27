@@ -25,6 +25,7 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
     //
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoiceViewmodel_saveInvoice.ActionDomainEvent ev) {
         switch (ev.getEventPhase()) {

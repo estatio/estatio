@@ -15,12 +15,14 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void toInstantiateWhen(BankAccount.PersistedLifecycleEvent ev) {
         stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.INSTANTIATE, null);
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void toDeleteWhen(BankAccount.RemovingLifecycleEvent ev) {
         repository.deleteFor(ev.getSource());

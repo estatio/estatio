@@ -11,6 +11,7 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 public class Document_hideAtPath extends AbstractSubscriber {
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(DocumentAbstract.AtPathDomainEvent ev) {
         ev.hide();

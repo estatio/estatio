@@ -142,6 +142,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
     // //////////////////////////////////////
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Lease.ChangeDatesEvent ev) {
         switch (ev.getEventPhase()) {
@@ -154,6 +155,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Lease.TerminateEvent ev) {
         switch (ev.getEventPhase()) {
@@ -168,6 +170,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
     // //////////////////////////////////////
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Brand.RemoveEvent ev) {
         Brand sourceBrand = (Brand) ev.getSource();
