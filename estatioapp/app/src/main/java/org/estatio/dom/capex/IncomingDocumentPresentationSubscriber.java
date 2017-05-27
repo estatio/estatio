@@ -1,5 +1,7 @@
 package org.estatio.dom.capex;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -10,6 +12,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.Document_delete;
 
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @DomainService(
@@ -22,16 +25,21 @@ public class IncomingDocumentPresentationSubscriber extends AbstractSubscriber {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void disableIfIncomingAndCategorisedFor(final Document_delete.ActionDomainEvent ev) {
+        final Document document = (Document) ev.getMixedIn();
         switch (ev.getEventPhase()) {
         case DISABLE:
-            final Document document = (Document) ev.getMixedIn();
             if(DocumentTypeData.hasIncomingType(document) && !DocumentTypeData.INCOMING.isDocTypeFor(document)) {
                 ev.veto(TranslatableString.tr(
-                        "Document has already been categorized (as {documentType})",
+                        "Document has already been categorised (as {documentType})",
                         "documentType", document.getType().getName()));
             }
+        case EXECUTING:
+            repository.deleteFor(document);
         }
     }
+
+    @Inject
+    IncomingDocumentCategorisationStateTransition.Repository repository;
 
     @Programmatic
     @com.google.common.eventbus.Subscribe

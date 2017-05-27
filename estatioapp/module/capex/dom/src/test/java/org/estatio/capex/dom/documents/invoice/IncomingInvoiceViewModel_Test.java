@@ -153,58 +153,6 @@ public class IncomingInvoiceViewModel_Test {
 
     }
 
-    @Test
-    public void autoCompleteBankAccount_works() throws Exception {
 
-        List<BankAccount> result;
-
-        // given
-        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel();
-        vm.bankAccountRepository = mockBankAccountRepository;
-
-        BankAccount acc1 = new BankAccount();
-        acc1.setReference("123");
-        BankAccount acc2 = new BankAccount();
-        acc2.setReference("345");
-
-        Party owner = new Organisation();
-        acc2.setOwner(owner);
-
-        // expect
-        context.checking(new Expectations() {
-            {
-                allowing(mockBankAccountRepository).allBankAccounts();
-                will(returnValue(Arrays.asList(
-                        acc1, acc2
-                )));
-                oneOf(mockBankAccountRepository).findBankAccountsByOwner(owner);
-                will(returnValue(Arrays.asList(
-                        acc2
-                )));
-            }
-
-        });
-
-        // when
-        result = vm.autoCompleteBankAccount("23");
-
-        // then
-        assertThat(result.size()).isEqualTo(1);
-
-        // and when
-        result = vm.autoCompleteBankAccount("3");
-
-        // then
-        assertThat(result.size()).isEqualTo(2);
-
-        // and when seller is set
-        vm.setSeller(owner);
-        result = vm.autoCompleteBankAccount("3");
-
-        // then
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(acc2);
-
-    }
 
 }

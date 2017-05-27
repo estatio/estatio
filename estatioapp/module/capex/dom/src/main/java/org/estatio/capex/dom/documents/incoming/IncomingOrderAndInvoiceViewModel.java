@@ -528,13 +528,13 @@ public abstract class IncomingOrderAndInvoiceViewModel<T extends IncomingOrderAn
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    public BankAccountRepository bankAccountRepository; // public because of junit test
+    protected BankAccountRepository bankAccountRepository;
 
     @Inject
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    PaperclipRepository paperclipRepository;
+    protected PaperclipRepository paperclipRepository;
 
 
 }

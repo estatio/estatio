@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.capex.TickingFixtureClock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.CANCELLED;
@@ -166,6 +168,16 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(PENDING);
         }
 
+        @Before
+        public void setupClock() {
+            TickingFixtureClock.replaceExisting();
+        }
+
+        @After
+        public void teardownClock() {
+            TickingFixtureClock.reinstateExisting();
+        }
+
         @Test
         public void verify() throws Exception {
 
@@ -178,16 +190,16 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
             // when
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
+            transactionService.nextTransaction();
 
             // then
-            assertState(bankAccount, VERIFIED);
-
             final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
             assertThat(transitionsAfter.size()).isEqualTo(2);
             assertTransition(transitionsAfter.get(0), PENDING, VERIFY_BANK_ACCOUNT, VERIFIED);
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
+
+            assertState(bankAccount, VERIFIED);
         }
 
 
@@ -203,24 +215,24 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
             // when
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
+            transactionService.nextTransaction();
 
             // then
-            assertState(bankAccount, CANCELLED);
-
             final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
             assertThat(transitionsAfter.size()).isEqualTo(2);
             assertTransition(transitionsAfter.get(0), PENDING, CANCEL, CANCELLED);
             assertTransition(transitionsAfter.get(1), null, INSTANTIATE, PENDING);
+
+            assertState(bankAccount, CANCELLED);
         }
 
         @Test
         public void cannot_cancel_when_verified() throws Exception {
 
             // given
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
+            transactionService.nextTransaction();
 
             assertState(bankAccount, VERIFIED);
 
@@ -233,7 +245,6 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             expectedExceptions.expect(HiddenException.class);
 
             // when
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_cancel.class, this.bankAccount)).act(null);
         }
 
@@ -249,77 +260,78 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
             // when
-            getFixtureClock().addTime(0,1);
             final String validIban = "NL39ABNA0572008761";
             wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
+            transactionService.nextTransaction();
 
             // then
-            assertState(this.bankAccount, PENDING);
             final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
             assertThat(transitionsAfter.size()).isEqualTo(3);
             assertTransition(transitionsAfter.get(0), PENDING, VERIFY_BANK_ACCOUNT, null);
             assertTransition(transitionsAfter.get(1), PENDING, RESET, PENDING);
             assertTransition(transitionsAfter.get(2), null, INSTANTIATE, PENDING);
+
+            assertState(this.bankAccount, PENDING);
         }
 
         @Test
         public void change_when_verified_will_reset() throws Exception {
 
             // given
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
-
-            assertState(this.bankAccount, VERIFIED);
+            transactionService.nextTransaction();
 
             final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
             assertThat(transitionsBefore.size()).isEqualTo(2);
             assertTransition(transitionsBefore.get(0), PENDING, VERIFY_BANK_ACCOUNT, VERIFIED);
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
+            assertState(this.bankAccount, VERIFIED);
+
             // when
-            getFixtureClock().addTime(0,1);
             final String validIban = "NL39ABNA0572008761";
             wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
+            transactionService.nextTransaction();
 
             // then
-            assertState(this.bankAccount, PENDING);
-
             final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
             assertThat(transitionsAfter.size()).isEqualTo(4);
             assertTransition(transitionsAfter.get(0), PENDING, VERIFY_BANK_ACCOUNT, null);
             assertTransition(transitionsAfter.get(1), VERIFIED, RESET, PENDING);
             assertTransition(transitionsAfter.get(2), PENDING, VERIFY_BANK_ACCOUNT, VERIFIED);
             assertTransition(transitionsAfter.get(3), null, INSTANTIATE, PENDING);
+
+            assertState(this.bankAccount, PENDING);
         }
 
         @Test
         public void change_when_cancelled_will_reset() throws Exception {
 
             // given
-            getFixtureClock().addTime(0,1);
             wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
-
-            assertState(this.bankAccount, CANCELLED);
+            transactionService.nextTransaction();
 
             final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
             assertThat(transitionsBefore.size()).isEqualTo(2);
             assertTransition(transitionsBefore.get(0), PENDING, CANCEL, CANCELLED);
             assertTransition(transitionsBefore.get(1), null, INSTANTIATE, PENDING);
 
+            assertState(this.bankAccount, CANCELLED);
+
             // when
-            getFixtureClock().addTime(0,1);
             final String validIban = "NL39ABNA0572008761";
             wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
+            transactionService.nextTransaction();
 
             // then
-            assertState(this.bankAccount, PENDING);
-
             final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
             assertThat(transitionsAfter.size()).isEqualTo(4);
             assertTransition(transitionsAfter.get(0), PENDING, VERIFY_BANK_ACCOUNT, null);
             assertTransition(transitionsAfter.get(1), CANCELLED, RESET, PENDING);
             assertTransition(transitionsAfter.get(2), PENDING, CANCEL, CANCELLED);
             assertTransition(transitionsAfter.get(3), null, INSTANTIATE, PENDING);
+
+            assertState(this.bankAccount, PENDING);
         }
     }
 }

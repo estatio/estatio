@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +22,6 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAsOrder;
@@ -42,7 +42,6 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsAssetManager;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.capex.dom.invoice.payment.PaymentRepository;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
@@ -84,6 +83,16 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new IncomingPdfFixture());
             }
         });
+    }
+
+    @Before
+    public void setupClock() {
+        TickingFixtureClock.replaceExisting();
+    }
+
+    @After
+    public void teardownClock() {
+        TickingFixtureClock.reinstateExisting();
     }
 
     public static class ClassifyAndCreateFromIncomingDocuments extends IncomingDocumentScenario_IntegTest {
@@ -447,19 +456,19 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // transitions
             final List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(2);
-            final IncomingInvoiceApprovalStateTransition transition = transitions.get(0);
-            assertThat(transition.getDomainObject()).isSameAs(invoiceCreated);
+            assertThat(transitions).hasSize(3);
 
-            assertTransition(transition, NEW, APPROVE_AS_ASSET_MANAGER, null);
-            assertThat(transition.getCreatedOn()).isNotNull();
-            assertThat(transition.getCompletedOn()).isNull();
-            assertThat(transition.isCompleted()).isFalse();
+            assertTransition(transitions.get(0), NEW, APPROVE_AS_ASSET_MANAGER, null);
+
+            assertThat(transitions.get(0).getDomainObject()).isSameAs(invoiceCreated);
+            assertThat(transitions.get(0).getCreatedOn()).isNotNull();
+            assertThat(transitions.get(0).getCompletedOn()).isNull();
+            assertThat(transitions.get(0).isCompleted()).isFalse();
 
             // task
-            assertThat(transition.getTask()).isNotNull();
-            assertThat(transition.getTask().getCompletedBy()).isNull();
-            assertThat(transition.getTask().isCompleted()).isFalse();
+            assertThat(transitions.get(0).getTask()).isNotNull();
+            assertThat(transitions.get(0).getTask().getCompletedBy()).isNull();
+            assertThat(transitions.get(0).getTask().isCompleted()).isFalse();
 
             // incoming invoices is empty
             incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());
@@ -471,11 +480,10 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(2);
+            assertThat(transitions).hasSize(3);
             final IncomingInvoiceApprovalStateTransition transition1 = transitions.get(0);
 
             // when
-            getFixtureClock().addTime(0,1);
             final IncomingInvoice_approveAsAssetManager _approveAsAssetMgr = wrap(
                     mixin(IncomingInvoice_approveAsAssetManager.class, invoiceCreated));
 
@@ -495,7 +503,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(3);
+            assertThat(transitions).hasSize(4);
 
             IncomingInvoiceApprovalStateTransition completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
@@ -514,11 +522,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(nextTransition.getTask().isCompleted()).isFalse();
 
             // and when (LAST transition)
-            getFixtureClock().addTime(0,1);
             final IncomingInvoice_approveAsCountryDirector _approveAsCountryDirector = wrap(
                     mixin(IncomingInvoice_approveAsCountryDirector.class, invoiceCreated));
 
-            getFixtureClock().addTime(1,0); // time moves on
             _approveAsCountryDirector.act(null);
             transactionService.nextTransaction();
 
@@ -527,8 +533,9 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions.size()).isEqualTo(4);
-            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR)).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+            assertThat(transitions).hasSize(5);
+            assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransition.class))
+                    .isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
             completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
@@ -557,14 +564,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         }
     }
 
-    void assertState(final BankAccount bankAccount, final IncomingInvoiceApprovalState expected) {
-        assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
-                expected);
-    }
-
-    @Inject PaymentApprovalStateTransition.Repository paymentStateTransitionRepository;
-
-    @Inject IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
+    @Inject
+    IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
     @Inject
     IncomingDocumentRepository repository;

@@ -199,15 +199,16 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
+        transactionService.nextTransaction();
 
         // then
-        assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
-
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
         assertThat(transitionsAfter.size()).isEqualTo(3);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
         assertTransition(transitionsAfter.get(1), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
         assertTransition(transitionsAfter.get(2), null, INSTANTIATE, NEW);
+
+        assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
 
     }
 
@@ -232,15 +233,16 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
+        transactionService.nextTransaction();
 
         // then
-        assertState(incomingInvoice, APPROVED_BY_PROJECT_MANAGER);
-
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
         assertThat(transitionsAfter.size()).isEqualTo(3);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_PROJECT_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
         assertTransition(transitionsAfter.get(1), NEW, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
         assertTransition(transitionsAfter.get(2), null, INSTANTIATE, NEW);
+
+        assertState(incomingInvoice, APPROVED_BY_PROJECT_MANAGER);
 
     }
 
@@ -270,16 +272,17 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
+        transactionService.nextTransaction();
 
         // then
-        assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
-
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
         assertThat(transitionsAfter.size()).isEqualTo(4);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, null);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_PROJECT_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
         assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
         assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+
+        assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
     }
 
     @Test
@@ -297,8 +300,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // and given
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
-
-        assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
+        transactionService.nextTransaction();
 
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
         assertThat(transitionsBefore.size()).isEqualTo(3);
@@ -306,18 +308,21 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertTransition(transitionsBefore.get(1), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
         assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 
+        assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
+
         // when
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
+        transactionService.nextTransaction();
 
         // then
-        assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
-
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
         assertThat(transitionsAfter.size()).isEqualTo(4);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, null);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
         assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
         assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+
+        assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
     }
 
     @Test
@@ -332,10 +337,13 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // and given the bank account is verified
         wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
+        transactionService.nextTransaction();
+
         assertState(bankAccount, VERIFIED);
 
         // and given
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
+        transactionService.nextTransaction();
 
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
 
@@ -347,6 +355,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
+        transactionService.nextTransaction();
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);

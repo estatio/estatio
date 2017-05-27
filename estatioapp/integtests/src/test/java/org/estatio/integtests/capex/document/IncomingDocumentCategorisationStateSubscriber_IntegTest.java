@@ -30,7 +30,6 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -43,6 +42,7 @@ import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCat
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
 
 public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends EstatioIntegrationTest {
 
@@ -89,10 +89,10 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
     public void scenario() throws Exception {
 
         // given
-        List<Document> incomingDocumentsAfter = repository.findIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
+        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
+        assertThat(incomingDocumentsBefore).hasSize(1);
 
-        final Document document = incomingDocumentsAfter.get(0);
+        final Document document = incomingDocumentsBefore.get(0);
 
         List<IncomingDocumentCategorisationStateTransition> transitions =
                 stateTransitionRepository.findByDomainObject(document);
@@ -163,7 +163,6 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
         final HasDocumentAbstract_resetCategorisation.DomainEvent resetEv =
                 new HasDocumentAbstract_resetCategorisation.DomainEvent();
 
-        final FixedAsset fixedAsset = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
         resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
         eventBusService.post(resetEv);
@@ -172,15 +171,18 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
         // then
         transitions =
                 stateTransitionRepository.findByDomainObject(document);
-        assertThat(transitions).hasSize(3);
+        assertThat(transitions).hasSize(4);
         assertTransition(transitions.get(0),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, ASSOCIATE_WITH_DOMAIN_ENTITY, null);
+                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, null);
         assertTransition(transitions.get(1),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, RESET, NEW);
         assertTransition(transitions.get(2),
+                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+        assertTransition(transitions.get(3),
                 null, INSTANTIATE, NEW);
 
-        assertState(document, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+
+        assertState(document, NEW);
     }
 
 

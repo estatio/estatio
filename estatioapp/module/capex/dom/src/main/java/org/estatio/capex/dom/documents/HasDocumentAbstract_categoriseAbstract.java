@@ -37,7 +37,12 @@ public abstract class HasDocumentAbstract_categoriseAbstract {
     }
 
     public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<HasDocumentAbstract_categoriseAbstract> {}
+            extends EstatioCapexDomModule.ActionDomainEvent<HasDocumentAbstract_categoriseAbstract> {
+        @Override
+        public void setMixedIn(final Object mixedIn) {
+            super.setMixedIn(mixedIn);
+        }
+    }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
