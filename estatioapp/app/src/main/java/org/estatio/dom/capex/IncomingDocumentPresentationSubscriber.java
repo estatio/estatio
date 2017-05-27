@@ -33,6 +33,7 @@ public class IncomingDocumentPresentationSubscriber extends AbstractSubscriber {
                         "Document has already been categorised (as {documentType})",
                         "documentType", document.getType().getName()));
             }
+            break;
         case EXECUTING:
             repository.deleteFor(document);
         }
