@@ -38,7 +38,7 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract {
      */
     protected boolean hideAct() {
         final Document document = getDocument();
-        return documentTypeData.isDocTypeFor(document);
+        return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
     }
 
     protected HasDocument categoriseAndAttachPaperclip(final Property property) {
