@@ -12,7 +12,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.DocumentMenu;
 import org.estatio.capex.dom.documents.HasDocument;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAsInvoice;
+import org.estatio.capex.dom.documents.HasDocument_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorisation;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
@@ -42,7 +42,7 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
-    public void toCategoriseDocumentTypeWhen(HasDocumentAbstract_categoriseAsInvoice.DomainEvent ev) {
+    public void toCategoriseDocumentTypeWhen(HasDocument_categoriseAsInvoice.DomainEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
             final HasDocumentAbstract hasDocument = (HasDocumentAbstract) ev.getMixedIn();

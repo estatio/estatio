@@ -14,7 +14,12 @@
         <col span="0">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true"/>
         </col>
-        <col span="12" unreferencedCollections="true">
+        <col span="6" unreferencedCollections="true">
+            <ns2:collection id="myTasks" defaultView="table">
+                <ns2:named>My tasks</ns2:named>
+            </ns2:collection>
+        </col>
+        <col span="6" unreferencedCollections="true">
             <ns2:collection id="leasesAboutToExpire" defaultView="table">
                 <ns2:named>Leases about to expire</ns2:named>
             </ns2:collection>

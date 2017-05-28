@@ -32,7 +32,10 @@ public class Task_pdf {
     }
 
     @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
-    @Action(semantics = SemanticsOf.SAFE, domainEvent = IncomingDocumentCategorisationStateTransition._pdf.DomainEvent.class)
+    @Action(
+            semantics = SemanticsOf.SAFE,
+            domainEvent = Task_pdf.DomainEvent.class
+    )
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob prop() {
         return queryResultsCache.execute(this::doProp, Task_pdf.class, "prop", task);

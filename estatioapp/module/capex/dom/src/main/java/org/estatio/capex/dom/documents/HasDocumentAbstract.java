@@ -115,22 +115,28 @@ public abstract class HasDocumentAbstract implements HasDocument, HintStore.Hint
     public static class Factory {
 
         @Programmatic
-        public HasDocumentAbstract map(final Document document) {
-            HasDocumentAbstract viewModel = createFor(document);
-            return viewModel != null ? serviceRegistry2.injectServicesInto(viewModel) :  null;
+        public HasDocumentAbstract createFor(final Document document) {
+            HasDocumentAbstract viewModel = instantiate(document);
+            return viewModel;
         }
 
-        private HasDocumentAbstract createFor(final Document document) {
+        private HasDocumentAbstract instantiate(final Document document) {
             if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
                 final IncomingOrderViewModel viewModel = new IncomingOrderViewModel(document);
-                return serviceRegistry2.injectServicesInto(viewModel).init();
+                serviceRegistry2.injectServicesInto(viewModel);
+                viewModel.inferFixedAssetFromPaperclips();
+                return viewModel;
             }
             if(DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
                 final IncomingInvoiceViewModel viewModel = new IncomingInvoiceViewModel(document);
-                return serviceRegistry2.injectServicesInto(viewModel).init();
+                serviceRegistry2.injectServicesInto(viewModel);
+                viewModel.inferFixedAssetFromPaperclips();
+                return viewModel;
             }
             if(DocumentTypeData.INCOMING.isDocTypeFor(document)) {
-                return new IncomingDocumentViewModel(document);
+                final IncomingDocumentViewModel viewModel = new IncomingDocumentViewModel(document);
+                serviceRegistry2.injectServicesInto(viewModel);
+                return viewModel;
             }
             return null;
         }
@@ -139,7 +145,7 @@ public abstract class HasDocumentAbstract implements HasDocument, HintStore.Hint
         public List<HasDocumentAbstract> map(final List<Document> documents) {
             return Lists.newArrayList(
                     FluentIterable.from(documents)
-                            .transform(doc -> map(doc))
+                            .transform(this::createFor)
                             .filter(Objects::nonNull)
                             .toList());
         }

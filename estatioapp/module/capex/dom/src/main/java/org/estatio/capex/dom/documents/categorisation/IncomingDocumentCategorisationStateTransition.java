@@ -165,7 +165,10 @@ public class IncomingDocumentCategorisationStateTransition
         public static class DomainEvent extends ActionDomainEvent<Document> {}
 
         @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
-        @Action(semantics = SemanticsOf.SAFE, domainEvent = IncomingDocumentCategorisationStateTransition._pdf.DomainEvent.class)
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                domainEvent = IncomingDocumentCategorisationStateTransition._pdf.DomainEvent.class
+        )
         @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
         public Blob prop() {
             return stateTransition.getDocument().getBlob();

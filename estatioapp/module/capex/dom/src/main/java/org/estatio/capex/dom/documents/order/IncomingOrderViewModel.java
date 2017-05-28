@@ -70,16 +70,11 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel<IncomingOrderViewModel> {
+public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
 
     public IncomingOrderViewModel() {}
     public IncomingOrderViewModel(final Document document) {
         super(document);
-    }
-
-    @Override
-    public IncomingOrderViewModel init() {
-        return super.init();
     }
 
     @Property(editing = Editing.ENABLED)

@@ -98,7 +98,7 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel<IncomingInvoiceViewModel> {
+public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
     public IncomingInvoiceViewModel() {
@@ -109,11 +109,6 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel<I
         super(document);
         setDateReceived(document.getCreatedAt().toLocalDate());
         setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
-    }
-
-    @Override
-    public IncomingInvoiceViewModel init() {
-        return super.init();
     }
 
     /**

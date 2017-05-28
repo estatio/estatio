@@ -52,7 +52,7 @@ public class IncomingInvoiceAndOrderViewModel_deriveBuyer_Test {
         // when
         IncomingOrderViewModel vm = new IncomingOrderViewModel(mockDocument);
         vm.paperclipRepository = mockPaperclipRepository;
-        vm.init();
+        vm.inferFixedAssetFromPaperclips();
 
         // then
         assertThat(vm.getBuyer()).isEqualTo(owner);

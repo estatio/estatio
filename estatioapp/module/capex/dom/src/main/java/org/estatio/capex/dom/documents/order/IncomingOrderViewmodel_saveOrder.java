@@ -42,7 +42,7 @@ public class IncomingOrderViewmodel_saveOrder {
     )
     public Object act(final boolean goToNext){
         Order order = doCreate();
-        return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : order;
+        return goToNext && nextDocument()!=null ? factory.createFor(nextDocument()) : order;
     }
 
     public boolean default0Act(){

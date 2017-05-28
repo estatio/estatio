@@ -68,7 +68,8 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Incoming">
                                 <cpt:property id="categorisationState">
-                                    <cpt:action id="categorise" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="categoriseAsOrder" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="categoriseAsInvoice" cssClassFa="folder-open-o"/>
                                 </cpt:property>
                                 <cpt:property id="pendingCategorisationTask"/>
                             </cpt:fieldSet>

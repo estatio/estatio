@@ -50,7 +50,7 @@ public class IncomingInvoiceViewmodel_saveInvoice {
         IncomingInvoice incomingInvoice = doCreate();
         // make the newly created invoice available to any subscribers of this action's domain event.
         this.viewmodel.incomingInvoice = incomingInvoice;
-        return goToNext && nextDocument()!=null ? factory.map(nextDocument()) : incomingInvoice;
+        return goToNext && nextDocument()!=null ? factory.createFor(nextDocument()) : incomingInvoice;
     }
 
     public boolean default0Act(){

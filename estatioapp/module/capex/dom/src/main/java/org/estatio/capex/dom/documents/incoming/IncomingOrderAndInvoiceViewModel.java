@@ -60,7 +60,7 @@ import lombok.Setter;
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
 @Setter @Getter
-public abstract class IncomingOrderAndInvoiceViewModel<T extends IncomingOrderAndInvoiceViewModel> extends HasDocumentAbstract {
+public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
 
     public IncomingOrderAndInvoiceViewModel() {}
 
@@ -69,12 +69,16 @@ public abstract class IncomingOrderAndInvoiceViewModel<T extends IncomingOrderAn
     }
 
     @Programmatic
-    public T init() {
-        setFixedAsset(paperclipRepository.paperclipAttaches(document, FixedAsset.class));
-        deriveBuyer();
-        return (T)this;
+    public void inferFixedAssetFromPaperclips() {
+        final FixedAsset fixedAsset = paperclipRepository.paperclipAttaches(document, FixedAsset.class);
+        modifyFixedAsset(fixedAsset);
     }
 
+    @Programmatic
+    public void modifyFixedAsset(final FixedAsset fixedAsset) {
+        setFixedAsset(fixedAsset);
+        deriveBuyer();
+    }
 
     private void deriveBuyer(){
         Party ownerCandidate = null;

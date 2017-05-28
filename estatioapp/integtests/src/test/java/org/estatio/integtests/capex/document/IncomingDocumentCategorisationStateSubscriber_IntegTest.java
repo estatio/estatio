@@ -21,7 +21,7 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_categoriseAbstract;
+import org.estatio.capex.dom.documents.HasDocument_categoriseAbstract;
 import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
@@ -105,8 +105,8 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
         assertState(document, NEW);
 
         // when
-        final HasDocumentAbstract_categoriseAbstract.DomainEvent categoriseEv =
-                new HasDocumentAbstract_categoriseAbstract.DomainEvent();
+        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
+                new HasDocument_categoriseAbstract.DomainEvent();
         categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
         categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
         eventBusService.post(categoriseEv);

@@ -1,99 +1,146 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
-      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-        </col>
-    </row>
-    <row>
-        <col span="4">
-            <tabGroup>
-                <tab name="General">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="General" id="general">
-                                <ns2:property id="invoiceNumber"/>
-                            </ns2:fieldSet>
-                        </col>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12" unreferencedActions="true">
+                    <cpt:domainObject/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="General" id="general">
+                                <cpt:property id="invoiceNumber"/>
+                                <cpt:property id="buyer"/>
+                                <cpt:property id="seller"/>
+                                <cpt:property id="isCreditFor"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
                         <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->
-                        <col span="0">
-                            <ns2:fieldSet name="hidden" id="hidden">
-                                <ns2:action id="updateAttribute"/>
-                                <ns2:action id="changePaymentMethod"/>
-                                <ns2:action id="remove"/>
-                                <ns2:action id="changeDueDate"/>
-                                <ns2:property id="status"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application Tenancy">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Tenancy">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Other">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-            <ns2:fieldSet name="Details" id="details">
-                <ns2:property id="buyer"/>
-                <ns2:property id="seller"/>
-                <ns2:property id="bankAccount"/>
-                <ns2:property id="dateReceived"/>
-                <ns2:property id="invoiceDate"/>
-                <ns2:property id="dueDate"/>
-                <ns2:property id="paymentMethod"/>
-                <ns2:property id="isCreditFor"/>
-            </ns2:fieldSet>
-        </col>
-        <col span="8">
-            <tabGroup>
-                <tab name="Items">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="items" defaultView="table"></ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup unreferencedCollections="true">
-                <tab name="_">
-                    <row>
-                        <col span="12"></col>
-                    </row>
-                </tab>
-            </tabGroup>
+                        <bs3:col span="0">
+                            <cpt:fieldSet name="hidden" id="hidden">
+                                <cpt:action id="updateAttribute"/>
+                                <cpt:action id="changePaymentMethod"/>
+                                <cpt:action id="remove"/>
+                                <cpt:action id="changeDueDate"/>
+                                <cpt:property id="status"/>
+                                <cpt:property id="collectionNumber"/>
+                                <cpt:property id="currency"/>
+                                <cpt:property id="paidBy"/>
+                                <cpt:property id="relatesTo"/>
+                                <cpt:property id="sendTo"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application Tenancy">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Tenancy">
+                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="versionSequence"/>
+                                <cpt:property id="datanucleusId"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="Amounts">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Amounts">
+                                <cpt:property id="netAmount"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Payment">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Payment" id="details">
+                                <cpt:property id="bankAccount"/>
+                                <cpt:property id="paymentMethod"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Dates">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Dates">
+                                <cpt:property id="dateReceived"/>
+                                <cpt:property id="invoiceDate"/>
+                                <cpt:property id="dueDate"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Approval">
+                <cpt:property id="approvalState"/>
+                <cpt:property id="pendingApprovalTask">
+                    <cpt:action id="approveAsProjectManager"/>
+                    <cpt:action id="approveAsAssetManager"/>
+                    <cpt:action id="approveAsCountryDirector"/>
+                    <cpt:action id="cancel"/>
+                </cpt:property>
+            </cpt:fieldSet>
 
-        </col>
-    </row>
-</grid>
+            <cpt:collection id="items" defaultView="table"></cpt:collection>
+        </bs3:col>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Document">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Content" id="content">
+                                <cpt:property id="pdf" hidden="ALL_TABLES">
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row>
+                        <bs3:col span="12">
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>
