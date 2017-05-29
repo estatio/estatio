@@ -44,6 +44,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
+import org.estatio.charge.dom.impmgr.ChargeImport;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
@@ -138,8 +139,15 @@ public class BudgetImportExportManager {
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
+        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "ChargeImport");
         List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3));
+                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
+
+        // first import charges
+        List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
+        for (ChargeImport lineItem : chargeImportLines){
+            lineItem.importData(null);
+        }
 
         // import budget en items
         List<BudgetImportExport> budgetItemLines = importBudgetAndItems(objects);
@@ -205,7 +213,7 @@ public class BudgetImportExportManager {
         List<KeyTable> result = new ArrayList<>();
         for (BudgetImportExport lineItem :lineItems) {
             KeyTable foundKeyTable = keyTableRepository.findByBudgetAndName(getBudget(), lineItem.getKeyTableName());
-            if (!result.contains(foundKeyTable)) {
+            if (foundKeyTable!=null && !result.contains(foundKeyTable)) {
                 result.add(foundKeyTable);
             }
         }
