@@ -11,8 +11,8 @@
     </row>
     <row>
         <col span="4">
-            <ns2:tabGroup>
-                <ns2:tab name="BudgetItem">
+            <tabGroup>
+                <tab name="BudgetItem">
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Item" id="item" unreferencedProperties="true">
@@ -26,8 +26,8 @@
                             </ns2:fieldSet>
                         </col>
                     </row>
-                </ns2:tab>
-                <ns2:tab name="Metadata">
+                </tab>
+                <tab name="Metadata">
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Metadata" id="metadata">
@@ -41,14 +41,26 @@
                             </ns2:fieldSet>
                         </col>
                     </row>
-                </ns2:tab>
-            </ns2:tabGroup>
+                </tab>
+            </tabGroup>
         </col>
-        <col span="8" unreferencedCollections="true">
+        <col span="8" unreferencedCollections="false">
             <ns2:collection id="partitionItems" defaultView="table">
                 <ns2:action id="createPartitionItemForBudgeting"/>
                 <ns2:action id="createPartitionItemForActuals"/>
             </ns2:collection>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup unreferencedCollections="true">
+                <tab name="_">
+                    <row>
+                        <col span="12"></col>
+                    </row>
+                </tab>
+            </tabGroup>
+
         </col>
     </row>
 </grid>

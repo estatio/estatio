@@ -109,6 +109,16 @@ public class IncomingInvoiceItemRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoiceItem> findByBudgetItem(final BudgetItem budgetItem) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByBudgetItem",
+                        "budgetItem", budgetItem
+                ));
+    }
+
+    @Programmatic
     public List<IncomingInvoiceItem> findByProject(final Project project) {
         return repositoryService.allMatches(
                 new QueryDefault<>(

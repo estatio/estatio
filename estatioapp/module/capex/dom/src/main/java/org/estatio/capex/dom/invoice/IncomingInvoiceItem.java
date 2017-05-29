@@ -59,7 +59,12 @@ import lombok.Setter;
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE project == :project ")
+                        + "WHERE project == :project "),
+        @Query(
+                name = "findByBudgetItem", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE budgetItem == :budgetItem ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
