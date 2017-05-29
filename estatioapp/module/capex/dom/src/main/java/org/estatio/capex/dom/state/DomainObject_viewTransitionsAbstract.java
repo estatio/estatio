@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 /**
- * Subclasses should be annotated using: @Mixin(method = "coll")
+ * Subclasses should be annotated using: @Mixin(method = "act")
  */
-public abstract class DomainObject_transitionsAbstract<
+public abstract class DomainObject_viewTransitionsAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
         STT extends StateTransitionType<DO, ST, STT, S>,
@@ -22,14 +22,14 @@ public abstract class DomainObject_transitionsAbstract<
     protected final DO domainObject;
     private final Class<ST> stateTransitionClass;
 
-    public DomainObject_transitionsAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
+    public DomainObject_viewTransitionsAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<ST> coll() {
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public List<ST> act() {
         return stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
     }
 

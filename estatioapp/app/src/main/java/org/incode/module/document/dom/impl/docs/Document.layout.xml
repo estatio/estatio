@@ -70,6 +70,9 @@
                                 <cpt:property id="categorisationState">
                                     <cpt:action id="categoriseAsOrder" cssClassFa="folder-open-o"/>
                                     <cpt:action id="categoriseAsInvoice" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="viewCategorisationTransitions" position="RIGHT">
+                                        <cpt:named>View transitions</cpt:named>
+                                    </cpt:action>
                                 </cpt:property>
                                 <cpt:property id="pendingCategorisationTask"/>
                             </cpt:fieldSet>

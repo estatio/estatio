@@ -104,7 +104,11 @@
                 </bs3:tab>
             </bs3:tabGroup>
             <cpt:fieldSet name="Approval">
-                <cpt:property id="approvalState"/>
+                <cpt:property id="approvalState">
+                    <cpt:action id="viewApprovalTransitions" position="RIGHT">
+                        <cpt:named>Show transitions</cpt:named>
+                    </cpt:action>
+                </cpt:property>
                 <cpt:property id="pendingApprovalTask">
                     <cpt:action id="approveAsProjectManager"/>
                     <cpt:action id="approveAsAssetManager"/>
@@ -136,6 +140,18 @@
                 <bs3:tab name="_">
                     <bs3:row>
                         <bs3:col span="12">
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+
+        </bs3:col>
+        <bs3:col span="0">
+            <bs3:tabGroup >
+                <bs3:tab name="hidden">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="attributes"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

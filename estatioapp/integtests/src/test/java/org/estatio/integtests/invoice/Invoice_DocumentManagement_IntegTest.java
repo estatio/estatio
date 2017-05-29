@@ -80,7 +80,7 @@ import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_c
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_document;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_documentState;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.Invoice_invoiceDocs;
-import org.estatio.dom.lease.invoicing.viewmodel.dnc.Invoice_preliminaryLetters;
+import org.estatio.dom.lease.invoicing.viewmodel.dnc.Invoice_ForLease_preliminaryLetters;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
@@ -852,7 +852,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
     DocAndCommForPrelimLetter prelimLetterViewModelOf(final Invoice invoice) {
-        List<DocAndCommForPrelimLetter> prelimLetterViewModels = mixin(Invoice_preliminaryLetters.class, invoice).$$();
+        List<DocAndCommForPrelimLetter> prelimLetterViewModels = mixin(Invoice_ForLease_preliminaryLetters.class, invoice).$$();
         assertThat(prelimLetterViewModels).hasSize(1);
         return prelimLetterViewModels.get(0);
     }
@@ -875,7 +875,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
     Document prelimLetterOf(final Invoice invoice) {
-        final List<DocAndCommForPrelimLetter> viewModels = mixin(Invoice_preliminaryLetters.class, invoice).$$();
+        final List<DocAndCommForPrelimLetter> viewModels = mixin(Invoice_ForLease_preliminaryLetters.class, invoice).$$();
         assertThat(viewModels).hasSize(1);
         final DocAndCommForPrelimLetter viewModel = viewModels.get(0);
         final Document document = mixin(DocAndCommForPrelimLetter_document.class, viewModel).$$();

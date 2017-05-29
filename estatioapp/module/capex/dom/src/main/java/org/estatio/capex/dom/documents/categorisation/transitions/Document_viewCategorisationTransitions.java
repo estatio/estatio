@@ -9,30 +9,30 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.state.DomainObject_transitionsAbstract;
+import org.estatio.capex.dom.state.DomainObject_viewTransitionsAbstract;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-@Mixin(method = "coll")
-public class Document_categorisationTransitions
-        extends DomainObject_transitionsAbstract<
-                    Document,
-                    IncomingDocumentCategorisationStateTransition,
-                    IncomingDocumentCategorisationStateTransitionType,
-                    IncomingDocumentCategorisationState> {
+@Mixin(method = "act")
+public class Document_viewCategorisationTransitions
+        extends DomainObject_viewTransitionsAbstract<
+                            Document,
+                            IncomingDocumentCategorisationStateTransition,
+                            IncomingDocumentCategorisationStateTransitionType,
+                            IncomingDocumentCategorisationState> {
 
 
-    public Document_categorisationTransitions(final Document document) {
+    public Document_viewCategorisationTransitions(final Document document) {
         super(document, IncomingDocumentCategorisationStateTransition.class);
     }
 
     // necessary because Isis' metamodel unable to infer return type from generic method
     @Override
-    public List<IncomingDocumentCategorisationStateTransition> coll() {
-        return super.coll();
+    public List<IncomingDocumentCategorisationStateTransition> act() {
+        return super.act();
     }
 
 
-    public boolean hideColl() {
+    public boolean hideAct() {
         return !DocumentTypeData.hasIncomingType(domainObject);
     }
 

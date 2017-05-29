@@ -29,15 +29,15 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
-public abstract class Invoice_collectionAbstract<T extends DocAndCommAbstract<T>> {
+public abstract class InvoiceForLease_collectionAbstract<T extends DocAndCommAbstract<T>> {
 
-    private final Invoice invoice;
+    private final InvoiceForLease invoiceForLease;
     private DocAndCommAbstract.Factory.DncProvider<T> provider;
 
-    public Invoice_collectionAbstract(final Invoice invoice, final DocAndCommAbstract.Factory.DncProvider<T> provider) {
-        this.invoice = invoice;
+    public InvoiceForLease_collectionAbstract(final InvoiceForLease invoice, final DocAndCommAbstract.Factory.DncProvider<T> provider) {
+        this.invoiceForLease = invoice;
         this.provider = provider;
     }
 
@@ -46,7 +46,7 @@ public abstract class Invoice_collectionAbstract<T extends DocAndCommAbstract<T>
     @Collection()
     @CollectionLayout(defaultView = "table")
     public List<T> $$() {
-        return docAndCommFactory.documentsAndCommunicationsFor(invoice, i -> provider.instantiate(i));
+        return docAndCommFactory.documentsAndCommunicationsFor(invoiceForLease, i -> provider.instantiate(i));
     }
 
     @Inject

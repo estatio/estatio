@@ -20,12 +20,12 @@ package org.estatio.dom.lease.invoicing.viewmodel.dnc;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_invoiceDocs extends Invoice_collectionAbstract<DocAndCommForInvoiceDoc> {
+public class Invoice_invoiceDocs extends InvoiceForLease_collectionAbstract<DocAndCommForInvoiceDoc> {
 
-    public Invoice_invoiceDocs(final Invoice invoice) {
+    public Invoice_invoiceDocs(final InvoiceForLease invoice) {
         super(invoice, i -> new DocAndCommForInvoiceDoc(i));
     }
 
