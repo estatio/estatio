@@ -173,17 +173,17 @@ public class Task implements Comparable<Task> {
      */
     public abstract static class _mixinAbstract<M, DO> {
 
-        protected final org.estatio.capex.dom.task.Task task;
+        protected final Task task;
         private final Class<M> mixinClass;
 
-        public _mixinAbstract(final org.estatio.capex.dom.task.Task task, final Class<M> mixinClass) {
+        public _mixinAbstract(final Task task, final Class<M> mixinClass) {
             this.task = task;
             this.mixinClass = mixinClass;
         }
 
-        protected org.estatio.capex.dom.task.Task taskToReturn(final boolean goToNext, final org.estatio.capex.dom.task.Task task) {
+        protected Task taskToReturn(final boolean goToNext, final Task task) {
             if (goToNext){
-                final org.estatio.capex.dom.task.Task nextTask = nextTask();
+                final Task nextTask = nextTaskAfter(task);
                 if (nextTask != null) {
                     return nextTask;
                 }
@@ -194,8 +194,8 @@ public class Task implements Comparable<Task> {
             return task;
         }
 
-        private org.estatio.capex.dom.task.Task nextTask() {
-            final List<org.estatio.capex.dom.task.Task> tasks = taskRepository.findMyTasksIncomplete();
+        private Task nextTaskAfter(final Task task) {
+            final List<Task> tasks = taskRepository.findMyTasksIncompleteCreatedOnAfter(task.getCreatedOn());
             return tasks.size() > 0 ? tasks.get(0) : null;
         }
 
@@ -207,7 +207,6 @@ public class Task implements Comparable<Task> {
         }
 
         protected DO getDomainObjectIfAny() {
-//            return doGetDomainObjectIfAny();
             return queryResultsCache.execute(
                     this::doGetDomainObjectIfAny,
                     getClass(), "getDomainObjectIfAny", task);

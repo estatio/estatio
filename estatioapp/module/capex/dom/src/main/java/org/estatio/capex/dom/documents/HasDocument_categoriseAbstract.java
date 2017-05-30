@@ -12,19 +12,17 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
-import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class HasDocument_classifyAbstract extends DocumentLike_categoriseAsAbstract {
+public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocument_categoriseAsAbstract {
 
     protected final HasDocument hasDocument;
 
-    public HasDocument_classifyAbstract(
+    public HasDocument_categoriseAbstract(
             final HasDocument hasDocument,
             final DocumentTypeData documentTypeData) {
-        super(documentTypeData, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
+        super(documentTypeData);
         this.hasDocument = hasDocument;
     }
 
@@ -33,12 +31,8 @@ public abstract class HasDocument_classifyAbstract extends DocumentLike_categori
         return hasDocument.getDocument();
     }
 
-    public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<HasDocument_classifyAbstract>{}
-
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = DomainEvent.class
+            semantics = SemanticsOf.IDEMPOTENT
     )
     @ActionLayout(cssClassFa = "folder-open-o")
     public HasDocumentAbstract act(
@@ -76,7 +70,6 @@ public abstract class HasDocument_classifyAbstract extends DocumentLike_categori
         List<Document> incomingDocuments = documentRepository.findWithNoPaperclips();
         return incomingDocuments.size() > 0 ? incomingDocuments.get(0) : null;
     }
-
 
     @Inject
     MessageService messageService;

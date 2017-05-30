@@ -10,8 +10,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocument;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_resetClassification;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
@@ -37,29 +35,29 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
     }
 
 
-    // no longer required, since Document_classifyAsAbstract now inherits from DomainObject_triggerAbstract
+    // no longer required, since Document_categoriseAsAbstract now inherits from DomainObject_triggerAbstract
 
 //    @Programmatic
 //    @com.google.common.eventbus.Subscribe
 //    @org.axonframework.eventhandling.annotation.EventHandler
-//    public void toCategoriseDocumentTypeWhen(Document_classifyAsInvoice.DomainEvent ev) {
-//        final DocumentLike_categoriseAsAbstract source = ev.getSource();
+//    public void toCategoriseDocumentTypeWhen(Document_categoriseAsInvoice.DomainEvent ev) {
+//        final DocumentOrHasDocument_categoriseAsAbstract source = ev.getSource();
 //        toCategoriseDocumentTypeWhen(ev, source);
 //    }
 //
 //    @Programmatic
 //    @com.google.common.eventbus.Subscribe
 //    @org.axonframework.eventhandling.annotation.EventHandler
-//    public void toCategoriseDocumentTypeWhen(HasDocument_classifyAsInvoice.DomainEvent ev) {
-//        final DocumentLike_categoriseAsAbstract source = ev.getSource();
+//    public void toCategoriseDocumentTypeWhen(HasDocument_categoriseAsInvoice.DomainEvent ev) {
+//        final DocumentOrHasDocument_categoriseAsAbstract source = ev.getSource();
 //        toCategoriseDocumentTypeWhen(ev, source);
 //    }
 //
 //    @Programmatic
 //    @com.google.common.eventbus.Subscribe
 //    @org.axonframework.eventhandling.annotation.EventHandler
-//    public void toCategoriseDocumentTypeWhen(Document_classifyAsInvoice.Task_categoriseAsInvoice.DomainEvent ev) {
-//        final Document_classifyAsInvoice.Task_categoriseAsInvoice source = ev.getSource();
+//    public void toCategoriseDocumentTypeWhen(Document_categoriseAsInvoice.Task_categoriseAsInvoice.DomainEvent ev) {
+//        final Document_categoriseAsInvoice.Task_categoriseAsInvoice source = ev.getSource();
 //        toCategoriseDocumentTypeWhen(ev, source);
 //    }
 //
@@ -73,6 +71,7 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
 //        }
 //    }
 
+    // REVIEW: perhaps subclass from DomainObject_triggerAbstract ?
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -85,6 +84,7 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
         }
     }
 
+    // REVIEW: perhaps subclass from DomainObject_triggerAbstract ?
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -97,17 +97,19 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
         }
     }
 
-    @Programmatic
-    @com.google.common.eventbus.Subscribe
-    @org.axonframework.eventhandling.annotation.EventHandler
-    public void toResetWhen(HasDocumentAbstract_resetClassification.DomainEvent ev) {
-        switch (ev.getEventPhase()) {
-        case EXECUTED:
-            final HasDocument hasDocument = (HasDocument) ev.getMixedIn();
-            final Document document = hasDocument.getDocument();
-            stateTransitionService.trigger(document, IncomingDocumentCategorisationStateTransitionType.RESET, null);
-        }
-    }
+    // no longer required, since HasDocument_resetCategorise now inherits from DomainObject_triggerBaseAbstract
+
+//    @Programmatic
+//    @com.google.common.eventbus.Subscribe
+//    @org.axonframework.eventhandling.annotation.EventHandler
+//    public void toResetWhen(HasDocument_resetCategorisation.DomainEvent ev) {
+//        switch (ev.getEventPhase()) {
+//        case EXECUTED:
+//            final HasDocument hasDocument = (HasDocument) ev.getMixedIn();
+//            final Document document = hasDocument.getDocument();
+//            stateTransitionService.trigger(document, IncomingDocumentCategorisationStateTransitionType.RESET, null);
+//        }
+//    }
 
     @Inject
     IncomingDocumentCategorisationStateTransition.Repository repository;

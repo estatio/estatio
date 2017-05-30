@@ -30,7 +30,7 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
             domainEvent = DomainEvent.class
     )
     @MemberOrder(sequence = "9")
-    public BankAccount act(@Nullable final String comment) {
+    public Object act(@Nullable final String comment) {
         return super.act(comment);
     }
 
@@ -38,44 +38,5 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
     public boolean hideAct() {
         return super.hideAct();
     }
-
-
-    @Mixin(method="act")
-    public static class Task_verifyBankAccount
-            extends
-            Task._mixinAbstract<BankAccount_verify, BankAccount> {
-
-        protected final Task task;
-        public Task_verifyBankAccount(final Task task) {
-            super(task, BankAccount_verify.class);
-            this.task = task;
-        }
-
-        public static class DomainEvent extends EstatioCapexDomModule.ActionDomainEvent<BankAccount_verify.Task_verifyBankAccount> {}
-
-        @Action(
-                semantics = SemanticsOf.IDEMPOTENT,
-                domainEvent = BankAccount_verify.Task_verifyBankAccount.DomainEvent.class)
-        @ActionLayout(contributed= Contributed.AS_ACTION)
-        public Task act(@Nullable final String comment, final boolean goToNext) {
-            mixin().act(comment);
-            return taskToReturn(goToNext, task);
-        }
-
-        public boolean hideAct() {
-            return super.hideAct() || mixin().hideAct();
-        }
-
-        @Override
-        protected BankAccount doGetDomainObjectIfAny() {
-            final BankAccountVerificationStateTransition transition = repository.findByTask(this.task);
-            return transition != null ? transition.getBankAccount() : null;
-        }
-
-        @Inject
-        BankAccountVerificationStateTransition.Repository repository;
-
-    }
-
 
 }

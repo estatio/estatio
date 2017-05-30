@@ -68,8 +68,8 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Incoming">
                                 <cpt:property id="categorisationState">
-                                    <cpt:action id="classifyAsOrder" cssClassFa="folder-open-o"/>
-                                    <cpt:action id="classifyAsInvoice" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="categoriseAsOrder" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="categoriseAsInvoice" cssClassFa="folder-open-o"/>
                                     <cpt:action id="viewCategorisationTransitions" position="RIGHT">
                                         <cpt:named>View transitions</cpt:named>
                                     </cpt:action>

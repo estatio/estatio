@@ -18,7 +18,7 @@ public class IncomingInvoice_cancel extends IncomingInvoice_triggerAbstract {
 
     @Action()
     @MemberOrder(sequence = "9")
-    public IncomingInvoice act(@Nullable final String comment) {
+    public Object act(@Nullable final String comment) {
         return super.act(comment);
     }
 

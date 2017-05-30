@@ -18,7 +18,7 @@ public class BankAccount_cancel extends BankAccount_triggerAbstract {
 
     @Action()
     @MemberOrder(sequence = "9")
-    public BankAccount act(@Nullable final String comment) {
+    public Object act(@Nullable final String comment) {
         return super.act(comment);
     }
 

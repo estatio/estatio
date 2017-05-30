@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -47,14 +49,18 @@ public class EstatioAppHomePage {
     }
     //endregion
 
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
     public List<Task> getMyTasks() {
         return taskRepository.findMyTasksIncomplete();
     }
 
+    @Collection(notPersisted = true)
     public List<Lease> getLeasesAboutToExpire() {
         return leaseRepository.findExpireInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
+    @Collection(notPersisted = true)
     public List<Event> getUpcomingEvents() {
         return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }

@@ -40,8 +40,8 @@
                                         <action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                         <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                                         <property id="document">
-                                            <action id="classifyAsOrder" promptStyle="INLINE"/>
-                                            <action id="classifyAsInvoice" promptStyle="INLINE"/>
+                                            <action id="categoriseAsOrder" promptStyle="INLINE"/>
+                                            <action id="categoriseAsInvoice" promptStyle="INLINE"/>
                                         </property>
                                         <property id="type"/>
                                         <property id="createdAt"/>

@@ -1,25 +1,29 @@
 package org.estatio.capex.dom.documents;
 
+import javax.annotation.Nullable;
+
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocument_classifyAsOrder
-        extends HasDocument_classifyAbstract {
+public class HasDocument_categoriseAsInvoice
+        extends HasDocument_categoriseAbstract {
 
     // workaround for https://issues.apache.org/jira/browse/ISIS-1628
-    private final HasDocument hasDocument;
+    protected final HasDocument hasDocument;
 
-    public HasDocument_classifyAsOrder(final HasDocumentAbstract hasDocument) {
-        super(hasDocument, DocumentTypeData.INCOMING_ORDER);
+    public HasDocument_categoriseAsInvoice(final HasDocumentAbstract hasDocument) {
+        super(hasDocument, DocumentTypeData.INCOMING_INVOICE);
         this.hasDocument = hasDocument;
     }
 
     // workaround for https://issues.apache.org/jira/browse/ISIS-1628
     @Override
-    public HasDocumentAbstract act(final Property property, final boolean goToNext) {
+    public HasDocumentAbstract act(
+            @Nullable final Property property,
+            final boolean goToNext) {
         return super.act(property, goToNext);
     }
 

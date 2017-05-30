@@ -8,19 +8,17 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class Document_classifyAsAbstract extends DocumentLike_categoriseAsAbstract  {
+public abstract class Document_categoriseAsAbstract extends DocumentOrHasDocument_categoriseAsAbstract {
 
     private final Document document;
 
-    public Document_classifyAsAbstract(
+    public Document_categoriseAsAbstract(
             final Document document,
             final DocumentTypeData documentTypeData) {
-        super(documentTypeData, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
+        super(documentTypeData);
         this.document = document;
     }
 
@@ -30,17 +28,13 @@ public abstract class Document_classifyAsAbstract extends DocumentLike_categoris
         return document;
     }
 
-    public static class DomainEvent extends EstatioCapexDomModule.ActionDomainEvent<Document_classifyAsAbstract> {}
-
-    @Action(
-            semantics = SemanticsOf.SAFE,
-            domainEvent = DomainEvent.class
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(
             contributed= Contributed.AS_ACTION,
             cssClassFa = "folder-open-o"
     )
-    public Object act(final Property property) {
+    public Object act(final Property property, final String comment) {
+        super.act(comment);
         final Object viewModel = categoriseAndAttachPaperclip(property);
         return viewModel;
     }

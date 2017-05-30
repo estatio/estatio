@@ -30,7 +30,7 @@ public abstract class DomainObject_triggerBaseAbstract<
     protected abstract DO getDomainObject();
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public DO act(@Nullable final String comment) {
+    public Object act(@Nullable final String comment) {
         stateTransitionService.trigger(getDomainObject(), transitionType, comment);
         return getDomainObject();
     }

@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
-import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
@@ -21,8 +20,8 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocument_classifyAbstract;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_resetClassification;
+import org.estatio.capex.dom.documents.HasDocument_categoriseAsInvoice;
+import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
@@ -39,8 +38,8 @@ import org.estatio.integtests.capex.TickingFixtureClock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
 
@@ -105,12 +104,14 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
         assertState(document, NEW);
 
         // when
-        final HasDocument_classifyAbstract.DomainEvent categoriseEv =
-                new HasDocument_classifyAbstract.DomainEvent();
-        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-        categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
-        eventBusService.post(categoriseEv);
-        transactionService.nextTransaction();
+        final IncomingDocumentViewModel vm = new IncomingDocumentViewModel(document);
+        wrap(mixin(HasDocument_categoriseAsInvoice.class, vm)).act(null, true);
+//        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
+//                new HasDocument_categoriseAbstract.DomainEvent();
+//        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+//        categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
+//        eventBusService.post(categoriseEv);
+//        transactionService.nextTransaction();
 
         // then
         transitions =
@@ -160,13 +161,16 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
          */
 
         // when
-        final HasDocumentAbstract_resetClassification.DomainEvent resetEv =
-                new HasDocumentAbstract_resetClassification.DomainEvent();
+        final IncomingInvoiceViewModel vm2 = new IncomingInvoiceViewModel(document);
+        wrap(mixin(HasDocument_resetCategorisation.class, vm2)).act(null);
+        transactionService.nextTransaction();
 
-        resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
-        resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-        eventBusService.post(resetEv);
-
+//        final HasDocument_resetCategorisation.DomainEvent resetEv =
+//                new HasDocument_resetCategorisation.DomainEvent();
+//
+//        resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
+//        resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+//        eventBusService.post(resetEv);
 
         // then
         transitions =

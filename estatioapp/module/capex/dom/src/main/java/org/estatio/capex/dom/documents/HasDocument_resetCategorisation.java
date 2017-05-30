@@ -8,7 +8,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -17,29 +16,39 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.estatio.capex.dom.triggers.DomainObject_triggerBaseAbstract;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocumentAbstract_resetClassification {
-
+public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbstract<
+        Document,
+        IncomingDocumentCategorisationStateTransition,
+        IncomingDocumentCategorisationStateTransitionType,
+        IncomingDocumentCategorisationState
+        > {
 
     protected final HasDocument hasDocument;
 
-    public HasDocumentAbstract_resetClassification(final HasDocument hasDocument) {
+    public HasDocument_resetCategorisation(final HasDocument hasDocument) {
+        super(IncomingDocumentCategorisationStateTransitionType.RESET);
         this.hasDocument = hasDocument;
     }
 
+    @Override
+    public Document getDomainObject() {
+        return hasDocument.getDocument();
+    }
 
-    public static class DomainEvent extends ActionDomainEvent<HasDocumentAbstract_resetClassification> {}
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = DomainEvent.class
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "folder-open-o")
-    public HasDocument act() {
+    public HasDocument act(final String comment) {
+        super.act(comment);
+
         Document document = hasDocument.getDocument();
         document.setType(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
 
@@ -61,6 +70,9 @@ public class HasDocumentAbstract_resetClassification {
     }
 
     public boolean hideAct() {
+        if(super.hideAct()) {
+            return true;
+        }
         return IncomingDocumentViewModel.class.isAssignableFrom(hasDocument.getClass());
     }
 

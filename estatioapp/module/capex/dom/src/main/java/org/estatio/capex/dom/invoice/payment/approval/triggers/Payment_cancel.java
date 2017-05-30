@@ -18,7 +18,7 @@ public class Payment_cancel extends Payment_triggerAbstract {
 
     @Action()
     @MemberOrder(sequence = "9")
-    public Payment act(@Nullable final String comment) {
+    public Object act(@Nullable final String comment) {
         return super.act(comment);
     }
 

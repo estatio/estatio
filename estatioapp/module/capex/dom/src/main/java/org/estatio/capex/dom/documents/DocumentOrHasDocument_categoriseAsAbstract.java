@@ -19,7 +19,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
  * Intended to be subclassed by 'act' mixins with first param being a {@link Property};
  * mixins should override relevant methods to make public
  */
-public abstract class DocumentLike_categoriseAsAbstract
+public abstract class DocumentOrHasDocument_categoriseAsAbstract
         extends DomainObject_triggerBaseAbstract<
                     Document,
                     IncomingDocumentCategorisationStateTransition,
@@ -29,10 +29,9 @@ public abstract class DocumentLike_categoriseAsAbstract
 
     protected final DocumentTypeData documentTypeData;
 
-    public DocumentLike_categoriseAsAbstract(
-            final DocumentTypeData documentTypeData,
-            final IncomingDocumentCategorisationStateTransitionType transitionType) {
-        super(transitionType);
+    public DocumentOrHasDocument_categoriseAsAbstract(
+            final DocumentTypeData documentTypeData) {
+        super(IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY);
         this.documentTypeData = documentTypeData;
     }
 
@@ -50,6 +49,9 @@ public abstract class DocumentLike_categoriseAsAbstract
      * mixins should override to make public
      */
     protected boolean hideAct() {
+        if(super.hideAct()) {
+            return true;
+        }
         final Document document = getDomainObject();
         return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
     }
