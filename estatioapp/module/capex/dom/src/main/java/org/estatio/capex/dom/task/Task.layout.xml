@@ -14,9 +14,16 @@
                             <cpt:fieldSet name="General">
                                 <cpt:property id="description"/>
                                 <cpt:property id="assignedTo"/>
-                                <cpt:property id="object"/>
-                                <cpt:property id="transition"/>
-                                <cpt:property id="createdOn"/>
+                                <cpt:property id="object">
+                                    <cpt:action id="classifyAsOrder"/>
+                                    <cpt:action id="classifyAsInvoice"/>
+                                    <cpt:action id="approveAsProjectManager"/>
+                                    <cpt:action id="approveAsAssetManager"/>
+                                    <cpt:action id="approveAsCountryDirector"/>
+                                    <cpt:action id="verifyBankAccount"/>
+                                </cpt:property>
+                                <cpt:property id="transition" hidden="ALL_TABLES"/>
+                                <cpt:property id="createdOn" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -46,8 +53,8 @@
             </bs3:tabGroup>
             <cpt:fieldSet name="Completion" id="completion">
                 <cpt:property id="completed"/>
-                <cpt:property id="comment"/>
-                <cpt:property id="completedBy"/>
+                <cpt:property id="comment" hidden="ALL_TABLES"/>
+                <cpt:property id="completedBy" hidden="ALL_TABLES"/>
                 <cpt:property id="completedOn"/>
             </cpt:fieldSet>
         </bs3:col>
@@ -57,8 +64,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Content" id="content">
-                                <cpt:property id="pdf" hidden="ALL_TABLES">
-                                </cpt:property>
+                                <cpt:property id="pdf" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

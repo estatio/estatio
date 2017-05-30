@@ -22,5 +22,8 @@ public class Payment_cancel extends Payment_triggerAbstract {
         return super.act(comment);
     }
 
-
+    @Override
+    public boolean hideAct() {
+        return super.hideAct();
+    }
 }

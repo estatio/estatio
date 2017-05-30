@@ -22,5 +22,9 @@ public class IncomingInvoice_cancel extends IncomingInvoice_triggerAbstract {
         return super.act(comment);
     }
 
+    @Override
+    public boolean hideAct() {
+        return super.hideAct();
+    }
 
 }

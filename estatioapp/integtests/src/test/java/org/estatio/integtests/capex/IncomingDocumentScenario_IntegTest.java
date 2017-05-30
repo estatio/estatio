@@ -23,9 +23,9 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAsInvoice;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAsOrder;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorisation;
+import org.estatio.capex.dom.documents.HasDocument_classifyAsInvoice;
+import org.estatio.capex.dom.documents.HasDocument_classifyAsOrder;
+import org.estatio.capex.dom.documents.HasDocumentAbstract_resetClassification;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
@@ -161,7 +161,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // when gotoNext is set to true
             IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel)
-                    wrap(mixin(HasDocument_categoriseAsOrder.class, incomingDocumentViewModel1))
+                    wrap(mixin(HasDocument_classifyAsOrder.class, incomingDocumentViewModel1))
                     .act(propertyForOxf, true);
 
             // then state has changed
@@ -206,7 +206,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when
-            wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
+            wrap(mixin(HasDocument_classifyAsInvoice.class, incomingDocumentViewModel2))
                     .act(propertyForOxf, true);
             transactionService.nextTransaction();
             incomingDocuments = factory.map(repository.findIncomingDocuments());
@@ -243,7 +243,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             assertThat(incomingDocuments.size()).isEqualTo(0);
 
             // when
-            wrap(mixin(HasDocumentAbstract_resetCategorisation.class, incomingInvoiceViewModel)).act();
+            wrap(mixin(HasDocumentAbstract_resetClassification.class, incomingInvoiceViewModel)).act();
             transactionService.nextTransaction();
 
             // then
@@ -317,7 +317,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // document state
             state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER);
 
             // calculated when using method changeItemDetails
             vatAmount = new BigDecimal("20.00");
@@ -346,7 +346,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // given
             incomingInvoiceViewModel = (IncomingInvoiceViewModel)
-                    wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
+                    wrap(mixin(HasDocument_classifyAsInvoice.class, incomingDocumentViewModel2))
                     .act(propertyForOxf, false);
             transactionService.nextTransaction();
 
@@ -456,7 +456,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // document state
             state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER);
 
             // transitions
             final List<IncomingInvoiceApprovalStateTransition> transitions =

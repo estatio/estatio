@@ -17,11 +17,16 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDateTime;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 
@@ -49,10 +54,12 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "),
         @Query(
-                name = "findByAssignedTo", language = "JDOQL",
+                name = "findByAssignedToIncomplete", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "
-                        + "WHERE assignedTo == :assignedTo"
+                        + "WHERE assignedTo == :assignedTo "
+                        + "   && completedBy == null "
+                        + "ORDER BY createdOn ASC "
         )
 })
 @DomainObject(objectType = "task.Task")
@@ -61,9 +68,11 @@ public class Task implements Comparable<Task> {
     public Task(
             final EstatioRole assignedTo,
             final String description,
+            final LocalDateTime createdOn,
             final String transitionObjectType) {
         this.assignedTo = assignedTo;
         this.description = description;
+        this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;
     }
 
@@ -92,12 +101,17 @@ public class Task implements Comparable<Task> {
     @Column(allowsNull = "false")
     private String transitionObjectType;
 
-
     public boolean isCompleted() {
         return getCompletedBy() != null;
     }
 
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private LocalDateTime createdOn;
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDateTime completedOn;
 
     @Getter @Setter
     @Column(allowsNull = "true")
@@ -147,10 +161,76 @@ public class Task implements Comparable<Task> {
 
     @Override
     public int compareTo(final Task other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "createdOn");
+        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "createdOn,transitionObjectType,description,comment");
     }
 
     @Inject
     UserService userService;
+
+    /**
+     * Base class for mixins on {@link Task} that delegate to a corresponding mixin on some domain object which will
+     * result in a {@link Task} being completed.
+     */
+    public abstract static class _mixinAbstract<M, DO> {
+
+        protected final org.estatio.capex.dom.task.Task task;
+        private final Class<M> mixinClass;
+
+        public _mixinAbstract(final org.estatio.capex.dom.task.Task task, final Class<M> mixinClass) {
+            this.task = task;
+            this.mixinClass = mixinClass;
+        }
+
+        protected org.estatio.capex.dom.task.Task taskToReturn(final boolean goToNext, final org.estatio.capex.dom.task.Task task) {
+            if (goToNext){
+                final org.estatio.capex.dom.task.Task nextTask = nextTask();
+                if (nextTask != null) {
+                    return nextTask;
+                }
+                // fall through to returning the view model for this document
+                messageService.informUser("No more tasks");
+            }
+
+            return task;
+        }
+
+        private org.estatio.capex.dom.task.Task nextTask() {
+            final List<org.estatio.capex.dom.task.Task> tasks = taskRepository.findMyTasksIncomplete();
+            return tasks.size() > 0 ? tasks.get(0) : null;
+        }
+
+        /**
+         * Subclasses should override and make <tt>public</tt>.
+         */
+        protected boolean hideAct() {
+            return task.isCompleted() || getDomainObjectIfAny() == null;
+        }
+
+        protected DO getDomainObjectIfAny() {
+//            return doGetDomainObjectIfAny();
+            return queryResultsCache.execute(
+                    this::doGetDomainObjectIfAny,
+                    getClass(), "getDomainObjectIfAny", task);
+        }
+
+        protected M mixin() {
+            return factoryService.mixin(mixinClass, doGetDomainObjectIfAny());
+        }
+
+        protected abstract DO doGetDomainObjectIfAny();
+
+        @Inject
+        TaskRepository taskRepository;
+
+        @Inject
+        MessageService messageService;
+
+        @Inject
+        FactoryService factoryService;
+
+        @Inject
+        QueryResultsCache queryResultsCache;
+
+    }
 
 }

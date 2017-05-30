@@ -13,42 +13,43 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocument_categoriseAsAbstract {
+public abstract class HasDocument_classifyAbstract extends DocumentLike_categoriseAsAbstract {
 
     protected final HasDocument hasDocument;
 
-    public HasDocument_categoriseAbstract(
+    public HasDocument_classifyAbstract(
             final HasDocument hasDocument,
             final DocumentTypeData documentTypeData) {
-        super(documentTypeData);
+        super(documentTypeData, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         this.hasDocument = hasDocument;
     }
 
     @Override
-    protected Document getDocument() {
+    public Document getDomainObject() {
         return hasDocument.getDocument();
     }
 
     public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<HasDocument_categoriseAbstract>{}
+            extends EstatioCapexDomModule.ActionDomainEvent<HasDocument_classifyAbstract>{}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = DomainEvent.class
     )
     @ActionLayout(cssClassFa = "folder-open-o")
-    public HasDocument act(
+    public HasDocumentAbstract act(
             final Property property,
             final boolean goToNext) {
-        final HasDocument viewModel = categoriseAndAttachPaperclip(property);
+        final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
 
         if (goToNext){
             final Document nextDocument = nextDocument();
             if (nextDocument != null) {
-                return viewModelFactory.createFor(nextDocument);
+                return this.viewModelFactory.createFor(nextDocument);
             }
             // fall through to returning the view model for this document
             messageService.informUser("No more documents to categorise");

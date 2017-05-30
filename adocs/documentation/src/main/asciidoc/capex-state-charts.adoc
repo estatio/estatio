@@ -11,13 +11,13 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
     state "NEW" as idc_new
     state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as idc_caawp
 
-    state "ASSOCIATED_\nWITH_DOMAIN_ENTITY" as idc_awde
+    state "CLASSIFIED_AS_\nINVOICE_OR_ORDER" as idc_awde
 
     [*] --> idc_new: INSTANTIATING
     idc_new -down-> idc_caawp : CATEGORISE_DOCUMENT_TYPE_AND_\nASSOCIATE_WITH_PROPERTY
     idc_caawp -up-> idc_new : RESET
 
-    idc_caawp --> idc_awde : ASSOCIATE_WITH_DOMAIN_ENTITY
+    idc_caawp --> idc_awde : CLASSIFY_AS_\nINVOICE_OR_ORDER
 }
 
 

@@ -22,7 +22,7 @@ public class TaskMenu {
     }
 
     public List<Task> findTasksAssignedTo(EstatioRole estatioRole){
-        return taskRepository.findByAssignedTo(estatioRole);
+        return taskRepository.findByAssignedToIncomplete(estatioRole);
     }
 
     @Inject

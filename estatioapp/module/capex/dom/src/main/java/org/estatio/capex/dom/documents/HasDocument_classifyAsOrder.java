@@ -6,21 +6,35 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocument_categoriseAsOrder
-        extends HasDocument_categoriseAbstract {
+public class HasDocument_classifyAsOrder
+        extends HasDocument_classifyAbstract {
 
     // workaround for https://issues.apache.org/jira/browse/ISIS-1628
     private final HasDocument hasDocument;
 
-    public HasDocument_categoriseAsOrder(final HasDocumentAbstract hasDocument) {
+    public HasDocument_classifyAsOrder(final HasDocumentAbstract hasDocument) {
         super(hasDocument, DocumentTypeData.INCOMING_ORDER);
         this.hasDocument = hasDocument;
     }
 
     // workaround for https://issues.apache.org/jira/browse/ISIS-1628
     @Override
-    public HasDocument act(final Property property, final boolean goToNext) {
+    public HasDocumentAbstract act(final Property property, final boolean goToNext) {
         return super.act(property, goToNext);
     }
 
+    @Override
+    public Property default0Act() {
+        return super.default0Act();
+    }
+
+    @Override
+    public boolean default1Act() {
+        return super.default1Act();
+    }
+
+    @Override
+    public boolean hideAct() {
+        return super.hideAct();
+    }
 }

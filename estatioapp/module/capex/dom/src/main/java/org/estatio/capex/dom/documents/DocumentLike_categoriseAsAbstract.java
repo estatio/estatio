@@ -2,11 +2,16 @@ package org.estatio.capex.dom.documents;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
+import org.estatio.capex.dom.triggers.DomainObject_triggerBaseAbstract;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
@@ -14,17 +19,25 @@ import org.estatio.dom.invoice.DocumentTypeData;
  * Intended to be subclassed by 'act' mixins with first param being a {@link Property};
  * mixins should override relevant methods to make public
  */
-public abstract class DocumentOrHasDocument_categoriseAsAbstract {
+public abstract class DocumentLike_categoriseAsAbstract
+        extends DomainObject_triggerBaseAbstract<
+                    Document,
+                    IncomingDocumentCategorisationStateTransition,
+                    IncomingDocumentCategorisationStateTransitionType,
+                    IncomingDocumentCategorisationState
+                > {
 
-    private final DocumentTypeData documentTypeData;
+    protected final DocumentTypeData documentTypeData;
 
-    public DocumentOrHasDocument_categoriseAsAbstract(final DocumentTypeData documentTypeData) {
+    public DocumentLike_categoriseAsAbstract(
+            final DocumentTypeData documentTypeData,
+            final IncomingDocumentCategorisationStateTransitionType transitionType) {
+        super(transitionType);
         this.documentTypeData = documentTypeData;
     }
 
-    protected abstract Document getDocument();
-
-    public static class DomainEvent extends EstatioCapexDomModule.ActionDomainEvent<Document> {}
+    @Programmatic
+    public abstract Document getDomainObject();
 
     /**
      * mixins should override to make public
@@ -37,19 +50,19 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract {
      * mixins should override to make public
      */
     protected boolean hideAct() {
-        final Document document = getDocument();
+        final Document document = getDomainObject();
         return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
     }
 
-    protected HasDocument categoriseAndAttachPaperclip(final Property property) {
-        final Document document = getDocument();
+    HasDocumentAbstract categoriseAndAttachPaperclip(final Property property) {
+        final Document document = getDomainObject();
         document.setType(documentTypeData.findUsing(documentTypeRepository));
         attachPaperclipTo(property);
         return viewModelFactory.createFor(document);
     }
 
     private void attachPaperclipTo(final Property property) {
-        final Document document = getDocument();
+        final Document document = getDomainObject();
         final Property existingProperty = existingPropertyAttachmentIfAny();
         if(existingProperty != null) {
             paperclipRepository.deleteIfAttachedTo(existingProperty);
@@ -58,7 +71,7 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract {
     }
 
     private Property existingPropertyAttachmentIfAny() {
-        final Document document = getDocument();
+        final Document document = getDomainObject();
         return paperclipRepository.paperclipAttaches(document, Property.class);
     }
 

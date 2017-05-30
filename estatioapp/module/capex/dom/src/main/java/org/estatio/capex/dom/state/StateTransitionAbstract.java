@@ -9,6 +9,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.util.Enums;
 import org.apache.isis.applib.util.ObjectContracts;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.estatio.capex.dom.task.Task;
 
 public abstract class StateTransitionAbstract<
@@ -89,6 +91,10 @@ public abstract class StateTransitionAbstract<
     public void completed() {
         setCompletedOn(clockService.nowAsLocalDateTime());
         setCompleted(true);
+        if(getTask() != null) {
+            getTask().setCompletedOn(getCompletedOn());
+            getTask().setCompletedBy(meService.me().getName());
+        }
         setToState(getTransitionType().getToState());
     }
 
@@ -101,5 +107,7 @@ public abstract class StateTransitionAbstract<
 
     @Inject
     protected ClockService clockService;
+    @Inject
+    protected MeService meService;
 
 }

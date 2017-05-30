@@ -21,8 +21,8 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAbstract;
-import org.estatio.capex.dom.documents.HasDocumentAbstract_resetCategorisation;
+import org.estatio.capex.dom.documents.HasDocument_classifyAbstract;
+import org.estatio.capex.dom.documents.HasDocumentAbstract_resetClassification;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
@@ -39,7 +39,7 @@ import org.estatio.integtests.capex.TickingFixtureClock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
@@ -105,8 +105,8 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
         assertState(document, NEW);
 
         // when
-        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
-                new HasDocument_categoriseAbstract.DomainEvent();
+        final HasDocument_classifyAbstract.DomainEvent categoriseEv =
+                new HasDocument_classifyAbstract.DomainEvent();
         categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
         categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
         eventBusService.post(categoriseEv);
@@ -117,7 +117,7 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(3);
         assertTransition(transitions.get(0),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, ASSOCIATE_WITH_DOMAIN_ENTITY, null);
+                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, CLASSIFY_AS_INVOICE_OR_ORDER, null);
         assertTransition(transitions.get(1),
                 NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
         assertTransition(transitions.get(2),
@@ -150,18 +150,18 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(3);
         assertTransition(transitions.get(0),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, ASSOCIATE_WITH_DOMAIN_ENTITY, ASSOCIATED_WITH_DOMAIN_ENTITY);
+                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, CLASSIFY_AS_INVOICE_OR_ORDER, CLASSIFIED_AS_INVOICE_OR_ORDER);
         assertTransition(transitions.get(1),
                 NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
         assertTransition(transitions.get(2),
                 null, INSTANTIATE, NEW);
 
-        assertState(document, ASSOCIATED_WITH_DOMAIN_ENTITY);
+        assertState(document, CLASSIFIED_AS_INVOICE_OR_ORDER);
          */
 
         // when
-        final HasDocumentAbstract_resetCategorisation.DomainEvent resetEv =
-                new HasDocumentAbstract_resetCategorisation.DomainEvent();
+        final HasDocumentAbstract_resetClassification.DomainEvent resetEv =
+                new HasDocumentAbstract_resetClassification.DomainEvent();
 
         resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
         resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);

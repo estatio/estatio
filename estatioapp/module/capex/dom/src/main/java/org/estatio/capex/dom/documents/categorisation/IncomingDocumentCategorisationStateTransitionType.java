@@ -41,17 +41,16 @@ public enum IncomingDocumentCategorisationStateTransitionType
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM), StateTransitionStrategy.Util.next()
     ),
-    ASSOCIATE_WITH_DOMAIN_ENTITY(
+    CLASSIFY_AS_INVOICE_OR_ORDER(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            IncomingDocumentCategorisationState.ASSOCIATED_WITH_DOMAIN_ENTITY,
+            IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
             TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.none()
     ),
     RESET(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.NEW,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
-    )
-    ;
+    );
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;

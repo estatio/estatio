@@ -22,8 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -34,7 +32,6 @@ import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.roles.EstatioRole;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -51,14 +48,7 @@ public class EstatioAppHomePage {
     //endregion
 
     public List<Task> getMyTasks() {
-        // REVIEW: this is rather naive query, but will do for prototyping at least
-        List<Task> results = Lists.newArrayList();
-        final EstatioRole[] estatioRoles = EstatioRole.values();
-        for (EstatioRole estatioRole : estatioRoles) {
-            final List<Task> tasksForRole = taskRepository.findByAssignedTo(estatioRole);
-            results.addAll(tasksForRole);
-        }
-        return results;
+        return taskRepository.findMyTasksIncomplete();
     }
 
     public List<Lease> getLeasesAboutToExpire() {

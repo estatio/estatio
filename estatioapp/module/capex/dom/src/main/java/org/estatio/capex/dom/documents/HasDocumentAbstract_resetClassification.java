@@ -22,17 +22,17 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocumentAbstract_resetCategorisation {
+public class HasDocumentAbstract_resetClassification {
 
 
     protected final HasDocument hasDocument;
 
-    public HasDocumentAbstract_resetCategorisation(final HasDocument hasDocument) {
+    public HasDocumentAbstract_resetClassification(final HasDocument hasDocument) {
         this.hasDocument = hasDocument;
     }
 
 
-    public static class DomainEvent extends ActionDomainEvent<HasDocumentAbstract_resetCategorisation> {}
+    public static class DomainEvent extends ActionDomainEvent<HasDocumentAbstract_resetClassification> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,

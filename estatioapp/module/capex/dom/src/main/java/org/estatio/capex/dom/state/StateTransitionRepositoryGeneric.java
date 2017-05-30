@@ -131,8 +131,9 @@ public class StateTransitionRepositoryGeneric {
         if (taskAssignToIfAny == null) {
             return null;
         }
+        final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
         final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
-        final Task task = new Task(taskAssignToIfAny, taskDescription, transitionObjectType);
+        final Task task = new Task(taskAssignToIfAny, taskDescription, createdOn, transitionObjectType);
         repositoryService.persist(task);
         return task;
     }
@@ -157,7 +158,7 @@ public class StateTransitionRepositoryGeneric {
         stateTransition.setFromState(fromState);
         stateTransition.setTask(taskIfAny);
 
-        final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
+        final LocalDateTime createdOn = taskIfAny != null ? taskIfAny.getCreatedOn() : clockService.nowAsLocalDateTime();
         stateTransition.setCreatedOn(createdOn);
 
         repositoryService.persistAndFlush(stateTransition);

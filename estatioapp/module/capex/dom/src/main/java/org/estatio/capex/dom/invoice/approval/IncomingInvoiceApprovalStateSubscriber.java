@@ -43,7 +43,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             case CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY:
                 break;
 
-            case ASSOCIATE_WITH_DOMAIN_ENTITY:
+            case CLASSIFY_AS_INVOICE_OR_ORDER:
                 final Document document = ev.getDomainObject();
                 final IncomingInvoice incomingInvoice = findIncomingInvoiceFrom(document);
                 if(incomingInvoice != null) {
@@ -51,7 +51,6 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
                 }
                 break;
             }
-
         }
     }
 

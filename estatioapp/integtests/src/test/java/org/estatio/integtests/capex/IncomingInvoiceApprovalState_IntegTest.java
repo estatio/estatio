@@ -142,7 +142,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev = new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(
-                invoiceDoc, null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                invoiceDoc, null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -167,7 +167,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // when
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -187,7 +187,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // given
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -221,7 +221,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // and given
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -255,7 +255,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // and given
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -291,7 +291,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // given
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
@@ -331,7 +331,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // given
         final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
                 new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.ASSOCIATE_WITH_DOMAIN_ENTITY);
+                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
