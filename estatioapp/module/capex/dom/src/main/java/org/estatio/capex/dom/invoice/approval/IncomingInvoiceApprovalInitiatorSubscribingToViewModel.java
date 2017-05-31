@@ -31,7 +31,7 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
         switch (ev.getEventPhase()) {
         case EXECUTED:
             final IncomingInvoiceViewModel viewModel = (IncomingInvoiceViewModel) ev.getMixedIn();
-            final IncomingInvoice incomingInvoice = viewModel.getIncomingInvoice();
+            final IncomingInvoice incomingInvoice = viewModel.getDomainObject();
 
             transactionService.flushTransaction();
 

@@ -50,7 +50,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -93,12 +93,12 @@ import lombok.Setter;
                 "tax",
                 "grossAmount",
                 "notCorrect",
-                "incomingInvoice"
+                "domainObject"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
+public class IncomingInvoiceViewModel extends IncomingOrderOrInvoiceViewModel<IncomingInvoice> {
 
     // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
     public IncomingInvoiceViewModel() {
@@ -116,7 +116,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
      * for this view model that publish domain events.
      */
     @Property(hidden = Where.EVERYWHERE)
-    IncomingInvoice incomingInvoice;
+    IncomingInvoice domainObject;
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;
@@ -133,7 +133,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
         }
     }
 
-    public IncomingOrderAndInvoiceViewModel createBankAccount(final String ibanNumber){
+    public IncomingOrderOrInvoiceViewModel createBankAccount(final String ibanNumber){
         bankAccountRepository.newBankAccount(getSeller(), ibanNumber, null);
         BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber); // this lookup is done instead of setting bankaccount right away for jaxb viewmodel recreation
         setBankAccount(bankAccount);
@@ -347,7 +347,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
                 bankAccountRepository.findBankAccountsByOwner(party).get(0) : null;
     }
 
-    String minimalRequiredDataToComplete(){
+    protected String minimalRequiredDataToComplete(){
         StringBuffer buffer = new StringBuffer();
         if (getInvoiceNumber()==null){
             buffer.append("invoice number, ");
@@ -386,7 +386,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
 
     @Programmatic
     public boolean hasOrderItem(){
-        return getOrderItem()==null ? false : true;
+        return getOrderItem() != null;
     }
 
     @Inject

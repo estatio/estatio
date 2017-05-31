@@ -20,7 +20,7 @@ import org.estatio.dom.party.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingInvoiceAndOrderViewModel_deriveBuyer_Test {
+public class IncomingOrderOrInvoiceViewModel_deriveBuyer_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);

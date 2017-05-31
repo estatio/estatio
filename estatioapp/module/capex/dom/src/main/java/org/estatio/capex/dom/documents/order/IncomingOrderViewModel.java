@@ -37,7 +37,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.party.Party;
 
@@ -68,12 +68,12 @@ import lombok.Setter;
                 "vatAmount",
                 "tax",
                 "grossAmount",
-                "order"
+                "domainObject"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
+public class IncomingOrderViewModel extends IncomingOrderOrInvoiceViewModel<Order> {
 
     public IncomingOrderViewModel() {}
     public IncomingOrderViewModel(final Document document) {
@@ -86,7 +86,7 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
      * for this view model that publish domain events.
      */
     @Property(hidden = Where.EVERYWHERE)
-    Order order;
+    Order domainObject;
 
 
     @Property(editing = Editing.ENABLED)
@@ -140,7 +140,7 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
         return getOrderDate();
     }
 
-    String minimalRequiredDataToComplete(){
+    protected String minimalRequiredDataToComplete(){
         StringBuilder buffer = new StringBuilder();
         if (getOrderNumber()==null){
             buffer.append("order number, ");

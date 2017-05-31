@@ -60,13 +60,19 @@ import lombok.Setter;
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
 @Setter @Getter
-public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstract {
+public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbstract {
 
-    public IncomingOrderAndInvoiceViewModel() {}
+    public IncomingOrderOrInvoiceViewModel() {}
 
-    public IncomingOrderAndInvoiceViewModel(final Document document) {
+    public IncomingOrderOrInvoiceViewModel(final Document document) {
         super(document);
     }
+
+    @Programmatic
+    public abstract void setDomainObject(T t);
+
+    @Programmatic
+    protected abstract String minimalRequiredDataToComplete();
 
     @Programmatic
     public void inferFixedAssetFromPaperclips() {
@@ -110,7 +116,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
-    public IncomingOrderAndInvoiceViewModel createSeller(
+    public IncomingOrderOrInvoiceViewModel createSeller(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumeratorForReference,
             final String name,
@@ -198,7 +204,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public IncomingOrderAndInvoiceViewModel createBudgetItem(final Budget budget, final Charge charge){
+    public IncomingOrderOrInvoiceViewModel createBudgetItem(final Budget budget, final Charge charge){
         budgetItemRepository.findOrCreateBudgetItem(budget, charge);
         deriveChargeFromBudgetItem();
         derivePeriodFromBudgetItem();
@@ -220,7 +226,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public IncomingOrderAndInvoiceViewModel createNextBudget(final Budget previousBudget){
+    public IncomingOrderOrInvoiceViewModel createNextBudget(final Budget previousBudget){
         previousBudget.createNextBudget();
         return this;
     }
@@ -293,7 +299,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     // ////////////////////////////////////
 
-    public IncomingOrderAndInvoiceViewModel changeDimensions(
+    public IncomingOrderOrInvoiceViewModel changeDimensions(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Charge charge,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -363,7 +369,7 @@ public abstract class IncomingOrderAndInvoiceViewModel extends HasDocumentAbstra
 
     // ////////////////////////////////////
 
-    public IncomingOrderAndInvoiceViewModel changeItemDetails(
+    public IncomingOrderOrInvoiceViewModel changeItemDetails(
             final String description,
             final BigDecimal netAmount,
             @Nullable
