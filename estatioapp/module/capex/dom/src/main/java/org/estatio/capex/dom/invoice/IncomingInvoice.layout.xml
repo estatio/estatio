@@ -26,6 +26,8 @@
                                 <cpt:action id="changePaymentMethod"/>
                                 <cpt:action id="remove"/>
                                 <cpt:action id="changeDueDate"/>
+                                <cpt:action id="preparePrelimLetter"/>
+                                <cpt:action id="prepareInvoiceDoc"/>
                                 <cpt:property id="status"/>
                                 <cpt:property id="collectionNumber"/>
                                 <cpt:property id="currency"/>
