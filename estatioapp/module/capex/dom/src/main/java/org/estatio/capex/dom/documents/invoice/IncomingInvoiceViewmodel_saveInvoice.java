@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewmodel_saveAbstract;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel_saveAbstract;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -23,7 +23,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 
 @Mixin(method = "act")
 public class IncomingInvoiceViewmodel_saveInvoice
-        extends IncomingOrderOrInvoiceViewmodel_saveAbstract<IncomingInvoice, IncomingInvoiceViewModel> {
+        extends IncomingOrderOrInvoiceViewModel_saveAbstract<IncomingInvoice, IncomingInvoiceViewModel> {
 
     // workaround for ISIS-1628
     private final IncomingInvoiceViewModel viewModel;
@@ -49,37 +49,37 @@ public class IncomingInvoiceViewmodel_saveInvoice
     protected IncomingInvoice doCreate(){
         // create invoice
         IncomingInvoice incomingInvoice = incomingInvoiceRepository.findOrCreate(
-                getViewmodel().getInvoiceNumber(),
-                getViewmodel().getBuyer().getAtPath(),
-                getViewmodel().getBuyer(),
-                getViewmodel().getSeller(),
-                getViewmodel().getInvoiceDate(),
-                getViewmodel().getDueDate(),
-                getViewmodel().getPaymentMethod(),
+                viewModel.getInvoiceNumber(),
+                viewModel.getBuyer().getAtPath(),
+                viewModel.getBuyer(),
+                viewModel.getSeller(),
+                viewModel.getInvoiceDate(),
+                viewModel.getDueDate(),
+                viewModel.getPaymentMethod(),
                 InvoiceStatus.NEW,
-                getViewmodel().getDateReceived(),
-                getViewmodel().getBankAccount()
+                viewModel.getDateReceived(),
+                viewModel.getBankAccount()
         );
         // create invoice item
         incomingInvoice.addItem(
-                getViewmodel().getCharge(),
-                getViewmodel().getDescription(),
-                getViewmodel().getNetAmount(),
-                getViewmodel().getVatAmount(),
-                getViewmodel().getGrossAmount(),
-                getViewmodel().getTax(),
-                getViewmodel().getDueDate(),
-                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate() : null,
-                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate() : null,
-                (Property) getViewmodel().getFixedAsset(),
-                getViewmodel().getProject(),
-                getViewmodel().getBudgetItem());
+                viewModel.getCharge(),
+                viewModel.getDescription(),
+                viewModel.getNetAmount(),
+                viewModel.getVatAmount(),
+                viewModel.getGrossAmount(),
+                viewModel.getTax(),
+                viewModel.getDueDate(),
+                viewModel.getPeriod()!= null ? PeriodUtil.yearFromPeriod(viewModel.getPeriod()).startDate() : null,
+                viewModel.getPeriod()!= null ? PeriodUtil.yearFromPeriod(viewModel.getPeriod()).endDate() : null,
+                (Property) viewModel.getFixedAsset(),
+                viewModel.getProject(),
+                viewModel.getBudgetItem());
         // attach document
-        paperclipRepository.attach(getViewmodel().getDocument(),null,incomingInvoice);
+        paperclipRepository.attach(viewModel.getDocument(),null,incomingInvoice);
         // link to orderItem if applicable
-        if (getViewmodel().getOrderItem()!=null){
-            Order order = getViewmodel().getOrderItem().getOrdr();
-            Charge chargeFromWrapper = getViewmodel().getOrderItem().getCharge();
+        if (viewModel.getOrderItem()!=null){
+            Order order = viewModel.getOrderItem().getOrdr();
+            Charge chargeFromWrapper = viewModel.getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
             IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
             orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink);

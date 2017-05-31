@@ -20,15 +20,15 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -106,8 +106,8 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         assertState(document, NEW);
 
         // when
-        final IncomingDocumentViewModel vm = new IncomingDocumentViewModel(document);
-        wrap(mixin(HasDocument_categoriseAsInvoice.class, vm)).act(property, null, true);
+        Task task = transitions.get(0).getTask();
+        wrap(mixin(Task_categoriseAsInvoice.class, task)).act(property, null, true);
 //        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
 //                new HasDocument_categoriseAbstract.DomainEvent();
 //        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);

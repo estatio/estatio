@@ -29,7 +29,7 @@ import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
@@ -46,6 +46,8 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
 import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
@@ -61,6 +63,7 @@ import org.estatio.dom.invoice.paperclips.PaperclipForInvoice;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.currency.CurrenciesRefData;
@@ -132,22 +135,26 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             stateTransition_works();
         }
 
-        List<HasDocumentAbstract> incomingDocuments;
-        IncomingDocumentViewModel incomingDocumentViewModel1;
-        IncomingDocumentViewModel incomingDocumentViewModel2;
+        List<Task> tasks;
+        Task task1;
+        Task task2;
 
         private void findIncomingDocuments_works() {
 
             // given, when
-            incomingDocuments = factory.map(repository.findIncomingDocuments());
-            incomingDocumentViewModel1 = (IncomingDocumentViewModel) incomingDocuments.get(0);
-            incomingDocumentViewModel2 = (IncomingDocumentViewModel) incomingDocuments.get(1);
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
+            task1 = tasks.get(0);
+            task2 = tasks.get(1);
 
             // then
-            assertThat(incomingDocuments.size()).isEqualTo(2);
-            assertThat(incomingDocumentViewModel1.getDocument().getType()).isEqualTo(INCOMING);
-            assertThat(incomingDocumentViewModel2.getDocument().getType()).isEqualTo(INCOMING);
+            assertThat(tasks.size()).isEqualTo(2);
+            assertThat(documentFor(task1).getType()).isEqualTo(INCOMING);
+            assertThat(documentFor(task2).getType()).isEqualTo(INCOMING);
 
+        }
+
+        private Document documentFor(final Task task) {
+            return taskIncomingDocumentService.lookupFor(task);
         }
 
         IncomingOrderViewModel incomingOrderViewModel;
@@ -155,14 +162,14 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void categoriseAsOrder_works() {
 
             // given
-            final Document document1 = incomingDocumentViewModel1.getDocument();
+            final Document document1 = documentFor(task1);
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document1, IncomingDocumentCategorisationStateTransition.class);
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when gotoNext is set to true
-            IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel)
-                    wrap(mixin(HasDocument_categoriseAsOrder.class, incomingDocumentViewModel1))
+            Task nextTask = (Task)
+                    wrap(mixin(HasDocument_categoriseAsOrder.class, task1))
                     .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
 
@@ -172,16 +179,17 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // and also then next is second viewmodel
-            assertThat(nextViewModel.getDocument()).isEqualTo(incomingDocumentViewModel2.getDocument());
+            assertThat(documentFor(nextTask)).isEqualTo(documentFor(task2));
 
             // and when
             transactionService.nextTransaction();
-            incomingDocuments = factory.map(repository.findIncomingDocuments());
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
 
             // then
-            assertThat(incomingDocuments.size()).isEqualTo(1);
+            assertThat(tasks.size()).isEqualTo(1);
 
-            List<HasDocumentAbstract> incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
+            List<HasDocumentAbstract> incomingOrders =
+                    (List)factory.map(incomingDocumentRepository.findUnclassifiedIncomingOrders());
             assertThat(incomingOrders.size()).isEqualTo(1);
 
             incomingOrderViewModel = (IncomingOrderViewModel) incomingOrders.get(0);
@@ -191,27 +199,27 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // document is linked to property
             assertThat(paperclipRepository.findByAttachedTo(propertyForOxf).size()).isEqualTo(1);
             PaperclipForFixedAsset paperclip = (PaperclipForFixedAsset) paperclipRepository.findByAttachedTo(propertyForOxf).get(0);
-            Document doc = incomingDocumentViewModel1.getDocument();
+            Document doc = documentFor(task1);
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
         }
 
-        List<HasDocumentAbstract> incomingInvoices;
+
         IncomingInvoiceViewModel incomingInvoiceViewModel;
 
         private void categoriseAsInvoice_works() {
 
             // given
-            final Document document2 = incomingDocumentViewModel2.getDocument();
+            final Document document2 = documentFor(task2);
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document2, IncomingDocumentCategorisationStateTransition.class);
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when
-            wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
+            wrap(mixin(HasDocument_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
-            incomingDocuments = factory.map(repository.findIncomingDocuments());
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
 
             // then state has changed
             state = stateTransitionService
@@ -219,9 +227,10 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // and also then
-            assertThat(incomingDocuments.size()).isEqualTo(0);
+            assertThat(tasks.size()).isEqualTo(0);
 
-            incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());
+            List<HasDocumentAbstract> incomingInvoices =
+                    (List) factory.map(incomingDocumentRepository.findUnclassifiedIncomingInvoices());
             assertThat(incomingInvoices.size()).isEqualTo(1);
 
             incomingInvoiceViewModel = (IncomingInvoiceViewModel) incomingInvoices.get(0);
@@ -233,7 +242,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // document is linked to property
             assertThat(paperclipRepository.findByAttachedTo(propertyForOxf).size()).isEqualTo(2);
             PaperclipForFixedAsset paperclip = (PaperclipForFixedAsset) paperclipRepository.findByAttachedTo(propertyForOxf).get(1);
-            Document doc = incomingDocumentViewModel2.getDocument();
+            Document doc = documentFor(task2);
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
         }
@@ -242,18 +251,20 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void resetClassification_works() {
 
             // given
-            assertThat(incomingDocuments.size()).isEqualTo(0);
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
+            assertThat(tasks.size()).isEqualTo(0);
+            List<Document> unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
+            assertThat(unclassified.size()).isEqualTo(1);
 
             // when
             wrap(mixin(HasDocument_resetCategorisation.class, incomingInvoiceViewModel)).act(null);
             transactionService.nextTransaction();
 
             // then
-            incomingDocuments = factory.map(repository.findIncomingDocuments());
-            assertThat(incomingDocuments.size()).isEqualTo(1);
-            incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());
-            assertThat(incomingInvoices.size()).isEqualTo(0);
-
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
+            assertThat(tasks.size()).isEqualTo(1);
+            unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
+            assertThat(unclassified.size()).isEqualTo(0);
         }
 
 
@@ -336,9 +347,8 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
             // incoming orders is empty
-            List<HasDocumentAbstract> incomingOrders = factory.map(repository.findUnclassifiedIncomingOrders());
-            assertThat(incomingOrders.size()).isEqualTo(0);
-
+            List<Document> unclassifiedDocs = incomingDocumentRepository.findUnclassifiedIncomingOrders();
+            assertThat(unclassifiedDocs.size()).isEqualTo(0);
         }
 
 
@@ -348,7 +358,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             // given
             incomingInvoiceViewModel = (IncomingInvoiceViewModel)
-                    wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
+                    wrap(mixin(HasDocument_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, false);
             transactionService.nextTransaction();
 
@@ -478,8 +488,8 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(transitions.get(0).getTask().isCompleted()).isFalse();
 
             // incoming invoices is empty
-            incomingInvoices = factory.map(repository.findUnclassifiedIncomingInvoices());
-            assertThat(incomingInvoices.size()).isEqualTo(0);
+            List<Document> unclassifiedDocs = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
+            assertThat(unclassifiedDocs.size()).isEqualTo(0);
 
         }
 
@@ -575,7 +585,10 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
     IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
     @Inject
-    IncomingDocumentRepository repository;
+    TaskRepository taskRepository;
+
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
 
     @Inject
     HasDocumentAbstract.Factory factory;
@@ -609,6 +622,9 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
     @Inject
     BankAccountRepository bankAccountRepository;
+
+    @Inject
+    TaskIncomingDocumentService taskIncomingDocumentService;
 
     @Inject
     PaymentRepository paymentRepository;

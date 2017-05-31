@@ -35,9 +35,9 @@ public class Task_verifyBankAccount
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = DomainEvent.class)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Task act(@Nullable final String comment, final boolean goToNext) {
-        mixin().act(comment);
-        return taskToReturn(goToNext, task);
+    public Object act(@Nullable final String comment, final boolean goToNext) {
+        Object mixinResult = mixin().act(comment);
+        return toReturnElse(goToNext, mixinResult);
     }
 
     public boolean hideAct() {

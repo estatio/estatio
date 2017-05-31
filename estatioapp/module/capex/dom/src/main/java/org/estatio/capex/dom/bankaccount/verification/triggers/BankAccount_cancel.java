@@ -20,7 +20,8 @@ public class BankAccount_cancel extends BankAccount_triggerAbstract {
     @MemberOrder(sequence = "9")
     public Object act(
             @Nullable final String comment) {
-        return triggerStateTransition(comment);
+        triggerStateTransition(comment);
+        return getDomainObject();
     }
 
     public boolean hideAct() {

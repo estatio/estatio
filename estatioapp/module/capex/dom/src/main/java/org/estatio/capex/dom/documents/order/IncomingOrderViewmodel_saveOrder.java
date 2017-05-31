@@ -7,14 +7,14 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewmodel_saveAbstract;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel_saveAbstract;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
 public class IncomingOrderViewmodel_saveOrder
-        extends IncomingOrderOrInvoiceViewmodel_saveAbstract<Order, IncomingOrderViewModel> {
+        extends IncomingOrderOrInvoiceViewModel_saveAbstract<Order, IncomingOrderViewModel> {
 
     // workaround for ISIS-1628
     private final IncomingOrderViewModel viewModel;
@@ -40,32 +40,32 @@ public class IncomingOrderViewmodel_saveOrder
     protected Order doCreate(){
         // create order
         Order order = orderRepository.findOrCreate(
-                getViewmodel().getOrderNumber(),
-                getViewmodel().getSellerOrderReference(),
+                viewModel.getOrderNumber(),
+                viewModel.getSellerOrderReference(),
                 clockService.now(),
-                getViewmodel().getOrderDate(),
-                getViewmodel().getSeller(),
-                getViewmodel().getBuyer(),
-                getViewmodel().getBuyer().getAtPath(),
+                viewModel.getOrderDate(),
+                viewModel.getSeller(),
+                viewModel.getBuyer(),
+                viewModel.getBuyer().getAtPath(),
                 null,
                 null
         );
         // create order item
         order.addItem(
-                getViewmodel().getCharge(),
-                getViewmodel().getDescription(),
-                getViewmodel().getNetAmount(),
-                getViewmodel().getVatAmount(),
-                getViewmodel().getGrossAmount(),
-                getViewmodel().getTax(),
-                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).startDate() : null,
-                getViewmodel().getPeriod()!= null ? PeriodUtil.yearFromPeriod(getViewmodel().getPeriod()).endDate() : null,
-                (Property) getViewmodel().getFixedAsset(),
-                getViewmodel().getProject(),
-                getViewmodel().getBudgetItem()
+                viewModel.getCharge(),
+                viewModel.getDescription(),
+                viewModel.getNetAmount(),
+                viewModel.getVatAmount(),
+                viewModel.getGrossAmount(),
+                viewModel.getTax(),
+                viewModel.getPeriod()!= null ? PeriodUtil.yearFromPeriod(viewModel.getPeriod()).startDate() : null,
+                viewModel.getPeriod()!= null ? PeriodUtil.yearFromPeriod(viewModel.getPeriod()).endDate() : null,
+                (Property) viewModel.getFixedAsset(),
+                viewModel.getProject(),
+                viewModel.getBudgetItem()
         );
         // attach document
-        paperclipRepository.attach(getViewmodel().getDocument(),null,order);
+        paperclipRepository.attach(viewModel.getDocument(),null,order);
         return order;
     }
 

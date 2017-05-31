@@ -48,7 +48,6 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
 import org.estatio.dom.invoice.DocumentTypeData;
@@ -58,7 +57,7 @@ import lombok.Setter;
 
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class HasDocumentAbstract implements HasDocument, HintStore.HintIdProvider {
+public abstract class HasDocumentAbstract implements HintStore.HintIdProvider {
 
     public HasDocumentAbstract() {}
     public HasDocumentAbstract(final Document document) {
@@ -115,12 +114,7 @@ public abstract class HasDocumentAbstract implements HasDocument, HintStore.Hint
     public static class Factory {
 
         @Programmatic
-        public HasDocumentAbstract createFor(final Document document) {
-            HasDocumentAbstract viewModel = instantiate(document);
-            return viewModel;
-        }
-
-        private HasDocumentAbstract instantiate(final Document document) {
+        public Object createFor(final Document document) {
             if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
                 final IncomingOrderViewModel viewModel = new IncomingOrderViewModel(document);
                 serviceRegistry2.injectServicesInto(viewModel);
@@ -133,16 +127,11 @@ public abstract class HasDocumentAbstract implements HasDocument, HintStore.Hint
                 viewModel.inferFixedAssetFromPaperclips();
                 return viewModel;
             }
-            if(DocumentTypeData.INCOMING.isDocTypeFor(document)) {
-                final IncomingDocumentViewModel viewModel = new IncomingDocumentViewModel(document);
-                serviceRegistry2.injectServicesInto(viewModel);
-                return viewModel;
-            }
-            return null;
+            return document;
         }
 
         @Programmatic
-        public List<HasDocumentAbstract> map(final List<Document> documents) {
+        public List<Object> map(final List<Document> documents) {
             return Lists.newArrayList(
                     FluentIterable.from(documents)
                             .transform(this::createFor)

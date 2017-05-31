@@ -100,33 +100,6 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
 
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "3")
-    public List<HasDocumentAbstract> incomingDocuments() {
-        return factory.map(repository.findIncomingDocuments());
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "4")
-    public List<HasDocumentAbstract> incomingOrderDocuments() {
-        return factory.map(repository.findUnclassifiedIncomingOrders());
-    }
-
-    @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "5")
-    public List<HasDocumentAbstract> incomingInvoiceDocuments() {
-        return factory.map(repository.findUnclassifiedIncomingInvoices());
-    }
-
-
-
-    @Inject
-    IncomingDocumentRepository repository;
-
-    @Inject
-    HasDocumentAbstract.Factory factory;
-
-
     @Inject
     MeService meService;
 

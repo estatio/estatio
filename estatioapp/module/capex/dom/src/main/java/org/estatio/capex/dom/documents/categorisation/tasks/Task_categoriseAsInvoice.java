@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -11,7 +11,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.Document_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinAbstract;
 import org.estatio.dom.asset.Property;
@@ -30,12 +32,17 @@ public class Task_categoriseAsInvoice
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Task act(
+    public Object act(
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        mixin().act(property, comment);
-        return taskToReturn(goToNext, task);
+        Object mixinResult = mixin().act(property, comment);
+        if(mixinResult instanceof IncomingOrderOrInvoiceViewModel) {
+            IncomingOrderOrInvoiceViewModel viewModel = (IncomingOrderOrInvoiceViewModel) mixinResult;
+            // to support 'goToNext' when finished with the view model
+            viewModel.setTask(task);
+        }
+        return toReturnElse(goToNext, mixinResult);
     }
 
     public boolean hideAct() {
@@ -50,11 +57,11 @@ public class Task_categoriseAsInvoice
 
     @Override
     protected Document doGetDomainObjectIfAny() {
-        final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);
+        final IncomingDocumentCategorisationStateTransition transition = transitionRepository.findByTask(this.task);
         return transition != null ? transition.getDocument() : null;
     }
 
     @Inject
-    IncomingDocumentCategorisationStateTransition.Repository repository;
+    IncomingDocumentCategorisationStateTransition.Repository transitionRepository;
 
 }

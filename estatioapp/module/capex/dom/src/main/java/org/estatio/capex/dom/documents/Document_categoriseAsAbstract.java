@@ -35,14 +35,14 @@ public abstract class Document_categoriseAsAbstract extends DocumentOrHasDocumen
             contributed= Contributed.AS_ACTION,
             cssClassFa = "folder-open-o"
     )
-    public HasDocumentAbstract act(
+    public Object act(
             @Nullable final Property property,
             @Nullable final String comment) {
-        final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
+        categoriseAndAttachPaperclip(property);
 
         triggerStateTransition(comment);
 
-        return viewModel;
+        return viewModelFactory.createFor(document);
     }
 
     @Override

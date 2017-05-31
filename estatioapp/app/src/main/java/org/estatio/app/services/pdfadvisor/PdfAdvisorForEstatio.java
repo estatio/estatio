@@ -22,7 +22,11 @@ import org.apache.isis.applib.services.urlencoding.UrlEncodingService;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.incode.module.document.dom.impl.docs.Document;
+
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
@@ -131,26 +135,75 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
     }
 
     private String bookmarkFor(final InstanceKey instanceKey) {
+
+        Document document = determineDocument(instanceKey);
         InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
         String objectType = typeKey.getObjectType();
+
         if(Objects.equals(
                 objectType,
-                IncomingDocumentViewModel.class.getName())) {
+                IncomingInvoiceViewModel.class.getName())) {
 
             String identifier = instanceKey.getIdentifier();
             final String xmlStr = urlEncodingService.decode(identifier);
 
-            IncomingDocumentViewModel viewModel = jaxbService.fromXml(IncomingDocumentViewModel.class, xmlStr);
+            IncomingInvoiceViewModel viewModel = jaxbService.fromXml(IncomingInvoiceViewModel.class, xmlStr);
 
             final Bookmark bookmark = bookmarkService2.bookmarkFor(viewModel.getDocument());
             if (bookmark != null)
-                return "homePageViewModel:" + bookmark.getIdentifier();
-            else
+                return "incomingInvoiceViewModel:" + bookmark.getIdentifier();
+            else {
                 // object presumably deleted
                 return null;
+            }
+        } else if(Objects.equals(
+                objectType,
+                IncomingOrderViewModel.class.getName())) {
+
+            String identifier = instanceKey.getIdentifier();
+            final String xmlStr = urlEncodingService.decode(identifier);
+
+            IncomingOrderViewModel viewModel = jaxbService.fromXml(IncomingOrderViewModel.class, xmlStr);
+
+            final Bookmark bookmark = bookmarkService2.bookmarkFor(viewModel.getDocument());
+            if (bookmark != null)
+                return "incomingOrderViewModel:" + bookmark.getIdentifier();
+            else {
+                // object presumably deleted
+                return null;
+            }
         } else {
             return instanceKey.asBookmark().toString();
         }
+    }
+
+    private Document determineDocument(final InstanceKey instanceKey) {
+
+        Document document = determineDocument(instanceKey, IncomingInvoiceViewModel.class);
+        if (document != null) {
+            return document;
+        }
+        document = determineDocument(instanceKey, IncomingOrderViewModel.class);
+        if (document != null) {
+            return document;
+        }
+        return null;
+    }
+
+    private Document determineDocument(
+            final InstanceKey instanceKey,
+            final Class<? extends IncomingOrderOrInvoiceViewModel> viewModelClass) {
+
+        final InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
+        final String objectType = typeKey.getObjectType();
+        if (!Objects.equals(objectType, viewModelClass.getName())) {
+            return null;
+        }
+        final String identifier = instanceKey.getIdentifier();
+        final String xmlStr = urlEncodingService.decode(identifier);
+
+        final IncomingOrderOrInvoiceViewModel viewModel = jaxbService.fromXml(viewModelClass, xmlStr);
+        return viewModel.getDocument();
     }
 
     @Inject

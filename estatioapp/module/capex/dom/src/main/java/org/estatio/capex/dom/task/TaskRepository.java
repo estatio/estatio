@@ -33,22 +33,36 @@ public class TaskRepository {
     }
 
     @Programmatic
-    public List<Task> findMyTasksIncomplete() {
+    public List<Task> findTasksIncomplete() {
         // REVIEW: this is rather naive query, but will do for prototyping at least
-        List<Task> results = Lists.newArrayList();
+        List<Task> tasks = Lists.newArrayList();
         final EstatioRole[] estatioRoles = EstatioRole.values();
         for (EstatioRole estatioRole : estatioRoles) {
-            final List<Task> tasksForRole = findByAssignedToIncomplete(estatioRole);
-            results.addAll(tasksForRole);
+            appendTasksIncompleteFor(estatioRole, tasks);
         }
-        Collections.sort(results, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+        return tasks;
+    }
+
+    @Programmatic
+    public List<Task> findTasksIncompleteFor(final EstatioRole estatioRole) {
+        List<Task> tasks = Lists.newArrayList();
+        appendTasksIncompleteFor(estatioRole, tasks);
+        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+        return tasks;
+    }
+
+    @Programmatic
+    private List<Task> appendTasksIncompleteFor(final EstatioRole estatioRole, List<Task> results) {
+        final List<Task> tasksForRole = findByAssignedToIncomplete(estatioRole);
+        results.addAll(tasksForRole);
         return results;
     }
 
     @Programmatic
-    public List<Task> findMyTasksIncompleteCreatedOnAfter(final LocalDateTime localDateTime) {
+    public List<Task> findTasksIncompleteCreatedOnAfter(final LocalDateTime localDateTime) {
         // REVIEW: this is rather naive, but will do for prototyping at least
-        final List<Task> results = findMyTasksIncomplete();
+        final List<Task> results = findTasksIncomplete();
         results.removeIf(task -> task.getCreatedOn().isBefore(localDateTime));
         return results;
     }

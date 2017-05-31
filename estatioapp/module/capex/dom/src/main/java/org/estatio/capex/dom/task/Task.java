@@ -13,6 +13,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
@@ -24,11 +25,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
@@ -63,6 +62,7 @@ import lombok.Setter;
         )
 })
 @DomainObject(objectType = "task.Task")
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Task implements Comparable<Task> {
 
     public Task(

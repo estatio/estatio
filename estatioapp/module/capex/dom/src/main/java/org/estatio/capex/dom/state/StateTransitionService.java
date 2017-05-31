@@ -337,7 +337,13 @@ public class StateTransitionService {
         eventBusService.post(event);
 
 
-        return nextTransition;
+        // do note that it's possible that the domain object may have transitioned beyond this state,
+        // eg if there were any subscribers to the transition events that automatically advanced
+        // through to next state.
+        //
+        // we therefore do NOT return the enxtTransition, but instead look up the transition
+        // on behalf of our the caller
+        return mostRecentlyCompletedTransitionOf(domainObject, requiredTransitionType);
     }
 
 

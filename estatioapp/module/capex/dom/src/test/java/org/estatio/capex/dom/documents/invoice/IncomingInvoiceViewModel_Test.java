@@ -20,7 +20,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

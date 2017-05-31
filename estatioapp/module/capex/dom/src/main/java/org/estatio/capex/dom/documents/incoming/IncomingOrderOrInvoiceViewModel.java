@@ -21,6 +21,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -31,6 +32,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
@@ -70,6 +72,16 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
 
     @Programmatic
     public abstract void setDomainObject(T t);
+
+    /**
+     * Optional, if created via a task.
+     *
+     * <p>
+     *     Used in order to advance to next task after this has been classified.
+     * </p>
+     */
+    @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
+    private Task task;
 
     @Programmatic
     protected abstract String minimalRequiredDataToComplete();

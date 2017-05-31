@@ -27,10 +27,11 @@ public abstract class DomainObject_triggerBaseAbstract<
 
     /**
      * Subclasses must call, to ensure that the state transition occurs.
+     *
+     * @return - the {@link StateTransition} most recently completed for the domain object.
      */
-    protected final Object triggerStateTransition(final String comment) {
-        stateTransitionService.trigger(getDomainObject(), transitionType, comment);
-        return getDomainObject();
+    protected final ST triggerStateTransition(final String comment) {
+        return stateTransitionService.trigger(getDomainObject(), transitionType, comment);
     }
 
     /**

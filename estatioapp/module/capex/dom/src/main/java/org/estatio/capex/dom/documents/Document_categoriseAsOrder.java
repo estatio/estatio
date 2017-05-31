@@ -22,7 +22,7 @@ public class Document_categoriseAsOrder extends Document_categoriseAsAbstract {
 
     // workaround for ISIS-1628
     @Override
-    public HasDocumentAbstract act(
+    public Object act(
             @Nullable final Property property,
             @Nullable final String comment) {
         return super.act(property, comment);
