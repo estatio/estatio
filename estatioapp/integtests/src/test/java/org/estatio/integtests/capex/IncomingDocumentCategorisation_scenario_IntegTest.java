@@ -23,13 +23,13 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAsInvoice;
-import org.estatio.capex.dom.documents.HasDocument_categoriseAsOrder;
 import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsOrder;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
@@ -169,7 +169,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             // when gotoNext is set to true
             Task nextTask = (Task)
-                    wrap(mixin(HasDocument_categoriseAsOrder.class, task1))
+                    wrap(mixin(Task_categoriseAsOrder.class, task1))
                     .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
 
@@ -210,13 +210,16 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void categoriseAsInvoice_works() {
 
             // given
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
+            assertThat(tasks.size()).isEqualTo(1);
+            task2 = tasks.get(0);
             final Document document2 = documentFor(task2);
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document2, IncomingDocumentCategorisationStateTransition.class);
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when
-            wrap(mixin(HasDocument_categoriseAsInvoice.class, task2))
+            wrap(mixin(Task_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
             tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
@@ -357,8 +360,12 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void createInvoice_works(){
 
             // given
+            tasks = taskRepository.findTasksIncompleteFor(EstatioRole.MAIL_ROOM);
+            assertThat(tasks.size()).isEqualTo(1);
+            task2 = tasks.get(0);
+
             incomingInvoiceViewModel = (IncomingInvoiceViewModel)
-                    wrap(mixin(HasDocument_categoriseAsInvoice.class, task2))
+                    wrap(mixin(Task_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, false);
             transactionService.nextTransaction();
 

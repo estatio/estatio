@@ -42,6 +42,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectItem;
 import org.estatio.capex.dom.project.ProjectRole;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -221,6 +222,8 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(PaperclipForDocument.class);
         deleteFrom(Paperclip.class);
         deleteFrom(Document.class);
+
+        deleteFrom(Task.class);
 
         deleteFrom(Numerator.class);
 
