@@ -59,7 +59,9 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
     HasDocumentAbstract categoriseAndAttachPaperclip(final Property property) {
         final Document document = getDomainObject();
         document.setType(documentTypeData.findUsing(documentTypeRepository));
-        attachPaperclipTo(property);
+        if (property!=null) {
+            attachPaperclipTo(property);
+        }
         return viewModelFactory.createFor(document);
     }
 

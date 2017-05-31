@@ -95,10 +95,10 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
                     continue;
                 }
             }
-        }
-        // temporary extra search until fixed asset ownership is fully in use
-        if (ownerCandidate==null && getFixedAsset().ownerCandidates().size()>0){
-            ownerCandidate = getFixedAsset().ownerCandidates().get(0).getParty();
+            // temporary extra search until fixed asset ownership is fully in use
+            if (ownerCandidate == null && getFixedAsset().ownerCandidates().size() > 0) {
+                ownerCandidate = getFixedAsset().ownerCandidates().get(0).getParty();
+            }
         }
         setBuyer(ownerCandidate);
     }
