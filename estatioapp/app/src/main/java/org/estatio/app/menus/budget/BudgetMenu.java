@@ -10,11 +10,13 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.app.services.budget.BudgetImportExportManager;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
@@ -29,7 +31,7 @@ import org.estatio.dom.budgeting.budget.BudgetRepository;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Projects",
+        named = "Service Charges",
         menuOrder = "70"
 )
 public class BudgetMenu {
@@ -79,6 +81,12 @@ public class BudgetMenu {
     @CollectionLayout(render = RenderType.EAGERLY)
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
         return budgetCalculationResultRepository.allBudgetCalculationResults();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "2")
+    public BudgetImportExportManager uploadBudget() {
+        return new BudgetImportExportManager();
     }
 
     @Inject
