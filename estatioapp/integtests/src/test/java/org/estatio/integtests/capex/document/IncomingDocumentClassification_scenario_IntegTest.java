@@ -44,7 +44,7 @@ import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCat
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
 
-public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends EstatioIntegrationTest {
+public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     FixtureScripts fixtureScripts;
@@ -71,7 +71,7 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
 
         final String fileName = "1020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(IncomingDocumentCategorisationStateSubscriber_IntegTest.class, fileName));
+                Resources.getResource(IncomingDocumentClassification_scenario_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
         wrap(documentMenu).upload(blob);
         transactionService.nextTransaction();

@@ -71,7 +71,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.NEW;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 
-public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
+public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -95,7 +95,8 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
         TickingFixtureClock.reinstateExisting();
     }
 
-    public static class ClassifyAndCreateFromIncomingDocuments extends IncomingDocumentScenario_IntegTest {
+    public static class ClassifyAndCreateFromIncomingDocuments extends
+            IncomingDocumentCategorisation_scenario_IntegTest {
 
         Property propertyForOxf;
         Party buyer;
