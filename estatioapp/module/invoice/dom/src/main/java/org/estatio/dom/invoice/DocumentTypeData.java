@@ -64,6 +64,8 @@ public enum DocumentTypeData {
     INCOMING("INCOMING", "Incoming", "Merged Incoming.pdf", null, null, Nature.INCOMING),
     INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null, Nature.INCOMING),
     INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
+
+    IBAN_PROOF("IBAN_PROOF", "Iban verification proof")
     ;
 
     private final String ref;

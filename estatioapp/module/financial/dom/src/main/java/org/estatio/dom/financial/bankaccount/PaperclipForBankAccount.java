@@ -22,7 +22,6 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.Order;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -77,7 +76,7 @@ public class PaperclipForBankAccount extends Paperclip {
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
-            super(Order.class, PaperclipForBankAccount.class);
+            super(BankAccount.class, PaperclipForBankAccount.class);
         }
     }
     //endregion
