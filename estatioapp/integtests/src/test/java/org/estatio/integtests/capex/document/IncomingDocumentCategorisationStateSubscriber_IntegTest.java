@@ -29,6 +29,7 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
 import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -88,6 +89,7 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
     public void scenario() throws Exception {
 
         // given
+        final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
         assertThat(incomingDocumentsBefore).hasSize(1);
 
@@ -105,7 +107,7 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
 
         // when
         final IncomingDocumentViewModel vm = new IncomingDocumentViewModel(document);
-        wrap(mixin(HasDocument_categoriseAsInvoice.class, vm)).act(null, true);
+        wrap(mixin(HasDocument_categoriseAsInvoice.class, vm)).act(property, null, true);
 //        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
 //                new HasDocument_categoriseAbstract.DomainEvent();
 //        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
@@ -190,9 +192,6 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
     }
 
 
-    @Inject
-    PropertyRepository propertyRepository;
-
     static void assertTransition(
             final IncomingDocumentCategorisationStateTransition transition,
             final IncomingDocumentCategorisationState from,
@@ -219,6 +218,9 @@ public class IncomingDocumentCategorisationStateSubscriber_IntegTest extends Est
 
         assertThat(currentState).isEqualTo(expectedState);
     }
+
+    @Inject
+    PropertyRepository propertyRepository;
 
     @Inject
     IncomingDocumentRepository repository;

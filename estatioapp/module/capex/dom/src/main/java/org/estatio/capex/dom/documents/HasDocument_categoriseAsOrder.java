@@ -23,8 +23,9 @@ public class HasDocument_categoriseAsOrder
     @Override
     public HasDocumentAbstract act(
             @Nullable final Property property,
+            @Nullable final String comment,
             final boolean goToNext) {
-        return super.act(property, goToNext);
+        return super.act(property, comment, goToNext);
     }
 
     @Override
@@ -33,8 +34,8 @@ public class HasDocument_categoriseAsOrder
     }
 
     @Override
-    public boolean default1Act() {
-        return super.default1Act();
+    public boolean default2Act() {
+        return super.default2Act();
     }
 
     @Override

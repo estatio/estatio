@@ -162,7 +162,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // when gotoNext is set to true
             IncomingDocumentViewModel nextViewModel = (IncomingDocumentViewModel)
                     wrap(mixin(HasDocument_categoriseAsOrder.class, incomingDocumentViewModel1))
-                    .act(propertyForOxf, true);
+                    .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
 
             // then state has changed
@@ -208,7 +208,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
 
             // when
             wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
-                    .act(propertyForOxf, true);
+                    .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
             incomingDocuments = factory.map(repository.findIncomingDocuments());
 
@@ -348,7 +348,7 @@ public class IncomingDocumentScenario_IntegTest extends EstatioIntegrationTest {
             // given
             incomingInvoiceViewModel = (IncomingInvoiceViewModel)
                     wrap(mixin(HasDocument_categoriseAsInvoice.class, incomingDocumentViewModel2))
-                    .act(propertyForOxf, false);
+                    .act(propertyForOxf, null, false);
             transactionService.nextTransaction();
 
             final Document document = incomingInvoiceViewModel.getDocument();

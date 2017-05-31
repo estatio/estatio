@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.documents;
 
+import javax.annotation.Nullable;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -33,9 +35,14 @@ public abstract class Document_categoriseAsAbstract extends DocumentOrHasDocumen
             contributed= Contributed.AS_ACTION,
             cssClassFa = "folder-open-o"
     )
-    public Object act(final Property property, final String comment) {
+    public HasDocumentAbstract act(
+            @Nullable final Property property,
+            @Nullable final String comment) {
+        final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
+
+        // to trigger state transition
         super.act(comment);
-        final Object viewModel = categoriseAndAttachPaperclip(property);
+
         return viewModel;
     }
 

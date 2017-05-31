@@ -39,14 +39,14 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
     public abstract Document getDomainObject();
 
     /**
-     * mixins should override to make public
+     * mixins should override to make <tt>public</tt>.
      */
     protected Property default0Act() {
         return existingPropertyAttachmentIfAny();
     }
 
     /**
-     * mixins should override to make public
+     * mixins should override to make <tt>public</tt>.
      */
     protected boolean hideAct() {
         if(super.hideAct()) {

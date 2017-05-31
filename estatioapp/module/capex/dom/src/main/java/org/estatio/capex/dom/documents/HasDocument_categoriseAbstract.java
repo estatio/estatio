@@ -2,6 +2,7 @@ package org.estatio.capex.dom.documents;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -36,9 +37,13 @@ public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocume
     )
     @ActionLayout(cssClassFa = "folder-open-o")
     public HasDocumentAbstract act(
-            final Property property,
+            @Nullable final Property property,
+            @Nullable final String comment,
             final boolean goToNext) {
         final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
+
+        // to trigger state transition
+        super.act(comment);
 
         if (goToNext){
             final Document nextDocument = nextDocument();
@@ -57,7 +62,7 @@ public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocume
         return super.default0Act();
     }
 
-    public boolean default1Act(){
+    public boolean default2Act(){
         return true;
     }
 
