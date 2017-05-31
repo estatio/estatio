@@ -49,7 +49,7 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
      * mixins should override to make <tt>public</tt>.
      */
     protected boolean hideAct() {
-        if(super.hideAct()) {
+        if(cannotTriggerStateTransition()) {
             return true;
         }
         final Document document = getDomainObject();

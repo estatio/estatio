@@ -19,11 +19,10 @@ public class Payment_approveAsTreasurer extends Payment_triggerAbstract {
     @Action()
     @MemberOrder(sequence = "4")
     public Object act(@Nullable final String comment) {
-        return super.act(comment);
+        return triggerStateTransition(comment);
     }
 
-    @Override
     public boolean hideAct() {
-        return super.hideAct();
+        return cannotTriggerStateTransition();
     }
 }

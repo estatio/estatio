@@ -2,6 +2,7 @@ package org.estatio.capex.dom.documents;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -46,8 +47,8 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "folder-open-o")
-    public HasDocument act(final String comment) {
-        super.act(comment);
+    public HasDocument act(
+            @Nullable final String comment) {
 
         Document document = hasDocument.getDocument();
         document.setType(DocumentTypeData.INCOMING.findUsing(documentTypeRepository));
@@ -60,6 +61,8 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
 
         HasDocument incomingDocumentViewModel = doCreate(document);
 
+        triggerStateTransition(comment);
+
         return serviceRegistry2.injectServicesInto(incomingDocumentViewModel);
     }
 
@@ -70,7 +73,7 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
     }
 
     public boolean hideAct() {
-        if(super.hideAct()) {
+        if(cannotTriggerStateTransition()) {
             return true;
         }
         return IncomingDocumentViewModel.class.isAssignableFrom(hasDocument.getClass());

@@ -32,11 +32,13 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.incoming.IncomingOrderAndInvoiceViewModel;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;
@@ -65,7 +67,8 @@ import lombok.Setter;
                 "netAmount",
                 "vatAmount",
                 "tax",
-                "grossAmount"
+                "grossAmount",
+                "order"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -76,6 +79,15 @@ public class IncomingOrderViewModel extends IncomingOrderAndInvoiceViewModel {
     public IncomingOrderViewModel(final Document document) {
         super(document);
     }
+
+
+    /**
+     * Populated once this view model is actioned; stored just so can be read by subscribers on any actions
+     * for this view model that publish domain events.
+     */
+    @Property(hidden = Where.EVERYWHERE)
+    Order order;
+
 
     @Property(editing = Editing.ENABLED)
     private String orderNumber;

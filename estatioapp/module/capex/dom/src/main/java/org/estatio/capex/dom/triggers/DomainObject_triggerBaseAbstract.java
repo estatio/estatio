@@ -1,10 +1,6 @@
 package org.estatio.capex.dom.triggers;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
@@ -29,17 +25,23 @@ public abstract class DomainObject_triggerBaseAbstract<
 
     protected abstract DO getDomainObject();
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Object act(@Nullable final String comment) {
+    /**
+     * Subclasses must call, to ensure that the state transition occurs.
+     */
+    protected final Object triggerStateTransition(final String comment) {
         stateTransitionService.trigger(getDomainObject(), transitionType, comment);
         return getDomainObject();
     }
 
     /**
-     * Subclasses should override and make <tt>public</tt>.
+     * Subclasses must call, typically in their <tt>hideAct()</tt> guargs, in order to check whether {@link #triggerStateTransition(String)}.
      */
-    protected boolean hideAct() {
-        return !stateTransitionService.canTrigger(getDomainObject(), transitionType);
+    protected final boolean cannotTriggerStateTransition() {
+        return !canTriggerStateTransition();
+    }
+
+    private boolean canTriggerStateTransition() {
+        return stateTransitionService.canTrigger(getDomainObject(), transitionType);
     }
 
     @Inject

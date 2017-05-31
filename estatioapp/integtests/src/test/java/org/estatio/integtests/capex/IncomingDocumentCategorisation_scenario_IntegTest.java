@@ -278,7 +278,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // when
             try {
                 wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel)).
-                        act(false);
+                        act(null, false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: order number, seller, description, net amount, gross amount, charge, period required");
             }
@@ -294,7 +294,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             this.orderCreated = (Order)
                     wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel))
-                        .act(false);
+                        .act(null, false);
             transactionService.nextTransaction();
 
             // then
@@ -360,7 +360,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // when
             try {
                 wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
-                        .act(false);
+                        .act(null, false);
             } catch (DisabledException e){
                 // REVIEW: why are buyer, date received and due date populated already?
 //                assertThat(e.getMessage()).contains("Reason: invoice number, buyer, seller, bank account, date received, due date, net amount, gross amount required");
@@ -397,7 +397,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // when
             try {
                 wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
-                        .act(false);
+                        .act(null, false);
             } catch (DisabledException e){
                 // REVIEW: why are date received and due date populated already?
 //                assertThat(e.getMessage()).contains("Reason: invoice number, date received, due date required");
@@ -413,7 +413,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             incomingInvoiceViewModel.setDateReceived(dateReceivedDate);
 
             invoiceCreated = (IncomingInvoice) wrap(
-                    mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel)).act(false);
+                    mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel)).act(null, false);
             transactionService.nextTransaction();
 
             // then

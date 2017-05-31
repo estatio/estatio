@@ -112,10 +112,11 @@ public class IncomingInvoiceViewModel extends IncomingOrderAndInvoiceViewModel {
     }
 
     /**
-     * Populated once this view model is actioned; stored just so can be read by subscribers on this
-     * view model's mixin actions.
+     * Populated once this view model is actioned; stored just so can be read by subscribers on any actions
+     * for this view model that publish domain events.
      */
-    @Property(hidden = Where.EVERYWHERE) IncomingInvoice incomingInvoice;
+    @Property(hidden = Where.EVERYWHERE)
+    IncomingInvoice incomingInvoice;
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;

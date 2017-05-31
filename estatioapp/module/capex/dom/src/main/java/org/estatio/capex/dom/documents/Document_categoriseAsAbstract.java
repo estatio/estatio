@@ -40,8 +40,7 @@ public abstract class Document_categoriseAsAbstract extends DocumentOrHasDocumen
             @Nullable final String comment) {
         final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
 
-        // to trigger state transition
-        super.act(comment);
+        triggerStateTransition(comment);
 
         return viewModel;
     }

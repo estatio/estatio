@@ -42,8 +42,8 @@ public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocume
             final boolean goToNext) {
         final HasDocumentAbstract viewModel = categoriseAndAttachPaperclip(property);
 
-        // to trigger state transition
-        super.act(comment);
+        // to triggerStateTransition state transition
+        triggerStateTransition(comment);
 
         if (goToNext){
             final Document nextDocument = nextDocument();

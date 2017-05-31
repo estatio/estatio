@@ -18,12 +18,12 @@ public class BankAccount_cancel extends BankAccount_triggerAbstract {
 
     @Action()
     @MemberOrder(sequence = "9")
-    public Object act(@Nullable final String comment) {
-        return super.act(comment);
+    public Object act(
+            @Nullable final String comment) {
+        return triggerStateTransition(comment);
     }
 
-    @Override
     public boolean hideAct() {
-        return super.hideAct();
+        return cannotTriggerStateTransition();
     }
 }
