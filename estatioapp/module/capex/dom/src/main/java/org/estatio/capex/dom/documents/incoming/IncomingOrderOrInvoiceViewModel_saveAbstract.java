@@ -65,7 +65,7 @@ public abstract class IncomingOrderOrInvoiceViewModel_saveAbstract<
             messageService.informUser("No more tasks");
         }
 
-        return viewModel;
+        return domainObject;
     }
 
 
