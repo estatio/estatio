@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel_saveAbstract;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_saveAbstract;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;

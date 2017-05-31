@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.capex.dom.documents.order;
+package org.estatio.capex.dom.documents.categorisation.order;
 
 import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -37,7 +38,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.party.Party;
 
@@ -46,7 +47,7 @@ import lombok.Setter;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
-        objectType = "org.estatio.capex.dom.documents.order.IncomingOrderViewModel",
+        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel",
         editing = Editing.ENABLED
 )
 @XmlRootElement(name = "categorizeIncomingOrder")
@@ -141,7 +142,8 @@ public class IncomingOrderViewModel extends IncomingOrderOrInvoiceViewModel<Orde
         return getOrderDate();
     }
 
-    protected String minimalRequiredDataToComplete(){
+    @Programmatic
+    public String minimalRequiredDataToComplete(){
         StringBuilder buffer = new StringBuilder();
         if (getOrderNumber()==null){
             buffer.append("order number, ");

@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import javax.inject.Inject;
 
@@ -19,17 +19,17 @@ import org.estatio.dom.invoice.DocumentTypeData;
  * Intended to be subclassed by 'act' mixins with first param being a {@link Property};
  * mixins should override relevant methods to make public
  */
-public abstract class DocumentOrHasDocument_categoriseAsAbstract
+public abstract class DocumentOrIncomingViewModel_categoriseAsAbstract
         extends DomainObject_triggerBaseAbstract<
                     Document,
-                    IncomingDocumentCategorisationStateTransition,
-                    IncomingDocumentCategorisationStateTransitionType,
-                    IncomingDocumentCategorisationState
+        IncomingDocumentCategorisationStateTransition,
+        IncomingDocumentCategorisationStateTransitionType,
+        IncomingDocumentCategorisationState
                 > {
 
     protected final DocumentTypeData documentTypeData;
 
-    public DocumentOrHasDocument_categoriseAsAbstract(
+    public DocumentOrIncomingViewModel_categoriseAsAbstract(
             final DocumentTypeData documentTypeData) {
         super(IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY);
         this.documentTypeData = documentTypeData;
@@ -56,7 +56,7 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
         return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
     }
 
-    Document categoriseAndAttachPaperclip(final Property property) {
+    protected Document categoriseAndAttachPaperclip(final Property property) {
         final Document document = getDomainObject();
         document.setType(documentTypeData.findUsing(documentTypeRepository));
         if (property!=null) {
@@ -86,6 +86,6 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
     protected PaperclipRepository paperclipRepository;
 
     @Inject
-    protected HasDocumentAbstract.Factory viewModelFactory;
+    protected IncomingOrderOrInvoiceViewModel.Factory viewModelFactory;
 
 }

@@ -2,7 +2,7 @@ package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.invoice.DocumentTypeData;
 

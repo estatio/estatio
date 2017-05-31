@@ -1,9 +1,10 @@
-package org.estatio.capex.dom.documents.incoming;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -13,8 +14,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+
+import org.joda.time.DateTime;
+import org.wicketstuff.pdfjs.Scale;
+
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -22,14 +31,23 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.bookmark.BookmarkService2;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.hint.HintStore;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.capex.dom.documents.HasDocumentAbstract;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
@@ -50,25 +68,61 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
-@Setter @Getter
-public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbstract {
+public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.HintIdProvider {
+
 
     public IncomingOrderOrInvoiceViewModel() {}
 
     public IncomingOrderOrInvoiceViewModel(final Document document) {
-        super(document);
+        this.document = document;
     }
+
+    public String title() {
+        return getDocument().getName();
+    }
+
+
+    @Getter @Setter
+    protected Document document;
+
+    public DocumentType getType() {
+        return getDocument().getType();
+    }
+
+    public DateTime getCreatedAt() {
+        return getDocument().getCreatedAt();
+    }
+
+
+
+    @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
+    public Blob getBlob() {
+        return getDocument() != null ? getDocument().getBlob() : null;
+    }
+
+    /**
+     * For view models with inline property edits, allows the focus to stay on the same field after OK.
+     */
+    @Override
+    public String hintId() {
+        return  bookmarkService2.bookmarkFor(getDocument()).toString();
+    }
+
+
+
+
 
     @Programmatic
     public abstract void setDomainObject(T t);
@@ -80,6 +134,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
      *     Used in order to advance to next task after this has been classified.
      * </p>
      */
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     private Task task;
 
@@ -115,9 +170,11 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         setBuyer(ownerCandidate);
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Party buyer;
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Party seller;
     // use of modify so can be overridden on IncomingInvoiceViewmodel
@@ -156,15 +213,18 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         return null;
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String description;
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Charge charge;
     public List<Charge> choicesCharge(){
         return chargeRepository.allIncoming();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private FixedAsset<?> fixedAsset;
 
@@ -180,6 +240,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         return result.size()>0 ? result : propertyRepository.allProperties();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Project project;
 
@@ -187,6 +248,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         return getFixedAsset()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getFixedAsset());
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BudgetItem budgetItem;
     public void modifyBudgetItem(final BudgetItem budgetItem) {
@@ -250,6 +312,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         return budgetRepository.allBudgets();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
 
@@ -260,6 +323,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
                 : null;
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal netAmount;
     @Digits(integer=13, fraction = 2)
@@ -272,6 +336,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         determineAmounts();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal vatAmount;
     @Digits(integer=13, fraction = 2)
@@ -284,6 +349,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         determineAmounts();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Tax tax;
     public void modifyTax(Tax tax) {
@@ -292,6 +358,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         determineAmounts();
     }
 
+    @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @PropertyLayout(promptStyle = PromptStyle.INLINE)
     private BigDecimal grossAmount;
@@ -498,64 +565,93 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> extends HasDocumentAbst
         return getDescription() != null;
     }
 
+
+    /////////////////////////////////
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class Factory {
+
+        @Programmatic
+        public Object createFor(final Document document) {
+            if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
+                final IncomingOrderViewModel viewModel = new IncomingOrderViewModel(document);
+                serviceRegistry2.injectServicesInto(viewModel);
+                viewModel.inferFixedAssetFromPaperclips();
+                return viewModel;
+            }
+            if(DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
+                final IncomingInvoiceViewModel viewModel = new IncomingInvoiceViewModel(document);
+                serviceRegistry2.injectServicesInto(viewModel);
+                viewModel.inferFixedAssetFromPaperclips();
+                return viewModel;
+            }
+            return document;
+        }
+
+        @Programmatic
+        public List<Object> map(final List<Document> documents) {
+            return Lists.newArrayList(
+                    FluentIterable.from(documents)
+                            .transform(this::createFor)
+                            .filter(Objects::nonNull)
+                            .toList());
+        }
+
+        @Inject
+        ServiceRegistry2 serviceRegistry2;
+
+    }
+
+
+    /////////////////////////////////
+
+
+    @XmlTransient
+    @Inject
+    protected BookmarkService2 bookmarkService2;
+
+    @XmlTransient
+    @Inject
+    protected TitleService titleService;
+
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE) // to prevent from being shown in UI
-    @Setter(AccessLevel.NONE)
     OrganisationRepository organisationRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     ChargeRepository chargeRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     ClockService clockService;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     PropertyRepository propertyRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     FixedAssetRoleRepository fixedAssetRoleRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     ProjectRepository projectRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     BudgetRepository budgetRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     BudgetItemRepository budgetItemRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     protected BankAccountRepository bankAccountRepository;
 
     @Inject
     @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     protected PaperclipRepository paperclipRepository;
 
 

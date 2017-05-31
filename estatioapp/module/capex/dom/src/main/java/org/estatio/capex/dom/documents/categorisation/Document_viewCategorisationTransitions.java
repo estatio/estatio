@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.transitions;
+package org.estatio.capex.dom.documents.categorisation;
 
 import java.util.List;
 

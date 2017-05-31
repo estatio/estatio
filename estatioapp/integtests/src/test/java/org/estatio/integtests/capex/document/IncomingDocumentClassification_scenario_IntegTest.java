@@ -20,13 +20,13 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.asset.Property;
@@ -108,8 +108,8 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         // when
         Task task = transitions.get(0).getTask();
         wrap(mixin(Task_categoriseAsInvoice.class, task)).act(property, null, true);
-//        final HasDocument_categoriseAbstract.DomainEvent categoriseEv =
-//                new HasDocument_categoriseAbstract.DomainEvent();
+//        final IncomingOrderOrInvoiceViewModel_categoriseAbstract.DomainEvent categoriseEv =
+//                new IncomingOrderOrInvoiceViewModel_categoriseAbstract.DomainEvent();
 //        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
 //        categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
 //        eventBusService.post(categoriseEv);
@@ -164,11 +164,11 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
         // when
         final IncomingInvoiceViewModel vm2 = new IncomingInvoiceViewModel(document);
-        wrap(mixin(HasDocument_resetCategorisation.class, vm2)).act(null);
+        wrap(mixin(IncomingOrderOrInvoiceViewModel_resetCategorisation.class, vm2)).act(null);
         transactionService.nextTransaction();
 
-//        final HasDocument_resetCategorisation.DomainEvent resetEv =
-//                new HasDocument_resetCategorisation.DomainEvent();
+//        final IncomingOrderOrInvoiceViewModel_resetCategorisation.DomainEvent resetEv =
+//                new IncomingOrderOrInvoiceViewModel_resetCategorisation.DomainEvent();
 //
 //        resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
 //        resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);

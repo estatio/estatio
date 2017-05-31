@@ -10,8 +10,8 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 

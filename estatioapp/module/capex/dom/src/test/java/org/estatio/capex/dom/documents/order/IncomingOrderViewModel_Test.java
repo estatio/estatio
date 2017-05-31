@@ -11,6 +11,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
 

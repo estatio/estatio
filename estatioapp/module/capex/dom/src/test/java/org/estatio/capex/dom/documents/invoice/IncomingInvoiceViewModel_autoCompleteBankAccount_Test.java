@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;

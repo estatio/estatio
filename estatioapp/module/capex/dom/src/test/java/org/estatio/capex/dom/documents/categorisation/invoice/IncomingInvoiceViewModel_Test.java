@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

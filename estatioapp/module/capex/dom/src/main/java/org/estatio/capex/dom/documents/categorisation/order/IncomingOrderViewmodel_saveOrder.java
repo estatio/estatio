@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.order;
+package org.estatio.capex.dom.documents.categorisation.order;
 
 import javax.annotation.Nullable;
 
@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel_saveAbstract;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_saveAbstract;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;

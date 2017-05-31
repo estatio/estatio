@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.incoming;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import org.apache.isis.applib.services.message.MessageService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.HasDocumentAbstract;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
@@ -101,7 +100,7 @@ public abstract class IncomingOrderOrInvoiceViewModel_saveAbstract<
     TaskRepository taskRepository;
 
     @Inject
-    protected HasDocumentAbstract.Factory factory;
+    protected IncomingOrderOrInvoiceViewModel.Factory factory;
 
     @Inject
     protected PaperclipRepository paperclipRepository;

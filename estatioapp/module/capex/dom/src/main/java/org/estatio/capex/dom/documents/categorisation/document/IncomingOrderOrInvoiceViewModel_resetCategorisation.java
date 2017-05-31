@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import java.util.List;
 
@@ -18,13 +18,12 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.triggers.DomainObject_triggerBaseAbstract;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbstract<
+public class IncomingOrderOrInvoiceViewModel_resetCategorisation extends DomainObject_triggerBaseAbstract<
         Document,
         IncomingDocumentCategorisationStateTransition,
         IncomingDocumentCategorisationStateTransitionType,
@@ -33,7 +32,7 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
 
     protected final IncomingOrderOrInvoiceViewModel hasDocument;
 
-    public HasDocument_resetCategorisation(final IncomingOrderOrInvoiceViewModel hasDocument) {
+    public IncomingOrderOrInvoiceViewModel_resetCategorisation(final IncomingOrderOrInvoiceViewModel hasDocument) {
         super(IncomingDocumentCategorisationStateTransitionType.RESET);
         this.hasDocument = hasDocument;
     }

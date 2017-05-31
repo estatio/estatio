@@ -4,6 +4,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
 import org.estatio.dom.invoice.DocumentTypeData;
 
@@ -11,9 +14,9 @@ import org.estatio.dom.invoice.DocumentTypeData;
 public class Document_categorisationState
         extends DomainObject_currentStateAbstract<
                 Document,
-                IncomingDocumentCategorisationStateTransition,
-                IncomingDocumentCategorisationStateTransitionType,
-                IncomingDocumentCategorisationState> {
+        IncomingDocumentCategorisationStateTransition,
+        IncomingDocumentCategorisationStateTransitionType,
+        IncomingDocumentCategorisationState> {
 
     public Document_categorisationState(final Document document) {
         super(document, IncomingDocumentCategorisationStateTransition.class);

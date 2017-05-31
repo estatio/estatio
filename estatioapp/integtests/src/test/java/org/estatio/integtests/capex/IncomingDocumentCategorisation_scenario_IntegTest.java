@@ -22,18 +22,18 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.capex.dom.documents.HasDocumentAbstract;
-import org.estatio.capex.dom.documents.HasDocument_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_resetCategorisation;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewmodel_saveInvoice;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsOrder;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewmodel_saveInvoice;
-import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
-import org.estatio.capex.dom.documents.order.IncomingOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -188,11 +188,11 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // then
             assertThat(tasks.size()).isEqualTo(1);
 
-            List<HasDocumentAbstract> incomingOrders =
+            List<IncomingOrderOrInvoiceViewModel> viewModels =
                     (List)factory.map(incomingDocumentRepository.findUnclassifiedIncomingOrders());
-            assertThat(incomingOrders.size()).isEqualTo(1);
+            assertThat(viewModels.size()).isEqualTo(1);
 
-            incomingOrderViewModel = (IncomingOrderViewModel) incomingOrders.get(0);
+            incomingOrderViewModel = (IncomingOrderViewModel) viewModels.get(0);
             assertThat(incomingOrderViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
             assertThat(incomingOrderViewModel.getDocument().getType()).isEqualTo(INCOMING_ORDER);
 
@@ -232,11 +232,11 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // and also then
             assertThat(tasks.size()).isEqualTo(0);
 
-            List<HasDocumentAbstract> incomingInvoices =
+            List<IncomingOrderOrInvoiceViewModel> viewModels =
                     (List) factory.map(incomingDocumentRepository.findUnclassifiedIncomingInvoices());
-            assertThat(incomingInvoices.size()).isEqualTo(1);
+            assertThat(viewModels.size()).isEqualTo(1);
 
-            incomingInvoiceViewModel = (IncomingInvoiceViewModel) incomingInvoices.get(0);
+            incomingInvoiceViewModel = (IncomingInvoiceViewModel) viewModels.get(0);
             assertThat(incomingInvoiceViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
             assertThat(incomingInvoiceViewModel.getDocument().getType()).isEqualTo(INCOMING_INVOICE);
             assertThat(incomingInvoiceViewModel.getDateReceived()).isNotNull();
@@ -260,7 +260,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(unclassified.size()).isEqualTo(1);
 
             // when
-            wrap(mixin(HasDocument_resetCategorisation.class, incomingInvoiceViewModel)).act(null);
+            wrap(mixin(IncomingOrderOrInvoiceViewModel_resetCategorisation.class, incomingInvoiceViewModel)).act(null);
             transactionService.nextTransaction();
 
             // then
@@ -598,7 +598,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
     IncomingDocumentRepository incomingDocumentRepository;
 
     @Inject
-    HasDocumentAbstract.Factory factory;
+    IncomingOrderOrInvoiceViewModel.Factory factory;
 
     @Inject
     PropertyRepository propertyRepository;

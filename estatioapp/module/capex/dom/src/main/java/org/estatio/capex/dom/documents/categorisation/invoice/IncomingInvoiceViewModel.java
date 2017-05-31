@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -67,7 +67,7 @@ import lombok.Setter;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
-        objectType = "org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel"
+        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel"
 )
 @XmlRootElement(name = "categorizeIncomingInvoice")
 @XmlType(

@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import java.util.List;
 
@@ -14,17 +14,17 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocument_categoriseAsAbstract {
+public abstract class IncomingOrderOrInvoiceViewModel_categoriseAbstract extends
+        DocumentOrIncomingViewModel_categoriseAsAbstract {
 
     protected final IncomingOrderOrInvoiceViewModel viewModel;
 
-    public HasDocument_categoriseAbstract(
+    public IncomingOrderOrInvoiceViewModel_categoriseAbstract(
             final IncomingOrderOrInvoiceViewModel viewModel,
             final DocumentTypeData documentTypeData) {
         super(documentTypeData);
@@ -95,6 +95,6 @@ public abstract class HasDocument_categoriseAbstract extends DocumentOrHasDocume
     TaskRepository taskRepository;
 
     @Inject
-    HasDocumentAbstract.Factory viewModelFactory;
+    IncomingOrderOrInvoiceViewModel.Factory viewModelFactory;
 
 }

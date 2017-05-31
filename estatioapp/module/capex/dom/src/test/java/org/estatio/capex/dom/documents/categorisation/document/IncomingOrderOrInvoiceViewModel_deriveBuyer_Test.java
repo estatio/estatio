@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.incoming;
+package org.estatio.capex.dom.documents.categorisation.document;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -10,7 +10,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
