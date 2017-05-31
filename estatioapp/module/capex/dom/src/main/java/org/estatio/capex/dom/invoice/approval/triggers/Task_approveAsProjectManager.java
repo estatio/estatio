@@ -11,10 +11,11 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.Task_mixinAbstract;
 
 @Mixin(method = "act")
 public class Task_approveAsProjectManager
-        extends Task._mixinAbstract<IncomingInvoice_approveAsProjectManager, IncomingInvoice> {
+        extends Task_mixinAbstract<IncomingInvoice_approveAsProjectManager, IncomingInvoice> {
 
     protected final Task task;
 
