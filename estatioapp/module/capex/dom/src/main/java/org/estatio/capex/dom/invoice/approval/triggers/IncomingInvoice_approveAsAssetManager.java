@@ -19,7 +19,8 @@ public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_trigg
     @Action()
     @MemberOrder(sequence = "2.1")
     public Object act(@Nullable final String comment) {
-        return triggerStateTransition(comment);
+        triggerStateTransition(comment);
+        return getDomainObject();
     }
 
     public boolean hideAct() {

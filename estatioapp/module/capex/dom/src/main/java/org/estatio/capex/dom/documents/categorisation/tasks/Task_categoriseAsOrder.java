@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinAbstract;
@@ -29,12 +30,12 @@ public class Task_categoriseAsOrder
 
     @Action()
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Task act(
+    public Object act(
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        mixin().act(property, comment);
-        return taskToReturn(goToNext, task);
+        Object mixinResult = mixin().act(property, comment);
+        return toReturnElse(goToNext, mixinResult);
     }
 
     public boolean hideAct() {

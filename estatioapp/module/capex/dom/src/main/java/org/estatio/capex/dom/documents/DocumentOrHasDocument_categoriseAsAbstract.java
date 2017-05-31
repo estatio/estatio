@@ -56,11 +56,11 @@ public abstract class DocumentOrHasDocument_categoriseAsAbstract
         return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
     }
 
-    HasDocumentAbstract categoriseAndAttachPaperclip(final Property property) {
+    Document categoriseAndAttachPaperclip(final Property property) {
         final Document document = getDomainObject();
         document.setType(documentTypeData.findUsing(documentTypeRepository));
         attachPaperclipTo(property);
-        return viewModelFactory.createFor(document);
+        return document;
     }
 
     private void attachPaperclipTo(final Property property) {

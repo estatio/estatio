@@ -1,7 +1,8 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.capex.dom.documents.invoice.IncomingInvoiceViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.invoice.DocumentTypeData;
 

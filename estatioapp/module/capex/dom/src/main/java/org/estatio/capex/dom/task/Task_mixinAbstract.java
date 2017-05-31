@@ -22,7 +22,7 @@ public abstract class Task_mixinAbstract<M, DO> {
         this.mixinClass = mixinClass;
     }
 
-    protected Task taskToReturn(final boolean goToNext, final Task task) {
+    protected Object toReturnElse(final boolean goToNext, final Object otherwise) {
         if (goToNext){
             final Task nextTask = nextTaskAfter(task);
             if (nextTask != null) {
@@ -32,11 +32,11 @@ public abstract class Task_mixinAbstract<M, DO> {
             messageService.informUser("No more tasks");
         }
 
-        return task;
+        return otherwise;
     }
 
     private Task nextTaskAfter(final Task task) {
-        final List<Task> tasks = taskRepository.findMyTasksIncompleteCreatedOnAfter(task.getCreatedOn());
+        final List<Task> tasks = taskRepository.findTasksIncompleteCreatedOnAfter(task.getCreatedOn());
         return tasks.size() > 0 ? tasks.get(0) : null;
     }
 

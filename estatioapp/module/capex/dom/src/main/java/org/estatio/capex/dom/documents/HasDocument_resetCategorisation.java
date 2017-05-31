@@ -9,8 +9,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -20,7 +18,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.documents.incoming.IncomingDocumentViewModel;
+import org.estatio.capex.dom.documents.incoming.IncomingOrderOrInvoiceViewModel;
 import org.estatio.capex.dom.triggers.DomainObject_triggerBaseAbstract;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
@@ -33,9 +31,9 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
         IncomingDocumentCategorisationState
         > {
 
-    protected final HasDocument hasDocument;
+    protected final IncomingOrderOrInvoiceViewModel hasDocument;
 
-    public HasDocument_resetCategorisation(final HasDocument hasDocument) {
+    public HasDocument_resetCategorisation(final IncomingOrderOrInvoiceViewModel hasDocument) {
         super(IncomingDocumentCategorisationStateTransitionType.RESET);
         this.hasDocument = hasDocument;
     }
@@ -47,7 +45,7 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "folder-open-o")
-    public HasDocument act(
+    public Document act(
             @Nullable final String comment) {
 
         Document document = hasDocument.getDocument();
@@ -59,24 +57,13 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
             paperclipRepository.delete(paperclip);
         }
 
-        HasDocument incomingDocumentViewModel = doCreate(document);
-
         triggerStateTransition(comment);
 
-        return serviceRegistry2.injectServicesInto(incomingDocumentViewModel);
-    }
-
-    protected HasDocument doCreate(final Document document) {
-        HasDocumentAbstract viewModel = factoryService.instantiate(IncomingDocumentViewModel.class);
-        viewModel.setDocument(document);
-        return viewModel;
+        return document;
     }
 
     public boolean hideAct() {
-        if(cannotTriggerStateTransition()) {
-            return true;
-        }
-        return IncomingDocumentViewModel.class.isAssignableFrom(hasDocument.getClass());
+        return cannotTriggerStateTransition();
     }
 
     public String disableAct() {
@@ -91,15 +78,9 @@ public class HasDocument_resetCategorisation extends DomainObject_triggerBaseAbs
     }
 
     @Inject
-    ServiceRegistry2 serviceRegistry2;
-
-    @Inject
     DocumentTypeRepository documentTypeRepository;
 
     @Inject
     PaperclipRepository paperclipRepository;
-
-    @Inject
-    FactoryService factoryService;
 
 }

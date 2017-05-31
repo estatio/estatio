@@ -19,7 +19,8 @@ public class IncomingInvoice_approveAsProjectManager extends IncomingInvoice_tri
     @Action()
     @MemberOrder(sequence = "2.2")
     public Object act(@Nullable final String comment) {
-        return triggerStateTransition(comment);
+        triggerStateTransition(comment);
+        return getDomainObject();
     }
 
     public boolean hideAct() {

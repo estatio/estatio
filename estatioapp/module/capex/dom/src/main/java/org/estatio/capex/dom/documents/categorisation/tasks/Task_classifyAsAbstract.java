@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import javax.inject.Inject;
 
@@ -28,7 +28,10 @@ public abstract class Task_classifyAsAbstract {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingOrderOrInvoiceViewModel act() {
-        return doCreate();
+        IncomingOrderOrInvoiceViewModel viewModel = doCreate();
+        // to support 'goToNext' when finished with the view model
+        viewModel.setTask(task);
+        return viewModel;
     }
 
     protected abstract IncomingOrderOrInvoiceViewModel doCreate();

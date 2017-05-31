@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 

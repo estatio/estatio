@@ -68,7 +68,8 @@ import lombok.Setter;
                 "vatAmount",
                 "tax",
                 "grossAmount",
-                "domainObject"
+                "domainObject",
+                "task"
         }
 )
 @XmlAccessorType(XmlAccessType.FIELD)
