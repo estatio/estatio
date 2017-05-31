@@ -13,7 +13,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class Document_categoriseAsAbstract extends DocumentOrIncomingViewModel_categoriseAsAbstract {
+public abstract class Document_categoriseAsAbstract extends DocOrIncomingDocViewModel_categoriseAsAbstract {
 
     private final Document document;
 

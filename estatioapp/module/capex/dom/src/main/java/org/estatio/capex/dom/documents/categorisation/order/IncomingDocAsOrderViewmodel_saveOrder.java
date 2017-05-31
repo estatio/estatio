@@ -7,25 +7,25 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_saveAbstract;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_saveAbstract;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
-public class IncomingOrderViewmodel_saveOrder
-        extends IncomingOrderOrInvoiceViewModel_saveAbstract<Order, IncomingOrderViewModel> {
+public class IncomingDocAsOrderViewmodel_saveOrder
+        extends IncomingDocViewModel_saveAbstract<Order, IncomingDocAsOrderViewModel> {
 
     // workaround for ISIS-1628
-    private final IncomingOrderViewModel viewModel;
+    private final IncomingDocAsOrderViewModel viewModel;
 
-    public IncomingOrderViewmodel_saveOrder(final IncomingOrderViewModel viewModel) {
+    public IncomingDocAsOrderViewmodel_saveOrder(final IncomingDocAsOrderViewModel viewModel) {
         super(viewModel);
         this.viewModel = viewModel;
     }
 
     public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<IncomingOrderViewmodel_saveOrder> {}
+            extends EstatioCapexDomModule.ActionDomainEvent<IncomingDocAsOrderViewmodel_saveOrder> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,

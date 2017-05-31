@@ -2,7 +2,7 @@ package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.invoice.DocumentTypeData;
 
@@ -16,8 +16,8 @@ public class Task_classifyAsInvoice extends Task_classifyAsAbstract {
         this.task = task;
     }
 
-    protected IncomingInvoiceViewModel doCreate() {
-        return new IncomingInvoiceViewModel(getDocument());
+    protected IncomingDocAsInvoiceViewModel doCreate() {
+        return new IncomingDocAsInvoiceViewModel(getDocument());
     }
 
 }

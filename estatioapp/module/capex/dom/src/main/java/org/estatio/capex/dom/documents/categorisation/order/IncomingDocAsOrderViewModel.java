@@ -38,7 +38,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.party.Party;
 
@@ -47,7 +47,7 @@ import lombok.Setter;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
-        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel",
+        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel",
         editing = Editing.ENABLED
 )
 @XmlRootElement(name = "categorizeIncomingOrder")
@@ -75,10 +75,10 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingOrderViewModel extends IncomingOrderOrInvoiceViewModel<Order> {
+public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
-    public IncomingOrderViewModel() {}
-    public IncomingOrderViewModel(final Document document) {
+    public IncomingDocAsOrderViewModel() {}
+    public IncomingDocAsOrderViewModel(final Document document) {
         super(document);
     }
 
@@ -105,7 +105,7 @@ public class IncomingOrderViewModel extends IncomingOrderOrInvoiceViewModel<Orde
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
-    public IncomingOrderViewModel changeOrderDetails(
+    public IncomingDocAsOrderViewModel changeOrderDetails(
             final String orderNumber,
             final Party buyer,
             final Party seller,

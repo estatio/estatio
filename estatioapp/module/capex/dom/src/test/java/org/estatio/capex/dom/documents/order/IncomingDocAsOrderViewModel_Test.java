@@ -11,13 +11,13 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingOrderViewModel_Test {
+public class IncomingDocAsOrderViewModel_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -32,7 +32,7 @@ public class IncomingOrderViewModel_Test {
     public void minimalRequiredDataToComplete() throws Exception {
 
         // given
-        IncomingOrderViewModel vm = new IncomingOrderViewModel();
+        IncomingDocAsOrderViewModel vm = new IncomingDocAsOrderViewModel();
 
         // when
         String result = vm.minimalRequiredDataToComplete();

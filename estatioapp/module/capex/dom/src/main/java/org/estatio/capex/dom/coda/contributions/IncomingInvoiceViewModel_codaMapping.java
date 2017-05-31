@@ -12,15 +12,15 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.coda.CodaMappingFilter;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.dom.charge.Charge;
 
 @Mixin
 public class IncomingInvoiceViewModel_codaMapping {
 
-    private final IncomingInvoiceViewModel item;
+    private final IncomingDocAsInvoiceViewModel item;
 
-    public IncomingInvoiceViewModel_codaMapping(IncomingInvoiceViewModel item) {
+    public IncomingInvoiceViewModel_codaMapping(IncomingDocAsInvoiceViewModel item) {
         this.item = item;
     }
 

@@ -10,8 +10,8 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewmodel_saveInvoice;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewmodel_saveInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 
@@ -27,15 +27,15 @@ public class IncomingInvoiceApprovalInitiatorSubscribingToViewModel extends Abst
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(IncomingInvoiceViewmodel_saveInvoice.DomainEvent ev) {
+    public void on(IncomingDocAsInvoiceViewmodel_saveInvoice.DomainEvent ev) {
         switch (ev.getEventPhase()) {
         case EXECUTED:
-            final IncomingInvoiceViewModel viewModel = (IncomingInvoiceViewModel) ev.getMixedIn();
+            final IncomingDocAsInvoiceViewModel viewModel = (IncomingDocAsInvoiceViewModel) ev.getMixedIn();
             final IncomingInvoice incomingInvoice = viewModel.getDomainObject();
 
             transactionService.flushTransaction();
 
-            // an alternative design would be to just do this in IncomingInvoiceViewmodel_saveInvoice#act method
+            // an alternative design would be to just do this in IncomingDocAsInvoiceViewmodel_saveInvoice#act method
             stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
             break;
         }

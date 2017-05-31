@@ -20,13 +20,13 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_resetCategorisation;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.asset.Property;
@@ -108,8 +108,8 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         // when
         Task task = transitions.get(0).getTask();
         wrap(mixin(Task_categoriseAsInvoice.class, task)).act(property, null, true);
-//        final IncomingOrderOrInvoiceViewModel_categoriseAbstract.DomainEvent categoriseEv =
-//                new IncomingOrderOrInvoiceViewModel_categoriseAbstract.DomainEvent();
+//        final IncomingDocViewModel_categoriseAbstract.DomainEvent categoriseEv =
+//                new IncomingDocViewModel_categoriseAbstract.DomainEvent();
 //        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
 //        categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
 //        eventBusService.post(categoriseEv);
@@ -131,7 +131,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         /*
         NOT TESTING THIS HERE...
 
-        because firing the IncomingInvoiceViewmodel_saveInvoice.DomainEvent
+        because firing the IncomingDocAsInvoiceViewmodel_saveInvoice.DomainEvent
         causes the flow for incoming invoice approval o kick in.
         We don't have an easy way of stubbing out that subscriber (would need to mess with modules and appmanifest to
         somehow remove it/exclude it.
@@ -140,11 +140,11 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
 
         // and when
-        final IncomingInvoiceViewmodel_saveInvoice.DomainEvent saveEv =
-                new IncomingInvoiceViewmodel_saveInvoice.DomainEvent();
+        final IncomingDocAsInvoiceViewmodel_saveInvoice.DomainEvent saveEv =
+                new IncomingDocAsInvoiceViewmodel_saveInvoice.DomainEvent();
 
         final FixedAsset fixedAsset = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        saveEv.setMixedIn(new IncomingInvoiceViewModel(document, fixedAsset));
+        saveEv.setMixedIn(new IncomingDocAsInvoiceViewModel(document, fixedAsset));
         saveEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
         eventBusService.post(saveEv);
 
@@ -163,14 +163,14 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
          */
 
         // when
-        final IncomingInvoiceViewModel vm2 = new IncomingInvoiceViewModel(document);
-        wrap(mixin(IncomingOrderOrInvoiceViewModel_resetCategorisation.class, vm2)).act(null);
+        final IncomingDocAsInvoiceViewModel vm2 = new IncomingDocAsInvoiceViewModel(document);
+        wrap(mixin(IncomingDocViewModel_resetCategorisation.class, vm2)).act(null);
         transactionService.nextTransaction();
 
-//        final IncomingOrderOrInvoiceViewModel_resetCategorisation.DomainEvent resetEv =
-//                new IncomingOrderOrInvoiceViewModel_resetCategorisation.DomainEvent();
+//        final IncomingDocViewModel_resetCategorisation.DomainEvent resetEv =
+//                new IncomingDocViewModel_resetCategorisation.DomainEvent();
 //
-//        resetEv.setMixedIn(new IncomingInvoiceViewModel(document));
+//        resetEv.setMixedIn(new IncomingDocAsInvoiceViewModel(document));
 //        resetEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
 //        eventBusService.post(resetEv);
 

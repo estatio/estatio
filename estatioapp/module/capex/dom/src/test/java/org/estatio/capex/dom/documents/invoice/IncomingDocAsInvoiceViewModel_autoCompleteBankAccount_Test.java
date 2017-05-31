@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -19,7 +19,7 @@ import org.estatio.dom.party.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingInvoiceViewModel_autoCompleteBankAccount_Test {
+public class IncomingDocAsInvoiceViewModel_autoCompleteBankAccount_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -36,8 +36,8 @@ public class IncomingInvoiceViewModel_autoCompleteBankAccount_Test {
         List<BankAccount> result;
 
         // given
-        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel() {
-            IncomingInvoiceViewModel setBankAccountRepository(BankAccountRepository bankAccountRepository) {
+        IncomingDocAsInvoiceViewModel vm = new IncomingDocAsInvoiceViewModel() {
+            IncomingDocAsInvoiceViewModel setBankAccountRepository(BankAccountRepository bankAccountRepository) {
                 this.bankAccountRepository = bankAccountRepository;
                 return this;
             }

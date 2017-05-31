@@ -8,14 +8,14 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class IncomingOrderOrInvoiceViewModel_categoriseAsInvoice
-        extends IncomingOrderOrInvoiceViewModel_categoriseAbstract {
+public class IncomingDocViewModel_categoriseAsOrder
+        extends IncomingDocViewModel_categoriseAbstract {
 
     // workaround for https://issues.apache.org/jira/browse/ISIS-1628
-    protected final IncomingOrderOrInvoiceViewModel viewModel;
+    private final IncomingDocViewModel viewModel;
 
-    public IncomingOrderOrInvoiceViewModel_categoriseAsInvoice(final IncomingOrderOrInvoiceViewModel viewModel) {
-        super(viewModel, DocumentTypeData.INCOMING_INVOICE);
+    public IncomingDocViewModel_categoriseAsOrder(final IncomingDocViewModel viewModel) {
+        super(viewModel, DocumentTypeData.INCOMING_ORDER);
         this.viewModel = viewModel;
     }
 

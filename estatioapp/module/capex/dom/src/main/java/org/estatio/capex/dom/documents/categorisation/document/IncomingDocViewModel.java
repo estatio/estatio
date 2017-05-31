@@ -46,8 +46,8 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
@@ -79,12 +79,12 @@ import lombok.Setter;
 
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.HintIdProvider {
+public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvider {
 
 
-    public IncomingOrderOrInvoiceViewModel() {}
+    public IncomingDocViewModel() {}
 
-    public IncomingOrderOrInvoiceViewModel(final Document document) {
+    public IncomingDocViewModel(final Document document) {
         this.document = document;
     }
 
@@ -185,7 +185,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
-    public IncomingOrderOrInvoiceViewModel createSeller(
+    public IncomingDocViewModel createSeller(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumeratorForReference,
             final String name,
@@ -278,7 +278,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public IncomingOrderOrInvoiceViewModel createBudgetItem(final Budget budget, final Charge charge){
+    public IncomingDocViewModel createBudgetItem(final Budget budget, final Charge charge){
         budgetItemRepository.findOrCreateBudgetItem(budget, charge);
         deriveChargeFromBudgetItem();
         derivePeriodFromBudgetItem();
@@ -300,7 +300,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public IncomingOrderOrInvoiceViewModel createNextBudget(final Budget previousBudget){
+    public IncomingDocViewModel createNextBudget(final Budget previousBudget){
         previousBudget.createNextBudget();
         return this;
     }
@@ -378,7 +378,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
 
     // ////////////////////////////////////
 
-    public IncomingOrderOrInvoiceViewModel changeDimensions(
+    public IncomingDocViewModel changeDimensions(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Charge charge,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -448,7 +448,7 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
 
     // ////////////////////////////////////
 
-    public IncomingOrderOrInvoiceViewModel changeItemDetails(
+    public IncomingDocViewModel changeItemDetails(
             final String description,
             final BigDecimal netAmount,
             @Nullable
@@ -574,13 +574,13 @@ public abstract class IncomingOrderOrInvoiceViewModel<T> implements HintStore.Hi
         @Programmatic
         public Object createFor(final Document document) {
             if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
-                final IncomingOrderViewModel viewModel = new IncomingOrderViewModel(document);
+                final IncomingDocAsOrderViewModel viewModel = new IncomingDocAsOrderViewModel(document);
                 serviceRegistry2.injectServicesInto(viewModel);
                 viewModel.inferFixedAssetFromPaperclips();
                 return viewModel;
             }
             if(DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
-                final IncomingInvoiceViewModel viewModel = new IncomingInvoiceViewModel(document);
+                final IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel(document);
                 serviceRegistry2.injectServicesInto(viewModel);
                 viewModel.inferFixedAssetFromPaperclips();
                 return viewModel;

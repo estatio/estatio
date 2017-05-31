@@ -2,7 +2,7 @@ package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.invoice.DocumentTypeData;
 
@@ -16,8 +16,8 @@ public class Task_classifyAsOrder extends Task_classifyAsAbstract {
         this.task = task;
     }
 
-    protected IncomingOrderViewModel doCreate() {
-        return new IncomingOrderViewModel(getDocument());
+    protected IncomingDocAsOrderViewModel doCreate() {
+        return new IncomingDocAsOrderViewModel(getDocument());
     }
 
 }

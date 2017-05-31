@@ -19,7 +19,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
  * Intended to be subclassed by 'act' mixins with first param being a {@link Property};
  * mixins should override relevant methods to make public
  */
-public abstract class DocumentOrIncomingViewModel_categoriseAsAbstract
+public abstract class DocOrIncomingDocViewModel_categoriseAsAbstract
         extends DomainObject_triggerBaseAbstract<
                     Document,
         IncomingDocumentCategorisationStateTransition,
@@ -29,7 +29,7 @@ public abstract class DocumentOrIncomingViewModel_categoriseAsAbstract
 
     protected final DocumentTypeData documentTypeData;
 
-    public DocumentOrIncomingViewModel_categoriseAsAbstract(
+    public DocOrIncomingDocViewModel_categoriseAsAbstract(
             final DocumentTypeData documentTypeData) {
         super(IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY);
         this.documentTypeData = documentTypeData;
@@ -86,6 +86,6 @@ public abstract class DocumentOrIncomingViewModel_categoriseAsAbstract
     protected PaperclipRepository paperclipRepository;
 
     @Inject
-    protected IncomingOrderOrInvoiceViewModel.Factory viewModelFactory;
+    protected IncomingDocViewModel.Factory viewModelFactory;
 
 }

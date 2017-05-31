@@ -19,13 +19,13 @@ import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class IncomingOrderOrInvoiceViewModel_categoriseAbstract extends
-        DocumentOrIncomingViewModel_categoriseAsAbstract {
+public abstract class IncomingDocViewModel_categoriseAbstract extends
+        DocOrIncomingDocViewModel_categoriseAsAbstract {
 
-    protected final IncomingOrderOrInvoiceViewModel viewModel;
+    protected final IncomingDocViewModel viewModel;
 
-    public IncomingOrderOrInvoiceViewModel_categoriseAbstract(
-            final IncomingOrderOrInvoiceViewModel viewModel,
+    public IncomingDocViewModel_categoriseAbstract(
+            final IncomingDocViewModel viewModel,
             final DocumentTypeData documentTypeData) {
         super(documentTypeData);
         this.viewModel = viewModel;
@@ -95,6 +95,6 @@ public abstract class IncomingOrderOrInvoiceViewModel_categoriseAbstract extends
     TaskRepository taskRepository;
 
     @Inject
-    IncomingOrderOrInvoiceViewModel.Factory viewModelFactory;
+    IncomingDocViewModel.Factory viewModelFactory;
 
 }

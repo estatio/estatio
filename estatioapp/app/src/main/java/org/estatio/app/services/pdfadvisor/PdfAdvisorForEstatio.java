@@ -24,9 +24,9 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
@@ -142,12 +142,12 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
 
         if(Objects.equals(
                 objectType,
-                IncomingInvoiceViewModel.class.getName())) {
+                IncomingDocAsInvoiceViewModel.class.getName())) {
 
             String identifier = instanceKey.getIdentifier();
             final String xmlStr = urlEncodingService.decode(identifier);
 
-            IncomingInvoiceViewModel viewModel = jaxbService.fromXml(IncomingInvoiceViewModel.class, xmlStr);
+            IncomingDocAsInvoiceViewModel viewModel = jaxbService.fromXml(IncomingDocAsInvoiceViewModel.class, xmlStr);
 
             final Bookmark bookmark = bookmarkService2.bookmarkFor(viewModel.getDocument());
             if (bookmark != null)
@@ -158,12 +158,12 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
             }
         } else if(Objects.equals(
                 objectType,
-                IncomingOrderViewModel.class.getName())) {
+                IncomingDocAsOrderViewModel.class.getName())) {
 
             String identifier = instanceKey.getIdentifier();
             final String xmlStr = urlEncodingService.decode(identifier);
 
-            IncomingOrderViewModel viewModel = jaxbService.fromXml(IncomingOrderViewModel.class, xmlStr);
+            IncomingDocAsOrderViewModel viewModel = jaxbService.fromXml(IncomingDocAsOrderViewModel.class, xmlStr);
 
             final Bookmark bookmark = bookmarkService2.bookmarkFor(viewModel.getDocument());
             if (bookmark != null)
@@ -179,11 +179,11 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
 
     private Document determineDocument(final InstanceKey instanceKey) {
 
-        Document document = determineDocument(instanceKey, IncomingInvoiceViewModel.class);
+        Document document = determineDocument(instanceKey, IncomingDocAsInvoiceViewModel.class);
         if (document != null) {
             return document;
         }
-        document = determineDocument(instanceKey, IncomingOrderViewModel.class);
+        document = determineDocument(instanceKey, IncomingDocAsOrderViewModel.class);
         if (document != null) {
             return document;
         }
@@ -192,7 +192,7 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
 
     private Document determineDocument(
             final InstanceKey instanceKey,
-            final Class<? extends IncomingOrderOrInvoiceViewModel> viewModelClass) {
+            final Class<? extends IncomingDocViewModel> viewModelClass) {
 
         final InstanceKey.TypeKey typeKey = instanceKey.getTypeKey();
         final String objectType = typeKey.getObjectType();
@@ -202,7 +202,7 @@ public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
         final String identifier = instanceKey.getIdentifier();
         final String xmlStr = urlEncodingService.decode(identifier);
 
-        final IncomingOrderOrInvoiceViewModel viewModel = jaxbService.fromXml(viewModelClass, xmlStr);
+        final IncomingDocViewModel viewModel = jaxbService.fromXml(viewModelClass, xmlStr);
         return viewModel.getDocument();
     }
 

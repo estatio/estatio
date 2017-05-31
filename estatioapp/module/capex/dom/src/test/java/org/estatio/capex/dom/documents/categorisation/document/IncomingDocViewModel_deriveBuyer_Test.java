@@ -10,7 +10,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
@@ -20,7 +20,7 @@ import org.estatio.dom.party.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingOrderOrInvoiceViewModel_deriveBuyer_Test {
+public class IncomingDocViewModel_deriveBuyer_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -50,7 +50,7 @@ public class IncomingOrderOrInvoiceViewModel_deriveBuyer_Test {
         }});
 
         // when
-        IncomingOrderViewModel vm = new IncomingOrderViewModel(mockDocument);
+        IncomingDocAsOrderViewModel vm = new IncomingDocAsOrderViewModel(mockDocument);
         vm.paperclipRepository = mockPaperclipRepository;
         vm.inferFixedAssetFromPaperclips();
 

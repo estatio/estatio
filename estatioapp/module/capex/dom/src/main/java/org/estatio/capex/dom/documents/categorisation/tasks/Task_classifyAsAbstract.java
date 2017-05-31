@@ -11,7 +11,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.invoice.DocumentTypeData;
 
@@ -27,14 +27,14 @@ public abstract class Task_classifyAsAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public IncomingOrderOrInvoiceViewModel act() {
-        IncomingOrderOrInvoiceViewModel viewModel = doCreate();
+    public IncomingDocViewModel act() {
+        IncomingDocViewModel viewModel = doCreate();
         // to support 'goToNext' when finished with the view model
         viewModel.setTask(task);
         return viewModel;
     }
 
-    protected abstract IncomingOrderOrInvoiceViewModel doCreate();
+    protected abstract IncomingDocViewModel doCreate();
 
     public boolean hideAct() {
         return task.isCompleted() || getDocument() == null || !documentTypeData.isDocTypeFor(getDocument());

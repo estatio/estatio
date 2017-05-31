@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_saveAbstract;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_saveAbstract;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -22,19 +22,19 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceStatus;
 
 @Mixin(method = "act")
-public class IncomingInvoiceViewmodel_saveInvoice
-        extends IncomingOrderOrInvoiceViewModel_saveAbstract<IncomingInvoice, IncomingInvoiceViewModel> {
+public class IncomingDocAsInvoiceViewmodel_saveInvoice
+        extends IncomingDocViewModel_saveAbstract<IncomingInvoice, IncomingDocAsInvoiceViewModel> {
 
     // workaround for ISIS-1628
-    private final IncomingInvoiceViewModel viewModel;
+    private final IncomingDocAsInvoiceViewModel viewModel;
 
-    public IncomingInvoiceViewmodel_saveInvoice(final IncomingInvoiceViewModel viewModel) {
+    public IncomingDocAsInvoiceViewmodel_saveInvoice(final IncomingDocAsInvoiceViewModel viewModel) {
         super(viewModel);
         this.viewModel = viewModel;
     }
 
     public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<IncomingInvoiceViewmodel_saveInvoice> {}
+            extends EstatioCapexDomModule.ActionDomainEvent<IncomingDocAsInvoiceViewmodel_saveInvoice> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,

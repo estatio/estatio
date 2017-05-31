@@ -23,7 +23,7 @@ import org.estatio.dom.party.Organisation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingInvoiceViewModel_Test {
+public class IncomingDocAsInvoiceViewModel_Test {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
@@ -40,7 +40,7 @@ public class IncomingInvoiceViewModel_Test {
         List<OrderItem> result;
 
         // given
-        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel();
+        IncomingDocAsInvoiceViewModel vm = new IncomingDocAsInvoiceViewModel();
         vm.orderRepository = mockOrderRepository;
         Charge someOtherCharge = new Charge();
         Charge charge = new Charge();
@@ -122,7 +122,7 @@ public class IncomingInvoiceViewModel_Test {
     public void minimalRequiredDataToComplete() throws Exception {
 
         // given
-        IncomingInvoiceViewModel vm = new IncomingInvoiceViewModel();
+        IncomingDocAsInvoiceViewModel vm = new IncomingDocAsInvoiceViewModel();
 
         // when
         String result = vm.minimalRequiredDataToComplete();

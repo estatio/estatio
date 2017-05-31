@@ -13,7 +13,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinAbstract;
 import org.estatio.dom.asset.Property;
@@ -37,8 +37,8 @@ public class Task_categoriseAsInvoice
             @Nullable final String comment,
             final boolean goToNext) {
         Object mixinResult = mixin().act(property, comment);
-        if(mixinResult instanceof IncomingOrderOrInvoiceViewModel) {
-            IncomingOrderOrInvoiceViewModel viewModel = (IncomingOrderOrInvoiceViewModel) mixinResult;
+        if(mixinResult instanceof IncomingDocViewModel) {
+            IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
             viewModel.setTask(task);
         }

@@ -50,7 +50,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -67,7 +67,7 @@ import lombok.Setter;
 
 @DomainObject(
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
-        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel"
+        objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel"
 )
 @XmlRootElement(name = "categorizeIncomingInvoice")
 @XmlType(
@@ -99,14 +99,14 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingInvoiceViewModel extends IncomingOrderOrInvoiceViewModel<IncomingInvoice> {
+public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<IncomingInvoice> {
 
     // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
-    public IncomingInvoiceViewModel() {
+    public IncomingDocAsInvoiceViewModel() {
         setPaymentMethod(PaymentMethod.BANK_TRANSFER);
     }
 
-    public IncomingInvoiceViewModel(final Document document) {
+    public IncomingDocAsInvoiceViewModel(final Document document) {
         super(document);
         setDateReceived(document.getCreatedAt().toLocalDate());
         setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
@@ -134,7 +134,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderOrInvoiceViewModel<In
         }
     }
 
-    public IncomingOrderOrInvoiceViewModel createBankAccount(final String ibanNumber){
+    public IncomingDocViewModel createBankAccount(final String ibanNumber){
         bankAccountRepository.newBankAccount(getSeller(), ibanNumber, null);
         BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber); // this lookup is done instead of setting bankaccount right away for jaxb viewmodel recreation
         setBankAccount(bankAccount);
@@ -243,7 +243,7 @@ public class IncomingInvoiceViewModel extends IncomingOrderOrInvoiceViewModel<In
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
     )
-    public IncomingInvoiceViewModel changeInvoiceDetails(
+    public IncomingDocAsInvoiceViewModel changeInvoiceDetails(
             final String invoiceNumber,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Party buyer,

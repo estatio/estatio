@@ -12,7 +12,7 @@ import org.estatio.capex.dom.coda.CodaMappingFilter;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.coda.CodaTransactionType;
 import org.estatio.capex.dom.coda.DocumentType;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
@@ -20,9 +20,9 @@ import org.estatio.dom.charge.Charge;
 @Mixin
 public class IncomingInvoiceViewModel_createCodaMapping {
 
-    private final IncomingInvoiceViewModel item;
+    private final IncomingDocAsInvoiceViewModel item;
 
-    public IncomingInvoiceViewModel_createCodaMapping(IncomingInvoiceViewModel item) {
+    public IncomingInvoiceViewModel_createCodaMapping(IncomingDocAsInvoiceViewModel item) {
         this.item = item;
     }
 

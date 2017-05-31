@@ -25,12 +25,12 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingOrderOrInvoiceViewModel_resetCategorisation;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingInvoiceViewmodel_saveInvoice;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewModel;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingOrderViewmodel_saveOrder;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewmodel_saveInvoice;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
+import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsOrder;
@@ -157,7 +157,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             return taskIncomingDocumentService.lookupFor(task);
         }
 
-        IncomingOrderViewModel incomingOrderViewModel;
+        IncomingDocAsOrderViewModel incomingDocAsOrderViewModel;
 
         private void categoriseAsOrder_works() {
 
@@ -188,13 +188,13 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // then
             assertThat(tasks.size()).isEqualTo(1);
 
-            List<IncomingOrderOrInvoiceViewModel> viewModels =
+            List<IncomingDocViewModel> viewModels =
                     (List)factory.map(incomingDocumentRepository.findUnclassifiedIncomingOrders());
             assertThat(viewModels.size()).isEqualTo(1);
 
-            incomingOrderViewModel = (IncomingOrderViewModel) viewModels.get(0);
-            assertThat(incomingOrderViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
-            assertThat(incomingOrderViewModel.getDocument().getType()).isEqualTo(INCOMING_ORDER);
+            incomingDocAsOrderViewModel = (IncomingDocAsOrderViewModel) viewModels.get(0);
+            assertThat(incomingDocAsOrderViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
+            assertThat(incomingDocAsOrderViewModel.getDocument().getType()).isEqualTo(INCOMING_ORDER);
 
             // document is linked to property
             assertThat(paperclipRepository.findByAttachedTo(propertyForOxf).size()).isEqualTo(1);
@@ -205,7 +205,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         }
 
 
-        IncomingInvoiceViewModel incomingInvoiceViewModel;
+        IncomingDocAsInvoiceViewModel incomingDocAsInvoiceViewModel;
 
         private void categoriseAsInvoice_works() {
 
@@ -232,15 +232,16 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // and also then
             assertThat(tasks.size()).isEqualTo(0);
 
-            List<IncomingOrderOrInvoiceViewModel> viewModels =
+            List<IncomingDocViewModel> viewModels =
                     (List) factory.map(incomingDocumentRepository.findUnclassifiedIncomingInvoices());
             assertThat(viewModels.size()).isEqualTo(1);
 
-            incomingInvoiceViewModel = (IncomingInvoiceViewModel) viewModels.get(0);
-            assertThat(incomingInvoiceViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
-            assertThat(incomingInvoiceViewModel.getDocument().getType()).isEqualTo(INCOMING_INVOICE);
-            assertThat(incomingInvoiceViewModel.getDateReceived()).isNotNull();
-            assertThat(incomingInvoiceViewModel.getDateReceived()).isEqualTo(incomingInvoiceViewModel.getDocument().getCreatedAt().toLocalDate());
+            incomingDocAsInvoiceViewModel = (IncomingDocAsInvoiceViewModel) viewModels.get(0);
+            assertThat(incomingDocAsInvoiceViewModel.getFixedAsset()).isEqualTo(propertyForOxf);
+            assertThat(incomingDocAsInvoiceViewModel.getDocument().getType()).isEqualTo(INCOMING_INVOICE);
+            assertThat(incomingDocAsInvoiceViewModel.getDateReceived()).isNotNull();
+            assertThat(incomingDocAsInvoiceViewModel.getDateReceived()).isEqualTo(
+                    incomingDocAsInvoiceViewModel.getDocument().getCreatedAt().toLocalDate());
 
             // document is linked to property
             assertThat(paperclipRepository.findByAttachedTo(propertyForOxf).size()).isEqualTo(2);
@@ -260,7 +261,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(unclassified.size()).isEqualTo(1);
 
             // when
-            wrap(mixin(IncomingOrderOrInvoiceViewModel_resetCategorisation.class, incomingInvoiceViewModel)).act(null);
+            wrap(mixin(IncomingDocViewModel_resetCategorisation.class, incomingDocAsInvoiceViewModel)).act(null);
             transactionService.nextTransaction();
 
             // then
@@ -284,30 +285,30 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void createOrder_works(){
 
             // given
-            final Document document = incomingOrderViewModel.getDocument();
+            final Document document = incomingDocAsOrderViewModel.getDocument();
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // when
             try {
-                wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel)).
+                wrap(mixin(IncomingDocAsOrderViewmodel_saveOrder.class, incomingDocAsOrderViewModel)).
                         act(null, false);
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: order number, seller, description, net amount, gross amount, charge, period required");
             }
 
             // and when
-            wrap(incomingOrderViewModel).createSeller("SELLER-REF", false, "Some seller", greatBritain, fakeIban);
+            wrap(incomingDocAsOrderViewModel).createSeller("SELLER-REF", false, "Some seller", greatBritain, fakeIban);
             seller = (Organisation) partyRepository.findPartyByReference("SELLER-REF");
-            incomingOrderViewModel.changeOrderDetails(orderNumber, buyer, seller, null, null);
-            incomingOrderViewModel.changeItemDetails(description, netAmount, null, null, grossAmount);
+            incomingDocAsOrderViewModel.changeOrderDetails(orderNumber, buyer, seller, null, null);
+            incomingDocAsOrderViewModel.changeItemDetails(description, netAmount, null, null, grossAmount);
 
-            incomingOrderViewModel.setCharge(charge_for_works);
-            incomingOrderViewModel.setPeriod(period);
+            incomingDocAsOrderViewModel.setCharge(charge_for_works);
+            incomingDocAsOrderViewModel.setPeriod(period);
 
             this.orderCreated = (Order)
-                    wrap(mixin(IncomingOrderViewmodel_saveOrder.class, incomingOrderViewModel))
+                    wrap(mixin(IncomingDocAsOrderViewmodel_saveOrder.class, incomingDocAsOrderViewModel))
                         .act(null, false);
             transactionService.nextTransaction();
 
@@ -346,7 +347,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(paperclipRepository.findByAttachedTo(orderCreated).size()).isEqualTo(1);
             PaperclipForOrder paperclip = (PaperclipForOrder) paperclipRepository.findByAttachedTo(orderCreated).get(0);
 
-            Document doc = incomingOrderViewModel.getDocument();
+            Document doc = incomingDocAsOrderViewModel.getDocument();
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
             // incoming orders is empty
@@ -364,19 +365,19 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(tasks.size()).isEqualTo(1);
             task2 = tasks.get(0);
 
-            incomingInvoiceViewModel = (IncomingInvoiceViewModel)
+            incomingDocAsInvoiceViewModel = (IncomingDocAsInvoiceViewModel)
                     wrap(mixin(Task_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, false);
             transactionService.nextTransaction();
 
-            final Document document = incomingInvoiceViewModel.getDocument();
+            final Document document = incomingDocAsInvoiceViewModel.getDocument();
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
 
             // when
             try {
-                wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
+                wrap(mixin(IncomingDocAsInvoiceViewmodel_saveInvoice.class, incomingDocAsInvoiceViewModel))
                         .act(null, false);
             } catch (DisabledException e){
                 // REVIEW: why are buyer, date received and due date populated already?
@@ -387,7 +388,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             // when
             try {
-                wrap(incomingInvoiceViewModel).createBankAccount("123");
+                wrap(incomingDocAsInvoiceViewModel).createBankAccount("123");
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: There is no seller specified");
             }
@@ -395,25 +396,25 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // when
             // link to order item
             OrderItem orderItem = orderCreated.getItems().first();
-            incomingInvoiceViewModel.modifyOrderItem(orderItem);
+            incomingDocAsInvoiceViewModel.modifyOrderItem(orderItem);
 
             // when
             try {
-                wrap(incomingInvoiceViewModel).createBankAccount("123");
+                wrap(incomingDocAsInvoiceViewModel).createBankAccount("123");
             } catch (Exception e){
                 assertThat(e.getMessage()).contains("Reason: 123 is not a valid iban number");
             }
 
             // when
             try {
-                wrap(incomingInvoiceViewModel).createBankAccount(fakeIban);
+                wrap(incomingDocAsInvoiceViewModel).createBankAccount(fakeIban);
             } catch (Exception e){
                 assertThat(e.getMessage()).contains("Reason: Some seller has already bank account with iban NL05ABNA0214875743");
             }
 
             // when
             try {
-                wrap(mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel))
+                wrap(mixin(IncomingDocAsInvoiceViewmodel_saveInvoice.class, incomingDocAsInvoiceViewModel))
                         .act(null, false);
             } catch (DisabledException e){
                 // REVIEW: why are date received and due date populated already?
@@ -423,14 +424,14 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             // and when
             final String invoiceNumber = "321";
-            incomingInvoiceViewModel.setInvoiceNumber(invoiceNumber);
+            incomingDocAsInvoiceViewModel.setInvoiceNumber(invoiceNumber);
             final LocalDate dueDate = new LocalDate(2016, 2, 14);
-            incomingInvoiceViewModel.setDueDate(dueDate);
+            incomingDocAsInvoiceViewModel.setDueDate(dueDate);
             final LocalDate dateReceivedDate = new LocalDate(2016, 2, 1);
-            incomingInvoiceViewModel.setDateReceived(dateReceivedDate);
+            incomingDocAsInvoiceViewModel.setDateReceived(dateReceivedDate);
 
             invoiceCreated = (IncomingInvoice) wrap(
-                    mixin(IncomingInvoiceViewmodel_saveInvoice.class, incomingInvoiceViewModel)).act(null, false);
+                    mixin(IncomingDocAsInvoiceViewmodel_saveInvoice.class, incomingDocAsInvoiceViewModel)).act(null, false);
             transactionService.nextTransaction();
 
             // then
@@ -469,7 +470,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(paperclipRepository.findByAttachedTo(invoiceCreated).size()).isEqualTo(1);
             PaperclipForInvoice paperclip = (PaperclipForInvoice) paperclipRepository.findByAttachedTo(invoiceCreated).get(0);
 
-            Document doc = incomingInvoiceViewModel.getDocument();
+            Document doc = incomingDocAsInvoiceViewModel.getDocument();
             assertThat(paperclip.getDocument()).isEqualTo(doc);
 
             // document state
@@ -598,7 +599,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
     IncomingDocumentRepository incomingDocumentRepository;
 
     @Inject
-    IncomingOrderOrInvoiceViewModel.Factory factory;
+    IncomingDocViewModel.Factory factory;
 
     @Inject
     PropertyRepository propertyRepository;

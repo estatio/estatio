@@ -23,9 +23,9 @@ import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 
 import lombok.Getter;
 
-public abstract class IncomingOrderOrInvoiceViewModel_saveAbstract<
+public abstract class IncomingDocViewModel_saveAbstract<
         T,
-        VM extends IncomingOrderOrInvoiceViewModel<T>
+        VM extends IncomingDocViewModel<T>
         > extends DomainObject_triggerAbstract<
         Document,
         IncomingDocumentCategorisationStateTransition,
@@ -36,7 +36,7 @@ public abstract class IncomingOrderOrInvoiceViewModel_saveAbstract<
     @Getter
     protected final VM viewModel;
 
-    public IncomingOrderOrInvoiceViewModel_saveAbstract(final VM viewModel) {
+    public IncomingDocViewModel_saveAbstract(final VM viewModel) {
         super(viewModel.getDocument(), IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
         this.viewModel = viewModel;
     }
@@ -100,7 +100,7 @@ public abstract class IncomingOrderOrInvoiceViewModel_saveAbstract<
     TaskRepository taskRepository;
 
     @Inject
-    protected IncomingOrderOrInvoiceViewModel.Factory factory;
+    protected IncomingDocViewModel.Factory factory;
 
     @Inject
     protected PaperclipRepository paperclipRepository;

@@ -23,16 +23,16 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class IncomingOrderOrInvoiceViewModel_resetCategorisation extends DomainObject_triggerBaseAbstract<
+public class IncomingDocViewModel_resetCategorisation extends DomainObject_triggerBaseAbstract<
         Document,
         IncomingDocumentCategorisationStateTransition,
         IncomingDocumentCategorisationStateTransitionType,
         IncomingDocumentCategorisationState
         > {
 
-    protected final IncomingOrderOrInvoiceViewModel hasDocument;
+    protected final IncomingDocViewModel hasDocument;
 
-    public IncomingOrderOrInvoiceViewModel_resetCategorisation(final IncomingOrderOrInvoiceViewModel hasDocument) {
+    public IncomingDocViewModel_resetCategorisation(final IncomingDocViewModel hasDocument) {
         super(IncomingDocumentCategorisationStateTransitionType.RESET);
         this.hasDocument = hasDocument;
     }
