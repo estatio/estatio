@@ -29,34 +29,6 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
     }
 
 
-//    // these now subclass from DomainObject_triggerAbstract ?
-
-//    @Programmatic
-//    @com.google.common.eventbus.Subscribe
-//    @org.axonframework.eventhandling.annotation.EventHandler
-//    public void toAssociateWithDomainEntityWhen(IncomingInvoiceViewmodel_saveInvoice.DomainEvent ev) {
-//        switch (ev.getEventPhase()) {
-//        case EXECUTED:
-//            final IncomingInvoiceViewModel viewModel = (IncomingInvoiceViewModel) ev.getMixedIn();
-//            final Document document = viewModel.getDocument();
-//            stateTransitionService.trigger(document, CLASSIFY_AS_INVOICE_OR_ORDER, null);
-//        }
-//    }
-//
-//    @Programmatic
-//    @com.google.common.eventbus.Subscribe
-//    @org.axonframework.eventhandling.annotation.EventHandler
-//    public void toAssociateWithDomainEntityWhen(IncomingOrderViewmodel_saveOrder.DomainEvent ev) {
-//        switch (ev.getEventPhase()) {
-//        case EXECUTED:
-//            final IncomingOrderViewModel viewModel = (IncomingOrderViewModel) ev.getMixedIn();
-//            final Document document = viewModel.getDocument();
-//            stateTransitionService.trigger(document, CLASSIFY_AS_INVOICE_OR_ORDER, null);
-//        }
-//    }
-//
-//    @Inject
-//    IncomingDocumentCategorisationStateTransition.Repository repository;
 
     @Inject
     StateTransitionService stateTransitionService;
