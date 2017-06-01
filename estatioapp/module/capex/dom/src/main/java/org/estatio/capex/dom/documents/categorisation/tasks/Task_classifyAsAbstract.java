@@ -7,8 +7,10 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
@@ -29,6 +31,10 @@ public abstract class Task_classifyAsAbstract {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public IncomingDocViewModel act() {
         IncomingDocViewModel viewModel = doCreate();
+
+        serviceRegistry2.injectServicesInto(viewModel);
+        viewModel.inferFixedAssetFromPaperclips();
+
         // to support 'goToNext' when finished with the view model
         viewModel.setTask(task);
         return viewModel;
@@ -50,6 +56,12 @@ public abstract class Task_classifyAsAbstract {
         final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);
         return transition != null ? transition.getDocument() : null;
     }
+
+    @Inject
+    protected PaperclipRepository paperclipRepository;
+
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
 
     @Inject
     IncomingDocumentCategorisationStateTransition.Repository repository;

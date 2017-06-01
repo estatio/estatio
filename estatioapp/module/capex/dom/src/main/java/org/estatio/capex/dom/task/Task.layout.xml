@@ -19,6 +19,7 @@
                                     <cpt:action id="categoriseAsInvoice"/>
                                     <cpt:action id="classifyAsOrder"/>
                                     <cpt:action id="classifyAsInvoice"/>
+                                    <cpt:action id="resetCategorisation"/>
 
                                     <cpt:action id="approveAsProjectManager"/>
                                     <cpt:action id="approveAsAssetManager"/>

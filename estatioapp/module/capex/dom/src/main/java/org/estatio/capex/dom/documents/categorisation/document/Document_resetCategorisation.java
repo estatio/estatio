@@ -7,17 +7,19 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.Document;
 
 @Mixin(method = "act")
-public class IncomingDocViewModel_resetCategorisation extends DocOrIncomingDoc_resetAbstract {
+public class Document_resetCategorisation extends DocOrIncomingDoc_resetAbstract {
 
-    protected final IncomingDocViewModel hasDocument;
+    // workaround for ISIS-1628
+    private final Document document;
 
-    public IncomingDocViewModel_resetCategorisation(final IncomingDocViewModel viewModel) {
-        this.hasDocument = viewModel;
+    public Document_resetCategorisation(final Document document) {
+        super();
+        this.document = document;
     }
 
     @Override
     public Document getDomainObject() {
-        return hasDocument.getDocument();
+        return document;
     }
 
     @Override

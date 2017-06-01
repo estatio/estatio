@@ -35,7 +35,6 @@ import org.apache.isis.applib.services.bookmark.BookmarkService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.hint.HintStore;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
@@ -598,6 +597,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         }
 
         @Inject
+        protected PaperclipRepository paperclipRepository;
+
+        @Inject
         ServiceRegistry2 serviceRegistry2;
 
     }
@@ -609,10 +611,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @XmlTransient
     @Inject
     protected BookmarkService2 bookmarkService2;
-
-    @XmlTransient
-    @Inject
-    protected TitleService titleService;
 
     @Inject
     @XmlTransient
@@ -653,6 +651,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Inject
     @XmlTransient
     protected PaperclipRepository paperclipRepository;
+
 
 
 }
