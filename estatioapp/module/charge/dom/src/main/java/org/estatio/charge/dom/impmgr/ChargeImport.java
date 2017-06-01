@@ -6,13 +6,9 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
@@ -44,6 +40,29 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return "charge import";
     }
 
+    public ChargeImport(){}
+
+    public ChargeImport(
+            final String atPath,
+            final String reference,
+            final String name,
+            final String description,
+            final String taxReference,
+            final String chargeGroupReference,
+            final String chargeGroupName,
+            final String applicability
+    ){
+        this();
+        this.atPath = atPath;
+        this.reference = reference;
+        this.name = name;
+        this.description = description;
+        this.taxReference = taxReference;
+        this.chargeGroupReference = chargeGroupReference;
+        this.chargeGroupName = chargeGroupName;
+        this.applicability = applicability;
+    }
+
     @Getter @Setter
     private String atPath;
 
@@ -72,7 +91,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     private String externalReference;
 
     @Getter @Setter
-    private Applicability applicability;
+    private String applicability;
 
     @Programmatic
     @Override
@@ -80,21 +99,15 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return importData(previousRow);
     }
 
-    // REVIEW: is this view model actually ever surfaced in the UI?
-    @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public List<Object> importData() {
-        return importData(null);
-    }
-
     @Override
     @Programmatic
     public List<Object> importData(Object previousRow) {
 
-        final ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
+        final ChargeGroup chargeGroup = findOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
-        final Applicability applicability = this.applicability != null ? this.applicability : Applicability.IN_AND_OUT;
+        final Applicability applicability = this.applicability != null ? Applicability.valueOf(this.applicability) : Applicability.IN_AND_OUT;
 
         final Tax tax = taxRepository.findOrCreate(taxReference, taxReference, applicationTenancy);
 
@@ -107,7 +120,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         return Lists.newArrayList(charge);
     }
 
-    private ChargeGroup fetchOrCreateChargeGroup(final String reference, final String name) {
+    private ChargeGroup findOrCreateChargeGroup(final String reference, final String name) {
         ChargeGroup chargeGroup = chargeGroupRepository.findChargeGroup(reference);
         if (chargeGroup == null) {
             chargeGroup = chargeGroupRepository.createChargeGroup(reference, name);

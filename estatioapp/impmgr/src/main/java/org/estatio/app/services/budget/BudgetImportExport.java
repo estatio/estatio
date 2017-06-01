@@ -51,25 +51,25 @@ public class BudgetImportExport implements Importable {
             final String propertyReference,
             final LocalDate budgetStartDate,
             final LocalDate budgetEndDate,
-            final String budgetChargeReference,
+            final String incomingChargeReference,
             final BigDecimal budgetedValue,
             final BigDecimal auditedValue,
             final String keyTableName,
             final String foundationValueType,
             final String keyValueMethod,
-            final String invoiceChargeReference,
+            final String outgoingChargeReference,
             final BigDecimal percentage
             ){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
         this.budgetEndDate = budgetEndDate;
-        this.budgetChargeReference = budgetChargeReference;
+        this.incomingChargeReference = incomingChargeReference;
         this.budgetedValue = budgetedValue;
         this.auditedValue = auditedValue;
         this.keyTableName = keyTableName;
         this.foundationValueType = foundationValueType;
         this.keyValueMethod = keyValueMethod;
-        this.invoiceChargeReference = invoiceChargeReference;
+        this.outgoingChargeReference = outgoingChargeReference;
         this.percentage = percentage;
     }
 
@@ -80,7 +80,7 @@ public class BudgetImportExport implements Importable {
     @Getter @Setter
     private LocalDate budgetEndDate;
     @Getter @Setter
-    private String budgetChargeReference;
+    private String incomingChargeReference;
     @Getter @Setter
     private BigDecimal budgetedValue;
     @Getter @Setter
@@ -92,7 +92,7 @@ public class BudgetImportExport implements Importable {
     @Getter @Setter
     private String keyValueMethod;
     @Getter @Setter
-    private String invoiceChargeReference;
+    private String outgoingChargeReference;
     @Getter @Setter
     private BigDecimal percentage;
 
@@ -100,13 +100,21 @@ public class BudgetImportExport implements Importable {
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
-
-        Charge incomingCharge = fetchCharge(getBudgetChargeReference());
+        if (previousRow==null){
+            removeExistingBudgetItems();
+        }
+        Charge incomingCharge = fetchCharge(getIncomingChargeReference());
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
-        if (getInvoiceChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null && percentage!=null) {
+        if (getOutgoingChargeReference()!=null && getKeyTableName()!=null && getFoundationValueType()!=null && getKeyValueMethod()!=null && percentage!=null) {
            findOrCreatePartitionItem(budgetItem);
         }
         return Lists.newArrayList(budgetItem.getBudget());
+    }
+
+    private void removeExistingBudgetItems(){
+        Property property = propertyRepository.findPropertyByReference(getPropertyReference());
+        Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
+        budget.removeAllBudgetItems();
     }
 
     private BudgetItem findOrCreateBudgetAndBudgetItem(final Charge incomingCharge){
@@ -121,7 +129,7 @@ public class BudgetImportExport implements Importable {
     }
 
     private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem){
-        Charge targetCharge = fetchCharge(getInvoiceChargeReference());
+        Charge targetCharge = fetchCharge(getOutgoingChargeReference());
         KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getKeyTableName(), getFoundationValueType(), getKeyValueMethod());
         return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage());
     }

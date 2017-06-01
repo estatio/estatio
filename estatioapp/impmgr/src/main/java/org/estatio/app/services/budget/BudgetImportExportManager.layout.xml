@@ -16,8 +16,10 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="lines">
-            </ns2:collection>
+            <ns2:collection id="lines" defaultView="table"/>
+            <ns2:collection id="keyItemLines" defaultView="table"/>
+            <ns2:collection id="overrides" defaultView="table"/>
+            <ns2:collection id="charges" defaultView="table"/>
         </col>
     </row>
 </grid>

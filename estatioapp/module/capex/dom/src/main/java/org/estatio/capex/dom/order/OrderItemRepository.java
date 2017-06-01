@@ -126,6 +126,15 @@ public class OrderItemRepository {
     }
 
     @Programmatic
+    public List<OrderItem> findByBudgetItem(final BudgetItem budgetItem) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findByBudgetItem",
+                        "budgetItem", budgetItem
+                ));
+    }
+    @Programmatic
     public List<OrderItem> listAll() {
         return repositoryService.allInstances(OrderItem.class);
     }

@@ -127,6 +127,12 @@ public class BudgetImportExportManager {
         return budgetImportExportService.overrides(this);
     }
 
+    public List<ChargeImport> getCharges() {
+        List<ChargeImport> result = new ArrayList<>();
+        if (getBudget()==null){return result;} // for import from menu where budget unknown
+        return budgetImportExportService.charges(this);
+    }
+
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout()
@@ -139,11 +145,11 @@ public class BudgetImportExportManager {
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
-        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "ChargeImport");
+        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
         List<List<?>> objects =
                 excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3, spec4));
 
-        // first import charges
+        // first upsert charges
         List<ChargeImport> chargeImportLines = (List<ChargeImport>) objects.get(3);
         for (ChargeImport lineItem : chargeImportLines){
             lineItem.importData(null);
@@ -164,11 +170,12 @@ public class BudgetImportExportManager {
     private List<BudgetImportExport> importBudgetAndItems(final List<List<?>> objects){
         Budget importedBudget = new Budget();
         List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
+        BudgetImportExport previousRow = null;
         for (BudgetImportExport lineItem :lineItems){
-            importedBudget = (Budget) lineItem.importData(null).get(0);
+            importedBudget = (Budget) lineItem.importData(previousRow).get(0);
+            previousRow = lineItem;
         }
         setBudget(importedBudget);
-
         return lineItems;
     }
 
@@ -234,10 +241,12 @@ public class BudgetImportExportManager {
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(BudgetOverrideImportExport.class, "overrides");
+        WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
         WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec1);
         WorksheetContent keyItemsContent = new WorksheetContent(getKeyItemLines(), spec2);
         WorksheetContent overridesContent = new WorksheetContent(getOverrides(), spec3);
-        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, overridesContent), fileName);
+        WorksheetContent chargesContent = new WorksheetContent(getCharges(), spec4);
+        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, overridesContent, chargesContent), fileName);
 
     }
 

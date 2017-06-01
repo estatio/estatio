@@ -11,7 +11,7 @@
                 <ns2:property id="leaseReference"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate"/>
-                <ns2:property id="invoiceChargeReference"/>
+                <ns2:property id="outgoingChargeReference"/>
                 <ns2:property id="incomingChargeReference"/>
                 <ns2:property id="type"/>
                 <ns2:property id="reason"/>

@@ -83,7 +83,12 @@ import lombok.Setter;
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
-                        + "WHERE project == :project ")
+                        + "WHERE project == :project "),
+        @Query(
+                name = "findByBudgetItem", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE budgetItem == :budgetItem ")
 })
 
 @Unique(name = "OrderItem_order_charge_UNQ", members = { "ordr", "charge" })

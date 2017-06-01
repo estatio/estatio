@@ -25,15 +25,12 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
+import org.estatio.charge.dom.impmgr.ChargeImport;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;
@@ -41,6 +38,7 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideForMax;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 
@@ -54,8 +52,6 @@ public class BudgetImportExportService {
         }
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetImportExport> lines(BudgetImportExportManager manager) {
 
         List<BudgetImportExport> result = new ArrayList<BudgetImportExport>();
@@ -84,12 +80,12 @@ public class BudgetImportExportService {
 
         } else {
             // create a line for each partion item
-            for (PartitionItem allocation : item.getPartitionItems()) {
-                String keyTableName = allocation.getKeyTable().getName();
-                String foundationValueType = allocation.getKeyTable().getFoundationValueType().toString();
-                String keyValueMethod = allocation.getKeyTable().getKeyValueMethod().toString();
-                String allocationChargeReference = allocation.getCharge().getReference();
-                BigDecimal percentage = allocation.getPercentage();
+            for (PartitionItem partitionItem : item.getPartitionItems()) {
+                String keyTableName = partitionItem.getKeyTable().getName();
+                String foundationValueType = partitionItem.getKeyTable().getFoundationValueType().toString();
+                String keyValueMethod = partitionItem.getKeyTable().getKeyValueMethod().toString();
+                String allocationChargeReference = partitionItem.getCharge().getReference();
+                BigDecimal percentage = partitionItem.getPercentage();
                 lines.add(new BudgetImportExport(propertyReference, budgetStartDate, budgetEndDate, budgetChargeReference, budgetedValue, auditedValue, keyTableName, foundationValueType, keyValueMethod, allocationChargeReference, percentage));
             }
 
@@ -98,8 +94,6 @@ public class BudgetImportExportService {
         return lines;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetOverrideImportExport> overrides(BudgetImportExportManager manager) {
 
         List<BudgetOverrideImportExport> result = new ArrayList<BudgetOverrideImportExport>();
@@ -166,6 +160,47 @@ public class BudgetImportExportService {
                 weightedArea
         ));
         return result;
+    }
+
+    public List<ChargeImport> charges(BudgetImportExportManager manager) {
+
+        List<ChargeImport> result = new ArrayList<ChargeImport>();
+        if (manager.getBudget()==null){return result;}
+
+        for (BudgetItem item : manager.getBudget().getItems()) {
+            result.add(createCharge(item.getCharge()));
+        }
+
+        for (BudgetItem item : manager.getBudget().getItems()) {
+            for (PartitionItem partitionItem : item.getPartitionItems()){
+                if (notInResult(result, partitionItem.getCharge())) {
+                    result.add(createCharge(partitionItem.getCharge()));
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean notInResult(List<ChargeImport> list, Charge charge){
+        for (ChargeImport line : list){
+            if (line.getReference().equals(charge.getReference())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private ChargeImport createCharge(final Charge charge){
+        return new ChargeImport(
+                charge.getAtPath(),
+                charge.getReference(),
+                charge.getName(),
+                charge.getDescription(),
+                charge.getTax().getReference(),
+                charge.getGroup().getReference(),
+                charge.getGroup().getName(),
+                charge.getApplicability().name()
+        );
     }
 
     @Inject
