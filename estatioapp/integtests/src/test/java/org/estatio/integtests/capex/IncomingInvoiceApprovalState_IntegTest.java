@@ -55,7 +55,7 @@ import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.PENDING;
+import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.VERIFIED;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR;
@@ -128,7 +128,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         paperclipRepository.attach(invoiceDoc, null, incomingInvoice);
 
         assertThat(incomingInvoice).isNotNull();
-        assertState(bankAccount, PENDING);
+        assertState(bankAccount, NOT_VERIFIED);
 
     }
 
@@ -295,7 +295,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(ev);
 
-        assertState(bankAccount, PENDING);
+        assertState(bankAccount, NOT_VERIFIED);
 
 
         // and given

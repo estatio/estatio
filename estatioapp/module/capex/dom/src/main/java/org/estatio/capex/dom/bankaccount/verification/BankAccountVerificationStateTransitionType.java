@@ -33,26 +33,26 @@ public enum BankAccountVerificationStateTransitionType
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
             (BankAccountVerificationState)null,
-            BankAccountVerificationState.PENDING,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            BankAccountVerificationState.NOT_VERIFIED,
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
     ),
     VERIFY_BANK_ACCOUNT(
-            BankAccountVerificationState.PENDING,
+            BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
             TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER), StateTransitionStrategy.Util.none()
     ),
     CANCEL(
-            BankAccountVerificationState.PENDING,
+            BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.CANCELLED,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
     ),
     RESET(
             Arrays.asList(
-                    BankAccountVerificationState.PENDING,
+                    BankAccountVerificationState.NOT_VERIFIED,
                     BankAccountVerificationState.VERIFIED,
                     BankAccountVerificationState.CANCELLED
             ),
-            BankAccountVerificationState.PENDING,
+            BankAccountVerificationState.NOT_VERIFIED,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
     );
 
