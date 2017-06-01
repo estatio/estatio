@@ -38,6 +38,10 @@ public class Task_categoriseAsOrder
         return toReturnElse(goToNext, mixinResult);
     }
 
+    public boolean default2Act() {
+        return true;
+    }
+
     public boolean hideAct() {
         return super.hideAct() || mixin().hideAct();
     }

@@ -45,6 +45,10 @@ public class Task_categoriseAsInvoice
         return toReturnElse(goToNext, mixinResult);
     }
 
+    public boolean default2Act() {
+        return true;
+    }
+
     public boolean hideAct() {
         if (super.hideAct()) {
             return true;
