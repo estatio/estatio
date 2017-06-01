@@ -53,22 +53,26 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
             [*] --> iia_la_new : INSTANTIATE
             iia_la_new --> iia_la_classified: COMPLETE\n[completely\nclassified]
-            iia_la_classified -down-> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            iia_la_classified -down-> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[not hasProject]
+            iia_la_classified --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+            iia_la_classified --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[not hasProject]
         }
+        note left of iia_la_abam: actions allow\nProject Manager or\nAsset Manager\nto send invoice\nfor approval  instead\nby the other
+
         state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
 
         iia_la_abam -> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
         iia_la_abpm -> iia_abcd
 
     }
+    state "RESCANNED" as iia_rescan
     state "PAYABLE" as iia_payable_by_ibq
     state "PAYABLE_BY\nDIRECT_DEBIT" as iia_payable_by_dd
     state "PAID" as iia_paid
     state "CANCELLED" as iia_cancelled
 
-    iia_abcd --> iia_payable_by_ibq : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [if not DD && \nbank account verified]
-    iia_abcd --> iia_payable_by_dd : PAYS_BY_DD\n [if DD]
+    iia_abcd --> iia_rescan : RESCAN
+    iia_rescan --> iia_payable_by_ibq : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [if not DD && \nbank account verified]
+    iia_rescan --> iia_payable_by_dd : PAYS_BY_DD\n [if DD]
     iia_payable_by_dd --> iia_paid: PAID_BY_DD
     iia_payable_by_ibq --> iia_paid: PAID_BY_IBQ
     iia_a --> iia_cancelled : CANCEL
