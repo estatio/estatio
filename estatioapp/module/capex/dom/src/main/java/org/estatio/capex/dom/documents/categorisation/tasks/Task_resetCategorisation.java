@@ -32,8 +32,15 @@ public class Task_resetCategorisation
     public Object act(
             @Nullable final String comment,
             final boolean goToNext) {
+//        Object mixinResult = mixin().act(comment);
+//        return toReturnElse(goToNext, mixinResult);
+
+        // need to evaluate this first, because it's possible that resetting the categorisation will delete *this* task
+        // meaning that it may no longer be interacted with.
+        Object nextTaskElseNull = toReturnElse(goToNext, null);
         Object mixinResult = mixin().act(comment);
-        return toReturnElse(goToNext, mixinResult);
+        return nextTaskElseNull != null ? nextTaskElseNull : mixinResult;
+
     }
 
     public boolean default1Act() {
