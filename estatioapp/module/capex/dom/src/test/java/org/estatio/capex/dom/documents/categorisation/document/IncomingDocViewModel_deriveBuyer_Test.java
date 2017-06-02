@@ -51,6 +51,7 @@ public class IncomingDocViewModel_deriveBuyer_Test {
 
         // when
         IncomingDocAsOrderViewModel vm = new IncomingDocAsOrderViewModel(mockDocument);
+        vm.paperclipRepository = mockPaperclipRepository;
         vm.inferFixedAssetFromPaperclips();
 
         // then
