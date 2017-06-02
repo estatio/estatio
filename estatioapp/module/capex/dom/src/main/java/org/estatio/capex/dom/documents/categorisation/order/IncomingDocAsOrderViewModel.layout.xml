@@ -17,15 +17,15 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/component" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <bs3:row>
         <bs3:col span="4">
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
-                    <domainObject/>
-                    <action id="previous"/>
-                    <action id="next"/>
-                    <action id="all"/>
+                    <cpt:domainObject/>
+                    <cpt:action id="previous"/>
+                    <cpt:action id="next"/>
+                    <cpt:action id="all"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -34,61 +34,62 @@
                         <bs3:tab name="Order">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Order" unreferencedProperties="false">
-                                        <action id="changeOrderDetails"/>
-                                        <property id="orderNumber" promptStyle="INLINE"/>
-                                        <property id="buyer" promptStyle="INLINE"/>
-                                        <property id="seller" promptStyle="INLINE">
-                                            <action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
-                                        </property>
-                                        <property id="sellerOrderReference" promptStyle="INLINE"/>
-                                        <property id="orderDate" promptStyle="INLINE"/>
-                                    </fieldSet>
-                                    <fieldSet name="Order Item" unreferencedProperties="false">
-                                        <action id="changeItemDetails"/>
-                                        <property id="description" promptStyle="INLINE"/>
-                                        <property id="netAmount" promptStyle="INLINE"/>
-                                        <property id="vatAmount" promptStyle="INLINE"/>
-                                        <property id="tax" promptStyle="INLINE"/>
-                                        <property id="grossAmount" promptStyle="INLINE"/>
-                                    </fieldSet>
-                                    <fieldSet name="Dimensions" unreferencedProperties="false">
-                                        <action id="changeDimensions"/>
-                                        <property id="charge" promptStyle="INLINE"/>
-                                        <property id="fixedAsset" promptStyle="INLINE"/>
-                                        <property id="project" promptStyle="INLINE"/>
-                                        <property id="budgetItem" promptStyle="INLINE">
-                                            <action id="createNextBudget" promptStyle="INLINE" position="RIGHT"/>
-                                            <action id="createBudgetItem" promptStyle="INLINE" position="RIGHT"/>
-                                        </property>
-                                        <property id="period" promptStyle="INLINE"/>
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Order" unreferencedProperties="false">
+                                        <cpt:action id="changeOrderDetails"/>
+                                        <cpt:property id="orderNumber" promptStyle="INLINE"/>
+                                        <cpt:property id="buyer" promptStyle="INLINE"/>
+                                        <cpt:property id="seller" promptStyle="INLINE">
+                                            <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="sellerOrderReference" promptStyle="INLINE"/>
+                                        <cpt:property id="orderDate" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Order Item" unreferencedProperties="false">
+                                        <cpt:action id="changeItemDetails"/>
+                                        <cpt:property id="description" promptStyle="INLINE"/>
+                                        <cpt:property id="netAmount" promptStyle="INLINE"/>
+                                        <cpt:property id="vatAmount" promptStyle="INLINE"/>
+                                        <cpt:property id="tax" promptStyle="INLINE"/>
+                                        <cpt:property id="grossAmount" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Dimensions" unreferencedProperties="false">
+                                        <cpt:action id="changeDimensions"/>
+                                        <cpt:property id="charge" promptStyle="INLINE"/>
+                                        <cpt:property id="fixedAsset" promptStyle="INLINE"/>
+                                        <cpt:property id="project" promptStyle="INLINE"/>
+                                        <cpt:property id="budgetItem" promptStyle="INLINE">
+                                            <cpt:action id="createNextBudget" promptStyle="INLINE" position="RIGHT"/>
+                                            <cpt:action id="createBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="period" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
                         <bs3:tab name="Document">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Document details" unreferencedProperties="false">
-                                        <action id="clearHints" position="PANEL_DROPDOWN"/>
-                                        <action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                        <action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
-                                        <property id="document"/>
-                                        <property id="type">
-                                            <action id="categoriseAsOrder"/>
-                                            <action id="categoriseAsInvoice"/>
-                                            <action id="resetCategorisation"/>
-                                        </property>
-                                        <property id="createdAt"/>
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Document details" unreferencedProperties="false">
+                                        <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="document"/>
+                                        <cpt:property id="type">
+                                            <cpt:action id="categoriseAsOrder"/>
+                                            <cpt:action id="categoriseAsInvoice"/>
+                                            <cpt:action id="resetCategorisation"/>
+                                            <cpt:action id="viewTask" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="createdAt"/>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
                         <bs3:tab name="Other">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <fieldSet name="Other" unreferencedProperties="true">
-                                    </fieldSet>
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true">
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -97,9 +98,9 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="8">
-            <fieldSet name="PDF">
-                <property id="blob" unchanging="true"/>
-            </fieldSet>
+            <cpt:fieldSet name="PDF">
+                <cpt:property id="blob" unchanging="true"/>
+            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>

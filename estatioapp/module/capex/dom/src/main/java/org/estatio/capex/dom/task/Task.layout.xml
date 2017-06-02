@@ -15,17 +15,19 @@
                                 <cpt:property id="assignedTo"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
-                                    <cpt:action id="categoriseAsOrder"/>
-                                    <cpt:action id="categoriseAsInvoice"/>
                                     <cpt:action id="classifyAsOrder"/>
                                     <cpt:action id="classifyAsInvoice"/>
+                                    <cpt:action id="categoriseAsOrder"/>
+                                    <cpt:action id="categoriseAsInvoice"/>
                                     <cpt:action id="resetCategorisation"/>
 
                                     <cpt:action id="approveAsProjectManager"/>
                                     <cpt:action id="approveAsAssetManager"/>
-
                                     <cpt:action id="approveAsCountryDirector"/>
+
                                     <cpt:action id="verifyBankAccount"/>
+
+                                    <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -56,7 +58,7 @@
             </bs3:tabGroup>
             <cpt:fieldSet name="Details" id="details">
                 <cpt:property id="createdOn"/>
-                <cpt:property id="transition" hidden="ALL_TABLES"/>
+                <cpt:property id="transition" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Completion" id="completion">
                 <cpt:property id="completed"/>

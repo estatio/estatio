@@ -36,8 +36,7 @@ public abstract class Task_mixinAbstract<M, DO> {
     }
 
     private Task nextTaskAfter(final Task task) {
-        final List<Task> tasks = taskRepository.findTasksIncompleteCreatedOnAfter(task.getCreatedOn());
-        return tasks.size() > 0 ? tasks.get(0) : null;
+        return taskRepository.nextTaskAfter(task);
     }
 
     /**

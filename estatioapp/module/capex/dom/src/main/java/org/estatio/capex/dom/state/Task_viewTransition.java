@@ -10,17 +10,17 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 
-@Mixin(method = "prop")
-public class Task_transition {
+@Mixin(method = "act")
+public class Task_viewTransition {
 
     private final Task task;
-    public Task_transition(final Task task) {
+    public Task_viewTransition(final Task task) {
         this.task = task;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public Object prop() {
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Object act() {
         return stateTransitionService.findFor(task);
     }
 

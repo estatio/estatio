@@ -40,7 +40,7 @@ public class Task_categoriseAsInvoice
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
-            viewModel.setTask(task);
+            viewModel.setOriginatingTask(task);
         }
         return toReturnElse(goToNext, mixinResult);
     }

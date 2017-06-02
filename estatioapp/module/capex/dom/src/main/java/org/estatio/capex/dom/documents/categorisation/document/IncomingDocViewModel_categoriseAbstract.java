@@ -76,7 +76,7 @@ public abstract class IncomingDocViewModel_categoriseAbstract extends
     }
 
     protected Task nextTaskElseFrom(final IncomingDocumentCategorisationStateTransition transition) {
-        Task taskJustCompleted = viewModel.getTask();
+        Task taskJustCompleted = viewModel.getOriginatingTask();
         if(taskJustCompleted == null) {
             taskJustCompleted = transition.getTask();
         }

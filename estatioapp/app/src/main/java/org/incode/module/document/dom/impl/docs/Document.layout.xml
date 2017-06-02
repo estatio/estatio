@@ -68,8 +68,10 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Incoming">
                                 <cpt:property id="categorisationState">
-                                    <cpt:action id="categoriseAsOrder" cssClassFa="folder-open-o"/>
-                                    <cpt:action id="categoriseAsInvoice" cssClassFa="folder-open-o"/>
+                                    <cpt:action id="classifyAsOrder"/>
+                                    <cpt:action id="classifyAsInvoice"/>
+                                    <cpt:action id="categoriseAsOrder"/>
+                                    <cpt:action id="categoriseAsInvoice"/>
                                     <cpt:action id="resetCategorisation"/>
                                     <cpt:action id="viewCategorisationTransitions" position="RIGHT">
                                         <cpt:named>View transitions</cpt:named>
@@ -93,6 +95,7 @@
                 <!-- if communication module also configured, then it will contribute a 'coverNoteFor' property -->
                 <cpt:property id="coverNoteFor" hidden="ALL_TABLES"/>
             </cpt:fieldSet>
+
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>
@@ -157,6 +160,13 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:collection id="backgroundCommands" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Categorisation tasks">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="categorisationTasks"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

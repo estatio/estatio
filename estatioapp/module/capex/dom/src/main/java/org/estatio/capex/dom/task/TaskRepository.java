@@ -67,6 +67,12 @@ public class TaskRepository {
         return results;
     }
 
+    @Programmatic
+    public Task nextTaskAfter(final Task task) {
+        final List<Task> tasks = findTasksIncompleteCreatedOnAfter(task.getCreatedOn());
+        return tasks.size() > 0 ? tasks.get(0) : null;
+    }
+
 
 
     @Programmatic

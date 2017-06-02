@@ -79,6 +79,7 @@
                                             <cpt:action id="categoriseAsOrder"/>
                                             <cpt:action id="categoriseAsInvoice"/>
                                             <cpt:action id="resetCategorisation"/>
+                                            <cpt:action id="viewTask" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="createdAt"/>
                                     </cpt:fieldSet>

@@ -127,7 +127,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     public abstract void setDomainObject(T t);
 
     /**
-     * Optional, if created via a task.
+     * Optional, the (categorisation) task (ie, just completed) that was used to create the view model.
      *
      * <p>
      *     Used in order to advance to next task after this has been classified.
@@ -135,7 +135,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
      */
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
-    private Task task;
+    private Task originatingTask;
 
     @Programmatic
     protected abstract String minimalRequiredDataToComplete();

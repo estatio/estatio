@@ -84,7 +84,7 @@ public abstract class IncomingDocViewModel_saveAbstract<
     protected abstract T doCreate();
 
     protected Task nextTaskElseFrom(final IncomingDocumentCategorisationStateTransition transition) {
-        Task taskJustCompleted = viewModel.getTask();
+        Task taskJustCompleted = viewModel.getOriginatingTask();
         if(taskJustCompleted == null) {
             taskJustCompleted = transition.getTask();
         }
