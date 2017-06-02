@@ -18,9 +18,9 @@ import org.isisaddons.module.excel.dom.util.Mode;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.capex.dom.impmgr.SellerImport"
 )
-public class SupplierBankAccountImportManager {
+public class SupplierImportManager {
 
-    public SupplierBankAccountImportManager(){}
+    public SupplierImportManager(){}
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public void importSheet(final Blob spreadSheet){
@@ -28,7 +28,7 @@ public class SupplierBankAccountImportManager {
         List<List<?>> res = excelService.fromExcel(
                 spreadSheet,
                 sheetName -> {
-                    if(sheetName.startsWith("oas_linkaddrlist")) {
+                    if(sheetName.startsWith("suppliers")) {
                         return new WorksheetSpec(
                                 SupplierImportLine.class,
                                 sheetName,
@@ -39,26 +39,10 @@ public class SupplierBankAccountImportManager {
                 }
         );
         List<SupplierImportLine> lines = (List) res.get(0);
+        SupplierImportLine previousRow = null;
         for (SupplierImportLine line : lines){
-            line.importLine();
-        }
-
-        List<List<?>> baRes = excelService.fromExcel(
-                spreadSheet,
-                sheetName -> {
-                    if(sheetName.startsWith("oas_linkbanklist")) {
-                        return new WorksheetSpec(
-                                BankAccountImportLine.class,
-                                sheetName,
-                                Mode.STRICT);
-                    }
-                    else
-                        return null;
-                }
-        );
-        List<BankAccountImportLine> bankAccountImportLines = (List) baRes.get(0);
-        for (BankAccountImportLine bankAccountImportLine : bankAccountImportLines){
-            bankAccountImportLine.importLine();
+            line.importData(previousRow);
+            previousRow = line;
         }
 
     }

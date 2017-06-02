@@ -83,7 +83,10 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
                 .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy).nextIncrementStr();
     }
 
-
+    public Organisation findByChamberOfCommerceCode(final String chamberOfCommerceCode) {
+        return firstMatch("findByChamberOfCommerceCode",
+                "chamberOfCommerceCode", chamberOfCommerceCode);
+    }
 
     // //////////////////////////////////////
 
@@ -99,5 +102,6 @@ public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organi
 
     @Inject
     private NumeratorRepository numeratorRepository;
+
 
 }

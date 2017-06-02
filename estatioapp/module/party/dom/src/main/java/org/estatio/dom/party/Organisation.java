@@ -54,6 +54,13 @@ import lombok.Setter;
 )
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.party.Organisation")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByChamberOfCommerceCode", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Organisation "
+                        + "WHERE chamberOfCommerceCode == :chamberOfCommerceCode ")
+})
 @DomainObject(editing = Editing.DISABLED)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Organisation
