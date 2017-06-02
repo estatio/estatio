@@ -103,8 +103,7 @@ import lombok.experimental.UtilityClass;
 })
 @DomainObject(
         objectType = "org.estatio.dom.charge.Charge",
-        autoCompleteRepository = ChargeRepository.class,
-        bounded = true
+        autoCompleteRepository = ChargeRepository.class
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Charge

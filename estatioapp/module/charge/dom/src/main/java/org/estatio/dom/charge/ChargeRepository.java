@@ -26,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
@@ -192,7 +193,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
     }
 
     @Programmatic
-    public List<Charge> autoComplete(final String search){
+    public List<Charge> autoComplete(@MinLength(3) final String search){
         return matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex("*"+search+"*"));
     }
 

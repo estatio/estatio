@@ -52,7 +52,9 @@
                                         <cpt:property id="vatAmount" promptStyle="INLINE"/>
                                         <cpt:property id="tax" promptStyle="INLINE"/>
                                         <cpt:property id="grossAmount" promptStyle="INLINE"/>
-                                        <cpt:property id="charge" promptStyle="INLINE"/>
+                                        <cpt:property id="charge">
+                                            <cpt:action id="editCharge" promptStyle="INLINE_AS_IF_EDIT"/>
+                                        </cpt:property>
                                         <cpt:property id="fixedAsset" promptStyle="INLINE"/>
                                         <cpt:property id="project" promptStyle="INLINE"/>
                                         <cpt:property id="budgetItem" promptStyle="INLINE">
