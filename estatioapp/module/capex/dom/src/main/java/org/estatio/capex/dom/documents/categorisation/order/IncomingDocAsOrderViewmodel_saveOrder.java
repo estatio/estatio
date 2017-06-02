@@ -39,7 +39,7 @@ public class IncomingDocAsOrderViewmodel_saveOrder
 
     protected Order doCreate(){
         // create order
-        Order order = orderRepository.findOrCreate(
+        Order order = orderRepository.create(
                 viewModel.getOrderNumber(),
                 viewModel.getSellerOrderReference(),
                 clockService.now(),

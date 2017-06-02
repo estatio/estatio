@@ -48,7 +48,7 @@ public class IncomingDocAsInvoiceViewmodel_saveInvoice
 
     protected IncomingInvoice doCreate(){
         // create invoice
-        IncomingInvoice incomingInvoice = incomingInvoiceRepository.findOrCreate(
+        IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
                 viewModel.getInvoiceNumber(),
                 viewModel.getBuyer().getAtPath(),
                 viewModel.getBuyer(),
