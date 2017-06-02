@@ -35,8 +35,7 @@ public enum BankAccountVerificationStateTransitionType
             (BankAccountVerificationState)null,
             BankAccountVerificationState.NOT_VERIFIED,
             TaskAssignmentStrategy.Util.none(),
-            // TODO: this needs to become .none(), and introduce new API in StateTransitionService to createPendingTransition()
-            StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.none() // don't automatically create pending transition to next state; this will be done only on request (by StateTransitionService#createPendingTransition)
     ),
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.NOT_VERIFIED,

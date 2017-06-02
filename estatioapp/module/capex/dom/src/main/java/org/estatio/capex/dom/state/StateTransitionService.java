@@ -313,8 +313,8 @@ public class StateTransitionService {
         // update the state of the domain object to be toState of the transition that's just completed
         currentState = requiredTransitionType.getToState();
 
-        // for wherever we might go next, we spin through all possible transitions,
-        // and create a task for the first one that applies to this particular domain object.
+        // for wherever we might go next, we use the transition strategy to create a pending task,
+        // and (if necessary) create a task for the first one that applies to this particular domain object.
         ST nextTransition = null;
 
         final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy =
@@ -322,14 +322,7 @@ public class StateTransitionService {
         if(transitionStrategy != null) {
             STT nextTransitionType = transitionStrategy.nextTransitionType(domainObject, requiredTransitionType, serviceRegistry2);
             if(nextTransitionType != null) {
-                final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
-                        nextTransitionType.getTaskAssignmentStrategy();
-                EstatioRole assignToIfAny = null;
-                if(taskAssignmentStrategy != null) {
-                    assignToIfAny = taskAssignmentStrategy
-                            .getAssignTo(domainObject, nextTransitionType, serviceRegistry2);
-                }
-                nextTransition = nextTransitionType.createTransition(domainObject, currentState,  assignToIfAny, serviceRegistry2);
+                nextTransition = createPendingTransition(domainObject, currentState, nextTransitionType);
             }
         }
 
@@ -341,17 +334,55 @@ public class StateTransitionService {
         // eg if there were any subscribers to the transition events that automatically advanced
         // through to next state.
         //
-        // we therefore do NOT return the enxtTransition, but instead look up the transition
-        // on behalf of our the caller
+        // we therefore do NOT return the nextTransition, but instead look up the transition
+        // on behalf of our caller
         return mostRecentlyCompletedTransitionOf(domainObject, requiredTransitionType);
     }
 
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >
+    ST createPendingTransition(
+            final DO domainObject,
+            final STT transitionType) {
+        if(!canTrigger(domainObject, transitionType)) {
+            return null;
+        }
+        final S currentState = currentStateOf(domainObject, transitionType);
+        return createPendingTransition(domainObject, currentState, transitionType);
+    }
+
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >
+    ST createPendingTransition(
+            final DO domainObject,
+            final S currentState,
+            final STT transitionType) {
+
+        final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
+                transitionType.getTaskAssignmentStrategy();
+        EstatioRole assignToIfAny = null;
+        if(taskAssignmentStrategy != null) {
+            assignToIfAny = taskAssignmentStrategy
+                    .getAssignTo(domainObject, transitionType, serviceRegistry2);
+        }
+        return transitionType
+                .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
+    }
 
     // ////////////////////////////////////
 
     // REVIEW: we could cache the result, perhaps (it's idempotent)
     @Programmatic
-    public <
+    <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
@@ -371,7 +402,7 @@ public class StateTransitionService {
 
     // REVIEW: we could cache the result, perhaps (it's idempotent)
     @Programmatic
-    public <
+    private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,

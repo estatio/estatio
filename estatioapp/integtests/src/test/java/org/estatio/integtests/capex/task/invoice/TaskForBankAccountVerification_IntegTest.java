@@ -35,6 +35,7 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_cancel;
 import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -68,6 +69,9 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
     @Inject
     BankAccountVerificationStateTransition.Repository bankAccountVerificationTransitionRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 
 
     static void assertTransition(
@@ -128,20 +132,28 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertState(bankAccount, NOT_VERIFIED);
 
             // and then also
-            final List<BankAccountVerificationStateTransition> transitionsAfter =
+            List<BankAccountVerificationStateTransition> transitions =
                     bankAccountVerificationTransitionRepository.findByDomainObject(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(2);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsAfter.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            assertThat(transitions.size()).isEqualTo(1);
+            assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
+            // and when
+            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            transactionService.nextTransaction();
+
+            // then
+            transitions =
+                    bankAccountVerificationTransitionRepository.findByDomainObject(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // and then also
-            final Task task = transitionsAfter.get(0).getTask();
+            final Task task = transitions.get(0).getTask();
             assertThat(task).isNotNull();
             assertThat(task.getAssignedTo()).isEqualTo(EstatioRole.TREASURER);
 
         }
-
 
     }
 
@@ -179,50 +191,101 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
         }
 
         @Test
-        public void verify() throws Exception {
+        public void verify_without_pending() throws Exception {
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(1);
+            assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
             transactionService.nextTransaction();
 
             // then
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(2);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+
+            assertState(bankAccount, VERIFIED);
+        }
+
+        @Test
+        public void verify_with_pending() throws Exception {
+
+            // given
+            assertState(bankAccount, NOT_VERIFIED);
+            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            transactionService.nextTransaction();
+
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+
+
+            // when
+            wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
+            transactionService.nextTransaction();
+
+            // then
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(bankAccount, VERIFIED);
         }
 
 
         @Test
-        public void cancel_when_pending() throws Exception {
+        public void cancel_without_pending() throws Exception {
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(1);
+            assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
             wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
             transactionService.nextTransaction();
 
             // then
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(2);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitionsAfter.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+
+            assertState(bankAccount, CANCELLED);
+        }
+
+        @Test
+        public void cancel_when_pending() throws Exception {
+
+            // given
+            assertState(bankAccount, NOT_VERIFIED);
+            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            transactionService.nextTransaction();
+
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+
+            // when
+            wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
+            transactionService.nextTransaction();
+
+            // then
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(bankAccount, CANCELLED);
         }
@@ -236,10 +299,10 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             assertState(bankAccount, VERIFIED);
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(this.bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(this.bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // expect
             expectedExceptions.expect(HiddenException.class);
@@ -253,11 +316,13 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(this.bankAccount, NOT_VERIFIED);
+            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            transactionService.nextTransaction();
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
             final String validIban = "NL39ABNA0572008761";
@@ -265,11 +330,11 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             transactionService.nextTransaction();
 
             // then
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(3);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsAfter.get(1), NOT_VERIFIED, RESET, NOT_VERIFIED);
-            assertTransition(transitionsAfter.get(2), null, INSTANTIATE, NOT_VERIFIED);
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(3);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), NOT_VERIFIED, RESET, NOT_VERIFIED);
+            assertTransition(transitions.get(2), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, NOT_VERIFIED);
         }
@@ -281,10 +346,10 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
             transactionService.nextTransaction();
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, VERIFIED);
 
@@ -294,12 +359,12 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             transactionService.nextTransaction();
 
             // then
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(4);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsAfter.get(1), VERIFIED, RESET, NOT_VERIFIED);
-            assertTransition(transitionsAfter.get(2), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NOT_VERIFIED);
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(4);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), VERIFIED, RESET, NOT_VERIFIED);
+            assertTransition(transitions.get(2), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(3), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, NOT_VERIFIED);
         }
@@ -311,10 +376,10 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
             transactionService.nextTransaction();
 
-            final List<BankAccountVerificationStateTransition> transitionsBefore = findTransitions(bankAccount);
-            assertThat(transitionsBefore.size()).isEqualTo(2);
-            assertTransition(transitionsBefore.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(2);
+            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, CANCELLED);
 
@@ -324,12 +389,12 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             transactionService.nextTransaction();
 
             // then
-            final List<BankAccountVerificationStateTransition> transitionsAfter = findTransitions(bankAccount);
-            assertThat(transitionsAfter.size()).isEqualTo(4);
-            assertTransition(transitionsAfter.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitionsAfter.get(1), CANCELLED, RESET, NOT_VERIFIED);
-            assertTransition(transitionsAfter.get(2), NOT_VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NOT_VERIFIED);
+            transitions = findTransitions(bankAccount);
+            assertThat(transitions.size()).isEqualTo(4);
+            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
+            assertTransition(transitions.get(1), CANCELLED, RESET, NOT_VERIFIED);
+            assertTransition(transitions.get(2), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(3), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, NOT_VERIFIED);
         }
