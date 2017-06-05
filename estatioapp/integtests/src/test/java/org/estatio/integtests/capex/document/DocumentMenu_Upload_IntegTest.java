@@ -69,6 +69,7 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         assertThat(documentBlob.getName()).isEqualTo(blob.getName());
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
+        assertThat(document.dnGetVersion()).isEqualTo(1L);
 
         // and then also
         final List<IncomingDocumentCategorisationStateTransition> transitions =
@@ -80,6 +81,19 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         assertTransition(transitions.get(1),
                 null, INSTANTIATE, NEW);
 
+        // and when
+        final String fileName2 = "1020100123-altered.pdf";
+        final byte[] pdfBytes2 = Resources.toByteArray(
+                Resources.getResource(DocumentMenu_Upload_IntegTest.class, fileName2));
+        final Blob similarNamedBlob = new Blob(fileName, "application/pdf", pdfBytes2);
+        wrap(documentMenu).upload(similarNamedBlob);
+        transactionService.nextTransaction();
+
+        // then
+        incomingDocumentsAfter = repository.findIncomingDocuments();
+        assertThat(incomingDocumentsAfter).hasSize(1);
+        assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
+        assertThat(incomingDocumentsAfter.get(0).dnGetVersion()).isEqualTo(2L);
     }
 
 

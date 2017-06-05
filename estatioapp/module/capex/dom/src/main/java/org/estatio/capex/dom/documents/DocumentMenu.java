@@ -19,6 +19,7 @@
 package org.estatio.capex.dom.documents;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -94,10 +95,23 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
             atPath = "/";
         }
 
-        final Document document = documentService.createForBlob(type, atPath, name, blob);
-        return document;
+        return upsert(type, atPath, name, blob);
     }
 
+    private Document upsert(final DocumentType type, final String atPath, final String name, final Blob blob){
+        Document document = null;
+        final List<Document> incomingDocuments = incomingDocumentRepository.findIncomingDocuments();
+        List<Document> similarNamedDocs = incomingDocuments.stream().filter(x->x.getName().equals(name)).collect(Collectors.toList());
+        if (similarNamedDocs.size()>0){
+            document = similarNamedDocs.get(0);
+        }
+        if (document!=null){
+            document.setBlobBytes(blob.getBytes());
+        } else {
+            document = documentService.createForBlob(type, atPath, name, blob);
+        }
+        return document;
+    }
 
 
     @Inject
@@ -114,5 +128,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Inject
     DocumentService documentService;
+
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
 
 }
