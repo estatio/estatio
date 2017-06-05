@@ -56,6 +56,13 @@ import lombok.Setter;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.financial.bankaccount.BankAccount")
 // no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.bankaccount.BankAccount "
+                        + "WHERE reference == :reference")
+})
 @DomainObject(editing = Editing.DISABLED
         , persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class
         , updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class

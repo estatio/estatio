@@ -75,6 +75,12 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
         return allInstances();
     }
 
+    @Programmatic
+    public List<BankAccount> findByReference(final String reference) {
+        return allMatches("findByReference",
+                "reference", reference);
+    }
+
     @Inject
     private FinancialAccountRepository financialAccountRepository;
 }

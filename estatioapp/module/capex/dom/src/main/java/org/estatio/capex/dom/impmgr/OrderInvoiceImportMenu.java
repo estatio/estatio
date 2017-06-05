@@ -84,7 +84,7 @@ public class OrderInvoiceImportMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
-    public SupplierImportManager importSellers(){
+    public SupplierImportManager importSuppliers(){
         return new SupplierImportManager();
     }
 

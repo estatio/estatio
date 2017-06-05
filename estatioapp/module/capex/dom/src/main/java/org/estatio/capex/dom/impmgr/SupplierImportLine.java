@@ -6,13 +6,9 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -31,8 +27,6 @@ import lombok.Setter;
         objectType = "org.estatio.capex.dom.impmgr.SupplierImportLine"
 )
 public class SupplierImportLine implements Importable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SupplierImportLine.class);
 
     public SupplierImportLine(){}
 
@@ -78,6 +72,7 @@ public class SupplierImportLine implements Importable {
 
         final Country countryObj = countryRepository.findCountry(getCountry());
 
+        String message = "";
         Organisation organisation = null;
         if (getChamberOfCommerceCode()!=null){
             organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode());
@@ -85,8 +80,7 @@ public class SupplierImportLine implements Importable {
         if (organisation==null && partyRepository.findParties(getSupplierName()).size()>0){
             organisation = (Organisation) partyRepository.findParties(getSupplierName()).get(0);
             if (partyRepository.findParties(getSupplierName()).size()>1){
-                String message = String.format("More than one seller found for %s; first found is taken", getSupplierName());
-                LOG.debug(message);
+                message = message.concat(String.format("More than one supplier found for %s; first found is taken. ", getSupplierName()));
             }
         }
         if (organisation == null) {
@@ -95,16 +89,21 @@ public class SupplierImportLine implements Importable {
 
         organisation.setChamberOfCommerceCode(getChamberOfCommerceCode());
 
-        bankAccountRepository.newBankAccount(organisation, getIban(), getBic());
+        if (bankAccountRepository.findByReference(getIban()).size()>0){
+            message = message.concat(String.format("More than one iban found for %s. ", getIban()));
+            messageService.warnUser(message);
+        } else {
+            bankAccountRepository.newBankAccount(organisation, getIban(), getBic());
+        }
 
-        return Lists.newArrayList(organisation);
+        return Lists.newArrayList(message);
 
     }
 
-    @Inject ApplicationTenancyRepository applicationTenancyRepository;
     @Inject OrganisationRepository organisationRepository;
     @Inject PartyRepository partyRepository;
     @Inject CountryRepository countryRepository;
     @Inject BankAccountRepository bankAccountRepository;
+    @Inject MessageService messageService;
 
 }

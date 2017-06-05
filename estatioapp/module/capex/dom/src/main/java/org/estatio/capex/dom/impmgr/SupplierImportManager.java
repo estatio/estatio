@@ -23,8 +23,9 @@ public class SupplierImportManager {
     public SupplierImportManager(){}
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public void importSheet(final Blob spreadSheet){
+    public String importSheet(final Blob spreadSheet){
 
+        String message = "";
         List<List<?>> res = excelService.fromExcel(
                 spreadSheet,
                 sheetName -> {
@@ -41,9 +42,14 @@ public class SupplierImportManager {
         List<SupplierImportLine> lines = (List) res.get(0);
         SupplierImportLine previousRow = null;
         for (SupplierImportLine line : lines){
-            line.importData(previousRow);
+            String result = (String) line.importData(previousRow).get(0);
+            if (result!=null && !result.equals("")){
+                message = message.concat(result);
+            }
             previousRow = line;
         }
+
+        return message.length()>0 ? message : "Import OK";
 
     }
 
