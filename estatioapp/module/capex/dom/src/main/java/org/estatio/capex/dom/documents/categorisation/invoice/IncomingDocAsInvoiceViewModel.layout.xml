@@ -29,7 +29,6 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Invoice" id="invoice" unreferencedProperties="false">
                                         <cpt:action id="changeInvoiceDetails" position="PANEL_DROPDOWN"/>
-                                        <cpt:property id="orderItem" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
                                         <cpt:property id="seller" promptStyle="INLINE">
                                             <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
@@ -37,6 +36,7 @@
                                         <cpt:property id="bankAccount" promptStyle="INLINE">
                                             <cpt:action id="createBankAccount" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
+                                        <cpt:property id="orderItem" promptStyle="INLINE"/>
                                         <cpt:property id="invoiceNumber" promptStyle="INLINE"/>
                                         <cpt:property id="dateReceived" promptStyle="INLINE"/>
                                         <cpt:property id="invoiceDate" promptStyle="INLINE"/>
