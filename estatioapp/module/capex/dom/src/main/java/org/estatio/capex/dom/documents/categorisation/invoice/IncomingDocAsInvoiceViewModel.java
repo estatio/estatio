@@ -102,8 +102,9 @@ import lombok.Setter;
 public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<IncomingInvoice> {
 
     // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
+    // Johan: the no-arg constructor gets called (after the *other*) - is this a feature or a bug?
     public IncomingDocAsInvoiceViewModel() {
-        setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+        setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
     }
 
     public IncomingDocAsInvoiceViewModel(final Document document) {
@@ -298,7 +299,7 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
     }
 
     public PaymentMethod default7ChangeInvoiceDetails(){
-        return getPaymentMethod()==null ? PaymentMethod.BANK_TRANSFER : getPaymentMethod();
+        return getPaymentMethod()==null ? PaymentMethod.TEST_NO_PAYMENT : getPaymentMethod();
     }
 
 

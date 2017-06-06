@@ -447,7 +447,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(invoiceCreated.getCurrency()).isEqualTo(euro);
             assertThat(invoiceCreated.getDueDate()).isEqualTo(dueDate);
             assertThat(invoiceCreated.getDateReceived()).isEqualTo(dateReceivedDate);
-            assertThat(invoiceCreated.getPaymentMethod()).isEqualTo(PaymentMethod.BANK_TRANSFER); // set by default
+            assertThat(invoiceCreated.getPaymentMethod()).isEqualTo(PaymentMethod.TEST_NO_PAYMENT); // set by default
             assertThat(invoiceCreated.getInvoiceDate()).isNull();
 
             assertThat(invoiceCreated.getItems().size()).isEqualTo(1);
