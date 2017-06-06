@@ -189,7 +189,7 @@ public class ChargeRepository extends UdoDomainRepositoryAndFactory<Charge> {
         return allMatches("findByApplicabilityAndMatchOnReferenceOrName",
                 "applicability1", applicability,
                 "applicability2", Applicability.IN_AND_OUT,
-                "regex", regex);
+                "regex", StringUtils.wildcardToCaseInsensitiveRegex("*"+regex+"*"));
     }
 
     @Programmatic

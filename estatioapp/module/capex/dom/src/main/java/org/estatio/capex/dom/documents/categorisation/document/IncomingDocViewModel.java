@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -65,6 +66,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
+import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -228,9 +230,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         setCharge(charge);
         return (T) this;
     }
-//    public List<Charge> autoComplete0EditCharge(@MinLength(3) String search){
-//        return chargeRepository.autoComplete(search);
-//    }
+    public List<Charge> autoComplete0EditCharge(@MinLength(3) String search){
+        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
+    }
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
