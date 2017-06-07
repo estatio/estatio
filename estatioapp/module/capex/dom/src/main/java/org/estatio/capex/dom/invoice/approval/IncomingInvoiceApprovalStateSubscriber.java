@@ -110,6 +110,11 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             switch (transitionType) {
 
             case INSTANTIATE:
+                if (incomingInvoice.classificationComplete()){
+                    stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
+                }
+                break;
+            case COMPLETE_CLASSIFICATION:
                 break;
             case APPROVE_AS_PROJECT_MANAGER:
                 break;
@@ -137,7 +142,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
     public void on(IncomingInvoice.ChangeEvent ev) {
         IncomingInvoice incomingInvoice = ev.getSource();
         if (ev.getPhase()== AbstractInteractionEvent.Phase.EXECUTED && incomingInvoice.classificationComplete()){
-            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE, null);
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
         }
     }
 

@@ -36,11 +36,18 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.NEW,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
     ),
-    COMPLETE(
+    COMPLETE_CLASSIFICATION(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.CLASSIFIED,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
-    ),
+            TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.next()
+    ) {
+        @Override
+        public boolean canApply(
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.classificationComplete();
+        }
+    },
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
