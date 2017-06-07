@@ -27,8 +27,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+
+import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.financial.FinancialAccountRepository;
@@ -79,6 +82,17 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
     public List<BankAccount> findByReference(final String reference) {
         return allMatches("findByReference",
                 "reference", reference);
+    }
+
+    @Programmatic
+    public List<BankAccount> findByReferenceMatches(final String regex) {
+        return allMatches("matchOnReference",
+                "regex", regex);
+    }
+
+    public List<BankAccount> autoComplete(@MinLength(3) final String search){
+        String regex = StringUtils.wildcardToCaseInsensitiveRegex("*" + search + "*");
+        return findByReferenceMatches(regex);
     }
 
     @Inject

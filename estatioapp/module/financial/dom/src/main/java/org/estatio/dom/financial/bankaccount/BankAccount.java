@@ -61,12 +61,18 @@ import lombok.Setter;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.financial.bankaccount.BankAccount "
-                        + "WHERE reference == :reference")
+                        + "WHERE reference == :reference"),
+        @javax.jdo.annotations.Query(
+                name = "matchOnReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.bankaccount.BankAccount "
+                        + "WHERE reference.matches(:regex)")
 })
 @DomainObject(editing = Editing.DISABLED
         , persistedLifecycleEvent = BankAccount.PersistedLifecycleEvent.class
         , updatedLifecycleEvent = BankAccount.UpdatedLifecycleEvent.class
         , removingLifecycleEvent = BankAccount.RemovingLifecycleEvent.class
+        , autoCompleteRepository = BankAccountRepository.class
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
