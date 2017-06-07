@@ -210,6 +210,12 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
             }
         }
 
+        for (OrderItem item : orderItemRepository.matchByDescription(searchString)) {
+            if (!result.contains(item)) {
+                result.add(item);
+            }
+        }
+
         if (hasSeller()){
             result = Lists.newArrayList(
                     FluentIterable.from(result)
@@ -395,7 +401,7 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private OrderItemRepository orderItemRepository;
+    OrderItemRepository orderItemRepository;
 
     @Inject
     @XmlTransient

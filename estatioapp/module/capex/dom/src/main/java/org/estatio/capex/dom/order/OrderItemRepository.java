@@ -14,10 +14,12 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.base.dom.utils.StringUtils;
+
+import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
-import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -107,11 +109,12 @@ public class OrderItemRepository {
 
     @Programmatic
     public List<OrderItem> matchByDescription(final String description) {
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex("*" + description + "*");
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         OrderItem.class,
                         "matchByDescription",
-                        "description", description
+                        "description", pattern
                 ));
     }
 

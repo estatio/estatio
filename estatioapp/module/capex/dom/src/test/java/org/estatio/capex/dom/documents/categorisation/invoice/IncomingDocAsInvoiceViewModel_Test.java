@@ -14,6 +14,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
@@ -32,6 +33,9 @@ public class IncomingDocAsInvoiceViewModel_Test {
     private OrderRepository mockOrderRepository;
 
     @Mock
+    private OrderItemRepository mockOrderItemRepository;
+
+    @Mock
     private BankAccountRepository mockBankAccountRepository;
 
     @Test
@@ -42,6 +46,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         // given
         IncomingDocAsInvoiceViewModel vm = new IncomingDocAsInvoiceViewModel();
         vm.orderRepository = mockOrderRepository;
+        vm.orderItemRepository = mockOrderItemRepository;
         Charge someOtherCharge = new Charge();
         Charge charge = new Charge();
         Project project = new Project();
@@ -83,7 +88,11 @@ public class IncomingDocAsInvoiceViewModel_Test {
             {
                 allowing(mockOrderRepository).matchByOrderNumber(with(any(String.class)));
                 will(returnValue(Arrays.asList(
-                        o1, o2, o3, o4
+                        o1, o2, o3
+                )));
+                allowing(mockOrderItemRepository).matchByDescription(with(any(String.class)));
+                will(returnValue(Arrays.asList(
+                        oi3, oi4
                 )));
             }
 

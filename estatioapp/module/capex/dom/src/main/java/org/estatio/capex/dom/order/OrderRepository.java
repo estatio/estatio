@@ -40,7 +40,7 @@ public class OrderRepository {
 
     @Programmatic
     public List<Order> matchByOrderNumber(final String orderNumber) {
-        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(orderNumber);
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex("*" + orderNumber + "*");
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Order.class,
