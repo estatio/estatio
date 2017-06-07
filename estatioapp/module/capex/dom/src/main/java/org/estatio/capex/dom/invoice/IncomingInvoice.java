@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.IsisApplibModule;
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -166,9 +168,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
                 budgetItem);
     }
 
+    // REVIEW: this is setup / suggestion for pattern
+    public static class ChangeEvent extends IsisApplibModule.ActionDomainEvent<IncomingInvoice> {}
+    public static class CreateEvent extends ChangeEvent {} // fired in repo
+    public static class UpdateEvent extends ChangeEvent {}
+    public static class RemoveEvent extends ChangeEvent {} // unused for now
+
     @Getter @Setter
     @Column(allowsNull = "true", name = "bankAccountId")
     private BankAccount bankAccount;
+
+    @Action(domainEvent = UpdateEvent.class)
+    public IncomingInvoice changeBankAccount(final BankAccount bankAccount){
+        setBankAccount(bankAccount);
+        return this;
+    }
 
     @Getter @Setter
     @Column(allowsNull = "true")
@@ -214,6 +228,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     // cheating
     private SortedSet getItemsRaw() {
         return getItems();
+    }
+
+    @Programmatic
+    public boolean classificationComplete(){
+        if (getBankAccount()==null){
+            return false;
+        }
+        return true;
     }
 
     //endregion

@@ -20,7 +20,6 @@ package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -131,7 +130,7 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
         if (getSeller()!=null){
             return bankAccountRepository.findBankAccountsByOwner(getSeller());
         } else {
-            return bankAccountRepository.allBankAccounts().stream().filter(x->x.getReference().contains(searchString)).collect(Collectors.toList());
+            return bankAccountRepository.autoComplete(searchString);
         }
     }
 
@@ -365,9 +364,6 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
         }
         if (getSeller()==null){
             buffer.append("seller, ");
-        }
-        if (getBankAccount()==null){
-            buffer.append("bank account, ");
         }
         if (getDateReceived()==null){
             buffer.append("date received, ");

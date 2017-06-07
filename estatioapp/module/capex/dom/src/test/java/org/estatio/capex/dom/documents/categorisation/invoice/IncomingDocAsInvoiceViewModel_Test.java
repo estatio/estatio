@@ -137,7 +137,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         String result = vm.minimalRequiredDataToComplete();
 
         // then
-        assertThat(result).isEqualTo("invoice number, buyer, seller, bank account, date received, due date, net amount, gross amount required");
+        assertThat(result).isEqualTo("invoice number, buyer, seller, date received, due date, net amount, gross amount required");
 
         // and when
         vm.setInvoiceNumber("123");
@@ -145,7 +145,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
         result = vm.minimalRequiredDataToComplete();
 
         // then
-        assertThat(result).isEqualTo("buyer, seller, bank account, date received, due date, gross amount required");
+        assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount required");
 
         // and when
         vm.setBuyer(new Organisation());

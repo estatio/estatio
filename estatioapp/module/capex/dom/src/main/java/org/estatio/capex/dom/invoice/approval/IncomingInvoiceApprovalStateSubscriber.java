@@ -8,6 +8,7 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -127,6 +128,16 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             case CANCEL:
                 break;
             }
+        }
+    }
+
+    @Programmatic
+    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
+    public void on(IncomingInvoice.ChangeEvent ev) {
+        IncomingInvoice incomingInvoice = ev.getSource();
+        if (ev.getPhase()== AbstractInteractionEvent.Phase.EXECUTED && incomingInvoice.classificationComplete()){
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE, null);
         }
     }
 

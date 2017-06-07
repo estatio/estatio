@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
 import org.incode.module.country.dom.impl.Country;
@@ -60,12 +61,14 @@ import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerifica
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.CLASSIFIED;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.NEW;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.PAYABLE;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_PROJECT_MANAGER;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.CHECK_BANK_ACCOUNT;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.COMPLETE;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.INSTANTIATE;
 
 public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTest {
@@ -138,26 +141,56 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     }
 
     @Test
-    public void when_document_associated_with_entity_then_invoice_approval_state_to_new_and_next_is_asset_manager() {
+    public void when_document_associated_with_entity_then_invoice_approval_state_to_new_and_next_is_complete() {
 
         // when
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev = new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(
-                invoiceDoc, null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
 
         // then
         assertState(incomingInvoice, NEW);
 
         final List<IncomingInvoiceApprovalStateTransition> transitions = findTransitions(this.incomingInvoice);
         assertThat(transitions.size()).isEqualTo(2);
-        assertTransition(transitions.get(0), NEW, APPROVE_AS_ASSET_MANAGER, null);
+        assertTransition(transitions.get(0), NEW, COMPLETE, null);
         assertTransition(transitions.get(1), null, INSTANTIATE, NEW);
 
     }
 
+    private void postClassifyAsInvoiceOrOrder(){
+        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev = new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(
+                invoiceDoc, null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
+        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
+        eventBusService.post(ev);
+    }
+
+    private void postIncomingInvoiceChangeEvent(){
+        final IncomingInvoice.ChangeEvent ev2 = new IncomingInvoice.ChangeEvent();
+        ev2.setSource(incomingInvoice);
+        ev2.setPhase(AbstractInteractionEvent.Phase.EXECUTED);
+        eventBusService.post(ev2);
+    }
+
     @Test
-    public void when_document_associated_with_entity_then_invoice_approval_state_to_new_and_next_is_project_manager() {
+    public void complete_and_next_is_asset_manager() {
+
+        // when
+        postClassifyAsInvoiceOrOrder();
+        // REVIEW - why is it needed to trigger change event manually in this test?
+        postIncomingInvoiceChangeEvent();
+
+        // then
+        assertState(incomingInvoice, CLASSIFIED);
+
+        final List<IncomingInvoiceApprovalStateTransition> transitions = findTransitions(this.incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(3);
+        assertTransition(transitions.get(0), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, null);
+        assertTransition(transitions.get(1), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitions.get(2), null, INSTANTIATE, NEW);
+
+    }
+
+    @Test
+    public void complete_and_next_is_project_manager() {
 
         // given
 
@@ -165,19 +198,17 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         givenInvoiceAssociatedWithProject();
 
         // when
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
         // then
-        assertState(incomingInvoice, NEW);
+        assertState(incomingInvoice, CLASSIFIED);
 
         final List<IncomingInvoiceApprovalStateTransition> transitions = findTransitions(this.incomingInvoice);
-        assertThat(transitions.size()).isEqualTo(2);
-        assertTransition(transitions.get(0), NEW, APPROVE_AS_PROJECT_MANAGER, null);
-        assertTransition(transitions.get(1), null, INSTANTIATE, NEW);
+        assertThat(transitions.size()).isEqualTo(3);
+        assertTransition(transitions.get(0), CLASSIFIED, APPROVE_AS_PROJECT_MANAGER, null);
+        assertTransition(transitions.get(1), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitions.get(2), null, INSTANTIATE, NEW);
 
     }
 
@@ -185,17 +216,16 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     public void approve_by_asset_manager() {
 
         // given
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
-        assertState(incomingInvoice, NEW);
+        assertState(incomingInvoice, CLASSIFIED);
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
-        assertThat(transitionsBefore.size()).isEqualTo(2);
-        assertTransition(transitionsBefore.get(0), NEW, APPROVE_AS_ASSET_MANAGER, null);
-        assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NEW);
+        assertThat(transitionsBefore.size()).isEqualTo(3);
+        assertTransition(transitionsBefore.get(0), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, null);
+        assertTransition(transitionsBefore.get(1), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
+
 
         // when
         wrap(mixin(IncomingInvoice_approveAsAssetManager.class, incomingInvoice)).act("looks good to me!");
@@ -203,10 +233,11 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
-        assertThat(transitionsAfter.size()).isEqualTo(3);
+        assertThat(transitionsAfter.size()).isEqualTo(4);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
-        assertTransition(transitionsAfter.get(1), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
-        assertTransition(transitionsAfter.get(2), null, INSTANTIATE, NEW);
+        assertTransition(transitionsAfter.get(1), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
+        assertTransition(transitionsAfter.get(2), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
 
@@ -219,17 +250,15 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         givenInvoiceAssociatedWithProject();
 
         // and given
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
-        assertState(incomingInvoice, NEW);
+        assertState(incomingInvoice, CLASSIFIED);
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
-        assertThat(transitionsBefore.size()).isEqualTo(2);
-        assertTransition(transitionsBefore.get(0), NEW, APPROVE_AS_PROJECT_MANAGER, null);
-        assertTransition(transitionsBefore.get(1), null, INSTANTIATE, NEW);
+        assertThat(transitionsBefore.size()).isEqualTo(3);
+        assertTransition(transitionsBefore.get(0), CLASSIFIED, APPROVE_AS_PROJECT_MANAGER, null);
+        assertTransition(transitionsBefore.get(1), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 
         // when
         wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
@@ -237,10 +266,11 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
-        assertThat(transitionsAfter.size()).isEqualTo(3);
+        assertThat(transitionsAfter.size()).isEqualTo(4);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_PROJECT_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
-        assertTransition(transitionsAfter.get(1), NEW, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
-        assertTransition(transitionsAfter.get(2), null, INSTANTIATE, NEW);
+        assertTransition(transitionsAfter.get(1), CLASSIFIED, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
+        assertTransition(transitionsAfter.get(2), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, APPROVED_BY_PROJECT_MANAGER);
 
@@ -253,11 +283,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         givenInvoiceAssociatedWithProject();
 
         // and given
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
         // and given
         wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
@@ -265,10 +292,11 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertState(incomingInvoice, APPROVED_BY_PROJECT_MANAGER);
 
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
-        assertThat(transitionsBefore.size()).isEqualTo(3);
+        assertThat(transitionsBefore.size()).isEqualTo(4);
         assertTransition(transitionsBefore.get(0), APPROVED_BY_PROJECT_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
-        assertTransition(transitionsBefore.get(1), NEW, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
-        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
+        assertTransition(transitionsBefore.get(1), CLASSIFIED, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
+        assertTransition(transitionsBefore.get(2), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsBefore.get(3), null, INSTANTIATE, NEW);
 
         // when
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
@@ -276,11 +304,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
-        assertThat(transitionsAfter.size()).isEqualTo(4);
+        assertThat(transitionsAfter.size()).isEqualTo(5);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, null);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_PROJECT_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
-        assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
-        assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+        assertTransition(transitionsAfter.get(2), CLASSIFIED, APPROVE_AS_PROJECT_MANAGER, APPROVED_BY_PROJECT_MANAGER);
+        assertTransition(transitionsAfter.get(3), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsAfter.get(4), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
     }
@@ -289,11 +318,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     public void approve_by_country_directory_once_approved_by_asset_manager_and_bank_account_not_yet_been_verified() {
 
         // given
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
         assertState(bankAccount, NOT_VERIFIED);
 
@@ -303,10 +329,11 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         transactionService.nextTransaction();
 
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
-        assertThat(transitionsBefore.size()).isEqualTo(3);
+        assertThat(transitionsBefore.size()).isEqualTo(4);
         assertTransition(transitionsBefore.get(0), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
-        assertTransition(transitionsBefore.get(1), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
-        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
+        assertTransition(transitionsBefore.get(1), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
+        assertTransition(transitionsBefore.get(2), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsBefore.get(3), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
 
@@ -316,11 +343,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
-        assertThat(transitionsAfter.size()).isEqualTo(4);
+        assertThat(transitionsAfter.size()).isEqualTo(5);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, null);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
-        assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
-        assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+        assertTransition(transitionsAfter.get(2), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
+        assertTransition(transitionsAfter.get(3), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsAfter.get(4), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, APPROVED_BY_COUNTRY_DIRECTOR);
     }
@@ -329,11 +357,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     public void approve_by_country_directory_once_approved_by_asset_manager_and_bank_account_is_verified() {
 
         // given
-        final IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev =
-                new IncomingDocumentCategorisationStateTransitionType.TransitionEvent(invoiceDoc,
-                        null, IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
-        ev.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
-        eventBusService.post(ev);
+        postClassifyAsInvoiceOrOrder();
+        postIncomingInvoiceChangeEvent();
 
         // and given the bank account is verified
         wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
@@ -348,10 +373,11 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertState(incomingInvoice, APPROVED_BY_ASSET_MANAGER);
 
         final List<IncomingInvoiceApprovalStateTransition> transitionsBefore = findTransitions(this.incomingInvoice);
-        assertThat(transitionsBefore.size()).isEqualTo(3);
+        assertThat(transitionsBefore.size()).isEqualTo(4);
         assertTransition(transitionsBefore.get(0), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, null);
-        assertTransition(transitionsBefore.get(1), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
-        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
+        assertTransition(transitionsBefore.get(1), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
+        assertTransition(transitionsBefore.get(2), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsBefore.get(3), null, INSTANTIATE, NEW);
 
         // when
         wrap(mixin(IncomingInvoice_approveAsCountryDirector.class, incomingInvoice)).act("me too!");
@@ -359,11 +385,12 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // then
         final List<IncomingInvoiceApprovalStateTransition> transitionsAfter = findTransitions(this.incomingInvoice);
-        assertThat(transitionsAfter.size()).isEqualTo(4);
+        assertThat(transitionsAfter.size()).isEqualTo(5);
         assertTransition(transitionsAfter.get(0), APPROVED_BY_COUNTRY_DIRECTOR, CHECK_BANK_ACCOUNT, PAYABLE);
         assertTransition(transitionsAfter.get(1), APPROVED_BY_ASSET_MANAGER, APPROVE_AS_COUNTRY_DIRECTOR, APPROVED_BY_COUNTRY_DIRECTOR);
-        assertTransition(transitionsAfter.get(2), NEW, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
-        assertTransition(transitionsAfter.get(3), null, INSTANTIATE, NEW);
+        assertTransition(transitionsAfter.get(2), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, APPROVED_BY_ASSET_MANAGER);
+        assertTransition(transitionsAfter.get(3), NEW, COMPLETE, CLASSIFIED);
+        assertTransition(transitionsAfter.get(4), null, INSTANTIATE, NEW);
 
         assertState(incomingInvoice, PAYABLE);
 

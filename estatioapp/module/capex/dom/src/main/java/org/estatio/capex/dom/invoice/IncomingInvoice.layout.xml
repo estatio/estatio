@@ -87,7 +87,9 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Payment" id="details">
-                                <cpt:property id="bankAccount"/>
+                                <cpt:property id="bankAccount">
+                                    <cpt:action id="changeBankAccount" promptStyle="INLINE_AS_IF_EDIT" />
+                                </cpt:property>
                                 <cpt:property id="paymentMethod"/>
                             </cpt:fieldSet>
                         </bs3:col>

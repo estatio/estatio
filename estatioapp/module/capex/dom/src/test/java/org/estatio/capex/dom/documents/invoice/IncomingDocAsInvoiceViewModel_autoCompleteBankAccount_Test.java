@@ -44,9 +44,7 @@ public class IncomingDocAsInvoiceViewModel_autoCompleteBankAccount_Test {
         }.setBankAccountRepository(mockBankAccountRepository);
 
         BankAccount acc1 = new BankAccount();
-        acc1.setReference("123");
         BankAccount acc2 = new BankAccount();
-        acc2.setReference("345");
 
         Party owner = new Organisation();
         acc2.setOwner(owner);
@@ -54,7 +52,7 @@ public class IncomingDocAsInvoiceViewModel_autoCompleteBankAccount_Test {
         // expect
         context.checking(new Expectations() {
             {
-                allowing(mockBankAccountRepository).allBankAccounts();
+                allowing(mockBankAccountRepository).autoComplete(with(any(String.class)));
                 will(returnValue(Arrays.asList(
                         acc1, acc2
                 )));
@@ -67,13 +65,7 @@ public class IncomingDocAsInvoiceViewModel_autoCompleteBankAccount_Test {
         });
 
         // when
-        result = vm.autoCompleteBankAccount("23");
-
-        // then
-        assertThat(result.size()).isEqualTo(1);
-
-        // and when
-        result = vm.autoCompleteBankAccount("3");
+        result = vm.autoCompleteBankAccount("some searchstring");
 
         // then
         assertThat(result.size()).isEqualTo(2);

@@ -36,8 +36,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.NEW,
             TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
     ),
-    APPROVE_AS_PROJECT_MANAGER(
+    COMPLETE(
             IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.CLASSIFIED,
+            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+    ),
+    APPROVE_AS_PROJECT_MANAGER(
+            IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
             TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER), StateTransitionStrategy.Util.next()
     ) {
@@ -49,7 +54,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     APPROVE_AS_ASSET_MANAGER(
-            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
             TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER), StateTransitionStrategy.Util.next()
     ) {
@@ -76,7 +81,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     ),
     CANCEL(
             Arrays.asList(
-                    IncomingInvoiceApprovalState.NEW,
+                    IncomingInvoiceApprovalState.CLASSIFIED,
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.CANCELLED,
