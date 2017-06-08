@@ -58,6 +58,8 @@ public class SupplierImportLine implements Importable {
     @Getter @Setter
     private String country;
 
+    private String message;
+
     @Override
     public List<Object> importData(Object previousRow) {
 
@@ -72,7 +74,31 @@ public class SupplierImportLine implements Importable {
 
         final Country countryObj = countryRepository.findCountry(getCountry());
 
-        String message = "";
+        this.message = "";
+        Organisation organisation;
+        organisation = findExistingOrganisation();
+
+        if (bankAccountRepository.findByReference(getIban()).size()>0) {
+            message = message.concat(String.format("More than one iban found for %s. ", getIban()));
+            // only set chamber of commerce code - do not create organisation or bank account
+            setChamberOfCommerceCodeIfEmpty(organisation);
+        } else {
+            if (organisation == null) {
+                organisation = organisationRepository.newOrganisation(null, true, getSupplierName(), countryObj);
+            }
+            bankAccountRepository.newBankAccount(organisation, getIban(), getBic());
+            setChamberOfCommerceCodeIfEmpty(organisation);
+        }
+
+        if (message!=""){
+            messageService.warnUser(message);
+        }
+
+        return Lists.newArrayList(message);
+
+    }
+
+    private Organisation findExistingOrganisation(){
         Organisation organisation = null;
         if (getChamberOfCommerceCode()!=null){
             organisation = organisationRepository.findByChamberOfCommerceCode(getChamberOfCommerceCode());
@@ -83,21 +109,19 @@ public class SupplierImportLine implements Importable {
                 message = message.concat(String.format("More than one supplier found for %s; first found is taken. ", getSupplierName()));
             }
         }
-        if (organisation == null) {
-            organisation = organisationRepository.newOrganisation(null, true, getSupplierName(), countryObj);
+        return organisation;
+    }
+
+    private void setChamberOfCommerceCodeIfEmpty(final Organisation organisation){
+        if (organisation != null) {
+            if (organisation.getChamberOfCommerceCode() == null) {
+                organisation.setChamberOfCommerceCode(this.getChamberOfCommerceCode());
+            } else {
+                if (!organisation.getChamberOfCommerceCode().equals(this.getChamberOfCommerceCode())) {
+                    message = message.concat(String.format("ChamberOfCommercode %s in upload is different from value %s2 in system. ", this.getChamberOfCommerceCode(), organisation.getChamberOfCommerceCode()));
+                }
+            }
         }
-
-        organisation.setChamberOfCommerceCode(getChamberOfCommerceCode());
-
-        if (bankAccountRepository.findByReference(getIban()).size()>0){
-            message = message.concat(String.format("More than one iban found for %s. ", getIban()));
-            messageService.warnUser(message);
-        } else {
-            bankAccountRepository.newBankAccount(organisation, getIban(), getBic());
-        }
-
-        return Lists.newArrayList(message);
-
     }
 
     @Inject OrganisationRepository organisationRepository;
