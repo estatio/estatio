@@ -40,7 +40,7 @@ public abstract class Document_categoriseAsAbstract extends DocOrIncomingDocView
             @Nullable final String comment) {
         categoriseAndAttachPaperclip(property);
 
-        triggerStateTransition(comment);
+        trigger(comment);
 
         return viewModelFactory.createFor(document);
     }

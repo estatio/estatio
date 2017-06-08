@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.SortedSet;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -15,19 +16,24 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.IsisApplibModule;
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.FixedAsset;
@@ -168,21 +174,37 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
                 budgetItem);
     }
 
-    // REVIEW: this is setup / suggestion for pattern
-    public static class ChangeEvent extends IsisApplibModule.ActionDomainEvent<IncomingInvoice> {}
-    public static class CreateEvent extends ChangeEvent {} // fired in repo
-    public static class UpdateEvent extends ChangeEvent {}
-    public static class RemoveEvent extends ChangeEvent {} // unused for now
+    //region > _changeBankAccount (action)
+    @Mixin(method="act")
+    public static class _changeBankAccount extends IncomingInvoice_triggerAbstract {
+
+        private final IncomingInvoice incomingInvoice;
+
+        public _changeBankAccount(final IncomingInvoice incomingInvoice) {
+            super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION);
+            this.incomingInvoice = incomingInvoice;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(contributed= Contributed.AS_ACTION)
+        public IncomingInvoice act(
+                final BankAccount bankAccount,
+                @Nullable final String comment){
+            incomingInvoice.setBankAccount(bankAccount);
+            trigger(comment);
+            return  incomingInvoice;
+        }
+
+        public boolean hideAct() {
+            return cannotTransition();
+        }
+
+    }
+
 
     @Getter @Setter
     @Column(allowsNull = "true", name = "bankAccountId")
     private BankAccount bankAccount;
-
-    @Action(domainEvent = UpdateEvent.class)
-    public IncomingInvoice changeBankAccount(final BankAccount bankAccount){
-        setBankAccount(bankAccount);
-        return this;
-    }
 
     @Getter @Setter
     @Column(allowsNull = "true")

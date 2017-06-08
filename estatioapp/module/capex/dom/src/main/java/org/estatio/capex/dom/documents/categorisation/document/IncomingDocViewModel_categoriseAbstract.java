@@ -47,7 +47,7 @@ public abstract class IncomingDocViewModel_categoriseAbstract extends
         final Document document = categoriseAndAttachPaperclip(property);
 
         IncomingDocumentCategorisationStateTransition transition =
-                triggerStateTransition(comment);
+                trigger(comment);
 
         if (goToNext){
             Task nextTask = nextTaskElseFrom(transition);

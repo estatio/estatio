@@ -33,17 +33,20 @@ public enum PaymentApprovalStateTransitionType
     INSTANTIATE(
             (PaymentApprovalState)null,
             PaymentApprovalState.NEW,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()
     ),
     APPROVE_AS_TREASURER(
             PaymentApprovalState.NEW,
             PaymentApprovalState.APPROVED_BY_TREASURER,
-            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER), StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)
     ),
     CANCEL(
             PaymentApprovalState.NEW,
             PaymentApprovalState.CANCELLED,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.none()
     );
 
     private final List<PaymentApprovalState> fromStates;
@@ -54,9 +57,7 @@ public enum PaymentApprovalStateTransitionType
     PaymentApprovalStateTransitionType(
             final List<PaymentApprovalState> fromState,
             final PaymentApprovalState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-
-            final StateTransitionStrategy stateTransitionStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy, final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -66,10 +67,9 @@ public enum PaymentApprovalStateTransitionType
     PaymentApprovalStateTransitionType(
             final PaymentApprovalState fromState,
             final PaymentApprovalState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
-                stateTransitionStrategy
+            final StateTransitionStrategy stateTransitionStrategy, final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy
         );
     }
 
@@ -98,21 +98,6 @@ public enum PaymentApprovalStateTransitionType
             final Payment domainObject,
             final PaymentApprovalStateTransition pendingTransitionIfAny) {
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
-    }
-
-    @Override
-    public boolean canApply(
-            final Payment domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // can never apply the initial pseudo approval
-        return getFromStates() != null;
-    }
-
-    @Override
-    public void applyTo(
-            final Payment domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // nothing to do....
     }
 
 

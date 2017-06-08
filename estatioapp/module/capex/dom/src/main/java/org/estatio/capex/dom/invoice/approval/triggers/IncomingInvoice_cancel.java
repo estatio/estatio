@@ -19,12 +19,12 @@ public class IncomingInvoice_cancel extends IncomingInvoice_triggerAbstract {
     @Action()
     @MemberOrder(sequence = "9")
     public Object act(@Nullable final String comment) {
-        triggerStateTransition(comment);
+        trigger(comment);
         return getDomainObject();
     }
 
     public boolean hideAct() {
-        return cannotTriggerStateTransition();
+        return cannotTransition();
     }
 
 }

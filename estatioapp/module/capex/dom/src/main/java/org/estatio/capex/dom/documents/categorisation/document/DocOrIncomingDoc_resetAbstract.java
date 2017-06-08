@@ -50,13 +50,13 @@ public abstract class DocOrIncomingDoc_resetAbstract extends DomainObject_trigge
             paperclipRepository.delete(paperclip);
         }
 
-        triggerStateTransition(comment);
+        trigger(comment);
 
         return document;
     }
 
     public boolean hideAct() {
-        return cannotTriggerStateTransition();
+        return cannotTransition();
     }
 
     public String disableAct() {

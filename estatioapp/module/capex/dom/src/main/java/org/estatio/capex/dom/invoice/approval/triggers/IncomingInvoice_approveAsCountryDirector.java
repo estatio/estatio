@@ -19,12 +19,12 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
     @Action()
     @MemberOrder(sequence = "3")
     public Object act(@Nullable final String comment) {
-        triggerStateTransition(comment);
+        trigger(comment);
         return getDomainObject();
     }
 
     public boolean hideAct() {
-        return cannotTriggerStateTransition();
+        return cannotTransition();
     }
 
 }

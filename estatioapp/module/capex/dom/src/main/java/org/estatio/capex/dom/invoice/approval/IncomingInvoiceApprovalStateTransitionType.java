@@ -34,15 +34,15 @@ public enum IncomingInvoiceApprovalStateTransitionType
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
             IncomingInvoiceApprovalState.NEW,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.none()
     ),
     COMPLETE_CLASSIFICATION(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.CLASSIFIED,
-            TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(EstatioRole.USER)
     ) {
         @Override
-        public boolean canApply(
+        public boolean isGuardSatisified(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
             return domainObject.classificationComplete();
@@ -51,10 +51,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-            TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER)
     ) {
         @Override
-        public boolean canApply(
+        public boolean isMatch(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
             return domainObject.hasProject();
@@ -63,13 +63,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
-            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER)
     ) {
         @Override
-        public boolean canApply(
+        public boolean isMatch(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
-            return !APPROVE_AS_PROJECT_MANAGER.canApply(domainObject, serviceRegistry2);
+            return !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
@@ -77,14 +78,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR),
-            StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR)
     ),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             IncomingInvoiceApprovalState.PAYABLE,
-            TaskAssignmentStrategy.Util.none(),
-            StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.none()
     ),
     CANCEL(
             Arrays.asList(
@@ -92,8 +93,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.CANCELLED,
-            TaskAssignmentStrategy.Util.none(),
-            StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.none()
     );
 
     private final List<IncomingInvoiceApprovalState> fromStates;
@@ -104,8 +105,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     IncomingInvoiceApprovalStateTransitionType(
             final List<IncomingInvoiceApprovalState> fromState,
             final IncomingInvoiceApprovalState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -115,10 +116,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
     IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
             final IncomingInvoiceApprovalState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
-                stateTransitionStrategy
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null
+                        ? Collections.singletonList(fromState)
+                        : null,
+                toState, stateTransitionStrategy, taskAssignmentStrategy
         );
     }
 
@@ -146,21 +149,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
             final IncomingInvoice domainObject,
             final IncomingInvoiceApprovalStateTransition transitionIfAny) {
         return new TransitionEvent(domainObject, transitionIfAny, this);
-    }
-
-    @Override
-    public boolean canApply(
-            final IncomingInvoice domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // can never apply the initial pseudo approval
-        return getFromStates() != null;
-    }
-
-    @Override
-    public void applyTo(
-            final IncomingInvoice domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // nothing to do....
     }
 
 

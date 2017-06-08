@@ -37,26 +37,6 @@ public interface StateTransitionType<
 
 
     /**
-     * Whether the provided domain object can make <i>this</i> type of transition.
-     *
-     * <p>
-     *     By default, all transitions are assumed to apply (with respect to their {@link #getFromStates() from} and
-     *     {@link #getToState() to} states <i>unless</i> this method is overridden to further constrain whether a
-     *     transition applies to a <i>particular</i> domain object.
-     * </p>
-     *
-     * <p>
-     *     In practice, this means that this is method is overridden when there is a decision to be made and the
-     *     next state to transition to depends upon the state of the domain object
-     * </p>
-     *
-     * @param domainObject - being transitioned.
-     * @param serviceRegistry2 -to lookup domain services etc
-     */
-    @Programmatic
-    boolean canApply(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
-
-    /**
      * How the {@link StateTransitionService} should search to create further pending transitions.
      *
      * Otherwise, the "to state" of the transition is considered to be an "end-point".
@@ -74,7 +54,9 @@ public interface StateTransitionType<
      *     domain object (for convenience or as a performance optimisation); in which case this is the place to do it.
      * </p>
      */
-    void applyTo(DO domainObject, final ServiceRegistry2 serviceRegistry2);
+    default void applyTo(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        // nothing to do.
+    }
 
     /**
      * The algorithm to detemine which {@link EstatioRole task role}, if any, to assign to a {@link Task} wrapping this
@@ -90,7 +72,7 @@ public interface StateTransitionType<
      * <p>
      *     This method is only intended to be called by {@link StateTransitionService}, which checks that the
      *     domain object is already in the specified fromState, and can otherwise be
-     *     {@link #canApply(Object, ServiceRegistry2) applied}.
+     *     {@link #isGuardSatisified(Object, ServiceRegistry2) applied}.
      * </p>
      */
     @Programmatic
@@ -116,4 +98,110 @@ public interface StateTransitionType<
      */
     @Programmatic
     StateTransitionEvent<DO,ST,STT,S> newStateTransitionEvent(DO domainObject, ST transitionIfAny);
+
+
+
+    /**
+     * Whether there is a &quot;road&quot; from the specified state using this transition to some other state.
+     *
+     * <p>
+     *     Note that the transition itself may also have a {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guard}
+     *     so the &quot;road&quot; may not be immediately traversable if the guard isn't satisfied.
+     * </p>
+     */
+    default <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+        > boolean canTransition(final S fromState) {
+        final STT transitionType = (STT) this;
+        final List<S> fromStates = transitionType.getFromStates();
+        if (fromStates == null) {
+            return (fromState == null);
+        }
+        return fromStates.contains(fromState);
+    }
+
+    /**
+     * Whether this domain object is in a state such that this transition could occur (subject to any additional
+     * {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guards} also being satisfied).
+     */
+    @Programmatic
+    default <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >  boolean canTransitionAndIsMatch(
+            final DO domainObject,
+            final ServiceRegistry2 serviceRegistry2) {
+        final STT transitionType = (STT) this;
+        final StateTransitionService stateTransitionService = serviceRegistry2.lookupService(StateTransitionService.class);
+        final S currentStateIfAny = stateTransitionService.currentStateOf(domainObject, transitionType);
+        return transitionType.canTransition(currentStateIfAny) &&
+               transitionType.isMatch(domainObject, serviceRegistry2);
+    }
+
+    /**
+     * Whether the provided domain object can make <i>this</i> transition at all, based on its (likely immutable) state.
+     *
+     * <p>
+     *     This is similar to {@link #isGuardSatisified(Object, ServiceRegistry2)}, but is used for initial routing
+     *     to set up a pending {@link StateTransition}.  That is, it is expected to be based on state of the domain
+     *     object that is unlikely to change over time.  In contrast, {@link #isGuardSatisified(Object, ServiceRegistry2)}
+     *     is continually evaluated to see if the transition can <i>yet</i> be made, and so is based on state that is
+     *     mutable.
+     * </p>
+     *
+     * <p>
+     *     In practice, this means that this is method is overridden when there is a decision to be made and the
+     *     next state to transition to depends upon the state of the domain object
+     * </p>
+     *
+     * @see #isGuardSatisified(Object, ServiceRegistry2)
+     *
+     * @param domainObject - being transitioned.
+     * @param serviceRegistry2 -to lookup domain services etc
+     */
+    @Programmatic
+    default boolean isMatch(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return true;
+    }
+
+    /**
+     * Whether the provided domain object can - yet - make <i>this</i> transition.
+     *
+     * <p>
+     *     In practice, this means that this is method is overridden when there is a decision to be made and the
+     *     next state to transition to depends upon the state of the domain object
+     * </p>
+     *
+     * @see #isMatch(Object, ServiceRegistry2)
+     *
+     * @param domainObject - being transitioned.
+     * @param serviceRegistry2 -to lookup domain services etc
+     */
+    @Programmatic
+    default boolean isGuardSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return true;
+    }
+
+    @Programmatic
+    default <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  boolean canTransitionAndGuardSatisfied(
+            final DO domainObject,
+            final ServiceRegistry2 serviceRegistry2) {
+        final STT transitionType = (STT) this;
+        return transitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2) &&
+                transitionType.isGuardSatisified(domainObject, serviceRegistry2);
+    }
+
+
+
+
 }

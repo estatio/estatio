@@ -30,6 +30,7 @@ public interface StateTransitionStrategy<
 
     public static class Util {
         private Util() {}
+
         public static <
                 DO,
                 ST extends StateTransition<DO, ST, STT, S>,
@@ -38,6 +39,7 @@ public interface StateTransitionStrategy<
                 > StateTransitionStrategy<DO,ST,STT,S> none() {
             return (domainObject, completedTransitionType, serviceRegistry2) -> null;
         }
+
         public static <
                 DO,
                 ST extends StateTransition<DO, ST, STT, S>,
@@ -50,16 +52,12 @@ public interface StateTransitionStrategy<
                 final StateTransitionService stateTransitionService = serviceRegistry2
                         .lookupService(StateTransitionService.class);
 
-                final S currentState = stateTransitionService.currentStateOf(domainObject, requiredTransitionType);
-                final STT[] allTransitionsTypes = stateTransitionService.supportFor(requiredTransitionType)
-                        .allTransitionTypes();
+                final STT[] allTransitionsTypes =
+                        stateTransitionService.supportFor(requiredTransitionType).allTransitionTypes();
                 for (STT candidateNextTransitionType : allTransitionsTypes) {
-
-                    if (!stateTransitionService
-                            .canTriggerFromState(domainObject, candidateNextTransitionType, currentState)) {
-                        continue;
+                    if (candidateNextTransitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2)) {
+                        return candidateNextTransitionType;
                     }
-                    return candidateNextTransitionType;
                 }
                 return null;
             };

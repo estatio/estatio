@@ -2,6 +2,8 @@ package org.estatio.capex.dom.triggers;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -26,26 +28,35 @@ public abstract class DomainObject_triggerBaseAbstract<
     protected abstract DO getDomainObject();
 
     /**
-     * Subclasses must call, to ensure that the state transition occurs.
+     * Subclasses should call, to request that the state transition occur (or at least, be attempted).
+     *
+     * <p>
+     *     It's possible that the transition may not occur if there
+     *     is {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guard} that is not yet satisfied
+     *     for the particular domain object.
+     * </p>
      *
      * @return - the {@link StateTransition} most recently completed for the domain object.
      */
-    protected final ST triggerStateTransition(final String comment) {
+    protected final ST trigger(final String comment) {
         return stateTransitionService.trigger(getDomainObject(), transitionType, comment);
     }
 
     /**
-     * Subclasses must call, typically in their <tt>hideAct()</tt> guargs, in order to check whether {@link #triggerStateTransition(String)}.
+     * Subclasses must call, typically in their <tt>hideAct()</tt> guargs, in order to check whether {@link #trigger(String)}.
      */
-    protected final boolean cannotTriggerStateTransition() {
-        return !canTriggerStateTransition();
+    protected final boolean cannotTransition() {
+        return !canTransition();
     }
 
-    private boolean canTriggerStateTransition() {
-        return stateTransitionService.canTrigger(getDomainObject(), transitionType);
+    private boolean canTransition() {
+        return transitionType.canTransitionAndIsMatch(getDomainObject(), serviceRegistry2);
     }
 
     @Inject
     protected StateTransitionService stateTransitionService;
+
+    @Inject
+    protected ServiceRegistry2 serviceRegistry2;
 
 }

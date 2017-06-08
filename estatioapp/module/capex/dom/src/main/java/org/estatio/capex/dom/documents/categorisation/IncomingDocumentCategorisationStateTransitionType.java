@@ -34,22 +34,26 @@ public enum IncomingDocumentCategorisationStateTransitionType
     INSTANTIATE(
             (IncomingDocumentCategorisationState)null,
             IncomingDocumentCategorisationState.NEW,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()
     ),
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.MAIL_ROOM)
     ),
     CLASSIFY_AS_INVOICE_OR_ORDER(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
-            TaskAssignmentStrategy.Util.to(EstatioRole.USER), StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.USER)
     ),
     RESET(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.NEW,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.none()
     );
 
     private final List<IncomingDocumentCategorisationState> fromStates;
@@ -60,8 +64,8 @@ public enum IncomingDocumentCategorisationStateTransitionType
     IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
             final IncomingDocumentCategorisationState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -71,10 +75,10 @@ public enum IncomingDocumentCategorisationStateTransitionType
     IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
             final IncomingDocumentCategorisationState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
-                stateTransitionStrategy
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy
         );
     }
 
@@ -102,21 +106,6 @@ public enum IncomingDocumentCategorisationStateTransitionType
             final Document domainObject,
             final IncomingDocumentCategorisationStateTransition transitionIfAny) {
         return new TransitionEvent(domainObject, transitionIfAny, this);
-    }
-
-    @Override
-    public boolean canApply(
-            final Document domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // can never apply the initial pseudo approval
-        return getFromStates() != null;
-    }
-
-    @Override
-    public void applyTo(
-            final Document domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // nothing to do....
     }
 
 

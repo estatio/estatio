@@ -55,26 +55,11 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > boolean canTrigger(
+    > boolean canTransitionAndGuardSatisfied(
             final DO domainObject,
             final STT candidateTransitionType) {
 
-        final S currentStateIfAny = currentStateOf(domainObject, candidateTransitionType);
-        return canTriggerFromState(domainObject, candidateTransitionType, currentStateIfAny);
-    }
-
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    >  boolean canTriggerFromState(
-            final DO domainObject,
-            final STT candidateTransitionType,
-            final S currentStateIfAny) {
-        return canTransitionFrom(currentStateIfAny, candidateTransitionType) &&
-               candidateTransitionType.canApply(domainObject, serviceRegistry2);
+        return candidateTransitionType.canTransitionAndGuardSatisfied(domainObject, serviceRegistry2);
     }
 
     /**
@@ -249,9 +234,8 @@ public class StateTransitionService {
             final STT requiredTransitionType,
             final String comment) {
 
-        S currentState = currentStateOf(domainObject, requiredTransitionType);
-        if(!canTransitionFrom(currentState, requiredTransitionType)) {
-            // cannot apply this state
+        if(!requiredTransitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2)) {
+            // cannot apply this state, there is no "road" or isn't a match (as a valid route to traverse, switch stmt)
             return null;
         }
 
@@ -280,16 +264,31 @@ public class StateTransitionService {
         // (b) there was a pending transition, but was heading in the different direction and was just deleted (above)
         if(pendingTransition == null) {
 
+            final S currentState = currentStateOf(domainObject, requiredTransitionType);
+
             final TaskAssignmentStrategy taskAssignmentStrategy = requiredTransitionType.getTaskAssignmentStrategy();
             EstatioRole assignToIfAny = null;
             if (taskAssignmentStrategy != null) {
                 assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, requiredTransitionType, serviceRegistry2);
             }
 
-            pendingTransition = requiredTransitionType.createTransition(domainObject, currentState,
-                    assignToIfAny, serviceRegistry2);
-
+            pendingTransition = requiredTransitionType.createTransition(
+                                        domainObject, currentState, assignToIfAny, serviceRegistry2);
         }
+
+
+        //
+        // by this stage there will be a pending transition for the required transition type, and we know that
+        // it is valid (the very first check we make)
+        //
+        // however, if there's a guard which isn't yet satisfied, then we quit here.
+        //
+        if(! requiredTransitionType.isGuardSatisified(domainObject, serviceRegistry2) ) {
+            // cannot apply this state, while there is an available "road" to traverse, it is blocked
+            // (there must be a guard prohibiting it for this particular domain object)
+            return null;
+        }
+
 
         final StateTransitionEvent<DO, ST, STT, S> event =
                 requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransition);
@@ -311,7 +310,7 @@ public class StateTransitionService {
         }
 
         // update the state of the domain object to be toState of the transition that's just completed
-        currentState = requiredTransitionType.getToState();
+        S currentState = requiredTransitionType.getToState();
 
         // for wherever we might go next, we use the transition strategy to create a pending task,
         // and (if necessary) create a task for the first one that applies to this particular domain object.
@@ -349,7 +348,7 @@ public class StateTransitionService {
     ST createPendingTransition(
             final DO domainObject,
             final STT transitionType) {
-        if(!canTrigger(domainObject, transitionType)) {
+        if(!canTransitionAndGuardSatisfied(domainObject, transitionType)) {
             return null;
         }
         final S currentState = currentStateOf(domainObject, transitionType);
@@ -431,19 +430,6 @@ public class StateTransitionService {
         }
         throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found for " + transitionType);
     }
-
-    private static <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-            > boolean canTransitionFrom(
-                final S fromState,
-                final STT transitionType) {
-        final List<S> fromStates = transitionType.getFromStates();
-        return fromStates == null || fromStates.contains(fromState);
-    }
-
 
     @Inject
     List<StateTransitionServiceSupport> supportServices;

@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -66,15 +65,7 @@ public class IncomingInvoiceRepository {
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persist(invoice);
-        postCreateEvent(invoice);
         return invoice;
-    }
-
-    private void postCreateEvent(final IncomingInvoice invoice){
-        IncomingInvoice.CreateEvent createEvent = new IncomingInvoice.CreateEvent();
-        createEvent.setSource(invoice);
-        createEvent.setPhase(AbstractInteractionEvent.Phase.EXECUTED);
-        eventBusService.post(createEvent);
     }
 
     @Programmatic

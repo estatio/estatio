@@ -66,8 +66,8 @@ language governing permissions and limitations under the License.
                             <artifactId>standard</artifactId>
                         </mixin>
                         <mixin>
-                            <groupId>org.apache.isis.mavenmixin</groupId>
-                            <artifactId>isis-mavenmixin-validate</artifactId>
+                            <groupId>com.danhaywood.mavenmixin</groupId>
+                            <artifactId>isisvalidate</artifactId>
                         </mixin>
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>

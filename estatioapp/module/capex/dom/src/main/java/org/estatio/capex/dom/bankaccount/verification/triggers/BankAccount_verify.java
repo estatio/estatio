@@ -26,12 +26,12 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
     )
     @MemberOrder(sequence = "9")
     public Object act(@Nullable final String comment) {
-        triggerStateTransition(comment);
+        trigger(comment);
         return getDomainObject();
     }
 
     public boolean hideAct() {
-        return cannotTriggerStateTransition();
+        return cannotTransition();
     }
 
 }

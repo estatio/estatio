@@ -116,13 +116,6 @@ language governing permissions and limitations under the License.
             <artifactId>isis-wicket-pdfjs-cpt</artifactId>
         </dependency>
 
-        <!-- provided -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-			<scope>provided</scope>
-        </dependency>
-
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
@@ -147,11 +140,12 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <!-- provided -->
         <dependency>
-            <groupId>org.isisaddons.wicket.pdfjs</groupId>
-            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
-
 
 
     </dependencies>

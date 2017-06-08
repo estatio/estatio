@@ -476,8 +476,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             // transitions
             List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            //REVIEW: where do 2 *extra* transitions come from?
-            assertThat(transitions).hasSize(5);
+            assertThat(transitions).hasSize(3);
 
             assertTransition(transitions.get(0), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, null);
 
@@ -501,7 +500,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions).hasSize(5);
+            assertThat(transitions).hasSize(3);
             final IncomingInvoiceApprovalStateTransition transition1 = transitions.get(0);
 
             // when
@@ -524,7 +523,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions).hasSize(6);
+            assertThat(transitions).hasSize(4);
 
             IncomingInvoiceApprovalStateTransition completedTransition =
                     incomingInvoiceStateTransitionRepository.findByDomainObjectAndCompleted(invoiceCreated, true);
@@ -554,7 +553,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
-            assertThat(transitions).hasSize(7);
+            assertThat(transitions).hasSize(5);
             assertThat(stateTransitionService.currentStateOf(invoiceCreated, IncomingInvoiceApprovalStateTransition.class))
                     .isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 

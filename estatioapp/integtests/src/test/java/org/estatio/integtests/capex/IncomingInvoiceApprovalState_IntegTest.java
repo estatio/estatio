@@ -159,8 +159,9 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertState(incomingInvoice, NEW);
 
         final List<IncomingInvoiceApprovalStateTransition> transitions = findTransitions(this.incomingInvoice);
-        assertThat(transitions.size()).isEqualTo(1);
-        assertTransition(transitions.get(0), null, INSTANTIATE, NEW);
+        assertThat(transitions.size()).isEqualTo(2);
+        assertTransition(transitions.get(0), NEW, COMPLETE_CLASSIFICATION, null);
+        assertTransition(transitions.get(1), null, INSTANTIATE, NEW);
 
     }
 
@@ -173,7 +174,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertState(incomingInvoice, NEW);
 
         // when
-        wrap(incomingInvoice).changeBankAccount(bankAccount);
+        wrap(mixin(IncomingInvoice._changeBankAccount.class, incomingInvoice)).act(bankAccount, null);
         transactionService.nextTransaction();
 
         // then

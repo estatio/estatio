@@ -8,7 +8,6 @@ import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -110,9 +109,8 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             switch (transitionType) {
 
             case INSTANTIATE:
-                if (incomingInvoice.classificationComplete()){
-                    stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
-                }
+                // attempt to transition; but there's a guard so may not necessarily (if not classificationComplete)
+                stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
                 break;
             case COMPLETE_CLASSIFICATION:
                 break;
@@ -136,15 +134,6 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         }
     }
 
-    @Programmatic
-    @com.google.common.eventbus.Subscribe
-    @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(IncomingInvoice.ChangeEvent ev) {
-        IncomingInvoice incomingInvoice = ev.getSource();
-        if (ev.getPhase()== AbstractInteractionEvent.Phase.EXECUTED && incomingInvoice.classificationComplete()){
-            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
-        }
-    }
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;

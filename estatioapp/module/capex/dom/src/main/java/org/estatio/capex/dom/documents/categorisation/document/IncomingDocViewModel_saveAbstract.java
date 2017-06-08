@@ -51,7 +51,7 @@ public abstract class IncomingDocViewModel_saveAbstract<
         final T domainObject = doCreate();
 
         IncomingDocumentCategorisationStateTransition transition =
-                triggerStateTransition(comment);
+                trigger(comment);
 
         this.viewModel.setDomainObject(domainObject);
 
@@ -73,7 +73,7 @@ public abstract class IncomingDocViewModel_saveAbstract<
     }
 
     public boolean hideAct() {
-        return cannotTriggerStateTransition();
+        return cannotTransition();
     }
 
     public String disableAct(){

@@ -34,18 +34,18 @@ public enum BankAccountVerificationStateTransitionType
     INSTANTIATE(
             (BankAccountVerificationState)null,
             BankAccountVerificationState.NOT_VERIFIED,
-            TaskAssignmentStrategy.Util.none(),
-            StateTransitionStrategy.Util.none() // don't automatically create pending transition to next state; this will be done only on request (by StateTransitionService#createPendingTransition)
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none()
+            // don't automatically create pending transition to next state; this will be done only on request (by StateTransitionService#createPendingTransition)
     ),
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
-            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER), StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)
     ),
     CANCEL(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.CANCELLED,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.none()
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none()
     ),
     RESET(
             Arrays.asList(
@@ -54,7 +54,7 @@ public enum BankAccountVerificationStateTransitionType
                     BankAccountVerificationState.CANCELLED
             ),
             BankAccountVerificationState.NOT_VERIFIED,
-            TaskAssignmentStrategy.Util.none(), StateTransitionStrategy.Util.next()
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.none()
     );
 
     private final List<BankAccountVerificationState> fromStates;
@@ -65,8 +65,8 @@ public enum BankAccountVerificationStateTransitionType
     BankAccountVerificationStateTransitionType(
             final List<BankAccountVerificationState> fromState,
             final BankAccountVerificationState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
@@ -76,10 +76,10 @@ public enum BankAccountVerificationStateTransitionType
     BankAccountVerificationStateTransitionType(
             final BankAccountVerificationState fromState,
             final BankAccountVerificationState toState,
-            final TaskAssignmentStrategy taskAssignmentStrategy,
-            final StateTransitionStrategy stateTransitionStrategy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, taskAssignmentStrategy,
-                stateTransitionStrategy
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy) {
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+                taskAssignmentStrategy
         );
     }
 
@@ -109,20 +109,6 @@ public enum BankAccountVerificationStateTransitionType
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
-    @Override
-    public boolean canApply(
-            final BankAccount domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // can never apply the initial pseudo approval
-        return getFromStates() != null;
-    }
-
-    @Override
-    public void applyTo(
-            final BankAccount domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        // nothing to do....
-    }
 
 
     @Override
