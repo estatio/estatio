@@ -24,12 +24,14 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -61,7 +63,9 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -219,8 +223,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return null;
     }
 
-
-
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
@@ -320,6 +322,10 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return this;
     }
 
+    public boolean hideVerify(){
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
+    }
+
     // //////////////////////////////////////
 
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -334,15 +340,25 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return getInvoice().isImmutable() ? "Cannot change invoice" : null;
     }
 
+    @Getter @Setter @Column(name = "taxRateId", allowsNull = "true")
+    private TaxRate taxRate;
+
+    public BigDecimal getVatPercentage() {
+        if (getTaxRate() != null) {
+            return getTaxRate().getPercentage();
+        }
+        return null;
+    }
+
     @Programmatic
     private void calculateTax() {
-        BigDecimal percentage = null;
-        if (getTax() != null) {
-            percentage = tax.percentageFor(getDueDate());
-        }
+        if(getTax() != null && getTaxRate() == null)
+            setTaxRate(tax.taxRateFor(ObjectUtils.firstNonNull(getEffectiveEndDate(), getEndDate(), getDueDate(), getInvoice().getDueDate())));
+        BigDecimal percentage = getVatPercentage();
         setVatAmount(vatFromNet(getNetAmount(), percentage));
         setGrossAmount(grossFromNet(getNetAmount(), percentage));
     }
+
 
     private BigDecimal vatFromNet(final BigDecimal net, final BigDecimal percentage) {
         if (net == null || percentage == null) {
