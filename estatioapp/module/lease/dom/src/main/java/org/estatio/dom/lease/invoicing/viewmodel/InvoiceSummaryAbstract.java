@@ -47,6 +47,17 @@ import org.estatio.dom.roles.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 
+    public Object verifyAll() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.verify();
+        }
+        return this;
+    }
+
+    public boolean hideVerifyAll(){
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+    }
+
     public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
             mixin(InvoiceForLease._approve.class, invoice).doApprove();
@@ -149,6 +160,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
 
     @Inject
     TitleService titleService;
+
 
 
 }

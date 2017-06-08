@@ -46,6 +46,7 @@ import org.estatio.dom.lease.LeaseForTesting;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -59,6 +60,7 @@ public class InvoiceItem_Test {
             newPojoTester()
                     .withFixture(pojos(Charge.class))
                     .withFixture(pojos(Tax.class))
+                    .withFixture(pojos(TaxRate.class))
                     .withFixture(pojos(Invoice.class, InvoiceForTesting.class))
                     .withFixture(pojos(Lease.class, LeaseForTesting.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
@@ -147,13 +149,17 @@ public class InvoiceItem_Test {
         private InvoiceItem invoiceItem;
         private LocalDate date = new LocalDate(2014,1,1);
 
+        private TaxRate taxRate;
 
         @Before
         public void setup() {
+            taxRate = new TaxRate();
+            taxRate.setPercentage(new BigDecimal("17.5"));
+
             context.checking(new Expectations() {
                 {
-                    allowing(mockTax).percentageFor(with(anyOf(aNull(LocalDate.class),any(LocalDate.class))));
-                    will(returnValue(new BigDecimal("17.5")));
+                    allowing(mockTax).taxRateFor(with(anyOf(aNull(LocalDate.class),any(LocalDate.class))));
+                    will(returnValue(taxRate));
                 }
             });
             invoiceItem = new InvoiceItem(){
@@ -162,6 +168,7 @@ public class InvoiceItem_Test {
                 }
             };
             invoiceItem.setTax(mockTax);
+            invoiceItem.setInvoice(new InvoiceForLease());
 
         }
 

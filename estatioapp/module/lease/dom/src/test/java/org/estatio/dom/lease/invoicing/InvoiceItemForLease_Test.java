@@ -55,6 +55,7 @@ InvoiceItemForLease_Test {
         public void test() {
             newPojoTester()
                     .withFixture(pojos(Tax.class))
+                    .withFixture(pojos(TaxRate.class))
                     .withFixture(pojos(Charge.class))
                     .withFixture(pojos(Invoice.class, InvoiceForTesting.class))
                     .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
@@ -82,20 +83,23 @@ InvoiceItemForLease_Test {
         @Before
         public void setup() {
             charge = new Charge();
-            tax = new Tax();
-            tax.taxRateRepository = mockTaxRateRepository;
-
             rate = new TaxRate();
             rate.setPercentage(BigDecimal.valueOf(21));
 
-            item = new InvoiceItemForLease();
+            tax = new Tax(){
+                @Override public TaxRate taxRateFor(final LocalDate date) {
+                    return rate;
+                }
+            };
 
+            item = new InvoiceItemForLease();
             item.setCharge(charge);
             item.setTax(tax);
             item.setDueDate(new LocalDate(2012, 1, 1));
             item.setNetAmount(BigDecimal.ZERO);
             item.setVatAmount(BigDecimal.ZERO);
             item.setGrossAmount(BigDecimal.ZERO);
+            item.setInvoice(new InvoiceForLease());
         }
 
         @Test

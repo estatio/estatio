@@ -28,8 +28,8 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath"/>
+                                <ns2:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -84,8 +84,10 @@
         <col span="3">
             <ns2:fieldSet name="Amounts" id="amounts">
                 <ns2:property id="netAmount"/>
+                <ns2:property id="tax" hidden="ALL_TABLES"/>
+                <ns2:property id="taxRate" hidden="ALL_TABLES"/>
+                <ns2:property id="vatPercentage"/>
                 <ns2:property id="vatAmount"/>
-                <ns2:property id="tax"/>
                 <ns2:property id="grossAmount"/>
             </ns2:fieldSet>
         </col>

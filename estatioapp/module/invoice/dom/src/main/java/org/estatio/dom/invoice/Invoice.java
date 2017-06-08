@@ -73,6 +73,7 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -264,7 +265,6 @@ public abstract class Invoice<T extends Invoice<T>>
 
     }
 
-
     @Inject protected
     InvoiceAttributeRepository invoiceAttributeRepository;
 
@@ -449,6 +449,17 @@ public abstract class Invoice<T extends Invoice<T>>
             return com.google.common.base.Predicates.not(Invoice.Predicates.isChangeable());
         }
 
+    }
+
+    public Invoice verify() {
+        for (InvoiceItem ii : getItems()){
+            ii.verify();
+        }
+        return this;
+    }
+
+    public boolean hideVerify(){
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
     public static class InvoiceNumberType {

@@ -22,6 +22,7 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -56,10 +57,11 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract {
         dto.setChargeGroupName(group.getName());
 
         final Tax tax = item.getTax();
+        final TaxRate rate = item.getTaxRate();
         dto.setTaxReference(tax.getReference());
         dto.setTaxName(tax.getName());
         dto.setTaxDescription(tax.getDescription());
-        dto.setTaxExternalReference(tax.getExternalReference());
+        dto.setTaxExternalReference(rate == null || rate.getExternalReference() == null ? tax.getExternalReference() : rate.getExternalReference());
 
         dto.setNetAmount(item.getNetAmount());
         dto.setGrossAmount(item.getGrossAmount());
