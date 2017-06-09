@@ -50,7 +50,8 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             final String taxReference,
             final String chargeGroupReference,
             final String chargeGroupName,
-            final String applicability
+            final String applicability,
+            final String parent
     ){
         this();
         this.atPath = atPath;
@@ -61,6 +62,7 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
         this.chargeGroupReference = chargeGroupReference;
         this.chargeGroupName = chargeGroupName;
         this.applicability = applicability;
+        this.parent = parent;
     }
 
     @Getter @Setter
@@ -93,6 +95,9 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String applicability;
 
+    @Getter @Setter
+    private String parent;
+
     @Programmatic
     @Override
     public List<Object> handleRow(FixtureScript.ExecutionContext executionContext, ExcelFixture excelFixture, Object previousRow) {
@@ -103,16 +108,34 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
     @Programmatic
     public List<Object> importData(Object previousRow) {
 
-        final ChargeGroup chargeGroup = findOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
+        ChargeGroup chargeGroup = null;
+
+        if (getChargeGroupReference()!=null) {
+            chargeGroup = findOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
+        }
 
         final ApplicationTenancy applicationTenancy = securityApplicationTenancyRepository.findByPath(atPath);
 
         final Applicability applicability = this.applicability != null ? Applicability.valueOf(this.applicability) : Applicability.IN_AND_OUT;
 
-        final Tax tax = taxRepository.findOrCreate(taxReference, taxReference, applicationTenancy);
+        Tax tax = null;
+        if (getTaxReference()!=null) {
+            tax = taxRepository.findOrCreate(taxReference, taxReference, applicationTenancy);
+        }
+
+        if (getReference()==null){
+            setReference(getName());
+        }
 
         final Charge charge = wrap(chargeMenu)
                 .newCharge(applicationTenancy, reference, name, description, tax, chargeGroup, applicability);
+
+        if (getParent()!=null){
+            Charge parentCharge = chargeRepository.findByReference(getParent());
+            if (parentCharge!=null){
+                charge.setParent(parentCharge);
+            }
+        }
 
         charge.setExternalReference(externalReference);
         charge.setSortOrder(sortOrder);

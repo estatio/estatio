@@ -68,6 +68,11 @@ public class ChargeImportManager {
             @ParameterLayout(named = "Excel spreadsheet") final Blob spreadsheet) {
         List<ChargeImport> lineItems =
                 excelService.fromExcel(spreadsheet, ChargeImport.class, ChargeImport.class.getSimpleName());
+        ChargeImport previous = null;
+        for (ChargeImport lineItem : lineItems){
+            lineItem.importData(previous);
+            previous = lineItem;
+        }
         return lineItems;
     }
     //endregion

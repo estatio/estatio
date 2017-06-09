@@ -42,6 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
+import org.estatio.charge.dom.impmgr.ChargeImportManager;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.dom.charge.Applicability;
@@ -141,6 +142,10 @@ public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
 
 
     // //////////////////////////////////////
+
+    public ChargeImportManager uploadCharges(){
+        return new ChargeImportManager();
+    }
 
 
     @Inject
