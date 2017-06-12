@@ -1,20 +1,31 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.estatio.dom.agreement.commchantype.AgreementRoleCommunicationChannelTypeServiceSupportAbstract;
+import org.estatio.dom.agreement.commchantype.IAgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.type.IAgreementType;
 
-@AllArgsConstructor
 public enum AgreementRoleCommunicationChannelTypeEnum implements IAgreementRoleCommunicationChannelType {
-    INVOICE_ADDRESS("Invoice Address"),
-    ADMINISTRATION_ADDRESS("Administration Address");
+    INVOICE_ADDRESS,
+    ADMINISTRATION_ADDRESS;
 
-    @Getter
-    private String title;
+    @Override
+    public IAgreementType getAppliesTo() {
+        return LeaseAgreementTypeEnum.LEASE;
+    }
 
     public boolean equalTo(final IAgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType) {
         return getTitle().equals(agreementRoleCommunicationChannelType.getTitle());
+    }
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class SupportService
+            extends AgreementRoleCommunicationChannelTypeServiceSupportAbstract<AgreementRoleCommunicationChannelTypeEnum> {
+        public SupportService() {
+            super(AgreementRoleCommunicationChannelTypeEnum.class);
+        }
     }
 
 }

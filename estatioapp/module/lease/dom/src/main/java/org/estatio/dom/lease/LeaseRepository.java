@@ -20,9 +20,7 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -42,7 +40,6 @@ import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
@@ -58,24 +55,6 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public LeaseRepository() {
         super(LeaseRepository.class, Lease.class);
     }
-
-    @PostConstruct
-    @Programmatic
-    public void init(final Map<String, String> properties) {
-        super.init(properties);
-
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseAgreementTypeEnum.LEASE);
-
-
-        for (IAgreementRoleCommunicationChannelType IAgreementRoleCommunicationChannelType : AgreementRoleCommunicationChannelTypeEnum
-                .values()){
-            agreementRoleCommunicationChannelTypeRepository.findOrCreate(IAgreementRoleCommunicationChannelType, agreementType);
-        }
-
-
-    }
-
-
 
 
     @Programmatic

@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.commchantype.IAgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.agreement.type.IAgreementType;

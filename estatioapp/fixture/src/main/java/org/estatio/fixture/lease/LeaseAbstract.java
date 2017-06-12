@@ -43,7 +43,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.commchantype.IAgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
