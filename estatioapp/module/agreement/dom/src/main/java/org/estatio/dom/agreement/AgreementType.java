@@ -39,6 +39,8 @@ import org.incode.module.base.dom.with.WithTitleComparable;
 import org.incode.module.base.dom.with.WithTitleUnique;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.role.AgreementRoleType;
+import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -74,6 +76,14 @@ public class AgreementType
 
     public AgreementType() {
         super("title");
+    }
+
+    /**
+     * For testing purposes only.
+     */
+    public AgreementType(AgreementRoleTypeRepository agreementRoleTypeRepository) {
+        this();
+        this.agreementRoleTypeRepository = agreementRoleTypeRepository;
     }
 
     public String title() {

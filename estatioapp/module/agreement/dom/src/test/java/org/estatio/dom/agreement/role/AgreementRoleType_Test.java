@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.agreement.role;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -30,6 +30,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.dom.agreement.AgreementType;
 
 public class AgreementRoleType_Test {
 
@@ -47,8 +49,7 @@ public class AgreementRoleType_Test {
 
         @Before
         public void setUp() throws Exception {
-            at = new AgreementType();
-            at.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            at = new AgreementType(mockAgreementRoleTypeRepository);
 
             art = new AgreementRoleType();
             art.setAppliesTo(at);

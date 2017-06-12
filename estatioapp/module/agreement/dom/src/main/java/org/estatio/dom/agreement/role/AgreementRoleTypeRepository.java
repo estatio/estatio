@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.agreement.role;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -28,7 +28,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.role.IAgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.AgreementTypeRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

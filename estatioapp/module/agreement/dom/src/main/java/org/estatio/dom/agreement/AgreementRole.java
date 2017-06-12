@@ -64,6 +64,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.roles.EstatioRole;

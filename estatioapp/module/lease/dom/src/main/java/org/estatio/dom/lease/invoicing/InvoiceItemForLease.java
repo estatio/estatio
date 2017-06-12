@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.Invoice;

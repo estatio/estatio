@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;

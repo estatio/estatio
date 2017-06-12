@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.agreement.role;
 
 import java.util.List;
 
@@ -30,6 +30,8 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
+import org.estatio.dom.agreement.AgreementType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

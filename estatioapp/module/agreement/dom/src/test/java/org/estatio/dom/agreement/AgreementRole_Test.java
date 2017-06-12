@@ -34,6 +34,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

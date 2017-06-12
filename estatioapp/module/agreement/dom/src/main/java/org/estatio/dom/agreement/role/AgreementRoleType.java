@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.agreement.role;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithTitleComparable;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.agreement.role.IAgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -55,23 +55,23 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByTitle", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "FROM org.estatio.dom.agreement.role.AgreementRoleType "
                         + "WHERE title == :title "),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "FROM org.estatio.dom.agreement.role.AgreementRoleType "
                         + "WHERE appliesTo == :agreementType "),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementTypeAndTitle", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "FROM org.estatio.dom.agreement.role.AgreementRoleType "
                         + "WHERE appliesTo == :agreementType && title == :title")
 })
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.agreement.AgreementRoleType"
+        objectType = "org.estatio.dom.agreement.AgreementRoleType" // backward compatibility
 )
 public class AgreementRoleType
         extends UdoDomainObject2<AgreementRoleType>
