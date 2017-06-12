@@ -14,4 +14,11 @@ public interface IPartyRoleType {
         return  repository.findOrCreate(this);
     }
 
+
+    class Meta {
+        private Meta(){}
+        public final static int MAX_LEN = 30;
+    }
+
+
 }

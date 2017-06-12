@@ -38,7 +38,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -91,7 +91,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
                     .create(invoice,
                             IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
                             IncomingInvoiceApprovalState.NEW,
-                            EstatioRole.COUNTRY_DIRECTOR,
+                            PartyRoleTypeEnum.COUNTRY_DIRECTOR,
                             Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
 
             // Then

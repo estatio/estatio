@@ -52,6 +52,7 @@ public class EstatioAppHomePage {
     @Collection(notPersisted = true)
     @CollectionLayout(paged = 20)
     public List<Task> getMyTasks() {
+
         return taskRepository.findTasksIncomplete();
     }
 

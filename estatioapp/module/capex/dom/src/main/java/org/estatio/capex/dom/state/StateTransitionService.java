@@ -14,7 +14,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionService {
@@ -267,7 +267,7 @@ public class StateTransitionService {
             final S currentState = currentStateOf(domainObject, requiredTransitionType);
 
             final TaskAssignmentStrategy taskAssignmentStrategy = requiredTransitionType.getTaskAssignmentStrategy();
-            EstatioRole assignToIfAny = null;
+            IPartyRoleType assignToIfAny = null;
             if (taskAssignmentStrategy != null) {
                 assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, requiredTransitionType, serviceRegistry2);
             }
@@ -368,7 +368,7 @@ public class StateTransitionService {
 
         final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
                 transitionType.getTaskAssignmentStrategy();
-        EstatioRole assignToIfAny = null;
+        IPartyRoleType assignToIfAny = null;
         if(taskAssignmentStrategy != null) {
             assignToIfAny = taskAssignmentStrategy
                     .getAssignTo(domainObject, transitionType, serviceRegistry2);

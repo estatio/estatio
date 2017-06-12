@@ -16,7 +16,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionRepositoryGeneric {
@@ -107,7 +108,7 @@ public class StateTransitionRepositoryGeneric {
             final DO domainObject,
             final STT transitionType,
             final S fromState,
-            final EstatioRole taskAssignToIfAny,
+            final IPartyRoleType taskAssignToIfAny,
             final String taskDescription,
             final Class<ST> stateTransitionClass) {
 
@@ -125,7 +126,7 @@ public class StateTransitionRepositoryGeneric {
             S extends State<S>
             >
     Task createTaskIfRequired(
-            final EstatioRole taskAssignToIfAny,
+            final IPartyRoleType taskAssignToIfAny,
             final String taskDescription,
             final Class<ST> stateTransitionClass) {
         if (taskAssignToIfAny == null) {
@@ -133,7 +134,8 @@ public class StateTransitionRepositoryGeneric {
         }
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
         final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
-        final Task task = new Task(taskAssignToIfAny, taskDescription, createdOn, transitionObjectType);
+        final Task task = new Task(taskAssignToIfAny, taskDescription, createdOn, transitionObjectType,
+                partyRoleTypeRepository);
         repositoryService.persist(task);
         return task;
     }
@@ -180,6 +182,9 @@ public class StateTransitionRepositoryGeneric {
         }
         transactionService.flushTransaction();
     }
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
     protected MetaModelService3 metaModelService3;

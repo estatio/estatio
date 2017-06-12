@@ -17,7 +17,8 @@ import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
 
@@ -40,7 +41,7 @@ public enum PaymentApprovalStateTransitionType
             PaymentApprovalState.NEW,
             PaymentApprovalState.APPROVED_BY_TREASURER,
             StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER)
     ),
     CANCEL(
             PaymentApprovalState.NEW,
@@ -105,7 +106,7 @@ public enum PaymentApprovalStateTransitionType
     public PaymentApprovalStateTransition createTransition(
             final Payment domainObject,
             final PaymentApprovalState fromState,
-            final EstatioRole assignToIfAny,
+            final IPartyRoleType assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final PaymentApprovalStateTransition.Repository repository =

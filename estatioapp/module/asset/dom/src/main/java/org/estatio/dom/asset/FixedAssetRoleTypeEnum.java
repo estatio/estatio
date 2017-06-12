@@ -66,11 +66,6 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
         };
     }
 
-    public static class Meta {
-        private Meta(){}
-
-        public final static int MAX_LEN = 30;
-    }
 
 
 

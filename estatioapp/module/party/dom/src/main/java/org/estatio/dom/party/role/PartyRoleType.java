@@ -70,7 +70,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.role.PartyRoleType "
                         + "WHERE key == :key") })
-@DomainObject()
+@DomainObject(bounded = true)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class PartyRoleType
         extends UdoDomainObject2<PartyRoleType>

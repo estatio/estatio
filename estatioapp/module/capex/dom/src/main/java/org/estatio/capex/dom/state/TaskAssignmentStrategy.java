@@ -3,7 +3,7 @@ package org.estatio.capex.dom.state;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 /**
  * Define the mechanism to determine which role (if anyone) to assign a {@link Task} associated with a particular
@@ -21,12 +21,14 @@ public interface TaskAssignmentStrategy<
         S extends State<S>
         >  {
 
-    EstatioRole getAssignTo(
+    IPartyRoleType getAssignTo(
             final DO domainObject,
             final STT pendingTransitionType,
             final ServiceRegistry2 serviceRegistry2);
 
-    public static class Util {
+
+
+    class Util {
         private Util() {}
         public static <
                 DO,
@@ -41,8 +43,8 @@ public interface TaskAssignmentStrategy<
                 ST extends StateTransition<DO, ST, STT, S>,
                 STT extends StateTransitionType<DO, ST, STT, S>,
                 S extends State<S>
-                > TaskAssignmentStrategy<DO,ST,STT,S> to(final EstatioRole estatioRole) {
-            return (domainObject, completedTransitionType, serviceRegistry2) -> estatioRole;
+                > TaskAssignmentStrategy<DO,ST,STT,S> to(final IPartyRoleType roleType) {
+            return (domainObject, completedTransitionType, serviceRegistry2) -> roleType;
         }
     }
 

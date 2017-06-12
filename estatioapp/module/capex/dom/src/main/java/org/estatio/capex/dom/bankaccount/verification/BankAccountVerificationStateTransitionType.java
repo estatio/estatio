@@ -18,7 +18,8 @@ import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
 
@@ -40,7 +41,7 @@ public enum BankAccountVerificationStateTransitionType
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
-            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.to(EstatioRole.TREASURER)
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER)
     ),
     CANCEL(
             BankAccountVerificationState.NOT_VERIFIED,
@@ -115,7 +116,7 @@ public enum BankAccountVerificationStateTransitionType
     public BankAccountVerificationStateTransition createTransition(
             final BankAccount domainObject,
             final BankAccountVerificationState fromState,
-            final EstatioRole assignToIfAny,
+            final IPartyRoleType assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final BankAccountVerificationStateTransition.Repository repository =

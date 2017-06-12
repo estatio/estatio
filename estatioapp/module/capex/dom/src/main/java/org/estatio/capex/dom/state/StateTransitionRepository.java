@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 public interface StateTransitionRepository<
         DO,
@@ -34,7 +34,7 @@ public interface StateTransitionRepository<
             final DO domainObject,
             final STT transitionType,
             final S fromState,
-            final EstatioRole taskAssignToIfAny,
+            final IPartyRoleType taskAssignToIfAny,
             final String taskDescription);
 
     /**

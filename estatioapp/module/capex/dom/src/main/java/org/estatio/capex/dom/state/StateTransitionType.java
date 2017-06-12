@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.roles.EstatioRole;
 
 /**
@@ -79,7 +80,7 @@ public interface StateTransitionType<
     ST createTransition(
             final DO domainObject,
             final S fromState,
-            final EstatioRole assignToIfAny,
+            final IPartyRoleType assignToIfAny,
             final ServiceRegistry2 serviceRegistry2);
 
     /**

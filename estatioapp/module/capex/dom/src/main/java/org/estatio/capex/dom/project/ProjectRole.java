@@ -45,6 +45,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -90,7 +91,7 @@ public class ProjectRole extends UdoDomainObject<ProjectRole>  {
 	@Getter @Setter
 	private Party party;
 
-	@Column(allowsNull = "false", length = ProjectRoleTypeEnum.Meta.MAX_LEN)
+	@Column(allowsNull = "false", length = IPartyRoleType.Meta.MAX_LEN)
 	@Getter @Setter
 	private ProjectRoleTypeEnum type;
 

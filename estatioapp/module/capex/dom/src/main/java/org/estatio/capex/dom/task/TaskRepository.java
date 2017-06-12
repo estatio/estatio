@@ -16,7 +16,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 /***
  * There is no "create" method here because tasks are only ever created in the context of state transitions.
@@ -35,26 +37,33 @@ public class TaskRepository {
     @Programmatic
     public List<Task> findTasksIncomplete() {
         // REVIEW: this is rather naive query, but will do for prototyping at least
-        List<Task> tasks = Lists.newArrayList();
-        final EstatioRole[] estatioRoles = EstatioRole.values();
-        for (EstatioRole estatioRole : estatioRoles) {
-            appendTasksIncompleteFor(estatioRole, tasks);
+        final List<Task> tasks = Lists.newArrayList();
+
+        for (PartyRoleType partyRoleType : partyRoleTypeRepository.listAll()) {
+            appendTasksIncompleteFor(partyRoleType, tasks);
         }
+
         Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
         return tasks;
     }
 
     @Programmatic
-    public List<Task> findTasksIncompleteFor(final EstatioRole estatioRole) {
+    public List<Task> findTasksIncompleteFor(final IPartyRoleType iPartyRoleType) {
+        final PartyRoleType partyRoleType = iPartyRoleType.findUsing(partyRoleTypeRepository);
+        return findTasksIncompleteFor(partyRoleType);
+    }
+
+    @Programmatic
+    public List<Task> findTasksIncompleteFor(final PartyRoleType partyRoleType) {
         List<Task> tasks = Lists.newArrayList();
-        appendTasksIncompleteFor(estatioRole, tasks);
+        appendTasksIncompleteFor(partyRoleType, tasks);
         Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
         return tasks;
     }
 
     @Programmatic
-    private List<Task> appendTasksIncompleteFor(final EstatioRole estatioRole, List<Task> results) {
-        final List<Task> tasksForRole = findByAssignedToIncomplete(estatioRole);
+    private List<Task> appendTasksIncompleteFor(final PartyRoleType partyRoleType, List<Task> results) {
+        final List<Task> tasksForRole = findByAssignedToIncomplete(partyRoleType);
         results.addAll(tasksForRole);
         return results;
     }
@@ -76,7 +85,7 @@ public class TaskRepository {
 
 
     @Programmatic
-    public List<Task> findByAssignedToIncomplete(final EstatioRole assignedTo) {
+    public List<Task> findByAssignedToIncomplete(final PartyRoleType assignedTo) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Task.class,
@@ -86,5 +95,9 @@ public class TaskRepository {
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
 
 }

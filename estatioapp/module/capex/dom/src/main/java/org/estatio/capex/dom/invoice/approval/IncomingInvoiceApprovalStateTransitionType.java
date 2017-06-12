@@ -12,13 +12,16 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
+import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
 
@@ -39,7 +42,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     COMPLETE_CLASSIFICATION(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.CLASSIFIED,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(EstatioRole.USER)
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER)
     ) {
         @Override
         public boolean isGuardSatisified(
@@ -51,7 +54,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(EstatioRole.PROJECT_MANAGER)
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(ProjectRoleTypeEnum.PROJECT_MANAGER)
     ) {
         @Override
         public boolean isMatch(
@@ -64,7 +67,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.ASSET_MANAGER)
+            TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.ASSET_MANAGER)
     ) {
         @Override
         public boolean isMatch(
@@ -78,7 +81,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_ADMINISTRATOR,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_ADMINISTRATOR)
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR)
     ) {
         @Override
         public boolean isMatch(
@@ -94,7 +97,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_DIRECTOR)
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR)
     ),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
@@ -171,7 +174,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     public IncomingInvoiceApprovalStateTransition createTransition(
             final IncomingInvoice domainObject,
             final IncomingInvoiceApprovalState fromState,
-            final EstatioRole assignToIfAny,
+            final IPartyRoleType assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingInvoiceApprovalStateTransition.Repository repository =

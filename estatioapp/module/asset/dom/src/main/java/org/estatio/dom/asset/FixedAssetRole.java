@@ -52,6 +52,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -146,7 +147,7 @@ public class FixedAssetRole
     // //////////////////////////////////////
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = FixedAssetRoleTypeEnum.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = IPartyRoleType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private FixedAssetRoleTypeEnum type;
