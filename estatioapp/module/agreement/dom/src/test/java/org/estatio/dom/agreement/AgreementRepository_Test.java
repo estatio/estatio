@@ -29,6 +29,7 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.dom.agreement.role.AgreementRoleType;
+import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

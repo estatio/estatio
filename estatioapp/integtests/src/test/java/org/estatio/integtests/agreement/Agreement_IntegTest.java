@@ -14,7 +14,7 @@ import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.AgreementTypeEnum;
 import org.estatio.dom.party.PartyRepository;

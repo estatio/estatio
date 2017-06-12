@@ -28,6 +28,9 @@ import org.apache.isis.applib.query.Query;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
+import org.estatio.dom.agreement.type.AgreementType;
+import org.estatio.dom.agreement.type.AgreementTypeRepository;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementTypeRepository_Test {

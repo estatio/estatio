@@ -31,7 +31,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
-import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.type.AgreementType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

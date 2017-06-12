@@ -3,7 +3,7 @@
  * {@link org.estatio.dom.party.Party party} playing various {@link org.estatio.dom.agreement.AgreementRole role}s.
  * 
  * <p>
- * Agreement itself is abstract, with its associated {@link org.estatio.dom.agreement.AgreementType type} acting 
+ * Agreement itself is abstract, with its associated {@link org.estatio.dom.agreement.type.AgreementType type} acting
  * as a powertype to the subclass.  The type subtypes are <tt>Lease</tt> (representing the occupancy of a unit in 
  * a property) and <tt>BankMandate</tt> (a mechanism by which one party pays another for services).  Thus, two parties 
  * will often have two related but independent {@link org.estatio.dom.agreement.Agreement}s, one being a 

@@ -25,6 +25,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.dom.agreement.type.AgreementType;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgreementRoleCommunicationChannelType_Test {

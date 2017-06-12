@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.agreement.type;
 
 import java.util.List;
 
@@ -39,6 +39,8 @@ import org.incode.module.base.dom.with.WithTitleComparable;
 import org.incode.module.base.dom.with.WithTitleUnique;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
@@ -62,13 +64,13 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByTitle", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.agreement.AgreementType "
+                        + "FROM org.estatio.dom.agreement.type.AgreementType "
                         + "WHERE title == :title")
 })
 @DomainObject(
         editing = Editing.DISABLED,
         bounded = true,
-        objectType = "org.estatio.dom.agreement.AgreementType"
+        objectType = "org.estatio.dom.agreement.AgreementType" // backward compatibility
 )
 public class AgreementType
         extends UdoDomainObject2<AgreementType>

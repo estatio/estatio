@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.role.AgreementRoleType;
+import org.estatio.dom.agreement.type.AgreementType;
+import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.party.Party;
 
 @DomainService(

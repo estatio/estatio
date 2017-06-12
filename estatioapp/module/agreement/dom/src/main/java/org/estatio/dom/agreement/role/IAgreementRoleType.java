@@ -1,6 +1,6 @@
 package org.estatio.dom.agreement.role;
 
-import org.estatio.dom.agreement.IAgreementType;
+import org.estatio.dom.agreement.type.IAgreementType;
 
 public interface IAgreementRoleType {
     String getTitle();

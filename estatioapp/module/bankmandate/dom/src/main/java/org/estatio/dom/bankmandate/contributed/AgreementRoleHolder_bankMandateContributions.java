@@ -41,8 +41,8 @@ import org.estatio.dom.UdoDomainService;
 import org.incode.module.base.dom.with.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.agreement.type.AgreementType;
+import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 

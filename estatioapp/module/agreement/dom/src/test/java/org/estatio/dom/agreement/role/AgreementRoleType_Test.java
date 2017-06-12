@@ -31,7 +31,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.type.AgreementType;
 
 public class AgreementRoleType_Test {
 

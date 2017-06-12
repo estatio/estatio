@@ -24,6 +24,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.dom.agreement.type.AgreementType;
+
 public class AgreementType_Test extends AbstractBeanPropertiesTest {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {

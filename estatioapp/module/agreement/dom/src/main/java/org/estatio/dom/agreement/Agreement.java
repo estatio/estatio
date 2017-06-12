@@ -69,6 +69,8 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.role.IAgreementRoleType;
+import org.estatio.dom.agreement.type.AgreementType;
+import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

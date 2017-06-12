@@ -19,7 +19,7 @@
 package org.estatio.dom.bankmandate;
 
 import org.estatio.dom.agreement.role.IAgreementRoleType;
-import org.estatio.dom.agreement.IAgreementType;
+import org.estatio.dom.agreement.type.IAgreementType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
