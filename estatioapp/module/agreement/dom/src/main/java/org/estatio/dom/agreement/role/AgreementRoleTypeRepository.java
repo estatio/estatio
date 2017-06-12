@@ -29,7 +29,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.IAgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 
 @DomainService(
@@ -74,7 +74,7 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         }, AgreementRoleTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
 
-    public AgreementRoleType findOrCreate(final IAgreementRoleType data, final AgreementTypeData appliesTo) {
+    public AgreementRoleType findOrCreate(final IAgreementRoleType data, final IAgreementType appliesTo) {
         final AgreementType agreementType = agreementTypeRepository.find(appliesTo);
         return findOrCreate(data.getTitle(), agreementType);
     }

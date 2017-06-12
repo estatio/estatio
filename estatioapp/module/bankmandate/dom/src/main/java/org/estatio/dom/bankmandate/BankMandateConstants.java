@@ -19,7 +19,7 @@
 package org.estatio.dom.bankmandate;
 
 import org.estatio.dom.agreement.role.IAgreementRoleType;
-import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.IAgreementType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public final class BankMandateConstants {
     private BankMandateConstants() {}
 
     @AllArgsConstructor
-    public enum AgreementType implements AgreementTypeData {
+    public enum AgreementType implements IAgreementType {
         MANDATE("Mandate");
 
         @Getter

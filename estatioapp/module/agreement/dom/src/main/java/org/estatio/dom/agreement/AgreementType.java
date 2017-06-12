@@ -72,7 +72,7 @@ import lombok.Setter;
 )
 public class AgreementType
         extends UdoDomainObject2<AgreementType>
-        implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal, AgreementTypeData {
+        implements WithTitleComparable<AgreementType>, WithTitleUnique, WithApplicationTenancyGlobal, IAgreementType {
 
     public AgreementType() {
         super("title");

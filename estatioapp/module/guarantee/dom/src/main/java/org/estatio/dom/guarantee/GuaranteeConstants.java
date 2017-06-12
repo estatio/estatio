@@ -19,7 +19,7 @@
 package org.estatio.dom.guarantee;
 
 import org.estatio.dom.agreement.role.IAgreementRoleType;
-import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.IAgreementType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public final class GuaranteeConstants {
     }
 
     @AllArgsConstructor
-    public enum AgreementType implements AgreementTypeData {
+    public enum AgreementType implements IAgreementType {
         GUARANTEE("Guarantee");
 
         @Getter

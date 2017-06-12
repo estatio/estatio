@@ -1,6 +1,6 @@
 package org.estatio.dom.agreement.role;
 
-import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.IAgreementType;
 
 public interface IAgreementRoleType {
     String getTitle();
@@ -9,8 +9,8 @@ public interface IAgreementRoleType {
         return repo.find(this);
     }
 
-    default AgreementRoleType findOrCreateUsing(AgreementRoleTypeRepository repository, AgreementTypeData agreementTypeData) {
-        return  repository.findOrCreate(this, agreementTypeData);
+    default AgreementRoleType findOrCreateUsing(AgreementRoleTypeRepository repository, IAgreementType IAgreementType) {
+        return  repository.findOrCreate(this, IAgreementType);
     }
 
 

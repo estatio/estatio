@@ -19,7 +19,7 @@
 package org.estatio.dom.lease;
 
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
-import org.estatio.dom.agreement.AgreementTypeData;
+import org.estatio.dom.agreement.IAgreementType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public final class LeaseConstants {
     private LeaseConstants() {}
 
     @AllArgsConstructor
-    public enum AgreementType implements AgreementTypeData {
+    public enum AgreementType implements IAgreementType {
         LEASE("Lease");
 
         @Getter

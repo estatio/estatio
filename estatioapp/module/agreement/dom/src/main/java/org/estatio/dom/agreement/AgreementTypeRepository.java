@@ -33,7 +33,7 @@ public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<Agree
         super(AgreementTypeRepository.class, AgreementType.class);
     }
 
-    public AgreementType find (final AgreementTypeData data){
+    public AgreementType find (final IAgreementType data){
         return find(data.getTitle());
     }
 
@@ -42,7 +42,7 @@ public class AgreementTypeRepository extends UdoDomainRepositoryAndFactory<Agree
         return firstMatch("findByTitle", "title", title);
     }
 
-    public AgreementType findOrCreate(final AgreementTypeData data) {
+    public AgreementType findOrCreate(final IAgreementType data) {
         return findOrCreate(data.getTitle());
     }
 

@@ -1,5 +1,5 @@
 package org.estatio.dom.agreement;
 
-public interface AgreementTypeData {
+public interface IAgreementType {
     String getTitle();
 }

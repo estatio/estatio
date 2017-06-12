@@ -72,9 +72,9 @@ public class AgreementRoleCommunicationChannelTypeRepository
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findApplicableTo", agreementType);
     }
 
-    public AgreementRoleCommunicationChannelType findOrCreate(final AgreementRoleCommunicationChannelTypeData data, final AgreementTypeData agreementTypeData) {
+    public AgreementRoleCommunicationChannelType findOrCreate(final AgreementRoleCommunicationChannelTypeData data, final IAgreementType IAgreementType) {
         final String title = data.getTitle();
-        final AgreementType agreementType = agreementTypeRepository.find(agreementTypeData);
+        final AgreementType agreementType = agreementTypeRepository.find(IAgreementType);
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
         if (arcct == null) {
             arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);
