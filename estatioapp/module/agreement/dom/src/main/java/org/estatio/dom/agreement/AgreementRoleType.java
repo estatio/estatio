@@ -36,6 +36,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithTitleComparable;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 

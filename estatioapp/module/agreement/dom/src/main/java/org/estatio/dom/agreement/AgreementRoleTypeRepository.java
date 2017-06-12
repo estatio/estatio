@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

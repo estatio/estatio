@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.guarantee;
 
-import org.estatio.dom.agreement.IAgreementRoleType;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 import org.estatio.dom.agreement.AgreementTypeData;
 
 import lombok.AllArgsConstructor;

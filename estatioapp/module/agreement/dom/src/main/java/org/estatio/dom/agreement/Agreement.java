@@ -66,6 +66,7 @@ import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.agreement.IAgreementRoleType;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
