@@ -18,8 +18,7 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
-import org.estatio.dom.agreement.IAgreementType;
+import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,14 +28,14 @@ public final class LeaseConstants {
     private LeaseConstants() {}
 
     @AllArgsConstructor
-    public enum AgreementRoleCommunicationChannelType implements AgreementRoleCommunicationChannelTypeData {
+    public enum AgreementRoleCommunicationChannelType implements IAgreementRoleCommunicationChannelType {
         INVOICE_ADDRESS("Invoice Address"),
         ADMINISTRATION_ADDRESS("Administration Address");
 
         @Getter
         private String title;
 
-        public boolean equalTo(final AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelType){
+        public boolean equalTo(final IAgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType){
             return getTitle().equals(agreementRoleCommunicationChannelType.getTitle());
         }
 

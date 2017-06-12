@@ -41,7 +41,7 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
+import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.IAgreementRoleType;
@@ -68,8 +68,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         for (IAgreementRoleType IAgreementRoleType : AgreementRoleTypeEnum.values()){
             agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
-        for (AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelTypeData : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
-            agreementRoleCommunicationChannelTypeRepository.findOrCreate(agreementRoleCommunicationChannelTypeData, agreementType);
+        for (IAgreementRoleCommunicationChannelType IAgreementRoleCommunicationChannelType : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
+            agreementRoleCommunicationChannelTypeRepository.findOrCreate(IAgreementRoleCommunicationChannelType, agreementType);
         }
     }
 

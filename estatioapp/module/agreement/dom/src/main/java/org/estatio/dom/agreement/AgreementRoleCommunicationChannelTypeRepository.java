@@ -40,7 +40,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
         super(AgreementRoleCommunicationChannelTypeRepository.class, AgreementRoleCommunicationChannelType.class);
     }
 
-    public AgreementRoleCommunicationChannelType find(final AgreementRoleCommunicationChannelTypeData data) {
+    public AgreementRoleCommunicationChannelType find(final IAgreementRoleCommunicationChannelType data) {
         return findByTitle(data.getTitle());
     }
 
@@ -72,7 +72,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
         }, AgreementRoleCommunicationChannelTypeRepository.class, "findApplicableTo", agreementType);
     }
 
-    public AgreementRoleCommunicationChannelType findOrCreate(final AgreementRoleCommunicationChannelTypeData data, final IAgreementType IAgreementType) {
+    public AgreementRoleCommunicationChannelType findOrCreate(final IAgreementRoleCommunicationChannelType data, final IAgreementType IAgreementType) {
         final String title = data.getTitle();
         final AgreementType agreementType = agreementTypeRepository.find(IAgreementType);
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);

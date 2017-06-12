@@ -1,6 +1,6 @@
 package org.estatio.dom.agreement;
 
-public interface AgreementRoleCommunicationChannelTypeData {
+public interface IAgreementRoleCommunicationChannelType {
 
     String getTitle();
 }

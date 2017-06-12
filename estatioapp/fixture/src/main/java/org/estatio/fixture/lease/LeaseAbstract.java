@@ -43,7 +43,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
+import org.estatio.dom.agreement.IAgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
@@ -273,7 +273,7 @@ public abstract class LeaseAbstract extends FixtureScript {
     @Inject
     protected CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
 
-    public void createAddress(Lease lease, AgreementRoleCommunicationChannelTypeData addressType) {
+    public void createAddress(Lease lease, IAgreementRoleCommunicationChannelType addressType) {
         AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.find(
                 AgreementRoleTypeEnum.TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
