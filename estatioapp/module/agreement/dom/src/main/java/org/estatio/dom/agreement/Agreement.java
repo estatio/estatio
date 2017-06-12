@@ -141,7 +141,7 @@ public abstract class Agreement
     protected final String primaryRoleTypeTitle;
     protected final String secondaryRoleTypeTitle;
 
-    public Agreement(final AgreementRoleTypeData primaryRoleType, final AgreementRoleTypeData secondaryRoleType) {
+    public Agreement(final IAgreementRoleType primaryRoleType, final IAgreementRoleType secondaryRoleType) {
         super("type,reference");
         this.primaryRoleTypeTitle = primaryRoleType == null ? null : primaryRoleType.getTitle();
         this.secondaryRoleTypeTitle = secondaryRoleType == null ? null : secondaryRoleType.getTitle();
@@ -428,8 +428,8 @@ public abstract class Agreement
     }
 
     @Programmatic
-    public AgreementRole findRoleWithType(final AgreementRoleTypeData agreementRoleTypeData, final LocalDate date) {
-        return findRoleWithType(agreementRoleTypeRepository.find(agreementRoleTypeData), date);
+    public AgreementRole findRoleWithType(final IAgreementRoleType IAgreementRoleType, final LocalDate date) {
+        return findRoleWithType(agreementRoleTypeRepository.find(IAgreementRoleType), date);
     }
 
     @Inject

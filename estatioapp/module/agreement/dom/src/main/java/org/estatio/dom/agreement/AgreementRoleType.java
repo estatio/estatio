@@ -74,7 +74,7 @@ import lombok.Setter;
 )
 public class AgreementRoleType
         extends UdoDomainObject2<AgreementRoleType>
-        implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal, AgreementRoleTypeData {
+        implements WithTitleComparable<AgreementRoleType>, WithApplicationTenancyGlobal, IAgreementRoleType {
 
     public AgreementRoleType() {
         super("title");

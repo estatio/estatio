@@ -39,7 +39,7 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         super(AgreementRoleTypeRepository.class, AgreementRoleType.class);
     }
 
-    public AgreementRoleType find(final AgreementRoleTypeData data) {
+    public AgreementRoleType find(final IAgreementRoleType data) {
         return findByTitle(data.getTitle());
     }
 
@@ -71,7 +71,7 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
         }, AgreementRoleTypeRepository.class, "findByAgreementTypeAndTitle", agreementType, title);
     }
 
-    public AgreementRoleType findOrCreate(final AgreementRoleTypeData data, final AgreementTypeData appliesTo) {
+    public AgreementRoleType findOrCreate(final IAgreementRoleType data, final AgreementTypeData appliesTo) {
         final AgreementType agreementType = agreementTypeRepository.find(appliesTo);
         return findOrCreate(data.getTitle(), agreementType);
     }

@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.bankmandate;
 
-import org.estatio.dom.agreement.AgreementRoleTypeData;
+import org.estatio.dom.agreement.IAgreementRoleType;
 import org.estatio.dom.agreement.AgreementTypeData;
 
 import lombok.AllArgsConstructor;
@@ -37,7 +37,7 @@ public final class BankMandateConstants {
     }
 
     @AllArgsConstructor
-    public enum AgreementRoleType implements AgreementRoleTypeData {
+    public enum AgreementRoleType implements IAgreementRoleType {
         DEBTOR("Debtor"),
         CREDITOR("Creditor"),
         OWNER("Owner");

@@ -44,7 +44,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypeData;
+import org.estatio.dom.agreement.IAgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
@@ -65,8 +65,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public void init(final Map<String, String> properties) {
         super.init(properties);
         final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE);
-        for (AgreementRoleTypeData agreementRoleTypeData : LeaseConstants.AgreementRoleType.values()){
-            agreementRoleTypeRepository.findOrCreate(agreementRoleTypeData, agreementType);
+        for (IAgreementRoleType IAgreementRoleType : LeaseConstants.AgreementRoleType.values()){
+            agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
         for (AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelTypeData : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
             agreementRoleCommunicationChannelTypeRepository.findOrCreate(agreementRoleCommunicationChannelTypeData, agreementType);

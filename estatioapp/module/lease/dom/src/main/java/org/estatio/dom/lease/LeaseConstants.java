@@ -19,7 +19,7 @@
 package org.estatio.dom.lease;
 
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
-import org.estatio.dom.agreement.AgreementRoleTypeData;
+import org.estatio.dom.agreement.IAgreementRoleType;
 import org.estatio.dom.agreement.AgreementTypeData;
 
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public final class LeaseConstants {
     }
 
     @AllArgsConstructor
-    public enum AgreementRoleType implements AgreementRoleTypeData {
+    public enum AgreementRoleType implements IAgreementRoleType {
         LANDLORD("Landlord"),
         TENANT("Tenant"),
         TENANTS_ASSOCIATION("Tenants association"),
