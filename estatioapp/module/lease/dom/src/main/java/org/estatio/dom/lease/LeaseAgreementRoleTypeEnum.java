@@ -15,10 +15,4 @@ public enum LeaseAgreementRoleTypeEnum implements IAgreementRoleType {
     @Getter
     private String title;
 
-    public static class Meta {
-        public final static int MAX_LEN = 30;
-
-        private Meta() {
-        }
-    }
 }

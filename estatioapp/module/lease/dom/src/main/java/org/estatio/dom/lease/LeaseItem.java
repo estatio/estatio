@@ -72,6 +72,7 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.agreement.role.IAgreementRoleType;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
@@ -341,7 +342,7 @@ public class LeaseItem
     @Getter @Setter
     private LocalDate endDate;
 
-    @Column(allowsNull = "false", length = LeaseAgreementRoleTypeEnum.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = IAgreementRoleType.Meta.MAX_LEN)
     @Getter @Setter
     private LeaseAgreementRoleTypeEnum invoicedBy;
 
