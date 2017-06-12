@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeAgreementRoleType;
+import org.estatio.dom.guarantee.GuaranteeAgreementRoleTypeEnum;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
@@ -65,7 +65,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
                 bd(50000),
                 executionContext);
         guarantee.createRole(
-                agreementRoleTypeRepository.find(GuaranteeAgreementRoleType.BANK),
+                agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.BANK),
                 partyRepository.findPartyByReference(PARTY_REF_BANK),
                 null,
                 null);

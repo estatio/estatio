@@ -20,9 +20,7 @@ package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -77,10 +75,10 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
             final BigDecimal startAmount
     ) {
 
-        AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeAgreementRoleType.GUARANTEE);
+        AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.GUARANTEE);
         Party leasePrimaryParty = lease.getPrimaryParty();
 
-        AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeAgreementRoleType.GUARANTOR);
+        AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeAgreementRoleTypeEnum.GUARANTOR);
         Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
@@ -167,18 +165,6 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
 
     // //////////////////////////////////////
 
-    @PostConstruct
-    @Programmatic
-    public void init(Map<String, String> properties) {
-        super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(
-                GuaranteeAgreementTypeEnum.GUARANTEE);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.GUARANTEE, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.GUARANTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.BANK, agreementType);
-    }
-
-    // //////////////////////////////////////
 
     @Inject
     private AgreementTypeRepository agreementTypeRepository;

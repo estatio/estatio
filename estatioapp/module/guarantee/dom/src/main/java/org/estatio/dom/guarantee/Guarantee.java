@@ -98,7 +98,7 @@ public class Guarantee
         implements WithApplicationTenancyProperty {
 
     public Guarantee() {
-        super(GuaranteeAgreementRoleType.GUARANTEE, GuaranteeAgreementRoleType.GUARANTOR);
+        super(GuaranteeAgreementRoleTypeEnum.GUARANTEE, GuaranteeAgreementRoleTypeEnum.GUARANTOR);
     }
 
     // //////////////////////////////////////

@@ -1,20 +1,33 @@
 package org.estatio.dom.agreement.role;
 
+import org.incode.module.base.dom.TitledEnum;
+import org.incode.module.base.dom.utils.StringUtils;
+
 import org.estatio.dom.agreement.type.IAgreementType;
 
-public interface IAgreementRoleType {
-    String getTitle();
+public interface IAgreementRoleType extends TitledEnum {
+
+    default String getTitle() {
+        return title();
+    }
+
+    default String title() {
+        return StringUtils.enumTitle(this.toString());
+    }
+
+    IAgreementType getAppliesTo();
+
 
     default AgreementRoleType findUsing(final AgreementRoleTypeRepository repo) {
         return repo.find(this);
     }
 
-    default AgreementRoleType findOrCreateUsing(AgreementRoleTypeRepository repository, IAgreementType IAgreementType) {
-        return  repository.findOrCreate(this, IAgreementType);
+    default AgreementRoleType findOrCreateUsing(AgreementRoleTypeRepository repository) {
+        return  repository.findOrCreate(this, getAppliesTo());
     }
 
 
-    public static class Meta {
+    class Meta {
         public final static int MAX_LEN = 30;
 
         private Meta() {

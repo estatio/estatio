@@ -1,10 +1,19 @@
 package org.estatio.dom.party.role;
 
-public interface IPartyRoleType {
+import org.incode.module.base.dom.TitledEnum;
+import org.incode.module.base.dom.utils.StringUtils;
+
+public interface IPartyRoleType extends TitledEnum {
 
     String getKey();
 
-    String getTitle();
+    default String getTitle() {
+        return title();
+    }
+
+    default String title() {
+        return StringUtils.enumTitle(this.toString());
+    }
 
     default PartyRoleType findUsing(final PartyRoleTypeRepository repo) {
         return repo.findByKey(getKey());

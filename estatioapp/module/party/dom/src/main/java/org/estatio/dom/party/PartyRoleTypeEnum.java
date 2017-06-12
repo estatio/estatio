@@ -1,18 +1,12 @@
 package org.estatio.dom.party;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.incode.module.base.dom.TitledEnum;
-import org.incode.module.base.dom.utils.StringUtils;
-
 import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeServiceSupport;
+import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
 
-public enum PartyRoleTypeEnum implements TitledEnum, IPartyRoleType {
+public enum PartyRoleTypeEnum implements IPartyRoleType {
 
     MAIL_ROOM,
     COUNTRY_DIRECTOR,
@@ -25,21 +19,10 @@ public enum PartyRoleTypeEnum implements TitledEnum, IPartyRoleType {
         return this.name();
     }
 
-    @Override
-    public String getTitle() {
-        return title();
-    }
-
-    public String title() {
-        return StringUtils.enumTitle(this.toString());
-    }
-
-
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class ListAll implements PartyRoleTypeServiceSupport {
-        @Override
-        public List<IPartyRoleType> listAll() {
-            return Arrays.asList(PartyRoleTypeEnum.values());
+    public static class SupportService extends PartyRoleTypeServiceSupportAbstract<PartyRoleTypeEnum> {
+        public SupportService() {
+            super(PartyRoleTypeEnum.class);
         }
     }
 

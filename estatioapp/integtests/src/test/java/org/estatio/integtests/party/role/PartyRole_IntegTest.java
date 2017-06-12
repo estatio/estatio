@@ -29,16 +29,15 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyRole_IntegTest extends EstatioIntegrationTest {
@@ -94,7 +93,6 @@ public class PartyRole_IntegTest extends EstatioIntegrationTest {
             return this.name();
         }
 
-        @Getter
         private String title;
 
     }

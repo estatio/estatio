@@ -1,38 +1,25 @@
 package org.estatio.dom.lease;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeServiceSupport;
+import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
 public enum LeaseRoleTypeEnum implements IPartyRoleType {
-    LANDLORD("Landlord"),
-    TENANT("Tenant");
+    LANDLORD,
+    TENANT;
 
     @Override
     public String getKey() {
         return this.name();
     }
 
-    @Getter
-    private String title;
-
-
-
 
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class ListAll implements PartyRoleTypeServiceSupport {
-        @Override
-        public List<IPartyRoleType> listAll() {
-            return Arrays.asList(LeaseRoleTypeEnum.values());
+    public static class SupportService extends PartyRoleTypeServiceSupportAbstract<LeaseRoleTypeEnum> {
+        public SupportService() {
+            super(LeaseRoleTypeEnum.class);
         }
     }
 

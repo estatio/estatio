@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.asset;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
@@ -29,10 +26,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.TitledEnum;
-import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeServiceSupport;
+import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
 
 public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
 
@@ -47,15 +43,6 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
         return this.name();
     }
 
-    @Override
-    public String getTitle() {
-        return title();
-    }
-
-    public String title() {
-        return StringUtils.enumTitle(this.toString());
-    }
-
     @Programmatic
     public Predicate<? super FixedAssetRole> matchingRole() {
         return new Predicate<FixedAssetRole>() {
@@ -66,14 +53,10 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
         };
     }
 
-
-
-
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class ListAll implements PartyRoleTypeServiceSupport {
-        @Override
-        public List<IPartyRoleType> listAll() {
-            return Arrays.asList(FixedAssetRoleTypeEnum.values());
+    public static class SupportService extends PartyRoleTypeServiceSupportAbstract<FixedAssetRoleTypeEnum> {
+        public SupportService() {
+            super(FixedAssetRoleTypeEnum.class);
         }
     }
 

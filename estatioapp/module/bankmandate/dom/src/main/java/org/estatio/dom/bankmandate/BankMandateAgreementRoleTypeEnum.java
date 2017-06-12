@@ -1,17 +1,29 @@
 package org.estatio.dom.bankmandate;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+
+import org.estatio.dom.agreement.role.AgreementRoleTypeServiceSupportAbstract;
 import org.estatio.dom.agreement.role.IAgreementRoleType;
+import org.estatio.dom.agreement.type.IAgreementType;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
 public enum BankMandateAgreementRoleTypeEnum implements IAgreementRoleType {
-    DEBTOR("Debtor"),
-    CREDITOR("Creditor"),
-    OWNER("Owner");
+    DEBTOR,
+    CREDITOR,
+    OWNER;
 
-    @Getter
-    private String title;
+    @Override
+    public IAgreementType getAppliesTo() {
+        return BankMandateAgreementTypeEnum.MANDATE;
+    }
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class SupportService extends
+            AgreementRoleTypeServiceSupportAbstract<BankMandateAgreementRoleTypeEnum> {
+        public SupportService() {
+            super(BankMandateAgreementRoleTypeEnum.class);
+        }
+    }
+
 
 }

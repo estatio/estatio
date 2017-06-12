@@ -19,9 +19,7 @@
 package org.estatio.dom.bankmandate;
 
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -33,7 +31,6 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
@@ -104,17 +101,6 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
 
     // //////////////////////////////////////
 
-    @PostConstruct
-    public void init(Map<String, String> properties) {
-        super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(
-                BankMandateAgreementTypeEnum.MANDATE);
-        agreementRoleTypeRepository.findOrCreate(BankMandateAgreementRoleTypeEnum.DEBTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateAgreementRoleTypeEnum.CREDITOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(BankMandateAgreementRoleTypeEnum.OWNER, agreementType);
-    }
-
-    // //////////////////////////////////////
 
     @Inject
     protected AgreementTypeRepository agreementTypeRepository;
