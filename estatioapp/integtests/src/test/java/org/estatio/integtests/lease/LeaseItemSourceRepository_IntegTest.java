@@ -29,9 +29,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemSourceRepository;
 import org.estatio.dom.lease.LeaseItemType;
@@ -108,7 +108,7 @@ public class LeaseItemSourceRepository_IntegTest extends EstatioIntegrationTest 
     public void findByItemTest() throws Exception {
 
         // given
-        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, LeaseConstants.AgreementRoleType.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, new LocalDate(2016, 01, 01));
+        LeaseItem newDeposit = lease.newItem(LeaseItemType.DEPOSIT, AgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, new LocalDate(2016, 01, 01));
 
         // when
         newDeposit.newSourceItem(serviceChargeItem);

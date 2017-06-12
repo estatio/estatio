@@ -35,10 +35,10 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
@@ -72,7 +72,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 leaseItemType,
                 invoicingFrequency,
                 executionContext,
-                LeaseConstants.AgreementRoleType.LANDLORD);
+                AgreementRoleTypeEnum.LANDLORD);
     }
 
     protected LeaseItem findOrCreateLeaseItem(
@@ -82,7 +82,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
             final ExecutionContext executionContext,
-            final LeaseConstants.AgreementRoleType invoicedBy) {
+            final AgreementRoleTypeEnum invoicedBy) {
 
         final Lease lease = findLease(leaseRef);
         final ApplicationTenancy leaseApplicationTenancy = lease.getApplicationTenancy();
@@ -272,7 +272,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LocalDate endDate,
             final BigDecimal budgetedValue,
             final ExecutionContext executionContext,
-            final LeaseConstants.AgreementRoleType invoicedBy) {
+            final AgreementRoleTypeEnum invoicedBy) {
 
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
                 leaseRef,
@@ -293,7 +293,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
     protected LeaseTerm createLeaseTermForMarketing(
             final String leaseRef,
             final String leaseItemAtPath,
-            final LeaseConstants.AgreementRoleType invoicedBy,
+            final AgreementRoleTypeEnum invoicedBy,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,

@@ -35,8 +35,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "40", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
@@ -50,7 +50,8 @@ public class Party_leaseContributions extends UdoDomainService<Party_leaseContri
     @CollectionLayout(defaultView = "table")
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Lease> currentLeases(final Party party) {
-        return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()), getClockService().now())
+        return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(
+                AgreementRoleTypeEnum.TENANT.getTitle()), getClockService().now())
                 .stream()
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()
@@ -61,7 +62,8 @@ public class Party_leaseContributions extends UdoDomainService<Party_leaseContri
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "currentLeases", sequence = "1")
     public List<Lease> allLeases(final Party party) {
-        return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle()))
+        return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(
+                AgreementRoleTypeEnum.TENANT.getTitle()))
                 .stream()
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()

@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -49,7 +49,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb extends Le
                 null,
                 bd(6000),
                 executionContext,
-                LeaseConstants.AgreementRoleType.LANDLORD);
+                AgreementRoleTypeEnum.LANDLORD);
         createLeaseTermForServiceCharge(
                 LEASE_REF,
                 AT_PATH,
@@ -57,6 +57,6 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb extends Le
                 null,
                 bd(6000),
                 executionContext,
-                LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION);
+                AgreementRoleTypeEnum.TENANTS_ASSOCIATION);
     }
 }

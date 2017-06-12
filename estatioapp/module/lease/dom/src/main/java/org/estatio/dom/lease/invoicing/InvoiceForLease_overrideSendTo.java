@@ -31,7 +31,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 
 @Mixin
 public class InvoiceForLease_overrideSendTo {
@@ -54,7 +54,7 @@ public class InvoiceForLease_overrideSendTo {
     public List<CommunicationChannel> choices0$$() {
         return locator.onFile(
                 invoiceForLease.getLease(),
-                LeaseConstants.AgreementRoleType.TENANT.getTitle(),
+                AgreementRoleTypeEnum.TENANT.getTitle(),
                 CommunicationChannelType.EMAIL_ADDRESS, CommunicationChannelType.POSTAL_ADDRESS);
     }
 

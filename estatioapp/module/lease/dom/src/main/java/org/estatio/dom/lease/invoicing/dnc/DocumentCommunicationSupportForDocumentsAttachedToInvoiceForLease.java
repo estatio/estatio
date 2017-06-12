@@ -40,6 +40,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.invoicing.AgreementCommunicationChannelLocator;
@@ -101,7 +102,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
 
         // current choice(s) and default
         final List current = locator.current(lease,
-                LeaseConstants.AgreementRoleType.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle(), channelType);
+                AgreementRoleTypeEnum.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle(), channelType);
         header.getToChoices().addAll(current);
         final CommunicationChannel sendTo = invoice.getSendTo();
 
@@ -112,7 +113,7 @@ public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease i
         }
 
         // additional choices (those on file)
-        final List onFile = locator.onFile(lease, LeaseConstants.AgreementRoleType.TENANT.getTitle(), channelType);
+        final List onFile = locator.onFile(lease, AgreementRoleTypeEnum.TENANT.getTitle(), channelType);
         header.getToChoices().addAll(onFile);
     }
 

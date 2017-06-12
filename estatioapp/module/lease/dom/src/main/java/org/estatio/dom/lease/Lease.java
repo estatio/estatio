@@ -164,7 +164,7 @@ public class Lease
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Lease() {
-        super(LeaseConstants.AgreementRoleType.LANDLORD, LeaseConstants.AgreementRoleType.TENANT);
+        super(AgreementRoleTypeEnum.LANDLORD, AgreementRoleTypeEnum.TENANT);
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
@@ -239,12 +239,12 @@ public class Lease
 
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
+        return findCurrentOrMostRecentAgreementRole(AgreementRoleTypeEnum.LANDLORD.getTitle());
     }
 
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(LeaseConstants.AgreementRoleType.TENANT.getTitle());
+        return findCurrentOrMostRecentAgreementRole(AgreementRoleTypeEnum.TENANT.getTitle());
     }
 
     // //////////////////////////////////////
@@ -474,7 +474,7 @@ public class Lease
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
-            final LeaseConstants.AgreementRoleType invoicedBy,
+            final AgreementRoleTypeEnum invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -487,8 +487,8 @@ public class Lease
         return chargeRepository.outgoingChargesForCountry(this.getApplicationTenancy());
     }
 
-    public LeaseConstants.AgreementRoleType default1NewItem(){
-        return LeaseConstants.AgreementRoleType.LANDLORD;
+    public AgreementRoleTypeEnum default1NewItem(){
+        return AgreementRoleTypeEnum.LANDLORD;
     }
 
     public PaymentMethod default4NewItem() {
@@ -501,7 +501,7 @@ public class Lease
 
     public String validateNewItem(
             final LeaseItemType type,
-            final LeaseConstants.AgreementRoleType invoicedBy,
+            final AgreementRoleTypeEnum invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -584,7 +584,7 @@ public class Lease
     public LeaseItem findItem(
             final LeaseItemType itemType,
             final LocalDate itemStartDate,
-            final LeaseConstants.AgreementRoleType invoicedBy) {
+            final AgreementRoleTypeEnum invoicedBy) {
         return leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(this, itemType, itemStartDate, invoicedBy);
     }
 
@@ -593,7 +593,7 @@ public class Lease
             final LeaseItemType itemType,
             final Charge charge,
             final LocalDate itemStartDate,
-            final LeaseConstants.AgreementRoleType invoicedBy) {
+            final AgreementRoleTypeEnum invoicedBy) {
         return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy(this, itemType, charge, itemStartDate, invoicedBy);
     }
 
@@ -933,7 +933,7 @@ public class Lease
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
-                    LeaseConstants.AgreementRoleType.LANDLORD, item.getCharge(),
+                    AgreementRoleTypeEnum.LANDLORD, item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
                     item.getStartDate()

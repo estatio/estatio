@@ -47,8 +47,8 @@ import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseRepository;
@@ -158,7 +158,8 @@ public class InvoiceCalculationService extends UdoDomainService<InvoiceCalculati
                                     lease.getItems() :
                                     new TreeSet<>(Arrays.asList(parameters.leaseItem()));
                     for (LeaseItem leaseItem : leaseItems) {
-                        if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED) && leaseItem.getInvoicedBy().equals(LeaseConstants.AgreementRoleType.LANDLORD)) {
+                        if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED) && leaseItem.getInvoicedBy().equals(
+                                AgreementRoleTypeEnum.LANDLORD)) {
                             //TODO: We only filter the Landlords
                             if (parameters.leaseItemTypes() == null || parameters.leaseItemTypes().contains(leaseItem.getType())) {
                                 SortedSet<LeaseTerm> leaseTerms =

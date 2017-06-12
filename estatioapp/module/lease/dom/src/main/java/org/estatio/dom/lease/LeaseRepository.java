@@ -65,7 +65,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public void init(final Map<String, String> properties) {
         super.init(properties);
         final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE);
-        for (IAgreementRoleType IAgreementRoleType : LeaseConstants.AgreementRoleType.values()){
+        for (IAgreementRoleType IAgreementRoleType : AgreementRoleTypeEnum.values()){
             agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
         for (AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelTypeData : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
@@ -128,11 +128,13 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         persistIfNotAlready(lease);
 
         if (tenant != null) {
-            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
+            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(
+                    AgreementRoleTypeEnum.TENANT.getTitle());
             lease.newRole(artTenant, tenant, null, null);
         }
         if (landlord != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.LANDLORD.getTitle());
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(
+                    AgreementRoleTypeEnum.LANDLORD.getTitle());
             lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;

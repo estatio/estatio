@@ -15,6 +15,7 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -61,7 +62,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
         agreementType = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
-        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.AgreementRoleType.TENANT.getTitle());
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
 
     }
 
@@ -69,7 +70,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(LeaseConstants.AgreementRoleType.TENANT.getTitle());
+            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.TENANT.getTitle());
             assertThat(result, is(agreementRoleType));
         }
     }
@@ -88,7 +89,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByAgreementTypeAndTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseConstants.AgreementRoleType.TENANT.getTitle());
+            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
             assertNotNull(result);
         }
     }

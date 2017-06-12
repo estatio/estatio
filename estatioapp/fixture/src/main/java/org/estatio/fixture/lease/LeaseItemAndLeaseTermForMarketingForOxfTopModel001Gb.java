@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -45,7 +45,7 @@ public class LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb extends LeaseI
         createLeaseTermForMarketing(
                 LEASE_REF,
                 AT_PATH,
-                LeaseConstants.AgreementRoleType.TENANTS_ASSOCIATION, lease.getStartDate(), null,
+                AgreementRoleTypeEnum.TENANTS_ASSOCIATION, lease.getStartDate(), null,
                 bd(6000),
                 executionContext
         );
