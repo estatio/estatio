@@ -50,9 +50,9 @@ import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
+import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
@@ -211,7 +211,8 @@ public abstract class LeaseAbstract extends FixtureScript {
         final AgreementRoleType inRoleOfTenant =
                 agreementRoleTypeRepository.find(AgreementRoleTypeEnum.TENANT);
         final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
-                agreementRoleCommunicationChannelTypeRepository.find(LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS);
+                agreementRoleCommunicationChannelTypeRepository.find(
+                        AgreementRoleCommunicationChannelTypeEnum.INVOICE_ADDRESS);
 
         final Party tenant = partyRepository.findPartyByReference(partyRefTenant);
 
@@ -284,7 +285,7 @@ public abstract class LeaseAbstract extends FixtureScript {
     }
 
     protected void addAddresses(final Lease lease) {
-        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.ADMINISTRATION_ADDRESS);
-        createAddress(lease, LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS);
+        createAddress(lease, AgreementRoleCommunicationChannelTypeEnum.ADMINISTRATION_ADDRESS);
+        createAddress(lease, AgreementRoleCommunicationChannelTypeEnum.INVOICE_ADDRESS);
     }
 }

@@ -39,9 +39,9 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 
 @DomainService(repositoryFor = InvoiceForLease.class, nature = NatureOfService.DOMAIN)
@@ -168,7 +168,7 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
     }
 
     List<CommunicationChannel> currentTenantInvoiceAddresses(final Agreement agreement) {
-        return locator.current(agreement, AgreementRoleTypeEnum.TENANT.getTitle(), LeaseConstants.AgreementRoleCommunicationChannelType.INVOICE_ADDRESS.getTitle());
+        return locator.current(agreement, AgreementRoleTypeEnum.TENANT.getTitle(), AgreementRoleCommunicationChannelTypeEnum.INVOICE_ADDRESS.getTitle());
 
     }
 

@@ -68,7 +68,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         for (IAgreementRoleType IAgreementRoleType : AgreementRoleTypeEnum.values()){
             agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
-        for (IAgreementRoleCommunicationChannelType IAgreementRoleCommunicationChannelType : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
+        for (IAgreementRoleCommunicationChannelType IAgreementRoleCommunicationChannelType : AgreementRoleCommunicationChannelTypeEnum
+                .values()){
             agreementRoleCommunicationChannelTypeRepository.findOrCreate(IAgreementRoleCommunicationChannelType, agreementType);
         }
     }

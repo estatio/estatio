@@ -27,18 +27,4 @@ public final class LeaseConstants {
 
     private LeaseConstants() {}
 
-    @AllArgsConstructor
-    public enum AgreementRoleCommunicationChannelType implements IAgreementRoleCommunicationChannelType {
-        INVOICE_ADDRESS("Invoice Address"),
-        ADMINISTRATION_ADDRESS("Administration Address");
-
-        @Getter
-        private String title;
-
-        public boolean equalTo(final IAgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType){
-            return getTitle().equals(agreementRoleCommunicationChannelType.getTitle());
-        }
-
-    }
-
 }
