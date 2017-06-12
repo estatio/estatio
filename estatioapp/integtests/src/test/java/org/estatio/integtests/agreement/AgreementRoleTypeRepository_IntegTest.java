@@ -16,7 +16,7 @@ import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
-import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.AgreementTypeEnum;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -60,7 +60,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
     @Before
     public void setUp() throws Exception {
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreementType = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
+        agreementType = agreementTypeRepository.find(AgreementTypeEnum.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
         agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
 

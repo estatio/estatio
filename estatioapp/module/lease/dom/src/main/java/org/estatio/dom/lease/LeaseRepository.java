@@ -64,7 +64,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseConstants.AgreementType.LEASE);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(AgreementTypeEnum.LEASE);
         for (IAgreementRoleType IAgreementRoleType : AgreementRoleTypeEnum.values()){
             agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
@@ -115,7 +115,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
             final Party landlord,
             final Party tenant) {
         Lease lease = newTransientInstance();
-        final AgreementType at = agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle());
+        final AgreementType at = agreementTypeRepository.find(AgreementTypeEnum.LEASE.getTitle());
         lease.setType(at);
         lease.setApplicationTenancyPath(applicationTenancy.getPath());
         lease.setReference(reference);

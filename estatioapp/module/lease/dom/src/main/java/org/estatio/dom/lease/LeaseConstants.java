@@ -29,14 +29,6 @@ public final class LeaseConstants {
     private LeaseConstants() {}
 
     @AllArgsConstructor
-    public enum AgreementType implements IAgreementType {
-        LEASE("Lease");
-
-        @Getter
-        private String title;
-    }
-
-    @AllArgsConstructor
     public enum AgreementRoleCommunicationChannelType implements AgreementRoleCommunicationChannelTypeData {
         INVOICE_ADDRESS("Invoice Address"),
         ADMINISTRATION_ADDRESS("Administration Address");

@@ -16,7 +16,7 @@ import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.AgreementTypeRepository;
 import org.estatio.dom.lease.AgreementRoleTypeEnum;
-import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.AgreementTypeEnum;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -62,7 +62,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() {
-        agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(LeaseConstants.AgreementType.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
+        agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(
+                AgreementTypeEnum.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
         party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
