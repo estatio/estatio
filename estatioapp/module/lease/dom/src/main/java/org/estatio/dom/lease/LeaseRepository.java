@@ -52,8 +52,6 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.role.PartyRoleTypeData;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
 public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
@@ -73,12 +71,10 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         for (AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelTypeData : LeaseConstants.AgreementRoleCommunicationChannelType.values()){
             agreementRoleCommunicationChannelTypeRepository.findOrCreate(agreementRoleCommunicationChannelTypeData, agreementType);
         }
-        for (PartyRoleTypeData partyRoleTypeData : LeaseConstants.PartyRoleTypeEnum.values()){
-            partyRoleTypeRepository.findOrCreate(partyRoleTypeData);
-        }
-
-
     }
+
+
+
 
     @Programmatic
     public Lease newLease(
@@ -201,17 +197,15 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     // //////////////////////////////////////
 
     @Inject
-    private AgreementTypeRepository agreementTypeRepository;
+    AgreementTypeRepository agreementTypeRepository;
 
     @Inject
-    private AgreementRoleTypeRepository agreementRoleTypeRepository;
+    AgreementRoleTypeRepository agreementRoleTypeRepository;
 
     @Inject
     ClockService clockService;
 
     @Inject
-    private AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 
-    @Inject
-    private PartyRoleTypeRepository partyRoleTypeRepository;
 }

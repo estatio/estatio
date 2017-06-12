@@ -39,7 +39,7 @@ public class FixedAssetRoleRepository_Test {
 
     FixedAsset asset;
     Party party;
-    FixedAssetRoleType type;
+    FixedAssetRoleTypeEnum type;
     LocalDate startDate;
     LocalDate endDate;
 
@@ -50,7 +50,7 @@ public class FixedAssetRoleRepository_Test {
 
         asset = new FixedAssetForTesting();
         party = new PartyForTesting();
-        type = FixedAssetRoleType.ASSET_MANAGER;
+        type = FixedAssetRoleTypeEnum.ASSET_MANAGER;
 
         startDate = new LocalDate(2013, 1, 4);
         endDate = new LocalDate(2013, 2, 5);

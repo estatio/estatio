@@ -39,10 +39,10 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
         return uniqueMatch("findByKey", "key", key);
     }
 
-    public PartyRoleType findOrCreate(final PartyRoleTypeData partyRoleTypeData) {
-        final PartyRoleType partyRoleType = findByKey(partyRoleTypeData.getKey());
+    public PartyRoleType findOrCreate(final IPartyRoleType IPartyRoleType) {
+        final PartyRoleType partyRoleType = findByKey(IPartyRoleType.getKey());
         if (partyRoleType == null) {
-            return create(partyRoleTypeData);
+            return create(IPartyRoleType);
         }
         return partyRoleType;
     }
@@ -51,10 +51,10 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
         return allInstances();
     }
 
-    private PartyRoleType create(final PartyRoleTypeData partyRoleTypeData) {
+    private PartyRoleType create(final IPartyRoleType IPartyRoleType) {
         PartyRoleType partyRoleType = newTransientInstance();
-        partyRoleType.setKey(partyRoleTypeData.getKey());
-        partyRoleType.setTitle(partyRoleTypeData.getTitle());
+        partyRoleType.setKey(IPartyRoleType.getKey());
+        partyRoleType.setTitle(IPartyRoleType.getTitle());
         persistIfNotAlready(partyRoleType);
         return partyRoleType;
     }

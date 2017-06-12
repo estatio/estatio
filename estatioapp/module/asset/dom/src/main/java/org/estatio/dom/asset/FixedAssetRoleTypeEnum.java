@@ -18,26 +18,44 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;
 
-public enum FixedAssetRoleType implements TitledEnum {
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeServiceSupport;
 
-    PROPERTY_OWNER, 
+public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
+
+    PROPERTY_OWNER,
     PROPERTY_MANAGER, 
     ASSET_MANAGER, 
     PROPERTY_CONTACT,
     TENANTS_ASSOCIATION;
 
+    @Override
+    public String getKey() {
+        return this.name();
+    }
+
+    @Override
+    public String getTitle() {
+        return title();
+    }
+
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
-    
+
     @Programmatic
     public Predicate<? super FixedAssetRole> matchingRole() {
         return new Predicate<FixedAssetRole>() {
@@ -52,6 +70,16 @@ public enum FixedAssetRoleType implements TitledEnum {
         private Meta(){}
 
         public final static int MAX_LEN = 30;
+    }
+
+
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class ListAll implements PartyRoleTypeServiceSupport {
+        @Override
+        public List<IPartyRoleType> listAll() {
+            return Arrays.asList(FixedAssetRoleTypeEnum.values());
+        }
     }
 
 }

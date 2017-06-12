@@ -90,9 +90,9 @@ public class ProjectRole extends UdoDomainObject<ProjectRole>  {
 	@Getter @Setter
 	private Party party;
 
-	@Column(allowsNull = "false", length = ProjectRoleType.Meta.MAX_LEN)
+	@Column(allowsNull = "false", length = ProjectRoleTypeEnum.Meta.MAX_LEN)
 	@Getter @Setter
-	private ProjectRoleType type;
+	private ProjectRoleTypeEnum type;
 
 	@Column(allowsNull = "true")
 	@Getter @Setter

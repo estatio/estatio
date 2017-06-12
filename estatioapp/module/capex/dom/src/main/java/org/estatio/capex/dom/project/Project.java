@@ -172,7 +172,7 @@ public class Project extends UdoDomainObject<Project> implements
 	@MemberOrder(name = "roles", sequence = "1")
 	public Project newRole(
 			final Party party,
-			final ProjectRoleType type,
+			final ProjectRoleTypeEnum type,
 			@Parameter(optionality = Optionality.OPTIONAL)
 			final LocalDate startDate,
 			@Parameter(optionality = Optionality.OPTIONAL)

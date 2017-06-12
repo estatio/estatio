@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Party;
@@ -73,7 +73,7 @@ public class FixedAssetRoleRepository_IntegTest extends EstatioIntegrationTest {
             Property property = propertyRepository.findPropertyByReference("OXF");
 
             // when
-            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, FixedAssetRoleType.PROPERTY_OWNER);
+            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
 
             // then
             assertNotNull(propertyActor);
@@ -94,7 +94,7 @@ public class FixedAssetRoleRepository_IntegTest extends EstatioIntegrationTest {
             LocalDate endDate = new LocalDate();
 
             // when
-            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER, startDate, endDate);
+            FixedAssetRole propertyActor = fixedAssetRoleRepository.findRole(property, party, FixedAssetRoleTypeEnum.PROPERTY_OWNER, startDate, endDate);
 
             // then
             Assert.assertNotNull(propertyActor);

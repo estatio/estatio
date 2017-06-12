@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
@@ -66,8 +66,8 @@ public abstract class PropertyAbstract extends FixtureScript {
         Property property = propertyRepository.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
         property.setLocation(Location.fromString(locationStr));
-        property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
-        property.addRoleIfDoesNotExist(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
+        property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
+        property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, null, null);
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;
             property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));

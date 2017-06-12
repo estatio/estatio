@@ -100,6 +100,26 @@ public interface StateTransitionType<
     StateTransitionEvent<DO,ST,STT,S> newStateTransitionEvent(DO domainObject, ST transitionIfAny);
 
 
+    /**
+     * Whether this domain object is in a state such that this transition could occur (subject to any additional
+     * {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guards} also being satisfied).
+     */
+    @Programmatic
+    default <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >  boolean canTransitionAndIsMatch(
+            final DO domainObject,
+            final ServiceRegistry2 serviceRegistry2) {
+        final STT transitionType = (STT) this;
+        final StateTransitionService stateTransitionService = serviceRegistry2.lookupService(StateTransitionService.class);
+        final S currentStateIfAny = stateTransitionService.currentStateOf(domainObject, transitionType);
+        return transitionType.canTransition(currentStateIfAny) &&
+                transitionType.isMatch(domainObject, serviceRegistry2);
+    }
+
 
     /**
      * Whether there is a &quot;road&quot; from the specified state using this transition to some other state.
@@ -121,26 +141,6 @@ public interface StateTransitionType<
             return (fromState == null);
         }
         return fromStates.contains(fromState);
-    }
-
-    /**
-     * Whether this domain object is in a state such that this transition could occur (subject to any additional
-     * {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guards} also being satisfied).
-     */
-    @Programmatic
-    default <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-            >  boolean canTransitionAndIsMatch(
-            final DO domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        final STT transitionType = (STT) this;
-        final StateTransitionService stateTransitionService = serviceRegistry2.lookupService(StateTransitionService.class);
-        final S currentStateIfAny = stateTransitionService.currentStateOf(domainObject, transitionType);
-        return transitionType.canTransition(currentStateIfAny) &&
-               transitionType.isMatch(domainObject, serviceRegistry2);
     }
 
     /**

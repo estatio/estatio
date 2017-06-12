@@ -146,10 +146,10 @@ public class FixedAssetRole
     // //////////////////////////////////////
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = FixedAssetRoleType.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = FixedAssetRoleTypeEnum.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
-    private FixedAssetRoleType type;
+    private FixedAssetRoleTypeEnum type;
 
     // //////////////////////////////////////
 

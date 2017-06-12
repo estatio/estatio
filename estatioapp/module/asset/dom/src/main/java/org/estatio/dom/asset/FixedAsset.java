@@ -194,7 +194,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     @Programmatic
     public List<FixedAssetRole> ownerCandidates() {
-        return fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleType.PROPERTY_OWNER);
+        return fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
     }
 
     public String validateAddOwner(final Party newOwner, final OwnershipType type) {
@@ -229,7 +229,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     private SortedSet<FixedAssetRole> roles = new TreeSet<>();
 
     public FixedAsset newRole(
-            final FixedAssetRoleType type,
+            final FixedAssetRoleTypeEnum type,
             final Party party,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
@@ -238,7 +238,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     }
 
     public String validateNewRole(
-            final FixedAssetRoleType type,
+            final FixedAssetRoleTypeEnum type,
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -263,7 +263,7 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     @Programmatic
     public FixedAssetRole createRole(
-            final FixedAssetRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
+            final FixedAssetRoleTypeEnum type, final Party party, final LocalDate startDate, final LocalDate endDate) {
         final FixedAssetRole role = newTransientInstance(FixedAssetRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);

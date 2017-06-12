@@ -27,7 +27,7 @@ import org.incode.module.country.dom.impl.StateRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
@@ -164,9 +164,9 @@ public class UnitImport implements ExcelFixtureRowHandler, Importable {
                     throw new IllegalArgumentException(String.format("Party with ownerReference %s not found", getOwnerReference()));
                 }
                 // create property owner of not found one already
-                FixedAssetRole propertyOwnerRole = fixedAssetRoleRepository.findRole(unitRepository.findUnitByReference(reference), FixedAssetRoleType.PROPERTY_OWNER);
+                FixedAssetRole propertyOwnerRole = fixedAssetRoleRepository.findRole(unitRepository.findUnitByReference(reference), FixedAssetRoleTypeEnum.PROPERTY_OWNER);
                 if (propertyOwnerRole == null) {
-                    unit.createRole(FixedAssetRoleType.PROPERTY_OWNER, party, null, null);
+                    unit.createRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, null, null);
                 }
             }
             return Lists.newArrayList();

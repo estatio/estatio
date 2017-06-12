@@ -27,7 +27,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.lease.EstatioApplicationTenancyRepositoryForLease;
@@ -41,7 +41,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        final List<FixedAssetRoleType> roleTypes = Arrays.asList(FixedAssetRoleType.PROPERTY_OWNER, FixedAssetRoleType.TENANTS_ASSOCIATION);
+        final List<FixedAssetRoleTypeEnum> roleTypes = Arrays.asList(FixedAssetRoleTypeEnum.PROPERTY_OWNER, FixedAssetRoleTypeEnum.TENANTS_ASSOCIATION);
         for (Property property : propertyRepository.allProperties()) {
             for (FixedAssetRole fixedAssetRole : fixedAssetRoleRepository.findAllForProperty(property)){
                 if (roleTypes.contains(fixedAssetRole.getType())) {

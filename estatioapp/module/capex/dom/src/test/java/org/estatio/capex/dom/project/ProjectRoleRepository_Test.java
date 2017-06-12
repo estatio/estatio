@@ -117,12 +117,12 @@ public class ProjectRoleRepository_Test {
             });
 
             // when
-            ProjectRole newRole = projectRoleRepository.create(project, party, ProjectRoleType.PROJECT_MANAGER, startDate, endDate);
+            ProjectRole newRole = projectRoleRepository.create(project, party, ProjectRoleTypeEnum.PROJECT_MANAGER, startDate, endDate);
 
             // then
             assertThat(newRole.getProject()).isEqualTo(project);
             assertThat(newRole.getParty()).isEqualTo(party);
-            assertThat(newRole.getType()).isEqualTo(ProjectRoleType.PROJECT_MANAGER);
+            assertThat(newRole.getType()).isEqualTo(ProjectRoleTypeEnum.PROJECT_MANAGER);
             assertThat(newRole.getStartDate()).isEqualTo(startDate);
             assertThat(newRole.getEndDate()).isEqualTo(endDate);
         }

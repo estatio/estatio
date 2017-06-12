@@ -71,6 +71,21 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
             return !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2);
+            //return domainObject.hasServiceCharges();
+        }
+    },
+    APPROVE_AS_COUNTRY_ADMINISTRATOR(
+            IncomingInvoiceApprovalState.CLASSIFIED,
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_ADMINISTRATOR,
+            StateTransitionStrategy.Util.next(),
+            TaskAssignmentStrategy.Util.to(EstatioRole.COUNTRY_ADMINISTRATOR)
+    ) {
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
+            // ie else the above two routes
+            return !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2) && !APPROVE_AS_ASSET_MANAGER.isMatch(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(

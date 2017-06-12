@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -56,12 +56,8 @@ public class PartyRoleTypeRepostitory_IntegTest extends EstatioIntegrationTest {
     }
 
     @AllArgsConstructor
-    public enum PartyRoleTypeEnum implements PartyRoleTypeData {
+    public enum PartyRoleTypeEnum implements IPartyRoleType {
         TEST_ROLE("Landlord");
-
-        public PartyRoleType findUsing(PartyRoleTypeRepository repo) {
-            return Util.findUsing(this, repo);
-        }
 
         @Override
         public String getKey() {

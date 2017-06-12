@@ -57,7 +57,7 @@ import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -241,7 +241,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     public List<Property> choicesFixedAsset(){
         List<Property> result = new ArrayList<>();
         if (hasBuyer()) {
-            for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleType.PROPERTY_OWNER)){
+            for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleTypeEnum.PROPERTY_OWNER)){
                 if (role.getAsset().getClass().isAssignableFrom(Property.class)) {
                     result.add((Property) role.getAsset());
                 }

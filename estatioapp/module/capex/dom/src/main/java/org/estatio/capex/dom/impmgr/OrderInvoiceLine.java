@@ -40,7 +40,7 @@ import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
@@ -322,7 +322,7 @@ public class OrderInvoiceLine {
         }
 
         private Party deriveBuyerFrom(final Property property) {
-            FixedAssetRole role = fixedAssetRoleRepository.findRole(property, FixedAssetRoleType.PROPERTY_OWNER);
+            FixedAssetRole role = fixedAssetRoleRepository.findRole(property, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
             return role!=null ? role.getParty() : null;
         }
 

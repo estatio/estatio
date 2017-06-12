@@ -215,7 +215,7 @@ public class Property
     @Programmatic
     public FixedAssetRole addRoleIfDoesNotExist(
             final Party party,
-            final FixedAssetRoleType type,
+            final FixedAssetRoleTypeEnum type,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
 

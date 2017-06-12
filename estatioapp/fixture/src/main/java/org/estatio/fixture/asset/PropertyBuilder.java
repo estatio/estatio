@@ -27,7 +27,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
@@ -169,10 +169,10 @@ public class PropertyBuilder extends FixtureScript {
                 .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
 
         if(getOwner() != null) {
-            wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
+            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
         }
         if(getManager() != null) {
-            wrap(property).newRole(FixedAssetRoleType.ASSET_MANAGER, getManager(), getAcquireDate(), null);
+            wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, getManager(), getAcquireDate(), null);
         }
 
         for (int i = 0; i < getNumberOfUnits(); i++) {

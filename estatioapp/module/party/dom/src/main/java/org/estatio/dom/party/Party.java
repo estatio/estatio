@@ -55,7 +55,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.party.role.PartyRole;
 import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -208,8 +208,8 @@ public abstract class Party
     }
 
     @Programmatic
-    public void addRole(final PartyRoleTypeData partyRoleTypeData){
-        partyRoleRepository.findOrCreate(this, partyRoleTypeData);
+    public void addRole(final IPartyRoleType IPartyRoleType){
+        partyRoleRepository.findOrCreate(this, IPartyRoleType);
     }
 
     @Inject

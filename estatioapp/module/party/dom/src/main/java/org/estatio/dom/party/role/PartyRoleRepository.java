@@ -58,7 +58,7 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
         return partyRole != null ? partyRole : createPartyRole(party, roleType);
     }
 
-    public PartyRole findOrCreate(final Party party, final PartyRoleTypeData roleTypeData) {
+    public PartyRole findOrCreate(final Party party, final IPartyRoleType roleTypeData) {
         return findOrCreate(party, partyRoleTypeRepository.findOrCreate(roleTypeData));
     }
 

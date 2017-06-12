@@ -74,7 +74,7 @@ import lombok.Setter;
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class PartyRoleType
         extends UdoDomainObject2<PartyRoleType>
-        implements PartyRoleTypeData {
+        implements IPartyRoleType {
 
     public PartyRoleType() {
         super("title");
@@ -96,11 +96,6 @@ public class PartyRoleType
     @Column(allowsNull = "false", length = TitleType.Meta.MAX_LEN)
     @Getter @Setter
     private String title;
-
-    @Override
-    public PartyRoleType findUsing(final PartyRoleTypeRepository repo) {
-        return Util.findUsing(this, repo);
-    }
 
     @Override public ApplicationTenancy getApplicationTenancy() {
         return securityApplicationTenancyRepository.findByPathCached(

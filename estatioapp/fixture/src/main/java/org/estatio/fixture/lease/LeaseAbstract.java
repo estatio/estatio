@@ -57,6 +57,7 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -127,9 +128,9 @@ public abstract class LeaseAbstract extends FixtureScript {
 
         Unit unit = unitRepository.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
-        landlord.addRole(LeaseConstants.PartyRoleTypeEnum.LANDLORD);
+        landlord.addRole(LeaseRoleTypeEnum.LANDLORD);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
-        tenant.addRole(LeaseConstants.PartyRoleTypeEnum.TENANT);
+        tenant.addRole(LeaseRoleTypeEnum.TENANT);
 
         final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", applicationTenancyRepository.findByPathCached(
                 ApplicationTenancyConstants.GLOBAL_PATH));

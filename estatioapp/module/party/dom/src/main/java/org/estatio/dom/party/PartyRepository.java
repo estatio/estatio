@@ -34,7 +34,7 @@ import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
@@ -70,8 +70,8 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     }
 
     @Programmatic
-    public List<Party> findByRoleTypeData(final PartyRoleTypeData partyRoleTypeData){
-        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(partyRoleTypeData);
+    public List<Party> findByRoleTypeData(final IPartyRoleType IPartyRoleType){
+        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(IPartyRoleType);
         return findByRoleType(partyRoleType);
     }
 
@@ -81,8 +81,8 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     }
 
     @Programmatic
-    public List<Party> findByRoleTypeDataAndReferenceOrName(final PartyRoleTypeData partyRoleTypeData, final String referenceOrName){
-        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(partyRoleTypeData);
+    public List<Party> findByRoleTypeDataAndReferenceOrName(final IPartyRoleType IPartyRoleType, final String referenceOrName){
+        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(IPartyRoleType);
         return findByRoleTypeAndReferenceOrName(partyRoleType, referenceOrName);
     }
 

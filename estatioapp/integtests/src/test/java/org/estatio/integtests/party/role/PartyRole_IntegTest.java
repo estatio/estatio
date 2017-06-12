@@ -31,7 +31,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeData;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
@@ -86,12 +86,8 @@ public class PartyRole_IntegTest extends EstatioIntegrationTest {
     }
 
     @AllArgsConstructor
-    public enum PartyRoleTypeEnum implements PartyRoleTypeData {
+    public enum PartyRoleTypeEnum implements IPartyRoleType {
         TEST_ROLE("Landlord");
-
-        public PartyRoleType findUsing(PartyRoleTypeRepository repo) {
-            return Util.findUsing(this, repo);
-        }
 
         @Override
         public String getKey() {

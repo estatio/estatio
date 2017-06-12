@@ -21,9 +21,6 @@ package org.estatio.dom.lease;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeData;
 import org.estatio.dom.agreement.AgreementRoleTypeData;
 import org.estatio.dom.agreement.AgreementTypeData;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeData;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -66,31 +63,6 @@ public final class LeaseConstants {
 
         public boolean equalTo(final AgreementRoleCommunicationChannelTypeData agreementRoleCommunicationChannelType){
             return getTitle().equals(agreementRoleCommunicationChannelType.getTitle());
-        }
-
-    }
-
-    @AllArgsConstructor
-    public enum PartyRoleTypeEnum implements PartyRoleTypeData {
-        LANDLORD("Landlord"),
-        TENANT("Tenant"),
-        TENANTS_ASSOCIATION("Tenants association");
-
-        public PartyRoleType findUsing(PartyRoleTypeRepository repo) {
-            return Util.findUsing(this, repo);
-        }
-
-        @Override
-        public String getKey() {
-            return this.name();
-        }
-
-        @Getter
-        private String title;
-
-        public static class Meta {
-            public final static int MAX_LEN = 30;
-            private Meta() {}
         }
 
     }

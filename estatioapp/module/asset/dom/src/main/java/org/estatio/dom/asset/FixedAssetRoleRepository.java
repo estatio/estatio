@@ -43,7 +43,7 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
 
     public List<FixedAssetRole> findByAssetAndType(
             final FixedAsset asset,
-            final FixedAssetRoleType type) {
+            final FixedAssetRoleTypeEnum type) {
         return allMatches("findByAssetAndType",
                 "asset", asset,
                 "type", type);
@@ -51,7 +51,7 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
 
     public FixedAssetRole findRole(
             final FixedAsset asset,
-            final FixedAssetRoleType type) {
+            final FixedAssetRoleTypeEnum type) {
         return firstMatch("findByAssetAndType",
                 "asset", asset,
                 "type", type);
@@ -60,7 +60,7 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
     public FixedAssetRole findRole(
             final FixedAsset asset,
             final Party party,
-            final FixedAssetRoleType type,
+            final FixedAssetRoleTypeEnum type,
             final LocalDate startDate,
             final LocalDate endDate) {
         return firstMatch("findByAssetAndPartyAndType",
@@ -78,7 +78,7 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
     public List<FixedAssetRole> findAllForPropertyAndPartyAndType(
             final FixedAsset asset,
             final Party party,
-            final FixedAssetRoleType type) {
+            final FixedAssetRoleTypeEnum type) {
         return allMatches("findByAssetAndPartyAndType",
                 "asset", asset,
                 "party", party,
@@ -87,7 +87,7 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
 
     public List<FixedAssetRole> findByPartyAndType(
             final Party party,
-            final FixedAssetRoleType type) {
+            final FixedAssetRoleTypeEnum type) {
         return allMatches("findByPartyAndType",
                 "party", party,
                 "type", type);

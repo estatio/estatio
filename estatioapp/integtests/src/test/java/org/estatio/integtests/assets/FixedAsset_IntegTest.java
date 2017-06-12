@@ -13,7 +13,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleRepository;
-import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.PartyRepository;
@@ -73,8 +73,9 @@ public class FixedAsset_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // when
-            wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, party, new LocalDate(2015, 1, 1), null);
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
+            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2015, 1, 1), null);
 
             // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(4));
@@ -83,8 +84,9 @@ public class FixedAsset_IntegTest extends EstatioIntegrationTest {
         @Test(expected = InvalidException.class)
         public void sadCase() throws Exception {
             // when
-            wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(property).newRole(FixedAssetRoleType.PROPERTY_OWNER, party, new LocalDate(2014, 12, 31), null);
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
+            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 12, 31), null);
 
             // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(2));

@@ -84,18 +84,18 @@ public class FixedAssetRole_Test {
                             newFixedAssetRole(asset1, null, null, null))
                     ,listOf(
                             newFixedAssetRole(asset1, new LocalDate(2012,4,2), null, null),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.PROPERTY_CONTACT, null))
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, null),
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, null),
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.PROPERTY_CONTACT, null))
                     ,listOf(
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party1),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party1),
-                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party2))
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, null),
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, party1),
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, party1),
+                            newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleTypeEnum.ASSET_MANAGER, party2))
             );
         }
 
-        private FixedAssetRole newFixedAssetRole(FixedAsset asset, LocalDate startDate, FixedAssetRoleType type, Party party) {
+        private FixedAssetRole newFixedAssetRole(FixedAsset asset, LocalDate startDate, FixedAssetRoleTypeEnum type, Party party) {
             final FixedAssetRole far = new FixedAssetRole();
             far.setAsset(asset);
             far.setParty(party);

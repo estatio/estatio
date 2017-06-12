@@ -48,7 +48,7 @@ public class ProjectRoleRepository extends UdoDomainRepositoryAndFactory<Project
     public ProjectRole create(
             final Project project,
             final Party party,
-            final ProjectRoleType type,
+            final ProjectRoleTypeEnum type,
             final LocalDate startDate,
             final LocalDate endDate) {
 
