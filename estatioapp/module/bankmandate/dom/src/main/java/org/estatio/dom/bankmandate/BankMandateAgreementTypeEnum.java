@@ -1,4 +1,4 @@
-package org.estatio.dom.lease;
+package org.estatio.dom.bankmandate;
 
 import org.estatio.dom.agreement.type.IAgreementType;
 
@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum AgreementTypeEnum implements IAgreementType {
-    LEASE("Lease");
+public enum BankMandateAgreementTypeEnum implements IAgreementType {
+    MANDATE("Mandate");
 
     @Getter
     private String title;

@@ -44,7 +44,7 @@ import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
 
 /**
  * These contributions act upon {@link AgreementRoleHolder}, and from its
@@ -79,7 +79,8 @@ public class AgreementRoleHolder_bankMandateContributions
     @CollectionLayout(render = RenderType.LAZILY)
     @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(
+                BankMandateAgreementTypeEnum.MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
@@ -108,7 +109,8 @@ public class AgreementRoleHolder_bankMandateContributions
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "List All", contributed = Contributed.AS_ACTION)
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
-        final AgreementType agreementType = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
+        final AgreementType agreementType = agreementTypeRepository.find(
+                BankMandateAgreementTypeEnum.MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(

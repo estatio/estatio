@@ -28,7 +28,7 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -153,7 +153,7 @@ public class LeaseTermForTurnoverRentImport implements ExcelFixtureRowHandler, I
         final LeaseItemType itemType = fetchLeaseItemType(itemTypeName);
         LeaseItem item = lease.findItem(itemType, itemStartDate, itemSequence);
         if (item == null) {
-            item = lease.newItem(itemType, AgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(itemInvoicingFrequency), PaymentMethod.valueOf(itemPaymentMethod), itemStartDate);
+            item = lease.newItem(itemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(itemInvoicingFrequency), PaymentMethod.valueOf(itemPaymentMethod), itemStartDate);
             item.setSequence(itemSequence);
         }
         item.setEpochDate(itemEpochDate);

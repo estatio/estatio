@@ -34,7 +34,7 @@ import org.estatio.dom.asset.UnitRepository;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
@@ -193,7 +193,7 @@ public class LeaseBuilder extends FixtureScript {
 
         if (createManagerRole) {
             final AgreementRole role = lease.createRole(agreementRoleTypeRepository.findByTitle(
-                    AgreementRoleTypeEnum.MANAGER.getTitle()), manager, null, null);
+                    LeaseAgreementRoleTypeEnum.MANAGER.getTitle()), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {

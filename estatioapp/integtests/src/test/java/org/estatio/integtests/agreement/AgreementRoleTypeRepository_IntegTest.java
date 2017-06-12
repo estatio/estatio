@@ -15,8 +15,8 @@ import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
-import org.estatio.dom.lease.AgreementTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementTypeEnum;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -60,9 +60,9 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
     @Before
     public void setUp() throws Exception {
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreementType = agreementTypeRepository.find(AgreementTypeEnum.LEASE.getTitle());
+        agreementType = agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
-        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseAgreementRoleTypeEnum.TENANT.getTitle());
 
     }
 
@@ -70,7 +70,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+            AgreementRoleType result = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             assertThat(result, is(agreementRoleType));
         }
     }
@@ -89,7 +89,7 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
 
         @Test
         public void findByAgreementTypeAndTitle() throws Exception {
-            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
+            AgreementRoleType result = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             assertNotNull(result);
         }
     }

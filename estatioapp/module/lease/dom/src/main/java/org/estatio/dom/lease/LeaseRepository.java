@@ -64,8 +64,8 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     @Programmatic
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        final AgreementType agreementType = agreementTypeRepository.findOrCreate(AgreementTypeEnum.LEASE);
-        for (IAgreementRoleType IAgreementRoleType : AgreementRoleTypeEnum.values()){
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(LeaseAgreementTypeEnum.LEASE);
+        for (IAgreementRoleType IAgreementRoleType : LeaseAgreementRoleTypeEnum.values()){
             agreementRoleTypeRepository.findOrCreate(IAgreementRoleType, agreementType);
         }
         for (IAgreementRoleCommunicationChannelType IAgreementRoleCommunicationChannelType : AgreementRoleCommunicationChannelTypeEnum
@@ -116,7 +116,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
             final Party landlord,
             final Party tenant) {
         Lease lease = newTransientInstance();
-        final AgreementType at = agreementTypeRepository.find(AgreementTypeEnum.LEASE.getTitle());
+        final AgreementType at = agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE.getTitle());
         lease.setType(at);
         lease.setApplicationTenancyPath(applicationTenancy.getPath());
         lease.setReference(reference);
@@ -130,12 +130,12 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
         if (tenant != null) {
             final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(
-                    AgreementRoleTypeEnum.TENANT.getTitle());
+                    LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             lease.newRole(artTenant, tenant, null, null);
         }
         if (landlord != null) {
             final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(
-                    AgreementRoleTypeEnum.LANDLORD.getTitle());
+                    LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
             lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;

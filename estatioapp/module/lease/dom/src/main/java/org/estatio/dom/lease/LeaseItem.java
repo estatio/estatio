@@ -341,9 +341,9 @@ public class LeaseItem
     @Getter @Setter
     private LocalDate endDate;
 
-    @Column(allowsNull = "false", length = AgreementRoleTypeEnum.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = LeaseAgreementRoleTypeEnum.Meta.MAX_LEN)
     @Getter @Setter
-    private AgreementRoleTypeEnum invoicedBy;
+    private LeaseAgreementRoleTypeEnum invoicedBy;
 
     // //////////////////////////////////////
 
@@ -392,7 +392,7 @@ public class LeaseItem
             final Charge charge
     ) {
         final LeaseItem newItem = getLease().newItem(
-                this.getType(), AgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
+                this.getType(), LeaseAgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
         this.copyTerms(startDate, newItem);
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;

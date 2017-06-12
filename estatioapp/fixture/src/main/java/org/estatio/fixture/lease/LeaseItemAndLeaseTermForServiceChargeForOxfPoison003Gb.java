@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
@@ -48,7 +48,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb extends Leas
                 lease.getStartDate(), null,
                 bd(12400),
                 executionContext,
-                AgreementRoleTypeEnum.LANDLORD);
+                LeaseAgreementRoleTypeEnum.LANDLORD);
     }
 
 }

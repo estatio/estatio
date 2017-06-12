@@ -35,7 +35,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -184,10 +184,10 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
         public void depositInvoicedInArrearsTest() {
 
             // given 2 identical deposit items: 1 invoice in arrears, 1 invoiced in advance
-            LeaseItem depositItemInArrears = wrap(leaseForMedia).newItem(LeaseItemType.DEPOSIT, AgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ARREARS, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
+            LeaseItem depositItemInArrears = wrap(leaseForMedia).newItem(LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ARREARS, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
             wrap(depositItemInArrears).newSourceItem(rentItem);
 
-            LeaseItem depositItemInAdvance = leaseForMedia.newItem(LeaseItemType.DEPOSIT, AgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
+            LeaseItem depositItemInAdvance = leaseForMedia.newItem(LeaseItemType.DEPOSIT, LeaseAgreementRoleTypeEnum.LANDLORD, chargeRepository.findByReference(ChargeRefData.GB_DEPOSIT), InvoicingFrequency.QUARTERLY_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, startDateDeposit);
             wrap(depositItemInAdvance).newSourceItem(rentItem);
 
             LeaseTermForDeposit termInArrears = (LeaseTermForDeposit) wrap(depositItemInArrears).newTerm(startDateDeposit, null);

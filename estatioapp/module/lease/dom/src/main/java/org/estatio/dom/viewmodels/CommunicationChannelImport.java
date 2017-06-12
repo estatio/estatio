@@ -33,7 +33,7 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.Party;
@@ -152,7 +152,7 @@ public class CommunicationChannelImport implements ExcelFixtureRowHandler, Impor
             if (leaseReference != null) {
                 Lease lease = fetchLease(leaseReference);
                 if (lease != null && addressType != null) {
-                    final AgreementRoleType art = agreementRoleTypeRepository.find(AgreementRoleTypeEnum.TENANT);
+                    final AgreementRoleType art = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
                     final AgreementRoleCommunicationChannelType arcct = agreementRoleCommunicationChannelTypeRepository.findByTitle(addressType);
                     lease.findRoleWithType(art, lease.getStartDate()).addCommunicationChannel(arcct, comm, lease.getStartDate());
                 }

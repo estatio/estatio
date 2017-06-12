@@ -77,14 +77,14 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
             final BigDecimal startAmount
     ) {
 
-        AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeConstants.AgreementRoleType.GUARANTEE);
+        AgreementRoleType artGuarantee = agreementRoleTypeRepository.find(GuaranteeAgreementRoleType.GUARANTEE);
         Party leasePrimaryParty = lease.getPrimaryParty();
 
-        AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeConstants.AgreementRoleType.GUARANTOR);
+        AgreementRoleType artGuarantor = agreementRoleTypeRepository.find(GuaranteeAgreementRoleType.GUARANTOR);
         Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
-        final AgreementType at = agreementTypeRepository.find(GuaranteeConstants.AgreementType.GUARANTEE);
+        final AgreementType at = agreementTypeRepository.find(GuaranteeAgreementTypeEnum.GUARANTEE);
         guarantee.setType(at);
         guarantee.setReference(reference);
         guarantee.setDescription(description);
@@ -171,10 +171,11 @@ public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee
     @Programmatic
     public void init(Map<String, String> properties) {
         super.init(properties);
-        AgreementType agreementType = agreementTypeRepository.findOrCreate(GuaranteeConstants.AgreementType.GUARANTEE);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.GUARANTEE, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.GUARANTOR, agreementType);
-        agreementRoleTypeRepository.findOrCreate(GuaranteeConstants.AgreementRoleType.BANK, agreementType);
+        AgreementType agreementType = agreementTypeRepository.findOrCreate(
+                GuaranteeAgreementTypeEnum.GUARANTEE);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.GUARANTEE, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.GUARANTOR, agreementType);
+        agreementRoleTypeRepository.findOrCreate(GuaranteeAgreementRoleType.BANK, agreementType);
     }
 
     // //////////////////////////////////////

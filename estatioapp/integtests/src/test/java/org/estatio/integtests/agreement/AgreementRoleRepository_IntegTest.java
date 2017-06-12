@@ -40,8 +40,8 @@ import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
-import org.estatio.dom.lease.AgreementTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.party.OrganisationRepository;
@@ -102,9 +102,9 @@ public class AgreementRoleRepository_IntegTest extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-        agreementType = agreementTypeRepository.find(AgreementTypeEnum.LEASE.getTitle());
+        agreementType = agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE.getTitle());
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementType, LeaseForOxfTopModel001Gb.REF);
-        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, AgreementRoleTypeEnum.TENANT.getTitle());
+        agreementRoleType = agreementRoleTypeRepository.findByAgreementTypeAndTitle(agreementType, LeaseAgreementRoleTypeEnum.TENANT.getTitle());
 
     }
 
@@ -135,7 +135,7 @@ public class AgreementRoleRepository_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            artTenant = agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+            artTenant = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             partyTopModel = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         }

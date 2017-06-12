@@ -76,7 +76,7 @@ public class BankMandate
      * Primary role is creditor, secondary role is debtor.
      */
     public BankMandate() {
-        super(BankMandateConstants.AgreementRoleType.CREDITOR, BankMandateConstants.AgreementRoleType.DEBTOR);
+        super(BankMandateAgreementRoleTypeEnum.CREDITOR, BankMandateAgreementRoleTypeEnum.DEBTOR);
     }
 
     @javax.jdo.annotations.Column(

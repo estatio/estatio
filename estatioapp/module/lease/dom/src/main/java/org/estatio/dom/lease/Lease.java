@@ -78,8 +78,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
 import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
@@ -164,7 +165,7 @@ public class Lease
         implements WithApplicationTenancyProperty, WithApplicationTenancyPathPersisted {
 
     public Lease() {
-        super(AgreementRoleTypeEnum.LANDLORD, AgreementRoleTypeEnum.TENANT);
+        super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
     }
 
     public static class RemoveEvent extends ActionDomainEvent<Lease> {}
@@ -239,12 +240,12 @@ public class Lease
 
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(AgreementRoleTypeEnum.LANDLORD.getTitle());
+        return findCurrentOrMostRecentAgreementRole(LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
     }
 
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(AgreementRoleTypeEnum.TENANT.getTitle());
+        return findCurrentOrMostRecentAgreementRole(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
     }
 
     // //////////////////////////////////////
@@ -474,7 +475,7 @@ public class Lease
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
-            final AgreementRoleTypeEnum invoicedBy,
+            final LeaseAgreementRoleTypeEnum invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -487,8 +488,8 @@ public class Lease
         return chargeRepository.outgoingChargesForCountry(this.getApplicationTenancy());
     }
 
-    public AgreementRoleTypeEnum default1NewItem(){
-        return AgreementRoleTypeEnum.LANDLORD;
+    public LeaseAgreementRoleTypeEnum default1NewItem(){
+        return LeaseAgreementRoleTypeEnum.LANDLORD;
     }
 
     public PaymentMethod default4NewItem() {
@@ -501,7 +502,7 @@ public class Lease
 
     public String validateNewItem(
             final LeaseItemType type,
-            final AgreementRoleTypeEnum invoicedBy,
+            final LeaseAgreementRoleTypeEnum invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -584,7 +585,7 @@ public class Lease
     public LeaseItem findItem(
             final LeaseItemType itemType,
             final LocalDate itemStartDate,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
         return leaseItemRepository.findByLeaseAndTypeAndStartDateAndInvoicedBy(this, itemType, itemStartDate, invoicedBy);
     }
 
@@ -593,7 +594,7 @@ public class Lease
             final LeaseItemType itemType,
             final Charge charge,
             final LocalDate itemStartDate,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
         return leaseItemRepository.findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy(this, itemType, charge, itemStartDate, invoicedBy);
     }
 
@@ -776,11 +777,11 @@ public class Lease
     }
 
     private AgreementRoleType debtorRoleType() {
-        return agreementRoleTypeRepository.find(BankMandateConstants.AgreementRoleType.DEBTOR);
+        return agreementRoleTypeRepository.find(BankMandateAgreementRoleTypeEnum.DEBTOR);
     }
 
     private AgreementType bankMandateAgreementType() {
-        return agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
+        return agreementTypeRepository.find(BankMandateAgreementTypeEnum.MANDATE);
     }
 
     // //////////////////////////////////////
@@ -933,7 +934,7 @@ public class Lease
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
-                    AgreementRoleTypeEnum.LANDLORD, item.getCharge(),
+                    LeaseAgreementRoleTypeEnum.LANDLORD, item.getCharge(),
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
                     item.getStartDate()

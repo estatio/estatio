@@ -15,8 +15,8 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
-import org.estatio.dom.lease.AgreementTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementTypeEnum;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -63,7 +63,7 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
     @Before
     public void setUp() {
         agreement = agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(
-                AgreementTypeEnum.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
+                LeaseAgreementTypeEnum.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
         party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
@@ -79,8 +79,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
 
             // when
             existingRole.setEndDate(new LocalDate(2013, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2015, 1, 1), null);
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2015, 1, 1), null);
 
             // then
             assertThat(agreementRoleRepository.findByParty(party).size(), is(3));
@@ -92,8 +92,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
             assertThat(agreementRoleRepository.findByParty(party).size(), is(1));
 
             // when
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.MANAGER.getTitle()), party, null, new LocalDate(2014, 12, 31));
-            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(AgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2014, 12, 31), null);
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.MANAGER.getTitle()), party, null, new LocalDate(2014, 12, 31));
+            wrap(agreement).newRole(agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.MANAGER.getTitle()), party, new LocalDate(2014, 12, 31), null);
 
         }
     }

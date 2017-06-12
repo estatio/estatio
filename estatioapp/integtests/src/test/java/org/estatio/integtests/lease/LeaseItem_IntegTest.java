@@ -41,7 +41,7 @@ import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -148,9 +148,9 @@ public class LeaseItem_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), AgreementRoleTypeEnum.LANDLORD);
+            LeaseItem leaseItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), LeaseAgreementRoleTypeEnum.LANDLORD);
             final Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-            assertThat(leaseItem.getInvoicedBy()).isEqualTo(AgreementRoleTypeEnum.LANDLORD);
+            assertThat(leaseItem.getInvoicedBy()).isEqualTo(LeaseAgreementRoleTypeEnum.LANDLORD);
 
             // when
             final LocalDate startDate = VT.ld(2011, 7, 15);

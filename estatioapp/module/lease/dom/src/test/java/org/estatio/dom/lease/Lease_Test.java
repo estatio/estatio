@@ -61,8 +61,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
 import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
 import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
@@ -204,12 +205,12 @@ public class Lease_Test {
             // Then
             context.checking(new Expectations() {
                 {
-                    oneOf(mockLeaseItemRepository).newLeaseItem(lease, leaseItemType, AgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
+                    oneOf(mockLeaseItemRepository).newLeaseItem(lease, leaseItemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
                 }
             });
 
             // When
-            lease.newItem(leaseItemType, AgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
+            lease.newItem(leaseItemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, invoicingFrequency, paymentMethod, startDate);
         }
 
     }
@@ -346,28 +347,28 @@ public class Lease_Test {
         public void setUp() throws Exception {
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(AgreementRoleTypeEnum.LANDLORD.getTitle());
+            tenantAgreementRoleType.setTitle(LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(AgreementRoleTypeEnum.LANDLORD.getTitle());
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
                     will(returnValue(landlordAgreementRoleType));
                 }
             });
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+            tenantAgreementRoleType.setTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
                     will(returnValue(tenantAgreementRoleType));
                 }
             });
 
             debtorAgreementRoleType = new AgreementRoleType();
-            debtorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
+            debtorAgreementRoleType.setTitle(BankMandateAgreementRoleTypeEnum.DEBTOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateAgreementRoleTypeEnum.DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
@@ -379,19 +380,19 @@ public class Lease_Test {
             });
 
             creditorAgreementRoleType = new AgreementRoleType();
-            creditorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.CREDITOR.getTitle());
+            creditorAgreementRoleType.setTitle(BankMandateAgreementRoleTypeEnum.CREDITOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.CREDITOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateAgreementRoleTypeEnum.CREDITOR);
                     will(returnValue(creditorAgreementRoleType));
                 }
             });
 
             bankMandateAgreementType = new AgreementType();
-            bankMandateAgreementType.setTitle(BankMandateConstants.AgreementType.MANDATE.getTitle());
+            bankMandateAgreementType.setTitle(BankMandateAgreementTypeEnum.MANDATE.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AgreementType.MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateAgreementTypeEnum.MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });
@@ -605,28 +606,28 @@ public class Lease_Test {
         public void setUp() throws Exception {
 
             tenantAgreementRoleType = new AgreementRoleType();
-            tenantAgreementRoleType.setTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+            tenantAgreementRoleType.setTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).findByTitle(AgreementRoleTypeEnum.TENANT.getTitle());
+                    allowing(mockAgreementRoleTypeRepository).findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
                     will(returnValue(tenantAgreementRoleType));
                 }
             });
 
             debtorAgreementRoleType = new AgreementRoleType();
-            debtorAgreementRoleType.setTitle(BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
+            debtorAgreementRoleType.setTitle(BankMandateAgreementRoleTypeEnum.DEBTOR.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementRoleTypeRepository).find(BankMandateConstants.AgreementRoleType.DEBTOR);
+                    allowing(mockAgreementRoleTypeRepository).find(BankMandateAgreementRoleTypeEnum.DEBTOR);
                     will(returnValue(debtorAgreementRoleType));
                 }
             });
 
             bankMandateAgreementType = new AgreementType();
-            bankMandateAgreementType.setTitle(BankMandateConstants.AgreementType.MANDATE.getTitle());
+            bankMandateAgreementType.setTitle(BankMandateAgreementTypeEnum.MANDATE.getTitle());
             context.checking(new Expectations() {
                 {
-                    allowing(mockAgreementTypeRepository).find(BankMandateConstants.AgreementType.MANDATE);
+                    allowing(mockAgreementTypeRepository).find(BankMandateAgreementTypeEnum.MANDATE);
                     will(returnValue(bankMandateAgreementType));
                 }
             });
@@ -1183,7 +1184,7 @@ public class Lease_Test {
                 @Override
                 public LeaseItem newItem(
                         final LeaseItemType type,
-                        final AgreementRoleTypeEnum invoicedBy,
+                        final LeaseAgreementRoleTypeEnum invoicedBy,
                         final Charge charge,
                         final InvoicingFrequency invoicingFrequency,
                         final PaymentMethod paymentMethod,

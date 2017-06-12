@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum AgreementRoleTypeEnum implements IAgreementRoleType {
+public enum LeaseAgreementRoleTypeEnum implements IAgreementRoleType {
     LANDLORD("Landlord"),
     TENANT("Tenant"),
     TENANTS_ASSOCIATION("Tenants association"),

@@ -23,7 +23,7 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -141,7 +141,7 @@ public class LeaseItemImport implements ExcelFixtureRowHandler, Importable {
         }
         LeaseItem item = lease.findItem(itemType, startDateOrDefault, sequence);
         if (item == null) {
-            item = lease.newItem(itemType, AgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDateOrDefault);
+            item = lease.newItem(itemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDateOrDefault);
             item.setSequence(sequence);
         }
         if (updateExisting) {

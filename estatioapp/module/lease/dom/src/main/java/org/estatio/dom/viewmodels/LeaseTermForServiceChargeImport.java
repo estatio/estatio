@@ -29,7 +29,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -139,7 +139,7 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
         final Charge charge = fetchCharge(itemChargeReference);
         final LeaseItemType itemType = fetchLeaseItemType(itemTypeName);
         final LocalDate itemStartDateToUse = itemStartDate == null ? lease.getStartDate() : itemStartDate;
-        final AgreementRoleTypeEnum invoicedByToUse = this.invoicedBy == null ? AgreementRoleTypeEnum.LANDLORD : AgreementRoleTypeEnum
+        final LeaseAgreementRoleTypeEnum invoicedByToUse = this.invoicedBy == null ? LeaseAgreementRoleTypeEnum.LANDLORD : LeaseAgreementRoleTypeEnum
                 .valueOf(this.invoicedBy);
         final PaymentMethod paymentMethodToUse = itemPaymentMethod == null ? lease.defaultPaymentMethod() : PaymentMethod.valueOf(itemPaymentMethod);
 

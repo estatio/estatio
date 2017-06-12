@@ -35,7 +35,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Fraction;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -72,7 +72,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
                 leaseItemType,
                 invoicingFrequency,
                 executionContext,
-                AgreementRoleTypeEnum.LANDLORD);
+                LeaseAgreementRoleTypeEnum.LANDLORD);
     }
 
     protected LeaseItem findOrCreateLeaseItem(
@@ -82,7 +82,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
             final ExecutionContext executionContext,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
 
         final Lease lease = findLease(leaseRef);
         final ApplicationTenancy leaseApplicationTenancy = lease.getApplicationTenancy();
@@ -272,7 +272,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final LocalDate endDate,
             final BigDecimal budgetedValue,
             final ExecutionContext executionContext,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
 
         final LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
                 leaseRef,
@@ -293,7 +293,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
     protected LeaseTerm createLeaseTermForMarketing(
             final String leaseRef,
             final String leaseItemAtPath,
-            final AgreementRoleTypeEnum invoicedBy,
+            final LeaseAgreementRoleTypeEnum invoicedBy,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,

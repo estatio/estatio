@@ -9,6 +9,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
+import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
@@ -20,7 +22,6 @@ import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
@@ -46,8 +47,9 @@ public class PartyBankAccountsAndMandatesDtoFactory extends DtoFactoryAbstract {
 
         dto.setBankAccounts(bankAccountDtos);
 
-        final AgreementType bankMandateAt = agreementTypeRepository.find(BankMandateConstants.AgreementType.MANDATE);
-        final AgreementRoleType debtorOfMandate = agreementRoleTypeRepository.findByAgreementTypeAndTitle(bankMandateAt, BankMandateConstants.AgreementRoleType.DEBTOR.getTitle());
+        final AgreementType bankMandateAt = agreementTypeRepository.find(
+                BankMandateAgreementTypeEnum.MANDATE);
+        final AgreementRoleType debtorOfMandate = agreementRoleTypeRepository.findByAgreementTypeAndTitle(bankMandateAt, BankMandateAgreementRoleTypeEnum.DEBTOR.getTitle());
         final List<AgreementRole> agreementRoles = agreementRoleRepository.findByPartyAndType(party, debtorOfMandate);
 
         final List<BankMandateDto> mandateDtos =

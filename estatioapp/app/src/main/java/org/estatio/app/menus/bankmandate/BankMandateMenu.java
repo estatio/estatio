@@ -35,7 +35,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 
 @DomainService(
@@ -57,7 +57,7 @@ public class BankMandateMenu extends UdoDomainService<BankMandateMenu> {
     @Action(semantics = SemanticsOf.SAFE)
     public List<Agreement> findBankMandates(final String search){
         return agreementRepository.findByTypeTitleAndReferenceOrName(
-                BankMandateConstants.AgreementType.MANDATE.getTitle(),
+                BankMandateAgreementTypeEnum.MANDATE.getTitle(),
                 StringUtils.wildcardToCaseInsensitiveRegex(search));
     }
 

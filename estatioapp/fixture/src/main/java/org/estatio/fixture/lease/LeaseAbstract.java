@@ -51,7 +51,7 @@ import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
@@ -149,7 +149,7 @@ public abstract class LeaseAbstract extends FixtureScript {
 
         if (createManagerRole) {
             final AgreementRole role = lease.createRole(agreementRoleTypeRepository.find(
-                    AgreementRoleTypeEnum.MANAGER), manager, null, null);
+                    LeaseAgreementRoleTypeEnum.MANAGER), manager, null, null);
             fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
@@ -209,7 +209,7 @@ public abstract class LeaseAbstract extends FixtureScript {
             final CommunicationChannelType channelType) {
 
         final AgreementRoleType inRoleOfTenant =
-                agreementRoleTypeRepository.find(AgreementRoleTypeEnum.TENANT);
+                agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
         final AgreementRoleCommunicationChannelType inRoleOfInvoiceAddress =
                 agreementRoleCommunicationChannelTypeRepository.find(
                         AgreementRoleCommunicationChannelTypeEnum.INVOICE_ADDRESS);
@@ -276,7 +276,7 @@ public abstract class LeaseAbstract extends FixtureScript {
 
     public void createAddress(Lease lease, IAgreementRoleCommunicationChannelType addressType) {
         AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypeRepository.find(
-                AgreementRoleTypeEnum.TENANT), ld(2010, 7, 15));
+                LeaseAgreementRoleTypeEnum.TENANT), ld(2010, 7, 15));
         AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypeRepository
                 .find(addressType);
         final SortedSet<CommunicationChannel> channels = communicationChannelRepository.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS);

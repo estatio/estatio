@@ -32,7 +32,7 @@ import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -160,7 +160,7 @@ public class BudgetAssignmentService {
         if (leaseItem==null){
             leaseItem = lease.newItem(
                     LeaseItemType.SERVICE_CHARGE_BUDGETED,
-                    AgreementRoleTypeEnum.LANDLORD, calculationResult.getInvoiceCharge(),
+                    LeaseAgreementRoleTypeEnum.LANDLORD, calculationResult.getInvoiceCharge(),
                     frequency,
                     paymentMethod,
                     startDate);

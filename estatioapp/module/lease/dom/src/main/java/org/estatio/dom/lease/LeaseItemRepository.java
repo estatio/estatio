@@ -52,7 +52,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
     public LeaseItem newLeaseItem(
             final Lease lease,
             final LeaseItemType type,
-            final AgreementRoleTypeEnum invoicedBy,
+            final LeaseAgreementRoleTypeEnum invoicedBy,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -122,7 +122,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final LeaseItemType type,
             final Charge charge,
             final LocalDate startDate,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
         return firstMatch("findByLeaseAndTypeAndChargeAndStartDateAndInvoicedBy",
                 "lease", lease,
                 "type", type,
@@ -136,7 +136,7 @@ public class LeaseItemRepository extends UdoDomainRepositoryAndFactory<LeaseItem
             final Lease lease,
             final LeaseItemType type,
             final LocalDate startDate,
-            final AgreementRoleTypeEnum invoicedBy) {
+            final LeaseAgreementRoleTypeEnum invoicedBy) {
         return firstMatch("findByLeaseAndTypeAndStartDateAndInvoicedBy",
                 "lease", lease,
                 "type", type,

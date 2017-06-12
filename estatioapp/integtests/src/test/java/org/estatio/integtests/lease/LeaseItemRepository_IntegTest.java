@@ -33,7 +33,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleTypeEnum;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -96,7 +96,7 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
 
             // when
             final ApplicationTenancy firstLocalAppTenancy = lease.getApplicationTenancy().getChildren().first();
-            LeaseItem newItem = leaseItemRepository.newLeaseItem(lease, currentItem.getType(), AgreementRoleTypeEnum.LANDLORD, currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
+            LeaseItem newItem = leaseItemRepository.newLeaseItem(lease, currentItem.getType(), LeaseAgreementRoleTypeEnum.LANDLORD, currentItem.getCharge(), currentItem.getInvoicingFrequency(), currentItem.getPaymentMethod(), currentItem.getStartDate().plusYears(1));
             lease.getItems().add(newItem);
 
             // then
@@ -113,7 +113,7 @@ public class LeaseItemRepository_IntegTest extends EstatioIntegrationTest {
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_RENT);
             Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
             final LeaseItemType leaseItemType = LeaseItemType.RENT;
-            final AgreementRoleTypeEnum agreementRoleType = AgreementRoleTypeEnum.TENANTS_ASSOCIATION;
+            final LeaseAgreementRoleTypeEnum agreementRoleType = LeaseAgreementRoleTypeEnum.TENANTS_ASSOCIATION;
             final InvoicingFrequency invoicingFrequency = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
             final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER;
 
