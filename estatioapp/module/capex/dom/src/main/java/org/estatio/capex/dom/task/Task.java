@@ -68,18 +68,24 @@ public class Task implements Comparable<Task> {
 
     public Task(
             final PartyRoleType assignedTo,
-            final Person personAssignedTo, final String description,
+            final Person personAssignedTo,
+            final String description,
             final LocalDateTime createdOn,
             final String transitionObjectType) {
         this.assignedTo = assignedTo;
+        this.personAssignedTo = personAssignedTo;
         this.description = description;
         this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", name = "assignedToId")
     private PartyRoleType assignedTo;
+
+    @Getter @Setter
+    @Column(allowsNull = "true", name = "personAssignedToId")
+    private Person personAssignedTo;
 
     /**
      * Human friendly name, used for the title.

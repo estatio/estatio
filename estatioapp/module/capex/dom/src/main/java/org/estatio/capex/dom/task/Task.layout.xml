@@ -12,7 +12,6 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
-                                <cpt:property id="assignedTo"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
                                     <cpt:action id="classifyAsOrder"/>
@@ -56,8 +55,12 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-            <cpt:fieldSet name="Details" id="details">
-                <cpt:property id="createdOn"/>
+            <cpt:fieldSet name="Assignment" id="assignedTo">
+                <cpt:property id="assignedTo"/>
+                <cpt:property id="personAssignedTo"/>
+                <cpt:property id="createdOn">
+                    <cpt:named>Assigned on</cpt:named>
+                </cpt:property>
                 <cpt:property id="transition" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Completion" id="completion">
