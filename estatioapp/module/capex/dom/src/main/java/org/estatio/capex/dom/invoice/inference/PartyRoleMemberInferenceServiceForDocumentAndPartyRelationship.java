@@ -42,8 +42,7 @@ public class PartyRoleMemberInferenceServiceForDocumentAndPartyRelationship
                 .collect(Collectors.toList());
     }
 
-    private Organisation inferOrganisation(
-            final Document document) {
+    private Organisation inferOrganisation(final Document document) {
 
         // we can use the ECP naming convention to infer the buyer for France.
         // from is the Organisation acting as the buyer, eg ECP FR

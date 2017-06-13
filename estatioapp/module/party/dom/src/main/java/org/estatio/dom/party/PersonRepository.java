@@ -77,6 +77,12 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
     // //////////////////////////////////////
 
     @Programmatic
+    public Person findByUsername(final String username) {
+        return firstMatch("findByUsername", "username", username);
+    }
+
+
+    @Programmatic
     public List<Person> allPersons() {
         return allInstances();
     }
@@ -91,6 +97,5 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
 
     @Inject
     private CountryRepository countryRepository;
-
 
 }
