@@ -48,7 +48,7 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;

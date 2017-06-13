@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.dom.asset.role;
 
 import java.util.SortedSet;
 
@@ -51,6 +51,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.role.IPartyRoleType;
 
@@ -76,29 +77,29 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "FROM org.estatio.dom.asset.role.FixedAssetRole "
                         + "WHERE asset == :asset "
                         + "&& type == :type"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndPartyAndType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "FROM org.estatio.dom.asset.role.FixedAssetRole "
                         + "WHERE asset == :asset "
                         + "&& party == :party "
                         + "&& type == :type"),
         @javax.jdo.annotations.Query(
                 name = "findAllForProperty", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "FROM org.estatio.dom.asset.role.FixedAssetRole "
                         + "WHERE asset == :asset"),
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "FROM org.estatio.dom.asset.role.FixedAssetRole "
                         + "WHERE party == :party && type == :type")
 })
 @DomainObject(
-        objectType = "org.estatio.dom.asset.FixedAssetRole"
+        objectType = "org.estatio.dom.asset.FixedAssetRole"  // backward compatibility
 )
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole

@@ -85,7 +85,7 @@ public class PartyRelationshipView  {
     @MemberOrder(sequence = "3")
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
-    private PartyRelationshipType relationshipType;
+    private PartyRelationshipTypeEnum relationshipType;
 
 
     // derived property

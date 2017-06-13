@@ -28,6 +28,10 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
+import org.estatio.dom.asset.role.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRoleRepository;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

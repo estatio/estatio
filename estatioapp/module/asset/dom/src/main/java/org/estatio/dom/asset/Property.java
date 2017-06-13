@@ -58,6 +58,8 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
+import org.estatio.dom.asset.role.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

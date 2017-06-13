@@ -40,7 +40,7 @@ import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipRepository;
-import org.estatio.dom.party.relationship.PartyRelationshipType;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
@@ -109,10 +109,10 @@ public class PartyRelationshipRepository_IntegTest extends EstatioIntegrationTes
             PartyRelationship relationship = partyRelationshipRepository.newRelationship(
                     fromParty,
                     toParty,
-                    PartyRelationshipType.EMPLOYMENT.toTitle(), null);
+                    PartyRelationshipTypeEnum.EMPLOYMENT.toTitle(), null);
             assertThat(relationship.getFrom(), is(fromParty));
             assertThat(relationship.getTo(), is(toParty));
-            assertThat(relationship.getRelationshipType().toTitle(), is(PartyRelationshipType.EMPLOYMENT.toTitle()));
+            assertThat(relationship.getRelationshipType().toTitle(), is(PartyRelationshipTypeEnum.EMPLOYMENT.toTitle()));
         }
     }
 
@@ -127,7 +127,7 @@ public class PartyRelationshipRepository_IntegTest extends EstatioIntegrationTes
         @Test
         public void happyCase() throws Exception {
             final Party husband = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);
-            PartyRelationship relationship = partyRelationshipRepository.newRelatedPerson(husband, LOPEZ, J, JENNIFER, LOPEZ, PersonGenderType.FEMALE, PartyRelationshipType.MARRIAGE.toTitle(), null, _555_12345, JLOPEZ_EXAMPLE_COM);
+            PartyRelationship relationship = partyRelationshipRepository.newRelatedPerson(husband, LOPEZ, J, JENNIFER, LOPEZ, PersonGenderType.FEMALE, PartyRelationshipTypeEnum.MARRIAGE.toTitle(), null, _555_12345, JLOPEZ_EXAMPLE_COM);
             Person wife = (Person) relationship.getTo();
             assertThat(wife.getReference(), is(LOPEZ));
             assertThat(wife.getFirstName(), is(JENNIFER));

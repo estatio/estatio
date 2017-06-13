@@ -9,13 +9,14 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.party.Person;
+
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleTypeService {
 
     @PostConstruct
     @Programmatic
     public void init() {
-
         for (PartyRoleTypeServiceSupport supportService : supportServices) {
             List<IPartyRoleType> partyRoleTypes = supportService.listAll();
             for (IPartyRoleType partyRoleType : partyRoleTypes) {
@@ -24,11 +25,24 @@ public class PartyRoleTypeService {
         }
     }
 
+    @Programmatic
+    public List<Person> membersOf(final IPartyRoleType partyRoleType, final Object domainObject) {
+        for (PartyRoleMemberInferenceService inferenceService : inferenceServices) {
+            List<Person> persons = inferenceService.inferMembersOf(partyRoleType, domainObject);
+            if(persons != null) {
+                return persons;
+            }
+        }
+        return null;
+    }
+
     @Inject
     List<PartyRoleTypeServiceSupport> supportServices;
 
     @Inject
-    PartyRoleTypeRepository partyRoleTypeRepository;
+    List<PartyRoleMemberInferenceService> inferenceServices;
 
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
 }

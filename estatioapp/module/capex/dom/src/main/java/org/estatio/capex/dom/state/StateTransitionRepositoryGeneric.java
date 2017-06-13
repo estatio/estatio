@@ -16,8 +16,11 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.dom.party.role.PartyRoleTypeService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionRepositoryGeneric {
@@ -112,7 +115,8 @@ public class StateTransitionRepositoryGeneric {
             final String taskDescription,
             final Class<ST> stateTransitionClass) {
 
-        final Task taskIfAny = createTaskIfRequired(taskAssignToIfAny, taskDescription, stateTransitionClass);
+        final Task taskIfAny = createTaskIfRequired(taskAssignToIfAny, taskDescription, stateTransitionClass,
+                domainObject);
 
         final ST stateTransition = createTransition(domainObject, transitionType, fromState, taskIfAny, stateTransitionClass);
 
@@ -126,16 +130,23 @@ public class StateTransitionRepositoryGeneric {
             S extends State<S>
             >
     Task createTaskIfRequired(
-            final IPartyRoleType taskAssignToIfAny,
+            final IPartyRoleType iRoleAssignTo,
             final String taskDescription,
-            final Class<ST> stateTransitionClass) {
-        if (taskAssignToIfAny == null) {
+            final Class<ST> stateTransitionClass,
+            final DO domainObject) {
+        if (iRoleAssignTo == null) {
             return null;
         }
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
         final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
-        final Task task = new Task(taskAssignToIfAny, taskDescription, createdOn, transitionObjectType,
-                partyRoleTypeRepository);
+
+        final List<Person> persons = partyRoleTypeService.membersOf(iRoleAssignTo, domainObject);
+        final Person assignToIfAny = persons != null && !persons.isEmpty() ? persons.get(0) : null;
+
+        final PartyRoleType roleAssignTo =
+                iRoleAssignTo.findOrCreateUsing(partyRoleTypeRepository);
+        final Task task = new Task(roleAssignTo, assignToIfAny, taskDescription, createdOn, transitionObjectType);
+
         repositoryService.persist(task);
         return task;
     }
@@ -187,7 +198,10 @@ public class StateTransitionRepositoryGeneric {
     PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
-    protected MetaModelService3 metaModelService3;
+    PartyRoleTypeService partyRoleTypeService;
+
+    @Inject
+    MetaModelService3 metaModelService3;
 
     @Inject
     protected RepositoryService repositoryService;

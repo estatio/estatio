@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -16,6 +19,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
@@ -34,12 +38,25 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
     }
 
     @Programmatic
+    public List<PartyRelationship> findCurrentByFromAndType(
+            final Organisation from,
+            final PartyRelationshipTypeEnum relationshipType) {
+        LocalDate now = clockService.now();
+        return allMatches("findByFromAndTypeAndBetweenStartDateAndEndDate",
+                "from", from,
+                "relationshipType", relationshipType,
+                "date", now);
+    }
+
+
+    @Programmatic
     public PartyRelationship newRelationship(
             final Party fromParty,
             final Party toParty,
             final String relationshipType,
             final @Parameter(optionality = Optionality.OPTIONAL) String description) {
-        PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(fromParty, toParty, relationshipType));
+        PartyRelationship relationship = getContainer().injectServicesInto(
+                PartyRelationshipTypeEnum.createWithToTitle(fromParty, toParty, relationshipType));
         relationship.setFrom(fromParty);
         relationship.setTo(toParty);
         relationship.setDescription(description);
@@ -138,8 +155,11 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
     // //////////////////////////////////////
 
     @Inject
-    private PersonRepository personRepository;
+    PersonRepository personRepository;
 
     @Inject
-    private CommunicationChannelRepository communicationChannelRepository;
+    CommunicationChannelRepository communicationChannelRepository;
+
+    @Inject
+    ClockService clockService;
 }

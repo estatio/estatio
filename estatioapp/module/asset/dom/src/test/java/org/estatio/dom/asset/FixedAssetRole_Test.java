@@ -29,6 +29,9 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.dom.asset.role.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

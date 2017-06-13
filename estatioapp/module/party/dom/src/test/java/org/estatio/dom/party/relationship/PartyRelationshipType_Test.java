@@ -11,15 +11,15 @@ public class PartyRelationshipType_Test {
 
     @Test
     public void availableFor() {
-        assertThat(PartyRelationshipType.toTitlesFor(Person.class, Organisation.class)).hasSize(7);
-        assertThat(PartyRelationshipType.toTitlesFor(Person.class, Person.class)).hasSize(3);
+        assertThat(PartyRelationshipTypeEnum.toTitlesFor(Person.class, Organisation.class)).hasSize(7);
+        assertThat(PartyRelationshipTypeEnum.toTitlesFor(Person.class, Person.class)).hasSize(3);
     }
 
     @Test
     public void createFor() {
         Person p = new Person();
         Organisation o = new Organisation();
-        PartyRelationship pr = PartyRelationshipType.createWithToTitle(o, p, PartyRelationshipType.EMPLOYMENT.toTitle());
+        PartyRelationship pr = PartyRelationshipTypeEnum.createWithToTitle(o, p, PartyRelationshipTypeEnum.EMPLOYMENT.toTitle());
         assertThat((Organisation) pr.getFrom()).isEqualTo(o);
     }
 

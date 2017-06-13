@@ -61,6 +61,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
+import org.estatio.dom.asset.role.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRoleRepository;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Party;
 
 import lombok.Getter;

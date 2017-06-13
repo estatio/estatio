@@ -4,14 +4,19 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
 
-public enum PartyRelationshipType {
+public enum PartyRelationshipTypeEnum implements IPartyRoleType {
 
     // Org - Org
-    OWNERSHIP("Owns","Owned by", Organisation.class, Organisation.class),
+    OWNERSHIP("Owns", "Owned by", Organisation.class, Organisation.class),
     // Org - Person
     EMPLOYMENT("Employer", "Employee", Organisation.class, Person.class),
     MARKETING("Marketing", "Marketing", Organisation.class, Person.class),
@@ -19,6 +24,12 @@ public enum PartyRelationshipType {
     ACCOUNTING("Accounting", "Accounting", Organisation.class, Person.class),
     STORE_MANAGER("Store Manager", "Store Manager", Organisation.class, Person.class),
     TURNOVER_REFERENT("Turnover Referent", "Turnover Referent", Organisation.class, Person.class),
+
+    MAIL_ROOM("Buyer", "Mailroom", Organisation.class, Person.class),
+    COUNTRY_ADMINISTRATOR("Buyer", "Country Administrator", Organisation.class, Person.class),
+    COUNTRY_DIRECTOR("Buyer", "Country Director", Organisation.class, Person.class),
+    TREASURER("Buyer", "Treasurer", Organisation.class, Person.class),
+
     // Person - Person
     MARRIAGE("Husband", "Wife", Person.class, Person.class),
     CONTACT("Contact", "Contact", Party.class, Party.class);
@@ -28,7 +39,7 @@ public enum PartyRelationshipType {
     Class<? extends Party> fromClass;
     Class<? extends Party> toClass;
 
-    PartyRelationshipType(
+    PartyRelationshipTypeEnum(
             final String fromTitle,
             final String toTitle,
             final Class<? extends Party> fromClass,
@@ -43,7 +54,7 @@ public enum PartyRelationshipType {
             final Party fromParty,
             final Party toParty,
             final String toTitle) {
-        for (PartyRelationshipType relationshipType : PartyRelationshipType.values()) {
+        for (PartyRelationshipTypeEnum relationshipType : PartyRelationshipTypeEnum.values()) {
             if (relationshipType.toTitle.equals(toTitle)) {
                 return new PartyRelationship(fromParty, toParty, relationshipType);
             }
@@ -59,7 +70,7 @@ public enum PartyRelationshipType {
             final Class<?> toClass) {
         Set<String> choices = Sets.newTreeSet();
         if (fromClass != null && toClass != null)
-            for (PartyRelationshipType type : PartyRelationshipType.values()) {
+            for (PartyRelationshipTypeEnum type : PartyRelationshipTypeEnum.values()) {
                 if (type.fromClass.isAssignableFrom(fromClass) && type.toClass.isAssignableFrom(toClass)) {
                     choices.add(type.toTitle);
                 }
@@ -70,12 +81,25 @@ public enum PartyRelationshipType {
         return choices;
     }
 
+    @Override
+    public String getKey() {
+        return this.name();
+    }
+
     public String toTitle() {
         return toTitle;
     }
 
     public String fromTitle() {
         return fromTitle;
+    }
+
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class SupportService extends PartyRoleTypeServiceSupportAbstract<PartyRelationshipTypeEnum> {
+        public SupportService() {
+            super(PartyRelationshipTypeEnum.class);
+        }
     }
 
 }

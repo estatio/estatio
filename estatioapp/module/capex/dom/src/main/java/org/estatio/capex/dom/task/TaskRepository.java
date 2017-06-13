@@ -16,6 +16,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.isisaddons.module.security.app.user.MeService;
+
 import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
@@ -35,8 +37,9 @@ public class TaskRepository {
     }
 
     @Programmatic
-    public List<Task> findTasksIncomplete() {
+    public List<Task> findTasksIncompleteForMe() {
         // REVIEW: this is rather naive query, but will do for prototyping at least
+
         final List<Task> tasks = Lists.newArrayList();
 
         for (PartyRoleType partyRoleType : partyRoleTypeRepository.listAll()) {
@@ -71,7 +74,7 @@ public class TaskRepository {
     @Programmatic
     public List<Task> findTasksIncompleteCreatedOnAfter(final LocalDateTime localDateTime) {
         // REVIEW: this is rather naive, but will do for prototyping at least
-        final List<Task> results = findTasksIncomplete();
+        final List<Task> results = findTasksIncompleteForMe();
         results.removeIf(task -> task.getCreatedOn().isBefore(localDateTime));
         return results;
     }
@@ -99,5 +102,7 @@ public class TaskRepository {
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;
 
+    @Inject
+    MeService meService;
 
 }

@@ -17,7 +17,7 @@ import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -41,7 +41,7 @@ public enum PaymentApprovalStateTransitionType
             PaymentApprovalState.NEW,
             PaymentApprovalState.APPROVED_BY_TREASURER,
             StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER)
+            TaskAssignmentStrategy.Util.to(PartyRelationshipTypeEnum.TREASURER)
     ),
     CANCEL(
             PaymentApprovalState.NEW,
@@ -115,6 +115,7 @@ public enum PaymentApprovalStateTransitionType
         final String taskDescription = Enums.getFriendlyNameOf(this);
         return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
     }
+
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends StateTransitionServiceSupportAbstract<

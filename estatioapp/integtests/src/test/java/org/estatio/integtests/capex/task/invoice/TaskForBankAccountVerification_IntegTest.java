@@ -41,7 +41,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
@@ -151,7 +151,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             // and then also
             final Task task = transitions.get(0).getTask();
             assertThat(task).isNotNull();
-            assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.TREASURER.getKey());
+            assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRelationshipTypeEnum.TREASURER.getKey());
 
         }
 

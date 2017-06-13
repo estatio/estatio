@@ -17,13 +17,12 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.incode.module.base.dom.with.WithInterval;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.party.Party;
 
@@ -40,7 +39,15 @@ import lombok.Setter;
         @Query(name = "findByParty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.relationship.PartyRelationship "
-                        + "WHERE (to == :party || from == :party) ")
+                        + "WHERE (to == :party || from == :party) "),
+        @Query(name = "findByFromAndTypeAndBetweenStartDateAndEndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.relationship.PartyRelationship "
+                        + "WHERE from == :party "
+                        + "   && relationshipType == :relationshipType "
+                        + "   && (startDate == null || startDate <= :date) "
+                        + "   && (endDate == null   || endDate   >= :date) "
+        )
 })
 @DomainObject(
         editing = Editing.DISABLED,
@@ -55,48 +62,37 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
                 getTo().getName());
     }
 
-    public PartyRelationship(Party fromParty, Party toParty, PartyRelationshipType relaionshipType) {
+    public PartyRelationship(Party fromParty, Party toParty, PartyRelationshipTypeEnum relaionshipType) {
         setFrom(fromParty);
         setTo(toParty);
         setRelationshipType(relaionshipType);
     }
 
-    // //////////////////////////////////////
 
     @Column(name = "fromPartyId", allowsNull = "false")
-    @MemberOrder(sequence = "1")
     @Getter @Setter
     private Party from;
 
-    // //////////////////////////////////////
 
     @Column(name = "toPartyId", allowsNull = "false")
-    @MemberOrder(sequence = "2")
     @Getter @Setter
     private Party to;
 
-    // //////////////////////////////////////
 
     @Column(allowsNull = "false")
-    @MemberOrder(sequence = "3")
     @Getter @Setter
-    private PartyRelationshipType relationshipType;
+    private PartyRelationshipTypeEnum relationshipType;
 
-    // //////////////////////////////////////
 
     @Persistent
-    @MemberOrder(sequence = "4")
     @Getter @Setter
     private LocalDate startDate;
 
-    // //////////////////////////////////////
 
     @Persistent
-    @MemberOrder(sequence = "5")
     @Getter @Setter
     private LocalDate endDate;
 
-    // //////////////////////////////////////
 
     @Override
     public LocalDateInterval getInterval() {

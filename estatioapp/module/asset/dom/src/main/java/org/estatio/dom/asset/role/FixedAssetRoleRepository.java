@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.dom.asset.role;
 
 import java.util.List;
 
@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = FixedAssetRole.class)

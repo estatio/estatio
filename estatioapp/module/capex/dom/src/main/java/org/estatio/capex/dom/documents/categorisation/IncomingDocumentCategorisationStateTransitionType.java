@@ -18,8 +18,8 @@ import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.asset.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -43,7 +43,7 @@ public enum IncomingDocumentCategorisationStateTransitionType
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.MAIL_ROOM)
+            TaskAssignmentStrategy.Util.to(PartyRelationshipTypeEnum.MAIL_ROOM)
     ),
     CLASSIFY_AS_INVOICE_OR_ORDER(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,

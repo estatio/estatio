@@ -7,8 +7,10 @@ import org.apache.isis.applib.annotation.Programmatic;
 /**
  * Each module that contributes a set of {@link IPartyRoleType}s should implement this SPI service.
  */
-public interface PartyRoleTypeServiceSupport  {
+public interface PartyRoleTypeServiceSupport<T extends IPartyRoleType>  {
 
     @Programmatic
-    List<IPartyRoleType> listAll();
+    List<T> listAll();
+
+
 }

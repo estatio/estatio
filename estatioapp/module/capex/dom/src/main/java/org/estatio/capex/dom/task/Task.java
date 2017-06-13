@@ -32,9 +32,8 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -68,12 +67,11 @@ import lombok.Setter;
 public class Task implements Comparable<Task> {
 
     public Task(
-            final IPartyRoleType assignedTo,
-            final String description,
+            final PartyRoleType assignedTo,
+            final Person personAssignedTo, final String description,
             final LocalDateTime createdOn,
-            final String transitionObjectType,
-            final PartyRoleTypeRepository partyRoleTypeRepository) {
-        this.assignedTo = assignedTo.findOrCreateUsing(partyRoleTypeRepository);
+            final String transitionObjectType) {
+        this.assignedTo = assignedTo;
         this.description = description;
         this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;

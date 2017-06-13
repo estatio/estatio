@@ -3,13 +3,8 @@ package org.estatio.dom.party.role;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
-
-import org.estatio.dom.party.PartyRoleTypeEnum;
-
-public class PartyRoleTypeServiceSupportAbstract<E extends Enum<E> & IPartyRoleType> implements
-        PartyRoleTypeServiceSupport {
+public abstract class PartyRoleTypeServiceSupportAbstract<E extends Enum<E> & IPartyRoleType> implements
+        PartyRoleTypeServiceSupport<E> {
 
     private final Class<E> enumClass;
 
@@ -18,7 +13,7 @@ public class PartyRoleTypeServiceSupportAbstract<E extends Enum<E> & IPartyRoleT
     }
 
     @Override
-    public List<IPartyRoleType> listAll() {
+    public List<E> listAll() {
         return Arrays.asList(enumClass.getEnumConstants());
     }
 

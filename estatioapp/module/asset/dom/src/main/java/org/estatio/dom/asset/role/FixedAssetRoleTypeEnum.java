@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.dom.asset.role;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -54,10 +54,12 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)
-    public static class SupportService extends PartyRoleTypeServiceSupportAbstract<FixedAssetRoleTypeEnum> {
+    public static class SupportService
+            extends PartyRoleTypeServiceSupportAbstract<FixedAssetRoleTypeEnum> {
         public SupportService() {
             super(FixedAssetRoleTypeEnum.class);
         }
+
     }
 
 }

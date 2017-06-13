@@ -41,7 +41,7 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipRepository;
-import org.estatio.dom.party.relationship.PartyRelationshipType;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 
 @DomainService(
         nature = NatureOfService.VIEW,
@@ -71,7 +71,7 @@ public class PartyRelationshipMenuAndContributions {
             final Party from,
             final Party to,
             final String type) {
-        return PartyRelationshipType.toTitlesFor(
+        return PartyRelationshipTypeEnum.toTitlesFor(
                 from == null ? null : from.getClass(),
                 to == null ? null : to.getClass());
     }
@@ -143,7 +143,7 @@ public class PartyRelationshipMenuAndContributions {
             final String description,
             final String phoneNumber,
             final String emailAddress) {
-        return PartyRelationshipType.toTitlesFor(from.getClass(), Person.class);
+        return PartyRelationshipTypeEnum.toTitlesFor(from.getClass(), Person.class);
     }
 
     // //////////////////////////////////////

@@ -19,7 +19,7 @@
 package org.estatio.fixture.party;
 
 import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.relationship.PartyRelationshipType;
+import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
 public class PersonForJeanneDarcFr extends PersonAbstract {
@@ -44,6 +44,6 @@ public class PersonForJeanneDarcFr extends PersonAbstract {
                 null,
                 null,
                 PARTY_REF_FROM,
-                PartyRelationshipType.CONTACT.fromTitle(), executionContext);
+                PartyRelationshipTypeEnum.CONTACT.fromTitle(), executionContext);
     }
 }
