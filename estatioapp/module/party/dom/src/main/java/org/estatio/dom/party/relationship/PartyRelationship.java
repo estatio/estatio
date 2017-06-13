@@ -43,7 +43,7 @@ import lombok.Setter;
         @Query(name = "findByFromAndTypeAndBetweenStartDateAndEndDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.relationship.PartyRelationship "
-                        + "WHERE from == :party "
+                        + "WHERE (from == :from) "  // in brackets so that 'from' is parsed as field rather than keyword
                         + "   && relationshipType == :relationshipType "
                         + "   && (startDate == null || startDate <= :date) "
                         + "   && (endDate == null   || endDate   >= :date) "

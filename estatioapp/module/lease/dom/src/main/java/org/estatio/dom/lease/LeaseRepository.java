@@ -109,13 +109,11 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         persistIfNotAlready(lease);
 
         if (tenant != null) {
-            final AgreementRoleType artTenant = agreementRoleTypeRepository.findByTitle(
-                    LeaseAgreementRoleTypeEnum.TENANT.getTitle());
+            final AgreementRoleType artTenant = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
             lease.newRole(artTenant, tenant, null, null);
         }
         if (landlord != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypeRepository.findByTitle(
-                    LeaseAgreementRoleTypeEnum.LANDLORD.getTitle());
+            final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.LANDLORD);
             lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;

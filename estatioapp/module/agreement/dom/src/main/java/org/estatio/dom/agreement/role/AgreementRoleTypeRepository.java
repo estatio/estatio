@@ -75,7 +75,7 @@ public class AgreementRoleTypeRepository extends UdoDomainRepositoryAndFactory<A
     }
 
     public AgreementRoleType findOrCreate(final IAgreementRoleType data, final IAgreementType appliesTo) {
-        final AgreementType agreementType = agreementTypeRepository.find(appliesTo);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(appliesTo);
         return findOrCreate(data.getTitle(), agreementType);
     }
 

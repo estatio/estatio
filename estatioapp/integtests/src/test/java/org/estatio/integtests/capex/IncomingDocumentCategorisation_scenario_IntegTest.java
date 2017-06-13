@@ -135,7 +135,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             stateTransition_works();
         }
 
-        List<Task> tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+        List<Task> tasks;
         Task task1;
         Task task2;
 

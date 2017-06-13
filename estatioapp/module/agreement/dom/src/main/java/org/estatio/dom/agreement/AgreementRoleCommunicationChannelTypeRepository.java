@@ -78,7 +78,7 @@ public class AgreementRoleCommunicationChannelTypeRepository
 
     public AgreementRoleCommunicationChannelType findOrCreate(final IAgreementRoleCommunicationChannelType data, final IAgreementType IAgreementType) {
         final String title = data.getTitle();
-        final AgreementType agreementType = agreementTypeRepository.find(IAgreementType);
+        final AgreementType agreementType = agreementTypeRepository.findOrCreate(IAgreementType);
         AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
         if (arcct == null) {
             arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);

@@ -16,6 +16,13 @@ public class AgreementRoleTypeService {
     @Programmatic
     public void init() {
 
+        for (AgreementRoleTypeServiceSupport supportService : supportServices) {
+            List<IAgreementRoleType> agreementRoleTypes = supportService.listAll();
+            for (IAgreementRoleType agreementRoleType : agreementRoleTypes) {
+                agreementRoleType.findOrCreateUsing(agreementRoleTypeRepository);
+            }
+        }
+
     }
 
     @Inject

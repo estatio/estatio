@@ -102,9 +102,12 @@ public class AgreementRoleType
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "appliesToAgreementTypeId", allowsNull = "false")
-    @Getter @Setter
+    @Getter
     private AgreementType appliesTo;
 
+    public void setAppliesTo(final AgreementType appliesTo) {
+        this.appliesTo = appliesTo;
+    }
     // //////////////////////////////////////
 
     public static List<AgreementRoleType> applicableTo(final AgreementType at) {

@@ -24,13 +24,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyRoleTypeRepostitory_IntegTest extends EstatioIntegrationTest {
@@ -55,17 +53,13 @@ public class PartyRoleTypeRepostitory_IntegTest extends EstatioIntegrationTest {
         }
     }
 
-    @AllArgsConstructor
     public enum PartyRoleTypeEnum implements IPartyRoleType {
-        TEST_ROLE("Landlord");
+        TEST_ROLE;
 
         @Override
         public String getKey() {
             return this.name();
         }
-
-        @Getter
-        private String title;
 
     }
 

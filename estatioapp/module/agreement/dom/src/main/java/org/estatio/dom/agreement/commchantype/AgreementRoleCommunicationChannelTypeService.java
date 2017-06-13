@@ -18,6 +18,13 @@ public class AgreementRoleCommunicationChannelTypeService {
     @Programmatic
     public void init() {
 
+        for (AgreementRoleCommunicationChannelTypeServiceSupport supportService : supportServices) {
+            List<IAgreementRoleCommunicationChannelType> types = supportService.listAll();
+            for (IAgreementRoleCommunicationChannelType type : types) {
+                type.findOrCreateUsing(agreementRoleCommunicationChannelTypeRepository);
+            }
+        }
+
     }
 
     @Inject

@@ -177,8 +177,12 @@ public class AgreementRole
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    @Getter @Setter
+    @Getter
     private AgreementRoleType type;
+
+    public void setType(final AgreementRoleType type) {
+        this.type = type;
+    }
 
     @javax.jdo.annotations.Column(length = NameType.Meta.MAX_LEN, allowsNull = "true")
     @Getter @Setter
