@@ -77,8 +77,8 @@ public class PartyRole_IntegTest extends EstatioIntegrationTest {
             party.addRole(PartyRoleTypeEnum.TEST_ROLE);
             party.addRole(PartyRoleTypeEnum.TEST_ROLE); // Yes, it's idempotent
             // Then
-            assertThat(partyRoleRepository.findbyParty(party).size()).isEqualTo(1);
-            assertThat(partyRoleRepository.findbyRoleType(partyRoleType).size()).isEqualTo(1);
+            assertThat(partyRoleRepository.findByParty(party).size()).isEqualTo(1);
+            assertThat(partyRoleRepository.findByRoleType(partyRoleType).size()).isEqualTo(1);
             assertThat(party.choices0AddRole().size()).isEqualTo(roleChoices-1); // We have one less choice
         }
 

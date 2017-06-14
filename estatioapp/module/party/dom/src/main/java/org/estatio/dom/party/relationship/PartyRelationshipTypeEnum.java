@@ -25,11 +25,6 @@ public enum PartyRelationshipTypeEnum implements IPartyRoleType {
     STORE_MANAGER("Store Manager", "Store Manager", Organisation.class, Person.class),
     TURNOVER_REFERENT("Turnover Referent", "Turnover Referent", Organisation.class, Person.class),
 
-    MAIL_ROOM("Buyer", "Mailroom", Organisation.class, Person.class),
-    COUNTRY_ADMINISTRATOR("Buyer", "Country Administrator", Organisation.class, Person.class),
-    COUNTRY_DIRECTOR("Buyer", "Country Director", Organisation.class, Person.class),
-    TREASURER("Buyer", "Treasurer", Organisation.class, Person.class),
-
     // Person - Person
     MARRIAGE("Husband", "Wife", Person.class, Person.class),
     CONTACT("Contact", "Contact", Party.class, Party.class);

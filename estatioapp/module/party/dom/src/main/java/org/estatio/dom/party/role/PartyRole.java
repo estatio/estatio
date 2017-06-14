@@ -68,7 +68,8 @@ import lombok.Setter;
                 name = "findByPartyAndRoleType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.role.PartyRole "
-                        + "WHERE party == :party && roleType == :roleType")})
+                        + "WHERE party == :party && roleType == :roleType")
+})
 @DomainObject()
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 public class PartyRole

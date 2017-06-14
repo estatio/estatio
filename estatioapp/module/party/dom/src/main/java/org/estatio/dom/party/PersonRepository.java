@@ -19,6 +19,7 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -87,15 +88,23 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
         return allInstances();
     }
 
+    @Programmatic
+    public List<Person> findByRoleTypeAndAtPath(
+            final org.estatio.dom.party.PartyRoleTypeEnum partyRoleType,
+            final String atPath) {
+        final List<Party> parties = partyRepository.findByRoleTypeAndAtPath(partyRoleType, atPath);
+        return parties.stream()
+                .filter(Person.class::isInstance)
+                .map(Person.class::cast)
+                .collect(Collectors.toList());
+    }
+
     // //////////////////////////////////////
 
     @Inject
-    private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+    EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
-    private PartyRepository partyRepository;
-
-    @Inject
-    private CountryRepository countryRepository;
+    PartyRepository partyRepository;
 
 }

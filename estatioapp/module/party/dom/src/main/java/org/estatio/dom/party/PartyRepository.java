@@ -19,6 +19,7 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -70,8 +71,8 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     }
 
     @Programmatic
-    public List<Party> findByRoleTypeData(final IPartyRoleType IPartyRoleType){
-        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(IPartyRoleType);
+    public List<Party> findByRoleType(final IPartyRoleType iPartyRoleType){
+        final PartyRoleType partyRoleType = iPartyRoleType.findUsing(roleTypeRepository);
         return findByRoleType(partyRoleType);
     }
 
@@ -81,14 +82,38 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     }
 
     @Programmatic
-    public List<Party> findByRoleTypeDataAndReferenceOrName(final IPartyRoleType IPartyRoleType, final String referenceOrName){
-        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(IPartyRoleType);
+    public List<Party> findByRoleTypeAndAtPath(
+            final IPartyRoleType iPartyRoleType,
+            final String atPath){
+        PartyRoleType partyRoleType = iPartyRoleType.findOrCreateUsing(roleTypeRepository);
+        return findByRoleTypeAndAtPath(partyRoleType, atPath);
+    }
+
+    @Programmatic
+    public List<Party> findByRoleTypeAndAtPath(
+            final PartyRoleType partyRoleType,
+            final String atPath){
+        List<Party> parties = findByRoleType(partyRoleType);
+        parties.removeIf(x -> !Objects.equals(atPath, x.getApplicationTenancyPath()));
+        return parties;
+    }
+
+    @Programmatic
+    public List<Party> findByRoleTypeAndReferenceOrName(
+            final IPartyRoleType iPartyRoleType,
+            final String referenceOrName){
+        final PartyRoleType partyRoleType = roleTypeRepository.findOrCreate(iPartyRoleType);
         return findByRoleTypeAndReferenceOrName(partyRoleType, referenceOrName);
     }
 
     @Programmatic
-    public List<Party> findByRoleTypeAndReferenceOrName(final PartyRoleType partyRoleType, final String referenceOrName){
-        return allMatches("findByRoleTypeAndReferenceOrName", "roleType", partyRoleType, "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+    public List<Party> findByRoleTypeAndReferenceOrName(
+            final PartyRoleType partyRoleType,
+            final String referenceOrName){
+        return allMatches(
+                "findByRoleTypeAndReferenceOrName",
+                "roleType", partyRoleType,
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     // //////////////////////////////////////

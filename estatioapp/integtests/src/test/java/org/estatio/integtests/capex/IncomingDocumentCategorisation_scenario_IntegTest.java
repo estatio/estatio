@@ -63,7 +63,7 @@ import org.estatio.dom.invoice.paperclips.PaperclipForInvoice;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.currency.CurrenciesRefData;
@@ -142,7 +142,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void findIncomingDocuments_works() {
 
             // given, when
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
             task1 = tasks.get(0);
             task2 = tasks.get(1);
 
@@ -183,7 +183,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
             // and when
             transactionService.nextTransaction();
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
 
             // then
             assertThat(tasks.size()).isEqualTo(1);
@@ -210,7 +210,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void categoriseAsInvoice_works() {
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
             assertThat(tasks.size()).isEqualTo(1);
             task2 = tasks.get(0);
             final Document document2 = documentFor(task2);
@@ -222,7 +222,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             wrap(mixin(Task_categoriseAsInvoice.class, task2))
                     .act(propertyForOxf, null, true);
             transactionService.nextTransaction();
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
 
             // then state has changed
             state = stateTransitionService
@@ -255,7 +255,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void resetClassification_works() {
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
             assertThat(tasks.size()).isEqualTo(0);
             List<Document> unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
             assertThat(unclassified.size()).isEqualTo(1);
@@ -265,7 +265,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             transactionService.nextTransaction();
 
             // then
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
             assertThat(tasks.size()).isEqualTo(1);
             unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
             assertThat(unclassified.size()).isEqualTo(0);
@@ -361,7 +361,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
         private void createInvoice_works(){
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRelationshipTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
             assertThat(tasks.size()).isEqualTo(1);
             task2 = tasks.get(0);
 

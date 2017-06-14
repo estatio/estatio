@@ -20,7 +20,7 @@ import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -81,7 +81,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_ADMINISTRATOR,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRelationshipTypeEnum.COUNTRY_ADMINISTRATOR)
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR)
     ) {
         @Override
         public boolean isMatch(
@@ -97,7 +97,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRelationshipTypeEnum.COUNTRY_DIRECTOR)
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR)
     ),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,

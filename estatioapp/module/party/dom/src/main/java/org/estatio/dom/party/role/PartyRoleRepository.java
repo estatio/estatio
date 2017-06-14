@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
 public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole> {
@@ -35,26 +36,36 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
         super(PartyRoleRepository.class, PartyRole.class);
     }
 
-    public List<PartyRole> findbyParty(
+    public List<PartyRole> findByParty(
             final Party party) {
         return allMatches("findByParty",
                 "party", party);
     }
 
-    public List<PartyRole> findbyRoleType(
+    public List<PartyRole> findByRoleType(
             final PartyRoleType roleType) {
         return allMatches("findByRoleType",
                 "roleType", roleType);
     }
 
-    public PartyRole findbyPartyAndRoleType(
-            final Party party, final PartyRoleType roleType) {
+    public PartyRole findByPartyAndRoleType(
+            final Party party,
+            final PartyRoleType roleType) {
         return uniqueMatch("findByPartyAndRoleType",
                 "party", party, "roleType", roleType);
     }
 
+    public List<PartyRole> findByRoleTypeAndAtPath(
+            final PartyRoleTypeEnum partyRoleTypeEnum,
+            final String atPath) {
+        PartyRoleType roleType = partyRoleTypeEnum.findUsing(partyRoleTypeRepository);
+        return allMatches("findByRoleTypeAndAtPath",
+                "roleType", roleType,
+                "atPath", atPath);
+    }
+
     public PartyRole findOrCreate(final Party party, final PartyRoleType roleType) {
-        final PartyRole partyRole = findbyPartyAndRoleType(party, roleType);
+        final PartyRole partyRole = findByPartyAndRoleType(party, roleType);
         return partyRole != null ? partyRole : createPartyRole(party, roleType);
     }
 

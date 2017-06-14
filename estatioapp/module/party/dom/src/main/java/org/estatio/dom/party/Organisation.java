@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -66,23 +65,6 @@ import lombok.Setter;
 public class Organisation
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
-
-    @javax.jdo.annotations.Column(
-            length = ApplicationTenancy.MAX_LENGTH_PATH,
-            allowsNull = "false",
-            name = "atPath"
-    )
-    @Property(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private String applicationTenancyPath;
-
-    @PropertyLayout(
-            named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
-    }
 
     // //////////////////////////////////////
 

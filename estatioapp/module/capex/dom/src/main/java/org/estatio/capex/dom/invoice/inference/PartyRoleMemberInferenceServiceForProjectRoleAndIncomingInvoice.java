@@ -11,46 +11,45 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectRole;
+import org.estatio.capex.dom.project.ProjectRoleRepository;
+import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class PartyRoleMemberInferenceServiceForIncomingInvoiceAndFixedAssetRole
-        extends PartyRoleMemberInferenceServiceAbstract<FixedAssetRoleTypeEnum, IncomingInvoice> {
+public class PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice
+        extends PartyRoleMemberInferenceServiceAbstract<ProjectRoleTypeEnum, IncomingInvoice> {
 
-    public PartyRoleMemberInferenceServiceForIncomingInvoiceAndFixedAssetRole() {
+    public PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice() {
         super(IncomingInvoice.class,
-                FixedAssetRoleTypeEnum.PROPERTY_MANAGER,
-                FixedAssetRoleTypeEnum.ASSET_MANAGER
+                ProjectRoleTypeEnum.PROJECT_MANAGER
         );
     }
 
     @Override
     protected List<Person> doInfer(
-            final FixedAssetRoleTypeEnum partyRoleType,
+            final ProjectRoleTypeEnum roleType,
             final IncomingInvoice incomingInvoice) {
 
-        final FixedAsset fixedAsset = inferFixedAsset(incomingInvoice);
-        if(fixedAsset == null) {
+        final Project project = inferProject(incomingInvoice);
+        if(project == null) {
             // can't go any further
             return null;
         }
 
-        final List<FixedAssetRole> fixedAssetRoles =
-                fixedAssetRoleRepository.findByAssetAndType(fixedAsset, partyRoleType);
+        final List<ProjectRole> projectRoles =
+                projectRoleRepository.findByProject(project);
 
-        return fixedAssetRoles.stream()
-                .map(FixedAssetRole::getParty)
+        return projectRoles.stream()
+                .map(ProjectRole::getParty)
                 .filter(Person.class::isInstance)
                 .map(Person.class::cast)
                 .collect(Collectors.toList());
     }
 
-    private FixedAsset inferFixedAsset(final IncomingInvoice incomingInvoice) {
+    private Project inferProject(final IncomingInvoice incomingInvoice) {
 
         final Collection<IncomingInvoiceItem> items =
                 incomingInvoice.getItems()
@@ -60,13 +59,16 @@ public class PartyRoleMemberInferenceServiceForIncomingInvoiceAndFixedAssetRole
                         .collect(Collectors.toList());
 
         for (IncomingInvoiceItem item : items) {
-            return item.getFixedAsset();
+            Project project = item.getProject();
+            if(project != null) {
+                return project;
+            }
         }
         return null;
     }
 
 
     @Inject
-    FixedAssetRoleRepository fixedAssetRoleRepository;
+    ProjectRoleRepository projectRoleRepository;
 
 }

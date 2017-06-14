@@ -38,13 +38,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
@@ -77,22 +73,7 @@ public class Person extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
 
-    @javax.jdo.annotations.Column(
-            length = ApplicationTenancy.MAX_LENGTH_PATH,
-            allowsNull = "false",
-            name = "atPath"
-    )
-    @Property(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private String applicationTenancyPath;
 
-    @PropertyLayout(
-            named = "Application Level",
-            describedAs = "Determines those users for whom this object is available to view and/or modify."
-    )
-    public ApplicationTenancy getApplicationTenancy() {
-        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
-    }
 
 
     @javax.jdo.annotations.Column(length = InitialsType.Meta.MAX_LEN)

@@ -43,7 +43,11 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -52,10 +56,10 @@ import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRole;
 import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -144,7 +148,26 @@ public abstract class Party
     @Getter @Setter
     private String reference;
 
-    // //////////////////////////////////////
+
+
+
+    @javax.jdo.annotations.Column(
+            length = ApplicationTenancy.MAX_LENGTH_PATH,
+            allowsNull = "false",
+            name = "atPath"
+    )
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private String applicationTenancyPath;
+
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
+    }
+
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
     @Getter @Setter

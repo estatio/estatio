@@ -108,7 +108,7 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
 
             //Then
-            final List<Party> partyList = partyRepository.findByRoleTypeData(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+            final List<Party> partyList = partyRepository.findByRoleType(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
             assertThat(partyList.size()).isEqualTo(1);
 
 
@@ -137,7 +137,7 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
 
             //Then
-            final List<Party> partyList = partyRepository.findByRoleTypeDataAndReferenceOrName(
+            final List<Party> partyList = partyRepository.findByRoleTypeAndReferenceOrName(
                     PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE,
                     "*ello*");
             assertThat(partyList.size()).isEqualTo(1);

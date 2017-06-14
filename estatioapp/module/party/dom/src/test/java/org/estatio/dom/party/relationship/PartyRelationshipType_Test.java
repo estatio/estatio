@@ -11,7 +11,7 @@ public class PartyRelationshipType_Test {
 
     @Test
     public void availableFor() {
-        assertThat(PartyRelationshipTypeEnum.toTitlesFor(Person.class, Organisation.class)).hasSize(8);
+        assertThat(PartyRelationshipTypeEnum.toTitlesFor(Person.class, Organisation.class)).hasSize(7);
         assertThat(PartyRelationshipTypeEnum.toTitlesFor(Person.class, Person.class)).hasSize(3);
     }
 
