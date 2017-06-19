@@ -43,10 +43,6 @@ public class TaskRepository {
         return repositoryService.allInstances(Task.class);
     }
 
-    /**
-     *
-     * @return null if unable to determine current user as a Person
-     */
     @Programmatic
     public List<Task> findTasksIncomplete() {
 
@@ -55,6 +51,36 @@ public class TaskRepository {
         for (PartyRoleType partyRoleType : partyRoleTypeRepository.listAll()) {
             appendTasksIncompleteFor(partyRoleType, tasks);
         }
+
+        sort(tasks);
+        return tasks;
+    }
+
+    @Programmatic
+    public List<Task> findTasksIncompleteForMe() {
+
+        // get all tasks.
+        final List<Task> tasks = findTasksIncomplete();
+
+        final ApplicationUser me = meService.me();
+        final Person meAsPerson = personRepository.findByUsername(me.getUsername());
+
+        List<Task> myTasks =
+                tasks.stream()
+                        .filter(x -> x.getPersonAssignedTo() == meAsPerson)
+                        .collect(Collectors.toList());
+        sort(myTasks);
+
+        return myTasks;
+    }
+
+    @Programmatic
+    public List<Task> findTasksIncompleteForOthers() {
+
+        final List<Task> tasks = findTasksIncomplete();
+
+        List<Task> myTasks = findTasksIncompleteForMe();
+        tasks.removeAll(myTasks);
 
         sort(tasks);
         return tasks;
@@ -146,16 +172,16 @@ public class TaskRepository {
     }
 
     @Programmatic
-    public List<Task> findTasksIncompleteCreatedOnAfter(final LocalDateTime localDateTime) {
+    public List<Task> findTasksIncompleteForMeCreatedOnAfter(final LocalDateTime localDateTime) {
         // REVIEW: this is rather naive, but will do for prototyping at least
-        final List<Task> results = findTasksIncomplete();
+        final List<Task> results = findTasksIncompleteForMe();
         results.removeIf(task -> task.getCreatedOn().isBefore(localDateTime));
         return results;
     }
 
     @Programmatic
-    public Task nextTaskAfter(final Task task) {
-        final List<Task> tasks = findTasksIncompleteCreatedOnAfter(task.getCreatedOn());
+    public Task nextTaskForMeAfter(final Task task) {
+        final List<Task> tasks = findTasksIncompleteForMeCreatedOnAfter(task.getCreatedOn());
         return tasks.size() > 0 ? tasks.get(0) : null;
     }
 

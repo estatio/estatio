@@ -16,10 +16,13 @@
         </col>
         <col span="12">
             <tabGroup unreferencedCollections="true">
-                <tab name="My tasks">
+                <tab name="Tasks">
                     <row>
                         <col span="12">
-                            <ns2:collection id="myTasks" paged="20"/>
+                            <ns2:collection id="tasksForMe" paged="15"/>
+                        </col>
+                        <col span="12">
+                            <ns2:collection id="tasksForOthers" paged="15"/>
                         </col>
                     </row>
                 </tab>

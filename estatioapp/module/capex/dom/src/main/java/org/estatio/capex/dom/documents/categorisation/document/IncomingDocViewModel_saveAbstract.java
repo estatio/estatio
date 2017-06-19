@@ -56,7 +56,7 @@ public abstract class IncomingDocViewModel_saveAbstract<
         this.viewModel.setDomainObject(domainObject);
 
         if (goToNext){
-            Task nextTask = nextTaskElseFrom(transition);
+            Task nextTask = nextTaskForMeElseFrom(transition);
             if(nextTask != null) {
                 return nextTask;
             }
@@ -83,13 +83,13 @@ public abstract class IncomingDocViewModel_saveAbstract<
 
     protected abstract T doCreate();
 
-    protected Task nextTaskElseFrom(final IncomingDocumentCategorisationStateTransition transition) {
+    private Task nextTaskForMeElseFrom(final IncomingDocumentCategorisationStateTransition transition) {
         Task taskJustCompleted = viewModel.getOriginatingTask();
         if(taskJustCompleted == null) {
             taskJustCompleted = transition.getTask();
         }
         List<Task> remainingTasks =
-                taskRepository.findTasksIncompleteCreatedOnAfter(taskJustCompleted.getCreatedOn());
+                taskRepository.findTasksIncompleteForMeCreatedOnAfter(taskJustCompleted.getCreatedOn());
         return !remainingTasks.isEmpty() ? remainingTasks.get(0) : null;
     }
 
