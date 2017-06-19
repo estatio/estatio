@@ -297,6 +297,9 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
             if (getTax() == null || getTax().equals("")) {
                 b.append("no tax; ");
             }
+            if (getOrderDescription() == null || getOrderDescription().equals("")){
+                b.append("no order description; ");
+            }
         }
 
         // invoice validation
