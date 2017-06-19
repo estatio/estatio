@@ -18,31 +18,32 @@
  */
 package org.estatio.fixture.party;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForGinoVannelliGb extends PersonAbstract {
+public class PersonForGinoVannelliGb extends FixtureScript {
 
     public static final String REF = "GVANNELLI";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
     public static final String PARTY_REF_FROM = OrganisationForTopModelGb.REF;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(FixtureScript.ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new OrganisationForTopModelGb());
 
-        createPerson(
-                AT_PATH,
-                REF,
-                "G",
-                "Gino",
-                "Vannelli",
-                PersonGenderType.MALE,
-                null,
-                null,
-                PARTY_REF_FROM,
-                PartyRelationshipTypeEnum.CONTACT.fromTitle(), executionContext);
+        getContainer().injectServicesInto(new PersonBuilder())
+                    .setAtPath(AT_PATH)
+                    .setReference(REF)
+                    .setInitials("G")
+                    .setFirstName("Gino")
+                    .setLastName("Vannelli")
+                    .setPersonGenderType(PersonGenderType.MALE)
+                    .setFromPartyStr(PARTY_REF_FROM)
+                    .setRelationshipType(PartyRelationshipTypeEnum.CONTACT.fromTitle())
+                .execute(executionContext);
     }
 }

@@ -18,18 +18,27 @@
  */
 package org.estatio.fixture.party;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 
-public class PersonForLinusTorvaldsNl extends PersonAbstract {
+public class PersonForLinusTorvaldsNl extends FixtureScript {
 
     public static final String REF = "LTORVALDS";
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createPerson(
-                AT_PATH,
-                REF, "L", "Linus", "Torvalds", PersonGenderType.MALE, executionContext);
+
+        getContainer().injectServicesInto(new PersonBuilder())
+                    .setAtPath(AT_PATH)
+                    .setReference(REF)
+                    .setInitials("L")
+                    .setFirstName("Linus")
+                    .setLastName("Torvalds")
+                    .setPersonGenderType(PersonGenderType.MALE)
+                .execute(executionContext);
+
     }
 }

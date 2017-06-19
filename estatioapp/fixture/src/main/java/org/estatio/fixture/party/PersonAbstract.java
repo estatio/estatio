@@ -29,8 +29,10 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
+
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.relationship.PartyRelationshipRepository;
@@ -55,7 +57,7 @@ public abstract class PersonAbstract extends FixtureScript {
         return executionContext.addResult(this, party.getReference(), party);
     }
 
-    protected Party createPerson(
+    protected Person createPerson(
             final String atPath,
             final String reference,
             final String initials,
@@ -69,20 +71,24 @@ public abstract class PersonAbstract extends FixtureScript {
             final ExecutionContext executionContext) {
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-        // new person
-        Party party = personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
+
+        Person person = personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
         if(emailAddress != null) {
             communicationChannelContributedActions
-                    .newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+                    .newEmail(person, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
         }
         if(phoneNumber != null) {
             communicationChannelContributedActions
-                    .newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
+                    .newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }
+
         // associate person
         Party from = partyRepository.findPartyByReference(fromPartyStr);
-        partyRelationshipRepository.newRelationship(from, party, relationshipType, null);
-        return executionContext.addResult(this, party.getReference(), party);
+        if(relationshipType != null) {
+            partyRelationshipRepository.newRelationship(from, person, relationshipType, null);
+        }
+
+        return executionContext.addResult(this, person.getReference(), person);
     }
 
 

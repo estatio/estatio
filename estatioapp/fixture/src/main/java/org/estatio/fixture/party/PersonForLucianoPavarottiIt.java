@@ -18,17 +18,17 @@
  */
 package org.estatio.fixture.party;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
-public class PersonForLucianoPavarottiIt extends PersonAbstract {
+public class PersonForLucianoPavarottiIt extends FixtureScript {
 
     public static final String REF = "LPAVAROTTI";
     public static final String AT_PATH = ApplicationTenancyForIt.PATH;
     public static final String PARTY_REF_FROM = OrganisationForPastaPapaIt.REF;
-
-    public static final String PARTY_REFERENCE = "GVANNELLI";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -36,16 +36,15 @@ public class PersonForLucianoPavarottiIt extends PersonAbstract {
         // prereqs
         executionContext.executeChild(this, new OrganisationForPastaPapaIt());
 
-        createPerson(
-                AT_PATH,
-                REF,
-                "L",
-                "Luciano",
-                "Pavarotti",
-                PersonGenderType.MALE,
-                null,
-                null,
-                PARTY_REF_FROM,
-                PartyRelationshipTypeEnum.CONTACT.fromTitle(), executionContext);
+        getContainer().injectServicesInto(new PersonBuilder())
+                    .setAtPath(AT_PATH)
+                    .setReference(REF)
+                    .setInitials("L")
+                    .setFirstName("Luciano")
+                    .setLastName("Pavarotti")
+                    .setPersonGenderType(PersonGenderType.MALE)
+                    .setFromPartyStr(PARTY_REF_FROM)
+                    .setRelationshipType(PartyRelationshipTypeEnum.CONTACT.fromTitle())
+                .execute(executionContext);
     }
 }

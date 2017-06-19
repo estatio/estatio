@@ -26,6 +26,8 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForCARTEST;
 import org.estatio.fixture.asset.PropertyForGraIt;
 import org.estatio.fixture.asset.PropertyForHanSe;
+import org.estatio.fixture.asset.PropertyForMacFr;
+import org.estatio.fixture.asset.PropertyForMnsFr;
 import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
@@ -50,8 +52,19 @@ import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
+import org.estatio.fixture.party.PersonForBrunoJeremieFr;
+import org.estatio.fixture.party.PersonForDylanClaytonGb;
+import org.estatio.fixture.party.PersonForEmmaFarmerGb;
+import org.estatio.fixture.party.PersonForFaithConwayGb;
+import org.estatio.fixture.party.PersonForFifineLacroixFr;
+import org.estatio.fixture.party.PersonForGabrielHerveFr;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
+import org.estatio.fixture.party.PersonForJonathanRiceGb;
 import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
+import org.estatio.fixture.party.PersonForOliveBeausoleilFr;
+import org.estatio.fixture.party.PersonForOscarPritchardGb;
+import org.estatio.fixture.party.PersonForRosaireEvrardFr;
+import org.estatio.fixture.party.PersonForThibaultJosueFr;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
 
@@ -88,9 +101,26 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
         executionContext.executeChild(this, new PersonForGinoVannelliGb());
+
         executionContext.executeChild(this, new PropertyForGraIt());
         executionContext.executeChild(this, new PropertyForVivFr());
         executionContext.executeChild(this, new PropertyForHanSe());
+        executionContext.executeChild(this, new PropertyForMnsFr());
+        executionContext.executeChild(this, new PropertyForMacFr());
+
+        executionContext.executeChild(this, new PersonForDylanClaytonGb()); // gb mailroom
+        executionContext.executeChild(this, new PersonForJonathanRiceGb());  // gb property mgr for OXF
+        executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
+        executionContext.executeChild(this, new PersonForOscarPritchardGb());  // gb country director
+        executionContext.executeChild(this, new PersonForEmmaFarmerGb());   // gb treasurer
+
+        executionContext.executeChild(this, new PersonForThibaultJosueFr());  // fr mailroom
+        executionContext.executeChild(this, new PersonForFifineLacroixFr());  // fr property mgr for VIV and MNS
+        executionContext.executeChild(this, new PersonForOliveBeausoleilFr());  // fr property mgr for MAC
+        executionContext.executeChild(this, new PersonForRosaireEvrardFr());  // fr country administrator
+        executionContext.executeChild(this, new PersonForGabrielHerveFr());  // fr country director
+        executionContext.executeChild(this, new PersonForBrunoJeremieFr()); // fr treasurer
+
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
 
@@ -105,7 +135,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new OrderInvoiceFixture());
 
-        executionContext.executeChild(this, new IncomingPdfFixture());
+        executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-fr"));
 
         final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
         fixtureClock.reset();

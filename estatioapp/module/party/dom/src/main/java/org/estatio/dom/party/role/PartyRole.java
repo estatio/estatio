@@ -58,17 +58,21 @@ import lombok.Setter;
                 name = "findByParty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.role.PartyRole "
-                        + "WHERE party == :party"),
+                        + "WHERE party == :party"
+        ),
         @javax.jdo.annotations.Query(
                 name = "findByRoleType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.role.PartyRole "
-                        + "WHERE roleType == :roleType"),
+                        + "WHERE roleType == :roleType"
+        ),
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndRoleType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.role.PartyRole "
-                        + "WHERE party == :party && roleType == :roleType")
+                        + "WHERE party    == :party "
+                        + "   && roleType == :roleType"
+        )
 })
 @DomainObject()
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
@@ -77,6 +81,12 @@ public class PartyRole
 
     public PartyRole() {
         super("party, roleType");
+    }
+
+    public PartyRole(final Party party, final PartyRoleType partyRoleType) {
+        this();
+        setParty(party);
+        setRoleType(partyRoleType);
     }
 
     public String title() {

@@ -19,7 +19,6 @@
 package org.estatio.dom.party;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -34,8 +33,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
@@ -71,8 +70,8 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
     }
 
     @Programmatic
-    public List<Party> findByRoleType(final IPartyRoleType iPartyRoleType){
-        final PartyRoleType partyRoleType = iPartyRoleType.findUsing(roleTypeRepository);
+    public List<Party> findByRoleType(final org.estatio.dom.party.PartyRoleTypeEnum partyRoleTypeEnum){
+        final PartyRoleType partyRoleType = partyRoleTypeEnum.findUsing(roleTypeRepository);
         return findByRoleType(partyRoleType);
     }
 
@@ -91,10 +90,12 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
 
     @Programmatic
     public List<Party> findByRoleTypeAndAtPath(
-            final PartyRoleType partyRoleType,
+            final PartyRoleType roleType,
             final String atPath){
-        List<Party> parties = findByRoleType(partyRoleType);
-        parties.removeIf(x -> !Objects.equals(atPath, x.getApplicationTenancyPath()));
+        final List<Party> parties = allMatches("findByRoleTypeAndAtPath",
+                "roleType", roleType,
+                "atPath", atPath);
+
         return parties;
     }
 
@@ -139,7 +140,8 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
         return null;
     }
 
-    @Inject PartyRoleTypeRepository roleTypeRepository;
+    @Inject
+    PartyRoleTypeRepository roleTypeRepository;
 
 
 

@@ -20,25 +20,30 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.fixture.asset.PropertyForMacFr;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
-public class PersonForJohnSmithGb extends FixtureScript {
+public class PersonForOliveBeausoleilFr extends FixtureScript {
 
-    public static final String REF = "JSMTH";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    public static final String REF = "OBEAUSOLIEL";
+    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        executionContext.executeChild(this, new PropertyForMacFr());
+
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setInitials("J")
-                    .setFirstName("John")
-                    .setLastName("Smith")
-                    .setPersonGenderType(PersonGenderType.MALE)
+                    .setFirstName("Olive")
+                    .setLastName("Beusoleil")
+                    .setPersonGenderType(PersonGenderType.FEMALE)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyForMacFr.REF)
+                    .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
-
     }
+
 }

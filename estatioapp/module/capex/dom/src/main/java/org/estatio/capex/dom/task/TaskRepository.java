@@ -2,6 +2,7 @@ package org.estatio.capex.dom.task;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -14,11 +15,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRole;
+import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
@@ -36,9 +43,12 @@ public class TaskRepository {
         return repositoryService.allInstances(Task.class);
     }
 
+    /**
+     *
+     * @return null if unable to determine current user as a Person
+     */
     @Programmatic
-    public List<Task> findTasksIncompleteForMe() {
-        // REVIEW: this is rather naive query, but will do for prototyping at least
+    public List<Task> findTasksIncomplete() {
 
         final List<Task> tasks = Lists.newArrayList();
 
@@ -46,8 +56,72 @@ public class TaskRepository {
             appendTasksIncompleteFor(partyRoleType, tasks);
         }
 
-        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+        sort(tasks);
         return tasks;
+    }
+
+    /**
+     * TODO: this requires EST-1331 to be implemented in order to correctly work (since relies on PartyRole to be correctly populated).
+     *
+     * @return null if unable to determine current user as a Person
+     */
+    @Programmatic
+    public List<Task> findTasksIncompleteForMeThenMyRoles() {
+
+        final List<Task> result = Lists.newArrayList();
+
+        // get all tasks.
+        final List<Task> tasks = findTasksIncomplete();
+
+
+        // first, pull out my tasks
+        final ApplicationUser me = meService.me();
+        final Person meAsPerson = personRepository.findByUsername(me.getUsername());
+
+        List<Task> selectedTasks =
+                tasks.stream()
+                        .filter(x -> x.getPersonAssignedTo() == meAsPerson)
+                        .collect(Collectors.toList());
+        sortAndMoveSelectedTasksToResult(tasks, selectedTasks, result);
+
+        // then, any tasks assigned to no-one, in one of my roles
+        // TODO: this requires EST-1331 to be implemented.
+        List<PartyRole> myPartyRoles =  partyRoleRepository.findByParty(meAsPerson);
+
+        for (PartyRole partyRole : myPartyRoles) {
+            selectedTasks =
+                    tasks.stream()
+                            .filter(x -> x.getAssignedTo() == partyRole.getRoleType() && x.getPersonAssignedTo() == null)
+                            .collect(Collectors.toList());
+            sortAndMoveSelectedTasksToResult(tasks, selectedTasks, result);
+        }
+
+        // then, any tasks assigned to someone else, in one of my roles
+        for (PartyRole partyRole : myPartyRoles) {
+            selectedTasks =
+                    tasks.stream()
+                            .filter(x -> x.getAssignedTo() == partyRole.getRoleType() && x.getPersonAssignedTo() != null)
+                            .collect(Collectors.toList());
+            sortAndMoveSelectedTasksToResult(tasks, selectedTasks, result);
+        }
+
+        // finally, any remaining tasks
+        selectedTasks = Lists.newArrayList(tasks);
+        sortAndMoveSelectedTasksToResult(tasks, selectedTasks, result);
+
+        return result;
+    }
+
+    private void sortAndMoveSelectedTasksToResult(
+            final List<Task> tasks,
+            final List<Task> selectedTasks, final List<Task> result) {
+        tasks.removeAll(selectedTasks);
+        sort(selectedTasks);
+        result.addAll(selectedTasks);
+    }
+
+    private void sort(final List<Task> tasks) {
+        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
     }
 
     @Programmatic
@@ -60,7 +134,7 @@ public class TaskRepository {
     public List<Task> findTasksIncompleteFor(final PartyRoleType partyRoleType) {
         List<Task> tasks = Lists.newArrayList();
         appendTasksIncompleteFor(partyRoleType, tasks);
-        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+        sort(tasks);
         return tasks;
     }
 
@@ -74,7 +148,7 @@ public class TaskRepository {
     @Programmatic
     public List<Task> findTasksIncompleteCreatedOnAfter(final LocalDateTime localDateTime) {
         // REVIEW: this is rather naive, but will do for prototyping at least
-        final List<Task> results = findTasksIncompleteForMe();
+        final List<Task> results = findTasksIncomplete();
         results.removeIf(task -> task.getCreatedOn().isBefore(localDateTime));
         return results;
     }
@@ -103,6 +177,15 @@ public class TaskRepository {
     PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @Inject
     MeService meService;
+
+    @Inject
+    MessageService messageService;
+
+    @Inject
+    PersonRepository personRepository;
 
 }

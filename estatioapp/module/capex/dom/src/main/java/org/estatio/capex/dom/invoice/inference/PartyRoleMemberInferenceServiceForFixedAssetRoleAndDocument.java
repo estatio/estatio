@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -16,6 +19,7 @@ import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
 
+@DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndDocument
         extends PartyRoleMemberInferenceServiceAbstract<FixedAssetRoleTypeEnum, Document> {
 

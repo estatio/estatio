@@ -27,25 +27,34 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRoleTypeEnum;
 
-@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Party.class)
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = PartyRole.class)
 public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole> {
 
     public PartyRoleRepository() {
         super(PartyRoleRepository.class, PartyRole.class);
     }
 
-    public List<PartyRole> findByParty(
-            final Party party) {
+    public List<PartyRole> findByParty(final Party party) {
         return allMatches("findByParty",
                 "party", party);
     }
 
-    public List<PartyRole> findByRoleType(
-            final PartyRoleType roleType) {
+    public List<PartyRole> findByRoleType(final IPartyRoleType iPartyRoleType) {
+        final PartyRoleType partyRoleType = iPartyRoleType.findUsing(partyRoleTypeRepository);
+        return findByRoleType(partyRoleType);
+    }
+
+    public List<PartyRole> findByRoleType(final PartyRoleType roleType) {
         return allMatches("findByRoleType",
                 "roleType", roleType);
+    }
+
+    public PartyRole findByPartyAndRoleType(
+            final Party party,
+            final IPartyRoleType iPartyRoleType) {
+        final PartyRoleType partyRoleType = iPartyRoleType.findOrCreateUsing(partyRoleTypeRepository);
+        return findByPartyAndRoleType(party, partyRoleType);
     }
 
     public PartyRole findByPartyAndRoleType(
@@ -55,28 +64,25 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
                 "party", party, "roleType", roleType);
     }
 
-    public List<PartyRole> findByRoleTypeAndAtPath(
-            final PartyRoleTypeEnum partyRoleTypeEnum,
-            final String atPath) {
-        PartyRoleType roleType = partyRoleTypeEnum.findUsing(partyRoleTypeRepository);
-        return allMatches("findByRoleTypeAndAtPath",
-                "roleType", roleType,
-                "atPath", atPath);
+    public PartyRole findOrCreate(
+            final Party party,
+            final IPartyRoleType iPartyRoleType) {
+        PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(iPartyRoleType);
+        return findOrCreate(party, partyRoleType);
     }
 
-    public PartyRole findOrCreate(final Party party, final PartyRoleType roleType) {
+    public PartyRole findOrCreate(
+            final Party party,
+            final PartyRoleType roleType) {
         final PartyRole partyRole = findByPartyAndRoleType(party, roleType);
         return partyRole != null ? partyRole : createPartyRole(party, roleType);
     }
 
-    public PartyRole findOrCreate(final Party party, final IPartyRoleType roleTypeData) {
-        return findOrCreate(party, partyRoleTypeRepository.findOrCreate(roleTypeData));
-    }
 
-    private PartyRole createPartyRole(final Party party, final PartyRoleType roleType) {
-        PartyRole partyRole = newTransientInstance();
-        partyRole.setParty(party);
-        partyRole.setRoleType(roleType);
+    private PartyRole createPartyRole(
+            final Party party,
+            final PartyRoleType roleType) {
+        final PartyRole partyRole = new PartyRole(party, roleType);
         persistIfNotAlready(partyRole);
         return partyRole;
     }

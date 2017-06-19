@@ -109,6 +109,16 @@ import lombok.Setter;
                         + "org.estatio.dom.party.role.PartyRole role "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
+                name = "findByRoleTypeAndAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Party "
+                        + "WHERE roles.contains(role) "
+                        + "&& (:atPath.startsWith(applicationTenancyPath)) "
+                        + "&& (role.roleType == :roleType) "
+                        + "VARIABLES "
+                        + "org.estatio.dom.party.role.PartyRole role "
+                        + "ORDER BY reference"),
+        @javax.jdo.annotations.Query(
                 name = "findByRoleTypeAndReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
@@ -231,8 +241,8 @@ public abstract class Party
     }
 
     @Programmatic
-    public void addRole(final IPartyRoleType IPartyRoleType){
-        partyRoleRepository.findOrCreate(this, IPartyRoleType);
+    public void addRole(final IPartyRoleType iPartyRoleType){
+        partyRoleRepository.findOrCreate(this, iPartyRoleType);
     }
 
     @Inject

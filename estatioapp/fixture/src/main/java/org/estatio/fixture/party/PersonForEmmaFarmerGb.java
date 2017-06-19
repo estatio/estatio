@@ -20,25 +20,29 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForJohnSmithGb extends FixtureScript {
+public class PersonForEmmaFarmerGb extends FixtureScript {
 
-    public static final String REF = "JSMTH";
+    public static final String REF = "EFARMER";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        executionContext.executeChild(this, new OrganisationForYoukeaSe());
+
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setInitials("J")
-                    .setFirstName("John")
-                    .setLastName("Smith")
-                    .setPersonGenderType(PersonGenderType.MALE)
+                    .setFirstName("E")
+                    .setLastName("Farmer")
+                    .setPersonGenderType(PersonGenderType.FEMALE)
+                    .addPartyRoleType(PartyRoleTypeEnum.TREASURER)
+                    .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
-
     }
+
 }

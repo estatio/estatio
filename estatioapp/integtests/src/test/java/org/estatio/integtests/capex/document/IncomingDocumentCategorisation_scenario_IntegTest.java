@@ -14,25 +14,33 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.fixture.party.PersonForDylanClaytonGb;
+import org.estatio.fixture.party.PersonForEmmaFarmerGb;
+import org.estatio.fixture.party.PersonForFaithConwayGb;
+import org.estatio.fixture.party.PersonForJonathanRiceGb;
+import org.estatio.fixture.party.PersonForOscarPritchardGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.TickingFixtureClock;
 
@@ -44,7 +52,7 @@ import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCat
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
 
-public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIntegrationTest {
+public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     FixtureScripts fixtureScripts;
@@ -63,6 +71,13 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PropertyForOxfGb());
+
+                executionContext.executeChild(this, new PersonForDylanClaytonGb()); // gb mailroom
+                executionContext.executeChild(this, new PersonForJonathanRiceGb());  // gb property mgr for OXF
+                executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
+                executionContext.executeChild(this, new PersonForOscarPritchardGb());  // gb country director
+                executionContext.executeChild(this, new PersonForEmmaFarmerGb());   // gb treasurer
+
             }
         });
 
@@ -71,14 +86,22 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
         final String fileName = "1020100123.pdf";
         final byte[] pdfBytes = Resources.toByteArray(
-                Resources.getResource(IncomingDocumentClassification_scenario_IntegTest.class, fileName));
+                Resources.getResource(IncomingDocumentCategorisation_scenario_IntegTest.class, fileName));
         final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
-        wrap(documentMenu).upload(blob);
+
+        sudoService.sudo("estatio-user-gb", new Runnable() {
+            @Override public void run() {
+                wrap(documentMenu).upload(blob);
+            }
+        });
         transactionService.nextTransaction();
 
 
         TickingFixtureClock.replaceExisting();
     }
+
+    @Inject
+    SudoService sudoService;
 
     @After
     public void tearDown() {
@@ -105,15 +128,13 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
         assertState(document, NEW);
 
-        // when
         Task task = transitions.get(0).getTask();
+        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+        assertThat(task.getPersonAssignedTo()).isNotNull();
+        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
+
+        // when
         wrap(mixin(Task_categoriseAsInvoice.class, task)).act(property, null, true);
-//        final IncomingDocViewModel_categoriseAbstract.DomainEvent categoriseEv =
-//                new IncomingDocViewModel_categoriseAbstract.DomainEvent();
-//        categoriseEv.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-//        categoriseEv.setMixedIn(new IncomingDocumentViewModel(document));
-//        eventBusService.post(categoriseEv);
-//        transactionService.nextTransaction();
 
         // then
         transitions =
@@ -127,6 +148,12 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
                 null, INSTANTIATE, NEW);
 
         assertState(document, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+
+        // then assigned now to Jonathan
+        task = transitions.get(0).getTask();
+        assertThat(task.getAssignedTo().getKey()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey());
+        assertThat(task.getPersonAssignedTo()).isNotNull();
+        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForJonathanRiceGb.REF);
 
         /*
         NOT TESTING THIS HERE...
@@ -186,6 +213,12 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
                 NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
         assertTransition(transitions.get(3),
                 null, INSTANTIATE, NEW);
+
+        // then back to Dylan
+        task = transitions.get(0).getTask();
+        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+        assertThat(task.getPersonAssignedTo()).isNotNull();
+        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 
 
         assertState(document, NEW);

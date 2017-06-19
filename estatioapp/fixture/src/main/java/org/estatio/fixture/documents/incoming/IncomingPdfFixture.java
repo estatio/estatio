@@ -10,12 +10,20 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+@Accessors(chain = true)
 public class IncomingPdfFixture extends FixtureScript {
 
+    @Getter @Setter
+    private String runAs;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -35,11 +43,17 @@ public class IncomingPdfFixture extends FixtureScript {
             }
 
             final Blob blob = new Blob(resourceName, "application/pdf", bytes);
-            wrap(documentMenu).upload(blob);
+            if(runAs != null) {
+                sudoService.sudo(runAs, (Runnable) () -> wrap(documentMenu).upload(blob));
+            } else {
+                wrap(documentMenu).upload(blob);
+            }
         }
     }
 
     @Inject
     DocumentMenu documentMenu;
+    @Inject
+    SudoService sudoService;
 
 }

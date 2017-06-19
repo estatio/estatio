@@ -64,17 +64,23 @@ import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixture;
+import org.estatio.fixture.party.PersonForDylanClaytonGb;
+import org.estatio.fixture.party.PersonForEmmaFarmerGb;
+import org.estatio.fixture.party.PersonForFaithConwayGb;
+import org.estatio.fixture.party.PersonForJonathanRiceGb;
+import org.estatio.fixture.party.PersonForOscarPritchardGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.CLASSIFIED;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 
-public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIntegrationTest {
+public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -83,7 +89,14 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PropertyForOxfGb());
-                executionContext.executeChild(this, new IncomingPdfFixture());
+
+                executionContext.executeChild(this, new PersonForDylanClaytonGb()); // gb mailroom
+                executionContext.executeChild(this, new PersonForJonathanRiceGb());  // gb property mgr for OXF
+                executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
+                executionContext.executeChild(this, new PersonForOscarPritchardGb());  // gb country director
+                executionContext.executeChild(this, new PersonForEmmaFarmerGb());   // gb treasurer
+
+                executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-gb"));
             }
         });
     }
@@ -99,7 +112,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
     }
 
     public static class ClassifyAndCreateFromIncomingDocuments extends
-            IncomingDocumentCategorisation_scenario_IntegTest {
+            IncomingDocumentClassification_scenario_IntegTest {
 
         Property propertyForOxf;
         Party buyer;
@@ -150,6 +163,15 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
             assertThat(tasks.size()).isEqualTo(2);
             assertThat(documentFor(task1).getType()).isEqualTo(INCOMING);
             assertThat(documentFor(task2).getType()).isEqualTo(INCOMING);
+
+            // and
+            assertThat(task1.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+            assertThat(task1.getPersonAssignedTo()).isNotNull();
+            assertThat(task1.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
+
+            assertThat(task2.getPersonAssignedTo()).isNotNull();
+            assertThat(task2.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+            assertThat(task2.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 
         }
 
@@ -628,6 +650,9 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 
     @Inject
     TaskIncomingDocumentService taskIncomingDocumentService;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     @Inject
     EventBusService eventBusService;

@@ -172,8 +172,12 @@ public class AgreementRole
 
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
-    @Getter @Setter
+    @Getter// @Setter
     private Party party;
+
+    public void setParty(final Party party) {
+        this.party = party;
+    }
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")

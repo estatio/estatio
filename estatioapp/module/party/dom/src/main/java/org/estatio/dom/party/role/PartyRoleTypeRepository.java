@@ -36,6 +36,7 @@ public class PartyRoleTypeRepository extends UdoDomainRepositoryAndFactory<Party
 
     @Programmatic
     public PartyRoleType findByKey(final String key) {
+        List<PartyRoleType> partyRoleTypes = listAll();
         return uniqueMatch("findByKey", "key", key);
     }
 

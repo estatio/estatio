@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeRepository;
@@ -37,7 +37,6 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import lombok.AllArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartyRole_IntegTest extends EstatioIntegrationTest {
@@ -70,12 +69,21 @@ public class PartyRole_IntegTest extends EstatioIntegrationTest {
         @Test
         public void add_role() {
             // Given
-            PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(PartyRoleTypeEnum.TEST_ROLE);
+            PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR);
             Party party = partyRepository.findPartyByReference(OrganisationForAcmeNl.REF);
             int roleChoices = party.choices0AddRole().size();
+
             // When
-            party.addRole(PartyRoleTypeEnum.TEST_ROLE);
-            party.addRole(PartyRoleTypeEnum.TEST_ROLE); // Yes, it's idempotent
+            party.addRole(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR);
+
+            // Then
+            assertThat(partyRoleRepository.findByParty(party).size()).isEqualTo(1);
+            assertThat(partyRoleRepository.findByRoleType(partyRoleType).size()).isEqualTo(1);
+            assertThat(party.choices0AddRole().size()).isEqualTo(roleChoices-1); // We have one less choice
+
+            // When
+            party.addRole(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR); // Yes, it's idempotent
+
             // Then
             assertThat(partyRoleRepository.findByParty(party).size()).isEqualTo(1);
             assertThat(partyRoleRepository.findByRoleType(partyRoleType).size()).isEqualTo(1);
@@ -84,17 +92,5 @@ public class PartyRole_IntegTest extends EstatioIntegrationTest {
 
     }
 
-    @AllArgsConstructor
-    public enum PartyRoleTypeEnum implements IPartyRoleType {
-        TEST_ROLE("Landlord");
-
-        @Override
-        public String getKey() {
-            return this.name();
-        }
-
-        private String title;
-
-    }
 
 }

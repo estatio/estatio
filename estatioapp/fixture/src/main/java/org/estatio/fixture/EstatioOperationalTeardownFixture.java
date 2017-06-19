@@ -48,12 +48,12 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.asset.CommunicationChannelOwnerLinkForFixedAsset;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.LandRegister;
+import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
@@ -143,7 +143,6 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 //        deleteFrom(IncomingInvoiceItem.class);
 //        deleteFrom(IncomingInvoice.class);
 
-
         deleteFrom(PaymentApprovalStateTransition.class);
         deleteFrom(Payment.class);
 
@@ -209,6 +208,11 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(FixedAssetRegistration.class);
         deleteFrom(FixedAsset.class);
 
+        deleteFrom(IncomingDocumentCategorisationStateTransition.class);
+        deleteFrom(PaperclipForDocument.class);
+
+        deleteFrom(Task.class);
+
         deleteFrom(PaperclipForParty.class);
         deleteFrom(OrganisationPreviousName.class);
         deleteFrom(PartyRegistration.class);
@@ -218,12 +222,9 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(Person.class);
         deleteFrom(Party.class);
 
-        deleteFrom(IncomingDocumentCategorisationStateTransition.class);
-        deleteFrom(PaperclipForDocument.class);
+
         deleteFrom(Paperclip.class);
         deleteFrom(Document.class);
-
-        deleteFrom(Task.class);
 
         deleteFrom(Numerator.class);
 

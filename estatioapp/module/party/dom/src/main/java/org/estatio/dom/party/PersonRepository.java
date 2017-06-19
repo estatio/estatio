@@ -30,10 +30,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Person.class)
 public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
@@ -90,7 +92,15 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
 
     @Programmatic
     public List<Person> findByRoleTypeAndAtPath(
-            final org.estatio.dom.party.PartyRoleTypeEnum partyRoleType,
+            final IPartyRoleType iPartyRoleType,
+            final String atPath) {
+        PartyRoleType partyRoleType = iPartyRoleType.findOrCreateUsing(partyRoleTypeRepository);
+        return findByRoleTypeAndAtPath(partyRoleType, atPath);
+    }
+
+    @Programmatic
+    public List<Person> findByRoleTypeAndAtPath(
+            final PartyRoleType partyRoleType,
             final String atPath) {
         final List<Party> parties = partyRepository.findByRoleTypeAndAtPath(partyRoleType, atPath);
         return parties.stream()
@@ -106,5 +116,8 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
 }

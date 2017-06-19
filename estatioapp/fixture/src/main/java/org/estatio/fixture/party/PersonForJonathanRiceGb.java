@@ -20,25 +20,33 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForJohnSmithGb extends FixtureScript {
+/**
+ * Property manager for OXF
+ */
+public class PersonForJonathanRiceGb extends FixtureScript {
 
-    public static final String REF = "JSMTH";
+    public static final String REF = "JRICE";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        executionContext.executeChild(this, new PropertyForOxfGb());
+
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setInitials("J")
-                    .setFirstName("John")
-                    .setLastName("Smith")
+                    .setFirstName("Jonathan")
+                    .setLastName("Rice")
                     .setPersonGenderType(PersonGenderType.MALE)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyForOxfGb.REF)
+                    .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
-
     }
+
 }

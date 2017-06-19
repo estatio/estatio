@@ -30,12 +30,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.party.role.PartyRole_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -105,10 +105,10 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(party).isNotNull();
 
             //When
-            party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+            party.addRole(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR);
 
             //Then
-            final List<Party> partyList = partyRepository.findByRoleType(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+            final List<Party> partyList = partyRepository.findByRoleType(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR);
             assertThat(partyList.size()).isEqualTo(1);
 
 
@@ -134,11 +134,11 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
 
             //When
-            party.addRole(PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE);
+            party.addRole(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR);
 
             //Then
             final List<Party> partyList = partyRepository.findByRoleTypeAndReferenceOrName(
-                    PartyRole_IntegTest.PartyRoleTypeEnum.TEST_ROLE,
+                    PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR,
                     "*ello*");
             assertThat(partyList.size()).isEqualTo(1);
         }
