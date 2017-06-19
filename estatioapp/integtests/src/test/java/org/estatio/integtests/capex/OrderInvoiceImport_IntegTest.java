@@ -46,7 +46,6 @@ import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +62,6 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new NumeratorForOrganisationFra());
                     executionContext.executeChild(this, new PropertyForOxfGb());
                 }
             });

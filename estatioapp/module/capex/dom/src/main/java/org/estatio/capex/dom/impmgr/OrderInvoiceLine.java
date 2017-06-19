@@ -334,11 +334,15 @@ public class OrderInvoiceLine {
             Country france = countryRepository.findCountry("FRA");
 
             if (party==null){
-                boolean useNumeratorForReference = true;
+
+                RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
+                String orgReference = "FRIMP_".concat(generator.generateRandomCode());
+
+                boolean useNumeratorForReference = false;
                 String name = line.seller;
                 Country country = france;
 
-                party = organisationRepository.newOrganisation(null, useNumeratorForReference, name, country);
+                party = organisationRepository.newOrganisation(orgReference.toUpperCase(), useNumeratorForReference, name, country);
             }
             return party;
         }
