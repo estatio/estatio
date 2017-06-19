@@ -327,6 +327,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                 "TENANT INSTALLATION WORKS",
                 "SECURITY AGENTS",
                 "LETTING FEES",
+                "INSURANCE",
                 "OTHER"
         );
         if (getCharge()!=null && !charges.contains(getCharge())){
