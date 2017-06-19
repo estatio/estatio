@@ -60,7 +60,12 @@ import lombok.Setter;
                 name = "findByUsername", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Person "
-                        + "WHERE username == :username")
+                        + "WHERE username == :username"),
+        @javax.jdo.annotations.Query(
+                name = "findWithUsername", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Person "
+                        + "WHERE username != null ")
 })
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(

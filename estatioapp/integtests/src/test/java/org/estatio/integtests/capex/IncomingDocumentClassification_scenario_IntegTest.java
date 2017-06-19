@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.country.dom.impl.Country;
@@ -81,6 +82,9 @@ import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 
 public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIntegrationTest {
+
+    @Inject
+    SudoService sudoService;
 
     @Before
     public void setupData() {
@@ -190,10 +194,14 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when gotoNext is set to true
-            Task nextTask = (Task)
-                    wrap(mixin(Task_categoriseAsOrder.class, task1))
-                    .act(propertyForOxf, null, true);
+            Object nextObj =
+                sudoService.sudo(PersonForDylanClaytonGb.SECURITY_USERNAME,
+                        () -> wrap(mixin(Task_categoriseAsOrder.class, task1))
+                                .act(propertyForOxf, null, true));
             transactionService.nextTransaction();
+
+            assertThat(nextObj).isInstanceOf(Task.class);
+            Task nextTask = (Task) nextObj;
 
             // then state has changed
             state = stateTransitionService

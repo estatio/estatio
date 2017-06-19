@@ -69,8 +69,20 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
             final String lastName,
             final PersonGenderType gender,
             final ApplicationTenancy applicationTenancy) {
+        final String atPath = applicationTenancy != null ? applicationTenancy.getPath() : null;
+        return newPerson(reference, initials, firstName, lastName, gender, atPath);
+    }
+
+    @Programmatic
+    public Person newPerson(
+            final String reference,
+            final String initials,
+            final String firstName,
+            final String lastName,
+            final PersonGenderType gender,
+            final String atPath) {
         final Person person = newTransientInstance(Person.class);
-        person.setApplicationTenancyPath(applicationTenancy.getPath());
+        person.setApplicationTenancyPath(atPath);
         person.setReference(reference);
         person.change(gender, initials, firstName, lastName);
         persist(person);
@@ -84,9 +96,19 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
         return firstMatch("findByUsername", "username", username);
     }
 
+    @Programmatic
+    public List<Person> findWithUsername() {
+        return allMatches("findWithUsername");
+    }
+
 
     @Programmatic
     public List<Person> allPersons() {
+        return allInstances();
+    }
+
+    @Programmatic
+    public List<Person> allPersonsWithUsername() {
         return allInstances();
     }
 

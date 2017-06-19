@@ -27,6 +27,7 @@ import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 public class PersonForDylanClaytonGb extends FixtureScript {
 
     public static final String REF = "DCLAYTON";
+    public static final String SECURITY_USERNAME = REF.toLowerCase();
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
@@ -41,7 +42,7 @@ public class PersonForDylanClaytonGb extends FixtureScript {
                     .setLastName("Clayton")
                     .setPersonGenderType(PersonGenderType.MALE)
                     .addPartyRoleType(PartyRoleTypeEnum.MAIL_ROOM)
-                    .setSecurityUsername(REF.toLowerCase())
+                    .setSecurityUsername(SECURITY_USERNAME)
                 .execute(executionContext);
     }
 

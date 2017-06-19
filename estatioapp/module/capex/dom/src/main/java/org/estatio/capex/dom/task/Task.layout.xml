@@ -57,7 +57,9 @@
             </bs3:tabGroup>
             <cpt:fieldSet name="Assignment" id="assignedTo">
                 <cpt:property id="assignedTo"/>
-                <cpt:property id="personAssignedTo"/>
+                <cpt:property id="personAssignedTo">
+                    <cpt:action id="assignTo"/>
+                </cpt:property>
                 <cpt:property id="createdOn">
                     <cpt:named>Assigned on</cpt:named>
                 </cpt:property>

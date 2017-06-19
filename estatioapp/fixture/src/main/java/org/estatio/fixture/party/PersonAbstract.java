@@ -23,12 +23,10 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
@@ -51,9 +49,7 @@ public abstract class PersonAbstract extends FixtureScript {
             final PersonGenderType gender,
             final ExecutionContext executionContext) {
 
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-
-        Party party = personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
+        Party party = personRepository.newPerson(reference, initials, firstName, lastName, gender, atPath);
         return executionContext.addResult(this, party.getReference(), party);
     }
 
@@ -70,9 +66,7 @@ public abstract class PersonAbstract extends FixtureScript {
             final String relationshipType,
             final ExecutionContext executionContext) {
 
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-
-        Person person = personRepository.newPerson(reference, initials, firstName, lastName, gender, applicationTenancy);
+        Person person = personRepository.newPerson(reference, initials, firstName, lastName, gender, atPath);
         if(emailAddress != null) {
             communicationChannelContributedActions
                     .newEmail(person, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
@@ -96,9 +90,6 @@ public abstract class PersonAbstract extends FixtureScript {
 
     @Inject
     protected CountryRepository countryRepository;
-
-    @Inject
-    protected StateRepository stateRepository;
 
     @Inject
     protected PartyRepository partyRepository;
