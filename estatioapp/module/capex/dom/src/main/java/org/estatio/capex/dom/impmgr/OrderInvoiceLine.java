@@ -30,7 +30,6 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
@@ -38,11 +37,11 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -297,10 +296,6 @@ public class OrderInvoiceLine {
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
                         dueDate, startDate, endDate, property, project, null);
-
-                // assume these are not yet approved, so create as 'NEW'
-                stateTransitionService.trigger(
-                        invoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
 
             }
 

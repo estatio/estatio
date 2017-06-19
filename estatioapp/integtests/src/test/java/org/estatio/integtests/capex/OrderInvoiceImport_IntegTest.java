@@ -42,6 +42,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectItem;
 import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -93,6 +94,9 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
         @Inject
         private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceApprovalStateTransitionRepository;
 
+        @Inject
+        private TaskRepository taskRepository;
+
         @Before
         public void setUp() throws Exception {
 
@@ -132,10 +136,9 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
             assertThat(incomingInvoices).isNotEmpty();
             assertThat(projects).isNotEmpty();
             assertThat(links).isNotEmpty();
-            assertThat(invoiceTransitions).isNotEmpty();
-
-            assertThat(invoiceTransitions.size()).isGreaterThanOrEqualTo(incomingInvoices.size());
             assertThat(links.size()).isEqualTo(3);
+            //EST-1335: imported invoices should not have tasks attached
+            assertThat(taskRepository.findTasksIncomplete().size()).isEqualTo(0);
 
             OrderItem orderItem1 = orders.get(0).getItems().first();
             OrderItem orderItem2 = orders.get(1).getItems().first();
