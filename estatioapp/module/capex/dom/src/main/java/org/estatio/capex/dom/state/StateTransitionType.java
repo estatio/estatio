@@ -44,7 +44,7 @@ public interface StateTransitionType<
      * @return true
      */
     @Programmatic
-    StateTransitionStrategy<DO, ST, STT, S> getTransitionStrategy();
+    NextTransitionSearchStrategy<DO, ST, STT, S> getNextTransitionSearchStrategy();
 
     /**
      * Allows the type to apply changes to the target domain object if necessary.

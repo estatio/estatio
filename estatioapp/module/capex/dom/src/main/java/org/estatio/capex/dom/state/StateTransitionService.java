@@ -266,8 +266,8 @@ public class StateTransitionService {
                 // use most recent transition to determine the next transition (since one hasn't been requested)
                 final STT mostRecentTransitionType = mostRecentTransitionIfAny.getTransitionType();
 
-                final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy =
-                        mostRecentTransitionType.getTransitionStrategy();
+                final NextTransitionSearchStrategy<DO, ST, STT, S> transitionStrategy =
+                        mostRecentTransitionType.getNextTransitionSearchStrategy();
                 if(transitionStrategy != null) {
                     nextTransitionType =
                             transitionStrategy.nextTransitionType(domainObject, mostRecentTransitionType, serviceRegistry2);

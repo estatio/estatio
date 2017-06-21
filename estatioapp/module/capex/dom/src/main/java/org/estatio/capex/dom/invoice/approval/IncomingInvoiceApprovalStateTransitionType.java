@@ -20,7 +20,7 @@ import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.StateTransitionStrategy;
+import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
@@ -42,12 +42,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
             IncomingInvoiceApprovalState.NEW,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.none(),
+            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
     COMPLETE_CLASSIFICATION(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.CLASSIFIED,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.AUTOMATIC) {
         @Override
         public String reasonGuardNotSatisified(
@@ -58,7 +58,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
+            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
@@ -70,8 +70,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_ASSET_MANAGER(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
@@ -84,8 +84,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_AS_COUNTRY_ADMINISTRATOR(
             IncomingInvoiceApprovalState.CLASSIFIED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_ADMINISTRATOR,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
@@ -100,14 +100,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             IncomingInvoiceApprovalState.PAYABLE,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none(),
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
         @Override
         public boolean isGuardSatisified(
@@ -130,25 +130,25 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
             IncomingInvoiceApprovalState.CANCELLED,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none(),
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;
-    private final StateTransitionStrategy stateTransitionStrategy;
+    private final NextTransitionSearchStrategy nextTransitionSearchStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
     private final AdvancePolicy advancePolicy;
 
     IncomingInvoiceApprovalStateTransitionType(
             final List<IncomingInvoiceApprovalState> fromState,
             final IncomingInvoiceApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
+            final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
         this.fromStates = fromState;
         this.toState = toState;
-        this.stateTransitionStrategy = stateTransitionStrategy;
+        this.nextTransitionSearchStrategy = nextTransitionSearchStrategy;
         this.taskAssignmentStrategy = taskAssignmentStrategy;
         this.advancePolicy = advancePolicy;
     }
@@ -156,13 +156,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
     IncomingInvoiceApprovalStateTransitionType(
             final IncomingInvoiceApprovalState fromState,
             final IncomingInvoiceApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
+            final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
         this(fromState != null
                         ? Collections.singletonList(fromState)
                         : null,
-                toState, stateTransitionStrategy, taskAssignmentStrategy,
+                toState, nextTransitionSearchStrategy, taskAssignmentStrategy,
                 advancePolicy);
     }
 
@@ -181,8 +181,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     @Override
-    public StateTransitionStrategy getTransitionStrategy() {
-        return stateTransitionStrategy;
+    public NextTransitionSearchStrategy getNextTransitionSearchStrategy() {
+        return nextTransitionSearchStrategy;
     }
 
 

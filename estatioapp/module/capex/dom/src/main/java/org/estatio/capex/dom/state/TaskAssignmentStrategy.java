@@ -28,24 +28,24 @@ public interface TaskAssignmentStrategy<
 
 
 
-    class Util {
-        private Util() {}
-        public static <
-                DO,
-                ST extends StateTransition<DO, ST, STT, S>,
-                STT extends StateTransitionType<DO, ST, STT, S>,
-                S extends State<S>
-                > TaskAssignmentStrategy<DO,ST,STT,S> none() {
-            return (domainObject, completedTransitionType, serviceRegistry2) -> null;
-        }
-        public static <
-                DO,
-                ST extends StateTransition<DO, ST, STT, S>,
-                STT extends StateTransitionType<DO, ST, STT, S>,
-                S extends State<S>
-                > TaskAssignmentStrategy<DO,ST,STT,S> to(final IPartyRoleType roleType) {
-            return (domainObject, completedTransitionType, serviceRegistry2) -> roleType;
-        }
+    public static <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > TaskAssignmentStrategy<DO,ST,STT,S> none() {
+        return (domainObject, completedTransitionType, serviceRegistry2) -> null;
     }
+
+    public static <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > TaskAssignmentStrategy<DO,ST,STT,S> to(final IPartyRoleType roleType) {
+        return (domainObject, completedTransitionType, serviceRegistry2) -> roleType;
+    }
+
+
 
 }

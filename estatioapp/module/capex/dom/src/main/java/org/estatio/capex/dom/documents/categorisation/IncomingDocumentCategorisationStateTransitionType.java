@@ -13,10 +13,10 @@ import org.apache.isis.applib.util.Enums;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.state.AdvancePolicy;
+import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.StateTransitionStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
@@ -37,43 +37,43 @@ public enum IncomingDocumentCategorisationStateTransitionType
     INSTANTIATE(
             (IncomingDocumentCategorisationState)null,
             IncomingDocumentCategorisationState.NEW,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none(),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.MAIL_ROOM),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.MAIL_ROOM),
             AdvancePolicy.MANUAL),
     CLASSIFY_AS_INVOICE_OR_ORDER(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
-            StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.MANUAL),
     RESET(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.NEW,
-            StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none(),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;
-    private final StateTransitionStrategy stateTransitionStrategy;
+    private final NextTransitionSearchStrategy nextTransitionSearchStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
     private final AdvancePolicy advancePolicy;
 
     IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
             final IncomingDocumentCategorisationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
+            final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
         this.fromStates = fromState;
         this.toState = toState;
-        this.stateTransitionStrategy = stateTransitionStrategy;
+        this.nextTransitionSearchStrategy = nextTransitionSearchStrategy;
         this.taskAssignmentStrategy = taskAssignmentStrategy;
         this.advancePolicy = advancePolicy;
     }
@@ -81,17 +81,17 @@ public enum IncomingDocumentCategorisationStateTransitionType
     IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
             final IncomingDocumentCategorisationState toState,
-            final StateTransitionStrategy stateTransitionStrategy,
+            final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
-        this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
+        this(fromState != null ? Collections.singletonList(fromState): null, toState, nextTransitionSearchStrategy,
                 taskAssignmentStrategy,
                 advancePolicy);
     }
 
     @Override
-    public StateTransitionStrategy getTransitionStrategy() {
-        return stateTransitionStrategy;
+    public NextTransitionSearchStrategy getNextTransitionSearchStrategy() {
+        return nextTransitionSearchStrategy;
     }
 
     @Override
