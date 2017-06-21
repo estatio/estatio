@@ -112,16 +112,16 @@
                 <cpt:action id="checkApprovalState">
                     <cpt:named>Check state</cpt:named>
                 </cpt:action>
-                <cpt:action id="approveAsProjectManager"/>
-                <cpt:action id="approveAsAssetManager"/>
-                <cpt:action id="approveAsCountryDirector"/>
-                <cpt:action id="cancel"/>
                 <cpt:property id="approvalState">
                     <cpt:action id="viewApprovalTransitions" position="RIGHT">
                         <cpt:named>Show transitions</cpt:named>
                     </cpt:action>
                 </cpt:property>
                 <cpt:property id="pendingApprovalTask">
+                    <cpt:action id="approveAsProjectManager"/>
+                    <cpt:action id="approveAsAssetManager"/>
+                    <cpt:action id="approveAsCountryDirector"/>
+                    <cpt:action id="cancel"/>
                 </cpt:property>
                 <cpt:property id="reasonApprovalTaskBlocked">
                     <cpt:named>Reason blocked</cpt:named>

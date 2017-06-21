@@ -11,6 +11,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
@@ -35,43 +36,49 @@ public enum PaymentApprovalStateTransitionType
             (PaymentApprovalState)null,
             PaymentApprovalState.NEW,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()
-    ),
+            TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL),
     APPROVE_AS_TREASURER(
             PaymentApprovalState.NEW,
             PaymentApprovalState.APPROVED_BY_TREASURER,
             StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER)
-    ),
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER),
+            AdvancePolicy.MANUAL),
     CANCEL(
             PaymentApprovalState.NEW,
             PaymentApprovalState.CANCELLED,
             StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.none()
-    );
+            TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL);
 
     private final List<PaymentApprovalState> fromStates;
     private final PaymentApprovalState toState;
     private final StateTransitionStrategy stateTransitionStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
+    private final AdvancePolicy advancePolicy;
 
     PaymentApprovalStateTransitionType(
             final List<PaymentApprovalState> fromState,
             final PaymentApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy, final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
         this.taskAssignmentStrategy = taskAssignmentStrategy;
+        this.advancePolicy = advancePolicy;
     }
 
     PaymentApprovalStateTransitionType(
             final PaymentApprovalState fromState,
             final PaymentApprovalState toState,
-            final StateTransitionStrategy stateTransitionStrategy, final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final StateTransitionStrategy stateTransitionStrategy,
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy
-        );
+                taskAssignmentStrategy,
+                advancePolicy);
     }
 
     public static class TransitionEvent
@@ -93,6 +100,11 @@ public enum PaymentApprovalStateTransitionType
         return stateTransitionStrategy;
     }
 
+    @Override
+    public AdvancePolicy advancePolicyFor(
+            final Payment domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return advancePolicy;
+    }
 
     @Override
     public TransitionEvent newStateTransitionEvent(

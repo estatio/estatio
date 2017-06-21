@@ -66,18 +66,22 @@
                     </bs3:row>
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Incoming">
+                            <cpt:fieldSet name="Categorisation">
+                                <cpt:action id="checkCategorisationState">
+                                    <cpt:named>Check state</cpt:named>
+                                </cpt:action>
                                 <cpt:property id="categorisationState">
+                                    <cpt:action id="viewCategorisationTransitions" position="RIGHT">
+                                        <cpt:named>View transitions</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                                <cpt:property id="pendingCategorisationTask">
                                     <cpt:action id="classifyAsOrder"/>
                                     <cpt:action id="classifyAsInvoice"/>
                                     <cpt:action id="categoriseAsOrder"/>
                                     <cpt:action id="categoriseAsInvoice"/>
                                     <cpt:action id="resetCategorisation"/>
-                                    <cpt:action id="viewCategorisationTransitions" position="RIGHT">
-                                        <cpt:named>View transitions</cpt:named>
-                                    </cpt:action>
                                 </cpt:property>
-                                <cpt:property id="pendingCategorisationTask"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

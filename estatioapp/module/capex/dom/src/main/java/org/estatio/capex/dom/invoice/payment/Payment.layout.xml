@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
-      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
+<cpt:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:cpt="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <cpt:row>
+        <cpt:col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-        </col>
-    </row>
-    <row>
-        <col span="6">
-            <tabGroup>
-                <tab name="Invoice">
-                    <row>
-                        <col span="12">
+        </cpt:col>
+    </cpt:row>
+    <cpt:row>
+        <cpt:col span="6">
+            <cpt:tabGroup>
+                <cpt:tab name="Invoice">
+                    <cpt:row>
+                        <cpt:col span="12">
                             <ns2:fieldSet name="Payment" id="payment">
                                 <ns2:property id="amount"/>
                                 <ns2:property id="invoice"/>
                                 <ns2:property id="paymentMethod"/>
                             </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Other">
-                    <row>
-                        <col span="12">
+                        </cpt:col>
+                    </cpt:row>
+                </cpt:tab>
+                <cpt:tab name="Other">
+                    <cpt:row>
+                        <cpt:col span="12">
                             <ns2:fieldSet name="Application Tenancy" id="general">
                                 <ns2:property id="applicationTenancy"/>
                                 <ns2:property id="atPath"/>
@@ -37,22 +37,39 @@
                                 <ns2:property id="datanucleusVersionTimestamp"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup unreferencedCollections="true">
-                <tab name="_">
-                    <row>
-                        <col span="12"></col>
-                    </row>
-                </tab>
-            </tabGroup>
+                        </cpt:col>
+                    </cpt:row>
+                </cpt:tab>
+            </cpt:tabGroup>
+            <cpt:fieldSet name="Approval state">
+                <cpt:action id="checkApprovalState">
+                    <cpt:named>Check state</cpt:named>
+                </cpt:action>
+                <cpt:property id="approvalState">
+                    <cpt:action id="viewApprovalTransitions" position="RIGHT">
+                        <cpt:named>View transitions</cpt:named>
+                    </cpt:action>
+                </cpt:property>
+                <cpt:property id="pendingApprovalTask">
+                    <cpt:action id="verify"/>
+                    <cpt:action id="cancel"/>
+                </cpt:property>
+                <cpt:property id="reasonApprovalTaskBlocked">
+                    <cpt:named>Reason blocked</cpt:named>
+                </cpt:property>
+            </cpt:fieldSet>
+        </cpt:col>
+    </cpt:row>
+    <cpt:row>
+        <cpt:col span="12">
+            <cpt:tabGroup unreferencedCollections="true">
+                <cpt:tab name="_">
+                    <cpt:row>
+                        <cpt:col span="12"></cpt:col>
+                    </cpt:row>
+                </cpt:tab>
+            </cpt:tabGroup>
 
-        </col>
-    </row>
-</grid>
+        </cpt:col>
+    </cpt:row>
+</cpt:grid>

@@ -69,6 +69,9 @@
                 </bs3:tab>
             </bs3:tabGroup>
             <cpt:fieldSet name="Verification state">
+                <cpt:action id="checkVerificationState">
+                    <cpt:named>Check state</cpt:named>
+                </cpt:action>
                 <cpt:property id="verificationState">
                     <cpt:action id="viewVerificationTransitions" position="RIGHT">
                         <cpt:named>View transitions</cpt:named>

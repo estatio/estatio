@@ -12,6 +12,7 @@ import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
@@ -37,56 +38,66 @@ public enum IncomingDocumentCategorisationStateTransitionType
             (IncomingDocumentCategorisationState)null,
             IncomingDocumentCategorisationState.NEW,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()
-    ),
+            TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL),
     CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.MAIL_ROOM)
-    ),
+            TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.MAIL_ROOM),
+            AdvancePolicy.MANUAL),
     CLASSIFY_AS_INVOICE_OR_ORDER(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
             StateTransitionStrategy.Util.none(),
-            TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER)
-    ),
+            TaskAssignmentStrategy.Util.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            AdvancePolicy.MANUAL),
     RESET(
             IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
             IncomingDocumentCategorisationState.NEW,
             StateTransitionStrategy.Util.next(),
-            TaskAssignmentStrategy.Util.none()
-    );
+            TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL);
 
     private final List<IncomingDocumentCategorisationState> fromStates;
     private final IncomingDocumentCategorisationState toState;
     private final StateTransitionStrategy stateTransitionStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
+    private final AdvancePolicy advancePolicy;
 
     IncomingDocumentCategorisationStateTransitionType(
             final List<IncomingDocumentCategorisationState> fromState,
             final IncomingDocumentCategorisationState toState,
             final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
         this.taskAssignmentStrategy = taskAssignmentStrategy;
+        this.advancePolicy = advancePolicy;
     }
 
     IncomingDocumentCategorisationStateTransitionType(
             final IncomingDocumentCategorisationState fromState,
             final IncomingDocumentCategorisationState toState,
             final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy
-        );
+                taskAssignmentStrategy,
+                advancePolicy);
     }
 
     @Override
     public StateTransitionStrategy getTransitionStrategy() {
         return stateTransitionStrategy;
+    }
+
+    @Override
+    public AdvancePolicy advancePolicyFor(
+            final Document domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return advancePolicy;
     }
 
     public static class TransitionEvent

@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
+import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
@@ -35,19 +36,19 @@ public enum BankAccountVerificationStateTransitionType
     INSTANTIATE(
             (BankAccountVerificationState)null,
             BankAccountVerificationState.NOT_VERIFIED,
-            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none()
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none(),
             // don't automatically create pending transition to next state; this will be done only on request (by StateTransitionService#createPendingTransition)
-    ),
+            AdvancePolicy.MANUAL),
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
-            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER)
-    ),
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.to(PartyRoleTypeEnum.TREASURER),
+            AdvancePolicy.MANUAL),
     CANCEL(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.CANCELLED,
-            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none()
-    ),
+            StateTransitionStrategy.Util.none(), TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL),
     RESET(
             Arrays.asList(
                     BankAccountVerificationState.NOT_VERIFIED,
@@ -55,34 +56,39 @@ public enum BankAccountVerificationStateTransitionType
                     BankAccountVerificationState.CANCELLED
             ),
             BankAccountVerificationState.NOT_VERIFIED,
-            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.none()
-    );
+            StateTransitionStrategy.Util.next(), TaskAssignmentStrategy.Util.none(),
+            AdvancePolicy.MANUAL);
 
     private final List<BankAccountVerificationState> fromStates;
     private final BankAccountVerificationState toState;
     private final StateTransitionStrategy stateTransitionStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
+    private final AdvancePolicy advancePolicy;
 
     BankAccountVerificationStateTransitionType(
             final List<BankAccountVerificationState> fromState,
             final BankAccountVerificationState toState,
             final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this.fromStates = fromState;
         this.toState = toState;
         this.stateTransitionStrategy = stateTransitionStrategy;
         this.taskAssignmentStrategy = taskAssignmentStrategy;
+        this.advancePolicy = advancePolicy;
     }
 
     BankAccountVerificationStateTransitionType(
             final BankAccountVerificationState fromState,
             final BankAccountVerificationState toState,
             final StateTransitionStrategy stateTransitionStrategy,
-            final TaskAssignmentStrategy taskAssignmentStrategy) {
+            final TaskAssignmentStrategy taskAssignmentStrategy,
+            final AdvancePolicy advancePolicy) {
         this(fromState != null ? Collections.singletonList(fromState): null, toState, stateTransitionStrategy,
-                taskAssignmentStrategy
-        );
+                taskAssignmentStrategy,
+                advancePolicy);
     }
+
 
     public static class TransitionEvent
             extends StateTransitionEvent<
@@ -110,7 +116,11 @@ public enum BankAccountVerificationStateTransitionType
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
-
+    @Override
+    public AdvancePolicy advancePolicyFor(
+            final BankAccount domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return advancePolicy;
+    }
 
     @Override
     public BankAccountVerificationStateTransition createTransition(

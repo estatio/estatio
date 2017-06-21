@@ -17,7 +17,7 @@ import org.estatio.capex.dom.state.StateTransitionType;
 /**
  * Subclasses should be annotated using: @Mixin(method = "prop")
  */
-public abstract class DomainObject_pendingReasonGuardNotSatisfied<
+public abstract class DomainObject_reasonGuardNotSatisfied<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
         STT extends StateTransitionType<DO, ST, STT, S>,
@@ -27,7 +27,7 @@ public abstract class DomainObject_pendingReasonGuardNotSatisfied<
     protected final DO domainObject;
     private final Class<ST> stateTransitionClass;
 
-    public DomainObject_pendingReasonGuardNotSatisfied(final DO domainObject, final Class<ST> stateTransitionClass) {
+    public DomainObject_reasonGuardNotSatisfied(final DO domainObject, final Class<ST> stateTransitionClass) {
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
     }
@@ -37,7 +37,7 @@ public abstract class DomainObject_pendingReasonGuardNotSatisfied<
     public String prop() {
         return queryResultsCache.execute(
                 this::doProp,
-                DomainObject_pendingReasonGuardNotSatisfied.class,
+                DomainObject_reasonGuardNotSatisfied.class,
                 "prop", domainObject);
     }
 

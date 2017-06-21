@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -97,8 +98,9 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter @Setter
-public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<IncomingInvoice> implements
-        SellerProvider {
+public class IncomingDocAsInvoiceViewModel
+        extends IncomingDocViewModel<IncomingInvoice>
+        implements SellerBankAccountCreator  {
 
     // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
     // Johan: the no-arg constructor gets called (after the *other*) - is this a feature or a bug?
@@ -136,29 +138,6 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
 
     //endregion
 
-//    public IncomingDocViewModel createBankAccount(final String ibanNumber){
-//        bankAccountRepository.newBankAccount(getSeller(), ibanNumber, null);
-//        BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber); // this lookup is done instead of setting bankaccount right away for jaxb viewmodel recreation
-//        setBankAccount(bankAccount);
-//        return this;
-//    }
-//
-//    public String validateCreateBankAccount(final String ibanNumber){
-//        if (!IBANValidator.valid(ibanNumber)){
-//            return String.format("%s is not a valid iban number", ibanNumber);
-//        }
-//        if (bankAccountRepository.findBankAccountByReference(getSeller(), ibanNumber)!=null){
-//            return String.format("%s has already bank account with iban %s", getSeller().getName(), ibanNumber);
-//        }
-//        return null;
-//    }
-//
-//    public String disableCreateBankAccount(){
-//        if (!hasSeller()){
-//            return "There is no seller specified";
-//        }
-//        return null;
-//    }
 
     @Property(editing = Editing.ENABLED)
     private String invoiceNumber;
@@ -434,4 +413,9 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
     @Setter(AccessLevel.NONE)
     private ClockService clockService;
 
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    FactoryService factoryService;
 }

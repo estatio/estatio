@@ -179,9 +179,7 @@ public interface StateTransitionType<
     }
 
     @Programmatic
-    default AdvancePolicy advancePolicyFor(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
-        return AdvancePolicy.MANUAL;
-    }
+    AdvancePolicy advancePolicyFor(final DO domainObject, final ServiceRegistry2 serviceRegistry2);
 
     /**
      * The reason as to why the provided domain object cannot - yet - make <i>this</i> transition.
