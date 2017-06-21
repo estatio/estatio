@@ -341,6 +341,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
         //tax validation
         List<String> taxcodes = Arrays.asList(
                 "FRA",
+                "FRB",
                 "FRC",
                 "FRD",
                 "FRE",
