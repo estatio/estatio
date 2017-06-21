@@ -19,6 +19,8 @@ import org.estatio.dom.party.role.IPartyRoleType;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionService {
 
+    // ////////////////////////////////////
+
     @Programmatic
     public <
             DO,
@@ -46,21 +48,8 @@ public class StateTransitionService {
         return (ST) supportService.findFor(task);
     }
 
-    /**
-     * Whether the domain object can make the suggested transition.
-     */
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > boolean canTransitionAndMatchAndGuardSatisfied(
-            final DO domainObject,
-            final STT candidateTransitionType) {
 
-        return candidateTransitionType.canTransitionAndMatchAndGuardSatisfied(domainObject, serviceRegistry2);
-    }
+    // ////////////////////////////////////
 
     /**
      * Obtain the current state of the domain object, which will be the
@@ -71,7 +60,7 @@ public class StateTransitionService {
      * If there is no {@link StateTransition}, then should default to null (indicating that the domain object has only just been instantiated).
      * </p>
      *
-     * @param domainObject
+     * @param domainObject - upon which
      * @param prototype - to specify which {@link StateTransitionType transition type} we are interested in.
      */
     @Programmatic
@@ -104,13 +93,14 @@ public class StateTransitionService {
         return supportService.currentStateOf(domainObject);
     }
 
+    // ////////////////////////////////////
+
 
     /**
      * Obtain the pending (incomplete) transition of the domain object, which will be the
      * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
      * {@link StateTransition#getToState() to state} is null.
      *
-     * @param domainObject
      * @return the current transition, or possibly null for the very first (INSTANTIATE) transition
      */
     @Programmatic
@@ -136,50 +126,14 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > ST pendingTransitionOf(
+    > ST pendingTransitionOf(
             final DO domainObject,
             final Class<ST> stateTransitionClass) {
         final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
         return supportService.pendingTransitionOf(domainObject);
     }
 
-    /**
-     * Obtain the most recently completed transition of the domain object, which will be the
-     * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
-     * {@link StateTransition#getToState() to state} is null.
-     *
-     * @param domainObject
-     * @return the current transition, or possibly null for the very first (INSTANTIATE) transition
-     */
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > ST mostRecentlyCompletedTransitionOf(
-            final DO domainObject,
-            final STT prototype) {
-        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(prototype);
-        return supportService.mostRecentlyCompletedTransitionOf(domainObject);
-    }
-
-    /**
-     * Overload of {@link #mostRecentlyCompletedTransitionOf(Object, StateTransitionType)}, but using the class of the
-     * {@link StateTransition} rather than a prototype value of the {@link StateTransitionType}.
-     */
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > ST mostRecentlyCompletedTransitionOf(
-            final DO domainObject,
-            final Class<ST> stateTransitionClass) {
-        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
-        return supportService.mostRecentlyCompletedTransitionOf(domainObject);
-    }
+    // ////////////////////////////////////
 
     /**
      * Applies the state transition to the domain object that it refers to, marks the transition as
@@ -203,7 +157,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > ST trigger(
+    > ST trigger(
             final ST stateTransition,
             final String comment) {
 
@@ -218,6 +172,28 @@ public class StateTransitionService {
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
+     *
+     * @param domainObject - the domain object whose
+     * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
+     * @param comment
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST trigger(
+            final DO domainObject,
+            final STT requiredTransitionType,
+            final String comment) {
+        final Class<ST> stateTransitionClass = transitionClassFor(requiredTransitionType);
+        return trigger(domainObject, stateTransitionClass, requiredTransitionType, comment);
+    }
+
+    /**
+     * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
+     *
      *  @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
      * @param requiredTransitionType
@@ -246,6 +222,8 @@ public class StateTransitionService {
 
         return mostRecentlyCompletedTransitionOf(domainObject, stateTransitionClass);
     }
+
+    // ////////////////////////////////////
 
     private <
             DO,
@@ -349,12 +327,38 @@ public class StateTransitionService {
         return completedTransition;
     }
 
+    /**
+     * Has public visibility only so can be used in tests.
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >
+    ST createPendingTransition(
+            final DO domainObject,
+            final S currentState,
+            final STT transitionType) {
+
+        final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
+                transitionType.getTaskAssignmentStrategy();
+        IPartyRoleType assignToIfAny = null;
+        if(taskAssignmentStrategy != null) {
+            assignToIfAny = taskAssignmentStrategy
+                    .getAssignTo(domainObject, transitionType, serviceRegistry2);
+        }
+        return transitionType
+                .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
+    }
+
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-        > ST completeTransition(
+            > ST completeTransition(
             final DO domainObject,
             final ST transitionToComplete,
             final String comment) {
@@ -384,83 +388,26 @@ public class StateTransitionService {
         return transitionToComplete;
     }
 
-    /**
-     * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
-     *
-     * @param domainObject - the domain object whose
-     * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
-     * @param comment
-     */
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > ST trigger(
-            final DO domainObject,
-            final STT requiredTransitionType,
-            final String comment) {
-        final Class<ST> stateTransitionClass = transitionClassFor(requiredTransitionType);
-        return trigger(domainObject, stateTransitionClass, requiredTransitionType, comment);
-    }
-
-    private <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    > Class<ST> transitionClassFor(final STT requiredTransitionType) {
-        for (StateTransitionServiceSupport supportService : supportServices) {
-            Class<ST> transitionClass = supportService.transitionClassFor(requiredTransitionType);
-            if(transitionClass != null) {
-                return transitionClass;
-            }
-        }
-        return null;
-    }
-
-    @Programmatic
-    public <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-            >
-    ST createPendingTransitionIfGuardSatisfied(
-            final DO domainObject,
-            final STT transitionType) {
-        if(!canTransitionAndMatchAndGuardSatisfied(domainObject, transitionType)) {
-            return null;
-        }
-        final S currentState = currentStateOf(domainObject, transitionType);
-        return createPendingTransition(domainObject, currentState, transitionType);
-    }
-
-    private <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-            >
-    ST createPendingTransition(
-            final DO domainObject,
-            final S currentState,
-            final STT transitionType) {
-
-        final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
-                transitionType.getTaskAssignmentStrategy();
-        IPartyRoleType assignToIfAny = null;
-        if(taskAssignmentStrategy != null) {
-            assignToIfAny = taskAssignmentStrategy
-                    .getAssignTo(domainObject, transitionType, serviceRegistry2);
-        }
-        return transitionType
-                .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
-    }
-
 
     // ////////////////////////////////////
+
+    /**
+     * Obtains the most recently completed transition of the domain object, which will be the
+     * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
+     * {@link StateTransition#getToState() to state} is null.
+     */
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > ST mostRecentlyCompletedTransitionOf(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+        final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
+        return supportService.mostRecentlyCompletedTransitionOf(domainObject);
+    }
+
 
     // REVIEW: we could cache the result, perhaps (it's idempotent)
     @Programmatic
@@ -513,6 +460,23 @@ public class StateTransitionService {
         }
         throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found for " + transitionType);
     }
+
+    // REVIEW: we could cache the result, perhaps (it's idempotent)
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > Class<ST> transitionClassFor(final STT requiredTransitionType) {
+        for (StateTransitionServiceSupport supportService : supportServices) {
+            Class<ST> transitionClass = supportService.transitionClassFor(requiredTransitionType);
+            if(transitionClass != null) {
+                return transitionClass;
+            }
+        }
+        return null;
+    }
+
 
     @Inject
     List<StateTransitionServiceSupport> supportServices;
