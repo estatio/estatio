@@ -35,12 +35,9 @@ import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -48,7 +45,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -60,8 +56,6 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -184,6 +178,11 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
     private LocalDate invoiceDate;
+
+    public void modifyInvoiceDate(LocalDate invoiceDate){
+        setInvoiceDate(invoiceDate);
+        updateDueDate();
+    }
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
@@ -322,6 +321,12 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
         return getPaymentMethod()==null ? PaymentMethod.TEST_NO_PAYMENT : getPaymentMethod();
     }
 
+    @Programmatic
+    public void updateDueDate(){
+        if (getInvoiceDate()!=null){
+            setDueDate(getInvoiceDate().plusMonths(1));
+        }
+    }
 
     @Programmatic
     public void autoFillIn(){
