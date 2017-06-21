@@ -380,6 +380,9 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
         if (getGrossAmount()==null){
             buffer.append("gross amount, ");
         }
+        if (getPeriod()==null){
+            buffer.append("period, ");
+        }
         if (buffer.length()==0){
             return null;
         } else {

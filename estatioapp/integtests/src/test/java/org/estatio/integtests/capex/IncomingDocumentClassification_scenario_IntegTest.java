@@ -410,7 +410,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
                 wrap(mixin(IncomingDocAsInvoiceViewmodel_saveInvoice.class, incomingDocAsInvoiceViewModel))
                         .act(null, false);
             } catch (DisabledException e){
-                assertThat(e.getMessage()).contains("Reason: invoice number, seller, net amount, gross amount required");
+                assertThat(e.getMessage()).contains("Reason: invoice number, seller, net amount, gross amount, period required");
             }
 
             // when
