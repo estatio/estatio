@@ -103,7 +103,13 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public String title() {
-        return TitleBuilder.start().withParent(getOrdr()).withName(getCharge()).toString();
+        return TitleBuilder.start()
+                .withName(getDescription().concat(" "))
+                .withName(getNetAmount())
+                .withName(" ")
+                .withName(getOrdr().getSellerOrderReference().concat(" "))
+                .withName(getOrdr().getOrderNumber())
+                .toString();
     }
 
     public OrderItem() {

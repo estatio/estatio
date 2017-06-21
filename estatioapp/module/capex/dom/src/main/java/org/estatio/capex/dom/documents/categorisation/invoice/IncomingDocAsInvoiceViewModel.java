@@ -236,6 +236,13 @@ public class IncomingDocAsInvoiceViewModel extends IncomingDocViewModel<Incoming
                             .toList()
             );
         }
+        if (hasFixedAsset()) {
+            result = Lists.newArrayList(
+                    FluentIterable.from(result)
+                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getFixedAsset()))
+                            .toList()
+            );
+        }
         return result;
     }
 
