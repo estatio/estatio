@@ -35,6 +35,14 @@ public abstract class StateTransitionServiceSupportAbstract<
     }
 
     @Override
+    public Class<ST> transitionClassFor(final StateTransitionType<?, ?, ?, ?> prototypeTransitionType) {
+        if(supports(prototypeTransitionType)) {
+            return stateTransitionClass;
+        }
+        return null;
+    }
+
+    @Override
     public boolean supports(final String transitionType) {
         String objectType = metaModelService3.toObjectType(stateTransitionClass);
         return Objects.equals(objectType, transitionType);
@@ -71,5 +79,5 @@ public abstract class StateTransitionServiceSupportAbstract<
     protected abstract StateTransitionRepository<DO, ST, STT, S> getRepository();
 
     @Inject
-    protected MetaModelService3 metaModelService3;
+    MetaModelService3 metaModelService3;
 }

@@ -24,19 +24,14 @@ import javax.inject.Inject;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.HiddenException;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.contributed.Party_financialAccountContributions;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -136,28 +131,5 @@ public class FinancialAccountRepository_IntegTest extends EstatioIntegrationTest
 
     }
 
-    public static class AddAccountWrapped extends FinancialAccountRepository_IntegTest {
-
-        @Rule
-        public ExpectedException expectedException = ExpectedException.none();
-
-        @Test
-        public void addAccountIsHiddenTest() throws Exception {
-
-            // then
-            expectedException.expect(HiddenException.class);
-
-            // when
-            wrapperFactory.wrap(financialAccountContributions).addAccount(party, FinancialAccountType.BANK_ACCOUNT, "123", "test");
-
-        }
-
-        @Inject
-        WrapperFactory wrapperFactory;
-
-        @Inject
-        Party_financialAccountContributions financialAccountContributions;
-
-    }
 
 }

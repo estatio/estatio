@@ -13,8 +13,6 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -47,7 +45,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
                 final Document document = ev.getDomainObject();
                 final IncomingInvoice incomingInvoice = findIncomingInvoiceFrom(document);
                 if(incomingInvoice != null) {
-                    stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+                    stateTransitionService.trigger(incomingInvoice,  IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
                 }
                 break;
             }
@@ -97,6 +95,10 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         return incomingInvoiceRepository.findByBankAccount(bankAccount);
     }
 
+    /*
+
+    think this is redundant because of the auto-advance stuff.
+
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -133,6 +135,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             }
         }
     }
+     */
 
 
     @Inject

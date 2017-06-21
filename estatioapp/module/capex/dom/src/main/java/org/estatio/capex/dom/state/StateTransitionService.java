@@ -55,11 +55,11 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > boolean canTransitionAndGuardSatisfied(
+    > boolean canTransitionAndMatchAndGuardSatisfied(
             final DO domainObject,
             final STT candidateTransitionType) {
 
-        return candidateTransitionType.canTransitionAndGuardSatisfied(domainObject, serviceRegistry2);
+        return candidateTransitionType.canTransitionAndMatchAndGuardSatisfied(domainObject, serviceRegistry2);
     }
 
     /**
@@ -196,7 +196,7 @@ public class StateTransitionService {
      * @param stateTransition - expected to for a task still incomplete, and applicable to its domain object's state
      * @param comment - used to complete the task.
      *
-     * @return - the next state transition, or null if the one provided one
+     * @return - the next state transition, or null if there isn't one defined by the transition just completing/ed
      */
     public <
             DO,
@@ -218,6 +218,174 @@ public class StateTransitionService {
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
+     *  @param domainObject - the domain object whose
+     * @param stateTransitionClass - identifies the state chart being applied
+     * @param requiredTransitionType
+     * @param comment
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST trigger(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final STT requiredTransitionType,
+            final String comment) {
+
+        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionType, comment);
+
+        boolean keepTransitioning = (completedTransition != null);
+        while(keepTransitioning) {
+            ST previousTransition = completedTransition;
+            completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, null, null);
+            keepTransitioning = (completedTransition != null && previousTransition != completedTransition);
+        }
+
+        return mostRecentlyCompletedTransitionOf(domainObject, stateTransitionClass);
+    }
+
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST completeTransitionIfPossible(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final STT requestedTransitionTypeIfAny,
+            final String comment) {
+
+        // check the override, if any
+        if(requestedTransitionTypeIfAny != null) {
+            boolean canTransition = requestedTransitionTypeIfAny.canTransitionAndIsMatch(domainObject, serviceRegistry2);
+            if(!canTransition) {
+                // what's been requested is a no-go.
+                return null;
+            }
+        }
+
+        // determine what previously was determined as the pending (if any)
+        ST pendingTransitionIfAny = pendingTransitionOf(domainObject, stateTransitionClass);
+
+        // what we now think as the pending (if any)
+        STT nextTransitionType = null;
+
+        // current state
+        final ST mostRecentTransitionIfAny = mostRecentlyCompletedTransitionOf(domainObject, stateTransitionClass);
+        final S currentStateIfAny =
+                mostRecentTransitionIfAny != null
+                        ? mostRecentTransitionIfAny.getTransitionType().getToState()
+                        : null;
+
+        if (requestedTransitionTypeIfAny != null) {
+            nextTransitionType = requestedTransitionTypeIfAny;
+        } else {
+            if (mostRecentTransitionIfAny != null) {
+
+                // use most recent transition to determine the next transition (since one hasn't been requested)
+                final STT mostRecentTransitionType = mostRecentTransitionIfAny.getTransitionType();
+
+                final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy =
+                        mostRecentTransitionType.getTransitionStrategy();
+                if(transitionStrategy != null) {
+                    nextTransitionType =
+                            transitionStrategy.nextTransitionType(domainObject, mostRecentTransitionType, serviceRegistry2);
+                }
+
+            } else {
+                // can't proceed because unable to determine current state, and no transition specified
+                return null;
+            }
+        }
+
+        // if pending has changed, then reconcile
+        STT pendingTransitionType = pendingTransitionIfAny != null ? pendingTransitionIfAny.getTransitionType() : null;
+
+        if(pendingTransitionType != nextTransitionType) {
+            if(pendingTransitionType != null) {
+
+                // for both nextTransitionType == null and != null
+
+                final Task taskIfAny = pendingTransitionIfAny.getTask();
+                repositoryService.remove(pendingTransitionIfAny);
+                if(taskIfAny != null) {
+                    repositoryService.removeAndFlush(taskIfAny);
+                }
+                pendingTransitionType = nextTransitionType;
+                pendingTransitionIfAny  = createPendingTransition(domainObject, currentStateIfAny, nextTransitionType);
+
+
+            } else {
+                // pendingTransitionType == null, so nextTransitionType != null because of outer if
+
+                pendingTransitionIfAny  = createPendingTransition(domainObject, currentStateIfAny, nextTransitionType);
+                pendingTransitionType = nextTransitionType;
+            }
+        }
+
+        if(pendingTransitionType == null) {
+            return null;
+        }
+
+        if(! pendingTransitionType.isGuardSatisified(domainObject, serviceRegistry2) ) {
+            // cannot apply this state, while there is an available "road" to traverse, it is blocked
+            // (there must be a guard prohibiting it for this particular domain object)
+            return null;
+        }
+
+        if(nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2).isManual() &&
+           requestedTransitionTypeIfAny == null) {
+            // do not proceed if this is an explicit transition and no explicit transition type provided.
+            return null;
+        }
+
+        //
+        // guard satisfied, so go ahead and complete this pending transition
+        //
+        final ST completedTransition = completeTransition(domainObject, pendingTransitionIfAny, comment);
+        return completedTransition;
+    }
+
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+        > ST completeTransition(
+            final DO domainObject,
+            final ST transitionToComplete,
+            final String comment) {
+
+        final STT transitionType = transitionToComplete.getTransitionType();
+
+        final StateTransitionEvent<DO, ST, STT, S> event =
+                transitionType.newStateTransitionEvent(domainObject, transitionToComplete);
+
+        // transitioning
+        event.setPhase(StateTransitionEvent.Phase.TRANSITIONING);
+        eventBusService.post(event);
+
+        // transition
+        transitionType.applyTo(domainObject, serviceRegistry2);
+
+        // mark tasks as complete
+        transitionToComplete.completed();
+        final Task taskIfAny = transitionToComplete.getTask();
+        if(taskIfAny != null) {
+            taskIfAny.completed(comment);
+        }
+
+        event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
+        eventBusService.post(event);
+
+        return transitionToComplete;
+    }
+
+    /**
+     * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
      *
      * @param domainObject - the domain object whose
      * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
@@ -233,6 +401,42 @@ public class StateTransitionService {
             final DO domainObject,
             final STT requiredTransitionType,
             final String comment) {
+        final Class<ST> stateTransitionClass = transitionClassFor(requiredTransitionType);
+        return trigger(domainObject, stateTransitionClass, requiredTransitionType, comment);
+    }
+
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > Class<ST> transitionClassFor(final STT requiredTransitionType) {
+        for (StateTransitionServiceSupport supportService : supportServices) {
+            Class<ST> transitionClass = supportService.transitionClassFor(requiredTransitionType);
+            if(transitionClass != null) {
+                return transitionClass;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
+     *
+     * @param domainObject - the domain object whose
+     * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
+     * @param comment
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST triggerOLD(
+            final DO domainObject,
+            final STT requiredTransitionType,
+            final String comment) {
 
         if(!requiredTransitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2)) {
             // cannot apply this state, there is no "road" or isn't a match (as a valid route to traverse, switch stmt)
@@ -243,6 +447,7 @@ public class StateTransitionService {
 
         if(pendingTransition != null) {
             final STT pendingType = pendingTransition.getTransitionType();
+
             if(pendingType != requiredTransitionType) {
                 // we're heading in a different direction than was set up
                 // eg we're doing a cancel instead of an approve.
@@ -294,7 +499,6 @@ public class StateTransitionService {
                 requiredTransitionType.newStateTransitionEvent(domainObject, pendingTransition);
 
         // transitioning
-        final EventBusService eventBusService = serviceRegistry2.lookupService(EventBusService.class);
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONING);
         eventBusService.post(event);
 
@@ -309,21 +513,10 @@ public class StateTransitionService {
             }
         }
 
-        // update the state of the domain object to be toState of the transition that's just completed
-        S currentState = requiredTransitionType.getToState();
 
         // for wherever we might go next, we use the transition strategy to create a pending task,
         // and (if necessary) create a task for the first one that applies to this particular domain object.
-        ST nextTransition = null;
-
-        final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy =
-                requiredTransitionType.getTransitionStrategy();
-        if(transitionStrategy != null) {
-            STT nextTransitionType = transitionStrategy.nextTransitionType(domainObject, requiredTransitionType, serviceRegistry2);
-            if(nextTransitionType != null) {
-                nextTransition = createPendingTransition(domainObject, currentState, nextTransitionType);
-            }
-        }
+        ST nextTransition = createPendingTransitionAfter(domainObject, requiredTransitionType);
 
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(event);
@@ -345,14 +538,61 @@ public class StateTransitionService {
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             >
-    ST createPendingTransition(
+    ST checkState(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+
+        final ST mostRecentTransition = mostRecentlyCompletedTransitionOf(domainObject, stateTransitionClass);
+        final STT mostRecentTransitionType = mostRecentTransition.getTransitionType();
+
+        final StateTransitionEvent<DO, ST, STT, S> event =
+                mostRecentTransitionType.newStateTransitionEvent(domainObject, mostRecentTransition);
+
+        ST pendingTransition = createPendingTransitionAfter(domainObject, mostRecentTransitionType);
+
+        // force re-evaluation
+        event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
+        eventBusService.post(event);
+
+        return pendingTransition;
+    }
+
+
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            >
+    ST createPendingTransitionIfGuardSatisfied(
             final DO domainObject,
             final STT transitionType) {
-        if(!canTransitionAndGuardSatisfied(domainObject, transitionType)) {
+        if(!canTransitionAndMatchAndGuardSatisfied(domainObject, transitionType)) {
             return null;
         }
         final S currentState = currentStateOf(domainObject, transitionType);
         return createPendingTransition(domainObject, currentState, transitionType);
+    }
+
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST createPendingTransitionAfter(
+            final DO domainObject,
+            final STT transitionType) {
+        ST nextTransition = null;
+        S currentState = transitionType.getToState();
+        final StateTransitionStrategy<DO, ST, STT, S> transitionStrategy = transitionType.getTransitionStrategy();
+        if(transitionStrategy != null) {
+            STT nextTransitionType = transitionStrategy.nextTransitionType(domainObject, transitionType, serviceRegistry2);
+            if(nextTransitionType != null) {
+                nextTransition = createPendingTransition(domainObject, currentState, nextTransitionType);
+            }
+        }
+        return nextTransition;
     }
 
     private <
@@ -376,6 +616,7 @@ public class StateTransitionService {
         return transitionType
                 .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
     }
+
 
     // ////////////////////////////////////
 
@@ -446,5 +687,7 @@ public class StateTransitionService {
     @Inject
     MetaModelService3 metaModelService3;
 
+    @Inject
+    EventBusService eventBusService;
 
 }

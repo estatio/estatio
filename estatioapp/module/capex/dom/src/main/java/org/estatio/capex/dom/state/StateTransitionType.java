@@ -171,7 +171,20 @@ public interface StateTransitionType<
     }
 
     /**
-     * Whether the provided domain object can - yet - make <i>this</i> transition.
+     * Derived from {@link #reasonGuardNotSatisified(Object, ServiceRegistry2)}; do not overrride.
+     */
+    @Programmatic
+    default boolean isGuardSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return reasonGuardNotSatisified(domainObject, serviceRegistry2) == null;
+    }
+
+    @Programmatic
+    default AdvancePolicy advancePolicyFor(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return AdvancePolicy.MANUAL;
+    }
+
+    /**
+     * The reason as to why the provided domain object cannot - yet - make <i>this</i> transition.
      *
      * <p>
      *     In practice, this means that this is method is overridden when there is a decision to be made and the
@@ -183,9 +196,11 @@ public interface StateTransitionType<
      * @param domainObject - being transitioned.
      * @param serviceRegistry2 -to lookup domain services etc
      */
-    @Programmatic
-    default boolean isGuardSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
-        return true;
+    /**
+     * Kind-a the same as our disableXxx() guards in the framework.
+     */
+    default String reasonGuardNotSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return null;
     }
 
     @Programmatic
@@ -194,7 +209,7 @@ public interface StateTransitionType<
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    >  boolean canTransitionAndGuardSatisfied(
+    >  boolean canTransitionAndMatchAndGuardSatisfied(
             final DO domainObject,
             final ServiceRegistry2 serviceRegistry2) {
         final STT transitionType = (STT) this;

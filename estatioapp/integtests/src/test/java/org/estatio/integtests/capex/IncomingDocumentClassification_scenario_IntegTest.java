@@ -31,6 +31,7 @@ import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewMo
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewmodel_saveInvoice;
+import org.estatio.capex.dom.documents.categorisation.invoice.SellerProvider_createBankAccount;
 import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
@@ -415,7 +416,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
             // when
             try {
-                wrap(incomingDocAsInvoiceViewModel).createBankAccount("123");
+                wrap(mixin(SellerProvider_createBankAccount.class, incomingDocAsInvoiceViewModel)).act("123");
             } catch (DisabledException e){
                 assertThat(e.getMessage()).contains("Reason: There is no seller specified");
             }
@@ -427,14 +428,14 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 
             // when
             try {
-                wrap(incomingDocAsInvoiceViewModel).createBankAccount("123");
+                wrap(mixin(SellerProvider_createBankAccount.class, incomingDocAsInvoiceViewModel)).act("123");
             } catch (Exception e){
                 assertThat(e.getMessage()).contains("Reason: 123 is not a valid iban number");
             }
 
             // when
             try {
-                wrap(incomingDocAsInvoiceViewModel).createBankAccount(fakeIban);
+                wrap(mixin(SellerProvider_createBankAccount.class, incomingDocAsInvoiceViewModel)).act(fakeIban);
             } catch (Exception e){
                 assertThat(e.getMessage()).contains("Reason: Some seller has already bank account with iban NL05ABNA0214875743");
             }

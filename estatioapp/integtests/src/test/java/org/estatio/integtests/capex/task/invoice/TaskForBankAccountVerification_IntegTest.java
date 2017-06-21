@@ -138,7 +138,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // and when
-            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            stateTransitionService.createPendingTransitionIfGuardSatisfied(bankAccount, VERIFY_BANK_ACCOUNT);
             transactionService.nextTransaction();
 
             // then
@@ -218,7 +218,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            stateTransitionService.createPendingTransitionIfGuardSatisfied(bankAccount, VERIFY_BANK_ACCOUNT);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -269,7 +269,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            stateTransitionService.createPendingTransitionIfGuardSatisfied(bankAccount, VERIFY_BANK_ACCOUNT);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -316,7 +316,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(this.bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, VERIFY_BANK_ACCOUNT);
+            stateTransitionService.createPendingTransitionIfGuardSatisfied(bankAccount, VERIFY_BANK_ACCOUNT);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);

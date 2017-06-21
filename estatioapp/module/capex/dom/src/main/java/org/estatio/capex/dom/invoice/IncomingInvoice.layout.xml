@@ -88,7 +88,8 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="Payment" id="details">
                                 <cpt:property id="bankAccount">
-                                    <cpt:action id="changeBankAccount" promptStyle="INLINE_AS_IF_EDIT" />
+                                    <cpt:action id="changeBankAccount"/>
+                                    <cpt:action id="createBankAccount" position="RIGHT"/>
                                 </cpt:property>
                                 <cpt:property id="paymentMethod"/>
                             </cpt:fieldSet>
@@ -108,16 +109,22 @@
                 </bs3:tab>
             </bs3:tabGroup>
             <cpt:fieldSet name="Approval">
+                <cpt:action id="checkApprovalState">
+                    <cpt:named>Check state</cpt:named>
+                </cpt:action>
+                <cpt:action id="approveAsProjectManager"/>
+                <cpt:action id="approveAsAssetManager"/>
+                <cpt:action id="approveAsCountryDirector"/>
+                <cpt:action id="cancel"/>
                 <cpt:property id="approvalState">
                     <cpt:action id="viewApprovalTransitions" position="RIGHT">
                         <cpt:named>Show transitions</cpt:named>
                     </cpt:action>
                 </cpt:property>
                 <cpt:property id="pendingApprovalTask">
-                    <cpt:action id="approveAsProjectManager"/>
-                    <cpt:action id="approveAsAssetManager"/>
-                    <cpt:action id="approveAsCountryDirector"/>
-                    <cpt:action id="cancel"/>
+                </cpt:property>
+                <cpt:property id="reasonApprovalTaskBlocked">
+                    <cpt:named>Reason blocked</cpt:named>
                 </cpt:property>
             </cpt:fieldSet>
 

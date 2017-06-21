@@ -25,49 +25,28 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.base.dom.types.ReferenceType;
-
-import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.party.Party;
 
-@DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class Party_financialAccountContributions extends UdoDomainService<Party_financialAccountContributions> {
+@Mixin
+public class Party_financialAccounts {
 
-    public Party_financialAccountContributions() {
-        super(Party_financialAccountContributions.class);
+    private final Party party;
+
+    public Party_financialAccounts(final Party party) {
+        this.party = party;
     }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    @MemberOrder(name = "financialAccounts", sequence = "1")
-    public FinancialAccount addAccount(
-            final Party owner,
-            final FinancialAccountType financialAccountType,
-            final @Parameter(regexPattern = ReferenceType.Meta.REGEX) String reference,
-            final String name) {
-        return financialAccountRepository.newFinancialAccount(financialAccountType, reference, name, owner);
-    }
-
-    // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<FinancialAccount> financialAccounts(final Party owner) {
-        return financialAccountRepository.findAccountsByOwner(owner);
+    public List<FinancialAccount> $$() {
+        return financialAccountRepository.findAccountsByOwner(party);
     }
-
-    // //////////////////////////////////////
 
 
     @Inject

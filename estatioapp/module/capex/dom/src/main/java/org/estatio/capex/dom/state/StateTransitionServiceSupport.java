@@ -72,4 +72,6 @@ public interface StateTransitionServiceSupport <
     @Programmatic
     ST findFor(Task task);
 
+    @Programmatic
+    Class<ST> transitionClassFor(final StateTransitionType<?, ?, ?, ?> prototypeTransitionType);
 }

@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.estatio.capex.dom.documents.categorisation.invoice.SellerProvider;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -89,7 +90,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class IncomingInvoice extends Invoice<IncomingInvoice> {
+public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerProvider {
 
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
@@ -258,11 +259,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
     }
 
     @Programmatic
-    public boolean classificationComplete(){
-        if (getBankAccount()==null){
-            return false;
+    public String reasonClassificationInComplete(){
+        if (getBankAccount() == null) {
+            return "Bank account is required";
         }
-        return true;
+        return null;
     }
 
     //endregion

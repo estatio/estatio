@@ -51,7 +51,7 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
             state "APPROVED_BY_ \n COUNTRY_ADMINISTRATOR" as iia_la_abca
 
             [*] -right-> iia_la_new : INSTANTIATE
-            iia_la_new --> iia_la_classified: COMPLETE\n[completely\nclassified]
+            iia_la_new --> iia_la_classified: COMPLETE_\nCLASSIFICATION\n[completely\nclassified]
             iia_la_classified --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[hasServiceCharges]
             iia_la_classified --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
             iia_la_classified --> iia_la_abca : APPROVE_AS_\nCOUNTRY_ADMINISTRATOR\n[else]

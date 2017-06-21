@@ -32,10 +32,12 @@
                         <col span="4">
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
                                 <ns2:property id="tax">
                                     <ns2:action id="changeTax" hidden="EVERYWHERE"/>
                                 </ns2:property>
+                                <ns2:property id="taxRate"/>
+                                <ns2:property id="vatPercentage"/>
+                                <ns2:property id="vatAmount"/>
                                 <ns2:property id="grossAmount"/>
                             </ns2:fieldSet>
                         </col>
