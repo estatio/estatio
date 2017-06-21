@@ -102,6 +102,11 @@ public class IncomingDocAsInvoiceViewModel
         extends IncomingDocViewModel<IncomingInvoice>
         implements SellerBankAccountCreator  {
 
+    /**
+     * for unit testing
+     */
+    IncomingDocAsInvoiceViewModel() {
+    }
 
     public IncomingDocAsInvoiceViewModel(final Document document) {
         super(document);

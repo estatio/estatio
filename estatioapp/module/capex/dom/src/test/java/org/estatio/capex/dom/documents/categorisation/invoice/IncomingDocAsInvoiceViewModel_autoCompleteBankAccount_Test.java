@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.invoice;
+package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
