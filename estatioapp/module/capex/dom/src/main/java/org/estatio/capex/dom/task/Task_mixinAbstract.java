@@ -20,30 +20,6 @@ public abstract class Task_mixinAbstract<M, DO> {
         this.mixinClass = mixinClass;
     }
 
-    protected Object toReturnElse(final boolean goToNext, final Object otherwise) {
-        if (goToNext){
-            final Task nextTask = nextTaskAfter(task);
-            if (nextTask != null) {
-                return nextTask;
-            }
-            // fall through to returning the view model for this document
-            messageService.informUser("No more tasks");
-        }
-
-        return otherwise;
-    }
-
-    private Task nextTaskAfter(final Task task) {
-        return taskRepository.nextTaskForMeAfter(task);
-    }
-
-    /**
-     * Subclasses should override and make <tt>public</tt>.
-     */
-    protected boolean hideAct() {
-        return task.isCompleted() || getDomainObjectIfAny() == null;
-    }
-
     protected DO getDomainObjectIfAny() {
         return queryResultsCache.execute(
                 this::doGetDomainObjectIfAny,

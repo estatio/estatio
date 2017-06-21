@@ -44,15 +44,16 @@ public interface NextTransitionSearchStrategy<
             S extends State<S>
             > NextTransitionSearchStrategy<DO,ST,STT,S> firstMatching() {
 
-        return (domainObject, requiredTransitionType, serviceRegistry2) -> {
+        return (domainObject, completedTransitionType, serviceRegistry2) -> {
 
             final StateTransitionService stateTransitionService = serviceRegistry2
                     .lookupService(StateTransitionService.class);
 
             final STT[] allTransitionsTypes =
-                    stateTransitionService.supportFor(requiredTransitionType).allTransitionTypes();
+                    stateTransitionService.supportFor(completedTransitionType).allTransitionTypes();
             for (STT candidateNextTransitionType : allTransitionsTypes) {
-                if (candidateNextTransitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2)) {
+                if (candidateNextTransitionType.canTransitionFromStateAndIsMatch(
+                        domainObject, completedTransitionType.getToState(), serviceRegistry2)) {
                     return candidateNextTransitionType;
                 }
             }

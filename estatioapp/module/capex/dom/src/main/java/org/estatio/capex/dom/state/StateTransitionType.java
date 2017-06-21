@@ -47,6 +47,22 @@ public interface StateTransitionType<
     NextTransitionSearchStrategy<DO, ST, STT, S> getNextTransitionSearchStrategy();
 
     /**
+     * Returns the next transition type after this one.
+     *
+     * <p>
+     *     Note that this method does <i>not</i> double-check the actual current state of the domain object;
+     *     this allows it to be used for "what-if" queries;
+     *     (as in: "what would the next state be if this one completed?")
+     * </p>
+     */
+    @Programmatic
+    default STT nextTransitionType(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        STT transitionType = (STT) this;
+        return getNextTransitionSearchStrategy().nextTransitionType(
+                domainObject, transitionType, serviceRegistry2);
+    }
+
+    /**
      * Allows the type to apply changes to the target domain object if necessary.
      *
      * <p>
@@ -66,6 +82,13 @@ public interface StateTransitionType<
     @Programmatic
     TaskAssignmentStrategy<DO, ST, STT, S> getTaskAssignmentStrategy();
 
+    @Programmatic
+    default IPartyRoleType getAssignTo(DO domainObject, ServiceRegistry2 serviceRegistry2) {
+        STT transitionType = (STT) this;
+        return getTaskAssignmentStrategy()
+                .getAssignTo(domainObject, transitionType, serviceRegistry2);
+
+    }
 
     /**
      * Creates a new {@link StateTransition transition}, and optionally {@link Task}, for the domain object.
@@ -111,13 +134,33 @@ public interface StateTransitionType<
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            >  boolean canTransitionAndIsMatch(
+    >  boolean canTransitionFromCurrentStateAndIsMatch(
             final DO domainObject,
             final ServiceRegistry2 serviceRegistry2) {
+
         final STT transitionType = (STT) this;
         final StateTransitionService stateTransitionService = serviceRegistry2.lookupService(StateTransitionService.class);
+
         final S currentStateIfAny = stateTransitionService.currentStateOf(domainObject, transitionType);
-        return transitionType.canTransition(currentStateIfAny) &&
+
+        return canTransitionFromStateAndIsMatch(domainObject, currentStateIfAny, serviceRegistry2);
+    }
+
+    /**
+     * Whether this domain object could transition from the specified state.
+     */
+    @Programmatic
+    default <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  boolean canTransitionFromStateAndIsMatch(
+            final DO domainObject,
+            final S startingState,
+            final ServiceRegistry2 serviceRegistry2) {
+        final STT transitionType = (STT) this;
+        return transitionType.canTransition(startingState) &&
                 transitionType.isMatch(domainObject, serviceRegistry2);
     }
 
@@ -197,25 +240,10 @@ public interface StateTransitionType<
     /**
      * Kind-a the same as our disableXxx() guards in the framework.
      */
+    @Programmatic
     default String reasonGuardNotSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
         return null;
     }
-
-    @Programmatic
-    default <
-            DO,
-            ST extends StateTransition<DO, ST, STT, S>,
-            STT extends StateTransitionType<DO, ST, STT, S>,
-            S extends State<S>
-    >  boolean canTransitionAndMatchAndGuardSatisfied(
-            final DO domainObject,
-            final ServiceRegistry2 serviceRegistry2) {
-        final STT transitionType = (STT) this;
-        return transitionType.canTransitionAndIsMatch(domainObject, serviceRegistry2) &&
-                transitionType.isGuardSatisified(domainObject, serviceRegistry2);
-    }
-
-
 
 
 }

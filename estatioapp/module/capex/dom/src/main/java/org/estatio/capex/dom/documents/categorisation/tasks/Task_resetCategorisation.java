@@ -13,12 +13,12 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.document.Document_resetCategorisation;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinAbstract;
+import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
 @Mixin(method = "act")
 public class Task_resetCategorisation
         extends
-        Task_mixinAbstract<Document_resetCategorisation, Document> {
+        Task_mixinActAbstract<Document_resetCategorisation, Document> {
 
     protected final Task task;
 

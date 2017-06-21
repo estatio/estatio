@@ -83,6 +83,17 @@
                                     <cpt:action id="resetCategorisation"/>
                                 </cpt:property>
                             </cpt:fieldSet>
+                            <cpt:fieldSet name="Next task">
+                                <cpt:property id="nextCategorisationTaskTransitionType">
+                                    <cpt:named>Description</cpt:named>
+                                </cpt:property>
+                                <cpt:property id="nextCategorisationTaskRoleAssignedTo">
+                                    <cpt:named>Role assigned to</cpt:named>
+                                </cpt:property>
+                                <cpt:property id="nextCategorisationTaskPersonAssignedTo">
+                                    <cpt:named>Person assigned to</cpt:named>
+                                </cpt:property>
+                            </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                     <bs3:row>

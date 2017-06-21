@@ -6,18 +6,22 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_checkStateAbstract;
+import org.estatio.capex.dom.task.DomainObject_nextTaskTransitionTypeAbstract;
 
-@Mixin(method="act")
-public class IncomingInvoice_checkApprovalState
-        extends DomainObject_checkStateAbstract<
+@Mixin(method="prop")
+public class IncomingInvoice_nextApprovalTaskTransitionType
+        extends DomainObject_nextTaskTransitionTypeAbstract<
                         IncomingInvoice,
                         IncomingInvoiceApprovalStateTransition,
                         IncomingInvoiceApprovalStateTransitionType,
                         IncomingInvoiceApprovalState> {
 
-    public IncomingInvoice_checkApprovalState(final IncomingInvoice incomingInvoice) {
+    public IncomingInvoice_nextApprovalTaskTransitionType(final IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class);
+    }
+
+    public boolean hideProp() {
+        return super.hideProp();
     }
 
 }

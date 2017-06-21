@@ -12,13 +12,13 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinAbstract;
+import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method = "act")
 public class Task_verifyBankAccount
         extends
-        Task_mixinAbstract<BankAccount_verify, BankAccount> {
+        Task_mixinActAbstract<BankAccount_verify, BankAccount> {
 
     protected final Task task;
 

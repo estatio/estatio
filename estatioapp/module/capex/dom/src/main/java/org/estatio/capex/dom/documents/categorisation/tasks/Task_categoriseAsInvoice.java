@@ -15,13 +15,13 @@ import org.estatio.capex.dom.documents.categorisation.document.Document_categori
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinAbstract;
+import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
 public class Task_categoriseAsInvoice
         extends
-        Task_mixinAbstract<Document_categoriseAsInvoice, Document> {
+        Task_mixinActAbstract<Document_categoriseAsInvoice, Document> {
 
     protected final Task task;
 

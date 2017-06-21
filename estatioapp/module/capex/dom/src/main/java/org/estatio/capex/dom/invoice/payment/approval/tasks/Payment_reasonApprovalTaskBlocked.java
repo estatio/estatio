@@ -6,15 +6,15 @@ import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalState;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_reasonGuardNotSatisfied;
+import org.estatio.capex.dom.task.DomainObject_reasonGuardNotSatisfiedAbstract;
 
 @Mixin(method="prop")
 public class Payment_reasonApprovalTaskBlocked
-        extends DomainObject_reasonGuardNotSatisfied<
-                        Payment,
-                        PaymentApprovalStateTransition,
-                        PaymentApprovalStateTransitionType,
-                        PaymentApprovalState> {
+        extends DomainObject_reasonGuardNotSatisfiedAbstract<
+                                Payment,
+                                PaymentApprovalStateTransition,
+                                PaymentApprovalStateTransitionType,
+                                PaymentApprovalState> {
 
     public Payment_reasonApprovalTaskBlocked(final Payment payment) {
         super(payment, PaymentApprovalStateTransition.class);

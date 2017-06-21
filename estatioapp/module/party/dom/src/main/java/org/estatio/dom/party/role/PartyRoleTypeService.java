@@ -38,6 +38,12 @@ public class PartyRoleTypeService {
     }
 
     @Programmatic
+    public Person firstMemberOf(final IPartyRoleType partyRoleType, final Object domainObject) {
+        final List<Person> persons = membersOf(partyRoleType, domainObject);
+        return persons != null && !persons.isEmpty() ? persons.get(0) : null;
+    }
+
+    @Programmatic
     public PartyRole createRole(final Party party, final IPartyRoleType iPartyRoleType) {
         final PartyRoleType partyRoleType = iPartyRoleType.findUsing(partyRoleTypeRepository);
         return partyRoleRepository.findOrCreate(party, partyRoleType);

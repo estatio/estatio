@@ -140,8 +140,7 @@ public class StateTransitionRepositoryGeneric {
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
         final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
 
-        final List<Person> persons = partyRoleTypeService.membersOf(iRoleAssignTo, domainObject);
-        final Person assignToIfAny = persons != null && !persons.isEmpty() ? persons.get(0) : null;
+        final Person assignToIfAny = partyRoleTypeService.firstMemberOf(iRoleAssignTo, domainObject);
 
         final PartyRoleType roleAssignTo =
                 iRoleAssignTo.findOrCreateUsing(partyRoleTypeRepository);

@@ -13,13 +13,13 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinAbstract;
+import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
 public class Task_categoriseAsOrder
         extends
-        Task_mixinAbstract<Document_categoriseAsOrder, Document> {
+        Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
 
     protected final Task task;
 

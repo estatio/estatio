@@ -238,7 +238,9 @@ public class StateTransitionService {
 
         // check the override, if any
         if(requestedTransitionTypeIfAny != null) {
-            boolean canTransition = requestedTransitionTypeIfAny.canTransitionAndIsMatch(domainObject, serviceRegistry2);
+            boolean canTransition = requestedTransitionTypeIfAny.canTransitionFromCurrentStateAndIsMatch(domainObject,
+                    serviceRegistry2
+            );
             if(!canTransition) {
                 // what's been requested is a no-go.
                 return null;
@@ -270,7 +272,9 @@ public class StateTransitionService {
                         mostRecentTransitionType.getNextTransitionSearchStrategy();
                 if(transitionStrategy != null) {
                     nextTransitionType =
-                            transitionStrategy.nextTransitionType(domainObject, mostRecentTransitionType, serviceRegistry2);
+                            transitionStrategy.nextTransitionType(domainObject, mostRecentTransitionType,
+                                    serviceRegistry2
+                            );
                 }
 
             } else {
@@ -358,7 +362,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > ST completeTransition(
+    > ST completeTransition(
             final DO domainObject,
             final ST transitionToComplete,
             final String comment) {
@@ -391,6 +395,45 @@ public class StateTransitionService {
 
     // ////////////////////////////////////
 
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  IPartyRoleType nextTaskRoleAssignToFor(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+
+        final STT nextTransitionType = nextTaskTransitionTypeFor(domainObject, stateTransitionClass);
+        if (nextTransitionType == null) {
+            return null;
+        }
+        return nextTransitionType.getAssignTo(domainObject, serviceRegistry2);
+    }
+
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > STT nextTaskTransitionTypeFor(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass) {
+
+        ST pendingTransitionIfAny = pendingTransitionOf(domainObject, stateTransitionClass);
+        if(pendingTransitionIfAny == null) {
+            return null;
+        }
+
+        STT transitionType = pendingTransitionIfAny.getTransitionType();
+        return transitionType.nextTransitionType(domainObject, serviceRegistry2);
+    }
+
+    // ////////////////////////////////////
+
+
     /**
      * Obtains the most recently completed transition of the domain object, which will be the
      * {@link StateTransition#getFromState() from state} of the {@link StateTransition} not yet completed (ie with a
@@ -401,7 +444,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > ST mostRecentlyCompletedTransitionOf(
+    > ST mostRecentlyCompletedTransitionOf(
             final DO domainObject,
             final Class<ST> stateTransitionClass) {
         final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);

@@ -50,7 +50,7 @@ public abstract class DomainObject_triggerBaseAbstract<
     }
 
     private boolean canTransition() {
-        return transitionType.canTransitionAndIsMatch(getDomainObject(), serviceRegistry2);
+        return transitionType.canTransitionFromCurrentStateAndIsMatch(getDomainObject(), serviceRegistry2);
     }
 
     @Inject
