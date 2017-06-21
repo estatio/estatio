@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice.approval;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -43,24 +44,24 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
             case CLASSIFY_AS_INVOICE_OR_ORDER:
                 final Document document = ev.getDomainObject();
-                final IncomingInvoice incomingInvoice = findIncomingInvoiceFrom(document);
-                if(incomingInvoice != null) {
-                    stateTransitionService.trigger(incomingInvoice,  IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
-                }
+                final Optional<IncomingInvoice> incomingInvoiceIfAny = findIncomingInvoiceFrom(document);
+                incomingInvoiceIfAny.ifPresent(
+                        incomingInvoice ->
+                                stateTransitionService .trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null));
                 break;
             }
         }
     }
 
-    private IncomingInvoice findIncomingInvoiceFrom(final Document document) {
+    private Optional<IncomingInvoice> findIncomingInvoiceFrom(final Document document) {
         final List<Paperclip> paperclipList = paperclipRepository.findByDocument(document);
         for (Paperclip paperclip : paperclipList) {
             final Object attachedTo = paperclip.getAttachedTo();
             if(attachedTo instanceof IncomingInvoice) {
-                return (IncomingInvoice) attachedTo;
+                return Optional.of ((IncomingInvoice) attachedTo);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Programmatic
@@ -94,48 +95,6 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
     private List<IncomingInvoice> findIncomingInvoicesUsing(final BankAccount bankAccount) {
         return incomingInvoiceRepository.findByBankAccount(bankAccount);
     }
-
-    /*
-
-    think this is redundant because of the auto-advance stuff.
-
-    @Programmatic
-    @com.google.common.eventbus.Subscribe
-    @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(IncomingInvoiceApprovalStateTransitionType.TransitionEvent ev) {
-        final StateTransitionEvent.Phase phase = ev.getPhase();
-        if (phase == StateTransitionEvent.Phase.TRANSITIONED) {
-            final IncomingInvoice incomingInvoice = ev.getDomainObject();
-            final IncomingInvoiceApprovalStateTransitionType transitionType = ev.getTransitionType();
-
-            switch (transitionType) {
-
-            case INSTANTIATE:
-                // attempt to transition; but there's a guard so may not necessarily (if not classificationComplete)
-                stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION, null);
-                break;
-            case COMPLETE_CLASSIFICATION:
-                break;
-            case APPROVE_AS_PROJECT_MANAGER:
-                break;
-            case APPROVE_AS_ASSET_MANAGER:
-                break;
-            case APPROVE_AS_COUNTRY_DIRECTOR:
-                final BankAccount bankAccount = incomingInvoice.getBankAccount();
-                final BankAccountVerificationState state = stateTransitionService
-                        .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
-                if(state == BankAccountVerificationState.VERIFIED) {
-                    stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.CHECK_BANK_ACCOUNT, null);
-                }
-                break;
-            case CHECK_BANK_ACCOUNT:
-                break;
-            case CANCEL:
-                break;
-            }
-        }
-    }
-     */
 
 
     @Inject
