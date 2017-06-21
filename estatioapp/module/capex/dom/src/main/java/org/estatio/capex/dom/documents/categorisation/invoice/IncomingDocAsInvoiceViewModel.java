@@ -102,16 +102,14 @@ public class IncomingDocAsInvoiceViewModel
         extends IncomingDocViewModel<IncomingInvoice>
         implements SellerBankAccountCreator  {
 
-    // REVIEW: how does paymentMethod get initialized when the *other* constructor is called ???
-    // Johan: the no-arg constructor gets called (after the *other*) - is this a feature or a bug?
-    public IncomingDocAsInvoiceViewModel() {
-        setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
-    }
 
     public IncomingDocAsInvoiceViewModel(final Document document) {
         super(document);
         setDateReceived(document.getCreatedAt().toLocalDate());
         setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
+
+        // TODO: this will need to default to BANK_TRANSFER when we get to live...
+        setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
     }
 
     /**
