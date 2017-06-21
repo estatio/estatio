@@ -163,7 +163,7 @@ public class Order extends UdoDomainObject2<Order> {
             @Parameter(optionality = Optionality.OPTIONAL)
             final BudgetItem budgetItem
     ) {
-        orderItemRepository.findOrCreate(
+        orderItemRepository.upsert(
                 this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
         return this;

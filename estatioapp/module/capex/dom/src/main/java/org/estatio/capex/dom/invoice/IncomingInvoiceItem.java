@@ -78,6 +78,8 @@ import lombok.Setter;
 )
 public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implements FinancialItem {
 
+    public IncomingInvoiceItem(){}
+
     public IncomingInvoiceItem(
             final BigInteger sequence,
             final IncomingInvoice invoice,

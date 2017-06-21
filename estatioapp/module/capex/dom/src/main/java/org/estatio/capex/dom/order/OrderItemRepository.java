@@ -65,7 +65,7 @@ public class OrderItemRepository {
     }
 
     @Programmatic
-    public OrderItem findOrCreate(
+    public OrderItem upsert(
             final Order order,
             final Charge charge,
             final String description,
@@ -82,8 +82,43 @@ public class OrderItemRepository {
         if (orderItem == null) {
             orderItem = create(order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate,
                     property, project, budgetItem);
+        } else {
+            updateOrderItem(orderItem,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    startDate,
+                    endDate,
+                    property,
+                    project,
+                    budgetItem);
         }
         return orderItem;
+    }
+
+    private void updateOrderItem(final OrderItem orderItem,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Property property,
+            final Project project,
+            final BudgetItem budgetItem){
+        orderItem.setDescription(description);
+        orderItem.setNetAmount(netAmount);
+        orderItem.setVatAmount(vatAmount);
+        orderItem.setGrossAmount(grossAmount);
+        orderItem.setTax(tax);
+        orderItem.setStartDate(startDate);
+        orderItem.setEndDate(endDate);
+        orderItem.setProperty(property);
+        orderItem.setProject(project);
+        orderItem.setBudgetItem(budgetItem);
     }
 
     @Programmatic

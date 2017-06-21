@@ -61,7 +61,7 @@ public class IncomingInvoiceItemRepository {
     }
 
     @Programmatic
-    public IncomingInvoiceItem findOrCreate(
+    public IncomingInvoiceItem upsert(
             final BigInteger sequence,
             final IncomingInvoice invoice,
             final Charge charge,
@@ -93,8 +93,51 @@ public class IncomingInvoiceItemRepository {
                     property,
                     project,
                     budgetItem);
+        } else {
+            updateInvoiceItem(
+                    invoiceItem,
+                    sequence,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    dueDate,
+                    startDate,
+                    endDate,
+                    property,
+                    project,
+                    budgetItem);
         }
         return invoiceItem;
+    }
+
+    private void updateInvoiceItem(
+            final IncomingInvoiceItem invoiceItem,
+            final BigInteger sequence,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Property property,
+            final Project project,
+            final BudgetItem budgetItem){
+        invoiceItem.setSequence(sequence);
+        invoiceItem.setDescription(description);
+        invoiceItem.setNetAmount(netAmount);
+        invoiceItem.setVatAmount(vatAmount);
+        invoiceItem.setGrossAmount(grossAmount);
+        invoiceItem.setTax(tax);
+        invoiceItem.setDueDate(dueDate);
+        invoiceItem.setStartDate(startDate);
+        invoiceItem.setEndDate(endDate);
+        invoiceItem.setFixedAsset(property);
+        invoiceItem.setProject(project);
+        invoiceItem.setBudgetItem(budgetItem);
     }
 
     @Programmatic

@@ -66,7 +66,7 @@ public class OrderRepository {
     }
 
     @Programmatic
-    public Order findOrCreate(
+    public Order upsert(
             final String number,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -80,8 +80,39 @@ public class OrderRepository {
         if (order == null) {
             order = create(number, sellerOrderReference, entryDate, orderDate,
                     seller, buyer, atPath, approvedBy, approvedOn);
+        } else {
+            updateOrder(
+                    order,
+                    sellerOrderReference,
+                    entryDate, orderDate,
+                    seller,
+                    buyer,
+                    atPath,
+                    approvedBy,
+                    approvedOn);
         }
         return order;
+    }
+
+    private void updateOrder(
+            final Order order,
+            final String sellerOrderReference,
+            final LocalDate entryDate,
+            final LocalDate orderDate,
+            final Party seller,
+            final Party buyer,
+            final String atPath,
+            final String approvedBy,
+            final LocalDate approvedOn
+            ){
+        order.setSellerOrderReference(sellerOrderReference);
+        order.setEntryDate(entryDate);
+        order.setOrderDate(orderDate);
+        order.setSeller(seller);
+        order.setBuyer(buyer);
+        order.setAtPath(atPath);
+        order.setApprovedBy(approvedBy);
+        order.setApprovedOn(approvedOn);
     }
 
     @Programmatic

@@ -68,6 +68,11 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE invoiceNumber == :invoiceNumber "),
         @Query(
+                name = "findByInvoiceNumberAndSellerAndInvoiceDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE invoiceNumber == :invoiceNumber && seller == :seller && invoiceDate == :invoiceDate "),
+        @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
@@ -157,7 +162,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> {
             final BudgetItem budgetItem
     ) {
         final BigInteger sequence = nextItemSequence();
-        incomingInvoiceItemRepository.findOrCreate(
+        incomingInvoiceItemRepository.upsert(
                 sequence,
                 invoice,
                 charge,

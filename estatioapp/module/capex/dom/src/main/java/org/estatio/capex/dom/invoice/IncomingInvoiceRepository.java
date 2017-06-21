@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -31,12 +30,12 @@ public class IncomingInvoiceRepository {
         return repositoryService.allInstances(IncomingInvoice.class);
     }
 
-    public IncomingInvoice findByInvoiceNumber(final String invoiceNumber){
-        return repositoryService.uniqueMatch(
+    public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate){
+        return repositoryService.firstMatch(
                 new QueryDefault<>(
                         IncomingInvoice.class,
-                        "findByInvoiceNumber",
-                        "invoiceNumber", invoiceNumber));
+                        "findByInvoiceNumberAndSellerAndInvoiceDate",
+                        "invoiceNumber", invoiceNumber, "seller", seller, "invoiceDate", invoiceDate));
     }
 
     @Programmatic
@@ -68,8 +67,9 @@ public class IncomingInvoiceRepository {
         return invoice;
     }
 
+    // Note: this method uses a first match on invoicenumber, seller and invoicedate which in practice can be assumed to be unique, but technically is not
     @Programmatic
-    public IncomingInvoice findOrCreate(
+    public IncomingInvoice upsert(
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -80,11 +80,31 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount) {
-        IncomingInvoice invoice = findByInvoiceNumber(invoiceNumber);
+        IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
             invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+        } else {
+            updateInvoice(invoice, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }
         return invoice;
+    }
+
+    private void updateInvoice(
+            final IncomingInvoice invoice,
+            final String atPath,
+            final Party buyer,
+            final LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dateReceived,
+            final BankAccount bankAccount){
+        invoice.setApplicationTenancyPath(atPath);
+        invoice.setBuyer(buyer);
+        invoice.setDueDate(dueDate);
+        invoice.setPaymentMethod(paymentMethod);
+        invoice.setStatus(invoiceStatus);
+        invoice.setDateReceived(dateReceived);
+        invoice.setBankAccount(bankAccount);
     }
 
     @Inject
@@ -93,7 +113,5 @@ public class IncomingInvoiceRepository {
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
-    @Inject
-    EventBusService eventBusService;
 
 }

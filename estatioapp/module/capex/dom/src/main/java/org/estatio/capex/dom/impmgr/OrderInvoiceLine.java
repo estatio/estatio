@@ -259,7 +259,7 @@ public class OrderInvoiceLine {
             final Charge chargeObj = chargeRepository.findByReference(line.charge);
 
             if(isOrder) {
-                Order order = orderRepository.findOrCreate(
+                Order order = orderRepository.upsert(
                         line.getOrderNumber(),
                         line.getSeller(),
                         line.entryDate,
@@ -288,11 +288,11 @@ public class OrderInvoiceLine {
                 final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
                 final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
 
-                invoice = incomingInvoiceRepository.findOrCreate(
+                invoice = incomingInvoiceRepository.upsert(
                         line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
                         invoiceStatus, null, null);
 
-                final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumber(line.getInvoiceNumber());
+                final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());
 
                 invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
