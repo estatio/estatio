@@ -196,7 +196,7 @@ public class StateTransitionService {
      *
      *  @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
-     * @param requiredTransitionType
+     * @param requiredTransitionTypeIfAny
      * @param comment
      */
     @Programmatic
@@ -208,10 +208,10 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requiredTransitionType,
+            final STT requiredTransitionTypeIfAny,
             final String comment) {
 
-        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionType, comment);
+        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, comment);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {

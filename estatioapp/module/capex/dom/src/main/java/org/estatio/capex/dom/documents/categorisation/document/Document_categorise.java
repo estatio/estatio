@@ -1,10 +1,13 @@
 package org.estatio.capex.dom.documents.categorisation.document;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -13,14 +16,13 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class Document_categoriseAsAbstract extends DocOrIncomingDocViewModel_categoriseAsAbstract {
+@Mixin(method = "act")
+public class Document_categorise extends DocOrIncomingDocViewModel_categoriseAsAbstract {
 
     private final Document document;
 
-    public Document_categoriseAsAbstract(
-            final Document document,
-            final DocumentTypeData documentTypeData) {
-        super(documentTypeData);
+    public Document_categorise(final Document document) {
+        super();
         this.document = document;
     }
 
@@ -36,9 +38,10 @@ public abstract class Document_categoriseAsAbstract extends DocOrIncomingDocView
             cssClassFa = "folder-open-o"
     )
     public Object act(
+            final DocumentTypeData documentTypeData,
             @Nullable final Property property,
             @Nullable final String comment) {
-        categoriseAndAttachPaperclip(property);
+        categoriseAndAttachPaperclip(property, documentTypeData);
 
         trigger(comment);
 
@@ -46,8 +49,13 @@ public abstract class Document_categoriseAsAbstract extends DocOrIncomingDocView
     }
 
     @Override
-    public Property default0Act() {
-        return super.default0Act();
+    public List<DocumentTypeData> choices0Act() {
+        return super.choices0Act();
+    }
+
+    @Override
+    public Property default1Act() {
+        return super.default1Act();
     }
 
     @Override

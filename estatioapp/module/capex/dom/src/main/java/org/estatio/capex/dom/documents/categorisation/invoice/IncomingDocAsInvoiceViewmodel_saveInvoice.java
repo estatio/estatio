@@ -7,7 +7,10 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.document.dom.impl.docs.Document;
+
 import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_saveAbstract;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
@@ -19,6 +22,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
 
 @Mixin(method = "act")
@@ -29,8 +33,25 @@ public class IncomingDocAsInvoiceViewmodel_saveInvoice
     private final IncomingDocAsInvoiceViewModel viewModel;
 
     public IncomingDocAsInvoiceViewmodel_saveInvoice(final IncomingDocAsInvoiceViewModel viewModel) {
-        super(viewModel);
+        super(viewModel, inferTransitionTypeFrom(viewModel));
         this.viewModel = viewModel;
+    }
+
+    private static IncomingDocumentCategorisationStateTransitionType inferTransitionTypeFrom(
+            final IncomingDocAsInvoiceViewModel viewModel) {
+
+        Document document = viewModel.getDocument();
+        DocumentTypeData documentTypeData = DocumentTypeData.docTypeDataFor(document);
+        switch (documentTypeData) {
+        case INCOMING_INVOICE:
+            return IncomingDocumentCategorisationStateTransitionType.PROCESS_INVOICE;
+        case INCOMING_LOCAL_INVOICE:
+            return IncomingDocumentCategorisationStateTransitionType.PROCESS_LOCAL_INVOICE;
+        case INCOMING_CORPORATE_INVOICE:
+            return IncomingDocumentCategorisationStateTransitionType.PROCESS_CORPORATE_INVOICE;
+        }
+        // fail fast
+        throw new IllegalArgumentException("Document type for document (" + documentTypeData + ") not recognised");
     }
 
     public static class DomainEvent

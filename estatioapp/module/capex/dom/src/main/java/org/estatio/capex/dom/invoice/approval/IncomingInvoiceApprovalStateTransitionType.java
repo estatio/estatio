@@ -1,6 +1,5 @@
 package org.estatio.capex.dom.invoice.approval;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,11 +15,11 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.capex.dom.state.AdvancePolicy;
+import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
@@ -44,32 +43,52 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    COMPLETE_CLASSIFICATION(
+    COMPLETE(
             IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.CLASSIFIED,
-            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
-            AdvancePolicy.AUTOMATIC) {
+            IncomingInvoiceApprovalState.COMPLETED,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            AdvancePolicy.MANUAL) {
         @Override
         public String reasonGuardNotSatisified(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return domainObject.reasonClassificationInComplete();
         }
     },
+    APPROVE_AS_LEGAL_MANAGER(
+            IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.APPROVED,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.LEGAL_MANAGER),
+            AdvancePolicy.MANUAL) {
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isPropertyInvoice(domainObject, serviceRegistry2) &&
+                   hasLegalFees(domainObject);
+        }
+        private boolean hasLegalFees(final IncomingInvoice incomingInvoice) {
+            // TODO:
+            return false;
+        }
+    },
     APPROVE_AS_PROJECT_MANAGER(
-            IncomingInvoiceApprovalState.CLASSIFIED,
-            IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
+            IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.hasProject();
+            return isPropertyInvoice(domainObject, serviceRegistry2) &&
+                   domainObject.hasProject();
         }
     },
     APPROVE_AS_ASSET_MANAGER(
-            IncomingInvoiceApprovalState.CLASSIFIED,
-            IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER,
+            IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
             AdvancePolicy.MANUAL) {
@@ -77,33 +96,50 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
-            return !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2);
-            //return domainObject.hasServiceCharges();
+            return isPropertyInvoice(domainObject, serviceRegistry2) &&
+                   !APPROVE_AS_LEGAL_MANAGER.isMatch(domainObject, serviceRegistry2) &&
+                   !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2);
         }
     },
-    APPROVE_AS_COUNTRY_ADMINISTRATOR(
-            IncomingInvoiceApprovalState.CLASSIFIED,
-            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_ADMINISTRATOR,
+    APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
+            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
-            // ie else the above two routes
-            return !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2) && !APPROVE_AS_ASSET_MANAGER.isMatch(domainObject, serviceRegistry2);
+            return isLocalInvoice(domainObject, serviceRegistry2);
+        }
+    },
+    CHECK_BANK_ACCOUNT_FOR_CORPORATE(
+            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isCorporateInvoice(domainObject, serviceRegistry2);
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
-            Arrays.asList(
-                    IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
+            IncomingInvoiceApprovalState.APPROVED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL),
     CHECK_BANK_ACCOUNT(
+            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC),
+    CONFIRM_BANK_ACCOUNT_VERIFIED(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             IncomingInvoiceApprovalState.PAYABLE,
             NextTransitionSearchStrategy.none(),
@@ -124,15 +160,33 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return state == BankAccountVerificationState.VERIFIED;
         }
     },
-    CANCEL(
-            Arrays.asList(
-                    IncomingInvoiceApprovalState.CLASSIFIED,
-                    IncomingInvoiceApprovalState.APPROVED_BY_PROJECT_MANAGER,
-                    IncomingInvoiceApprovalState.APPROVED_BY_ASSET_MANAGER),
-            IncomingInvoiceApprovalState.CANCELLED,
-            NextTransitionSearchStrategy.none(),
+    PAY_BY_IBQ(
+            IncomingInvoiceApprovalState.PAYABLE,
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL);
+            AdvancePolicy.MANUAL),
+    PAY_BY_DD(
+            IncomingInvoiceApprovalState.PAYABLE,
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL)
+    ;
+
+
+    private static boolean isLocalInvoice(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return false;
+    }
+
+    private static boolean isCorporateInvoice(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return false;
+    }
+
+    private static boolean isPropertyInvoice(final IncomingInvoice domainObject, ServiceRegistry2 serviceRegistry2) {
+        // TODO
+        return true;
+    }
 
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;

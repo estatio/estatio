@@ -27,12 +27,13 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_resetCategorisation;
 import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categorise;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
@@ -45,11 +46,11 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.TickingFixtureClock;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.CATEGORISED;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.PROCESS_INVOICE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.RESET;
 
 public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIntegrationTest {
@@ -122,32 +123,32 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(2);
         assertTransition(transitions.get(0),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, null);
+                NEW, CATEGORISE, null);
         assertTransition(transitions.get(1),
                 null, INSTANTIATE, NEW);
 
         assertState(document, NEW);
 
         Task task = transitions.get(0).getTask();
-        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
         assertThat(task.getPersonAssignedTo()).isNotNull();
         assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 
         // when
-        wrap(mixin(Task_categoriseAsInvoice.class, task)).act(property, null, true);
+        wrap(mixin(Task_categorise.class, task)).act(DocumentTypeData.INCOMING_INVOICE, property, null, true);
 
         // then
         transitions =
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(3);
         assertTransition(transitions.get(0),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, CLASSIFY_AS_INVOICE_OR_ORDER, null);
+                CATEGORISED, PROCESS_INVOICE, null);
         assertTransition(transitions.get(1),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+                NEW, CATEGORISE, CATEGORISED);
         assertTransition(transitions.get(2),
                 null, INSTANTIATE, NEW);
 
-        assertState(document, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+        assertState(document, CATEGORISED);
 
         // then assigned now to Jonathan
         task = transitions.get(0).getTask();
@@ -180,13 +181,13 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(3);
         assertTransition(transitions.get(0),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, CLASSIFY_AS_INVOICE_OR_ORDER, CLASSIFIED_AS_INVOICE_OR_ORDER);
+                CATEGORISED, CLASSIFY_AS_INVOICE_OR_ORDER, PROCESSED);
         assertTransition(transitions.get(1),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+                NEW, CATEGORISE, CATEGORISED);
         assertTransition(transitions.get(2),
                 null, INSTANTIATE, NEW);
 
-        assertState(document, CLASSIFIED_AS_INVOICE_OR_ORDER);
+        assertState(document, PROCESSED);
          */
 
         // when
@@ -206,17 +207,17 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
                 stateTransitionRepository.findByDomainObject(document);
         assertThat(transitions).hasSize(4);
         assertTransition(transitions.get(0),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, null);
+                NEW, CATEGORISE, null);
         assertTransition(transitions.get(1),
-                CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY, RESET, NEW);
+                CATEGORISED, RESET, NEW);
         assertTransition(transitions.get(2),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+                NEW, CATEGORISE, CATEGORISED);
         assertTransition(transitions.get(3),
                 null, INSTANTIATE, NEW);
 
         // then back to Dylan
         task = transitions.get(0).getTask();
-        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
         assertThat(task.getPersonAssignedTo()).isNotNull();
         assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 

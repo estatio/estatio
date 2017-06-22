@@ -82,10 +82,10 @@ public class PersonRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void happy_case() {
-            assertSize(PartyRoleTypeEnum.MAIL_ROOM, "/FRA", 1);
-            assertSize(PartyRoleTypeEnum.MAIL_ROOM, "/GBR", 1);
+            assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/FRA", 1);
+            assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/GBR", 1);
             assertSize(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, "/GBR", 1);
-            assertSize(PartyRoleTypeEnum.MAIL_ROOM, "/FRA", 1);
+            assertSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, "/FRA", 1);
         }
 
         private void assertSize(final IPartyRoleType type, final String atPath, final int expected) {

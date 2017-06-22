@@ -7,11 +7,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.task.Task;
@@ -19,15 +19,14 @@ import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-public abstract class IncomingDocViewModel_categoriseAbstract extends
+@Mixin(method = "act")
+public class IncomingDocViewModel_categorise extends
         DocOrIncomingDocViewModel_categoriseAsAbstract {
 
     protected final IncomingDocViewModel viewModel;
 
-    public IncomingDocViewModel_categoriseAbstract(
-            final IncomingDocViewModel viewModel,
-            final DocumentTypeData documentTypeData) {
-        super(documentTypeData);
+    public IncomingDocViewModel_categorise(final IncomingDocViewModel viewModel) {
+        super();
         this.viewModel = viewModel;
     }
 
@@ -41,10 +40,11 @@ public abstract class IncomingDocViewModel_categoriseAbstract extends
     )
     @ActionLayout(cssClassFa = "folder-open-o")
     public Object act(
+            final DocumentTypeData documentTypeData,
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        final Document document = categoriseAndAttachPaperclip(property);
+        final Document document = categoriseAndAttachPaperclip(property, documentTypeData);
 
         IncomingDocumentCategorisationStateTransition transition =
                 trigger(comment);
@@ -62,11 +62,16 @@ public abstract class IncomingDocViewModel_categoriseAbstract extends
     }
 
     @Override
-    public Property default0Act() {
-        return super.default0Act();
+    public List<DocumentTypeData> choices0Act() {
+        return super.choices0Act();
     }
 
-    public boolean default2Act(){
+    @Override
+    public Property default1Act() {
+        return super.default1Act();
+    }
+
+    public boolean default3Act(){
         return true;
     }
 
@@ -87,9 +92,6 @@ public abstract class IncomingDocViewModel_categoriseAbstract extends
 
     @Inject
     MessageService messageService;
-
-    @Inject
-    DocumentRepository documentRepository;
 
     @Inject
     TaskRepository taskRepository;

@@ -40,20 +40,38 @@ public enum IncomingDocumentCategorisationStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
+    CATEGORISE(
             IncomingDocumentCategorisationState.NEW,
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
+            IncomingDocumentCategorisationState.CATEGORISED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.MAIL_ROOM),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
             AdvancePolicy.MANUAL),
-    CLASSIFY_AS_INVOICE_OR_ORDER(
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
+    PROCESS_ORDER(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.PROCESSED,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.MANUAL),
+    PROCESS_INVOICE(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.PROCESSED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            AdvancePolicy.MANUAL),
+    PROCESS_LOCAL_INVOICE(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.PROCESSED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
+            AdvancePolicy.MANUAL),
+    PROCESS_CORPORATE_INVOICE(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.PROCESSED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR),
+            AdvancePolicy.MANUAL),
     RESET(
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
+            IncomingDocumentCategorisationState.CATEGORISED,
             IncomingDocumentCategorisationState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),

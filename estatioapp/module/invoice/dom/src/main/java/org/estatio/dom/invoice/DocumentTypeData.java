@@ -63,6 +63,8 @@ public enum DocumentTypeData {
 
     INCOMING("INCOMING", "Incoming", "Merged Incoming.pdf", null, null, Nature.INCOMING),
     INCOMING_INVOICE("INCOMING_INVOICE", "Incoming Invoice", "Merged Incoming Invoices.pdf", null, null, Nature.INCOMING),
+    INCOMING_LOCAL_INVOICE("INCOMING_LOCAL_INVOICE", "Incoming Local Invoice", "Merged Incoming Local Invoices.pdf", null, null, Nature.INCOMING),
+    INCOMING_CORPORATE_INVOICE("INCOMING_CORPORATE_INVOICE", "Incoming Corporate Invoice", "Merged Incoming Corporate Invoices.pdf", null, null, Nature.INCOMING),
     INCOMING_ORDER("INCOMING_ORDER", "Incoming Order", "Merged Incoming Orders.pdf", null, null, Nature.INCOMING),
 
     IBAN_PROOF("IBAN_PROOF", "Iban verification proof")
@@ -90,7 +92,8 @@ public enum DocumentTypeData {
     }
 
     DocumentTypeData(
-            final String ref, final String name,
+            final String ref,
+            final String name,
             final String mergedFileName,
             final DocumentTypeData coverNote,
             final DocumentTypeData supports,

@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel_saveAbstract;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.util.PeriodUtil;
@@ -20,7 +21,7 @@ public class IncomingDocAsOrderViewmodel_saveOrder
     private final IncomingDocAsOrderViewModel viewModel;
 
     public IncomingDocAsOrderViewmodel_saveOrder(final IncomingDocAsOrderViewModel viewModel) {
-        super(viewModel);
+        super(viewModel, IncomingDocumentCategorisationStateTransitionType.PROCESS_ORDER);
         this.viewModel = viewModel;
     }
 

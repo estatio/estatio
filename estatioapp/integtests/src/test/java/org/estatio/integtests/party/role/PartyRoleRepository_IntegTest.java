@@ -85,9 +85,9 @@ public class PartyRoleRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void happy_case() {
-            assertPartyRoleSize(PartyRoleTypeEnum.MAIL_ROOM, 2);
+            assertPartyRoleSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, 2);
             assertPartyRoleSize(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, 3);
-            assertPartyRoleSize(PartyRoleTypeEnum.COUNTRY_ADMINISTRATOR, 2);
+            assertPartyRoleSize(PartyRoleTypeEnum.LEGAL_MANAGER, 2);
             assertPartyRoleSize(PartyRoleTypeEnum.COUNTRY_DIRECTOR, 2);
         }
 

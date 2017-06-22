@@ -1,6 +1,10 @@
 package org.estatio.capex.dom.documents.categorisation.document;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -27,12 +31,8 @@ public abstract class DocOrIncomingDocViewModel_categoriseAsAbstract
         IncomingDocumentCategorisationState
                 > {
 
-    protected final DocumentTypeData documentTypeData;
-
-    public DocOrIncomingDocViewModel_categoriseAsAbstract(
-            final DocumentTypeData documentTypeData) {
-        super(IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY);
-        this.documentTypeData = documentTypeData;
+    public DocOrIncomingDocViewModel_categoriseAsAbstract() {
+        super(IncomingDocumentCategorisationStateTransitionType.CATEGORISE);
     }
 
     @Programmatic
@@ -41,7 +41,19 @@ public abstract class DocOrIncomingDocViewModel_categoriseAsAbstract
     /**
      * mixins should override to make <tt>public</tt>.
      */
-    protected Property default0Act() {
+    protected List<DocumentTypeData> choices0Act() {
+        return Lists.newArrayList(
+                DocumentTypeData.INCOMING_INVOICE,
+                DocumentTypeData.INCOMING_ORDER,
+                DocumentTypeData.INCOMING_LOCAL_INVOICE,
+                DocumentTypeData.INCOMING_CORPORATE_INVOICE
+        );
+    }
+
+    /**
+     * mixins should override to make <tt>public</tt>.
+     */
+    protected Property default1Act() {
         return existingPropertyAttachmentIfAny();
     }
 
@@ -53,10 +65,10 @@ public abstract class DocOrIncomingDocViewModel_categoriseAsAbstract
             return true;
         }
         final Document document = getDomainObject();
-        return documentTypeData.isDocTypeFor(document) || !DocumentTypeData.hasIncomingType(document);
+        return !DocumentTypeData.hasIncomingType(document);
     }
 
-    protected Document categoriseAndAttachPaperclip(final Property property) {
+    protected Document categoriseAndAttachPaperclip(final Property property, final DocumentTypeData documentTypeData) {
         final Document document = getDomainObject();
         document.setType(documentTypeData.findUsing(documentTypeRepository));
         if (property!=null) {

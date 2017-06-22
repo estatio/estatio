@@ -187,7 +187,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         private final IncomingInvoice incomingInvoice;
 
         public _changeBankAccount(final IncomingInvoice incomingInvoice) {
-            super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_CLASSIFICATION);
+            super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE);
             this.incomingInvoice = incomingInvoice;
         }
 

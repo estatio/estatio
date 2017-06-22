@@ -36,8 +36,8 @@ public abstract class IncomingDocViewModel_saveAbstract<
     @Getter
     protected final VM viewModel;
 
-    public IncomingDocViewModel_saveAbstract(final VM viewModel) {
-        super(viewModel.getDocument(), IncomingDocumentCategorisationStateTransitionType.CLASSIFY_AS_INVOICE_OR_ORDER);
+    public IncomingDocViewModel_saveAbstract(final VM viewModel, final IncomingDocumentCategorisationStateTransitionType transitionType) {
+        super(viewModel.getDocument(), transitionType);
         this.viewModel = viewModel;
     }
 

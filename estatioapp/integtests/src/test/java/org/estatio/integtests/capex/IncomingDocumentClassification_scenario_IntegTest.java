@@ -35,8 +35,7 @@ import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountC
 import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewmodel_saveOrder;
 import org.estatio.capex.dom.documents.categorisation.tasks.TaskIncomingDocumentService;
-import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsInvoice;
-import org.estatio.capex.dom.documents.categorisation.tasks.Task_categoriseAsOrder;
+import org.estatio.capex.dom.documents.categorisation.tasks.Task_categorise;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -79,7 +78,7 @@ import org.estatio.fixture.party.PersonForOscarPritchardGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.CLASSIFIED;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.COMPLETED;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER;
 
 public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIntegrationTest {
@@ -160,7 +159,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         private void findIncomingDocuments_works() {
 
             // given, when
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
             task1 = tasks.get(0);
             task2 = tasks.get(1);
 
@@ -170,12 +169,12 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             assertThat(documentFor(task2).getType()).isEqualTo(INCOMING);
 
             // and
-            assertThat(task1.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+            assertThat(task1.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
             assertThat(task1.getPersonAssignedTo()).isNotNull();
             assertThat(task1.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 
             assertThat(task2.getPersonAssignedTo()).isNotNull();
-            assertThat(task2.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.MAIL_ROOM.getKey());
+            assertThat(task2.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
             assertThat(task2.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 
         }
@@ -197,8 +196,8 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             // when gotoNext is set to true
             Object nextObj =
                 sudoService.sudo(PersonForDylanClaytonGb.SECURITY_USERNAME,
-                        () -> wrap(mixin(Task_categoriseAsOrder.class, task1))
-                                .act(propertyForOxf, null, true));
+                        () -> wrap(mixin(Task_categorise.class, task1))
+                                .act(DocumentTypeData.INCOMING_ORDER, propertyForOxf, null, true));
             transactionService.nextTransaction();
 
             assertThat(nextObj).isInstanceOf(Task.class);
@@ -207,14 +206,14 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             // then state has changed
             state = stateTransitionService
                     .currentStateOf(document1, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED);
 
             // and also then next is second viewmodel
             assertThat(documentFor(nextTask)).isEqualTo(documentFor(task2));
 
             // and when
             transactionService.nextTransaction();
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 
             // then
             assertThat(tasks.size()).isEqualTo(1);
@@ -241,7 +240,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         private void categoriseAsInvoice_works() {
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
             assertThat(tasks.size()).isEqualTo(1);
             task2 = tasks.get(0);
             final Document document2 = documentFor(task2);
@@ -250,15 +249,15 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 
             // when
-            wrap(mixin(Task_categoriseAsInvoice.class, task2))
-                    .act(propertyForOxf, null, true);
+            wrap(mixin(Task_categorise.class, task2))
+                    .act(DocumentTypeData.INCOMING_INVOICE, propertyForOxf, null, true);
             transactionService.nextTransaction();
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 
             // then state has changed
             state = stateTransitionService
                     .currentStateOf(document2, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED);
 
             // and also then
             assertThat(tasks.size()).isEqualTo(0);
@@ -286,7 +285,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         private void resetClassification_works() {
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
             assertThat(tasks.size()).isEqualTo(0);
             List<Document> unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
             assertThat(unclassified.size()).isEqualTo(1);
@@ -296,7 +295,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             transactionService.nextTransaction();
 
             // then
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
             assertThat(tasks.size()).isEqualTo(1);
             unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
             assertThat(unclassified.size()).isEqualTo(0);
@@ -319,7 +318,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             final Document document = incomingDocAsOrderViewModel.getDocument();
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED);
 
             // when
             try {
@@ -365,7 +364,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             // document state
             state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.PROCESSED);
 
             // calculated when using method changeItemDetails
             vatAmount = new BigDecimal("20.00");
@@ -392,19 +391,19 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
         private void createInvoice_works(){
 
             // given
-            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.MAIL_ROOM);
+            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
             assertThat(tasks.size()).isEqualTo(1);
             task2 = tasks.get(0);
 
             incomingDocAsInvoiceViewModel = (IncomingDocAsInvoiceViewModel)
-                    wrap(mixin(Task_categoriseAsInvoice.class, task2))
-                    .act(propertyForOxf, null, false);
+                    wrap(mixin(Task_categorise.class, task2))
+                    .act(DocumentTypeData.INCOMING_INVOICE, propertyForOxf, null, false);
             transactionService.nextTransaction();
 
             final Document document = incomingDocAsInvoiceViewModel.getDocument();
             IncomingDocumentCategorisationState state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CATEGORISED);
 
             // when
             try {
@@ -502,14 +501,14 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
             // document state
             state = stateTransitionService
                     .currentStateOf(document, IncomingDocumentCategorisationStateTransition.class);
-            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER);
+            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.PROCESSED);
 
             // transitions
             List<IncomingInvoiceApprovalStateTransition> transitions =
                     incomingInvoiceStateTransitionRepository.findByDomainObject(invoiceCreated);
             assertThat(transitions).hasSize(3);
 
-            assertTransition(transitions.get(0), CLASSIFIED, APPROVE_AS_ASSET_MANAGER, null);
+            assertTransition(transitions.get(0), COMPLETED, APPROVE_AS_ASSET_MANAGER, null);
 
             assertThat(transitions.get(0).getDomainObject()).isSameAs(invoiceCreated);
             assertThat(transitions.get(0).getCreatedOn()).isNotNull();

@@ -8,10 +8,11 @@ import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
 
 public enum PartyRoleTypeEnum implements IPartyRoleType {
 
-    MAIL_ROOM,
+    OFFICE_ADMINISTRATOR,
     COUNTRY_DIRECTOR,
-    COUNTRY_ADMINISTRATOR,
-    TREASURER;
+    LEGAL_MANAGER,
+    TREASURER,
+    CORPORATE_ADMINISTRATOR;
 
 
     @Override
