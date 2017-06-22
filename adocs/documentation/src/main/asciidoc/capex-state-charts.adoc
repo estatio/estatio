@@ -1,77 +1,140 @@
- = CAPEX State Charts
+= CAPEX State Charts
 :Notice: (c) 2017 Eurocommercial Properties Ltd.  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 :toc: right
 :_basedir: ./
 
 
-[plantuml,state-charts,png]
+[plantuml,state-charts,svg]
 --
 state "IncomingDocumentCategorisationStateTransitionType" as idc {
 
     state "NEW" as idc_new
-    state "CATEGORISED_AND_\nASSOCIATED_WITH_PROPERTY" as idc_caawp
+    state "CATEGORISED" as idc_c
 
-    state "CLASSIFIED_AS_\nINVOICE_OR_ORDER" as idc_awde
+    state "Classifying" as idc_classifying {
+
+        state "Classifying\nby Property Managers" as idc_cbpm {
+            state "CLASSIFYING_AS_\nORDER" as idc_cao
+            state "CLASSIFYING_AS_\nINCOMING_\nINVOICE" as idc_caii
+        }
+
+        state "CLASSIFYING_AS_\nLOCAL_NV_\nINVOICE" as idc_calnvi
+        state "CLASSIFYING_AS_\nCORPORATE_NV_\nINVOICE" as idc_cacnvi
+    }
 
     [*] -right-> idc_new: INSTANTIATE
-    idc_new -down-> idc_caawp : CATEGORISE_  \nDOCUMENT_TYPE_  \nAND_ASSOCIATE_  \nWITH_PROPERTY
-    idc_caawp -up-> idc_new :  \n  RESET
-    idc_new -right-> [*]: /delete
-
-    idc_caawp --> idc_awde : CLASSIFY_AS_\nINVOICE_OR_ORDER
+    idc_new -down-> idc_c : \n  CATEGORISE
+    idc_c -down->idc_cao : CLASSIFY_\nORDER_\nAS\nPROPERTY_\nMANAGER\n[docType="\nINCOMING_\nORDER"]
+    idc_c -down->idc_caii : CLASSIFY_\nINVOICE_\nAS\nPROPERTY_\nMANAGER\n[docType=\n"INCOMING_\nINVOICE"]
+    idc_c -down->idc_calnvi : CLASSIFY_\nAS\nOFFICE_\nADMINISTRATOR\n[docType=\n"INCOMING_\nLOCAL_NV_\nINVOICE"]
+    idc_c -down->idc_cacnvi : CLASSIFY_\nAS\nCORPORATE_\nMANAGER\n[docType=\n"INCOMING_\nCORPORATE_NV_\nINVOICE"]
 }
-
 
 state "BankAccount\nVerification\nStateTransitionType" as bbv {
 
-
     state "NOT_VERIFIED" as bbv_not_verified
-    [*] -down-> bbv_not_verified: \n  INSTANTIATE
-
     state "VERIFIED" as bbv_verified
 
-    bbv_verified -left-> bbv_not_verified: \n  RESET
-    bbv_not_verified --> bbv_verified: VERIFY_\nBANK_ACCOUNT
+    [*] --right--> bbv_not_verified: \n  INSTANTIATE
+    bbv_not_verified -down--> bbv_verified: VERIFY_\nBANK_ACCOUNT
+
 }
 
-[*] -> idc
 
-idc_caawp -right-> bbv_not_verified : BankAccount\nVerification\nStateSubscriber\n[new bank account \nto verify]
-idc_awde -> iia : IncomingInvoice\nApproval\nStateSubscriber
+idc_classifying -left-> bbv : BankAccount\nVerification\nStateSubscriber\n(if new bank account \nto verify)
 
 
 state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
-    state "Approval" as iia_a {
-        state "Local Approval" as iia_la {
-            state "NEW" as iia_la_new
-            state "CLASSIFIED" as iia_la_classified
-            state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_la_abpm
-            state "APPROVED_BY_ \n ASSET_MANAGER" as iia_la_abam
-            state "APPROVED_BY_ \n COUNTRY_ADMINISTRATOR" as iia_la_abca
+    state "NEW" as iia_new
 
-            [*] -right-> iia_la_new : INSTANTIATE
-            iia_la_new --> iia_la_classified: COMPLETE_\nCLASSIFICATION\n[completely\nclassified]
-            iia_la_classified --> iia_la_abam : APPROVE_AS_\nASSET_MANAGER\n[hasServiceCharges]
-            iia_la_classified --> iia_la_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
-            iia_la_classified --> iia_la_abca : APPROVE_AS_\nCOUNTRY_ADMINISTRATOR\n[else]
-        }
+    state "CLASSIFIED" as iia_classified
+
+    state "Approval" as iia_a {
+        state "APPROVED_BY_ \n ASSET_MANAGER" as iia_a_abam
+        state "APPROVED_BY_ \n LEGAL_MANAGER" as iia_a_ablm
+        state "APPROVED_BY_ \n PROJECT_MANAGER" as iia_a_abpm
 
         state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
-
-        iia_la_abpm -> iia_abcd
-        iia_la_abam -> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-        iia_la_abca -> iia_abcd
-
     }
     state "PAYABLE" as iia_payable
     state "PAID" as iia_paid
-    state "CANCELLED" as iia_cancelled
 
-    iia_abcd --> iia_payable : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [bank account verified ||\ndirect debit]
+    [*] -right-> iia_new: INSTANTIATE
+
+    iia_new -down-> iia_classified: COMPLETE_\nCLASSIFICATION\n[completely\nclassified]
+
+    iia_classified --> iia_a_ablm : APPROVE_AS_\nLEGAL_MANAGER\n[hasLegalCharges]
+    iia_classified --> iia_a_abpm : APPROVE_AS_\nPROJECT_MANAGER\n[hasProject]
+    iia_classified --> iia_a_abam : APPROVE_AS_\nASSET_MANAGER\n[else]
+
+    iia_a_ablm -down-> iia_abcd
+    iia_a_abpm -down-> iia_abcd
+    iia_a_abam -down-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+
+    iia_abcd --> iia_payable : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [bank account verified ||\n direct debit]
     iia_payable --> iia_paid: PAID\n  (by IBQ or DD)
-    iia_a --> iia_cancelled : CANCEL
+}
+
+state "LocalNvInvoice\nApproval\nStateTransitionType" as lnva {
+
+    state "NEW" as lnva_new
+    state "CLASSIFIED" as lnva_classified
+
+    state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as lnva_abcd
+
+
+    state "PAYABLE" as lnva_payable
+    state "PAID" as lnva_paid
+
+    [*] -right-> lnva_new: INSTANTIATE
+
+    lnva_new --> lnva_classified: COMPLETE_\nCLASSIFICATION\n[completely\nclassified]
+
+    lnva_classified -down-> lnva_abcd  : APPROVE_AS_\nCOUNTRY_DIRECTOR
+    lnva_abcd -down-> lnva_payable : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [bank account verified ||\n direct debit]
+    lnva_payable -down-> lnva_paid: PAID\n  (by IBQ or DD)
+}
+
+
+state "CorporateNvInvoice\nApproval\nStateTransitionType" as cnva {
+
+    state "NEW" as cnva_new
+    state "CLASSIFIED" as cnva_classified
+
+    state "PAYABLE" as cnva_payable
+    state "PAID" as cnva_paid
+
+    [*] -right-> cnva_new: INSTANTIATE
+
+    cnva_new --> cnva_classified: COMPLETE_\nCLASSIFICATION\n[completely\nclassified]
+
+    cnva_classified -down-> cnva_payable : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [bank account verified ||\n direct debit]
+    
+    cnva_payable -down-> cnva_paid: PAID\n  (by IBQ or DD)
+    note right of cnva_payable: probably an\napproval process\nrequired here
+}
+
+
+idc_caii ---right-> iia : IncomingInvoice\nApproval\nStateSubscriber
+idc_calnvi ---right-> lnva : LocalNvInvoice\nApproval\nStateSubscriber
+idc_cacnvi ---right-> cnva : CorporateNvInvoice\nApproval\nStateSubscriber
+
+
+state "PaymentApproval\nStateTransitionType" as pa {
+
+    state "NEW" as pa_new
+    state "APPROVED" as pa_approved
+
+    [*] -right-> pa_new: INSTANTIATE
+    pa_new -down-> pa_approved: APPROVED
 
 }
-bbv_verified --> iia_payable: \n  IncomingInvoice\n  Approval\n  StateSubscriber
+
 --
+
+Notes:
+
+* Modelling the downstream invoice approval as three separate flows simplifies the state charts but does mean that providing the ability to convert from one type to another (eg local NV to corporate NV) would take more development effort to implement.
+
+* After bank account verified, respective subscribers update any incoming invoices approved but awaiting verification before moving to `PAID`state
