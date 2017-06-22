@@ -61,6 +61,8 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
     @Getter @Setter
     private String invoiceNumber;
     @Getter @Setter
+    private String invoiceType;
+    @Getter @Setter
     private String invoiceDescription;
     @Getter @Setter
     private BigDecimal invoiceNetAmount;
@@ -157,6 +159,7 @@ public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderIn
                     getPeriod(),
                     taxToUse(),
                     invoiceNumberToUse(),
+                    getInvoiceType(),
                     invoiceDescriptionToUse(),
                     invoiceNetAmountToUse(),
                     invoiceVatAmountToUse(),

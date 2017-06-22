@@ -14,14 +14,8 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
     state "NEW" as idc_new
     state "CATEGORISED" as idc_c
 
-    state "PROCESSED" as idc_classifying
-
     [*] -right-> idc_new: INSTANTIATE
     idc_new -down-> idc_c : \n  CATEGORISE
-    idc_c -down->idc_classifying : PROCESS_\nORDER\n[docType="\nINCOMING_\nORDER"]
-    idc_c -down->idc_classifying : PROCESS_\nINVOICE\n[docType=\n"INCOMING_\nINVOICE"]
-    idc_c -down->idc_classifying : PROCESS_\nLOCAL_\nINVOICE\n[docType=\n"INCOMING_\nLOCAL_\nINVOICE"]
-    idc_c -down->idc_classifying : PROCESS_\nCORPORATE_\nINVOICE\n[docType=\n"INCOMING_\nCORPORATE_\nINVOICE"]
 }
 --
 
@@ -46,11 +40,13 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_classified: COMPLETE\n[classification complete]
+    iia_new -down-> iia_classified : COMPLETE_\nPROPERTY_\nINVOICE\n[capex || asset || legal]
+    iia_new -down-> iia_classified : COMPLETE_\nLOCAL_\nINVOICE\n[local]
+    iia_new -down-> iia_classified : COMPLETE_\nCORPORATE_\nINVOICE\n[corporate]
 
-    iia_classified --> iia_a : APPROVE_AS_\nLEGAL_MANAGER\n[property invoice &&\nhasLegalCharges]
-    iia_classified --> iia_a : APPROVE_AS_\nPROJECT_MANAGER\n[property invoice &&\nhasProject]
-    iia_classified --> iia_a : APPROVE_AS_\nASSET_MANAGER\n[property invoice &&\nelse]
+    iia_classified --> iia_a : APPROVE_AS_\nLEGAL_MANAGER\n[legal]
+    iia_classified --> iia_a : APPROVE_AS_\nPROJECT_MANAGER\n[capex]
+    iia_classified --> iia_a : APPROVE_AS_\nASSET_MANAGER\n[asset]
 
     iia_classified --> iia_abcd : APPROVE_\nLOCAL_AS\n_COUNTRY_DIRECTOR\n[local]
     iia_classified --> iia_pbac : CHECK_BANK_ACCOUNT_\nFOR_CORPORATE\n[corporate]

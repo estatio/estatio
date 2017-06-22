@@ -19,7 +19,6 @@ import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
@@ -45,36 +44,6 @@ public enum IncomingDocumentCategorisationStateTransitionType
             IncomingDocumentCategorisationState.CATEGORISED,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
-            AdvancePolicy.MANUAL),
-    PROCESS_ORDER(
-            IncomingDocumentCategorisationState.CATEGORISED,
-            IncomingDocumentCategorisationState.PROCESSED,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
-            AdvancePolicy.MANUAL),
-    PROCESS_INVOICE(
-            IncomingDocumentCategorisationState.CATEGORISED,
-            IncomingDocumentCategorisationState.PROCESSED,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
-            AdvancePolicy.MANUAL),
-    PROCESS_LOCAL_INVOICE(
-            IncomingDocumentCategorisationState.CATEGORISED,
-            IncomingDocumentCategorisationState.PROCESSED,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
-            AdvancePolicy.MANUAL),
-    PROCESS_CORPORATE_INVOICE(
-            IncomingDocumentCategorisationState.CATEGORISED,
-            IncomingDocumentCategorisationState.PROCESSED,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR),
-            AdvancePolicy.MANUAL),
-    RESET(
-            IncomingDocumentCategorisationState.CATEGORISED,
-            IncomingDocumentCategorisationState.NEW,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<IncomingDocumentCategorisationState> fromStates;

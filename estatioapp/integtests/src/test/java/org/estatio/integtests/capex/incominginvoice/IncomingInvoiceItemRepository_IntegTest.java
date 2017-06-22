@@ -102,7 +102,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
 
-        IncomingInvoice invoice = incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+        IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoice.Type.CAPEX, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
 
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";

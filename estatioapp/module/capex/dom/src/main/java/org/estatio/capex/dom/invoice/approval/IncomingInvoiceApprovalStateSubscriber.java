@@ -30,7 +30,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         // nb: note that the incoming invoice at this stage has no items attached to it, so there is a limit as to what we can safely do.
         // however, it *is* ok to just create the state chart for the invoice.
         final IncomingInvoice incomingInvoice = ev.getSource();
-        stateTransitionService .trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+        stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
     }
 
     /*

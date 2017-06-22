@@ -13,7 +13,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -74,7 +73,6 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE seller == :seller ")
 })
-@Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "orders.Order"
@@ -86,7 +84,8 @@ import lombok.Setter;
 public class Order extends UdoDomainObject2<Order> {
 
     public Order() {
-        super("orderNumber");
+        // TODO: may need to revise this when we know more...
+        super("seller, orderDate, orderNumber, id");
     }
 
     public String title() {

@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.SortedSet;
 
 import javax.annotation.Nullable;
@@ -33,11 +34,10 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -92,6 +92,8 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator {
 
+
+
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
     }
@@ -101,6 +103,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoice(
+            final Type type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -112,6 +115,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final LocalDate dateReceived,
             final BankAccount bankAccount){
         super("invoiceNumber");
+        setType(type);
         setInvoiceNumber(invoiceNumber);
         setApplicationTenancyPath(atPath);
         setBuyer(buyer);
@@ -180,6 +184,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
+    public String title() {
+        // TODO: need to refine, obviously...
+        return "Incoming Invoice";
+    }
+
     //region > _changeBankAccount (action)
     @Mixin(method="act")
     public static class _changeBankAccount extends IncomingInvoice_triggerAbstract {
@@ -187,7 +196,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         private final IncomingInvoice incomingInvoice;
 
         public _changeBankAccount(final IncomingInvoice incomingInvoice) {
-            super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE);
+            super(incomingInvoice, Arrays.asList(IncomingInvoiceApprovalState.NEW));
             this.incomingInvoice = incomingInvoice;
         }
 
@@ -207,6 +216,57 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
+    public enum Type {
+        LEGAL,
+        CAPEX,
+        ASSET,
+        LOCAL,
+        CORPORATE;
+
+        public boolean isToCompleteByPropertyManagers() {
+            return this == LEGAL || this == CAPEX || this == ASSET;
+        }
+        public boolean isToCompleteByOfficeAdministrator() {
+            return this == LOCAL;
+        }
+        public boolean isToCompleteByCorporateAdministrator() {
+            return this == CORPORATE;
+        }
+
+        public boolean relatesToProperty() {
+            return this == CAPEX || this == ASSET;
+        }
+
+        public static Type parse(final String value) {
+            if(value == null) {
+                return CAPEX;
+            }
+            String trimmedLowerValue = value.trim().toUpperCase();
+            try {
+                return valueOf(trimmedLowerValue);
+            } catch(IllegalArgumentException ex) {
+                return CAPEX;
+            }
+        }
+    }
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private Type type;
+
+    /**
+     * This relates to the owning property, while the child items may either also relate to the property,
+     * or could potentially relate to individual units within the property.
+     *
+     * <p>
+     *     Note that InvoiceForLease also has a reference to FixedAsset.  It's not possible to move this
+     *     up to the Invoice superclass because invoicing module does not "know" about fixed assets.
+     * </p>
+     */
+    @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
+    private Property property;
 
     @Getter @Setter
     @Column(allowsNull = "true", name = "bankAccountId")
@@ -228,8 +288,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
-    // region: supporting state transitions.
-
     @Programmatic
     public boolean hasProject() {
         final SortedSet<IncomingInvoiceItem> items = getItemsRaw();
@@ -242,24 +300,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return false;
     }
 
-    @Programmatic
-    public boolean hasFixedAsset() {
-        final SortedSet<IncomingInvoiceItem> items = getItemsRaw();
-        for (IncomingInvoiceItem item : items) {
-            FixedAsset fixedAsset = item.getFixedAsset();
-            if(fixedAsset != null) {
-                return true;
-            }
-        }
-        return false;
-    }
     // cheating
     private SortedSet getItemsRaw() {
         return getItems();
     }
 
     @Programmatic
-    public String reasonClassificationInComplete(){
+    public String reasonInComplete(){
         if (getBankAccount() == null) {
             return "Bank account is required";
         }

@@ -191,11 +191,11 @@ public abstract class Invoice<T extends Invoice<T>>
                 title());
     }
 
-    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "true")
     @Getter @Setter
     private Party buyer;
 
-    @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "true")
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party seller;
@@ -220,7 +220,7 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private CommunicationChannel sendTo;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate dueDate;
@@ -311,7 +311,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private Currency currency;
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 

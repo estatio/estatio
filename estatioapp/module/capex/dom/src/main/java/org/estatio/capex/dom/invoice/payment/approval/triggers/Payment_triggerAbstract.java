@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.invoice.payment.approval.triggers;
 
+import java.util.List;
+
 import org.estatio.capex.dom.invoice.payment.Payment;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalState;
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
@@ -15,8 +17,8 @@ abstract class Payment_triggerAbstract
 
     Payment_triggerAbstract(
             final Payment payment,
-            final PaymentApprovalStateTransitionType transitionType) {
-        super(payment, transitionType);
+            final List<PaymentApprovalState> fromStates) {
+        super(payment, PaymentApprovalStateTransition.class, fromStates);
     }
 
 }

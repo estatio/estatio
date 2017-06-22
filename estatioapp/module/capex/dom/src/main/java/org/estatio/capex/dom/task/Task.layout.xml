@@ -14,11 +14,7 @@
                             <cpt:fieldSet name="General">
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
-                                    <cpt:action id="classifyAsOrder"/>
-                                    <cpt:action id="classifyAsInvoice"/>
-                                    <cpt:action id="categoriseAsOrder"/>
-                                    <cpt:action id="categoriseAsInvoice"/>
-                                    <cpt:action id="resetCategorisation"/>
+                                    <cpt:action id="categorise"/>
 
                                     <cpt:action id="approveAsProjectManager"/>
                                     <cpt:action id="approveAsAssetManager"/>

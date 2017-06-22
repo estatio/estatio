@@ -79,6 +79,7 @@ import lombok.Setter;
                 "period",
                 "tax",
                 "invoiceNumber",
+                "invoiceType",
                 "invoiceDescription",
                 "invoiceNetAmount",
                 "invoiceVatAmount",
@@ -197,32 +198,40 @@ public class OrderInvoiceLine {
     @MemberOrder(sequence = "17")
     private String invoiceNumber;
 
+    /**
+     * Corresponding to {@link IncomingInvoice.Type}.
+     */
     @XmlElement(required = false)
     @Getter @Setter
     @MemberOrder(sequence = "18")
+    private String invoiceType;
+
+    @XmlElement(required = false)
+    @Getter @Setter
+    @MemberOrder(sequence = "19")
     private String invoiceDescription;
 
     @XmlElement(required = false)
     @Getter @Setter
     @Column(scale = 2)
-    @MemberOrder(sequence = "19")
+    @MemberOrder(sequence = "20")
     private BigDecimal invoiceNetAmount;
 
     @XmlElement(required = false)
     @Getter @Setter
     @Column(scale = 2)
-    @MemberOrder(sequence = "20")
+    @MemberOrder(sequence = "21")
     private BigDecimal invoiceVatAmount;
 
     @XmlElement(required = false)
     @Getter @Setter
-    @MemberOrder(sequence = "21")
+    @MemberOrder(sequence = "22")
     @Column(scale = 2)
     private BigDecimal invoiceGrossAmount;
 
     @XmlElement(required = false)
     @Getter @Setter
-    @MemberOrder(sequence = "22")
+    @MemberOrder(sequence = "23")
     private String invoiceTax;
 
 
@@ -237,6 +246,7 @@ public class OrderInvoiceLine {
         public _apply(final OrderInvoiceLine line) {
             this.line = line;
         }
+
         @Action()
         @ActionLayout(contributed= Contributed.AS_ACTION)
         public OrderInvoiceLine act() {
@@ -289,7 +299,7 @@ public class OrderInvoiceLine {
                 final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
 
                 invoice = incomingInvoiceRepository.upsert(
-                        line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
+                        IncomingInvoice.Type.parse(line.invoiceType), line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
                         invoiceStatus, null, null);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);

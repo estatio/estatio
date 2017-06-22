@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.bankaccount.verification.triggers;
 
+import java.util.List;
+
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
@@ -15,7 +17,7 @@ abstract class BankAccount_triggerAbstract
 
     BankAccount_triggerAbstract(
             final BankAccount bankAccount,
-            final BankAccountVerificationStateTransitionType transitionType) {
-        super(bankAccount, transitionType);
+            final List<BankAccountVerificationState> fromStates) {
+        super(bankAccount, BankAccountVerificationStateTransition.class, fromStates);
     }
 }

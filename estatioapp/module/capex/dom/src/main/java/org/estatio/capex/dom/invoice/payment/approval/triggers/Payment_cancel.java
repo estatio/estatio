@@ -13,7 +13,7 @@ import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransi
 public class Payment_cancel extends Payment_triggerAbstract {
 
     public Payment_cancel(Payment payment) {
-        super(payment, PaymentApprovalStateTransitionType.CANCEL);
+        super(payment, PaymentApprovalStateTransitionType.CANCEL.getFromStates());
     }
 
     @Action()

@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.documents.categorisation.tasks;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -13,6 +15,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.document.Document_categorise;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
@@ -34,10 +37,11 @@ public class Task_categorise
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object act(
             final DocumentTypeData documentTypeData,
+            @Nullable final IncomingInvoice.Type incomingInvoiceType,
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(null, property, comment);
+        Object mixinResult = mixin().act(documentTypeData, incomingInvoiceType, property, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
@@ -46,7 +50,19 @@ public class Task_categorise
         return toReturnElse(goToNext, mixinResult);
     }
 
-    public boolean default3Act() {
+    public List<DocumentTypeData> choices0Act() {
+        return mixin().choices0Act();
+    }
+
+    public String validateAct(
+            final DocumentTypeData documentTypeData,
+            final IncomingInvoice.Type incomingInvoiceType,
+            final Property property,
+            final String comment) {
+        return mixin().validateAct(documentTypeData, incomingInvoiceType, property, comment);
+    }
+
+    public boolean default4Act() {
         return true;
     }
 

@@ -76,11 +76,7 @@
                                     </cpt:action>
                                 </cpt:property>
                                 <cpt:property id="pendingCategorisationTask">
-                                    <cpt:action id="classifyAsOrder"/>
-                                    <cpt:action id="classifyAsInvoice"/>
-                                    <cpt:action id="categoriseAsOrder"/>
-                                    <cpt:action id="categoriseAsInvoice"/>
-                                    <cpt:action id="resetCategorisation"/>
+                                    <cpt:action id="categorise"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Next task">

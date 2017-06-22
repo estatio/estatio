@@ -49,6 +49,7 @@ public class IncomingInvoiceRepository {
 
     @Programmatic
     public IncomingInvoice create(
+            final IncomingInvoice.Type type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -60,16 +61,17 @@ public class IncomingInvoiceRepository {
             final LocalDate dateReceived,
             final BankAccount bankAccount) {
         final IncomingInvoice invoice =
-                new IncomingInvoice(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+                new IncomingInvoice(type, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
-        repositoryService.persist(invoice);
+        repositoryService.persistAndFlush(invoice);
         return invoice;
     }
 
     // Note: this method uses a first match on invoicenumber, seller and invoicedate which in practice can be assumed to be unique, but technically is not
     @Programmatic
     public IncomingInvoice upsert(
+            final IncomingInvoice.Type type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -82,7 +84,7 @@ public class IncomingInvoiceRepository {
             final BankAccount bankAccount) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
-            invoice = create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+            invoice = create(type, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         } else {
             updateInvoice(invoice, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }

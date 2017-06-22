@@ -43,16 +43,61 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    COMPLETE(
+    COMPLETE_PROPERTY_INVOICE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.MANUAL) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getType().isToCompleteByPropertyManagers();
+        }
+
         @Override
         public String reasonGuardNotSatisified(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonClassificationInComplete();
+            return domainObject.reasonInComplete();
+        }
+    },
+    COMPLETE_LOCAL_INVOICE(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.COMPLETED,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
+            AdvancePolicy.MANUAL) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getType().isToCompleteByOfficeAdministrator();
+        }
+
+        @Override
+        public String reasonGuardNotSatisified(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.reasonInComplete();
+        }
+    },
+    COMPLETE_CORPORATE_INVOICE(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.COMPLETED,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR),
+            AdvancePolicy.MANUAL) {
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getType().isToCompleteByCorporateAdministrator();
+        }
+
+        @Override
+        public String reasonGuardNotSatisified(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.reasonInComplete();
         }
     },
     APPROVE_AS_LEGAL_MANAGER(
@@ -63,27 +108,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice domainObject,
+                final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isPropertyInvoice(domainObject, serviceRegistry2) &&
-                   hasLegalFees(domainObject);
-        }
-        private boolean hasLegalFees(final IncomingInvoice incomingInvoice) {
-            // TODO:
-            return false;
+            return incomingInvoice.getType() == IncomingInvoice.Type.LEGAL;
         }
     },
     APPROVE_AS_PROJECT_MANAGER(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED,
-            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice domainObject,
+                final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isPropertyInvoice(domainObject, serviceRegistry2) &&
-                   domainObject.hasProject();
+            return incomingInvoice.getType() == IncomingInvoice.Type.CAPEX;
         }
     },
     APPROVE_AS_ASSET_MANAGER(
@@ -94,11 +134,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice domainObject,
+                final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isPropertyInvoice(domainObject, serviceRegistry2) &&
-                   !APPROVE_AS_LEGAL_MANAGER.isMatch(domainObject, serviceRegistry2) &&
-                   !APPROVE_AS_PROJECT_MANAGER.isMatch(domainObject, serviceRegistry2);
+            return incomingInvoice.getType() == IncomingInvoice.Type.ASSET;
         }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
@@ -109,9 +147,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
             AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice domainObject,
+                final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isLocalInvoice(domainObject, serviceRegistry2);
+            return incomingInvoice.getType() == IncomingInvoice.Type.LOCAL;
         }
     },
     CHECK_BANK_ACCOUNT_FOR_CORPORATE(
@@ -122,9 +160,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
             AdvancePolicy.AUTOMATIC) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice domainObject,
+                final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isCorporateInvoice(domainObject, serviceRegistry2);
+            return incomingInvoice.getType() == IncomingInvoice.Type.CORPORATE;
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
@@ -173,20 +211,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL)
     ;
-
-
-    private static boolean isLocalInvoice(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-        return false;
-    }
-
-    private static boolean isCorporateInvoice(final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-        return false;
-    }
-
-    private static boolean isPropertyInvoice(final IncomingInvoice domainObject, ServiceRegistry2 serviceRegistry2) {
-        // TODO
-        return true;
-    }
 
     private final List<IncomingInvoiceApprovalState> fromStates;
     private final IncomingInvoiceApprovalState toState;

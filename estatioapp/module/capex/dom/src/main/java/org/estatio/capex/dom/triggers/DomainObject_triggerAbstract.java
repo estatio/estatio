@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.triggers;
 
+import java.util.List;
+
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
@@ -16,8 +18,11 @@ public abstract class DomainObject_triggerAbstract<
 
     protected final DO domainObject;
 
-    protected DomainObject_triggerAbstract(final DO domainObject, final STT transitionType) {
-        super(transitionType);
+    protected DomainObject_triggerAbstract(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final List<S> fromStates) {
+        super(stateTransitionClass, fromStates);
         this.domainObject = domainObject;
     }
 

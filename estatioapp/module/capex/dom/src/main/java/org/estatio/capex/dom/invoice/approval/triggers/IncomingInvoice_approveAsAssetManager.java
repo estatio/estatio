@@ -13,7 +13,8 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_triggerAbstract {
 
     public IncomingInvoice_approveAsAssetManager(IncomingInvoice incomingInvoice) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER);
+        super(incomingInvoice,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER.getFromStates());
     }
 
     @Action()

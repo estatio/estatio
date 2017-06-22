@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.triggers;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -19,10 +21,14 @@ public abstract class DomainObject_triggerBaseAbstract<
         S extends State<S>
         > {
 
-    protected final STT transitionType;
+    protected final Class<ST> stateTransitionClass;
+    protected final List<S> fromStates;
 
-    protected DomainObject_triggerBaseAbstract(final STT transitionType) {
-        this.transitionType = transitionType;
+    protected DomainObject_triggerBaseAbstract(
+            final Class<ST> stateTransitionClass,
+            final List<S> fromStates) {
+        this.stateTransitionClass = stateTransitionClass;
+        this.fromStates = fromStates;
     }
 
     protected abstract DO getDomainObject();
@@ -39,7 +45,7 @@ public abstract class DomainObject_triggerBaseAbstract<
      * @return - the {@link StateTransition} most recently completed for the domain object.
      */
     protected final ST trigger(final String comment) {
-        return stateTransitionService.trigger(getDomainObject(), transitionType, comment);
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, null, comment);
     }
 
     /**
@@ -50,7 +56,8 @@ public abstract class DomainObject_triggerBaseAbstract<
     }
 
     private boolean canTransition() {
-        return transitionType.canTransitionFromCurrentStateAndIsMatch(getDomainObject(), serviceRegistry2);
+        final S currentState = stateTransitionService.currentStateOf(getDomainObject(), stateTransitionClass);
+        return fromStates.contains(currentState);
     }
 
     @Inject

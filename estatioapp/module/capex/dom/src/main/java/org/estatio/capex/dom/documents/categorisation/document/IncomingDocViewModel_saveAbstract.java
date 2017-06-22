@@ -36,8 +36,10 @@ public abstract class IncomingDocViewModel_saveAbstract<
     @Getter
     protected final VM viewModel;
 
-    public IncomingDocViewModel_saveAbstract(final VM viewModel, final IncomingDocumentCategorisationStateTransitionType transitionType) {
-        super(viewModel.getDocument(), transitionType);
+    public IncomingDocViewModel_saveAbstract(
+            final VM viewModel,
+            final List<IncomingDocumentCategorisationState> fromStates) {
+        super(viewModel.getDocument(), IncomingDocumentCategorisationStateTransition.class, fromStates);
         this.viewModel = viewModel;
     }
 
