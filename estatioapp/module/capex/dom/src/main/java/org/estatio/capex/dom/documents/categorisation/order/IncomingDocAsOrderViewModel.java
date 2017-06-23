@@ -61,7 +61,7 @@ import lombok.Setter;
                 "orderDate",
                 "description",
                 "charge",
-                "fixedAsset",
+                "property",
                 "project",
                 "period",
                 "budgetItem",

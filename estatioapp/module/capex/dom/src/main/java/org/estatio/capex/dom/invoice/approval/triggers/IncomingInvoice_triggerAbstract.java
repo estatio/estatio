@@ -10,15 +10,24 @@ import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 
 public abstract class IncomingInvoice_triggerAbstract
         extends DomainObject_triggerAbstract<
-                    IncomingInvoice,
-                    IncomingInvoiceApprovalStateTransition,
-                    IncomingInvoiceApprovalStateTransitionType,
-                    IncomingInvoiceApprovalState> {
+                                    IncomingInvoice,
+                                    IncomingInvoiceApprovalStateTransition,
+                                    IncomingInvoiceApprovalStateTransitionType,
+                                    IncomingInvoiceApprovalState> {
 
     protected IncomingInvoice_triggerAbstract(
             final IncomingInvoice incomingInvoice,
-            final List<IncomingInvoiceApprovalState> fromStates) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, fromStates);
+            final List<IncomingInvoiceApprovalState> fromStates,
+            final IncomingInvoiceApprovalStateTransitionType requiredTransitionTypeIfAny) {
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, fromStates, requiredTransitionTypeIfAny
+        );
+    }
+
+    protected IncomingInvoice_triggerAbstract(
+            final IncomingInvoice incomingInvoice,
+            final IncomingInvoiceApprovalStateTransitionType requiredTransitionType) {
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType
+        );
     }
 
 }

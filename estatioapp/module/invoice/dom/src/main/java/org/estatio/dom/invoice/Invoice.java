@@ -20,8 +20,10 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -368,29 +370,24 @@ public abstract class Invoice<T extends Invoice<T>>
 
     @Property(notPersisted = true)
     public BigDecimal getNetAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getNetAmount());
-        }
-        return total;
+        return sum(InvoiceItem::getNetAmount);
     }
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getVatAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getVatAmount());
-        }
-        return total;
+        return sum(InvoiceItem::getVatAmount);
     }
 
     @Property(notPersisted = true)
     public BigDecimal getGrossAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getGrossAmount());
-        }
-        return total;
+        return sum(InvoiceItem::getGrossAmount);
+    }
+
+    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
+        return getItems().stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     protected boolean isImmutable() {

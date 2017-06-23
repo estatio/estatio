@@ -10,14 +10,23 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 
 abstract class BankAccount_triggerAbstract
         extends DomainObject_triggerAbstract<
-                    BankAccount,
-                    BankAccountVerificationStateTransition,
-                    BankAccountVerificationStateTransitionType,
-                    BankAccountVerificationState> {
+                                    BankAccount,
+                                    BankAccountVerificationStateTransition,
+                                    BankAccountVerificationStateTransitionType,
+                                    BankAccountVerificationState> {
 
     BankAccount_triggerAbstract(
             final BankAccount bankAccount,
-            final List<BankAccountVerificationState> fromStates) {
-        super(bankAccount, BankAccountVerificationStateTransition.class, fromStates);
+            final List<BankAccountVerificationState> fromStates,
+            final BankAccountVerificationStateTransitionType requiredTransitionTypeIfAny) {
+        super(bankAccount, BankAccountVerificationStateTransition.class, fromStates, requiredTransitionTypeIfAny
+        );
+    }
+
+    BankAccount_triggerAbstract(
+            final BankAccount bankAccount,
+            final BankAccountVerificationStateTransitionType requiredTransitionType) {
+        super(bankAccount, BankAccountVerificationStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType
+        );
     }
 }

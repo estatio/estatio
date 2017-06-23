@@ -31,6 +31,7 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
@@ -84,7 +85,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
 
-            final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoice.Type.CAPEX,
+            final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
                     "TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
 
             // When

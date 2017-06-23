@@ -71,8 +71,16 @@ public interface StateTransitionType<
      *     domain object (for convenience or as a performance optimisation); in which case this is the place to do it.
      * </p>
      */
-    default void applyTo(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
-        // nothing to do.
+    default void applyTo(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final ServiceRegistry2 serviceRegistry2) {
+
+        // push the to state into the domain object (if Stateful)
+        if(domainObject instanceof Stateful) {
+            Stateful stateful = (Stateful) domainObject;
+            stateful.setStateOf(stateTransitionClass, this.getToState());
+        }
     }
 
     /**

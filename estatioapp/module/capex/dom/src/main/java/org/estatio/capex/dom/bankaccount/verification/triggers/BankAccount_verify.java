@@ -15,7 +15,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 public class BankAccount_verify extends BankAccount_triggerAbstract {
 
     public BankAccount_verify(BankAccount bankAccount) {
-        super(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT.getFromStates());
+        super(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT);
     }
 
     public static class DomainEvent extends EstatioCapexDomModule.ActionDomainEvent<BankAccount_triggerAbstract> {}

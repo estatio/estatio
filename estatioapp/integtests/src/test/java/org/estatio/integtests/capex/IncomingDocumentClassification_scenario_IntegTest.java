@@ -578,7 +578,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //    BankAccountRepository bankAccountRepository;
 //
 //    @Inject
-//    TaskIncomingDocumentService taskIncomingDocumentService;
+//    TaskIncomingDocumentPdfService taskIncomingDocumentService;
 //
 //    @Inject
 //    PartyRoleTypeRepository partyRoleTypeRepository;

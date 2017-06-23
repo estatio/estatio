@@ -35,9 +35,14 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.state.State;
+import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.state.Stateful;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -90,9 +95,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator {
-
-
+public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
@@ -103,7 +106,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoice(
-            final Type type,
+            final IncomingInvoiceType type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -144,6 +147,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BudgetItem budgetItem) {
         addItem(this, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
         return this;
+    }
+
+    public String disableAddItem() {
+        return reasonDisabledDueToState();
     }
 
     @Programmatic
@@ -196,7 +203,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         private final IncomingInvoice incomingInvoice;
 
         public _changeBankAccount(final IncomingInvoice incomingInvoice) {
-            super(incomingInvoice, Arrays.asList(IncomingInvoiceApprovalState.NEW));
+            super(incomingInvoice, Arrays.asList(IncomingInvoiceApprovalState.NEW), null);
             this.incomingInvoice = incomingInvoice;
         }
 
@@ -216,43 +223,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
-    public enum Type {
-        LEGAL,
-        CAPEX,
-        ASSET,
-        LOCAL,
-        CORPORATE;
-
-        public boolean isToCompleteByPropertyManagers() {
-            return this == LEGAL || this == CAPEX || this == ASSET;
-        }
-        public boolean isToCompleteByOfficeAdministrator() {
-            return this == LOCAL;
-        }
-        public boolean isToCompleteByCorporateAdministrator() {
-            return this == CORPORATE;
-        }
-
-        public boolean relatesToProperty() {
-            return this == CAPEX || this == ASSET;
-        }
-
-        public static Type parse(final String value) {
-            if(value == null) {
-                return CAPEX;
-            }
-            String trimmedLowerValue = value.trim().toUpperCase();
-            try {
-                return valueOf(trimmedLowerValue);
-            } catch(IllegalArgumentException ex) {
-                return CAPEX;
-            }
-        }
-    }
-
     @Getter @Setter
     @Column(allowsNull = "false")
-    private Type type;
+    private IncomingInvoiceType type;
 
     /**
      * This relates to the owning property, while the child items may either also relate to the property,
@@ -300,7 +273,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return false;
     }
 
-    // cheating
+        // cheating
     private SortedSet getItemsRaw() {
         return getItems();
     }
@@ -312,6 +285,47 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
         return null;
     }
+
+
+    //@Getter @Setter
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    private IncomingInvoiceApprovalState approvalState;
+
+    public IncomingInvoiceApprovalState getApprovalState() {
+        return approvalState;
+    }
+
+    public void setApprovalState(final IncomingInvoiceApprovalState approvalState) {
+        this.approvalState = approvalState;
+    }
+
+    @Override
+    public <DO, ST extends StateTransition<DO, ST, STT, S>, STT extends StateTransitionType<DO, ST, STT, S>, S extends State<S>> S getStateOf(
+            final Class<ST> stateTransitionClass) {
+        if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
+            return (S) approvalState;
+        }
+        return null;
+    }
+
+    @Override
+    public <DO, ST extends StateTransition<DO, ST, STT, S>, STT extends StateTransitionType<DO, ST, STT, S>, S extends State<S>> void setStateOf(
+            final Class<ST> stateTransitionClass, final S newState) {
+        if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
+            setApprovalState( (IncomingInvoiceApprovalState) newState );
+        }
+    }
+
+
+    @Programmatic
+    public String reasonDisabledDueToState() {
+        IncomingInvoiceApprovalState currentState = getApprovalState();
+        return currentState == IncomingInvoiceApprovalState.NEW ?
+                null :
+                "Cannot modify because invoice is in state of " + currentState;
+    }
+
+
 
     //endregion
 

@@ -89,6 +89,13 @@ public class StateTransitionService {
     >  S currentStateOf(
             final DO domainObject,
             final Class<ST> stateTransitionClass) {
+        if(domainObject instanceof Stateful) {
+            Stateful stateful = (Stateful) domainObject;
+            S currentStateIfKnown = stateful.getStateOf(stateTransitionClass);
+            if(currentStateIfKnown != null) {
+                return currentStateIfKnown;
+            }
+        }
         final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
         return supportService.currentStateOf(domainObject);
     }
@@ -377,7 +384,8 @@ public class StateTransitionService {
         eventBusService.post(event);
 
         // transition
-        transitionType.applyTo(domainObject, serviceRegistry2);
+        final Class<ST> stateTransitionClass = transitionClassFor(transitionType);
+        transitionType.applyTo(domainObject, stateTransitionClass, serviceRegistry2);
 
         // mark tasks as complete
         transitionToComplete.completed();

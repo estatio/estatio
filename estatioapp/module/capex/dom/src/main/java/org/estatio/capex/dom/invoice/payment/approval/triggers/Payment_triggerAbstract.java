@@ -10,15 +10,22 @@ import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 
 abstract class Payment_triggerAbstract
         extends DomainObject_triggerAbstract<
-                    Payment,
-                    PaymentApprovalStateTransition,
-                    PaymentApprovalStateTransitionType,
-                    PaymentApprovalState> {
+                                    Payment,
+                                    PaymentApprovalStateTransition,
+                                    PaymentApprovalStateTransitionType,
+                                    PaymentApprovalState> {
 
     Payment_triggerAbstract(
             final Payment payment,
-            final List<PaymentApprovalState> fromStates) {
-        super(payment, PaymentApprovalStateTransition.class, fromStates);
+            final List<PaymentApprovalState> fromStates,
+            final PaymentApprovalStateTransitionType requiredTransitionTypeIfAny) {
+        super(payment, PaymentApprovalStateTransition.class, fromStates, requiredTransitionTypeIfAny);
+    }
+
+    Payment_triggerAbstract(
+            final Payment payment,
+            final PaymentApprovalStateTransitionType requiredTransitionType) {
+        super(payment, PaymentApprovalStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType);
     }
 
 }

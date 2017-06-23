@@ -13,7 +13,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_triggerAbstract {
 
     public IncomingInvoice_approveAsCountryDirector(IncomingInvoice incomingInvoice) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR.getFromStates());
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
     }
 
     @Action()

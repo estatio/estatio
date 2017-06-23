@@ -10,6 +10,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -106,7 +107,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
         LocalDate updatedDateReceived = new LocalDate(2017,1,2);
         BankAccount updatedBankAccount = bankAccountRepository.allBankAccounts().get(0);
 
-        IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoice.Type.CAPEX, invoiceNumber, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount);
+        IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoiceType.CAPEX, invoiceNumber, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount);
 
         // then
         assertThat(updatedInvoice.getInvoiceNumber()).isEqualTo(invoiceNumber);
@@ -132,7 +133,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
 
-        return incomingInvoiceRepository.create(IncomingInvoice.Type.CAPEX, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
     }
 
     @Inject

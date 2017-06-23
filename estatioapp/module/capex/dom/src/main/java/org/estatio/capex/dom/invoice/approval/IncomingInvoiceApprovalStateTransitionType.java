@@ -13,6 +13,7 @@ import org.apache.isis.applib.util.Enums;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
@@ -110,7 +111,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoice.Type.LEGAL;
+            return incomingInvoice.getType() == IncomingInvoiceType.LEGAL;
         }
     },
     APPROVE_AS_PROJECT_MANAGER(
@@ -123,7 +124,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoice.Type.CAPEX;
+            return incomingInvoice.getType() == IncomingInvoiceType.CAPEX;
         }
     },
     APPROVE_AS_ASSET_MANAGER(
@@ -136,7 +137,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoice.Type.ASSET;
+            return incomingInvoice.getType() == IncomingInvoiceType.PROPERTY_EXPENSES;
         }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
@@ -149,7 +150,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoice.Type.LOCAL;
+            return incomingInvoice.getType() == IncomingInvoiceType.LOCAL_EXPENSES;
         }
     },
     CHECK_BANK_ACCOUNT_FOR_CORPORATE(
@@ -162,7 +163,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoice.Type.CORPORATE;
+            return incomingInvoice.getType() == IncomingInvoiceType.CORPORATE_EXPENSES;
         }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(

@@ -26,9 +26,11 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
     state "NEW" as iia_new
+    note right of iia_new: currently no transitions for\nTANGIBLE_FIXED_ASSET, INTERCOMPANY, RE_INVOICING,
 
-    state "COMPLETED" as iia_classified
-    note right of iia_classified: immutable from this point on
+
+    state "COMPLETED" as iia_completed
+    note right of iia_completed: immutable from this point on
 
     state "APPROVED" as iia_a
     state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
@@ -40,16 +42,16 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_classified : COMPLETE_\nPROPERTY_\nINVOICE\n[capex || asset || legal]
-    iia_new -down-> iia_classified : COMPLETE_\nLOCAL_\nINVOICE\n[local]
-    iia_new -down-> iia_classified : COMPLETE_\nCORPORATE_\nINVOICE\n[corporate]
+    iia_new -down-> iia_completed : COMPLETE_\nPROPERTY_\nINVOICE\n[capex || property ||\nservice || legal]
+    iia_new -down-> iia_completed : COMPLETE_\nLOCAL_\nINVOICE\n[local]
+    iia_new -down-> iia_completed : COMPLETE_\nCORPORATE_\nINVOICE\n[corporate]
 
-    iia_classified --> iia_a : APPROVE_AS_\nLEGAL_MANAGER\n[legal]
-    iia_classified --> iia_a : APPROVE_AS_\nPROJECT_MANAGER\n[capex]
-    iia_classified --> iia_a : APPROVE_AS_\nASSET_MANAGER\n[asset]
+    iia_completed --> iia_a : APPROVE_AS_\nLEGAL_MANAGER\n[legal]
+    iia_completed --> iia_a : APPROVE_AS_\nPROJECT_MANAGER\n[capex]
+    iia_completed --> iia_a : APPROVE_AS_\nASSET_MANAGER\n[asset]
 
-    iia_classified --> iia_abcd : APPROVE_\nLOCAL_AS\n_COUNTRY_DIRECTOR\n[local]
-    iia_classified --> iia_pbac : CHECK_BANK_ACCOUNT_\nFOR_CORPORATE\n[corporate]
+    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n_COUNTRY_DIRECTOR\n[local]
+    iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\nFOR_CORPORATE\n[corporate]
     
     iia_a -down-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
     

@@ -13,7 +13,7 @@ import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransi
 public class Payment_approveAsTreasurer extends Payment_triggerAbstract {
 
     public Payment_approveAsTreasurer(Payment payment) {
-        super(payment, PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER.getFromStates());
+        super(payment, PaymentApprovalStateTransitionType.APPROVE_AS_TREASURER);
     }
 
     @Action()

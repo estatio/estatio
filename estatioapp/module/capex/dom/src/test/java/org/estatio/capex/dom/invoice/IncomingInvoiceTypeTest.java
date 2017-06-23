@@ -9,24 +9,24 @@ public class IncomingInvoiceTypeTest {
     @Test
     public void parse() throws Exception {
 
-        assertThat(IncomingInvoice.Type.parse(null)).isEqualTo(IncomingInvoice.Type.CAPEX);
-        assertThat(IncomingInvoice.Type.parse(" Capex  ")).isEqualTo(IncomingInvoice.Type.CAPEX);
-        assertThat(IncomingInvoice.Type.parse("garbage")).isEqualTo(IncomingInvoice.Type.CAPEX);
+        assertThat(IncomingInvoiceType.parse(null)).isEqualTo(IncomingInvoiceType.CAPEX);
+        assertThat(IncomingInvoiceType.parse(" Capex  ")).isEqualTo(IncomingInvoiceType.CAPEX);
+        assertThat(IncomingInvoiceType.parse("garbage")).isEqualTo(IncomingInvoiceType.CAPEX);
 
-        assertThat(IncomingInvoice.Type.parse("CAPEX")).isEqualTo(IncomingInvoice.Type.CAPEX);
-        assertThat(IncomingInvoice.Type.parse("capex")).isEqualTo(IncomingInvoice.Type.CAPEX);
+        assertThat(IncomingInvoiceType.parse("CAPEX")).isEqualTo(IncomingInvoiceType.CAPEX);
+        assertThat(IncomingInvoiceType.parse("capex")).isEqualTo(IncomingInvoiceType.CAPEX);
 
-        assertThat(IncomingInvoice.Type.parse("ASSET")).isEqualTo(IncomingInvoice.Type.ASSET);
-        assertThat(IncomingInvoice.Type.parse("asset")).isEqualTo(IncomingInvoice.Type.ASSET);
+        assertThat(IncomingInvoiceType.parse("PROPERTY_EXPENSES")).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
+        assertThat(IncomingInvoiceType.parse("asset")).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
 
-        assertThat(IncomingInvoice.Type.parse("CORPORATE")).isEqualTo(IncomingInvoice.Type.CORPORATE);
-        assertThat(IncomingInvoice.Type.parse("corporate")).isEqualTo(IncomingInvoice.Type.CORPORATE);
+        assertThat(IncomingInvoiceType.parse("CORPORATE_EXPENSES")).isEqualTo(IncomingInvoiceType.CORPORATE_EXPENSES);
+        assertThat(IncomingInvoiceType.parse("corporate")).isEqualTo(IncomingInvoiceType.CORPORATE_EXPENSES);
 
-        assertThat(IncomingInvoice.Type.parse("LEGAL")).isEqualTo(IncomingInvoice.Type.LEGAL);
-        assertThat(IncomingInvoice.Type.parse("legal")).isEqualTo(IncomingInvoice.Type.LEGAL);
+        assertThat(IncomingInvoiceType.parse("LEGAL")).isEqualTo(IncomingInvoiceType.LEGAL);
+        assertThat(IncomingInvoiceType.parse("legal")).isEqualTo(IncomingInvoiceType.LEGAL);
 
-        assertThat(IncomingInvoice.Type.parse("LOCAL")).isEqualTo(IncomingInvoice.Type.LOCAL);
-        assertThat(IncomingInvoice.Type.parse("local")).isEqualTo(IncomingInvoice.Type.LOCAL);
+        assertThat(IncomingInvoiceType.parse("LOCAL_EXPENSES")).isEqualTo(IncomingInvoiceType.LOCAL_EXPENSES);
+        assertThat(IncomingInvoiceType.parse("local")).isEqualTo(IncomingInvoiceType.LOCAL_EXPENSES);
 
     }
 

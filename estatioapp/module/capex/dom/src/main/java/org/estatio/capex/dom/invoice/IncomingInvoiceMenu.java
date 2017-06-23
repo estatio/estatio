@@ -36,7 +36,7 @@ public class IncomingInvoiceMenu {
     }
 
     public IncomingInvoice newInvoice(
-            final IncomingInvoice.Type type,
+            final IncomingInvoiceType type,
             final String invoiceNumber,
             final Party buyer,
             final Party seller,

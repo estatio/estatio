@@ -235,7 +235,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Property(editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
@@ -243,12 +243,14 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate endDate;

@@ -13,7 +13,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 public class BankAccount_cancel extends BankAccount_triggerAbstract {
 
     public BankAccount_cancel(BankAccount bankAccount) {
-        super(bankAccount, BankAccountVerificationStateTransitionType.CANCEL.getFromStates());
+        super(bankAccount, BankAccountVerificationStateTransitionType.CANCEL);
     }
 
     @Action()

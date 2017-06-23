@@ -30,6 +30,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
@@ -199,7 +200,7 @@ public class OrderInvoiceLine {
     private String invoiceNumber;
 
     /**
-     * Corresponding to {@link IncomingInvoice.Type}.
+     * Corresponding to {@link IncomingInvoiceType}.
      */
     @XmlElement(required = false)
     @Getter @Setter
@@ -299,7 +300,7 @@ public class OrderInvoiceLine {
                 final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
 
                 invoice = incomingInvoiceRepository.upsert(
-                        IncomingInvoice.Type.parse(line.invoiceType), line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
+                        IncomingInvoiceType.parse(line.invoiceType), line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
                         invoiceStatus, null, null);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);

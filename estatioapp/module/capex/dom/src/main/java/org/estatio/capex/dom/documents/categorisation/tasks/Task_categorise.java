@@ -15,7 +15,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.document.Document_categorise;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
@@ -37,7 +37,7 @@ public class Task_categorise
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object act(
             final DocumentTypeData documentTypeData,
-            @Nullable final IncomingInvoice.Type incomingInvoiceType,
+            @Nullable final IncomingInvoiceType incomingInvoiceType,
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
@@ -56,9 +56,10 @@ public class Task_categorise
 
     public String validateAct(
             final DocumentTypeData documentTypeData,
-            final IncomingInvoice.Type incomingInvoiceType,
+            final IncomingInvoiceType incomingInvoiceType,
             final Property property,
-            final String comment) {
+            final String comment,
+            final boolean goToNext) {
         return mixin().validateAct(documentTypeData, incomingInvoiceType, property, comment);
     }
 

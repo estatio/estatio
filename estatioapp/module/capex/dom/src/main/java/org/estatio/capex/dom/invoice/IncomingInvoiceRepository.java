@@ -49,7 +49,7 @@ public class IncomingInvoiceRepository {
 
     @Programmatic
     public IncomingInvoice create(
-            final IncomingInvoice.Type type,
+            final IncomingInvoiceType type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,
@@ -71,7 +71,7 @@ public class IncomingInvoiceRepository {
     // Note: this method uses a first match on invoicenumber, seller and invoicedate which in practice can be assumed to be unique, but technically is not
     @Programmatic
     public IncomingInvoice upsert(
-            final IncomingInvoice.Type type,
+            final IncomingInvoiceType type,
             final String invoiceNumber,
             final String atPath,
             final Party buyer,

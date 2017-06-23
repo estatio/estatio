@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
@@ -22,33 +21,25 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.capex.dom.triggers.DomainObject_triggerBaseAbstract;
+import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
 
 @Mixin(method = "act")
 public class Document_categorise
-        extends DomainObject_triggerBaseAbstract<
-                    Document,
-                    IncomingDocumentCategorisationStateTransition,
-                    IncomingDocumentCategorisationStateTransitionType,
-                    IncomingDocumentCategorisationState> {
-
-    private final Document document;
+        extends DomainObject_triggerAbstract<
+                                            Document,
+                                            IncomingDocumentCategorisationStateTransition,
+                                            IncomingDocumentCategorisationStateTransitionType,
+                                            IncomingDocumentCategorisationState> {
 
     public Document_categorise(final Document document) {
-        super(IncomingDocumentCategorisationStateTransition.class,
-              Arrays.asList( IncomingDocumentCategorisationState.NEW));
-        this.document = document;
-    }
-
-    @Programmatic
-    @Override
-    public Document getDomainObject() {
-        return document;
+        super(document, IncomingDocumentCategorisationStateTransition.class,
+              Arrays.asList( IncomingDocumentCategorisationState.NEW), IncomingDocumentCategorisationStateTransitionType.CATEGORISE);
     }
 
     @Action(
@@ -57,11 +48,11 @@ public class Document_categorise
     @ActionLayout(cssClassFa = "folder-open-o")
     public Object act(
             final DocumentTypeData documentTypeData,
-            @Nullable final IncomingInvoice.Type incomingInvoiceType,
+            @Nullable final IncomingInvoiceType incomingInvoiceType,
             @Nullable final Property property,
             @Nullable final String comment) {
 
-        document.setType(documentTypeData.findUsing(documentTypeRepository));
+        getDomainObject().setType(documentTypeData.findUsing(documentTypeRepository));
 
         Object entity = null;
 
@@ -76,7 +67,7 @@ public class Document_categorise
                     null,
                     null,
                     null,
-                    document.getAtPath(),
+                    getDomainObject().getAtPath(),
                     null,
                     null
             );
@@ -89,7 +80,7 @@ public class Document_categorise
             final IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
                     incomingInvoiceType,
                     null,
-                    document.getAtPath(),
+                    getDomainObject().getAtPath(),
                     null,
                     null,
                     null,
@@ -109,7 +100,7 @@ public class Document_categorise
 
         if(entity != null) {
             // should always be true...
-            paperclipRepository.attach(document, null, entity);
+            paperclipRepository.attach(getDomainObject(), null, entity);
         }
 
         trigger(comment);
@@ -123,7 +114,7 @@ public class Document_categorise
 
     public String validateAct(
             final DocumentTypeData documentTypeData,
-            final IncomingInvoice.Type incomingInvoiceType,
+            final IncomingInvoiceType incomingInvoiceType,
             final Property property,
             final String comment) {
 
@@ -132,17 +123,15 @@ public class Document_categorise
             if (incomingInvoiceType == null) {
                 return "Invoice type is required";
             }
-            if (incomingInvoiceType.relatesToProperty() && property == null) {
-                return "Property is required for " + incomingInvoiceType;
+            String validateReason = incomingInvoiceType.validateProperty(property);
+            if(validateReason != null) {
+                return validateReason;
             }
             break;
         }
         return null;
     }
 
-    public Property default2Act() {
-        return existingPropertyAttachmentIfAny();
-    }
 
     public boolean hideAct() {
         if(cannotTransition()) {
@@ -150,11 +139,6 @@ public class Document_categorise
         }
         final Document document = getDomainObject();
         return !DocumentTypeData.hasIncomingType(document);
-    }
-
-    private Property existingPropertyAttachmentIfAny() {
-        final Document document = getDomainObject();
-        return paperclipRepository.paperclipAttaches(document, Property.class);
     }
 
     @Inject

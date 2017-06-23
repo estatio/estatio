@@ -9,15 +9,15 @@
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="dueDate"/>
+                <ns2:property id="description"/>
+                <ns2:property id="charge"/>
                 <ns2:property id="effectiveStartDate"/>
                 <ns2:property id="effectiveEndDate"/>
-                <ns2:property id="charge"/>
                 <ns2:property id="netAmount"/>
                 <ns2:property id="grossAmount"/>
                 <ns2:property id="quantity"/>
-                <ns2:property id="description"/>
-                <ns2:property id="source"/>
-                <ns2:property id="applicationTenancy"/>
+                <ns2:property id="source"  hidden="ALL_TABLES"/>
+                <ns2:property id="applicationTenancy"  hidden="ALL_TABLES"/>
                 <ns2:property id="atPath" hidden="ALL_TABLES"/>
                 <ns2:property id="vatPercentage" hidden="ALL_TABLES"/>
             </ns2:fieldSet>

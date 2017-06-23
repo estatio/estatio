@@ -18,8 +18,12 @@
  */
 package org.estatio.capex.dom.documents.categorisation.invoice;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -37,26 +41,37 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -82,7 +97,7 @@ import lombok.Setter;
                 "paymentMethod",
                 "description",
                 "orderItem",
-                "fixedAsset",
+                "property",
                 "project",
                 "period",
                 "budgetItem",
@@ -93,6 +108,7 @@ import lombok.Setter;
                 "grossAmount",
                 "notCorrect",
                 "domainObject",
+                "incomingInvoiceType",
                 "originatingTask"
         }
 )
@@ -108,8 +124,9 @@ public class IncomingDocAsInvoiceViewModel
     IncomingDocAsInvoiceViewModel() {
     }
 
-    public IncomingDocAsInvoiceViewModel(final Document document) {
+    public IncomingDocAsInvoiceViewModel(final IncomingInvoice incomingInvoice, final Document document) {
         super(document);
+        this.domainObject = incomingInvoice;
         setDateReceived(document.getCreatedAt().toLocalDate());
         setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
 
@@ -117,12 +134,12 @@ public class IncomingDocAsInvoiceViewModel
         setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
     }
 
-    /**
-     * Populated once this view model is actioned; stored just so can be read by subscribers on any actions
-     * for this view model that publish domain events.
-     */
-    @Property(hidden = Where.EVERYWHERE)
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(named = "Incoming invoice")
     IncomingInvoice domainObject;
+
+    @Property(editing = Editing.ENABLED)
+    private IncomingInvoiceType incomingInvoiceType;
 
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;
@@ -225,10 +242,10 @@ public class IncomingDocAsInvoiceViewModel
                             .toList()
             );
         }
-        if (hasFixedAsset()) {
+        if (hasProperty()) {
             result = Lists.newArrayList(
                     FluentIterable.from(result)
-                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getFixedAsset()))
+                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getProperty()))
                             .toList()
             );
         }
@@ -339,8 +356,8 @@ public class IncomingDocAsInvoiceViewModel
             if (!hasProject()){
                 setProject(orderItem.getProject());
             }
-            if (!hasFixedAsset()){
-                setFixedAsset(orderItem.getFixedAsset());
+            if (!hasProperty()){
+                setProperty(orderItem.getProperty());
             }
             if (!hasBudgetItem()){
                 setBudgetItem(orderItem.getBudgetItem());
@@ -398,6 +415,135 @@ public class IncomingDocAsInvoiceViewModel
         return getOrderItem() != null;
     }
 
+
+    @Programmatic
+    public void init() {
+        IncomingInvoice incomingInvoice = getDomainObject();
+
+        setIncomingInvoiceType(incomingInvoice.getType());
+        setInvoiceNumber(incomingInvoice.getInvoiceNumber());
+        setBuyer(incomingInvoice.getBuyer());
+        setSeller(incomingInvoice.getSeller());
+        setInvoiceDate(incomingInvoice.getInvoiceDate());
+        setDueDate(incomingInvoice.getDueDate());
+        setPaymentMethod(incomingInvoice.getPaymentMethod());
+        setDateReceived(incomingInvoice.getDateReceived());
+        setBankAccount(incomingInvoice.getBankAccount());
+
+        SortedSet<InvoiceItem> items = incomingInvoice.getItems();
+        Optional<IncomingInvoiceItem> firstItemIfAny =
+                items.stream()
+                        .filter(x -> Objects.equals(x.getSequence(), BigInteger.ONE))
+                        .filter(IncomingInvoiceItem.class::isInstance)
+                        .map(IncomingInvoiceItem.class::cast)
+                        .findFirst();
+
+        if(firstItemIfAny.isPresent()) {
+            IncomingInvoiceItem invoiceItem = firstItemIfAny.get();
+            setCharge(invoiceItem.getCharge());
+            setDescription(invoiceItem.getDescription());
+            setNetAmount(invoiceItem.getNetAmount());
+            setVatAmount(invoiceItem.getVatAmount());
+            setTax(invoiceItem.getTax());
+            setDueDate(invoiceItem.getDueDate());
+            LocalDateInterval ldi = LocalDateInterval
+                    .including(invoiceItem.getStartDate(), invoiceItem.getEndDate());
+            setPeriod(PeriodUtil.periodFromInterval(ldi));
+            setProperty((org.estatio.dom.asset.Property) invoiceItem.getFixedAsset());
+            setProject(invoiceItem.getProject());
+            setBudgetItem(invoiceItem.getBudgetItem());
+        } else {
+
+            // for the first time we edit there will be no first item,
+            // so we instead get the property from the header invoice
+            setProperty(incomingInvoice.getProperty());
+        }
+    }
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public IncomingInvoice cancel() {
+        return getDomainObject();
+    }
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public IncomingInvoice save() {
+
+        IncomingInvoice incomingInvoice = getDomainObject();
+
+        IncomingInvoiceType previousType = incomingInvoice.getType();
+        incomingInvoiceRepository.upsert(
+                getIncomingInvoiceType(),
+                getInvoiceNumber(),
+                incomingInvoice.getAtPath(),
+                getBuyer(),
+                getSeller(),
+                getInvoiceDate(),
+                getDueDate(),
+                getPaymentMethod(),
+                InvoiceStatus.NEW,
+                getDateReceived(),
+                getBankAccount()
+        );
+
+        // if changed the type, then we need to re-evaluate the state machine
+        if(previousType != getIncomingInvoiceType()) {
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);
+        }
+
+
+        // upsert invoice item
+        // this will also update the parent header's property with that from the first item
+        final BigInteger sequence = BigInteger.ONE;
+        incomingInvoiceItemRepository.upsert(
+                sequence,
+                incomingInvoice,
+                getCharge(),
+                getDescription(),
+                getNetAmount(),
+                getVatAmount(),
+                getGrossAmount(),
+                getTax(),
+                getDueDate(),
+                getPeriod()!= null ? PeriodUtil.yearFromPeriod(getPeriod()).startDate() : null,
+                getPeriod()!= null ? PeriodUtil.yearFromPeriod(getPeriod()).endDate() : null,
+                getProperty(),
+                getProject(),
+                getBudgetItem());
+
+        return incomingInvoice;
+    }
+
+    public String disableSave() {
+        String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());
+        if(propertyInvalidReason != null) {
+            return propertyInvalidReason;
+        }
+        return getDomainObject().reasonDisabledDueToState();
+    }
+
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    StateTransitionService stateTransitionService;
+
     @Inject
     @XmlTransient
     @Getter(AccessLevel.NONE)
@@ -421,4 +567,5 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     FactoryService factoryService;
+
 }

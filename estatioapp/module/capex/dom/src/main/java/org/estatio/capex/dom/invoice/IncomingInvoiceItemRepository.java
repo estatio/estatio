@@ -109,6 +109,10 @@ public class IncomingInvoiceItemRepository {
                     project,
                     budgetItem);
         }
+
+        // also copy over this first item's property onto the header
+        invoice.setProperty(property);
+
         return invoiceItem;
     }
 
