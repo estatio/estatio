@@ -26,10 +26,21 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
+    public void on(IncomingInvoice.ObjectPersistingEvent ev) {
+        final IncomingInvoice incomingInvoice = ev.getSource();
+        // this is a workaround, because we can't mutate the state of the incoming invoice in the persisted callback
+        incomingInvoice.setApprovalState(IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState());
+    }
+
+    @Programmatic
+    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoice.ObjectPersistedEvent ev) {
-        // nb: note that the incoming invoice at this stage has no items attached to it, so there is a limit as to what we can safely do.
+        // nb: note that the incoming invoice at this stage has no items attached to it,
+        // so there is a limit as to what we can safely do.
         // however, it *is* ok to just create the state chart for the invoice.
         final IncomingInvoice incomingInvoice = ev.getSource();
+
         stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
     }
 
@@ -68,8 +79,6 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         }
         return Optional.empty();
     }
-
-
     */
 
     @Programmatic

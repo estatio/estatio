@@ -129,7 +129,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Property(hidden = Where.EVERYWHERE)
+    @Property
     @Getter @Setter
     private BigInteger sequence;
 

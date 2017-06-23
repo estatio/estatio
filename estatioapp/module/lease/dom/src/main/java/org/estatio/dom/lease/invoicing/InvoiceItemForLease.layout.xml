@@ -15,6 +15,7 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="General" id="general">
+                                <ns2:property id="sequence" hidden="EVERYWHERE"/>
                                 <ns2:property id="invoice"/>
                                 <ns2:property id="lease"/>
                                 <ns2:property id="fixedAsset"/>

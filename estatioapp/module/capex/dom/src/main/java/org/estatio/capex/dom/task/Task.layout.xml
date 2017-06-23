@@ -16,6 +16,10 @@
                                 <cpt:property id="object">
                                     <cpt:action id="categorise"/>
 
+                                    <cpt:action id="completePropertyInvoice"/>
+                                    <cpt:action id="completeLocalInvoice"/>
+                                    <cpt:action id="completeCorporateInvoice"/>
+
                                     <cpt:action id="approveAsProjectManager"/>
                                     <cpt:action id="approveAsAssetManager"/>
                                     <cpt:action id="approveAsCountryDirector"/>

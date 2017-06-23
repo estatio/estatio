@@ -67,11 +67,13 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -127,11 +129,6 @@ public class IncomingDocAsInvoiceViewModel
     public IncomingDocAsInvoiceViewModel(final IncomingInvoice incomingInvoice, final Document document) {
         super(document);
         this.domainObject = incomingInvoice;
-        setDateReceived(document.getCreatedAt().toLocalDate());
-        setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
-
-        // TODO: this will need to default to BANK_TRANSFER when we get to live...
-        setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
     }
 
     @Property(editing = Editing.DISABLED)
@@ -317,7 +314,7 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     public PaymentMethod default7ChangeInvoiceDetails(){
-        return getPaymentMethod()==null ? PaymentMethod.TEST_NO_PAYMENT : getPaymentMethod();
+        return getPaymentMethod()==null ? PaymentMethod.MANUAL_PROCESS : getPaymentMethod();
     }
 
     @Programmatic
@@ -452,6 +449,13 @@ public class IncomingDocAsInvoiceViewModel
             setProperty((org.estatio.dom.asset.Property) invoiceItem.getFixedAsset());
             setProject(invoiceItem.getProject());
             setBudgetItem(invoiceItem.getBudgetItem());
+
+            List<OrderItemInvoiceItemLink> links =
+                    orderItemInvoiceItemLinkRepository.findByInvoiceItem(invoiceItem);
+
+            final Optional<OrderItemInvoiceItemLink> linkIfAny = links.stream().findFirst();
+            linkIfAny.ifPresent(x -> setOrderItem(linkIfAny.get().getOrderItem()));
+
         } else {
 
             // for the first time we edit there will be no first item,
@@ -475,56 +479,102 @@ public class IncomingDocAsInvoiceViewModel
         IncomingInvoice incomingInvoice = getDomainObject();
 
         IncomingInvoiceType previousType = incomingInvoice.getType();
-        incomingInvoiceRepository.upsert(
-                getIncomingInvoiceType(),
-                getInvoiceNumber(),
-                incomingInvoice.getAtPath(),
-                getBuyer(),
-                getSeller(),
-                getInvoiceDate(),
-                getDueDate(),
-                getPaymentMethod(),
-                InvoiceStatus.NEW,
-                getDateReceived(),
-                getBankAccount()
-        );
+        incomingInvoice.setType(getIncomingInvoiceType());
+        incomingInvoice.setInvoiceNumber(getInvoiceNumber());
+        incomingInvoice.setBuyer(getBuyer());
+        incomingInvoice.setSeller(getSeller());
+        incomingInvoice.setInvoiceDate(getInvoiceDate());
+        incomingInvoice.setDueDate(getDueDate());
+        incomingInvoice.setPaymentMethod(getPaymentMethod());
+        incomingInvoice.setDateReceived(getDateReceived());
+        incomingInvoice.setBankAccount(getBankAccount());
 
         // if changed the type, then we need to re-evaluate the state machine
         if(previousType != getIncomingInvoiceType()) {
             stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);
         }
 
-
         // upsert invoice item
         // this will also update the parent header's property with that from the first item
         final BigInteger sequence = BigInteger.ONE;
-        incomingInvoiceItemRepository.upsert(
-                sequence,
-                incomingInvoice,
-                getCharge(),
-                getDescription(),
-                getNetAmount(),
-                getVatAmount(),
-                getGrossAmount(),
-                getTax(),
-                getDueDate(),
-                getPeriod()!= null ? PeriodUtil.yearFromPeriod(getPeriod()).startDate() : null,
-                getPeriod()!= null ? PeriodUtil.yearFromPeriod(getPeriod()).endDate() : null,
-                getProperty(),
-                getProject(),
-                getBudgetItem());
+        SortedSet<InvoiceItem> items = incomingInvoice.getItems();
+        Optional<IncomingInvoiceItem> firstItemIfAny = items.stream().filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast).filter(x -> Objects
+                        .equals(x.getSequence(), BigInteger.ONE)).findFirst();
+
+        final LocalDate startDate = getPeriod() != null ? PeriodUtil.yearFromPeriod(getPeriod()).startDate() : null;
+        final LocalDate endDate = getPeriod() != null ? PeriodUtil.yearFromPeriod(getPeriod()).endDate() : null;
+        if(firstItemIfAny.isPresent()) {
+            IncomingInvoiceItem item = firstItemIfAny.get();
+            item.setCharge(getCharge());
+            item.setDescription(getDescription());
+            item.setNetAmount(getNetAmount());
+            item.setVatAmount(getVatAmount());
+            item.setGrossAmount(getGrossAmount());
+            item.setTax(getTax());
+            item.setStartDate(startDate);
+            item.setEndDate(endDate);
+            item.setFixedAsset(getProperty());
+            item.setProject(getProject());
+            item.setBudgetItem(getBudgetItem());
+        } else {
+            incomingInvoiceItemRepository.create(
+                    sequence,
+                    incomingInvoice,
+                    getCharge(),
+                    getDescription(),
+                    getNetAmount(),
+                    getVatAmount(),
+                    getGrossAmount(),
+                    getTax(),
+                    getDueDate(),
+                    startDate,
+                    endDate,
+                    getProperty(),
+                    getProject(),
+                    getBudgetItem());
+        }
+
+        // link to orderItem if applicable
+        // (if was changed, then will add to previous link, meaning that
+        // 'switch view' will not be available subsequently because the Invoice/Item is "too complex")
+        if (getOrderItem()!=null){
+            Order order = getOrderItem().getOrdr();
+            Charge chargeFromWrapper = getOrderItem().getCharge();
+            OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
+            IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink);
+        }
 
         return incomingInvoice;
     }
 
     public String disableSave() {
+        IncomingInvoice incomingInvoice = getDomainObject();
+
         String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());
         if(propertyInvalidReason != null) {
             return propertyInvalidReason;
         }
-        return getDomainObject().reasonDisabledDueToState();
+        String reasonDisabledDueToState = incomingInvoice.reasonDisabledDueToState();
+        if(reasonDisabledDueToState != null) {
+            return reasonDisabledDueToState;
+        }
+
+        SortedSet<InvoiceItem> items = incomingInvoice.getItems();
+        if(items.size() > 1) {
+            return "Only simple invoices with 1 item can be maintained using this view";
+        }
+
+        return null;
     }
 
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
     @XmlTransient

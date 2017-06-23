@@ -2,6 +2,8 @@ package org.estatio.capex.dom.invoice.approval.triggers;
 
 import java.util.List;
 
+import org.apache.isis.applib.annotation.Action;
+
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -28,6 +30,16 @@ public abstract class IncomingInvoice_triggerAbstract
             final IncomingInvoiceApprovalStateTransitionType requiredTransitionType) {
         super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType
         );
+    }
+
+    @Action()
+    public IncomingInvoice act(final String comment) {
+        trigger(comment);
+        return getDomainObject();
+    }
+
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
 }

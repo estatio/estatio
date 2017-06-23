@@ -37,6 +37,16 @@ public abstract class DomainObject_triggerAbstract<
         this.requiredTransitionTypeIfAny = requiredTransitionTypeIfAny;
     }
 
+    protected DomainObject_triggerAbstract(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final STT requiredTransitionType) {
+        this.domainObject = domainObject;
+        this.stateTransitionClass = stateTransitionClass;
+        this.fromStates = requiredTransitionType.getFromStates();
+        this.requiredTransitionTypeIfAny = requiredTransitionType;
+    }
+
 
     public DO getDomainObject() {
         return domainObject;

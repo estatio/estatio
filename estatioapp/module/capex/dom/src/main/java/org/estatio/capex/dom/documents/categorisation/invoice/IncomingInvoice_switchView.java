@@ -1,6 +1,8 @@
 package org.estatio.capex.dom.documents.categorisation.invoice;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -10,16 +12,15 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.DocumentAbstract;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoicePdfService;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 
 @Mixin(method = "act")
 public class IncomingInvoice_switchView {
@@ -37,38 +38,50 @@ public class IncomingInvoice_switchView {
     )
     @MemberOrder(sequence = "1")
     public IncomingDocAsInvoiceViewModel act() {
-        Document document = findIncomingInvoiceDocumentAttachedTo(incomingInvoice);
+        Optional<Document> documentIfAny = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        Document document = documentIfAny.get();
         final IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel(incomingInvoice, document);
         serviceRegistry2.injectServicesInto(viewModel);
         viewModel.init();
         return viewModel;
     }
 
-    private Document findIncomingInvoiceDocumentAttachedTo(final IncomingInvoice incomingInvoice) {
-        return queryResultsCache.execute(
-                () -> doFindIncomingInvoiceDocumentAttachedTo(incomingInvoice),
-                IncomingInvoice_switchView.class,
-                "findIncomingInvoiceDocumentAttachedTo", incomingInvoice);
+    public boolean hideAct() {
+        Optional<Document> documentIfAny = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        return documentIfAny.isPresent();
     }
 
-    private Document doFindIncomingInvoiceDocumentAttachedTo(final IncomingInvoice incomingInvoice) {
-        List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(incomingInvoice);
-        for (Paperclip paperclip : paperclips) {
-            DocumentAbstract documentAbstract = paperclip.getDocument();
-            if(documentAbstract instanceof Document) {
-                final Document document = (Document) documentAbstract;
-                if(DocumentTypeData.docTypeDataFor(document) == DocumentTypeData.INCOMING_INVOICE) {
-                    return document;
-                }
+    public String disableAct() {
+        List<IncomingInvoiceItem> items =
+                incomingInvoice.getItems().stream()
+                        .filter(IncomingInvoiceItem.class::isInstance)
+                        .map(IncomingInvoiceItem.class::cast)
+                        .collect(Collectors.toList());
+
+        switch (items.size()) {
+        case 0:
+            return null;
+        case 1:
+            IncomingInvoiceItem item = items.get(0);
+            List<OrderItemInvoiceItemLink> links = linkRepository.findByInvoiceItem(item);
+            switch (links.size()) {
+            case 0:
+            case 1:
+                return null;
+            default:
+                return "Can only switch view for invoices with a single item and no more than one order item link";
             }
+        default:
+            return "Can only switch view for invoices with a single item";
         }
-        return null;
     }
 
     @Inject
-    QueryResultsCache queryResultsCache;
+    OrderItemInvoiceItemLinkRepository linkRepository;
+
     @Inject
-    PaperclipRepository paperclipRepository;
+    IncomingInvoicePdfService incomingInvoicePdfService;
+
     @Inject
     ServiceRegistry2 serviceRegistry2;
 }

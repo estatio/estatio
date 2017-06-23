@@ -3,6 +3,7 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.SortedSet;
 
 import javax.annotation.Nullable;
@@ -31,7 +32,10 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+
+import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -89,6 +93,7 @@ import lombok.Setter;
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "incomingInvoice.IncomingInvoice",
+        persistingLifecycleEvent = IncomingInvoice.ObjectPersistingEvent.class,
         persistedLifecycleEvent = IncomingInvoice.ObjectPersistedEvent.class
 )
 @DomainObjectLayout(
@@ -99,6 +104,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
+    }
+    public static class ObjectPersistingEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <IncomingInvoice> {
     }
 
     public IncomingInvoice() {
@@ -192,8 +200,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String title() {
-        // TODO: need to refine, obviously...
-        return "Incoming Invoice";
+        final TitleBuffer buf = new TitleBuffer();
+
+        final Optional<Document> document = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(this);
+        document.ifPresent(d -> buf.append(d.getName()));
+
+        final Party seller = getSeller();
+        if(seller != null) {
+            buf.append(": ", seller);
+        }
+
+        final String invoiceNumber = getInvoiceNumber();
+        if(invoiceNumber != null) {
+            buf.append(", ", invoiceNumber);
+        }
+
+        return buf.toString();
     }
 
     //region > _changeBankAccount (action)
@@ -330,8 +352,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     //endregion
 
     @Inject
-    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    IncomingInvoicePdfService incomingInvoicePdfService;
+
     @Inject
-    private OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 }

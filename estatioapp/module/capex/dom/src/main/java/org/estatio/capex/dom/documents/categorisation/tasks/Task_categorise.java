@@ -23,8 +23,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
 public class Task_categorise
-        extends
-        Task_mixinActAbstract<Document_categorise, Document> {
+        extends Task_mixinActAbstract<Document_categorise, Document> {
 
     protected final Task task;
 

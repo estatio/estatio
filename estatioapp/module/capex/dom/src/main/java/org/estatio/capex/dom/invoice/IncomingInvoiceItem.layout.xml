@@ -14,6 +14,7 @@
                         <col span="4">
                             <ns2:fieldSet name="Invoice item" id="invoiceItem">
                                 <ns2:property id="invoice"/>
+                                <ns2:property id="sequence"/>
                                 <ns2:property id="description"/>
                                 <ns2:property id="dueDate"/>
                             </ns2:fieldSet>

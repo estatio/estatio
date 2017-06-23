@@ -16,15 +16,5 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
         super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
     }
 
-    @Action()
-    @MemberOrder(sequence = "3")
-    public Object act(@Nullable final String comment) {
-        trigger(comment);
-        return getDomainObject();
-    }
-
-    public boolean hideAct() {
-        return cannotTransition();
-    }
 
 }

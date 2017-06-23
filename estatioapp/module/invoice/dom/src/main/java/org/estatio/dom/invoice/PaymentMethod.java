@@ -27,7 +27,7 @@ public enum PaymentMethod {
     BANK_TRANSFER,
     CASH,
     CHEQUE,
-    TEST_NO_PAYMENT;
+    MANUAL_PROCESS;
 
     public String title() {
         return StringUtils.enumTitle(this.name());

@@ -16,15 +16,5 @@ public class IncomingInvoice_approveAsAssetManager extends IncomingInvoice_trigg
         super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_ASSET_MANAGER);
     }
 
-    @Action()
-    @MemberOrder(sequence = "2.1")
-    public Object act(@Nullable final String comment) {
-        trigger(comment);
-        return getDomainObject();
-    }
-
-    public boolean hideAct() {
-        return cannotTransition();
-    }
 
 }

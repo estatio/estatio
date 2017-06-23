@@ -28,6 +28,7 @@ import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
 
 @Mixin(method = "act")
 public class Document_categorise
@@ -52,7 +53,9 @@ public class Document_categorise
             @Nullable final Property property,
             @Nullable final String comment) {
 
-        getDomainObject().setType(documentTypeData.findUsing(documentTypeRepository));
+        final Document document = getDomainObject();
+
+        document.setType(documentTypeData.findUsing(documentTypeRepository));
 
         Object entity = null;
 
@@ -67,7 +70,7 @@ public class Document_categorise
                     null,
                     null,
                     null,
-                    getDomainObject().getAtPath(),
+                    document.getAtPath(),
                     null,
                     null
             );
@@ -80,7 +83,7 @@ public class Document_categorise
             final IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
                     incomingInvoiceType,
                     null,
-                    getDomainObject().getAtPath(),
+                    document.getAtPath(),
                     null,
                     null,
                     null,
@@ -95,12 +98,16 @@ public class Document_categorise
             // some invoice types will have a property, so we copy over directly.
             incomingInvoice.setProperty(property);
 
+            incomingInvoice.setDateReceived(document.getCreatedAt().toLocalDate());
+            incomingInvoice.setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
+            incomingInvoice.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
+
             break;
         }
 
         if(entity != null) {
             // should always be true...
-            paperclipRepository.attach(getDomainObject(), null, entity);
+            paperclipRepository.attach(document, null, entity);
         }
 
         trigger(comment);
