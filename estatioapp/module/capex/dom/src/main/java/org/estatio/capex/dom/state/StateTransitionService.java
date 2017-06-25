@@ -358,7 +358,7 @@ public class StateTransitionService {
         IPartyRoleType assignToIfAny = null;
         if(taskAssignmentStrategy != null) {
             assignToIfAny = taskAssignmentStrategy
-                    .getAssignTo(domainObject, transitionType, serviceRegistry2);
+                    .getAssignTo(domainObject, serviceRegistry2);
         }
         return transitionType
                 .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);

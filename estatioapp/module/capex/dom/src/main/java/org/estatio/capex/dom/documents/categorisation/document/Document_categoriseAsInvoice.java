@@ -72,8 +72,8 @@ public class Document_categoriseAsInvoice
                 paymentMethod,
                 InvoiceStatus.NEW,
                 dateReceived,
-                null // bankAccount
-        );
+                null, // bankAccount
+                null);
 
         paperclipRepository.attach(document, null, incomingInvoice);
 

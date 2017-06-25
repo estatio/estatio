@@ -15,6 +15,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
@@ -103,7 +104,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
 
         IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property,
                 atPath,
-                buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+                buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null, IncomingInvoiceApprovalState.PAID);
 
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";

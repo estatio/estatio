@@ -23,13 +23,20 @@ import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
+    /**
+     * This entire callback is a workaround, because we can't mutate the state of the incoming invoice
+     * in the persisted callback
+     */
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(IncomingInvoice.ObjectPersistingEvent ev) {
         final IncomingInvoice incomingInvoice = ev.getSource();
-        // this is a workaround, because we can't mutate the state of the incoming invoice in the persisted callback
-        incomingInvoice.setApprovalState(IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState());
+
+        // for the OrderInvoiceLine import from existing spreadsheets, will be set to PAID, so do nothing
+        if(incomingInvoice.getApprovalState() == null) {
+            incomingInvoice.setApprovalState(IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState());
+        }
     }
 
     @Programmatic
@@ -41,7 +48,12 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         // however, it *is* ok to just create the state chart for the invoice.
         final IncomingInvoice incomingInvoice = ev.getSource();
 
-        stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+        IncomingInvoiceApprovalState approvalState = incomingInvoice.getApprovalState();
+        if(approvalState == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
+            // ie was set in the persisting callback
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+        }
+
     }
 
     /*

@@ -13,6 +13,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -61,9 +62,10 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final BankAccount bankAccount) {
+            final BankAccount bankAccount,
+            final IncomingInvoiceApprovalState approvalStateIfAny) {
         final IncomingInvoice invoice =
-                new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+                new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalStateIfAny);
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -84,10 +86,12 @@ public class IncomingInvoiceRepository {
             final PaymentMethod paymentMethod,
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
-            final BankAccount bankAccount) {
+            final BankAccount bankAccount,
+            final IncomingInvoiceApprovalState approvalStateIfAny) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
-            invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+            invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount,
+                    approvalStateIfAny);
         } else {
             updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }

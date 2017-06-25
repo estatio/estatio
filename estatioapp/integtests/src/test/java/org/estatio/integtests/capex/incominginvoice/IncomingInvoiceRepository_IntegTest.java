@@ -11,6 +11,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -33,6 +34,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
+    private IncomingInvoiceApprovalState approvalStateIfAny;
 
     @Before
     public void setupData() {
@@ -101,7 +103,8 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
         Property property = existingInvoice.getProperty();
 
         IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoiceType.CAPEX, invoiceNumber,
-                property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount);
+                property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount,
+                null);
 
         // then
         assertThat(updatedInvoice.getInvoiceNumber()).isEqualTo(invoiceNumber);
@@ -127,8 +130,10 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
+        approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
-        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null,
+                approvalStateIfAny);
     }
 
     @Inject

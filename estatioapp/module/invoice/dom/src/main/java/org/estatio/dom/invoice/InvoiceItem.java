@@ -103,6 +103,15 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
     }
 
+    public InvoiceItem(final Invoice invoice) {
+        this();
+        this.invoice = invoice;
+
+        // the least significant part of the item's comparator...
+        // ensures that these are always distinct items in the parent invoice's items collection
+        setUuid(java.util.UUID.randomUUID().toString());
+    }
+
     public String title() {
         return TitleBuilder.start()
                 .withParent(getInvoice())

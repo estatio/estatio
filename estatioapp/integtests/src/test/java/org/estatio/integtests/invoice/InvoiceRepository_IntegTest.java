@@ -651,10 +651,11 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             // then
 
             // two import lines create to invoices
-            assertThat(invoiceRepository.findByStatus(InvoiceStatus.NEW).size()).isEqualTo(2);
+            List<Invoice> newInvoices = invoiceRepository.findByStatus(InvoiceStatus.NEW);
+            assertThat(newInvoices.size()).isEqualTo(2);
 
             // for first invoice
-            Invoice<?> invoice = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(0);
+            Invoice<?> invoice = newInvoices.get(0);
             assertThat(invoice.getDueDate()).isEqualTo(dueDate);
             assertThat(invoice.getNetAmount()).isEqualTo(netAmount);
             assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
@@ -667,7 +668,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(item.getQuantity()).isEqualTo(BigDecimal.ONE);
 
             // second invoice item defaults to charge description
-            Invoice<?> invoice2 = invoiceRepository.findByStatus(InvoiceStatus.NEW).get(1);
+            Invoice<?> invoice2 = newInvoices.get(1);
             InvoiceItem item2 = invoice2.getItems().first();
             assertThat(item2.getDescription()).isEqualTo(item2.getCharge().getDescription());
 

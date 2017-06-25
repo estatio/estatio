@@ -23,6 +23,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 public class InvoiceItemForTesting extends InvoiceItem {
 
+    public InvoiceItemForTesting(final Invoice invoice) {
+        super(invoice);
+    }
+
     public ApplicationTenancy getApplicationTenancy() {
         return null;
     }

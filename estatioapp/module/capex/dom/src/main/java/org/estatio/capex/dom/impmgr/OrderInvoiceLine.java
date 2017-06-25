@@ -32,6 +32,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
@@ -297,10 +298,11 @@ public class OrderInvoiceLine {
                 final LocalDate dueDate = line.getOrderDate();
                 final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
                 final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
+                IncomingInvoiceApprovalState paid = IncomingInvoiceApprovalState.PAID; // migrating historic data
 
                 invoice = incomingInvoiceRepository.upsert(
                         IncomingInvoiceType.parse(line.invoiceType), line.getInvoiceNumber(), property, atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
-                        invoiceStatus, null, null);
+                        invoiceStatus, null, null, paid);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());

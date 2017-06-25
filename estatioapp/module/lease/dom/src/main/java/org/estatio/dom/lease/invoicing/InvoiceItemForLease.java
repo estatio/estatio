@@ -23,6 +23,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
@@ -111,6 +113,14 @@ import lombok.Setter;
 )
 public class InvoiceItemForLease
         extends InvoiceItem<InvoiceItemForLease> {
+
+    public InvoiceItemForLease() {
+    }
+
+    public InvoiceItemForLease(final Invoice invoice, final LocalDate dueDate) {
+        super(invoice);
+        setDueDate(dueDate);
+    }
 
     public String title() {
         return TitleBuilder.start()

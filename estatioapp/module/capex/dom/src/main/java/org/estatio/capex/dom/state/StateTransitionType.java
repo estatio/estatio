@@ -92,9 +92,8 @@ public interface StateTransitionType<
 
     @Programmatic
     default IPartyRoleType getAssignTo(DO domainObject, ServiceRegistry2 serviceRegistry2) {
-        STT transitionType = (STT) this;
         return getTaskAssignmentStrategy()
-                .getAssignTo(domainObject, transitionType, serviceRegistry2);
+                .getAssignTo(domainObject, serviceRegistry2);
 
     }
 
