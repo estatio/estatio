@@ -1,27 +1,14 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- */
 package org.estatio.capex.dom.documents.categorisation.order;
 
+import java.util.Optional;
+import java.util.SortedSet;
+
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -30,18 +17,23 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.party.Party;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,7 +42,7 @@ import lombok.Setter;
         objectType = "org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel",
         editing = Editing.ENABLED
 )
-@XmlRootElement(name = "categorizeIncomingOrder")
+@XmlRootElement(name = "incomingOrderViewModel")
 @XmlType(
         propOrder = {
                 "document",
@@ -77,19 +69,20 @@ import lombok.Setter;
 @Getter @Setter
 public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
-    public IncomingDocAsOrderViewModel() {}
-    public IncomingDocAsOrderViewModel(final Document document) {
-        super(document);
-    }
-
 
     /**
-     * Populated once this view model is actioned; stored just so can be read by subscribers on any actions
-     * for this view model that publish domain events.
+     * for unit testing
      */
-    @Property(hidden = Where.EVERYWHERE)
-    Order domainObject;
+    IncomingDocAsOrderViewModel() {}
 
+    public IncomingDocAsOrderViewModel(final Order order, final Document document) {
+        super(document);
+        this.domainObject = order;
+    }
+
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(named = "Order")
+    Order domainObject;
 
     @Property(editing = Editing.ENABLED)
     private String orderNumber;
@@ -102,45 +95,52 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     private LocalDate orderDate;
 
 
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    public IncomingDocAsOrderViewModel changeOrderDetails(
-            final String orderNumber,
-            final Party buyer,
-            final Party seller,
-            @Nullable
-            final String sellerOrderReference,
-            @Nullable
-            final LocalDate orderDate
-    ){
-        setOrderNumber(orderNumber);
-        setBuyer(buyer);
-        setSeller(seller);
-        setSellerOrderReference(sellerOrderReference);
-        setOrderDate(orderDate);
-        return this;
-    }
+    //region > changeOrderDetails (action)
+    @Mixin(method="act")
+    public static class changeOrderDetails {
+        private final IncomingDocAsOrderViewModel viewModel;
+        public changeOrderDetails(final IncomingDocAsOrderViewModel viewModel) {
+            this.viewModel = viewModel;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        public IncomingDocAsOrderViewModel act(
+                final String orderNumber,
+                final Party buyer,
+                final Party seller,
+                @Nullable
+                final String sellerOrderReference,
+                @Nullable
+                final LocalDate orderDate
+        ){
+            viewModel.setOrderNumber(orderNumber);
+            viewModel.setBuyer(buyer);
+            viewModel.setSeller(seller);
+            viewModel.setSellerOrderReference(sellerOrderReference);
+            viewModel.setOrderDate(orderDate);
+            return viewModel;
+        }
 
-    public String default0ChangeOrderDetails(){
-        return getOrderNumber();
-    }
+        public String default0Act(){
+            return viewModel.getOrderNumber();
+        }
 
-    public Party default1ChangeOrderDetails(){
-        return getBuyer();
-    }
+        public Party default1Act(){
+            return viewModel.getBuyer();
+        }
 
-    public Party default2ChangeOrderDetails(){
-        return getSeller();
-    }
+        public Party default2Act(){
+            return viewModel.getSeller();
+        }
 
-    public String default3ChangeOrderDetails(){
-        return getSellerOrderReference();
-    }
+        public String default3Act(){
+            return viewModel.getSellerOrderReference();
+        }
 
-    public LocalDate default4ChangeOrderDetails(){
-        return getOrderDate();
+        public LocalDate default4Act(){
+            return viewModel.getOrderDate();
+        }
     }
+    //endregion
 
     @Programmatic
     public String minimalRequiredDataToComplete(){
@@ -174,5 +174,98 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
                 ? buffer.replace(buflen - 2, buflen, " required").toString()
                 : null;
     }
+
+
+    @Programmatic
+    public void init() {
+
+        final Order order = getDomainObject();
+        setOrderNumber(order.getOrderNumber());
+        setSellerOrderReference(order.getSellerOrderReference());
+        setOrderDate(order.getOrderDate());
+        setSeller(order.getSeller());
+        setBuyer(order.getBuyer());
+        setProperty(order.getProperty());
+
+        final Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        if(firstItemIfAny.isPresent()) {
+            OrderItem orderItem = firstItemIfAny.get();
+
+            setCharge(orderItem.getCharge());
+            setDescription(orderItem.getDescription());
+            setNetAmount(orderItem.getNetAmount());
+            setVatAmount(orderItem.getVatAmount());
+            setGrossAmount(orderItem.getGrossAmount());
+            setTax(orderItem.getTax());
+            setPeriod(periodFrom(orderItem.getStartDate(), orderItem.getEndDate()));
+            setProperty(orderItem.getProperty());
+            setProject(orderItem.getProject());
+            setBudgetItem(orderItem.getBudgetItem());
+        }
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public Order cancel() {
+        return getDomainObject();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public Order save() {
+
+        Order order = getDomainObject();
+        order.setOrderNumber(getOrderNumber());
+        order.setSellerOrderReference(getSellerOrderReference());
+        order.setEntryDate(clockService.now());
+        order.setOrderDate(getOrderDate());
+        order.setSeller(getSeller());
+        order.setBuyer(getBuyer());
+
+        Optional<OrderItem> firstItemIfAny = getFirstItemIfAny();
+        if(firstItemIfAny.isPresent()) {
+
+            OrderItem orderItem = firstItemIfAny.get();
+            orderItem.setCharge(getCharge());
+            orderItem.setDescription(getDescription());
+            orderItem.setNetAmount(getNetAmount());
+            orderItem.setVatAmount(getVatAmount());
+            orderItem.setGrossAmount(getGrossAmount());
+            orderItem.setTax(getTax());
+            orderItem.setStartDate(getStartDateFromPeriod());
+            orderItem.setEndDate(getEndDateFromPeriod());
+            orderItem.setProperty(getProperty());
+            orderItem.setProject(getProject());
+            orderItem.setBudgetItem(getBudgetItem());
+        } else {
+            order.addItem(
+                    getCharge(),
+                    getDescription(),
+                    getVatAmount(),
+                    getNetAmount(),
+                    getGrossAmount(),
+                    getTax(),
+                    getStartDateFromPeriod(),
+                    getEndDateFromPeriod(),
+                    getProperty(),
+                    getProject(),
+                    getBudgetItem()
+            );
+        }
+
+        return order;
+    }
+
+
+    private Optional<OrderItem> getFirstItemIfAny() {
+        SortedSet<OrderItem> items = getDomainObject().getItems();
+        return items.stream().findFirst();
+    }
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    ClockService clockService;
 
 }

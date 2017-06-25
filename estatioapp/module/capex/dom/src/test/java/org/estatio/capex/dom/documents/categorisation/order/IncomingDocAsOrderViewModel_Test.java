@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.order;
+package org.estatio.capex.dom.documents.categorisation.order;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
 

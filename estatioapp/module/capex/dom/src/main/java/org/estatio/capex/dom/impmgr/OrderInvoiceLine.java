@@ -22,6 +22,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 
 import org.incode.module.country.dom.impl.Country;
@@ -37,7 +38,6 @@ import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
-import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -271,15 +271,14 @@ public class OrderInvoiceLine {
 
             if(isOrder) {
                 Order order = orderRepository.upsert(
-                        line.getOrderNumber(),
+                        property, line.getOrderNumber(),
                         line.getSeller(),
                         line.entryDate,
                         line.orderDate,
                         supplier,
                         buyer,
-                        atPath,
-                        line.orderApprovedBy,
-                        line.orderApprovedOn);
+                        atPath
+                );
 
                 final Tax tax = taxRepository.findByReference(line.tax);
 
@@ -300,13 +299,17 @@ public class OrderInvoiceLine {
                 final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
 
                 invoice = incomingInvoiceRepository.upsert(
-                        IncomingInvoiceType.parse(line.invoiceType), line.getInvoiceNumber(), atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
+                        IncomingInvoiceType.parse(line.invoiceType), line.getInvoiceNumber(), property, atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
                         invoiceStatus, null, null);
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());
 
-                invoice.addItem(invoiceObj, chargeObj, line.getInvoiceDescription(), line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(), invoiceTax,
+
+                factoryService.mixin(IncomingInvoice.addItem.class, invoiceObj).act(
+                        chargeObj, line.getInvoiceDescription(),
+                        line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(),
+                        invoiceTax,
                         dueDate, startDate, endDate, property, project, null);
 
             }
@@ -402,7 +405,7 @@ public class OrderInvoiceLine {
         @Inject
         MessageService messageService;
         @Inject
-        StateTransitionService stateTransitionService;
+        FactoryService factoryService;
 
 
         public static class RandomCodeGenerator10Chars {

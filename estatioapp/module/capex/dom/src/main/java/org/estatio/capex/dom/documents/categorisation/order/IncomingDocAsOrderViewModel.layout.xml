@@ -36,6 +36,8 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" unreferencedProperties="false">
                                         <cpt:action id="changeOrderDetails"/>
+                                        <cpt:property id="domainObject"/>
+                                        <cpt:property id="property" promptStyle="INLINE"/>
                                         <cpt:property id="orderNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
                                         <cpt:property id="seller" promptStyle="INLINE">

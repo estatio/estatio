@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -27,8 +26,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -37,11 +34,11 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
@@ -116,6 +113,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public IncomingInvoice(
             final IncomingInvoiceType type,
             final String invoiceNumber,
+            final Property property,
             final String atPath,
             final Party buyer,
             final Party seller,
@@ -128,6 +126,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super("invoiceNumber");
         setType(type);
         setInvoiceNumber(invoiceNumber);
+        setProperty(property);
         setApplicationTenancyPath(atPath);
         setBuyer(buyer);
         setSeller(seller);
@@ -139,70 +138,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setBankAccount(bankAccount);
     }
 
-    @MemberOrder(name="items", sequence = "1")
-    public IncomingInvoice addItem(
-            final Charge charge,
-            final String description,
-            final BigDecimal netAmount,
-            final BigDecimal vatAmount,
-            final BigDecimal grossAmount,
-            final Tax tax,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final Property property,
-            final Project project,
-            final BudgetItem budgetItem) {
-        addItem(this, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
-        return this;
-    }
-
-    public String disableAddItem() {
-        return reasonDisabledDueToState();
-    }
-
-    @Programmatic
-    public void addItem(
-            final IncomingInvoice invoice,   // REVIEW: this looks odd; why isn't this just gonna use 'this'?
-            // this should be an incoming charge
-            final Charge charge,
-            final String description,
-            final BigDecimal netAmount,
-            final BigDecimal vatAmount,
-            final BigDecimal grossAmount,
-            final Tax tax,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Property property,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BudgetItem budgetItem
-    ) {
-        final BigInteger sequence = nextItemSequence();
-        incomingInvoiceItemRepository.upsert(
-                sequence,
-                invoice,
-                charge,
-                description,
-                netAmount,
-                vatAmount,
-                grossAmount,
-                tax,
-                dueDate,
-                startDate,
-                endDate,
-                property,
-                project,
-                budgetItem);
-    }
-
     public String title() {
         final TitleBuffer buf = new TitleBuffer();
 
-        final Optional<Document> document = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(this);
+        final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(this);
         document.ifPresent(d -> buf.append(d.getName()));
 
         final Party seller = getSeller();
@@ -218,13 +157,63 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.toString();
     }
 
-    //region > _changeBankAccount (action)
     @Mixin(method="act")
-    public static class _changeBankAccount extends IncomingInvoice_triggerAbstract {
+    public static class addItem {
+        private final IncomingInvoice incomingInvoice;
+        public addItem(final IncomingInvoice incomingInvoice) {
+            this.incomingInvoice = incomingInvoice;
+        }
+
+        @MemberOrder(name="items", sequence = "1")
+        public IncomingInvoice act(
+                final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                final Tax tax,
+                final LocalDate dueDate,
+                final LocalDate startDate,
+                final LocalDate endDate,
+                final Property property,
+                final Project project,
+                final BudgetItem budgetItem) {
+            final BigInteger sequence = incomingInvoice.nextItemSequence();
+            incomingInvoiceItemRepository.upsert(
+                    sequence,
+                    incomingInvoice,
+                    charge,
+                    description,
+                    netAmount,
+                    vatAmount,
+                    grossAmount,
+                    tax,
+                    dueDate,
+                    startDate,
+                    endDate,
+                    property,
+                    project,
+                    budgetItem);
+
+            return incomingInvoice;
+        }
+
+        public String disableAct() {
+            return incomingInvoice.reasonDisabledDueToState();
+        }
+
+        @Inject
+        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    }
+
+
+    @Mixin(method="act")
+    public static class changeBankAccount extends IncomingInvoice_triggerAbstract {
 
         private final IncomingInvoice incomingInvoice;
 
-        public _changeBankAccount(final IncomingInvoice incomingInvoice) {
+        public changeBankAccount(final IncomingInvoice incomingInvoice) {
             super(incomingInvoice, Arrays.asList(IncomingInvoiceApprovalState.NEW), null);
             this.incomingInvoice = incomingInvoice;
         }
@@ -283,46 +272,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
-    @Programmatic
-    public boolean hasProject() {
-        final SortedSet<IncomingInvoiceItem> items = getItemsRaw();
-        for (IncomingInvoiceItem item : items) {
-            final Project project = item.getProject();
-            if(project != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-        // cheating
-    private SortedSet getItemsRaw() {
-        return getItems();
-    }
-
-    @Programmatic
-    public String reasonInComplete(){
-        if (getBankAccount() == null) {
-            return "Bank account is required";
-        }
-        return null;
-    }
-
-
-    //@Getter @Setter
+    @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
     private IncomingInvoiceApprovalState approvalState;
 
-    public IncomingInvoiceApprovalState getApprovalState() {
-        return approvalState;
-    }
-
-    public void setApprovalState(final IncomingInvoiceApprovalState approvalState) {
-        this.approvalState = approvalState;
-    }
-
     @Override
-    public <DO, ST extends StateTransition<DO, ST, STT, S>, STT extends StateTransitionType<DO, ST, STT, S>, S extends State<S>> S getStateOf(
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > S getStateOf(
             final Class<ST> stateTransitionClass) {
         if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
             return (S) approvalState;
@@ -331,7 +291,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Override
-    public <DO, ST extends StateTransition<DO, ST, STT, S>, STT extends StateTransitionType<DO, ST, STT, S>, S extends State<S>> void setStateOf(
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > void setStateOf(
             final Class<ST> stateTransitionClass, final S newState) {
         if(stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
             setApprovalState( (IncomingInvoiceApprovalState) newState );
@@ -348,16 +313,18 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
+    @Programmatic
+    public String reasonIncomplete(){
+        if (getBankAccount() == null) {
+            return "Bank account is required";
+        }
+        return null;
+    }
 
-    //endregion
 
     @Inject
-    IncomingInvoicePdfService incomingInvoicePdfService;
+    LookupAttachedPdfService lookupAttachedPdfService;
 
-    @Inject
-    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
-    @Inject
-    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 }

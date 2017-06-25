@@ -4,14 +4,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-
-import org.estatio.dom.party.Party;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -23,25 +22,12 @@ import org.estatio.dom.party.Party;
 )
 public class OrderMenu {
 
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<Order> allOrders(){
         return orderRepository.listAll();
-
-    }
-
-    public Order newOrder(
-            final String orderNumber,
-            final String sellerOrderReference,
-            final Party buyer,
-            final Party seller,
-            final LocalDate orderDate
-    ){
-        final String atPath = "/FRA";
-        return orderRepository.create(orderNumber, sellerOrderReference, clockService.now(), orderDate,  seller, buyer, atPath, null, null);
     }
 
     @Inject
     OrderRepository orderRepository;
 
-    @Inject
-    ClockService clockService;
 }

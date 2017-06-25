@@ -26,11 +26,12 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_prepareInvoiceDoc extends Invoice_prepareAbstract{
+public class InvoiceForLease_prepareInvoiceDoc extends InvoiceForLease_prepareAbstract {
 
-    public Invoice_prepareInvoiceDoc(final Invoice invoice) {
+    public InvoiceForLease_prepareInvoiceDoc(final InvoiceForLease invoice) {
         super(invoice, DocumentTypeData.INVOICE);
     }
 
@@ -45,7 +46,7 @@ public class Invoice_prepareInvoiceDoc extends Invoice_prepareAbstract{
         if(reasonIfAny != null) {
             return reasonIfAny;
         }
-        if(Invoice.Predicates.isChangeable().apply(invoice)) {
+        if(Invoice.Predicates.isChangeable().apply(invoiceForLease)) {
             return "Invoice must be approved/invoiced first";
         }
         return null;

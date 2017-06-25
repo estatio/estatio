@@ -32,14 +32,15 @@ import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 import static com.google.common.base.Predicates.not;
 
 @Mixin
-public class Invoice_prepare extends T_createAndAttachDocumentAndRender<Invoice> {
+public class InvoiceForLease_prepare extends T_createAndAttachDocumentAndRender<InvoiceForLease> {
 
-    public Invoice_prepare(final Invoice domainObject) {
-        super(domainObject);
+    public InvoiceForLease_prepare(final InvoiceForLease invoiceForLease) {
+        super(invoiceForLease);
     }
 
     public Object $$(DocumentTemplate template) throws IOException {

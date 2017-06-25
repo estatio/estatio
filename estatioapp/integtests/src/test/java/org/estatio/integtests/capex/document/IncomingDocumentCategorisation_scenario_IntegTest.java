@@ -84,7 +84,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanClaytonGb.REF);
 //
 //        // when
-//        wrap(mixin(Task_categorise.class, task)).act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, property, null, true);
+//        wrap(mixin(Task_categoriseAsInvoice.class, task)).act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, property, null, true);
 //
 //        // then
 //        transitions =

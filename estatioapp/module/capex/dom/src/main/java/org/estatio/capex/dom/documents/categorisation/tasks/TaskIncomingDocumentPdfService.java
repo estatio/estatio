@@ -16,7 +16,7 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.IncomingInvoicePdfService;
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -56,7 +56,7 @@ public class TaskIncomingDocumentPdfService {
             final IncomingInvoiceApprovalStateTransition iiast =
                     (IncomingInvoiceApprovalStateTransition) stateTransition;
             final IncomingInvoice invoice = iiast.getInvoice();
-            final Optional<Document> documentIfAny = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(invoice);
+            final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
             return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
         }
 
@@ -64,7 +64,7 @@ public class TaskIncomingDocumentPdfService {
     }
 
     @Inject
-    IncomingInvoicePdfService incomingInvoicePdfService;
+    LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
     StateTransitionService stateTransitionService;

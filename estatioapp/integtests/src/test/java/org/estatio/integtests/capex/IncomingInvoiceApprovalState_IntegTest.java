@@ -107,7 +107,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 //        assertState(incomingInvoice, NEW);
 //
 //        // when
-//        wrap(mixin(IncomingInvoice._changeBankAccount.class, incomingInvoice)).act(bankAccount, null);
+//        wrap(mixin(IncomingInvoice.changeBankAccount.class, incomingInvoice)).act(bankAccount, null);
 //        transactionService.nextTransaction();
 //
 //        // then

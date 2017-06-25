@@ -24,9 +24,9 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_sendByPostPrelimLetter extends Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceForLease_sendByEmailPrelimLetter extends InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByPostPrelimLetter(final InvoiceForLease invoice) {
+    public InvoiceForLease_sendByEmailPrelimLetter(final InvoiceForLease invoice) {
         super(invoice, DocumentTypeData.PRELIM_LETTER);
     }
 

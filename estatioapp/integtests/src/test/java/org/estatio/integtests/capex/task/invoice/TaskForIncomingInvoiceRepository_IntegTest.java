@@ -35,6 +35,8 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -72,6 +74,9 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
         private PartyRepository partyRepository;
 
         @Inject
+        private PropertyRepository propertyRepository;
+
+        @Inject
         private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
         @Before
@@ -84,9 +89,10 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
-                    "TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
+                    "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
 
             // When
             incomingInvoiceStateTransitionRepository

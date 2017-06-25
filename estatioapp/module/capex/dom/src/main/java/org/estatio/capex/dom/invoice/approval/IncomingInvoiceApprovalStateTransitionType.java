@@ -60,7 +60,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public String reasonGuardNotSatisified(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonInComplete();
+            return domainObject.reasonIncomplete();
         }
     },
     COMPLETE_LOCAL_INVOICE(
@@ -79,7 +79,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public String reasonGuardNotSatisified(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonInComplete();
+            return domainObject.reasonIncomplete();
         }
     },
     COMPLETE_CORPORATE_INVOICE(
@@ -98,7 +98,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         @Override
         public String reasonGuardNotSatisified(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonInComplete();
+            return domainObject.reasonIncomplete();
         }
     },
     APPROVE_AS_LEGAL_MANAGER(

@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -18,17 +19,33 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
-import org.apache.isis.applib.annotation.Mixin;
+import java.io.IOException;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Where;
+
+import org.incode.module.document.dom.impl.docs.DocumentTemplate;
+import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
+
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_sendByEmailInvoiceDoc extends Invoice_sendByEmailPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceForLease_backgroundPrepare
+        extends T_createAndAttachDocumentAndScheduleRender<InvoiceForLease> {
 
-    public Invoice_sendByEmailInvoiceDoc(final InvoiceForLease invoice) {
-        super(invoice, DocumentTypeData.INVOICE);
+    public InvoiceForLease_backgroundPrepare(final InvoiceForLease invoiceForLease) {
+        super(invoiceForLease);
     }
 
-
+    /**
+     * For use only programmatically.
+     */
+    @Action(hidden = Where.EVERYWHERE)
+    @Override
+    public Object $$(
+            final DocumentTemplate template) throws IOException {
+        super.$$(template);
+        return domainObject;
+    }
 }

@@ -14,7 +14,8 @@
                             <cpt:fieldSet name="General">
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
-                                    <cpt:action id="categorise"/>
+                                    <cpt:action id="categoriseAsOrder"/>
+                                    <cpt:action id="categoriseAsInvoice"/>
 
                                     <cpt:action id="completePropertyInvoice"/>
                                     <cpt:action id="completeLocalInvoice"/>

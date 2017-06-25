@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.documents.categorisation.tasks;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -13,34 +11,30 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.Document_categorise;
+import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class Task_categorise
-        extends Task_mixinActAbstract<Document_categorise, Document> {
+public class Task_categoriseAsOrder
+        extends Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
 
     protected final Task task;
 
-    public Task_categorise(final Task task) {
-        super(task, Document_categorise.class);
+    public Task_categoriseAsOrder(final Task task) {
+        super(task, Document_categoriseAsOrder.class);
         this.task = task;
     }
 
     @Action()
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object act(
-            final DocumentTypeData documentTypeData,
-            @Nullable final IncomingInvoiceType incomingInvoiceType,
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(documentTypeData, incomingInvoiceType, property, comment);
+        Object mixinResult = mixin().act(property, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
@@ -49,20 +43,14 @@ public class Task_categorise
         return toReturnElse(goToNext, mixinResult);
     }
 
-    public List<DocumentTypeData> choices0Act() {
-        return mixin().choices0Act();
-    }
-
     public String validateAct(
-            final DocumentTypeData documentTypeData,
-            final IncomingInvoiceType incomingInvoiceType,
             final Property property,
             final String comment,
             final boolean goToNext) {
-        return mixin().validateAct(documentTypeData, incomingInvoiceType, property, comment);
+        return mixin().validateAct(property, comment);
     }
 
-    public boolean default4Act() {
+    public boolean default2Act() {
         return true;
     }
 

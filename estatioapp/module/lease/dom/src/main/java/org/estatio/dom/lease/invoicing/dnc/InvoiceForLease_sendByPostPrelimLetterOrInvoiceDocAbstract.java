@@ -40,13 +40,14 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 /**
  * Provides the ability to send an print.
  */
-public abstract class Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract extends Invoice_sendPrelimLetterOrInvoiceDocAbstract {
+public abstract class InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract extends
+        InvoiceForLease_sendPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
+    public InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
         super(invoice, documentTypeData);
     }
 
-    public static class DomainEvent extends ActionDomainEvent<Invoice_sendByPostPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,

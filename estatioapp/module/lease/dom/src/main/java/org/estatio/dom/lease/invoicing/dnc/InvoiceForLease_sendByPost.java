@@ -50,13 +50,13 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
  * Provides the ability to send an print.
  */
 @Mixin
-public class Invoice_sendByPost extends Invoice_sendAbstract {
+public class InvoiceForLease_sendByPost extends InvoiceForLease_sendAbstract {
 
-    public Invoice_sendByPost(final InvoiceForLease invoice) {
+    public InvoiceForLease_sendByPost(final InvoiceForLease invoice) {
         super(invoice);
     }
 
-    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<Invoice_sendByPost> { }
+    public static class ActionDomainEvent extends DocumentModule.ActionDomainEvent<InvoiceForLease_sendByPost> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,

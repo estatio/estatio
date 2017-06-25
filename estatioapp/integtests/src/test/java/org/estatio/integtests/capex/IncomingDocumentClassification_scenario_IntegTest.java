@@ -117,7 +117,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            // when gotoNext is set to true
 //            Object nextObj =
 //                sudoService.sudo(PersonForDylanClaytonGb.SECURITY_USERNAME,
-//                        () -> wrap(mixin(Task_categorise.class, task1))
+//                        () -> wrap(mixin(Task_categoriseAsInvoice.class, task1))
 //                                .act(documentTypeData, DocumentTypeData.INCOMING_ORDER, propertyForOxf, null, true));
 //            transactionService.nextTransaction();
 //
@@ -170,7 +170,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            assertThat(state).isEqualTo(IncomingDocumentCategorisationState.NEW);
 //
 //            // when
-//            wrap(mixin(Task_categorise.class, task2))
+//            wrap(mixin(Task_categoriseAsInvoice.class, task2))
 //                    .act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, propertyForOxf, null, true);
 //            transactionService.nextTransaction();
 //            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
@@ -317,7 +317,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            task2 = tasks.get(0);
 //
 //            incomingDocAsInvoiceViewModel = (IncomingDocAsInvoiceViewModel)
-//                    wrap(mixin(Task_categorise.class, task2))
+//                    wrap(mixin(Task_categoriseAsInvoice.class, task2))
 //                    .act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, propertyForOxf, null, false);
 //            transactionService.nextTransaction();
 //

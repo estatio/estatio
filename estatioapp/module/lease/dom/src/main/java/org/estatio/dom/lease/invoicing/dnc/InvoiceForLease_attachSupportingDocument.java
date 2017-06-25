@@ -56,12 +56,12 @@ import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_attachSupportingDocument {
+public class InvoiceForLease_attachSupportingDocument {
 
-    private final InvoiceForLease invoice;
+    private final InvoiceForLease invoiceForLease;
 
-    public Invoice_attachSupportingDocument(final InvoiceForLease invoice) {
-        this.invoice = invoice;
+    public InvoiceForLease_attachSupportingDocument(final InvoiceForLease invoiceForLease) {
+        this.invoiceForLease = invoiceForLease;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -82,7 +82,7 @@ public class Invoice_attachSupportingDocument {
         // before we do anything, therefore, we get hold of those invoice documents.
         //
         DocumentTypeData supportedBy = DocumentTypeData.supportedBy(supportingDocumentType);
-        final List<DocumentAbstract> unsentDocuments = findUnsentDocumentsFor(invoice, supportedBy);
+        final List<DocumentAbstract> unsentDocuments = findUnsentDocumentsFor(invoiceForLease, supportedBy);
 
         //
         // now we create the receiptDoc, and attach to the invoice
@@ -94,8 +94,8 @@ public class Invoice_attachSupportingDocument {
 
 
         final Document supportingDoc = documentService.createAndAttachDocumentForBlob(
-                supportingDocumentType, this.invoice.getAtPath(), documentName, blob,
-                PaperclipRoleNames.SUPPORTING_DOCUMENT, this.invoice);
+                supportingDocumentType, this.invoiceForLease.getAtPath(), documentName, blob,
+                PaperclipRoleNames.SUPPORTING_DOCUMENT, this.invoiceForLease);
 
 
         //
@@ -105,7 +105,7 @@ public class Invoice_attachSupportingDocument {
             paperclipRepository.attach(supportingDoc, roleName, unsentDocument);
         }
 
-        return this.invoice;
+        return this.invoiceForLease;
     }
 
     @Inject
@@ -199,7 +199,7 @@ public class Invoice_attachSupportingDocument {
      * can be used as a supporting document for the provided {@link Document}.
      *
      * <p>
-     *     This service is also used by the {@link Invoice_attachSupportingDocument} mixin which will call it with a
+     *     This service is also used by the {@link InvoiceForLease_attachSupportingDocument} mixin which will call it with a
      *     <tt>null</tt> {@link Document}.
      * </p>
      */
@@ -210,7 +210,7 @@ public class Invoice_attachSupportingDocument {
         public List<DocumentType> documentTypeChoicesFor(final Document document) {
 
             if(document == null) {
-                // assume being called by Invoice_attachSupportingDocument
+                // assume being called by InvoiceForLease_attachSupportingDocument
                 return DocumentTypeData.supportingDocTypesUsing(documentTypeRepository, queryResultsCache);
             }
 

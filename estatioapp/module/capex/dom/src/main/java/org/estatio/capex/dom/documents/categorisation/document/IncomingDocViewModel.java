@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.annotation.Action;
@@ -36,6 +37,7 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -306,6 +308,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return budgetRepository.allBudgets();
     }
 
+    //region > period (prop)
+
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
@@ -316,6 +320,42 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
                 ? "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)"
                 : null;
     }
+
+    protected LocalDate getStartDateFromPeriod() {
+        return startDateFromPeriod(getPeriod());
+    }
+
+    protected LocalDate getEndDateFromPeriod() {
+        return endDateFromPeriod(getPeriod());
+    }
+
+    private static LocalDate startDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.startDate() : null;
+    }
+
+    private static LocalDate endDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.endDate() : null;
+    }
+
+    private static LocalDateInterval fromPeriod(final String period) {
+        return period != null
+                ? PeriodUtil.yearFromPeriod(period)
+                : null;
+    }
+
+    /**
+     * For conveniences of subclasses, reciprocal to {@link #getStartDateFromPeriod()} and {@link #getEndDateFromPeriod()}.
+     */
+    protected static String periodFrom(final LocalDate startDate, final LocalDate endDate) {
+        LocalDateInterval ldi = LocalDateInterval
+                .including(startDate, endDate);
+        return PeriodUtil.periodFromInterval(ldi);
+    }
+
+
+    //endregion
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -558,6 +598,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     protected boolean hasDescription(){
         return getDescription() != null;
     }
+
 
 
     /////////////////////////////////

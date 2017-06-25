@@ -38,7 +38,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByEmail;
+import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_sendByEmail;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
@@ -58,7 +58,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
             final Invoice invoice = invoiceAndDocument.getInvoice();
             final Document document = invoiceAndDocument.getDocument();
 
-            final Invoice_sendByEmail invoice_sendByEmail = invoice_email(invoice);
+            final InvoiceForLease_sendByEmail invoice_sendByEmail = invoice_email(invoice);
 
             final EmailAddress emailAddress = invoice_sendByEmail.default1$$(document);
             final String cc = invoice_sendByEmail.default2$$(document);
@@ -90,14 +90,14 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract
 
     private Predicate<InvoiceAndDocument> canBeSentByEmail() {
         return invoiceAndDocument -> {
-            final Invoice_sendByEmail emailMixin = invoice_email(invoiceAndDocument.getInvoice());
+            final InvoiceForLease_sendByEmail emailMixin = invoice_email(invoiceAndDocument.getInvoice());
             final EmailAddress emailAddress = emailMixin.default1$$(invoiceAndDocument.getDocument());
             return emailAddress != null;
         };
     }
 
-    private Invoice_sendByEmail invoice_email(final Invoice invoice) {
-        return factoryService.mixin(Invoice_sendByEmail.class, invoice);
+    private InvoiceForLease_sendByEmail invoice_email(final Invoice invoice) {
+        return factoryService.mixin(InvoiceForLease_sendByEmail.class, invoice);
     }
 
     @Inject

@@ -13,6 +13,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -51,6 +52,7 @@ public class IncomingInvoiceRepository {
     public IncomingInvoice create(
             final IncomingInvoiceType type,
             final String invoiceNumber,
+            final Property property,
             final String atPath,
             final Party buyer,
             final Party seller,
@@ -61,7 +63,7 @@ public class IncomingInvoiceRepository {
             final LocalDate dateReceived,
             final BankAccount bankAccount) {
         final IncomingInvoice invoice =
-                new IncomingInvoice(type, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+                new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         invoice.setCurrency(currencyRepository.findCurrency("EUR"));
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -73,6 +75,7 @@ public class IncomingInvoiceRepository {
     public IncomingInvoice upsert(
             final IncomingInvoiceType type,
             final String invoiceNumber,
+            final Property property,
             final String atPath,
             final Party buyer,
             final Party seller,
@@ -84,15 +87,16 @@ public class IncomingInvoiceRepository {
             final BankAccount bankAccount) {
         IncomingInvoice invoice = findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         if (invoice == null) {
-            invoice = create(type, invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+            invoice = create(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         } else {
-            updateInvoice(invoice, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
+            updateInvoice(invoice, property, atPath, buyer, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount);
         }
         return invoice;
     }
 
     private void updateInvoice(
             final IncomingInvoice invoice,
+            final Property property,
             final String atPath,
             final Party buyer,
             final LocalDate dueDate,
@@ -100,6 +104,7 @@ public class IncomingInvoiceRepository {
             final InvoiceStatus invoiceStatus,
             final LocalDate dateReceived,
             final BankAccount bankAccount){
+        invoice.setProperty(property);
         invoice.setApplicationTenancyPath(atPath);
         invoice.setBuyer(buyer);
         invoice.setDueDate(dueDate);

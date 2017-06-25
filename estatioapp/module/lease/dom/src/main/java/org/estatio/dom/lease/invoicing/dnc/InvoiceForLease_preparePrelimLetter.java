@@ -21,31 +21,24 @@ package org.estatio.dom.lease.invoicing.dnc;
 
 import java.io.IOException;
 
-import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
-
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_backgroundPrepare
-        extends T_createAndAttachDocumentAndScheduleRender<Invoice> {
+public class InvoiceForLease_preparePrelimLetter extends InvoiceForLease_prepareAbstract {
 
-    public Invoice_backgroundPrepare(final Invoice domainObject) {
-        super(domainObject);
+    public InvoiceForLease_preparePrelimLetter(final InvoiceForLease invoiceForLease) {
+        super(invoiceForLease, DocumentTypeData.PRELIM_LETTER);
     }
 
-    /**
-     * For use only programmatically.
-     */
-    @Action(hidden = Where.EVERYWHERE)
-    @Override
-    public Object $$(
-            final DocumentTemplate template) throws IOException {
-        super.$$(template);
-        return domainObject;
+    @MemberOrder(name = "preliminaryLetters", sequence = "2")
+    public Invoice $$() throws IOException {
+        return super.$$();
     }
+
+
 }

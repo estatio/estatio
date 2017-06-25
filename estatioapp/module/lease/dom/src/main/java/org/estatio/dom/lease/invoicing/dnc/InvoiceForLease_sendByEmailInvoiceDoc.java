@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -19,24 +18,16 @@
  */
 package org.estatio.dom.lease.invoicing.dnc;
 
-import java.io.IOException;
-
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 @Mixin
-public class Invoice_preparePrelimLetter extends Invoice_prepareAbstract{
+public class InvoiceForLease_sendByEmailInvoiceDoc extends InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract {
 
-    public Invoice_preparePrelimLetter(final Invoice invoice) {
-        super(invoice, DocumentTypeData.PRELIM_LETTER);
-    }
-
-    @MemberOrder(name = "preliminaryLetters", sequence = "2")
-    public Invoice $$() throws IOException {
-        return super.$$();
+    public InvoiceForLease_sendByEmailInvoiceDoc(final InvoiceForLease invoice) {
+        super(invoice, DocumentTypeData.INVOICE);
     }
 
 

@@ -30,11 +30,11 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
-public abstract class Invoice_sendPrelimLetterOrInvoiceDocAbstract extends Invoice_sendAbstract {
+public abstract class InvoiceForLease_sendPrelimLetterOrInvoiceDocAbstract extends InvoiceForLease_sendAbstract {
 
     private final DocumentTypeData documentTypeData;
 
-    public Invoice_sendPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
+    public InvoiceForLease_sendPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
         super(invoice);
         this.documentTypeData = documentTypeData;
     }

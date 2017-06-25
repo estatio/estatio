@@ -1,9 +1,13 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -24,17 +28,18 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -88,21 +93,17 @@ public class Order extends UdoDomainObject2<Order> {
         super("seller, orderDate, orderNumber, id");
     }
 
-    public String title() {
-        return TitleBuilder.start().withReference(getOrderNumber()).toString();
-    }
-
     public Order(
+            final org.estatio.dom.asset.Property property,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
-            final String atPath,
-            final String approvedBy,
-            final LocalDate approvedOn) {
+            final String atPath) {
         this();
+        this.property = property;
         this.orderNumber = orderNumber;
         this.sellerOrderReference = sellerOrderReference;
         this.entryDate = entryDate;
@@ -110,19 +111,50 @@ public class Order extends UdoDomainObject2<Order> {
         this.seller = seller;
         this.buyer = buyer;
         this.atPath = atPath;
-        this.approvedBy = approvedBy;
-        this.approvedOn = approvedOn;
     }
 
-    @Column(allowsNull = "false")
+    public String title() {
+
+        final TitleBuffer buf = new TitleBuffer();
+
+        final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(this);
+        document.ifPresent(d -> buf.append(d.getName()));
+
+        final Party seller = getSeller();
+        if(seller != null) {
+            buf.append(": ", seller);
+        }
+
+        final String orderNumber = getOrderNumber();
+        if(orderNumber != null) {
+            buf.append(", ", orderNumber);
+        }
+
+        return buf.toString();
+    }
+
+    /**
+     * This relates to the owning property, while the child items may either also relate to the property,
+     * or could potentially relate to individual units within the property.
+     *
+     * <p>
+     *     This follows the same pattern as {@link IncomingInvoice}.
+     * </p>
+     */
+    @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
+    private org.estatio.dom.asset.Property property;
+
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String orderNumber;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String sellerOrderReference;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate entryDate;
 
@@ -130,11 +162,11 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private LocalDate orderDate;
 
-    @Column(allowsNull = "false", name = "sellerId")
+    @Column(allowsNull = "true", name = "sellerPartyId")
     @Getter @Setter
     private Party seller;
 
-    @Column(allowsNull = "false", name = "buyerId")
+    @Column(allowsNull = "true", name = "buyerPartyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
@@ -148,24 +180,41 @@ public class Order extends UdoDomainObject2<Order> {
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BigDecimal vatAmount,
+            @Nullable final BigDecimal vatAmount,
             final BigDecimal grossAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Tax tax,
+            @Nullable final Tax tax,
             final LocalDate startDate,
             final LocalDate endDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final org.estatio.dom.asset.Property property,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BudgetItem budgetItem
+            @Nullable final org.estatio.dom.asset.Property property,
+            @Nullable final Project project,
+            @Nullable final BudgetItem budgetItem
     ) {
         orderItemRepository.upsert(
                 this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
         // (we think there's) no need to add to the getItems(), because the item points back to this order.
         return this;
+    }
+
+    @Property(notPersisted = true)
+    public BigDecimal getNetAmount() {
+        return sum(OrderItem::getNetAmount);
+    }
+
+    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
+    public BigDecimal getVatAmount() {
+        return sum(OrderItem::getVatAmount);
+    }
+
+    @Property(notPersisted = true)
+    public BigDecimal getGrossAmount() {
+        return sum(OrderItem::getGrossAmount);
+    }
+
+    private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
+        return getItems().stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
@@ -178,7 +227,6 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private String atPath;
 
-
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
@@ -189,18 +237,10 @@ public class Order extends UdoDomainObject2<Order> {
 
 
 
-    // random thought: approvedBy and approvedOn are probably both attributes of a different entity, "Approval".
-    // workflow is a crosscutting concern, the approval points back to the order that it approves
-    // (perhaps Order is Approvable)
-    @Column(allowsNull = "true")
-    @Getter @Setter
-    private String approvedBy;
-
-    @Column(allowsNull = "true")
-    @Getter @Setter
-    private LocalDate approvedOn;
-
     @Inject
     OrderItemRepository orderItemRepository;
+
+    @Inject
+    LookupAttachedPdfService lookupAttachedPdfService;
 
 }

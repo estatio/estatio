@@ -44,11 +44,11 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
-public abstract class Invoice_sendAbstract {
+public abstract class InvoiceForLease_sendAbstract {
 
     final InvoiceForLease invoice;
 
-    public Invoice_sendAbstract(final InvoiceForLease invoice) {
+    public InvoiceForLease_sendAbstract(final InvoiceForLease invoice) {
         this.invoice = invoice;
     }
 

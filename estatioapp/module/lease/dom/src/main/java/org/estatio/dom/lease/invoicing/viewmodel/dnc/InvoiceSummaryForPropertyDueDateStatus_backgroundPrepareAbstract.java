@@ -36,7 +36,7 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_backgroundPrepare;
+import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_backgroundPrepare;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
@@ -54,7 +54,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAb
         final List<InvoiceForLease> invoices = invoicesToPrepare();
         for (Invoice invoice : invoices) {
             final DocumentTemplate documentTemplate = documentTemplateFor(invoice);
-            factoryService.mixin(Invoice_backgroundPrepare.class, invoice).$$(documentTemplate);
+            factoryService.mixin(InvoiceForLease_backgroundPrepare.class, invoice).$$(documentTemplate);
         }
         return this.invoiceSummary;
     }

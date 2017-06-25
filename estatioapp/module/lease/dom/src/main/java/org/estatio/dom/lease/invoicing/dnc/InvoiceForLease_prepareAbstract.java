@@ -41,15 +41,18 @@ import org.incode.module.document.dom.services.DocumentCreatorService;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.InvoiceSummaryForPropertyDueDateStatus_actionAbstract;
 
-public abstract class Invoice_prepareAbstract {
+public abstract class InvoiceForLease_prepareAbstract {
 
-    final Invoice invoice;
+    final InvoiceForLease invoiceForLease;
     final DocumentTypeData documentTypeData;
 
-    public Invoice_prepareAbstract(final Invoice invoice, final DocumentTypeData documentTypeData) {
-        this.invoice = invoice;
+    public InvoiceForLease_prepareAbstract(
+            final InvoiceForLease invoiceForLease,
+            final DocumentTypeData documentTypeData) {
+        this.invoiceForLease = invoiceForLease;
         this.documentTypeData = documentTypeData;
     }
 
@@ -64,20 +67,20 @@ public abstract class Invoice_prepareAbstract {
     )
     public Invoice $$() throws IOException {
 
-        final DocumentTemplate template = documentTemplateFor(invoice);
+        final DocumentTemplate template = documentTemplateFor(invoiceForLease);
         final Document document =
-                documentCreatorService.createDocumentAndAttachPaperclips(invoice, template);
+                documentCreatorService.createDocumentAndAttachPaperclips(invoiceForLease, template);
 
-        document.render(template, invoice);
+        document.render(template, invoiceForLease);
 
-        return invoice;
+        return invoiceForLease;
     }
 
     public String disable$$() {
-        return documentTemplateFor(invoice) == null
+        return documentTemplateFor(invoiceForLease) == null
                 ? String.format("Could not locate a DocumentTemplate for document type '%s' for invoice '%s'",
                                 documentTypeData.getName(),
-                                titleService.titleOf(invoice))
+                                titleService.titleOf(invoiceForLease))
                 : null;
     }
 

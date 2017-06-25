@@ -18,7 +18,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.invoice.IncomingInvoicePdfService;
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 
@@ -38,7 +38,7 @@ public class IncomingInvoice_switchView {
     )
     @MemberOrder(sequence = "1")
     public IncomingDocAsInvoiceViewModel act() {
-        Optional<Document> documentIfAny = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
         Document document = documentIfAny.get();
         final IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel(incomingInvoice, document);
         serviceRegistry2.injectServicesInto(viewModel);
@@ -47,12 +47,12 @@ public class IncomingInvoice_switchView {
     }
 
     public boolean hideAct() {
-        Optional<Document> documentIfAny = incomingInvoicePdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
-        return documentIfAny.isPresent();
+        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        return !documentIfAny.isPresent();
     }
 
     public String disableAct() {
-        List<IncomingInvoiceItem> items =
+        final List<IncomingInvoiceItem> items =
                 incomingInvoice.getItems().stream()
                         .filter(IncomingInvoiceItem.class::isInstance)
                         .map(IncomingInvoiceItem.class::cast)
@@ -80,7 +80,7 @@ public class IncomingInvoice_switchView {
     OrderItemInvoiceItemLinkRepository linkRepository;
 
     @Inject
-    IncomingInvoicePdfService incomingInvoicePdfService;
+    LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
