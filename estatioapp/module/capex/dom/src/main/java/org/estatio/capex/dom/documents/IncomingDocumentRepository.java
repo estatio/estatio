@@ -29,12 +29,17 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.value.Blob;
 
+import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.PropertyRepository;
@@ -100,6 +105,26 @@ public class IncomingDocumentRepository extends DocumentRepository {
         );
     }
 
+    @Programmatic
+    public List<Document> findAllIncomingDocumentsByName(final String name) {
+        final List<Document> documents = findAllIncomingDocuments();
+        return Lists.newArrayList(
+                FluentIterable.from(documents)
+                .filter(document -> document.getName().equals(name))
+                .toList()
+        );
+    }
+
+    @Programmatic
+    public List<Document> findAllIncomingDocuments() {
+        final List<Document> documents = repositoryService.allInstances(Document.class);
+        return Lists.newArrayList(
+                FluentIterable.from(documents)
+                        .filter(document -> DocumentTypeData.docTypeDataFor(document).getNature()== DocumentTypeData.Nature.INCOMING)
+                        .toList()
+        );
+    }
+
     // TODO: tackle this (and the filtering on DocumentType?) at db level
     private List<Document> findAttachedToExactlyOneFixedAssetOnly() {
         List<Document> result = new ArrayList<>();
@@ -114,6 +139,27 @@ public class IncomingDocumentRepository extends DocumentRepository {
         return result;
     }
 
+    @Programmatic
+    public Document upsertAndArchive(final DocumentType type, final String atPath, final String name, final Blob blob){
+        Document document = null;
+        final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
+        if (incomingDocumentsWithSameName.size()>0){
+            document = incomingDocumentsWithSameName.get(0);
+        }
+        if (document!=null){
+            String prefix = "arch-".concat(clockService.nowAsLocalDateTime().toString("yyyy-MM-dd-HH-mm-ss")).concat("-");
+            String archivedName = prefix.concat(document.getName());
+            Document archivedDocument = documentService.createForBlob(document.getType(), document.getAtPath(), archivedName, document.getBlob());
+            // update blobbytes of document
+            document.setBlobBytes(blob.getBytes());
+            // attach document to archived document
+            paperclipRepository.attach(document, "", archivedDocument);
+        } else {
+            document = documentService.createForBlob(type, atPath, name, blob);
+        }
+        return document;
+    }
+
     @Inject
     QueryResultsCache queryResultsCache;
 
@@ -121,6 +167,15 @@ public class IncomingDocumentRepository extends DocumentRepository {
     PaperclipRepository paperclipRepository;
 
     @Inject
+    RepositoryService repositoryService;
+
+    @Inject
     PropertyRepository propertyRepository;
+
+    @Inject
+    ClockService clockService;
+
+    @Inject
+    DocumentService documentService;
 
 }

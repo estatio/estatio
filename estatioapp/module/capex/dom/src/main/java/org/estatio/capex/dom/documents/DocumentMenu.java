@@ -19,7 +19,6 @@
 package org.estatio.capex.dom.documents;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -43,6 +42,7 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -94,25 +94,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         if (atPath == null) {
             atPath = "/";
         }
-
-        return upsert(type, atPath, name, blob);
+        return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);
     }
-
-    private Document upsert(final DocumentType type, final String atPath, final String name, final Blob blob){
-        Document document = null;
-        final List<Document> incomingDocuments = incomingDocumentRepository.findIncomingDocuments();
-        List<Document> similarNamedDocs = incomingDocuments.stream().filter(x->x.getName().equals(name)).collect(Collectors.toList());
-        if (similarNamedDocs.size()>0){
-            document = similarNamedDocs.get(0);
-        }
-        if (document!=null){
-            document.setBlobBytes(blob.getBytes());
-        } else {
-            document = documentService.createForBlob(type, atPath, name, blob);
-        }
-        return document;
-    }
-
 
     @Inject
     MeService meService;
@@ -132,4 +115,6 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
 
+    @Inject
+    PaperclipRepository paperclipRepository;
 }
