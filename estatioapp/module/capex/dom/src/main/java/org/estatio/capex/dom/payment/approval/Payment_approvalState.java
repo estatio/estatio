@@ -1,8 +1,8 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.payment.approval;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.payment.Payment;
 import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
 
 @Mixin(method="prop")

@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.payment.approval;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.payment.Payment;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.capex.dom.task.Task;
@@ -39,14 +39,14 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
                         + "WHERE payment == :domainObject "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
                         + "WHERE payment == :domainObject "
                         + "&& completed == :completed "
                         + "ORDER BY completedOn DESC "
@@ -54,7 +54,7 @@ import lombok.Setter;
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
                         + "WHERE task == :task "
         ),
 })

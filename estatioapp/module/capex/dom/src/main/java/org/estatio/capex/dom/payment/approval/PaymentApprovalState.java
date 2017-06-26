@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.payment.approval;
 
 import org.estatio.capex.dom.state.State;
 

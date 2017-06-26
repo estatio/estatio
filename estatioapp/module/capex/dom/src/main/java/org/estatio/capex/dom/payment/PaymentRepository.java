@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment;
+package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.payment.Payment;
 import org.estatio.dom.invoice.PaymentMethod;
 
 @DomainService(

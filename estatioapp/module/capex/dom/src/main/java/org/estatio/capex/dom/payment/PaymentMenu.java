@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.order;
+package org.estatio.capex.dom.payment;
 
 import java.util.List;
 
@@ -11,9 +11,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-
-import org.estatio.capex.dom.invoice.payment.Payment;
-import org.estatio.capex.dom.invoice.payment.PaymentRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

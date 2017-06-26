@@ -1,13 +1,13 @@
-package org.estatio.capex.dom.invoice.payment.approval.transitions;
+package org.estatio.capex.dom.payment.approval.transitions;
 
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalState;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
+import org.estatio.capex.dom.payment.Payment;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalState;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransitionType;
 import org.estatio.capex.dom.state.DomainObject_viewTransitionsAbstract;
 
 @Mixin(method = "act")

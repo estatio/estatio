@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval.triggers;
+package org.estatio.capex.dom.payment.approval.triggers;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalState;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransition;
-import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
+import org.estatio.capex.dom.payment.Payment;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalState;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition;
+import org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransitionType;
 import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 
 abstract class Payment_triggerAbstract

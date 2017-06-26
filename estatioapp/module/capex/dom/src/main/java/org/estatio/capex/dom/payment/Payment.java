@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment;
+package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
 
@@ -39,12 +39,12 @@ import lombok.Setter;
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.payment.Payment "
+                        + "FROM org.estatio.capex.dom.payment.Payment "
                         + "WHERE invoice == :invoice ")
 })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "org.estatio.capex.dom.invoice.payment.Payment"
+        objectType = "payment.Payment"
 )
 public class Payment extends UdoDomainObject2<Payment> {
 

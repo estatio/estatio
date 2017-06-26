@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.payment.approval;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.payment.Payment;
 import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
