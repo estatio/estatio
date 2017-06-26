@@ -2,6 +2,8 @@ package org.estatio.capex.dom.invoice.payment.approval.triggers;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.isis.applib.annotation.Action;
 
 import org.estatio.capex.dom.invoice.payment.Payment;
@@ -31,7 +33,7 @@ abstract class Payment_triggerAbstract
     }
 
     @Action()
-    public Payment act(final String comment) {
+    public Payment act(@Nullable final String comment) {
         trigger(comment);
         return getDomainObject();
     }

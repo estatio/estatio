@@ -95,7 +95,6 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     private LocalDate orderDate;
 
 
-    //region > changeOrderDetails (action)
     @Mixin(method="act")
     public static class changeOrderDetails {
         private final IncomingDocAsOrderViewModel viewModel;
@@ -139,8 +138,13 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         public LocalDate default4Act(){
             return viewModel.getOrderDate();
         }
+
+        public String disableAct() {
+            return viewModel.reasonNotEditableIfAny();
+        }
+
     }
-    //endregion
+
 
     @Programmatic
     public String minimalRequiredDataToComplete(){
@@ -256,6 +260,21 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return order;
     }
 
+    public String disableSave() {
+        return reasonNotEditableIfAny();
+    }
+
+    @Override
+    protected String reasonNotEditableIfAny() {
+        Order order = getDomainObject();
+
+        String reasonDisabledDueToState = order.reasonDisabledDueToState();
+        if(reasonDisabledDueToState != null) {
+            return reasonDisabledDueToState;
+        }
+
+        return null;
+    }
 
     private Optional<OrderItem> getFirstItemIfAny() {
         return getDomainObject().getItems().stream().findFirst();

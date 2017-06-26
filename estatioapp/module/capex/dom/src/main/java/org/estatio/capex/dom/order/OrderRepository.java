@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
+import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
@@ -58,8 +59,10 @@ public class OrderRepository {
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
-            final String atPath) {
-        final Order order = new Order(property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath);
+            final String atPath,
+            final OrderApprovalState approvalStateIfAny) {
+        final Order order = new Order(
+                property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvalStateIfAny);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
         return order;
@@ -74,11 +77,12 @@ public class OrderRepository {
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
-            final String atPath) {
+            final String atPath,
+            final OrderApprovalState approvalStateIfAny) {
         Order order = findByOrderNumber(number);
         if (order == null) {
             order = create(property, number, sellerOrderReference, entryDate, orderDate,
-                    seller, buyer, atPath);
+                    seller, buyer, atPath, approvalStateIfAny);
         } else {
             updateOrder(
                     order,

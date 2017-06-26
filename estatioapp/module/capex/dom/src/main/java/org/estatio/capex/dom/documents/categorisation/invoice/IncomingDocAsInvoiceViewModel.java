@@ -378,8 +378,8 @@ public class IncomingDocAsInvoiceViewModel
                     : viewModel.getPaymentMethod();
         }
 
-        public boolean hideAct() {
-            return viewModel.reasonNotEditableIfAny() != null;
+        public String disableAct() {
+            return viewModel.reasonNotEditableIfAny();
         }
 
         @Inject
@@ -555,7 +555,8 @@ public class IncomingDocAsInvoiceViewModel
     }
 
 
-    private String reasonNotEditableIfAny() {
+    @Override
+    protected String reasonNotEditableIfAny() {
         IncomingInvoice incomingInvoice = getDomainObject();
 
         String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());

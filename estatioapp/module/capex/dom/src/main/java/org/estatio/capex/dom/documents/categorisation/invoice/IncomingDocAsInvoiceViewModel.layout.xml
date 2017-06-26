@@ -28,7 +28,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Invoice" id="invoice" unreferencedProperties="false">
-                                        <cpt:action id="changeInvoiceDetails" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="changeInvoiceDetails" position="PANEL"/>
                                         <cpt:property id="domainObject"/>
                                         <cpt:property id="incomingInvoiceType"/>
                                         <cpt:property id="property" promptStyle="INLINE"/>
@@ -48,13 +48,15 @@
                                         <cpt:property id="notCorrect" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Invoice Item" id="invoiceItem" unreferencedProperties="false">
-                                        <cpt:action id="changeItemDetails" position="PANEL_DROPDOWN"/>
-                                        <cpt:action id="changeDimensions" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="changeItemDetails" position="PANEL"/>
                                         <cpt:property id="description" promptStyle="INLINE"/>
                                         <cpt:property id="netAmount" promptStyle="INLINE"/>
                                         <cpt:property id="vatAmount" promptStyle="INLINE"/>
                                         <cpt:property id="tax" promptStyle="INLINE"/>
                                         <cpt:property id="grossAmount" promptStyle="INLINE"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Dimensions" unreferencedProperties="false">
+                                        <cpt:action id="changeDimensions" position="PANEL"/>
                                         <cpt:property id="charge">
                                             <cpt:action id="editCharge" promptStyle="INLINE_AS_IF_EDIT"/>
                                         </cpt:property>

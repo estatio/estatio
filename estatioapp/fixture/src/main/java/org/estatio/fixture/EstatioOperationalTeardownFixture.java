@@ -38,6 +38,7 @@ import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransi
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.PaperclipForOrder;
+import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectItem;
@@ -151,6 +152,7 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         deleteFrom(InvoiceItem.class);
         deleteFrom(Invoice.class);
 
+        deleteFrom(OrderApprovalStateTransition.class);
         deleteFrom(PaperclipForOrder.class);
         deleteFrom(OrderItem.class);
         deleteFrom(Order.class);

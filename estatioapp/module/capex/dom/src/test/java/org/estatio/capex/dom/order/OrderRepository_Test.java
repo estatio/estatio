@@ -3,6 +3,7 @@ package org.estatio.capex.dom.order;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
@@ -31,6 +32,7 @@ public class OrderRepository_Test {
         Party buyer = new Organisation();
         Property property = new Property();
         String atPath = "atPath";
+        OrderApprovalState approvalState = OrderApprovalState.APPROVED;
 
         assertThat(order.getOrderNumber()).isNull();
 
@@ -42,8 +44,8 @@ public class OrderRepository_Test {
                 orderDate,
                 seller,
                 buyer,
-                atPath
-        );
+                atPath,
+                approvalState);
 
         // then
         assertThat(order.getOrderNumber()).isNull();
@@ -54,6 +56,7 @@ public class OrderRepository_Test {
         assertThat(order.getBuyer()).isEqualTo(buyer);
         assertThat(order.getProperty()).isEqualTo(property);
         assertThat(order.getAtPath()).isEqualTo(atPath);
+        assertThat(order.getApprovalState()).isNull(); // is ignored.
 
     }
 

@@ -8,7 +8,7 @@ import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransi
 import org.estatio.capex.dom.invoice.payment.approval.PaymentApprovalStateTransitionType;
 import org.estatio.capex.dom.task.DomainObject_pendingTaskAbstract;
 
-@Mixin(method="act")
+@Mixin(method="prop")
 public class Payment_pendingApprovalTask
         extends DomainObject_pendingTaskAbstract<
                     Payment,

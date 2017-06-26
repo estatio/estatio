@@ -18,7 +18,7 @@ import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -38,11 +38,11 @@ public enum OrderApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    APPROVE_AS_COUNTRY_DIRECTOR(
+    COMPLETE_WITH_APPROVAL(
             OrderApprovalState.NEW,
-            OrderApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            OrderApprovalState.APPROVED,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.MANUAL);
 
     private final List<OrderApprovalState> fromStates;

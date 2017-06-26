@@ -36,6 +36,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
@@ -272,13 +273,15 @@ public class OrderInvoiceLine {
 
             if(isOrder) {
                 Order order = orderRepository.upsert(
-                        property, line.getOrderNumber(),
+                        property,
+                        line.getOrderNumber(),
                         line.getSeller(),
                         line.entryDate,
                         line.orderDate,
                         supplier,
                         buyer,
-                        atPath
+                        atPath,
+                        OrderApprovalState.APPROVED // migrating historic data
                 );
 
                 final Tax tax = taxRepository.findByReference(line.tax);
@@ -296,13 +299,20 @@ public class OrderInvoiceLine {
             if(isInvoice) {
                 final LocalDate invoiceDate = line.getOrderDate();
                 final LocalDate dueDate = line.getOrderDate();
-                final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
-                final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED;      // migrating historic data...
-                IncomingInvoiceApprovalState paid = IncomingInvoiceApprovalState.PAID; // migrating historic data
 
                 invoice = incomingInvoiceRepository.upsert(
-                        IncomingInvoiceType.parse(line.invoiceType), line.getInvoiceNumber(), property, atPath, buyer, supplier, invoiceDate, dueDate, paymentMethod,
-                        invoiceStatus, null, null, paid);
+                        IncomingInvoiceType.parse(line.invoiceType),
+                        line.getInvoiceNumber(),
+                        property, atPath,
+                        buyer, supplier,
+                        invoiceDate,
+                        dueDate,
+                        PaymentMethod.BANK_TRANSFER, // assumed for Capex
+                        InvoiceStatus.APPROVED,      // migrating historic data...
+                        null, // date received
+                        null, // bank account
+                        IncomingInvoiceApprovalState.PAID // migrating historic data
+                );
 
                 final IncomingInvoice invoiceObj = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(line.getInvoiceNumber(), supplier, invoiceDate);
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());

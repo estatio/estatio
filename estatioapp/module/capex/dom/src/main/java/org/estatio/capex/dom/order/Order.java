@@ -119,7 +119,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
-            final String atPath) {
+            final String atPath,
+            final OrderApprovalState approvalStateIfAny) {
         this();
         this.property = property;
         this.orderNumber = orderNumber;
@@ -129,6 +130,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         this.seller = seller;
         this.buyer = buyer;
         this.atPath = atPath;
+        this.approvalState = approvalStateIfAny;
     }
 
     public String title() {
@@ -271,6 +273,22 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return securityApplicationTenancyRepository.findByPathCached(getAtPath());
     }
 
+
+    @Column(allowsNull = "true", length = 255)
+    @Getter @Setter
+    private String approvedBy;
+
+    public boolean hideApprovedBy() {
+        return getApprovedBy() == null;
+    }
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate approvedOn;
+
+    public boolean hideApprovedOn() {
+        return getApprovedOn() == null;
+    }
 
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")

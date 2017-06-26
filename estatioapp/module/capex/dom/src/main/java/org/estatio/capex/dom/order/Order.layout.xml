@@ -104,11 +104,13 @@
                                             </cpt:action>
                                         </cpt:property>
                                         <cpt:property id="pendingApprovalTask">
-                                            <cpt:action id="approveAsCountryDirector"/>
+                                            <cpt:action id="completeWithApproval"/>
                                         </cpt:property>
                                         <cpt:property id="reasonApprovalTaskBlocked">
                                             <cpt:named>Reason blocked</cpt:named>
                                         </cpt:property>
+                                        <cpt:property id="approvedBy"/>
+                                        <cpt:property id="approvedOn"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

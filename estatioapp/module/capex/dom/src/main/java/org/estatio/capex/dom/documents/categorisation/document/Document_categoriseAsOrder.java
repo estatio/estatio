@@ -51,7 +51,8 @@ public class Document_categoriseAsOrder
                 null, // orderDate
                 null, // seller
                 null, // buyer
-                document.getAtPath()
+                document.getAtPath(),
+                null  // approval state... will cause state transition to be created automatically by subscriber
         );
 
         paperclipRepository.attach(document, null, order);

@@ -48,6 +48,10 @@ public abstract class DomainObject_reasonGuardNotSatisfiedAbstract<
                 : null;
     }
 
+    public boolean hideProp() {
+        return prop() == null;
+    }
+
     @Inject
     ServiceRegistry2 serviceRegistry;
 

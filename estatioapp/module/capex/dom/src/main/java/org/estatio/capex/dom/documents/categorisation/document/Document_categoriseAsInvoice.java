@@ -64,7 +64,8 @@ public class Document_categoriseAsInvoice
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
-                null);
+                null  // approval state... will cause state transition to be created automatically by subscriber
+        );
 
         paperclipRepository.attach(document, null, incomingInvoice);
 

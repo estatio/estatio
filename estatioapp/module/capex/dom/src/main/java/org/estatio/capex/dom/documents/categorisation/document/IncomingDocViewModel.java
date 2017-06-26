@@ -116,8 +116,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
 
 
-
-
     @Programmatic
     public abstract void setDomainObject(T t);
 
@@ -480,6 +478,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return validatePeriod(period);
     }
 
+    public String disableChangeDimensions() {
+        return reasonNotEditableIfAny();
+    }
+
     // ////////////////////////////////////
 
     public IncomingDocViewModel changeItemDetails(
@@ -520,6 +522,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     public BigDecimal default4ChangeItemDetails(){
         return getGrossAmount();
+    }
+
+    public String disableChangeItemDetails() {
+        return reasonNotEditableIfAny();
     }
 
     // ////////////////////////////////////
@@ -602,6 +608,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
 
     /////////////////////////////////
+
+    /**
+     * Mandatory hook - to disable actions that change the state.
+     * @return
+     */
+    protected abstract String reasonNotEditableIfAny();
 
 
     @XmlTransient

@@ -26,10 +26,11 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 state "OrderApprovalStateTransitionType" as oa {
 
     state "NEW" as oa_new
-    state "APPROVED_BY_\nCOUNTRY_DIRECTOR" as oa_approved
+    state "APPROVED" as oa_approved
 
     [*] -right-> oa_new: INSTANTIATE
-    oa_new -down-> oa_approved: APPROVE_AS_\nCOUNTRY_DIRECTOR
+    oa_new -down-> oa_approved: COMPLETE_WITH_APPROVAL
+    note right of oa_approved: immutable from this point on
 
 }
 --

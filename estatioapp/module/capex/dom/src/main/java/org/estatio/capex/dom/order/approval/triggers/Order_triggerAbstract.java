@@ -2,6 +2,8 @@ package org.estatio.capex.dom.order.approval.triggers;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.isis.applib.annotation.Action;
 
 import org.estatio.capex.dom.order.Order;
@@ -30,14 +32,5 @@ public abstract class Order_triggerAbstract
         super(order, OrderApprovalStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType);
     }
 
-    @Action()
-    public Order act(final String comment) {
-        trigger(comment);
-        return getDomainObject();
-    }
-
-    public boolean hideAct() {
-        return cannotTransition();
-    }
 
 }

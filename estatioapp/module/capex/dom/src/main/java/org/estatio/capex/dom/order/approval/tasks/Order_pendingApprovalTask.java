@@ -8,7 +8,7 @@ import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
 import org.estatio.capex.dom.task.DomainObject_pendingTaskAbstract;
 
-@Mixin(method="act")
+@Mixin(method="prop")
 public class Order_pendingApprovalTask
         extends DomainObject_pendingTaskAbstract<
                     Order,
