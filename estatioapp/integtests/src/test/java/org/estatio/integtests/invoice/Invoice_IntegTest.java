@@ -135,7 +135,7 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
 
             // then
             InvoiceForLease foundInvoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(applicationTenancy, seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
-            assertThat(foundInvoice.getNetAmount(), is(VT.bd("10000.123")));
+            assertThat(foundInvoice.getTotalNetAmount(), is(VT.bd("10000.123")));
 
             // and also
             final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) foundInvoice.getItems().first();

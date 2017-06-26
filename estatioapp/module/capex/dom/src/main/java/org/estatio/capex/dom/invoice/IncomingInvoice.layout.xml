@@ -61,11 +61,18 @@
                     <bs3:tabGroup>
                         <bs3:tab name="Amounts">
                             <bs3:row>
-                                <bs3:col span="12">
+                                <bs3:col span="6">
                                     <cpt:fieldSet name="Amounts">
                                         <cpt:property id="netAmount"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="6">
+                                    <cpt:fieldSet name="Total (of items)">
+                                        <cpt:property id="totalNetAmount" labelPosition="NONE"/>
+                                        <cpt:property id="totalVatAmount" labelPosition="NONE"/>
+                                        <cpt:property id="totalGrossAmount" labelPosition="NONE"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

@@ -26,7 +26,7 @@ public class InvoiceTest {
         assertThat(invoiceForTesting.getItems()).hasSize(2);
 
         // when
-        BigDecimal netAmount = invoiceForTesting.getNetAmount();
+        BigDecimal netAmount = invoiceForTesting.getTotalNetAmount();
 
         // then
         assertThat(netAmount).isEqualTo(new BigDecimal("666.66"));

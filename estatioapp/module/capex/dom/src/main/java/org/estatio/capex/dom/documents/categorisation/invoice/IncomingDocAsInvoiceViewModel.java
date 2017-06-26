@@ -489,6 +489,9 @@ public class IncomingDocAsInvoiceViewModel
         incomingInvoice.setDateReceived(getDateReceived());
         incomingInvoice.setBankAccount(getBankAccount());
 
+        incomingInvoice.setNetAmount(getNetAmount());
+        incomingInvoice.setGrossAmount(getGrossAmount());
+
         // if changed the type, then we need to re-evaluate the state machine
         if(previousType != getIncomingInvoiceType()) {
             stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);

@@ -232,7 +232,7 @@ public class InvoiceAttributesVM implements WithApplicationTenancy {
 
     @Programmatic
     public BigDecimal getGrossAmount() {
-        return invoice.getGrossAmount();
+        return invoice.getTotalGrossAmount();
     }
 
     @Programmatic

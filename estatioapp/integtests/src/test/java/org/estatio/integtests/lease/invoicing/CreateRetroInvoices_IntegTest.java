@@ -147,7 +147,7 @@ public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
             assertThat(invoicesList.size(), is(11));
             Invoice invoice = invoicesList.get(10);
             assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
-            assertThat(invoice.getGrossAmount(), is(VT.bd("-8170.01")));
+            assertThat(invoice.getTotalGrossAmount(), is(VT.bd("-8170.01")));
 
             // and also
             LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);

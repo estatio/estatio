@@ -369,18 +369,19 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
 
+
     @Property(notPersisted = true)
-    public BigDecimal getNetAmount() {
+    public BigDecimal getTotalNetAmount() {
         return sum(InvoiceItem::getNetAmount);
     }
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmount() {
+    public BigDecimal getTotalVatAmount() {
         return sum(InvoiceItem::getVatAmount);
     }
 
     @Property(notPersisted = true)
-    public BigDecimal getGrossAmount() {
+    public BigDecimal getTotalGrossAmount() {
         return sum(InvoiceItem::getGrossAmount);
     }
 
@@ -407,6 +408,7 @@ public abstract class Invoice<T extends Invoice<T>>
      * This does not enumerate correctly, it would seem.
      */
     private BigDecimal sumFunctionalUsingLazyStreamBROKEN(final Function<InvoiceItem, BigDecimal> x) {
+        // as per http://www.datanucleus.org/servlet/jira/browse/NUCAPIJDO-77
         return getItems().stream()
                 .map(x)
                 .filter(Objects::nonNull)
@@ -423,6 +425,10 @@ public abstract class Invoice<T extends Invoice<T>>
         }
         return sum;
     }
+
+
+
+
 
     protected boolean isImmutable() {
         return !getStatus().invoiceIsChangable();

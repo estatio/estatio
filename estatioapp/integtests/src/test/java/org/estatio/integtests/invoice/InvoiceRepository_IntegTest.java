@@ -657,7 +657,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             // for first invoice
             Invoice<?> invoice = newInvoices.get(0);
             assertThat(invoice.getDueDate()).isEqualTo(dueDate);
-            assertThat(invoice.getNetAmount()).isEqualTo(netAmount);
+            assertThat(invoice.getTotalNetAmount()).isEqualTo(netAmount);
             assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
 
             InvoiceItem item = invoice.getItems().first();

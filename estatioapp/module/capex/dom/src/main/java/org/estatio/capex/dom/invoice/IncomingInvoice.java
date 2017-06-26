@@ -13,6 +13,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
+import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
@@ -286,12 +287,32 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "true", name="invoiceId")
     private IncomingInvoice relatesTo;
 
-    // need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
+    // TODO: need to remove this from superclass, ie push down to InvoiceForLease subclass so not in this subtype
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     @Override
     public InvoiceStatus getStatus() {
         return super.getStatus();
     }
+
+
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
+    private BigDecimal netAmount;
+
+    @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
+    @Digits(integer = 9, fraction = 2)
+    public BigDecimal getVatAmount() {
+        return getGrossAmount() != null && getNetAmount() != null
+                ? getGrossAmount().subtract(getNetAmount())
+                : null;
+    }
+
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Getter @Setter
+    private BigDecimal grossAmount;
+
+
+
 
 
     @Getter @Setter
