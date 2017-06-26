@@ -82,6 +82,18 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE orderNumber.matches(:orderNumber) "),
         @Query(
+                name = "findByOrderDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE orderDate >= :fromDate "
+                        + "   && orderDate <= :toDate "),
+        @Query(
+                name = "findByEntryDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE entryDate >= :fromDate "
+                        + "   && entryDate <= :toDate "),
+        @Query(
                 name = "findBySeller", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "

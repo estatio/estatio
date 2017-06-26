@@ -32,6 +32,41 @@ public class IncomingInvoiceRepository {
         return repositoryService.allInstances(IncomingInvoice.class);
     }
 
+    @Programmatic
+    public List<IncomingInvoice> findByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByInvoiceDateBetween",
+                        "fromDate", fromDate,
+                        "toDate", toDate));
+    }
+
+
+    @Programmatic
+    public List<IncomingInvoice> findByDueDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByDueDateBetween",
+                        "fromDate", fromDate,
+                        "toDate", toDate));
+    }
+
+
+    @Programmatic
+    public List<IncomingInvoice> findByDateReceivedBetween(final LocalDate fromDate, final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByDateReceivedBetween",
+                        "fromDate", fromDate,
+                        "toDate", toDate));
+    }
+
+
+
+    @Programmatic
     public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate){
         return repositoryService.firstMatch(
                 new QueryDefault<>(

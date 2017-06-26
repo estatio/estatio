@@ -78,7 +78,27 @@ import lombok.Setter;
                 name = "findByInvoiceNumberAndSellerAndInvoiceDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE invoiceNumber == :invoiceNumber && seller == :seller && invoiceDate == :invoiceDate "),
+                        + "WHERE invoiceNumber == :invoiceNumber "
+                        + "   && seller == :seller "
+                        + "   && invoiceDate == :invoiceDate "),
+        @Query(
+                name = "findByInvoiceDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE invoiceDate >= :fromDate "
+                        + "   && invoiceDate <= :toDate "),
+        @Query(
+                name = "findByDueDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE dueDate >= :fromDate "
+                        + "   && dueDate <= :toDate "),
+        @Query(
+                name = "findByDateReceivedBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE dateReceived >= :fromDate "
+                        + "   && dateReceived <= :toDate "),
         @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "

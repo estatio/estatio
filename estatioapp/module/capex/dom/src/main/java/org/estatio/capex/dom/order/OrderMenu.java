@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -18,7 +20,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Invoices In"
+        named = "Invoices In",
+        menuOrder = "100"
 )
 public class OrderMenu {
 
@@ -27,7 +30,54 @@ public class OrderMenu {
         return orderRepository.listAll();
     }
 
+
+    ///////////////////////////////////////////
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByOrderDate(final LocalDate fromDate, final LocalDate toDate) {
+        return orderRepository.findByOrderDateBetween(fromDate, toDate);
+    }
+
+    public LocalDate default0FindOrdersByOrderDate() {
+        return clockService.now().minusMonths(3);
+    }
+
+    public LocalDate default1FindOrdersByOrderDate() {
+        return clockService.now();
+    }
+
+    
+
+    ///////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrdersByEntryDate(final LocalDate fromDate, final LocalDate toDate) {
+        return orderRepository.findByEntryDateBetween(fromDate, toDate);
+    }
+
+    public LocalDate default0FindOrdersByEntryDate() {
+        return clockService.now().minusMonths(3);
+    }
+
+    public LocalDate default1FindOrdersByEntryDate() {
+        return clockService.now();
+    }
+
+    ///////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrderByOrderNumber(final String orderNumber) {
+        return orderRepository.matchByOrderNumber(orderNumber);
+    }
+
+
+    ///////////////////////////////////////////
+
     @Inject
     OrderRepository orderRepository;
+
+    @Inject
+    ClockService clockService;
 
 }

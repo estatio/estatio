@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -38,6 +39,26 @@ public class OrderRepository {
                         Order.class,
                         "findByOrderNumber",
                         "orderNumber", orderNumber));
+    }
+
+    @Programmatic
+    public List<Order> findByOrderDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByOrderDateBetween",
+                        "fromDate", fromDate,
+                        "toDate", toDate));
+    }
+
+    @Programmatic
+    public List<Order> findByEntryDateBetween(final LocalDate fromDate, final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Order.class,
+                        "findByEntryDateBetween",
+                        "fromDate", fromDate,
+                        "toDate", toDate));
     }
 
     @Programmatic
@@ -127,6 +148,10 @@ public class OrderRepository {
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
+
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
