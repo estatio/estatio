@@ -82,6 +82,12 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
+            <groupId>org.incode.ecp.iso20022</groupId>
+            <artifactId>incode-ecp-iso20022-pain</artifactId>
+            <version>001.001.003</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-party</artifactId>
         </dependency>
