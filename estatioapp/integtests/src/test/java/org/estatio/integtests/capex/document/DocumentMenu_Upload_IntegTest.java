@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
@@ -60,7 +61,7 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         transactionService.nextTransaction();
 
         // then
-        List<Document> incomingDocumentsAfter = repository.findIncomingDocuments();
+        List<Document> incomingDocumentsAfter = repository.findAllIncomingDocuments();
         assertThat(incomingDocumentsAfter).hasSize(1);
 
         final Document document = incomingDocumentsAfter.get(0);
@@ -70,6 +71,7 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         assertThat(documentBlob.getMimeType().getBaseType()).isEqualTo(blob.getMimeType().getBaseType());
         assertThat(documentBlob.getBytes()).isEqualTo(blob.getBytes());
         assertThat(document.dnGetVersion()).isEqualTo(1L);
+        assertThat(paperclipRepository.findByDocument(document).size()).isEqualTo(0);
 
         // and then also
         final List<IncomingDocumentCategorisationStateTransition> transitions =
@@ -90,10 +92,16 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
         transactionService.nextTransaction();
 
         // then
-        incomingDocumentsAfter = repository.findIncomingDocuments();
-        assertThat(incomingDocumentsAfter).hasSize(1);
+        incomingDocumentsAfter = repository.findAllIncomingDocuments();
+        assertThat(incomingDocumentsAfter).hasSize(2);
+        assertThat(incomingDocumentsAfter.get(0).getName()).isEqualTo(fileName);
         assertThat(incomingDocumentsAfter.get(0).getBlobBytes()).isEqualTo(similarNamedBlob.getBytes());
         assertThat(incomingDocumentsAfter.get(0).dnGetVersion()).isEqualTo(2L);
+        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(0)).size()).isEqualTo(1);
+        assertThat(incomingDocumentsAfter.get(1).getName()).contains(fileName); // has prefix arch-[date time indication]-
+        assertThat(incomingDocumentsAfter.get(1).getBlobBytes()).isEqualTo(documentBlob.getBytes());
+        assertThat(incomingDocumentsAfter.get(1).dnGetVersion()).isEqualTo(1L);
+        assertThat(paperclipRepository.findByDocument(incomingDocumentsAfter.get(1)).size()).isEqualTo(0);
     }
 
 
@@ -128,5 +136,8 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }

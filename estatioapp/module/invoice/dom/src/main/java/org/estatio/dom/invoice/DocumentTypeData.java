@@ -79,7 +79,7 @@ public enum DocumentTypeData {
         return nature == Nature.INCOMING;
     }
 
-    enum Nature {
+    public enum Nature {
         INCOMING,
         OUTGOING,
         NOT_SPECIFIED
