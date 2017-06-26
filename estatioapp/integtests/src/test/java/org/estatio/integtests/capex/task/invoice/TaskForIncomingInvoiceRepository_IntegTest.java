@@ -27,13 +27,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -71,6 +75,9 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
         private PartyRepository partyRepository;
 
         @Inject
+        private PropertyRepository propertyRepository;
+
+        @Inject
         private IncomingInvoiceApprovalStateTransition.Repository incomingInvoiceStateTransitionRepository;
 
         @Before
@@ -83,8 +90,14 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
-            final IncomingInvoice invoice = incomingInvoiceRepository.create("TEST", "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null);
+            final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
+                    "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,
+                    null);
+
+            // given (the normal setup would create 2 transitions (INSTANTIATE, COMPLETE...)
+            incomingInvoiceStateTransitionRepository.deleteFor(invoice);
 
             // When
             incomingInvoiceStateTransitionRepository
@@ -95,10 +108,13 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
                             Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
 
             // Then
-            final List<IncomingInvoiceApprovalStateTransition> tasks =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
+            final List<IncomingInvoiceApprovalStateTransition> transitions =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
 
-            assertThat(tasks.size()).isEqualTo(1);
+            assertThat(transitions.size()).isEqualTo(1);
         }
+
+        @Inject
+        RepositoryService repositoryService;
 
     }
 

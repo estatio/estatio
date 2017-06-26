@@ -19,7 +19,6 @@ import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
@@ -40,23 +39,11 @@ public enum IncomingDocumentCategorisationStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY(
+    CATEGORISE(
             IncomingDocumentCategorisationState.NEW,
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
+            IncomingDocumentCategorisationState.CATEGORISED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.MAIL_ROOM),
-            AdvancePolicy.MANUAL),
-    CLASSIFY_AS_INVOICE_OR_ORDER(
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            IncomingDocumentCategorisationState.CLASSIFIED_AS_INVOICE_OR_ORDER,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
-            AdvancePolicy.MANUAL),
-    RESET(
-            IncomingDocumentCategorisationState.CATEGORISED_AND_ASSOCIATED_WITH_PROPERTY,
-            IncomingDocumentCategorisationState.NEW,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.none(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
             AdvancePolicy.MANUAL);
 
     private final List<IncomingDocumentCategorisationState> fromStates;

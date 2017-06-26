@@ -18,9 +18,13 @@
  */
 package org.estatio.capex.dom.documents.categorisation.invoice;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,13 +41,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
@@ -52,11 +56,21 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
@@ -68,7 +82,7 @@ import lombok.Setter;
         // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
         objectType = "org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel"
 )
-@XmlRootElement(name = "categorizeIncomingInvoice")
+@XmlRootElement(name = "incomingInvoiceViewModel")
 @XmlType(
         propOrder = {
                 "document",
@@ -82,7 +96,7 @@ import lombok.Setter;
                 "paymentMethod",
                 "description",
                 "orderItem",
-                "fixedAsset",
+                "property",
                 "project",
                 "period",
                 "budgetItem",
@@ -93,6 +107,7 @@ import lombok.Setter;
                 "grossAmount",
                 "notCorrect",
                 "domainObject",
+                "incomingInvoiceType",
                 "originatingTask"
         }
 )
@@ -108,24 +123,22 @@ public class IncomingDocAsInvoiceViewModel
     IncomingDocAsInvoiceViewModel() {
     }
 
-    public IncomingDocAsInvoiceViewModel(final Document document) {
+    public IncomingDocAsInvoiceViewModel(final IncomingInvoice incomingInvoice, final Document document) {
         super(document);
-        setDateReceived(document.getCreatedAt().toLocalDate());
-        setDueDate(document.getCreatedAt().toLocalDate().plusDays(30));
-
-        // TODO: this will need to default to BANK_TRANSFER when we get to live...
-        setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
+        this.domainObject = incomingInvoice;
     }
 
-    /**
-     * Populated once this view model is actioned; stored just so can be read by subscribers on any actions
-     * for this view model that publish domain events.
-     */
-    @Property(hidden = Where.EVERYWHERE)
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(named = "Incoming invoice")
     IncomingInvoice domainObject;
 
+    @Property(editing = Editing.ENABLED)
+    private IncomingInvoiceType incomingInvoiceType;
+
+    //region > bankAccount (prop)
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;
+
     public void modifyBankAccount(final BankAccount bankAccount){
         setBankAccount(bankAccount);
         setSeller(bankAccount.getOwner());
@@ -138,12 +151,12 @@ public class IncomingDocAsInvoiceViewModel
             return bankAccountRepository.autoComplete(searchString);
         }
     }
-
     //endregion
-
 
     @Property(editing = Editing.ENABLED)
     private String invoiceNumber;
+
+    //region > dateReceived (prop)
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
@@ -156,6 +169,9 @@ public class IncomingDocAsInvoiceViewModel
     private LocalDate dateReceivedDerivedFromDocument() {
         return getDocument().getCreatedAt().toLocalDate();
     }
+    //endregion
+
+    //region > invoiceDate (prop)
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
@@ -166,19 +182,31 @@ public class IncomingDocAsInvoiceViewModel
         updateDueDate();
     }
 
+    private void updateDueDate(){
+        if (getInvoiceDate()!=null){
+            setDueDate(getInvoiceDate().plusMonths(1));
+        }
+    }
+    //endregion
+
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
     private LocalDate dueDate;
 
-    @Property(editing = Editing.ENABLED)
-    private PaymentMethod paymentMethod;
+    //region > paymentMethod (prop)
 
     @Property(editing = Editing.ENABLED)
-    private Boolean notCorrect;
+    private PaymentMethod paymentMethod;
 
     public PaymentMethod defaultPaymentMethod(){
         return getPaymentMethod();
     }
+    //endregion
+
+    @Property(editing = Editing.ENABLED)
+    private Boolean notCorrect;
+
+    //region > orderItem (prop)
 
     @Property(editing = Editing.ENABLED)
     private OrderItem orderItem;
@@ -225,93 +253,17 @@ public class IncomingDocAsInvoiceViewModel
                             .toList()
             );
         }
-        if (hasFixedAsset()) {
+        if (hasProperty()) {
             result = Lists.newArrayList(
                     FluentIterable.from(result)
-                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getFixedAsset()))
+                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getProperty()))
                             .toList()
             );
         }
         return result;
     }
 
-    @Override
-    public void modifySeller(final Party seller){
-        setSeller(seller);
-        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
-    }
-
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    public IncomingDocAsInvoiceViewModel changeInvoiceDetails(
-            final String invoiceNumber,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Party buyer,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Party seller,
-            final LocalDate dateReceived,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final LocalDate invoiceDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final LocalDate dueDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Integer dueInNumberOfDaysFromNow,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final PaymentMethod paymentMethod
-    ){
-        setInvoiceNumber(invoiceNumber);
-        setBuyer(buyer);
-        setSeller(seller);
-        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
-        setDateReceived(dateReceived);
-        setInvoiceDate(invoiceDate);
-        setDueDate(dueDate);
-        if (dueInNumberOfDaysFromNow!=null){
-            setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
-        }
-        setPaymentMethod(paymentMethod);
-        return this;
-    }
-
-    public String default0ChangeInvoiceDetails(){
-        return getInvoiceNumber();
-    }
-
-    public Party default1ChangeInvoiceDetails(){
-        return getBuyer();
-    }
-
-    public Party default2ChangeInvoiceDetails(){
-        return getSeller();
-    }
-
-    public LocalDate default3ChangeInvoiceDetails(){
-        return getDateReceived()==null ? dateReceivedDerivedFromDocument() : getDateReceived();
-    }
-
-    public LocalDate default4ChangeInvoiceDetails(){
-        return getInvoiceDate();
-    }
-
-    public LocalDate default5ChangeInvoiceDetails(){
-        return getDueDate();
-    }
-
-    public PaymentMethod default7ChangeInvoiceDetails(){
-        return getPaymentMethod()==null ? PaymentMethod.TEST_NO_PAYMENT : getPaymentMethod();
-    }
-
-    @Programmatic
-    public void updateDueDate(){
-        if (getInvoiceDate()!=null){
-            setDueDate(getInvoiceDate().plusMonths(1));
-        }
-    }
-
-    @Programmatic
-    public void autoFillIn(){
+    private void autoFillIn(){
         if (hasOrderItem()){
             Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
             OrderItem orderItem = orderItemRepository.findByOrderAndCharge(order, getOrderItem().getCharge());
@@ -339,8 +291,8 @@ public class IncomingDocAsInvoiceViewModel
             if (!hasProject()){
                 setProject(orderItem.getProject());
             }
-            if (!hasFixedAsset()){
-                setFixedAsset(orderItem.getFixedAsset());
+            if (!hasProperty()){
+                setProperty(orderItem.getProperty());
             }
             if (!hasBudgetItem()){
                 setBudgetItem(orderItem.getBudgetItem());
@@ -350,6 +302,90 @@ public class IncomingDocAsInvoiceViewModel
             }
         }
     }
+
+    private boolean hasOrderItem(){
+        return getOrderItem() != null;
+    }
+
+    //endregion
+
+    @Override
+    public void modifySeller(final Party seller){
+        setSeller(seller);
+        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
+    }
+
+
+    @Mixin(method="act")
+    public static class changeInvoiceDetails {
+        private final IncomingDocAsInvoiceViewModel viewModel;
+        public changeInvoiceDetails(final IncomingDocAsInvoiceViewModel viewModel) {
+            this.viewModel = viewModel;
+        }
+
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        public IncomingDocAsInvoiceViewModel act(
+                final String invoiceNumber,
+                @Nullable final Party buyer,
+                @Nullable final Party seller,
+                final LocalDate dateReceived,
+                @Nullable final LocalDate invoiceDate,
+                @Nullable final LocalDate dueDate,
+                @Nullable final Integer dueInNumberOfDaysFromNow,
+                @Nullable final PaymentMethod paymentMethod
+        ){
+            viewModel.setInvoiceNumber(invoiceNumber);
+            viewModel.setBuyer(buyer);
+            viewModel.setSeller(seller);
+            viewModel.setBankAccount(viewModel.getFirstBankAccountOfPartyOrNull(seller));
+            viewModel.setDateReceived(dateReceived);
+            viewModel.setInvoiceDate(invoiceDate);
+            viewModel.setDueDate(dueDate);
+            if (dueInNumberOfDaysFromNow!=null){
+                viewModel.setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
+            }
+            viewModel.setPaymentMethod(paymentMethod);
+            return viewModel;
+        }
+
+        public String default0Act(){
+            return viewModel.getInvoiceNumber();
+        }
+
+        public Party default1Act(){
+            return viewModel.getBuyer();
+        }
+
+        public Party default2Act(){
+            return viewModel.getSeller();
+        }
+
+        public LocalDate default3Act(){
+            return viewModel.getDateReceived()==null ? viewModel.dateReceivedDerivedFromDocument() : viewModel.getDateReceived();
+        }
+
+        public LocalDate default4Act(){
+            return viewModel.getInvoiceDate();
+        }
+
+        public LocalDate default5Act(){
+            return viewModel.getDueDate();
+        }
+
+        public PaymentMethod default7Act(){
+            return viewModel.getPaymentMethod()==null
+                    ? PaymentMethod.MANUAL_PROCESS
+                    : viewModel.getPaymentMethod();
+        }
+
+        public String disableAct() {
+            return viewModel.reasonNotEditableIfAny();
+        }
+
+        @Inject
+        ClockService clockService;
+    }
+
 
     private BankAccount getFirstBankAccountOfPartyOrNull(final Party party){
         return bankAccountRepository.findBankAccountsByOwner(party).size()>0 ?
@@ -393,10 +429,187 @@ public class IncomingDocAsInvoiceViewModel
     }
 
 
+
     @Programmatic
-    public boolean hasOrderItem(){
-        return getOrderItem() != null;
+    public void init() {
+        IncomingInvoice incomingInvoice = getDomainObject();
+
+        setIncomingInvoiceType(incomingInvoice.getType());
+        setInvoiceNumber(incomingInvoice.getInvoiceNumber());
+        setBuyer(incomingInvoice.getBuyer());
+        setSeller(incomingInvoice.getSeller());
+        setInvoiceDate(incomingInvoice.getInvoiceDate());
+        setDueDate(incomingInvoice.getDueDate());
+        setPaymentMethod(incomingInvoice.getPaymentMethod());
+        setDateReceived(incomingInvoice.getDateReceived());
+        setBankAccount(incomingInvoice.getBankAccount());
+
+        final Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
+        if(firstItemIfAny.isPresent()) {
+            IncomingInvoiceItem invoiceItem = firstItemIfAny.get();
+            setCharge(invoiceItem.getCharge());
+            setDescription(invoiceItem.getDescription());
+            setNetAmount(invoiceItem.getNetAmount());
+            setVatAmount(invoiceItem.getVatAmount());
+            setTax(invoiceItem.getTax());
+            setDueDate(invoiceItem.getDueDate());
+            setPeriod(periodFrom(invoiceItem.getStartDate(), invoiceItem.getEndDate()));
+            setProperty((org.estatio.dom.asset.Property) invoiceItem.getFixedAsset());
+            setProject(invoiceItem.getProject());
+            setBudgetItem(invoiceItem.getBudgetItem());
+
+            List<OrderItemInvoiceItemLink> links =
+                    orderItemInvoiceItemLinkRepository.findByInvoiceItem(invoiceItem);
+
+            final Optional<OrderItemInvoiceItemLink> linkIfAny = links.stream().findFirst();
+            linkIfAny.ifPresent(x -> setOrderItem(linkIfAny.get().getOrderItem()));
+
+        } else {
+
+            // for the first time we edit there will be no first item,
+            // so we instead get the property from the header invoice
+            setProperty(incomingInvoice.getProperty());
+        }
     }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public IncomingInvoice save() {
+
+        IncomingInvoice incomingInvoice = getDomainObject();
+
+        IncomingInvoiceType previousType = incomingInvoice.getType();
+        incomingInvoice.setType(getIncomingInvoiceType());
+        incomingInvoice.setInvoiceNumber(getInvoiceNumber());
+        incomingInvoice.setBuyer(getBuyer());
+        incomingInvoice.setSeller(getSeller());
+        incomingInvoice.setInvoiceDate(getInvoiceDate());
+        incomingInvoice.setDueDate(getDueDate());
+        incomingInvoice.setPaymentMethod(getPaymentMethod());
+        incomingInvoice.setDateReceived(getDateReceived());
+        incomingInvoice.setBankAccount(getBankAccount());
+
+        // if changed the type, then we need to re-evaluate the state machine
+        if(previousType != getIncomingInvoiceType()) {
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);
+        }
+
+        // upsert invoice item
+        // this will also update the parent header's property with that from the first item
+        Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
+
+        if(firstItemIfAny.isPresent()) {
+            IncomingInvoiceItem item = firstItemIfAny.get();
+            item.setCharge(getCharge());
+            item.setDescription(getDescription());
+            item.setNetAmount(getNetAmount());
+            item.setVatAmount(getVatAmount());
+            item.setGrossAmount(getGrossAmount());
+            item.setTax(getTax());
+            item.setStartDate(getStartDateFromPeriod());
+            item.setEndDate(getEndDateFromPeriod());
+            item.setFixedAsset(getProperty());
+            item.setProject(getProject());
+            item.setBudgetItem(getBudgetItem());
+        } else {
+            incomingInvoiceItemRepository.create(
+                    BigInteger.ONE,
+                    incomingInvoice,
+                    getCharge(),
+                    getDescription(),
+                    getNetAmount(),
+                    getVatAmount(),
+                    getGrossAmount(),
+                    getTax(),
+                    getDueDate(),
+                    getStartDateFromPeriod(),
+                    getEndDateFromPeriod(),
+                    getProperty(),
+                    getProject(),
+                    getBudgetItem());
+        }
+
+        // link to orderItem if applicable
+        // (if was changed, then will add to previous link, meaning that
+        // 'switch view' will not be available subsequently because the Invoice/Item is "too complex")
+        if (getOrderItem()!=null){
+            Order order = getOrderItem().getOrdr();
+            Charge chargeFromWrapper = getOrderItem().getCharge();
+            OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
+            IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink);
+        }
+
+        return incomingInvoice;
+    }
+
+    public String disableSave() {
+        return reasonNotEditableIfAny();
+    }
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public IncomingInvoice cancel() {
+        return getDomainObject();
+    }
+
+
+    @Override
+    protected String reasonNotEditableIfAny() {
+        IncomingInvoice incomingInvoice = getDomainObject();
+
+        String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());
+        if(propertyInvalidReason != null) {
+            return propertyInvalidReason;
+        }
+        String reasonDisabledDueToState = incomingInvoice.reasonDisabledDueToState();
+        if(reasonDisabledDueToState != null) {
+            return reasonDisabledDueToState;
+        }
+
+        SortedSet<InvoiceItem> items = incomingInvoice.getItems();
+        if(items.size() > 1) {
+            return "Only simple invoices with 1 item can be maintained using this view";
+        }
+
+        return null;
+    }
+
+
+    private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
+        SortedSet<InvoiceItem> items = getDomainObject().getItems();
+        Optional<IncomingInvoiceItem> firstItemIfAny =
+                items.stream()
+                        .filter(IncomingInvoiceItem.class::isInstance)
+                        .map(IncomingInvoiceItem.class::cast)
+                        .findFirst();
+        return firstItemIfAny;
+    }
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    StateTransitionService stateTransitionService;
 
     @Inject
     @XmlTransient
@@ -414,11 +627,6 @@ public class IncomingDocAsInvoiceViewModel
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private ClockService clockService;
-
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     FactoryService factoryService;
+
 }

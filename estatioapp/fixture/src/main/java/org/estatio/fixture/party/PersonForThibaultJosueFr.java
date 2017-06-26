@@ -40,7 +40,7 @@ public class PersonForThibaultJosueFr extends FixtureScript {
                     .setFirstName("Thibault")
                     .setLastName("Josue")
                     .setPersonGenderType(PersonGenderType.MALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.MAIL_ROOM)
+                    .addPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR)
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
     }

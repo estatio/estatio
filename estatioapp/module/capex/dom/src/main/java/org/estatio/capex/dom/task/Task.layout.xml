@@ -14,17 +14,28 @@
                             <cpt:fieldSet name="General">
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
-                                    <cpt:action id="classifyAsOrder"/>
-                                    <cpt:action id="classifyAsInvoice"/>
+                                    <!-- document categorisation -->
                                     <cpt:action id="categoriseAsOrder"/>
                                     <cpt:action id="categoriseAsInvoice"/>
-                                    <cpt:action id="resetCategorisation"/>
 
+                                    <!-- order -->
+                                    <cpt:action id="completeOrderWithApproval"/>
+
+                                    <!-- incoming invoice -->
+                                    <cpt:action id="completePropertyInvoice"/>
+                                    <cpt:action id="completeLocalInvoice"/>
+                                    <cpt:action id="completeCorporateInvoice"/>
+
+                                    <cpt:action id="approveAsLegalManager"/>
                                     <cpt:action id="approveAsProjectManager"/>
                                     <cpt:action id="approveAsAssetManager"/>
                                     <cpt:action id="approveAsCountryDirector"/>
 
+                                    <!-- bank account -->
                                     <cpt:action id="verifyBankAccount"/>
+
+                                    <!-- payment batch -->
+                                    <cpt:action id="approveAsFinancialDirector"/>
 
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>

@@ -10,6 +10,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -17,6 +21,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldNl;
@@ -29,6 +34,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
+    private IncomingInvoiceApprovalState approvalStateIfAny;
 
     @Before
     public void setupData() {
@@ -36,23 +42,9 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-            }
-        });
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
-            }
-        });
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-            }
-        });
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new PropertyForOxfGb());
                 executionContext.executeChild(this, new BankAccountForHelloWorldNl());
             }
         });
@@ -67,6 +59,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
     LocalDate dueDate;
     PaymentMethod paymentMethod;
     InvoiceStatus invoiceStatus;
+    Property property;
 
     @Test
     public void findByInvoiceNumberAndSellerAndInvoiceDate_works() throws Exception {
@@ -86,7 +79,8 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
     public void upsert_works() throws Exception {
 
         // given
-        createIncomingInvoice();
+        IncomingInvoice existingInvoice = createIncomingInvoice();
+
         IncomingInvoice invoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(invoiceNumber, seller, invoiceDate);
         assertThat(invoice.getInvoiceNumber()).isEqualTo(invoiceNumber);
         assertThat(invoice.getAtPath()).isEqualTo(atPath);
@@ -106,7 +100,11 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
         LocalDate updatedDateReceived = new LocalDate(2017,1,2);
         BankAccount updatedBankAccount = bankAccountRepository.allBankAccounts().get(0);
 
-        IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(invoiceNumber, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount);
+        Property property = existingInvoice.getProperty();
+
+        IncomingInvoice updatedInvoice = incomingInvoiceRepository.upsert(IncomingInvoiceType.CAPEX, invoiceNumber,
+                property, updatedAtPath, updatedBuyer, seller, invoiceDate, updatedDueDate, updatedPaymentMethod, updatedStatus, updatedDateReceived, updatedBankAccount,
+                null);
 
         // then
         assertThat(updatedInvoice.getInvoiceNumber()).isEqualTo(invoiceNumber);
@@ -125,18 +123,24 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
     private IncomingInvoice createIncomingInvoice(){
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+        property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);
         dueDate = invoiceDate.minusMonths(1);
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
+        approvalStateIfAny = IncomingInvoiceApprovalState.PAID;
 
-        return incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+        return incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null,
+                approvalStateIfAny);
     }
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    PropertyRepository propertyRepository;
 
     @Inject
     BankAccountRepository bankAccountRepository;

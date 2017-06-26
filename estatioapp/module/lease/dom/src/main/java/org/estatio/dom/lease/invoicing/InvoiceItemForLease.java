@@ -18,10 +18,14 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.math.BigInteger;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -111,6 +115,15 @@ import lombok.Setter;
 )
 public class InvoiceItemForLease
         extends InvoiceItem<InvoiceItemForLease> {
+
+    public InvoiceItemForLease() {
+    }
+
+    public InvoiceItemForLease(final Invoice invoice, final LocalDate dueDate) {
+        super(invoice);
+        setDueDate(dueDate);
+        setSequence(BigInteger.ZERO);
+    }
 
     public String title() {
         return TitleBuilder.start()

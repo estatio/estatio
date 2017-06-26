@@ -198,7 +198,6 @@ public class InvoiceForLease
      * business rule states that we never generate invoices for invoice items
      * that relate to different properties.
      * <p>
-     * <p>
      * Another reason for persisting this is that it allows eager validation
      * when attaching additional {@link InvoiceItem}s to an invoice, to check
      * that they relate to the same fixed asset.
@@ -209,6 +208,7 @@ public class InvoiceForLease
     @PropertyLayout(named = "Property")
     @Getter @Setter
     private FixedAsset fixedAsset;
+
 
     @Property(hidden = Where.EVERYWHERE, optionality = Optionality.OPTIONAL)
     @Column(length = 512)

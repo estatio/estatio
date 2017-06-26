@@ -100,7 +100,16 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         implements WithInterval<T>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
     public InvoiceItem() {
-        super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
+        super("invoice, charge, startDate desc nullsLast, description, grossAmount, sequence, uuid");
+    }
+
+    public InvoiceItem(final Invoice invoice) {
+        this();
+        this.invoice = invoice;
+
+        // the least significant part of the item's comparator...
+        // ensures that these are always distinct items in the parent invoice's items collection
+        setUuid(java.util.UUID.randomUUID().toString());
     }
 
     public String title() {
@@ -129,7 +138,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Property(hidden = Where.EVERYWHERE)
+    @Property
     @Getter @Setter
     private BigInteger sequence;
 
@@ -235,7 +244,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Property(editing = Editing.DISABLED)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
@@ -243,12 +252,14 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate startDate;
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(hidden = Where.PARENTED_TABLES)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate endDate;

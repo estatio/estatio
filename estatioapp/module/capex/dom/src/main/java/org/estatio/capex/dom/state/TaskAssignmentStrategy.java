@@ -23,7 +23,6 @@ public interface TaskAssignmentStrategy<
 
     IPartyRoleType getAssignTo(
             final DO domainObject,
-            final STT pendingTransitionType,
             final ServiceRegistry2 serviceRegistry2);
 
 
@@ -34,7 +33,7 @@ public interface TaskAssignmentStrategy<
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > TaskAssignmentStrategy<DO,ST,STT,S> none() {
-        return (domainObject, completedTransitionType, serviceRegistry2) -> null;
+        return (domainObject, serviceRegistry2) -> null;
     }
 
     public static <
@@ -43,7 +42,7 @@ public interface TaskAssignmentStrategy<
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
             > TaskAssignmentStrategy<DO,ST,STT,S> to(final IPartyRoleType roleType) {
-        return (domainObject, completedTransitionType, serviceRegistry2) -> roleType;
+        return (domainObject, serviceRegistry2) -> roleType;
     }
 
 

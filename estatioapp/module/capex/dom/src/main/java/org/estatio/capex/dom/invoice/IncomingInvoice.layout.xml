@@ -8,138 +8,156 @@
                     <cpt:domainObject/>
                 </bs3:col>
             </bs3:row>
-            <bs3:tabGroup>
-                <bs3:tab name="General">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="General" id="general">
-                                <cpt:property id="invoiceNumber"/>
-                                <cpt:property id="buyer"/>
-                                <cpt:property id="seller"/>
-                                <cpt:property id="isCreditFor"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                        <!--temporarily hides actions and properties for demo purposes TODO: bring them to subclass or make visible or ...-->
-                        <bs3:col span="0">
-                            <cpt:fieldSet name="hidden" id="hidden">
-                                <cpt:action id="updateAttribute"/>
-                                <cpt:action id="changePaymentMethod"/>
-                                <cpt:action id="remove"/>
-                                <cpt:action id="changeDueDate"/>
-                                <cpt:action id="preparePrelimLetter"/>
-                                <cpt:action id="prepareInvoiceDoc"/>
-                                <cpt:property id="status"/>
-                                <cpt:property id="collectionNumber"/>
-                                <cpt:property id="currency"/>
-                                <cpt:property id="paidBy"/>
-                                <cpt:property id="relatesTo"/>
-                                <cpt:property id="sendTo"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Application Tenancy">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Application Tenancy">
-                                <cpt:property id="applicationTenancy"/>
-                                <cpt:property id="atPath"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Other">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Metadata">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <cpt:property id="id"/>
-                                <cpt:property id="versionSequence"/>
-                                <cpt:property id="datanucleusId"/>
-                                <cpt:property id="datanucleusVersionLong"/>
-                                <cpt:property id="datanucleusVersionTimestamp"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-            <bs3:tabGroup>
-                <bs3:tab name="Amounts">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Amounts">
-                                <cpt:property id="netAmount"/>
-                                <cpt:property id="vatAmount"/>
-                                <cpt:property id="grossAmount"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Payment">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Payment" id="details">
-                                <cpt:property id="bankAccount">
-                                    <cpt:action id="changeBankAccount"/>
-                                    <cpt:action id="createBankAccount" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="paymentMethod"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Dates">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Dates">
-                                <cpt:property id="dateReceived"/>
-                                <cpt:property id="invoiceDate"/>
-                                <cpt:property id="dueDate"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-            <cpt:fieldSet name="Approval">
-                <cpt:action id="checkApprovalState">
-                    <cpt:named>Check state</cpt:named>
-                </cpt:action>
-                <cpt:property id="approvalState">
-                    <cpt:action id="viewApprovalTransitions" position="RIGHT">
-                        <cpt:named>Show transitions</cpt:named>
-                    </cpt:action>
-                </cpt:property>
-                <cpt:property id="pendingApprovalTask">
-                    <cpt:action id="approveAsProjectManager"/>
-                    <cpt:action id="approveAsAssetManager"/>
-                    <cpt:action id="approveAsCountryDirector"/>
-                    <cpt:action id="cancel"/>
-                </cpt:property>
-                <cpt:property id="reasonApprovalTaskBlocked">
-                    <cpt:named>Reason blocked</cpt:named>
-                </cpt:property>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Next task">
-                <cpt:property id="nextApprovalTaskTransitionType">
-                    <cpt:named>Description</cpt:named>
-                </cpt:property>
-                <cpt:property id="nextApprovalTaskRoleAssignedTo">
-                    <cpt:named>Role assigned to</cpt:named>
-                </cpt:property>
-                <cpt:property id="nextApprovalTaskPersonAssignedTo">
-                    <cpt:named>Person assigned to</cpt:named>
-                </cpt:property>
-            </cpt:fieldSet>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="General">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="General" id="general">
+                                        <cpt:property id="invoiceNumber"/>
+                                        <cpt:property id="buyer"/>
+                                        <cpt:property id="seller"/>
+                                        <cpt:property id="type"/>
+                                        <cpt:property id="property"/>
+                                        <cpt:property id="isCreditFor"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Application Tenancy">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Application Tenancy">
+                                        <cpt:property id="applicationTenancy"/>
+                                        <cpt:property id="atPath"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="id"/>
+                                        <cpt:property id="versionSequence"/>
+                                        <cpt:property id="datanucleusId"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                    <bs3:tabGroup>
+                        <bs3:tab name="Amounts">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Amounts">
+                                        <cpt:property id="netAmount"/>
+                                        <cpt:property id="vatAmount"/>
+                                        <cpt:property id="grossAmount"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Payment">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Payment" id="details">
+                                        <cpt:property id="bankAccount">
+                                            <cpt:action id="changeBankAccount"/>
+                                            <cpt:action id="createBankAccount" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="paymentMethod">
+                                            <cpt:action id="changePaymentMethod"/>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Dates">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Dates">
+                                        <cpt:property id="dateReceived"/>
+                                        <cpt:property id="invoiceDate"/>
+                                        <cpt:property id="dueDate">
+                                            <cpt:action id="changeDueDate"/>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="items" defaultView="table"></cpt:collection>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Current task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Approval">
+                                        <cpt:action id="checkApprovalState">
+                                            <cpt:named>Check state</cpt:named>
+                                        </cpt:action>
+                                        <cpt:property id="approvalState">
+                                            <cpt:action id="viewApprovalTransitions" position="RIGHT">
+                                                <cpt:named>Show transitions</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="pendingApprovalTask">
+                                            <cpt:action id="completePropertyInvoice"/>
+                                            <cpt:action id="completeLocalInvoice"/>
+                                            <cpt:action id="completeCorporateInvoice"/>
+                                            <cpt:action id="approveAsLegalManager"/>
+                                            <cpt:action id="approveAsProjectManager"/>
+                                            <cpt:action id="approveAsAssetManager"/>
+                                            <cpt:action id="approveAsCountryDirector"/>
+                                        </cpt:property>
+                                        <cpt:property id="reasonApprovalTaskBlocked">
+                                            <cpt:named>Reason blocked</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Next task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Next task">
+                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                            <cpt:named>Description</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                            <cpt:named>Role assigned to</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskPersonAssignedTo">
+                                            <cpt:named>Person assigned to</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
 
-            <cpt:collection id="items" defaultView="table"></cpt:collection>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>
@@ -166,14 +184,30 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-
+        </bs3:col>
+        <bs3:col span="0">
+            <!--
+            TODO: move down to InvoiceForLease subtype.
+            temporarily hides actions, properties and collections ...
+            -->
+            <cpt:fieldSet name="hidden" id="hidden">
+                <cpt:action id="remove"/>
+                <cpt:property id="status"/>
+                <cpt:property id="collectionNumber"/>
+                <cpt:property id="currency"/>
+                <cpt:property id="paidBy"/>
+                <cpt:property id="relatesTo"/>
+                <cpt:property id="sendTo"/>
+            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="0">
             <bs3:tabGroup >
                 <bs3:tab name="hidden">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="attributes"/>
+                            <cpt:collection id="attributes">
+                                <cpt:action id="updateAttribute"/>
+                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

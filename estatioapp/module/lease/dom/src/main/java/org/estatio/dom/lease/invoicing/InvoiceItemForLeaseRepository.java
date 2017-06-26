@@ -58,7 +58,6 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
 
         final InvoiceItemForLease invoiceItem = newItem(invoice, dueDate);
 
-        invoiceItem.setUuid(java.util.UUID.randomUUID().toString());
         persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
@@ -87,19 +86,18 @@ public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory
         // redundantly persist, these are immutable
         // assumes only one occupancy per lease...
         invoiceItem.setLease(lease);
-        final Optional<Occupancy> occupancy = lease.primaryOccupancy();
-        Unit unit = occupancy.get().getUnit();
-        invoiceItem.setFixedAsset(unit);
+        final Optional<Occupancy> occupancyIfAny = lease.primaryOccupancy();
+        occupancyIfAny.ifPresent(occupancy -> {
+            Unit unit = occupancy.getUnit();
+            invoiceItem.setFixedAsset(unit);
+        });
 
         persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
 
     private InvoiceItemForLease newItem(final InvoiceForLease invoice, final LocalDate dueDate) {
-        InvoiceItemForLease invoiceItem = newTransientInstance();
-        invoiceItem.setInvoice(invoice);
-        invoiceItem.setDueDate(dueDate);
-        return invoiceItem;
+        return new InvoiceItemForLease(invoice, dueDate);
     }
 
     // //////////////////////////////////////

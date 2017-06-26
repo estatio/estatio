@@ -95,9 +95,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final org.estatio.dom.asset.Property property,
             final Project project,
             final BudgetItem budgetItem){
+        super(invoice);
+
         setSequence(sequence);
 
-        setInvoice(invoice);
         setCharge(charge);
         setDescription(description);
 
@@ -113,6 +114,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setFixedAsset(property);
         setProject(project);
         setBudgetItem(budgetItem);
+
     }
 
     @Override

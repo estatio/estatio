@@ -14,6 +14,10 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -23,6 +27,7 @@ import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -37,27 +42,21 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-            }
-        });
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
-            }
-        });
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+                executionContext.executeChild(this, new PropertyForOxfGb());
             }
         });
     }
 
     @Inject
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    @Inject
+    PropertyRepository propertyRepository;
 
     Party seller;
     Party buyer;
+    Property property;
     String invoiceNumber;
     String atPath;
     LocalDate invoiceDate;
@@ -95,6 +94,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
     private IncomingInvoice createIncomingInvoiceAndItem(){
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+        property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);
         dueDate = invoiceDate.minusMonths(1);
@@ -102,13 +102,18 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         invoiceStatus = InvoiceStatus.NEW;
         atPath = "/GBR";
 
-        IncomingInvoice invoice = incomingInvoiceRepository.create(invoiceNumber, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null);
+        IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX, invoiceNumber, property,
+                atPath,
+                buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, null,null, IncomingInvoiceApprovalState.PAID);
 
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";
         tax = taxRepository.findByReference("FRF");
 
-        invoice.addItem(charge, description, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, tax, dueDate, null, null, null, null, null);
+        mixin(IncomingInvoice.addItem.class, invoice).act(
+                charge, description,
+                BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                tax, dueDate, null, null, null, null, null);
 
         return invoice;
     }

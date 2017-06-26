@@ -1,7 +1,6 @@
 package org.estatio.capex.dom.invoice.approval;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -10,58 +9,51 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
-import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.CHECK_BANK_ACCOUNT;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.CONFIRM_BANK_ACCOUNT_VERIFIED;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
+    /**
+     * This entire callback is a workaround, because we can't mutate the state of the incoming invoice
+     * in the persisted callback
+     */
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev) {
-        final StateTransitionEvent.Phase phase = ev.getPhase();
-        if (phase == StateTransitionEvent.Phase.TRANSITIONED) {
+    public void on(IncomingInvoice.ObjectPersistingEvent ev) {
+        final IncomingInvoice incomingInvoice = ev.getSource();
 
-            final IncomingDocumentCategorisationStateTransitionType transitionType = ev.getTransitionType();
-            switch (transitionType) {
-
-            case INSTANTIATE:
-                break;
-            case CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY:
-                break;
-
-            case CLASSIFY_AS_INVOICE_OR_ORDER:
-                final Document document = ev.getDomainObject();
-                final Optional<IncomingInvoice> incomingInvoiceIfAny = findIncomingInvoiceFrom(document);
-                incomingInvoiceIfAny.ifPresent(
-                        incomingInvoice ->
-                                stateTransitionService .trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null));
-                break;
-            }
+        // for the OrderInvoiceLine import from existing spreadsheets, will be set to PAID, so do nothing
+        if(incomingInvoice.getApprovalState() == null) {
+            incomingInvoice.setApprovalState(IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState());
         }
     }
 
-    private Optional<IncomingInvoice> findIncomingInvoiceFrom(final Document document) {
-        final List<Paperclip> paperclipList = paperclipRepository.findByDocument(document);
-        for (Paperclip paperclip : paperclipList) {
-            final Object attachedTo = paperclip.getAttachedTo();
-            if(attachedTo instanceof IncomingInvoice) {
-                return Optional.of ((IncomingInvoice) attachedTo);
-            }
+    @Programmatic
+    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
+    public void on(IncomingInvoice.ObjectPersistedEvent ev) {
+        // nb: note that the incoming invoice at this stage has no items attached to it,
+        // so there is a limit as to what we can safely do.
+        // however, it *is* ok to just create the state chart for the invoice.
+        final IncomingInvoice incomingInvoice = ev.getSource();
+
+        IncomingInvoiceApprovalState approvalState = incomingInvoice.getApprovalState();
+        if(approvalState == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
+            // ie was set in the persisting callback
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
         }
-        return Optional.empty();
+
     }
 
     @Programmatic
@@ -80,7 +72,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             case VERIFY_BANK_ACCOUNT:
                 final List<IncomingInvoice> incomingInvoices = findIncomingInvoicesUsing(bankAccount);
                 for (IncomingInvoice incomingInvoice : incomingInvoices) {
-                    stateTransitionService.trigger(incomingInvoice, CHECK_BANK_ACCOUNT, null);
+                    stateTransitionService.trigger(incomingInvoice, CONFIRM_BANK_ACCOUNT_VERIFIED, null);
                 }
 
                 break;

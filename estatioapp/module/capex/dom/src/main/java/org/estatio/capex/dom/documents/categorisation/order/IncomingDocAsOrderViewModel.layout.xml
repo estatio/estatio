@@ -36,6 +36,8 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" unreferencedProperties="false">
                                         <cpt:action id="changeOrderDetails"/>
+                                        <cpt:property id="domainObject"/>
+                                        <cpt:property id="property" promptStyle="INLINE"/>
                                         <cpt:property id="orderNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
                                         <cpt:property id="seller" promptStyle="INLINE">
@@ -45,7 +47,7 @@
                                         <cpt:property id="orderDate" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Order Item" unreferencedProperties="false">
-                                        <cpt:action id="changeItemDetails"/>
+                                        <cpt:action id="changeItemDetails" position="PANEL"/>
                                         <cpt:property id="description" promptStyle="INLINE"/>
                                         <cpt:property id="netAmount" promptStyle="INLINE"/>
                                         <cpt:property id="vatAmount" promptStyle="INLINE"/>
@@ -53,7 +55,7 @@
                                         <cpt:property id="grossAmount" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Dimensions" unreferencedProperties="false">
-                                        <cpt:action id="changeDimensions"/>
+                                        <cpt:action id="changeDimensions" position="PANEL"/>
                                         <cpt:property id="charge">
                                             <cpt:action id="editCharge" promptStyle="INLINE_AS_IF_EDIT"/>
                                         </cpt:property>

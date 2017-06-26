@@ -142,7 +142,6 @@ public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<Inv
         invoice.setCurrency(currency);
         invoice.setLease(lease);
         invoice.setDueDate(dueDate);
-        invoice.setUuid(java.util.UUID.randomUUID().toString());
         invoice.setRunId(interactionId);
 
         // copy down form the agreement, we require all invoice items to relate

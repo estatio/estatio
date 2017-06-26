@@ -43,7 +43,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.Invoice_sendByPost;
+import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_sendByPost;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {
@@ -68,7 +68,7 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
             final Invoice invoice = invoiceAndDocument.getInvoice();
             final Document prelimLetterOrInvoiceNote = invoiceAndDocument.getDocument();
 
-            final Invoice_sendByPost invoice_sendByPost = invoice_sendByPost(invoice);
+            final InvoiceForLease_sendByPost invoice_sendByPost = invoice_sendByPost(invoice);
             final PostalAddress postalAddress = invoice_sendByPost.default1$$(prelimLetterOrInvoiceNote);
 
             invoice_sendByPost.createPostalCommunicationAsSent(prelimLetterOrInvoiceNote, postalAddress);
@@ -97,14 +97,14 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByPostAbstract 
 
     private Predicate<InvoiceAndDocument> withPostalAddress() {
         return invoiceAndDocument -> {
-            final Invoice_sendByPost invoice_sendByPost = invoice_sendByPost(invoiceAndDocument.getInvoice());
+            final InvoiceForLease_sendByPost invoice_sendByPost = invoice_sendByPost(invoiceAndDocument.getInvoice());
             final PostalAddress postalAddress = invoice_sendByPost.default1$$(invoiceAndDocument.getDocument());
             return postalAddress != null;
         };
     }
 
-    private Invoice_sendByPost invoice_sendByPost(final Invoice invoice) {
-        return factoryService.mixin(Invoice_sendByPost.class, invoice);
+    private InvoiceForLease_sendByPost invoice_sendByPost(final Invoice invoice) {
+        return factoryService.mixin(InvoiceForLease_sendByPost.class, invoice);
     }
 
 

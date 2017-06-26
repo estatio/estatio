@@ -152,15 +152,15 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @PropertyLayout(named = "order", hidden = Where.REFERENCES_PARENT)
     private Order ordr;
 
-    @Column(allowsNull = "false", name = "chargeId")
+    @Column(allowsNull = "true", name = "chargeId")
     @Getter @Setter
     private Charge charge;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String description;
 
-    @Column(allowsNull = "false", scale = 2)
+    @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal netAmount;
 
@@ -168,7 +168,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     private BigDecimal vatAmount;
 
-    @Column(allowsNull = "false", scale = 2)
+    @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal grossAmount;
 
@@ -177,11 +177,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private Tax tax;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     private LocalDate startDate;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     private LocalDate endDate;
 
     @Column(allowsNull = "true", name = "propertyId")

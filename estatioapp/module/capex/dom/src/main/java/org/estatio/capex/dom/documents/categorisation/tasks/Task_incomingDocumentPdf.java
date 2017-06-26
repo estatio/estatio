@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.documents.categorisation.tasks;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import org.wicketstuff.pdfjs.Scale;
@@ -38,14 +36,7 @@ public class Task_incomingDocumentPdf {
     )
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob prop() {
-        final Document document = taskIncomingDocumentService.lookupFor(task);
-        if(document == null) {
-            return null;
-        }
-        if (!Objects.equals(document.getMimeType(), "application/pdf")) {
-            return null;
-        }
-        return document.getBlob();
+        return taskIncomingDocumentPdfService.lookupPdfFor(task);
     }
 
     public boolean hideProp() {
@@ -53,5 +44,5 @@ public class Task_incomingDocumentPdf {
     }
 
     @Inject
-    TaskIncomingDocumentService taskIncomingDocumentService;
+    TaskIncomingDocumentPdfService taskIncomingDocumentPdfService;
 }

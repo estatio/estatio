@@ -10,16 +10,16 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
+import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
 public class Task_categoriseAsOrder
-        extends
-        Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
+        extends Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
 
     protected final Task task;
 
@@ -35,7 +35,19 @@ public class Task_categoriseAsOrder
             @Nullable final String comment,
             final boolean goToNext) {
         Object mixinResult = mixin().act(property, comment);
+        if(mixinResult instanceof IncomingDocViewModel) {
+            IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
+            // to support 'goToNext' when finished with the view model
+            viewModel.setOriginatingTask(task);
+        }
         return toReturnElse(goToNext, mixinResult);
+    }
+
+    public String validateAct(
+            final Property property,
+            final String comment,
+            final boolean goToNext) {
+        return mixin().validateAct(property, comment);
     }
 
     public boolean default2Act() {

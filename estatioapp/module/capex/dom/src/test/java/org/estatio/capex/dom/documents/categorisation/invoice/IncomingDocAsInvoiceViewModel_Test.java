@@ -133,7 +133,7 @@ public class IncomingDocAsInvoiceViewModel_Test {
 
         // given
         IncomingDocAsInvoiceViewModel vm = new IncomingDocAsInvoiceViewModel();
-        vm.setPaymentMethod(PaymentMethod.TEST_NO_PAYMENT);
+        vm.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
 
         // when
         String result = vm.minimalRequiredDataToComplete();

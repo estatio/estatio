@@ -69,7 +69,7 @@ public class InvoiceForLeaseDtoFactory_Test {
     }
 
     private static InvoiceItemForTesting newItem(final Invoice invoice, final String netAmt, final String grossAmt, final String vatAmt) {
-        final InvoiceItemForTesting invoiceItem = new InvoiceItemForTesting();
+        final InvoiceItemForTesting invoiceItem = new InvoiceItemForTesting(invoice);
         invoiceItem.setInvoice(invoice);
         final ChargeGroup chargeGroup = new ChargeGroup();
         final Charge charge = new Charge();

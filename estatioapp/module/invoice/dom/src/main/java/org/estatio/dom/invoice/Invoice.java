@@ -20,8 +20,10 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -33,6 +35,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -191,11 +194,11 @@ public abstract class Invoice<T extends Invoice<T>>
                 title());
     }
 
-    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "true")
     @Getter @Setter
     private Party buyer;
 
-    @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "true")
     @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party seller;
@@ -220,7 +223,7 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private CommunicationChannel sendTo;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate dueDate;
@@ -311,7 +314,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private Currency currency;
 
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = PaymentMethod.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PaymentMethod.Meta.MAX_LEN)
     @Getter @Setter
     private PaymentMethod paymentMethod;
 
@@ -368,29 +371,57 @@ public abstract class Invoice<T extends Invoice<T>>
 
     @Property(notPersisted = true)
     public BigDecimal getNetAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getNetAmount());
-        }
-        return total;
+        return sum(InvoiceItem::getNetAmount);
     }
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getVatAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getVatAmount());
-        }
-        return total;
+        return sum(InvoiceItem::getVatAmount);
     }
 
     @Property(notPersisted = true)
     public BigDecimal getGrossAmount() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()) {
-            total = total.add(item.getGrossAmount());
+        return sum(InvoiceItem::getGrossAmount);
+    }
+
+    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
+        // this works:
+        //return sumImperative(x);
+
+        // this also works:
+        return sumFunctionalUsingEagerStream(x);
+
+        // this doesn't work:
+        //return sumFunctionalUsingLazyStreamBROKEN(x);
+
+    }
+
+    private BigDecimal sumFunctionalUsingEagerStream(final Function<InvoiceItem, BigDecimal> x) {
+        return Lists.newArrayList(getItems()).stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * This does not enumerate correctly, it would seem.
+     */
+    private BigDecimal sumFunctionalUsingLazyStreamBROKEN(final Function<InvoiceItem, BigDecimal> x) {
+        return getItems().stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal sumImperative(final Function<InvoiceItem, BigDecimal> x) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (final InvoiceItem item : getItems()) {
+            BigDecimal value = x.apply(item);
+            if(value != null) {
+                sum = sum.add(value);
+            }
         }
-        return total;
+        return sum;
     }
 
     protected boolean isImmutable() {

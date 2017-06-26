@@ -89,6 +89,13 @@ public class StateTransitionService {
     >  S currentStateOf(
             final DO domainObject,
             final Class<ST> stateTransitionClass) {
+        if(domainObject instanceof Stateful) {
+            Stateful stateful = (Stateful) domainObject;
+            S currentStateIfKnown = stateful.getStateOf(stateTransitionClass);
+            if(currentStateIfKnown != null) {
+                return currentStateIfKnown;
+            }
+        }
         final StateTransitionServiceSupport<DO, ST, STT, S> supportService = supportFor(stateTransitionClass);
         return supportService.currentStateOf(domainObject);
     }
@@ -196,7 +203,7 @@ public class StateTransitionService {
      *
      *  @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
-     * @param requiredTransitionType
+     * @param requiredTransitionTypeIfAny
      * @param comment
      */
     @Programmatic
@@ -208,10 +215,10 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requiredTransitionType,
+            final STT requiredTransitionTypeIfAny,
             final String comment) {
 
-        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionType, comment);
+        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, comment);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {
@@ -351,7 +358,7 @@ public class StateTransitionService {
         IPartyRoleType assignToIfAny = null;
         if(taskAssignmentStrategy != null) {
             assignToIfAny = taskAssignmentStrategy
-                    .getAssignTo(domainObject, transitionType, serviceRegistry2);
+                    .getAssignTo(domainObject, serviceRegistry2);
         }
         return transitionType
                 .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
@@ -377,7 +384,8 @@ public class StateTransitionService {
         eventBusService.post(event);
 
         // transition
-        transitionType.applyTo(domainObject, serviceRegistry2);
+        final Class<ST> stateTransitionClass = transitionClassFor(transitionType);
+        transitionType.applyTo(domainObject, stateTransitionClass, serviceRegistry2);
 
         // mark tasks as complete
         transitionToComplete.completed();

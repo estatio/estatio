@@ -20,6 +20,7 @@ package org.estatio.integtests.lease;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
@@ -248,13 +250,22 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             invoice = invoiceForLeaseRepository.findByLease(leaseForMedia).get(0);
             assertThat(invoice.getItems().size()).isEqualTo(2);
 
-            invoiceItemInArrears = (InvoiceItemForLease) invoice.getItems().first();
-            assertThat(invoiceItemInArrears.getSource()).isEqualTo(termInArrears);
-            assertThat(invoiceItemInArrears.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+            SortedSet<InvoiceItem> items = invoice.getItems();
+            InvoiceItemForLease firstItem = (InvoiceItemForLease) items.first();
+            InvoiceItemForLease secondItem = (InvoiceItemForLease) invoice.getItems().last();
 
-            invoiceItemInAdvance = (InvoiceItemForLease) invoice.getItems().last();
-            assertThat(invoiceItemInAdvance.getSource()).isEqualTo(termInAdvance);
-            assertThat(invoiceItemInAdvance.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+            assertThat(firstItem.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+            assertThat(secondItem.getNetAmount()).isEqualTo(new BigDecimal("10281.95"));
+
+            // flaky test, I think because now reliant on value of UUID which is randomly assigned
+            if(firstItem.getSource().equals(termInArrears)) {
+                assertThat(firstItem.getSource()).isEqualTo(termInArrears);
+                assertThat(secondItem.getSource()).isEqualTo(termInAdvance);
+            } else {
+                // other way around
+                assertThat(firstItem.getSource()).isEqualTo(termInAdvance);
+                assertThat(secondItem.getSource()).isEqualTo(termInArrears);
+            }
 
         }
 

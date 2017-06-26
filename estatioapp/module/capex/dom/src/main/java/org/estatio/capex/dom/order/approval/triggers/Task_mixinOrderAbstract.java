@@ -1,0 +1,19 @@
+package org.estatio.capex.dom.order.approval.triggers;
+
+import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.Task_mixinActAbstract;
+
+public abstract class Task_mixinOrderAbstract<M extends Order_triggerAbstract>
+        extends
+        Task_mixinActAbstract<M, Order> {
+
+    protected final Task task;
+
+    public Task_mixinOrderAbstract(final Task task, final Class<M> mixinClass) {
+        super(task, mixinClass);
+        this.task = task;
+    }
+
+
+}

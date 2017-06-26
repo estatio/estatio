@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -12,19 +13,22 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 @Mixin(method = "act")
 public class BankAccount_cancel extends BankAccount_triggerAbstract {
 
+    private final BankAccount bankAccount;
+
     public BankAccount_cancel(BankAccount bankAccount) {
         super(bankAccount, BankAccountVerificationStateTransitionType.CANCEL);
+        this.bankAccount = bankAccount;
     }
 
-    @Action()
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @MemberOrder(sequence = "9")
-    public Object act(
-            @Nullable final String comment) {
-        trigger(comment);
-        return getDomainObject();
+    @Override public BankAccount act(@Nullable final String comment) {
+        return super.act(comment);
     }
 
-    public boolean hideAct() {
-        return cannotTransition();
+    @Override public boolean hideAct() {
+        return super.hideAct();
     }
 }

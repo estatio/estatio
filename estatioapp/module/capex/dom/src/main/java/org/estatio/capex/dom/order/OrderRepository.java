@@ -15,6 +15,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
+import org.estatio.capex.dom.order.approval.OrderApprovalState;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 
@@ -50,6 +52,7 @@ public class OrderRepository {
 
     @Programmatic
     public Order create(
+            final Property property,
             final String number,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -57,9 +60,9 @@ public class OrderRepository {
             final Party seller,
             final Party buyer,
             final String atPath,
-            final String approvedBy,
-            final LocalDate approvedOn) {
-        final Order order = new Order(number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvedBy, approvedOn);
+            final OrderApprovalState approvalStateIfAny) {
+        final Order order = new Order(
+                property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvalStateIfAny);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
         return order;
@@ -67,6 +70,7 @@ public class OrderRepository {
 
     @Programmatic
     public Order upsert(
+            final Property property,
             final String number,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -74,45 +78,42 @@ public class OrderRepository {
             final Party seller,
             final Party buyer,
             final String atPath,
-            final String approvedBy,
-            final LocalDate approvedOn) {
+            final OrderApprovalState approvalStateIfAny) {
         Order order = findByOrderNumber(number);
         if (order == null) {
-            order = create(number, sellerOrderReference, entryDate, orderDate,
-                    seller, buyer, atPath, approvedBy, approvedOn);
+            order = create(property, number, sellerOrderReference, entryDate, orderDate,
+                    seller, buyer, atPath, approvalStateIfAny);
         } else {
             updateOrder(
                     order,
+                    property,
                     sellerOrderReference,
                     entryDate, orderDate,
                     seller,
                     buyer,
-                    atPath,
-                    approvedBy,
-                    approvedOn);
+                    atPath
+            );
         }
         return order;
     }
 
     private void updateOrder(
             final Order order,
+            final Property property,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
             final Party seller,
             final Party buyer,
-            final String atPath,
-            final String approvedBy,
-            final LocalDate approvedOn
-            ){
+            final String atPath
+    ){
+        order.setProperty(property);
         order.setSellerOrderReference(sellerOrderReference);
         order.setEntryDate(entryDate);
         order.setOrderDate(orderDate);
         order.setSeller(seller);
         order.setBuyer(buyer);
         order.setAtPath(atPath);
-        order.setApprovedBy(approvedBy);
-        order.setApprovedOn(approvedOn);
     }
 
     @Programmatic

@@ -20,10 +20,10 @@ import org.estatio.dom.charge.Charge;
 @Mixin
 public class IncomingInvoiceViewModel_createCodaMapping {
 
-    private final IncomingDocAsInvoiceViewModel item;
+    private final IncomingDocAsInvoiceViewModel viewModel;
 
-    public IncomingInvoiceViewModel_createCodaMapping(IncomingDocAsInvoiceViewModel item) {
-        this.item = item;
+    public IncomingInvoiceViewModel_createCodaMapping(IncomingDocAsInvoiceViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -53,13 +53,13 @@ public class IncomingInvoiceViewModel_createCodaMapping {
                 codaElement);
     }
 
-    public Charge default0$$() {return item.getCharge();}
+    public Charge default0$$() {return viewModel.getCharge();}
     //public CodaElement default1$$() {}
     //public CodaTransactionType default2$$() {}
-    public CodaMappingFilter default3$$() {return item.getProject() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
-    public CodaMappingFilter default4$$() {return item.getFixedAsset() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
-    public CodaMappingFilter default5$$() {return item.getBudgetItem() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
-    public boolean default6$$() {return isFullyOwned(item.getFixedAsset());}
+    public CodaMappingFilter default3$$() {return viewModel.getProject() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
+    public CodaMappingFilter default4$$() {return viewModel.getProperty() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
+    public CodaMappingFilter default5$$() {return viewModel.getBudgetItem() == null ? CodaMappingFilter.NO : CodaMappingFilter.YES;}
+    public boolean default6$$() {return isFullyOwned(viewModel.getProperty());}
 
     private boolean isFullyOwned(final FixedAsset<?> fixedAsset) {
         if (fixedAsset instanceof Property){

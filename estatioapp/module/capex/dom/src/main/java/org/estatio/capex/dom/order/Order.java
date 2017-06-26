@@ -1,9 +1,13 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -13,11 +17,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -25,18 +29,27 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.order.approval.OrderApprovalState;
+import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.state.State;
+import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.state.Stateful;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -74,26 +87,32 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE seller == :seller ")
 })
-@Unique(name = "Order_reference_UNQ", members = { "orderNumber" })
 @DomainObject(
         editing = Editing.DISABLED,
-        objectType = "orders.Order"
+        objectType = "orders.Order",
+        persistingLifecycleEvent = Order.ObjectPersistingEvent.class,
+        persistedLifecycleEvent = Order.ObjectPersistedEvent.class
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class Order extends UdoDomainObject2<Order> {
+public class Order extends UdoDomainObject2<Order> implements Stateful {
 
-    public Order() {
-        super("orderNumber");
+    public static class ObjectPersistedEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <Order> {
+    }
+    public static class ObjectPersistingEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <Order> {
     }
 
-    public String title() {
-        return TitleBuilder.start().withReference(getOrderNumber()).toString();
+    public Order() {
+        // TODO: may need to revise this when we know more...
+        super("seller, orderDate, orderNumber, id");
     }
 
     public Order(
+            final org.estatio.dom.asset.Property property,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -101,9 +120,9 @@ public class Order extends UdoDomainObject2<Order> {
             final Party seller,
             final Party buyer,
             final String atPath,
-            final String approvedBy,
-            final LocalDate approvedOn) {
+            final OrderApprovalState approvalStateIfAny) {
         this();
+        this.property = property;
         this.orderNumber = orderNumber;
         this.sellerOrderReference = sellerOrderReference;
         this.entryDate = entryDate;
@@ -111,19 +130,51 @@ public class Order extends UdoDomainObject2<Order> {
         this.seller = seller;
         this.buyer = buyer;
         this.atPath = atPath;
-        this.approvedBy = approvedBy;
-        this.approvedOn = approvedOn;
+        this.approvalState = approvalStateIfAny;
     }
 
-    @Column(allowsNull = "false")
+    public String title() {
+
+        final TitleBuffer buf = new TitleBuffer();
+
+        final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(this);
+        document.ifPresent(d -> buf.append(d.getName()));
+
+        final Party seller = getSeller();
+        if(seller != null) {
+            buf.append(": ", seller);
+        }
+
+        final String orderNumber = getOrderNumber();
+        if(orderNumber != null) {
+            buf.append(", ", orderNumber);
+        }
+
+        return buf.toString();
+    }
+
+    /**
+     * This relates to the owning property, while the child items may either also relate to the property,
+     * or could potentially relate to individual units within the property.
+     *
+     * <p>
+     *     This follows the same pattern as {@link IncomingInvoice}.
+     * </p>
+     */
+    @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
+    private org.estatio.dom.asset.Property property;
+
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String orderNumber;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String sellerOrderReference;
 
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate entryDate;
 
@@ -131,11 +182,11 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private LocalDate orderDate;
 
-    @Column(allowsNull = "false", name = "sellerId")
+    @Column(allowsNull = "true", name = "sellerPartyId")
     @Getter @Setter
     private Party seller;
 
-    @Column(allowsNull = "false", name = "buyerId")
+    @Column(allowsNull = "true", name = "buyerPartyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
@@ -144,29 +195,64 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
 
-    @MemberOrder(name="items", sequence = "1")
-    public Order addItem(
-            final Charge charge,
-            final String description,
-            final BigDecimal netAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BigDecimal vatAmount,
-            final BigDecimal grossAmount,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Tax tax,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final org.estatio.dom.asset.Property property,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BudgetItem budgetItem
-    ) {
-        orderItemRepository.upsert(
-                this, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
-        // (we think there's) no need to add to the getItems(), because the item points back to this order.
-        return this;
+    @Mixin(method="act")
+    public static class addItem {
+        private final Order order;
+
+        public addItem(final Order order) {
+            this.order = order;
+        }
+
+        @MemberOrder(name="items", sequence = "1")
+        public Order act(
+                final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                @Nullable final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                @Nullable final Tax tax,
+                final LocalDate startDate,
+                final LocalDate endDate,
+                @Nullable final org.estatio.dom.asset.Property property,
+                @Nullable final Project project,
+                @Nullable final BudgetItem budgetItem
+        ) {
+            orderItemRepository.upsert(
+                    order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
+            // (we think there's) no need to add to the getItems(), because the item points back to this order.
+            return order;
+        }
+
+        public String disableAct() {
+            return order.reasonDisabledDueToState();
+        }
+
+        @Inject
+        OrderItemRepository orderItemRepository;
+
+    }
+
+
+    @Property(notPersisted = true)
+    public BigDecimal getNetAmount() {
+        return sum(OrderItem::getNetAmount);
+    }
+
+    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
+    public BigDecimal getVatAmount() {
+        return sum(OrderItem::getVatAmount);
+    }
+
+    @Property(notPersisted = true)
+    public BigDecimal getGrossAmount() {
+        return sum(OrderItem::getGrossAmount);
+    }
+
+    private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
+        return Lists.newArrayList(getItems()).stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
@@ -179,7 +265,6 @@ public class Order extends UdoDomainObject2<Order> {
     @Getter @Setter
     private String atPath;
 
-
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
@@ -189,19 +274,63 @@ public class Order extends UdoDomainObject2<Order> {
     }
 
 
-
-    // random thought: approvedBy and approvedOn are probably both attributes of a different entity, "Approval".
-    // workflow is a crosscutting concern, the approval points back to the order that it approves
-    // (perhaps Order is Approvable)
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String approvedBy;
+
+    public boolean hideApprovedBy() {
+        return getApprovedBy() == null;
+    }
 
     @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate approvedOn;
 
+    public boolean hideApprovedOn() {
+        return getApprovedOn() == null;
+    }
+
+    @Getter @Setter
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    private OrderApprovalState approvalState;
+
+    @Override
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > S getStateOf(
+            final Class<ST> stateTransitionClass) {
+        if(stateTransitionClass == OrderApprovalStateTransition.class) {
+            return (S) approvalState;
+        }
+        return null;
+    }
+
+    @Override
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > void setStateOf(
+            final Class<ST> stateTransitionClass, final S newState) {
+        if(stateTransitionClass == OrderApprovalStateTransition.class) {
+            setApprovalState( (OrderApprovalState) newState );
+        }
+    }
+
+    @Programmatic
+    public String reasonDisabledDueToState() {
+        OrderApprovalState currentState = getApprovalState();
+        return currentState == OrderApprovalState.NEW ?
+                null :
+                "Cannot modify because invoice is in state of " + currentState;
+    }
+
+
     @Inject
-    OrderItemRepository orderItemRepository;
+    LookupAttachedPdfService lookupAttachedPdfService;
 
 }

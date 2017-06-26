@@ -38,17 +38,11 @@ public enum PaymentApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    APPROVE_AS_TREASURER(
+    APPROVE_AS_FINANCIAL_DIRECTOR(
             PaymentApprovalState.NEW,
-            PaymentApprovalState.APPROVED_BY_TREASURER,
+            PaymentApprovalState.APPROVED_BY_FINANCIAL_DIRECTOR,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
-            AdvancePolicy.MANUAL),
-    CANCEL(
-            PaymentApprovalState.NEW,
-            PaymentApprovalState.CANCELLED,
-            NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.none(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.FINANCIAL_DIRECTOR),
             AdvancePolicy.MANUAL);
 
     private final List<PaymentApprovalState> fromStates;

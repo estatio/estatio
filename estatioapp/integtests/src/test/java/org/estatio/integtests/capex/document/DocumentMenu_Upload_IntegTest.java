@@ -26,7 +26,7 @@ import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY;
+import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE;
 import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 
 public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
@@ -77,7 +77,7 @@ public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
 
         assertThat(transitions).hasSize(2);
         assertTransition(transitions.get(0),
-                NEW, CATEGORISE_DOCUMENT_TYPE_AND_ASSOCIATE_WITH_PROPERTY, null);
+                NEW, CATEGORISE, null);
         assertTransition(transitions.get(1),
                 null, INSTANTIATE, NEW);
 

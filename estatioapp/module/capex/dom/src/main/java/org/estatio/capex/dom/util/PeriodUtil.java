@@ -35,6 +35,9 @@ public class PeriodUtil {
     }
 
     public static String periodFromInterval(@NotNull final LocalDateInterval interval){
+        if(interval.isInfinite()) {
+            return null;
+        }
         LocalDate endDate = interval.endDate();
         if (matchesCalendarYear(interval)){
             return String.valueOf(endDate.getYear());

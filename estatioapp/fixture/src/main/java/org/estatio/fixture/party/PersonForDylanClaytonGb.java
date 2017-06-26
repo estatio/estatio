@@ -41,7 +41,7 @@ public class PersonForDylanClaytonGb extends FixtureScript {
                     .setFirstName("Dylan")
                     .setLastName("Clayton")
                     .setPersonGenderType(PersonGenderType.MALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.MAIL_ROOM)
+                    .addPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR)
                     .setSecurityUsername(SECURITY_USERNAME)
                 .execute(executionContext);
     }

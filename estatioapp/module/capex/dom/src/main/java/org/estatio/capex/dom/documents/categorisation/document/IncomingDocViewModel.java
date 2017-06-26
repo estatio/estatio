@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -14,19 +13,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
-
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -37,31 +32,28 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.BookmarkService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.hint.HintStore;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.util.PeriodUtil;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.ownership.FixedAssetOwnership;
+import org.estatio.dom.asset.role.FixedAssetRole;
+import org.estatio.dom.asset.role.FixedAssetRoleRepository;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -71,7 +63,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -125,8 +116,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
 
 
-
-
     @Programmatic
     public abstract void setDomainObject(T t);
 
@@ -144,30 +133,25 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Programmatic
     protected abstract String minimalRequiredDataToComplete();
 
-    @Programmatic
-    public void inferFixedAssetFromPaperclips() {
-        final FixedAsset fixedAsset = paperclipRepository.paperclipAttaches(document, FixedAsset.class);
-        modifyFixedAsset(fixedAsset);
-    }
 
     @Programmatic
-    public void modifyFixedAsset(final FixedAsset fixedAsset) {
-        setFixedAsset(fixedAsset);
+    public void modifyProperty(final Property property) {
+        setProperty(property);
         deriveBuyer();
     }
 
     private void deriveBuyer(){
         Party ownerCandidate = null;
-        if (hasFixedAsset()){
-            for (FixedAssetOwnership fos: getFixedAsset().getOwners()){
+        if (hasProperty()){
+            for (FixedAssetOwnership fos: getProperty().getOwners()){
                 if (fos.getOwnershipType()== OwnershipType.FULL){
                     ownerCandidate = fos.getOwner();
                     continue;
                 }
             }
             // temporary extra search until fixed asset ownership is fully in use
-            if (ownerCandidate == null && getFixedAsset().ownerCandidates().size() > 0) {
-                ownerCandidate = getFixedAsset().ownerCandidates().get(0).getParty();
+            if (ownerCandidate == null && getProperty().ownerCandidates().size() > 0) {
+                ownerCandidate = getProperty().ownerCandidates().get(0).getParty();
             }
         }
         setBuyer(ownerCandidate);
@@ -236,9 +220,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
-    private FixedAsset<?> fixedAsset;
+    private Property property;
 
-    public List<Property> choicesFixedAsset(){
+    public List<Property> choicesProperty(){
         List<Property> result = new ArrayList<>();
         if (hasBuyer()) {
             for (FixedAssetRole role : fixedAssetRoleRepository.findByPartyAndType(getBuyer(), FixedAssetRoleTypeEnum.PROPERTY_OWNER)){
@@ -255,7 +239,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private Project project;
 
     public List<Project> choicesProject(){
-        return getFixedAsset()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getFixedAsset());
+        return getProperty()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getProperty());
     }
 
     @Setter @Getter
@@ -269,8 +253,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     public List<BudgetItem> choicesBudgetItem(){
         List<BudgetItem> result = new ArrayList<>();
-        if (hasFixedAsset()){
-            for (Budget budget : budgetRepository.findByProperty((Property) getFixedAsset())){
+        if (hasProperty()){
+            for (Budget budget : budgetRepository.findByProperty(getProperty())){
                 if (hasCharge()){
                     result.add(budgetItemRepository.findByBudgetAndCharge(budget, getCharge()));
                 } else {
@@ -296,8 +280,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public List<Budget> choices0CreateBudgetItem(final Budget budget, final Charge charge){
-        if (hasFixedAsset()){
-            return budgetRepository.findByProperty((Property) getFixedAsset());
+        if (hasProperty()){
+            return budgetRepository.findByProperty(getProperty());
         }
         return budgetRepository.allBudgets();
     }
@@ -316,11 +300,13 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public List<Budget> choices0CreateNextBudget(final Budget budget){
-        if (hasFixedAsset()){
-            return budgetRepository.findByProperty((Property) getFixedAsset());
+        if (hasProperty()){
+            return budgetRepository.findByProperty(getProperty());
         }
         return budgetRepository.allBudgets();
     }
+
+    //region > period (prop)
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -332,6 +318,42 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
                 ? "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)"
                 : null;
     }
+
+    protected LocalDate getStartDateFromPeriod() {
+        return startDateFromPeriod(getPeriod());
+    }
+
+    protected LocalDate getEndDateFromPeriod() {
+        return endDateFromPeriod(getPeriod());
+    }
+
+    private static LocalDate startDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.startDate() : null;
+    }
+
+    private static LocalDate endDateFromPeriod(final String period) {
+        LocalDateInterval localDateInterval = fromPeriod(period);
+        return localDateInterval != null ? localDateInterval.endDate() : null;
+    }
+
+    private static LocalDateInterval fromPeriod(final String period) {
+        return period != null
+                ? PeriodUtil.yearFromPeriod(period)
+                : null;
+    }
+
+    /**
+     * For conveniences of subclasses, reciprocal to {@link #getStartDateFromPeriod()} and {@link #getEndDateFromPeriod()}.
+     */
+    protected static String periodFrom(final LocalDate startDate, final LocalDate endDate) {
+        LocalDateInterval ldi = LocalDateInterval
+                .including(startDate, endDate);
+        return PeriodUtil.periodFromInterval(ldi);
+    }
+
+
+    //endregion
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -401,7 +423,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             final String period
     ){
         setCharge(charge);
-        setFixedAsset(property);
+        setProperty(property);
         setProject(project);
         setBudgetItem(budgetItem);
         setPeriod(period);
@@ -415,7 +437,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public Property default1ChangeDimensions(){
-        return (Property) getFixedAsset();
+        return getProperty();
     }
 
     public Project default2ChangeDimensions(){
@@ -435,7 +457,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 //    }
 
     public List<Property> choices1ChangeDimensions() {
-        return choicesFixedAsset();
+        return choicesProperty();
     }
 
     public List<Project> choices2ChangeDimensions() {
@@ -454,6 +476,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             final String period
     ) {
         return validatePeriod(period);
+    }
+
+    public String disableChangeDimensions() {
+        return reasonNotEditableIfAny();
     }
 
     // ////////////////////////////////////
@@ -496,6 +522,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     public BigDecimal default4ChangeItemDetails(){
         return getGrossAmount();
+    }
+
+    public String disableChangeItemDetails() {
+        return reasonNotEditableIfAny();
     }
 
     // ////////////////////////////////////
@@ -559,8 +589,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     protected boolean hasSeller(){
         return getSeller() != null;
     }
-    protected boolean hasFixedAsset(){
-        return getFixedAsset() != null;
+    protected boolean hasProperty(){
+        return getProperty() != null;
     }
     protected boolean hasProject(){
         return getProject() != null;
@@ -576,47 +606,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
 
-    /////////////////////////////////
-
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class Factory {
-
-        @Programmatic
-        public Object createFor(final Document document) {
-            if(DocumentTypeData.INCOMING_ORDER.isDocTypeFor(document)) {
-                final IncomingDocAsOrderViewModel viewModel = new IncomingDocAsOrderViewModel(document);
-                serviceRegistry2.injectServicesInto(viewModel);
-                viewModel.inferFixedAssetFromPaperclips();
-                return viewModel;
-            }
-            if(DocumentTypeData.INCOMING_INVOICE.isDocTypeFor(document)) {
-                final IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel(document);
-                serviceRegistry2.injectServicesInto(viewModel);
-                viewModel.inferFixedAssetFromPaperclips();
-                return viewModel;
-            }
-            return document;
-        }
-
-        @Programmatic
-        public List<Object> map(final List<Document> documents) {
-            return Lists.newArrayList(
-                    FluentIterable.from(documents)
-                            .transform(this::createFor)
-                            .filter(Objects::nonNull)
-                            .toList());
-        }
-
-        @Inject
-        protected PaperclipRepository paperclipRepository;
-
-        @Inject
-        ServiceRegistry2 serviceRegistry2;
-
-    }
-
 
     /////////////////////////////////
+
+    /**
+     * Mandatory hook - to disable actions that change the state.
+     * @return
+     */
+    protected abstract String reasonNotEditableIfAny();
 
 
     @XmlTransient
