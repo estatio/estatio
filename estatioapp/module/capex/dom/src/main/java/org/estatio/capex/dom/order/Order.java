@@ -338,7 +338,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         OrderApprovalState currentState = getApprovalState();
         return currentState == OrderApprovalState.NEW ?
                 null :
-                "Cannot modify because invoice is in state of " + currentState;
+                "Cannot modify because order is in state of " + currentState;
     }
 
 

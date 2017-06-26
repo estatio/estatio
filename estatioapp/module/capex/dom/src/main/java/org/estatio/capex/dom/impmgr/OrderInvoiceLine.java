@@ -137,14 +137,12 @@ public class OrderInvoiceLine {
 
     @XmlElement(required = false)
     @Getter @Setter
-    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @MemberOrder(sequence = "5")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate entryDate;
 
     @XmlElement(required = false)
     @Getter @Setter
-    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @MemberOrder(sequence = "6")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate orderDate;
@@ -183,7 +181,6 @@ public class OrderInvoiceLine {
     private String orderApprovedBy;
 
     @XmlElement(required = false)
-    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Getter @Setter
     @MemberOrder(sequence = "13")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)

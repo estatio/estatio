@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
@@ -71,6 +73,11 @@ import lombok.Setter;
 )
 @Queries({
         @Query(
+                name = "findByApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState == :approvalState "),
+        @Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
@@ -106,6 +113,9 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE bankAccount == :bankAccount ")
 })
+@Indices({
+        @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" })
+})
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
 @DomainObject(
@@ -128,7 +138,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoice() {
-        super("invoiceNumber");
+        super("seller,invoiceNumber");
     }
 
     public IncomingInvoice(
@@ -367,7 +377,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
-
 
 
 }

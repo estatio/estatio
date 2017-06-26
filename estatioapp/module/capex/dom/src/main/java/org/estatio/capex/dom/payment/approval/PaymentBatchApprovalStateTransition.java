@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.payment.Payment;
+import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.capex.dom.task.Task;
@@ -39,32 +39,32 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
-                        + "WHERE payment == :domainObject "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
+                        + "WHERE paymentBatch == :domainObject "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
-                        + "WHERE payment == :domainObject "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
+                        + "WHERE paymentBatch == :domainObject "
                         + "&& completed == :completed "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentApprovalStateTransition "
+                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
                         + "WHERE task == :task "
         ),
 })
 @DomainObject(objectType = "payment.PaymentApprovalStateTransition" )
-public class PaymentApprovalStateTransition
+public class PaymentBatchApprovalStateTransition
         extends StateTransitionAbstract<
-        Payment,
-        PaymentApprovalStateTransition,
-        PaymentApprovalStateTransitionType,
-        PaymentApprovalState> {
+        PaymentBatch,
+        PaymentBatchApprovalStateTransition,
+        PaymentBatchApprovalStateTransitionType,
+        PaymentBatchApprovalState> {
 
 
     /**
@@ -73,11 +73,11 @@ public class PaymentApprovalStateTransition
      */
     @Column(allowsNull = "true")
     @Getter @Setter
-    private PaymentApprovalState fromState;
+    private PaymentBatchApprovalState fromState;
 
     @Column(allowsNull = "false")
     @Getter @Setter
-    private PaymentApprovalStateTransitionType transitionType;
+    private PaymentBatchApprovalStateTransitionType transitionType;
 
     /**
      * The most recent non-null value corresponds to the current state of the domain object.
@@ -85,11 +85,11 @@ public class PaymentApprovalStateTransition
      */
     @Column(allowsNull = "true")
     @Getter @Setter
-    private PaymentApprovalState toState;
+    private PaymentBatchApprovalState toState;
 
     @Column(allowsNull = "false", name = "paymentId")
     @Getter @Setter
-    private Payment payment;
+    private PaymentBatch paymentBatch;
 
 
     /**
@@ -113,29 +113,29 @@ public class PaymentApprovalStateTransition
 
     @Programmatic
     @Override
-    public Payment getDomainObject() {
-        return getPayment();
+    public PaymentBatch getDomainObject() {
+        return this.getPaymentBatch();
     }
 
     @Programmatic
     @Override
-    public void setDomainObject(final Payment domainObject) {
-        setPayment(domainObject);
+    public void setDomainObject(final PaymentBatch domainObject) {
+        setPaymentBatch(domainObject);
     }
 
     @DomainService(
             nature = NatureOfService.DOMAIN,
-            repositoryFor = PaymentApprovalStateTransition.class
+            repositoryFor = PaymentBatchApprovalStateTransition.class
     )
     public static class Repository
             extends StateTransitionRepositoryAbstract<
-                    Payment,
-            PaymentApprovalStateTransition,
-            PaymentApprovalStateTransitionType,
-            PaymentApprovalState> {
+            PaymentBatch,
+            PaymentBatchApprovalStateTransition,
+            PaymentBatchApprovalStateTransitionType,
+            PaymentBatchApprovalState> {
 
         public Repository() {
-            super(PaymentApprovalStateTransition.class);
+            super(PaymentBatchApprovalStateTransition.class);
         }
 
     }
