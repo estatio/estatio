@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -135,11 +137,13 @@ public class OrderInvoiceLine {
 
     @XmlElement(required = false)
     @Getter @Setter
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @MemberOrder(sequence = "5")
     private LocalDate entryDate;
 
     @XmlElement(required = false)
     @Getter @Setter
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @MemberOrder(sequence = "6")
     private LocalDate orderDate;
 
@@ -177,6 +181,7 @@ public class OrderInvoiceLine {
     private String orderApprovedBy;
 
     @XmlElement(required = false)
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Getter @Setter
     @MemberOrder(sequence = "13")
     private LocalDate orderApprovedOn;
