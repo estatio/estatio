@@ -56,43 +56,6 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
     }
 
-    /*
-    because we now have NEW->COMPLETED, means that we can integrate at a "deeper" level via the object lifecycle event;
-    so this code not needed.
-    @Programmatic
-    @com.google.common.eventbus.Subscribe
-    @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(IncomingDocumentCategorisationStateTransitionType.TransitionEvent ev) {
-        final StateTransitionEvent.Phase phase = ev.getPhase();
-        if (phase == StateTransitionEvent.Phase.TRANSITIONED) {
-
-            final IncomingDocumentCategorisationStateTransitionType transitionType = ev.getTransitionType();
-            IncomingDocumentCategorisationState toState = transitionType.getToState();
-            switch (toState) {
-
-            case PROCESSED:
-                final Document document = ev.getDomainObject();
-                final Optional<IncomingInvoice> incomingInvoiceIfAny = findIncomingInvoiceFrom(document);
-                incomingInvoiceIfAny.ifPresent(
-                        incomingInvoice ->
-                                stateTransitionService .trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null));
-                break;
-            }
-        }
-    }
-
-    private Optional<IncomingInvoice> findIncomingInvoiceFrom(final Document document) {
-        final List<Paperclip> paperclipList = paperclipRepository.findByDocument(document);
-        for (Paperclip paperclip : paperclipList) {
-            final Object attachedTo = paperclip.getAttachedTo();
-            if(attachedTo instanceof IncomingInvoice) {
-                return Optional.of ((IncomingInvoice) attachedTo);
-            }
-        }
-        return Optional.empty();
-    }
-    */
-
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler

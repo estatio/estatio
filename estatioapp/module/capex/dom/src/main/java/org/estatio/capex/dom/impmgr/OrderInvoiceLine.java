@@ -283,7 +283,7 @@ public class OrderInvoiceLine {
 
                 final Tax tax = taxRepository.findByReference(line.tax);
 
-                order.addItem(
+                factoryService.mixin(Order.addItem.class, order).act(
                         chargeObj, line.orderDescription,
                         line.netAmount, line.vatAmount, line.grossAmount,
                         tax, startDate, endDate, property, project, null);
@@ -297,7 +297,7 @@ public class OrderInvoiceLine {
                 final LocalDate invoiceDate = line.getOrderDate();
                 final LocalDate dueDate = line.getOrderDate();
                 final PaymentMethod paymentMethod = PaymentMethod.BANK_TRANSFER; // assumed for Capex
-                final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED; // migrating historic data...
+                final InvoiceStatus invoiceStatus = InvoiceStatus.APPROVED;      // migrating historic data...
                 IncomingInvoiceApprovalState paid = IncomingInvoiceApprovalState.PAID; // migrating historic data
 
                 invoice = incomingInvoiceRepository.upsert(

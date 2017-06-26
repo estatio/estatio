@@ -19,11 +19,26 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 }
 --
 
+== Order Approval
+
+[plantuml,order-approval-state-chart,png]
+--
+state "OrderApprovalStateTransitionType" as oa {
+
+    state "NEW" as oa_new
+    state "APPROVED_BY_\nCOUNTRY_DIRECTOR" as oa_approved
+
+    [*] -right-> oa_new: INSTANTIATE
+    oa_new -down-> oa_approved: APPROVE_AS_\nCOUNTRY_DIRECTOR
+
+}
+--
+
 == Incoming Invoice Approval
 
 [plantuml,incoming-invoice-approval-state-chart,png]
 --
-state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
+state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     state "NEW" as iia_new
     note right of iia_new: currently no transitions for\nTANGIBLE_FIXED_ASSET, INTERCOMPANY, RE_INVOICING,
@@ -67,7 +82,7 @@ state "IncomingInvoice\nApproval\nStateTransitionType" as iia {
 
 [plantuml,bank-account-verification-state-chart,png]
 --
-state "BankAccount\nVerification\nStateTransitionType" as bbv {
+state "BankAccountVerificationStateTransitionType" as bbv {
 
     state "NOT_VERIFIED" as bbv_not_verified
     state "VERIFIED" as bbv_verified
@@ -79,17 +94,17 @@ state "BankAccount\nVerification\nStateTransitionType" as bbv {
 --
 
 
-== Payment Approval
+== Payment Batch Approval
 
 [plantuml,payment-approval-state-chart,png]
 --
-state "PaymentApproval\nStateTransitionType" as pa {
+state "PaymentBatchApprovalStateTransitionType" as pa {
 
     state "NEW" as pa_new
-    state "APPROVED" as pa_approved
+    state "APPROVED_BY_\nFINANCIAL_DIRECTOR" as pa_approved
 
     [*] -right-> pa_new: INSTANTIATE
-    pa_new -down-> pa_approved: APPROVED
+    pa_new -down-> pa_approved: APPROVE_AS_\nFINANCIAL_DIRECTOR
 
 }
 --

@@ -8,87 +8,131 @@
                     <cpt:domainObject/>
                 </bs3:col>
             </bs3:row>
-            <bs3:tabGroup>
-                <bs3:tab name="General">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Order" id="order">
-                                <cpt:property id="orderNumber"/>
-                                <cpt:property id="buyer"/>
-                                <cpt:property id="seller"/>
-                                <cpt:property id="sellerOrderReference"/>
-                                <cpt:property id="property"/>
-                                <cpt:property id="description"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Application Tenancy">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Application Tenancy">
-                                <cpt:property id="applicationTenancy"/>
-                                <cpt:property id="atPath"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Other">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Metadata">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Metadata" id="metadata">
-                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <cpt:property id="id"/>
-                                <cpt:property id="versionSequence"/>
-                                <cpt:property id="datanucleusId"/>
-                                <cpt:property id="datanucleusVersionLong"/>
-                                <cpt:property id="datanucleusVersionTimestamp"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-            <bs3:tabGroup>
-                <bs3:tab name="Amounts">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Amounts">
-                                <cpt:property id="netAmount"/>
-                                <cpt:property id="vatAmount"/>
-                                <cpt:property id="grossAmount"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Dates">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Dates">
-                                <cpt:property id="orderDate"/>
-                                <cpt:property id="entryDate"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-
-            <bs3:tabGroup>
-                <bs3:tab name="Items">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="items" defaultView="table"></cpt:collection>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="General">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Order" id="order">
+                                        <cpt:property id="orderNumber"/>
+                                        <cpt:property id="buyer"/>
+                                        <cpt:property id="seller"/>
+                                        <cpt:property id="sellerOrderReference"/>
+                                        <cpt:property id="property"/>
+                                        <cpt:property id="description"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Application Tenancy">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Application Tenancy">
+                                        <cpt:property id="applicationTenancy"/>
+                                        <cpt:property id="atPath"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="id"/>
+                                        <cpt:property id="versionSequence"/>
+                                        <cpt:property id="datanucleusId"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                    <bs3:tabGroup>
+                        <bs3:tab name="Amounts">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Amounts">
+                                        <cpt:property id="netAmount"/>
+                                        <cpt:property id="vatAmount"/>
+                                        <cpt:property id="grossAmount"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Dates">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Dates">
+                                        <cpt:property id="orderDate"/>
+                                        <cpt:property id="entryDate"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="items" defaultView="table"></cpt:collection>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Current task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Approval">
+                                        <cpt:action id="checkApprovalState">
+                                            <cpt:named>Check state</cpt:named>
+                                        </cpt:action>
+                                        <cpt:property id="approvalState">
+                                            <cpt:action id="viewApprovalTransitions" position="RIGHT">
+                                                <cpt:named>Show transitions</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="pendingApprovalTask">
+                                            <cpt:action id="approveAsCountryDirector"/>
+                                        </cpt:property>
+                                        <cpt:property id="reasonApprovalTaskBlocked">
+                                            <cpt:named>Reason blocked</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Next task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Next task">
+                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                            <cpt:named>Description</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                            <cpt:named>Role assigned to</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskPersonAssignedTo">
+                                            <cpt:named>Person assigned to</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>

@@ -104,7 +104,6 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:collection id="items" defaultView="table"></cpt:collection>
-
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -129,7 +128,6 @@
                                             <cpt:action id="approveAsProjectManager"/>
                                             <cpt:action id="approveAsAssetManager"/>
                                             <cpt:action id="approveAsCountryDirector"/>
-                                            <cpt:action id="cancel"/>
                                         </cpt:property>
                                         <cpt:property id="reasonApprovalTaskBlocked">
                                             <cpt:named>Reason blocked</cpt:named>

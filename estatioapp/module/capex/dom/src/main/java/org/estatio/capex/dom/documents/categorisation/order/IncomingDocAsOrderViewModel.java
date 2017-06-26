@@ -1,7 +1,6 @@
 package org.estatio.capex.dom.documents.categorisation.order;
 
 import java.util.Optional;
-import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -24,6 +23,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -238,7 +238,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
             orderItem.setProject(getProject());
             orderItem.setBudgetItem(getBudgetItem());
         } else {
-            order.addItem(
+            factoryService.mixin(Order.addItem.class, order).act(
                     getCharge(),
                     getDescription(),
                     getVatAmount(),
@@ -258,8 +258,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
 
     private Optional<OrderItem> getFirstItemIfAny() {
-        SortedSet<OrderItem> items = getDomainObject().getItems();
-        return items.stream().findFirst();
+        return getDomainObject().getItems().stream().findFirst();
     }
 
     @Inject
@@ -267,5 +266,11 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     ClockService clockService;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    FactoryService factoryService;
 
 }

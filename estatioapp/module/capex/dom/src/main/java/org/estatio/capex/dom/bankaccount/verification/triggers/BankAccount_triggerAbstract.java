@@ -2,6 +2,11 @@ package org.estatio.capex.dom.bankaccount.verification.triggers;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
+
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
@@ -29,4 +34,17 @@ abstract class BankAccount_triggerAbstract
         super(bankAccount, BankAccountVerificationStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType
         );
     }
+
+    @Action()
+    @MemberOrder(sequence = "9")
+    public BankAccount act(
+            @Nullable final String comment) {
+        trigger(comment);
+        return getDomainObject();
+    }
+
+    public boolean hideAct() {
+        return cannotTransition();
+    }
+
 }

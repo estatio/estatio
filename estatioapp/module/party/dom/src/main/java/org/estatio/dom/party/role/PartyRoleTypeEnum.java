@@ -11,6 +11,7 @@ public enum PartyRoleTypeEnum implements IPartyRoleType {
     OFFICE_ADMINISTRATOR,
     COUNTRY_DIRECTOR,
     LEGAL_MANAGER,
+    FINANCIAL_DIRECTOR,
     TREASURER,
     CORPORATE_ADMINISTRATOR;
 

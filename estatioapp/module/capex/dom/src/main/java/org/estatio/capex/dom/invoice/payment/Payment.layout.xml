@@ -1,75 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<cpt:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
-          xmlns:cpt="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <cpt:row>
-        <cpt:col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-        </cpt:col>
-    </cpt:row>
-    <cpt:row>
-        <cpt:col span="6">
-            <cpt:tabGroup>
-                <cpt:tab name="Invoice">
-                    <cpt:row>
-                        <cpt:col span="12">
-                            <ns2:fieldSet name="Payment" id="payment">
-                                <ns2:property id="amount"/>
-                                <ns2:property id="invoice"/>
-                                <ns2:property id="paymentMethod"/>
-                            </ns2:fieldSet>
-                        </cpt:col>
-                    </cpt:row>
-                </cpt:tab>
-                <cpt:tab name="Other">
-                    <cpt:row>
-                        <cpt:col span="12">
-                            <ns2:fieldSet name="Application Tenancy" id="general">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
-                        </cpt:col>
-                    </cpt:row>
-                </cpt:tab>
-            </cpt:tabGroup>
-            <cpt:fieldSet name="Approval state">
-                <cpt:action id="checkApprovalState">
-                    <cpt:named>Check state</cpt:named>
-                </cpt:action>
-                <cpt:property id="approvalState">
-                    <cpt:action id="viewApprovalTransitions" position="RIGHT">
-                        <cpt:named>View transitions</cpt:named>
-                    </cpt:action>
-                </cpt:property>
-                <cpt:property id="pendingApprovalTask">
-                    <cpt:action id="verify"/>
-                    <cpt:action id="cancel"/>
-                </cpt:property>
-                <cpt:property id="reasonApprovalTaskBlocked">
-                    <cpt:named>Reason blocked</cpt:named>
-                </cpt:property>
-            </cpt:fieldSet>
-        </cpt:col>
-    </cpt:row>
-    <cpt:row>
-        <cpt:col span="12">
-            <cpt:tabGroup unreferencedCollections="true">
-                <cpt:tab name="_">
-                    <cpt:row>
-                        <cpt:col span="12"></cpt:col>
-                    </cpt:row>
-                </cpt:tab>
-            </cpt:tabGroup>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Invoice">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Payment" id="payment">
+                                        <cpt:property id="amount"/>
+                                        <cpt:property id="invoice"/>
+                                        <cpt:property id="paymentMethod"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Application Tenancy" id="general">
+                                        <cpt:property id="applicationTenancy"/>
+                                        <cpt:property id="atPath"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Metadata" id="metadata">
+                                        <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <cpt:property id="id"/>
+                                        <cpt:property id="versionSequence"/>
+                                        <cpt:property id="datanucleusId"/>
+                                        <cpt:property id="datanucleusVersionLong"/>
+                                        <cpt:property id="datanucleusVersionTimestamp"/>
+                                    </cpt:fieldSet>
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
 
-        </cpt:col>
-    </cpt:row>
-</cpt:grid>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Current task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Approval">
+                                        <cpt:action id="checkApprovalState">
+                                            <cpt:named>Check state</cpt:named>
+                                        </cpt:action>
+                                        <cpt:property id="approvalState">
+                                            <cpt:action id="viewApprovalTransitions" position="RIGHT">
+                                                <cpt:named>Show transitions</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                        <cpt:property id="pendingApprovalTask">
+                                            <cpt:action id="approveAsFinancialDirector"/>
+                                        </cpt:property>
+                                        <cpt:property id="reasonApprovalTaskBlocked">
+                                            <cpt:named>Reason blocked</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Next task">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Next task">
+                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                            <cpt:named>Description</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                            <cpt:named>Role assigned to</cpt:named>
+                                        </cpt:property>
+                                        <cpt:property id="nextApprovalTaskPersonAssignedTo">
+                                            <cpt:named>Person assigned to</cpt:named>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row>
+                        <bs3:col span="12"></bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

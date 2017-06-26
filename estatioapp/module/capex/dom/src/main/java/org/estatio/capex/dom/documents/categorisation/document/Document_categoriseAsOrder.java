@@ -1,8 +1,5 @@
 package org.estatio.capex.dom.documents.categorisation.document;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -16,27 +13,21 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
 public class Document_categoriseAsOrder
-        extends DomainObject_triggerAbstract<
-                                            Document,
-                                            IncomingDocumentCategorisationStateTransition,
-                                            IncomingDocumentCategorisationStateTransitionType,
-                                            IncomingDocumentCategorisationState> {
+        extends Document_triggerAbstract {
+
+    private final Document document;
 
     public Document_categoriseAsOrder(final Document document) {
-        super(document, IncomingDocumentCategorisationStateTransition.class,
-              Arrays.asList( IncomingDocumentCategorisationState.NEW), IncomingDocumentCategorisationStateTransitionType.CATEGORISE);
+        super(document, IncomingDocumentCategorisationStateTransitionType.CATEGORISE);
+        this.document = document;
     }
 
     @Action(
@@ -70,17 +61,9 @@ public class Document_categoriseAsOrder
         return order;
     }
 
-    public List<DocumentTypeData> choices0Act() {
-        return Arrays.asList(DocumentTypeData.INCOMING_ORDER, DocumentTypeData.INCOMING_INVOICE);
-    }
-
-    public String validateAct(
-            final Property property,
-            final String comment) {
-
+    public String validateAct(final Property property, final String comment) {
         return null;
     }
-
 
     public boolean hideAct() {
         if(cannotTransition()) {
@@ -95,9 +78,6 @@ public class Document_categoriseAsOrder
 
     @Inject
     PaperclipRepository paperclipRepository;
-
-    @Inject
-    IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
     OrderRepository orderRepository;

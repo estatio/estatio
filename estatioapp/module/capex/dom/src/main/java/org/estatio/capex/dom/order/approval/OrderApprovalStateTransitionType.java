@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.payment.approval;
+package org.estatio.capex.dom.order.approval;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,12 +10,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
-import org.estatio.capex.dom.invoice.payment.Payment;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.state.AdvancePolicy;
+import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.party.PartyRoleTypeEnum;
@@ -24,36 +24,36 @@ import org.estatio.dom.party.role.IPartyRoleType;
 import lombok.Getter;
 
 @Getter
-public enum PaymentApprovalStateTransitionType
+public enum OrderApprovalStateTransitionType
         implements StateTransitionType<
-                Payment,
-                PaymentApprovalStateTransition,
-                PaymentApprovalStateTransitionType,
-                PaymentApprovalState> {
+        Order,
+        OrderApprovalStateTransition,
+        OrderApprovalStateTransitionType,
+        OrderApprovalState> {
 
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
-            (PaymentApprovalState)null,
-            PaymentApprovalState.NEW,
+            (OrderApprovalState)null,
+            OrderApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    APPROVE_AS_FINANCIAL_DIRECTOR(
-            PaymentApprovalState.NEW,
-            PaymentApprovalState.APPROVED_BY_FINANCIAL_DIRECTOR,
+    APPROVE_AS_COUNTRY_DIRECTOR(
+            OrderApprovalState.NEW,
+            OrderApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.FINANCIAL_DIRECTOR),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL);
 
-    private final List<PaymentApprovalState> fromStates;
-    private final PaymentApprovalState toState;
+    private final List<OrderApprovalState> fromStates;
+    private final OrderApprovalState toState;
     private final NextTransitionSearchStrategy nextTransitionSearchStrategy;
     private final TaskAssignmentStrategy taskAssignmentStrategy;
     private final AdvancePolicy advancePolicy;
 
-    PaymentApprovalStateTransitionType(
-            final List<PaymentApprovalState> fromState,
-            final PaymentApprovalState toState,
+    OrderApprovalStateTransitionType(
+            final List<OrderApprovalState> fromState,
+            final OrderApprovalState toState,
             final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
@@ -64,9 +64,9 @@ public enum PaymentApprovalStateTransitionType
         this.advancePolicy = advancePolicy;
     }
 
-    PaymentApprovalStateTransitionType(
-            final PaymentApprovalState fromState,
-            final PaymentApprovalState toState,
+    OrderApprovalStateTransitionType(
+            final OrderApprovalState fromState,
+            final OrderApprovalState toState,
             final NextTransitionSearchStrategy nextTransitionSearchStrategy,
             final TaskAssignmentStrategy taskAssignmentStrategy,
             final AdvancePolicy advancePolicy) {
@@ -77,14 +77,14 @@ public enum PaymentApprovalStateTransitionType
 
     public static class TransitionEvent
             extends StateTransitionEvent<
-                        Payment,
-                        PaymentApprovalStateTransition,
-                        PaymentApprovalStateTransitionType,
-                        PaymentApprovalState> {
+            Order,
+            OrderApprovalStateTransition,
+            OrderApprovalStateTransitionType,
+            OrderApprovalState> {
         public TransitionEvent(
-                final Payment domainObject,
-                final PaymentApprovalStateTransition stateTransitionIfAny,
-                final PaymentApprovalStateTransitionType transitionType) {
+                final Order domainObject,
+                final OrderApprovalStateTransition stateTransitionIfAny,
+                final OrderApprovalStateTransitionType transitionType) {
             super(domainObject, stateTransitionIfAny, transitionType);
         }
     }
@@ -96,27 +96,27 @@ public enum PaymentApprovalStateTransitionType
 
     @Override
     public AdvancePolicy advancePolicyFor(
-            final Payment domainObject, final ServiceRegistry2 serviceRegistry2) {
+            final Order domainObject, final ServiceRegistry2 serviceRegistry2) {
         return advancePolicy;
     }
 
     @Override
     public TransitionEvent newStateTransitionEvent(
-            final Payment domainObject,
-            final PaymentApprovalStateTransition pendingTransitionIfAny) {
+            final Order domainObject,
+            final OrderApprovalStateTransition pendingTransitionIfAny) {
         return new TransitionEvent(domainObject, pendingTransitionIfAny, this);
     }
 
 
     @Override
-    public PaymentApprovalStateTransition createTransition(
-            final Payment domainObject,
-            final PaymentApprovalState fromState,
+    public OrderApprovalStateTransition createTransition(
+            final Order domainObject,
+            final OrderApprovalState fromState,
             final IPartyRoleType assignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
-        final PaymentApprovalStateTransition.Repository repository =
-                serviceRegistry2.lookupService(PaymentApprovalStateTransition.Repository.class);
+        final OrderApprovalStateTransition.Repository repository =
+                serviceRegistry2.lookupService(OrderApprovalStateTransition.Repository.class);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
         return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
@@ -125,25 +125,28 @@ public enum PaymentApprovalStateTransitionType
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends StateTransitionServiceSupportAbstract<
-            Payment, PaymentApprovalStateTransition, PaymentApprovalStateTransitionType, PaymentApprovalState> {
+            Order,
+            OrderApprovalStateTransition,
+            OrderApprovalStateTransitionType,
+            OrderApprovalState> {
 
         public SupportService() {
-            super(PaymentApprovalStateTransitionType.class, PaymentApprovalStateTransition.class
+            super(OrderApprovalStateTransitionType.class, OrderApprovalStateTransition.class
             );
         }
 
         @Override
         protected StateTransitionRepository<
-                Payment,
-                PaymentApprovalStateTransition,
-                PaymentApprovalStateTransitionType,
-                PaymentApprovalState
+                Order,
+                OrderApprovalStateTransition,
+                OrderApprovalStateTransitionType,
+                OrderApprovalState
                 > getRepository() {
             return repository;
         }
 
         @Inject
-        PaymentApprovalStateTransition.Repository repository;
+        OrderApprovalStateTransition.Repository repository;
 
     }
 
