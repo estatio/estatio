@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.math.BigInteger;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -120,6 +122,7 @@ public class InvoiceItemForLease
     public InvoiceItemForLease(final Invoice invoice, final LocalDate dueDate) {
         super(invoice);
         setDueDate(dueDate);
+        setSequence(BigInteger.ZERO);
     }
 
     public String title() {

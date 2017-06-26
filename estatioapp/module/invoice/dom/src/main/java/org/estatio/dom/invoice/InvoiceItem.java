@@ -100,7 +100,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         implements WithInterval<T>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
     public InvoiceItem() {
-        super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
+        super("invoice, charge, startDate desc nullsLast, description, grossAmount, sequence, uuid");
     }
 
     public InvoiceItem(final Invoice invoice) {

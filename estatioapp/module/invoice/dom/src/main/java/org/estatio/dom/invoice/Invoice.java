@@ -35,6 +35,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -384,10 +385,43 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
+        // this works:
+        //return sumImperative(x);
+
+        // this also works:
+        return sumFunctionalUsingEagerStream(x);
+
+        // this doesn't work:
+        //return sumFunctionalUsingLazyStreamBROKEN(x);
+
+    }
+
+    private BigDecimal sumFunctionalUsingEagerStream(final Function<InvoiceItem, BigDecimal> x) {
+        return Lists.newArrayList(getItems()).stream()
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * This does not enumerate correctly, it would seem.
+     */
+    private BigDecimal sumFunctionalUsingLazyStreamBROKEN(final Function<InvoiceItem, BigDecimal> x) {
         return getItems().stream()
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal sumImperative(final Function<InvoiceItem, BigDecimal> x) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (final InvoiceItem item : getItems()) {
+            BigDecimal value = x.apply(item);
+            if(value != null) {
+                sum = sum.add(value);
+            }
+        }
+        return sum;
     }
 
     protected boolean isImmutable() {
