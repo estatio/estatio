@@ -4,7 +4,7 @@
         <bs3:col span="4" unreferencedActions="true">
             <cpt:domainObject/>
             <cpt:action id="process"/>
-            <cpt:action id="removeTransfers"/>
+            <cpt:action id="downloadClob"/>
         </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
             <cpt:collection id="currentBatches" defaultView="table"/>

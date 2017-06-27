@@ -36,6 +36,8 @@ public class Transfer implements Comparable<Transfer> {
     private IncomingInvoice invoice;
     @Getter @Setter
     private BigDecimal transferAmount;
+    @Getter @Setter
+    private String remittanceInformation;
 
     public Party getCreditor() {
         return getInvoice().getSeller();

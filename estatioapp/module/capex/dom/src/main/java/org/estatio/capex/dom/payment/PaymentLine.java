@@ -52,14 +52,16 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     public PaymentLine(
             final PaymentBatch batch,
             final int sequence,
-            final IncomingInvoice invoice){
+            final IncomingInvoice invoice,
+            final BigDecimal transferAmount,
+            final String remittanceInformation){
         this();
         this.batch = batch;
         this.sequence = sequence;
         this.invoice = invoice;
         this.creditorBankAccount = invoice.getBankAccount();
-        this.remittanceInformation = invoice.getInvoiceNumber(); // TODO: will need to refine this, no doubt...
-        this.amount = invoice.getGrossAmount();
+        this.remittanceInformation = remittanceInformation;
+        this.amount = transferAmount;
     }
 
     @Column(allowsNull = "false", name = "batchId")

@@ -7,28 +7,34 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="6">
+        <bs3:col span="4">
             <bs3:row>
                 <bs3:col span="12">
                     <bs3:tabGroup>
-                        <bs3:tab name="Invoice">
+                        <bs3:tab name="Payment Batch">
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Payment" id="payment">
-                                        <cpt:property id="amount"/>
-                                        <cpt:property id="invoice"/>
+                                        <cpt:property id="debtorBankAccount"/>
+                                        <cpt:property id="createdOn"/>
                                         <cpt:property id="paymentMethod"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
-                        <bs3:tab name="Other">
+                        <bs3:tab name="Application Tenancy">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <cpt:fieldSet name="Application Tenancy" id="general">
+                                    <cpt:fieldSet name="Application Tenancy" id="applicationTenancy">
                                         <cpt:property id="applicationTenancy"/>
                                         <cpt:property id="atPath"/>
                                     </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
                                     <cpt:fieldSet name="Metadata" id="metadata">
                                         <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                         <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
@@ -46,7 +52,13 @@
                 </bs3:col>
             </bs3:row>
             <bs3:row>
-
+                <bs3:col span="12">
+                    <cpt:fieldSet name="Dates">
+                        <cpt:property id="requestedExecutionDate"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
                 <bs3:col span="12">
                     <bs3:tabGroup>
                         <bs3:tab name="Current task">
@@ -92,6 +104,26 @@
                 </bs3:col>
             </bs3:row>
         </bs3:col>
+        <bs3:col span="8">
+            <bs3:tabGroup>
+                <bs3:tab name="Lines">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="lines"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy-to-make-first-tab-appear">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy-fieldset">
+                                <cpt:property id="dummy-property"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
     </bs3:row>
     <bs3:row>
         <bs3:col span="12">
@@ -102,7 +134,6 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-
         </bs3:col>
     </bs3:row>
 </bs3:grid>

@@ -108,12 +108,19 @@ public class PaymentBatchManager {
                 .findByApprovalStatus(IncomingInvoiceApprovalState.PAYABLE);
         for (IncomingInvoice payableInvoice : payableInvoices) {
             PaymentBatch paymentBatchIfAny = batchThatUniquelyCanPay(payableInvoice);
-            Transfer transfer = new Transfer(paymentBatchIfAny, payableInvoice, payableInvoice.getGrossAmount());
+            Transfer transfer = new Transfer(
+                    paymentBatchIfAny, payableInvoice,
+                    payableInvoice.getGrossAmount(), remittanceInformationFor(payableInvoice));
             transfers.add(transfer);
         }
         Collections.sort(transfers);
 
         return this;
+    }
+
+    private static String remittanceInformationFor(final IncomingInvoice payableInvoice) {
+        // TODO: will need to refine this, no doubt...
+        return payableInvoice.getInvoiceNumber();
     }
 
     /**
@@ -244,13 +251,15 @@ public class PaymentBatchManager {
     @ActionLayout(cssClassFa = "fa-play")
     public PaymentBatchManager process(@Nullable String comment) {
 
-        List<Transfer> transfers = this.transfers;
-        for (Transfer transfer : transfers) {
+        PaymentBatch previousBatch = null;
+        for (Transfer transfer : this.transfers) {
             PaymentBatch paymentBatch = transfer.getPaymentBatch();
+            paymentBatch.updateFor(transfer.getInvoice(), transfer.getTransferAmount(), transfer.getRemittanceInformation());
 
-            paymentBatch.updateFor(transfer.getInvoice());
-
-            factoryService.mixin(PaymentBatch_approveAsFinancialDirector.class, paymentBatch).act(comment);
+            if(paymentBatch != previousBatch) {
+                factoryService.mixin(PaymentBatch_approveAsFinancialDirector.class, paymentBatch).act(comment);
+                previousBatch = paymentBatch;
+            }
         }
 
         return this;
@@ -258,11 +267,14 @@ public class PaymentBatchManager {
 
 
     public String disableProcess() {
-        List<Transfer> transfersWithoutBatch = this.transfers.stream().filter(x -> x.getPaymentBatch() == null)
-                .collect(Collectors.toList());
-        return transfersWithoutBatch.isEmpty() ? null : transfersWithoutBatch.size() + " transfers do not have a batch assigned";
+        List<Transfer> transfersWithoutBatch =
+                this.transfers.stream()
+                        .filter(x -> x.getPaymentBatch() == null)
+                        .collect(Collectors.toList());
+        return !transfersWithoutBatch.isEmpty()
+                ? transfersWithoutBatch.size() + " transfers do not have a batch assigned"
+                : null;
     }
-
 
     ///////////////////////
 

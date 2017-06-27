@@ -52,6 +52,9 @@
 					<schemaIncludes>
 						<include>pain.001.001.03.xsd</include>
 					</schemaIncludes>
+					<bindingIncludes>
+						<include>binding.xml</include>
+					</bindingIncludes>
 				</configuration>
 			</plugin>
 			<plugin>

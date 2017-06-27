@@ -1,0 +1,7 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               jaxb:version="2.0">
+    <jaxb:bindings schemaLocation="pain.001.001.03.xsd">
+        <jaxb:globalBindings typesafeEnumMaxMembers="2000"/>
+    </jaxb:bindings>
+</jaxb:bindings>
