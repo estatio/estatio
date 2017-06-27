@@ -101,7 +101,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
-    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
     public Blob getBlob() {
         return getDocument() != null ? getDocument().getBlob() : null;
     }

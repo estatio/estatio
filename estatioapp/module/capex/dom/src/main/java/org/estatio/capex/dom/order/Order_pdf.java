@@ -28,7 +28,7 @@ public class Order_pdf {
         this.order = order;
     }
 
-    @PdfJsViewer(initialPageNum = 1, initialScale = Scale._2_00, initialHeight = 900)
+    @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob prop() {
