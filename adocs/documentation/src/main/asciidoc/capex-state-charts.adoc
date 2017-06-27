@@ -42,8 +42,6 @@ state "OrderApprovalStateTransitionType" as oa {
 state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     state "NEW" as iia_new
-    note right of iia_new: currently no transitions for\nTANGIBLE_FIXED_ASSET, INTERCOMPANY, RE_INVOICING,
-
 
     state "COMPLETED" as iia_completed
     note right of iia_completed: immutable from this point on
@@ -58,12 +56,12 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_completed : COMPLETE\n[legal | capex | asset |\nservices_charges | local | corporate ]
+    iia_new -down-> iia_completed : COMPLETE\n[hasProperty() | \n legal | local | corporate ]
 
     iia_completed --> iia_a : APPROVE\n[legal | capex | \nasset | services_charges ]
 
-    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n_COUNTRY_DIRECTOR\n[local]
-    iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\nFOR_CORPORATE\n[corporate]
+    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n _COUNTRY_DIRECTOR\n[local]
+    iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\n FOR_CORPORATE\n[corporate]
     
     iia_a -down-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
     

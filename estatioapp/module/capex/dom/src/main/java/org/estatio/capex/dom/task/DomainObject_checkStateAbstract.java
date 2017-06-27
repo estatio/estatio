@@ -33,7 +33,7 @@ public abstract class DomainObject_checkStateAbstract<
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(
             contributed= Contributed.AS_ACTION,
-            cssClassFa = "fa-check-circle" // not sure why this isn't being picked up from isis-non-changing.properties
+            cssClassFa = "fa-question-circle" // overrride isis-non-changing.properties
     )
     public DO act() {
 

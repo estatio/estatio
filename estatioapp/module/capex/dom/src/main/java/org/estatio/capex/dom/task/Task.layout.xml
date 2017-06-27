@@ -16,7 +16,8 @@
                                 <cpt:property id="object">
                                     <!-- document categorisation -->
                                     <cpt:action id="categoriseAsOrder"/>
-                                    <cpt:action id="categoriseAsInvoice"/>
+                                    <cpt:action id="categoriseAsPropertyInvoice"/>
+                                    <cpt:action id="categoriseAsOtherInvoice"/>
 
                                     <!-- order -->
                                     <cpt:action id="completeOrderWithApproval"/>

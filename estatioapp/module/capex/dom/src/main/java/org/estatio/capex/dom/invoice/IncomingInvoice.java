@@ -142,7 +142,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoice(
-            final IncomingInvoiceType type,
+            final IncomingInvoiceType typeIfAny,
             final String invoiceNumber,
             final Property property,
             final String atPath,
@@ -156,7 +156,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalStateIfAny){
         super("invoiceNumber");
-        setType(type);
+        setType(typeIfAny);
         setInvoiceNumber(invoiceNumber);
         setProperty(property);
         setApplicationTenancyPath(atPath);

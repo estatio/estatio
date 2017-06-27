@@ -1,0 +1,15 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               jaxb:version="2.0">
+
+    <jaxb:bindings schemaLocation="pain_001_001/pain.001.001.03.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="iso.std.iso._20022.tech.xsd.pain_001_001"/>
+        </jaxb:schemaBindings>
+	<!--
+        <jaxb:bindings>
+            <namespace:prefix name="chg" />
+        </jaxb:bindings>
+	-->
+    </jaxb:bindings>
+</jaxb:bindings>

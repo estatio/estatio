@@ -11,27 +11,27 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
+import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsPropertyInvoice;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
-public class Task_categoriseAsOrder
-        extends Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
+public class Task_categoriseAsPropertyInvoice
+        extends Task_mixinActAbstract<Document_categoriseAsPropertyInvoice, Document> {
 
     protected final Task task;
 
-    public Task_categoriseAsOrder(final Task task) {
-        super(task, Document_categoriseAsOrder.class);
+    public Task_categoriseAsPropertyInvoice(final Task task) {
+        super(task, Document_categoriseAsPropertyInvoice.class);
         this.task = task;
     }
 
     @Action()
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
     public Object act(
-            @Nullable final Property property,
+            final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
         Object mixinResult = mixin().act(property, comment);
@@ -41,13 +41,6 @@ public class Task_categoriseAsOrder
             viewModel.setOriginatingTask(task);
         }
         return toReturnElse(goToNext, mixinResult);
-    }
-
-    public String validateAct(
-            final Property property,
-            final String comment,
-            final boolean goToNext) {
-        return mixin().validateAct(property, comment);
     }
 
     public boolean default2Act() {

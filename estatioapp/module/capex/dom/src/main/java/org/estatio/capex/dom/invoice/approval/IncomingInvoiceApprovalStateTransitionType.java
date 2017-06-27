@@ -59,12 +59,22 @@ public enum IncomingInvoiceApprovalStateTransitionType
                         IncomingInvoiceApprovalStateTransition,
                         IncomingInvoiceApprovalStateTransitionType,
                         IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+
+                final boolean hasProperty = incomingInvoice.getProperty() != null;
+                if (hasProperty) {
+                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                }
+
                 switch (incomingInvoice.getType()) {
-                case LEGAL:
                 case CAPEX:
                 case PROPERTY_EXPENSES:
                 case SERVICE_CHARGES:
+                    // this case should not be hit, because the upstream document categorisation process
+                    // should have also set a property in this case, so the previous check would have been satisfied
+                    // just adding this case in the switch stmt "for completeness"
                     return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                case LEGAL:
+                    return PartyRoleTypeEnum.LEGAL_MANAGER;
                 case LOCAL_EXPENSES:
                     return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
                 case CORPORATE_EXPENSES:
