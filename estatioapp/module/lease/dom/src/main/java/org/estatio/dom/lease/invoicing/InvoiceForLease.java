@@ -230,6 +230,10 @@ public class InvoiceForLease
         return occupancies.first();
     }
 
+    @Override
+    protected String reasonDisabledDueToState() {
+        return getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
+    }
 
     @Mixin
     public static class _newItem {

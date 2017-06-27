@@ -58,13 +58,9 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_completed : COMPLETE_\nPROPERTY_\nINVOICE\n[capex || property ||\nservice || legal]
-    iia_new -down-> iia_completed : COMPLETE_\nLOCAL_\nINVOICE\n[local]
-    iia_new -down-> iia_completed : COMPLETE_\nCORPORATE_\nINVOICE\n[corporate]
+    iia_new -down-> iia_completed : COMPLETE\n[legal | capex | asset |\nservices_charges | local | corporate ]
 
-    iia_completed --> iia_a : APPROVE_AS_\nLEGAL_MANAGER\n[legal]
-    iia_completed --> iia_a : APPROVE_AS_\nPROJECT_MANAGER\n[capex]
-    iia_completed --> iia_a : APPROVE_AS_\nASSET_MANAGER\n[asset]
+    iia_completed --> iia_a : APPROVE\n[legal | capex | \nasset | services_charges ]
 
     iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n_COUNTRY_DIRECTOR\n[local]
     iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\nFOR_CORPORATE\n[corporate]
@@ -102,10 +98,10 @@ state "BankAccountVerificationStateTransitionType" as bbv {
 state "PaymentBatchApprovalStateTransitionType" as pa {
 
     state "NEW" as pa_new
-    state "APPROVED_BY_\nFINANCIAL_DIRECTOR" as pa_approved
+    state "COMPLETED" as pa_completed
 
     [*] -right-> pa_new: INSTANTIATE
-    pa_new -down-> pa_approved: APPROVE_AS_\nFINANCIAL_DIRECTOR
+    pa_new -down-> pa_completed: COMPLETE (as treasurer)
 
 }
 --

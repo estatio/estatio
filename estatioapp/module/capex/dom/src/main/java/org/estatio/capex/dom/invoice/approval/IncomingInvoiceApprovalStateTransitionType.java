@@ -25,6 +25,7 @@ import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.role.IPartyRoleType;
 
@@ -42,102 +43,79 @@ public enum IncomingInvoiceApprovalStateTransitionType
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
             IncomingInvoiceApprovalState.NEW,
-            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.none(),
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    COMPLETE_PROPERTY_INVOICE(
+    COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            null, // task assignment strategy overridden below
             AdvancePolicy.MANUAL) {
-
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                        IncomingInvoice,
+                        IncomingInvoiceApprovalStateTransition,
+                        IncomingInvoiceApprovalStateTransitionType,
+                        IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                switch (incomingInvoice.getType()) {
+                case LEGAL:
+                case CAPEX:
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
+                case LOCAL_EXPENSES:
+                    return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
+                case CORPORATE_EXPENSES:
+                    return PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR;
+                }
+                // REVIEW: for other types, we haven't yet established a business process, so no task will be created
+                return null;
+            };
+        }
         @Override
         public boolean isMatch(
-                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType().isToCompleteByPropertyManagers();
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
 
         @Override
         public String reasonGuardNotSatisified(
-                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonIncomplete();
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.reasonIncomplete();
         }
     },
-    COMPLETE_LOCAL_INVOICE(
-            IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.COMPLETED,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
-            AdvancePolicy.MANUAL) {
-
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType().isToCompleteByOfficeAdministrator();
-        }
-
-        @Override
-        public String reasonGuardNotSatisified(
-                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonIncomplete();
-        }
-    },
-    COMPLETE_CORPORATE_INVOICE(
-            IncomingInvoiceApprovalState.NEW,
-            IncomingInvoiceApprovalState.COMPLETED,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR),
-            AdvancePolicy.MANUAL) {
-
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice, final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType().isToCompleteByCorporateAdministrator();
-        }
-
-        @Override
-        public String reasonGuardNotSatisified(
-                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
-            return domainObject.reasonIncomplete();
-        }
-    },
-    APPROVE_AS_LEGAL_MANAGER(
+    APPROVE(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.LEGAL_MANAGER),
+            null, // task assignment strategy overridden below
             AdvancePolicy.MANUAL) {
         @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoiceType.LEGAL;
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceApprovalStateTransition,
+                    IncomingInvoiceApprovalStateTransitionType,
+                    IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                switch (incomingInvoice.getType()) {
+                case LEGAL:
+                    return PartyRoleTypeEnum.LEGAL_MANAGER;
+                case CAPEX:
+                    return ProjectRoleTypeEnum.PROJECT_MANAGER;
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    return FixedAssetRoleTypeEnum.ASSET_MANAGER;
+                }
+                return null;
+            };
         }
-    },
-    APPROVE_AS_PROJECT_MANAGER(
-            IncomingInvoiceApprovalState.COMPLETED,
-            IncomingInvoiceApprovalState.APPROVED,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(ProjectRoleTypeEnum.PROJECT_MANAGER),
-            AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoiceType.CAPEX;
-        }
-    },
-    APPROVE_AS_ASSET_MANAGER(
-            IncomingInvoiceApprovalState.COMPLETED,
-            IncomingInvoiceApprovalState.APPROVED,
-            NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.ASSET_MANAGER),
-            AdvancePolicy.MANUAL) {
-        @Override
-        public boolean isMatch(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            return incomingInvoice.getType() == IncomingInvoiceType.PROPERTY_EXPENSES;
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
@@ -179,13 +157,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC),
     CONFIRM_BANK_ACCOUNT_VERIFIED(
-            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
             IncomingInvoiceApprovalState.PAYABLE,
-            NextTransitionSearchStrategy.none(),
+            NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
         @Override
         public boolean isGuardSatisified(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return isBankAccountVerified(incomingInvoice, serviceRegistry2) ||
+                   incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
+        }
+
+        private boolean isBankAccountVerified(
                 final IncomingInvoice domainObject,
                 final ServiceRegistry2 serviceRegistry2) {
             final StateTransitionService stateTransitionService =

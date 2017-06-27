@@ -6,12 +6,12 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 
 @Mixin(method = "act")
-public class IncomingInvoice_completePropertyInvoice extends IncomingInvoice_triggerAbstract {
+public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
 
     private final IncomingInvoice incomingInvoice;
 
-    public IncomingInvoice_completePropertyInvoice(IncomingInvoice incomingInvoice) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE_PROPERTY_INVOICE);
+    public IncomingInvoice_complete(IncomingInvoice incomingInvoice) {
+        super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE);
         this.incomingInvoice = incomingInvoice;
     }
 

@@ -38,11 +38,11 @@ public enum PaymentBatchApprovalStateTransitionType
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
-    APPROVE_AS_FINANCIAL_DIRECTOR(
+    COMPLETE(
             PaymentBatchApprovalState.NEW,
-            PaymentBatchApprovalState.APPROVED_BY_FINANCIAL_DIRECTOR,
+            PaymentBatchApprovalState.COMPLETED,
             NextTransitionSearchStrategy.none(),
-            TaskAssignmentStrategy.to(PartyRoleTypeEnum.FINANCIAL_DIRECTOR),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
             AdvancePolicy.MANUAL);
 
     private final List<PaymentBatchApprovalState> fromStates;

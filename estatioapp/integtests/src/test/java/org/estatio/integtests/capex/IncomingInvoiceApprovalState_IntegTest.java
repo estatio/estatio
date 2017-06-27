@@ -213,7 +213,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 //        assertTransition(transitionsBefore.get(2), null, INSTANTIATE, NEW);
 //
 //        // when
-//        wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
+//        wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("looks good to me!");
 //        transactionService.nextTransaction();
 //
 //        // then
@@ -239,7 +239,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 //        postProcessInvoice();
 //
 //        // and given
-//        wrap(mixin(IncomingInvoice_approveAsProjectManager.class, incomingInvoice)).act("looks good to me!");
+//        wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act("looks good to me!");
 //
 //        assertState(incomingInvoice, APPROVED);
 //

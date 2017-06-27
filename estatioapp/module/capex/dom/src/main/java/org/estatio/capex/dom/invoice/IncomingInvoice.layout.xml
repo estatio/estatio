@@ -129,12 +129,8 @@
                                             </cpt:action>
                                         </cpt:property>
                                         <cpt:property id="pendingApprovalTask">
-                                            <cpt:action id="completePropertyInvoice"/>
-                                            <cpt:action id="completeLocalInvoice"/>
-                                            <cpt:action id="completeCorporateInvoice"/>
-                                            <cpt:action id="approveAsLegalManager"/>
-                                            <cpt:action id="approveAsProjectManager"/>
-                                            <cpt:action id="approveAsAssetManager"/>
+                                            <cpt:action id="complete"/>
+                                            <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCountryDirector"/>
                                         </cpt:property>
                                         <cpt:property id="reasonApprovalTaskBlocked">

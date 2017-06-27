@@ -34,7 +34,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_approveAsFinancialDirector;
+import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -257,7 +257,7 @@ public class PaymentBatchManager {
             paymentBatch.updateFor(transfer.getInvoice(), transfer.getTransferAmount(), transfer.getRemittanceInformation());
 
             if(paymentBatch != previousBatch) {
-                factoryService.mixin(PaymentBatch_approveAsFinancialDirector.class, paymentBatch).act(comment);
+                factoryService.mixin(PaymentBatch_complete.class, paymentBatch).act(comment);
                 previousBatch = paymentBatch;
             }
         }

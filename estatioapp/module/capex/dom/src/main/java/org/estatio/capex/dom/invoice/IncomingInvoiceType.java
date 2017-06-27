@@ -9,9 +9,6 @@ public enum IncomingInvoiceType {
     LEGAL,
     CAPEX,
     PROPERTY_EXPENSES,
-    /**
-     * These are a sub-category of property expenses, being those that can be re-charged onto tenants.
-     */
     SERVICE_CHARGES,
     LOCAL_EXPENSES,
     CORPORATE_EXPENSES,
@@ -23,18 +20,6 @@ public enum IncomingInvoiceType {
     INTERCOMPANY,
     RE_INVOICING,
     ;
-
-    public boolean isToCompleteByPropertyManagers() {
-        return this == LEGAL || this == CAPEX || this == PROPERTY_EXPENSES || this == SERVICE_CHARGES;
-    }
-
-    public boolean isToCompleteByOfficeAdministrator() {
-        return this == LOCAL_EXPENSES;
-    }
-
-    public boolean isToCompleteByCorporateAdministrator() {
-        return this == CORPORATE_EXPENSES;
-    }
 
     @Programmatic
     public String validateProperty(final Property property) {

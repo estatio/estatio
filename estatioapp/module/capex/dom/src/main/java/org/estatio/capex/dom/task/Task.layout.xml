@@ -22,20 +22,12 @@
                                     <cpt:action id="completeOrderWithApproval"/>
 
                                     <!-- incoming invoice -->
-                                    <cpt:action id="completePropertyInvoice"/>
-                                    <cpt:action id="completeLocalInvoice"/>
-                                    <cpt:action id="completeCorporateInvoice"/>
-
-                                    <cpt:action id="approveAsLegalManager"/>
-                                    <cpt:action id="approveAsProjectManager"/>
-                                    <cpt:action id="approveAsAssetManager"/>
+                                    <cpt:action id="complete"/>
+                                    <cpt:action id="approve"/>
                                     <cpt:action id="approveAsCountryDirector"/>
 
                                     <!-- bank account -->
                                     <cpt:action id="verifyBankAccount"/>
-
-                                    <!-- payment batch -->
-                                    <cpt:action id="approveAsFinancialDirector"/>
 
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>

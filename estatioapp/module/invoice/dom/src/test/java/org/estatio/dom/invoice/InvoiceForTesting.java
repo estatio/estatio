@@ -6,4 +6,8 @@ public class InvoiceForTesting extends Invoice<InvoiceForTesting> {
         super("");
     }
 
+    @Override
+    protected String reasonDisabledDueToState() {
+        return null;
+    }
 }

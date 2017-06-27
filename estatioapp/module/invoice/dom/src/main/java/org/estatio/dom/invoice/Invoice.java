@@ -343,9 +343,15 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
         public String disableExec() {
-            return invoice.getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
+            return invoice.reasonDisabledDueToState();
         }
     }
+
+    /**
+     * Mandatory hook
+     * @return
+     */
+    protected abstract String reasonDisabledDueToState();
 
     @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")

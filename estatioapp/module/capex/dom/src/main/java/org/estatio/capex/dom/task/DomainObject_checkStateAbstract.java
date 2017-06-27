@@ -43,10 +43,6 @@ public abstract class DomainObject_checkStateAbstract<
         return domainObject;
     }
 
-    public boolean hideAct() {
-        ST st = stateTransitionService.pendingTransitionOf(domainObject, stateTransitionClass);
-        return st == null;
-    }
 
     @Inject
     StateTransitionService stateTransitionService;
