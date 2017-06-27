@@ -79,6 +79,7 @@
                                     <cpt:action id="categoriseAsOrder"/>
                                     <cpt:action id="categoriseAsPropertyInvoice"/>
                                     <cpt:action id="categoriseAsOtherInvoice"/>
+                                    <cpt:action id="discard"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Next task">

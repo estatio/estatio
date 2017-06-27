@@ -4,5 +4,6 @@ import org.estatio.capex.dom.state.State;
 
 public enum IncomingDocumentCategorisationState implements State<IncomingDocumentCategorisationState> {
     NEW,
-    CATEGORISED
+    CATEGORISED,
+    DISCARDED
 }

@@ -132,6 +132,7 @@
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCountryDirector"/>
+                                            <cpt:action id="discard"/>
                                         </cpt:property>
                                         <cpt:property id="reasonApprovalTaskBlocked">
                                             <cpt:named>Reason blocked</cpt:named>

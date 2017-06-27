@@ -9,13 +9,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.dto.DtoFactoryAbstract;
-import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.canonical.invoice.v1.InvoiceDto;
-import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.dto.DtoFactoryAbstract;
+import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
@@ -65,16 +64,21 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract {
         invoiceForLease.getItems().stream().forEach(item -> dto.getItems().add(invoiceItemForLeaseDtoFactory.newDto(item)));
 
         dto.setNetAmount(dto.getItems().stream()
-                            .map(InvoiceItemDto::getNetAmount)
+                            .map(x -> valueElseZero(x.getNetAmount()))
                             .reduce(BigDecimal.ZERO, BigDecimal::add));
         dto.setGrossAmount(dto.getItems().stream()
-                            .map(InvoiceItemDto::getGrossAmount)
+                            .map(x -> valueElseZero(x.getGrossAmount()))
                             .reduce(BigDecimal.ZERO, BigDecimal::add));
         dto.setVatAmount(dto.getItems().stream()
-                            .map(InvoiceItemDto::getVatAmount)
+                            .map(x -> valueElseZero(x.getVatAmount()))
                             .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         return dto;
+    }
+
+    private BigDecimal valueElseZero(final BigDecimal amount) {
+        return amount != null ?
+                amount : BigDecimal.ZERO;
     }
 
     private org.estatio.canonical.invoice.v1.PaymentMethod toDto(final PaymentMethod paymentMethod) {

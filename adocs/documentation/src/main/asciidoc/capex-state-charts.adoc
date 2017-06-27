@@ -13,25 +13,12 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 
     state "NEW" as idc_new
     state "CATEGORISED" as idc_c
+    state "DISCARDED" as idc_d
 
     [*] -right-> idc_new: INSTANTIATE
-    idc_new -down-> idc_c : \n  CATEGORISE
-}
---
-
-== Order Approval
-
-[plantuml,order-approval-state-chart,png]
---
-state "OrderApprovalStateTransitionType" as oa {
-
-    state "NEW" as oa_new
-    state "APPROVED" as oa_approved
-
-    [*] -right-> oa_new: INSTANTIATE
-    oa_new -down-> oa_approved: COMPLETE_WITH_APPROVAL
-    note right of oa_approved: immutable from this point on
-
+    idc_new -down-> idc_c : CATEGORISE\n\n
+    idc_c -right-> idc_d : \n  DISCARD_ASSOCIATED \n(when associated invoice\nor order is discarded)
+    idc_new --> idc_d : \n  DISCARD\n (explicit)
 }
 --
 
@@ -46,6 +33,9 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
     state "COMPLETED" as iia_completed
     note right of iia_completed: immutable from this point on
 
+    state "DISCARDED" as iia_discarded
+    note right of iia_discarded: associated document\nalso discarded
+
     state "APPROVED" as iia_a
     state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
     
@@ -57,6 +47,7 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
     [*] -right-> iia_new: INSTANTIATE
 
     iia_new -down-> iia_completed : COMPLETE\n[hasProperty() | \n legal | local | corporate ]
+    iia_new -right-> iia_discarded : DISCARD
 
     iia_completed --> iia_a : APPROVE\n[legal | capex | \nasset | services_charges ]
 
@@ -72,6 +63,29 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
     iia_payable --> iia_paid: PAY_BY_DD\n[paymentMethod=\n"DIRECT_DEBIT"]
 }
 --
+
+== Order Approval
+
+[plantuml,order-approval-state-chart,png]
+--
+state "OrderApprovalStateTransitionType" as oa {
+
+    state "NEW" as oa_new
+
+    state "APPROVED" as oa_approved
+    note right of oa_approved: immutable from this point on
+
+    state "DISCARDED" as oa_discarded
+    note right of oa_discarded: associated document\nalso discarded
+
+    [*] -right-> oa_new: INSTANTIATE
+
+    oa_new -down-> oa_approved: COMPLETE_WITH_APPROVAL
+    oa_new -right-> oa_discarded : DISCARD
+
+}
+--
+
 
 == Bank Account Verification
 

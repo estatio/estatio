@@ -14,21 +14,47 @@
                             <cpt:fieldSet name="General">
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
+
                                     <!-- document categorisation -->
-                                    <cpt:action id="categoriseAsOrder"/>
-                                    <cpt:action id="categoriseAsPropertyInvoice"/>
-                                    <cpt:action id="categoriseAsOtherInvoice"/>
+                                    <cpt:action id="categoriseDocumentAsOrder">
+                                        <cpt:named>Categorise as order</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="categoriseDocumentAsPropertyInvoice">
+                                        <cpt:named>Categorise as property invoice</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="categoriseDocumentAsOtherInvoice">
+                                        <cpt:named>Categorise as other invoice</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="discardDocument">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
 
                                     <!-- order -->
-                                    <cpt:action id="completeOrderWithApproval"/>
+                                    <cpt:action id="completeOrderWithApproval">
+                                        <cpt:named>Complete with Approval</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="discardOrder">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
 
                                     <!-- incoming invoice -->
-                                    <cpt:action id="complete"/>
-                                    <cpt:action id="approve"/>
-                                    <cpt:action id="approveAsCountryDirector"/>
+                                    <cpt:action id="completeIncomingInvoice">
+                                        <cpt:named>Complete</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoice">
+                                        <cpt:named>Approve</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsCountryDirector">
+                                        <cpt:named>Approve as Country Director</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="discardIncomingInvoice">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
 
                                     <!-- bank account -->
-                                    <cpt:action id="verifyBankAccount"/>
+                                    <cpt:action id="verifyBankAccount">
+                                        <cpt:named>Verify</cpt:named>
+                                    </cpt:action>
 
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>

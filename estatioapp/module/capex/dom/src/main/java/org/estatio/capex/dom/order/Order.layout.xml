@@ -105,6 +105,7 @@
                                         </cpt:property>
                                         <cpt:property id="pendingApprovalTask">
                                             <cpt:action id="completeWithApproval"/>
+                                            <cpt:action id="discard"/>
                                         </cpt:property>
                                         <cpt:property id="reasonApprovalTaskBlocked">
                                             <cpt:named>Reason blocked</cpt:named>

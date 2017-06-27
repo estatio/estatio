@@ -3,7 +3,6 @@ package org.estatio.capex.dom.order.approval.triggers;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
@@ -13,8 +12,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
 
@@ -52,14 +49,6 @@ public class Task_completeOrderWithApproval
         return super.hideAct() || mixin().hideAct();
     }
 
-    @Override
-    protected Order doGetDomainObjectIfAny() {
-        final OrderApprovalStateTransition transition = repository.findByTask(this.task);
-        return transition != null ? transition.getOrdr() : null;
-    }
-
-    @Inject
-    OrderApprovalStateTransition.Repository repository;
 
 
 }

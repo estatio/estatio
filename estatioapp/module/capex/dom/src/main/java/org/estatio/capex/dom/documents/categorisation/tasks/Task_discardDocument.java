@@ -7,43 +7,36 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsPropertyInvoice;
-import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.documents.categorisation.document.Document_discard;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
-import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
-public class Task_categoriseAsPropertyInvoice
-        extends Task_mixinActAbstract<Document_categoriseAsPropertyInvoice, Document> {
+public class Task_discardDocument
+        extends Task_mixinActAbstract<Document_discard, Document> {
 
     protected final Task task;
 
-    public Task_categoriseAsPropertyInvoice(final Task task) {
-        super(task, Document_categoriseAsPropertyInvoice.class);
+    public Task_discardDocument(final Task task) {
+        super(task, Document_discard.class);
         this.task = task;
     }
 
-    @Action()
-    @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "trash-o")
     public Object act(
-            final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(property, comment);
-        if(mixinResult instanceof IncomingDocViewModel) {
-            IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
-            // to support 'goToNext' when finished with the view model
-            viewModel.setOriginatingTask(task);
-        }
+        Document mixinResult = mixin().act(comment);
         return toReturnElse(goToNext, mixinResult);
     }
 
-    public boolean default2Act() {
+    public boolean default1Act() {
         return true;
     }
 

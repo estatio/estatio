@@ -205,7 +205,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL)
+            AdvancePolicy.MANUAL),
+    DISCARD(
+            IncomingInvoiceApprovalState.NEW,
+            IncomingInvoiceApprovalState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
     ;
 
     private final List<IncomingInvoiceApprovalState> fromStates;

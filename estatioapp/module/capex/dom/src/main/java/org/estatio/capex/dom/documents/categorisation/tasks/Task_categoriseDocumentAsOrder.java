@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.documents.categorisation.tasks;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -13,30 +11,30 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOtherInvoice;
+import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
+import org.estatio.dom.asset.Property;
 
 @Mixin(method = "act")
-public class Task_categoriseAsOtherInvoice
-        extends Task_mixinActAbstract<Document_categoriseAsOtherInvoice, Document> {
+public class Task_categoriseDocumentAsOrder
+        extends Task_mixinActAbstract<Document_categoriseAsOrder, Document> {
 
     protected final Task task;
 
-    public Task_categoriseAsOtherInvoice(final Task task) {
-        super(task, Document_categoriseAsOtherInvoice.class);
+    public Task_categoriseDocumentAsOrder(final Task task) {
+        super(task, Document_categoriseAsOrder.class);
         this.task = task;
     }
 
     @Action()
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
     public Object act(
-            final IncomingInvoiceType incomingInvoiceType,
+            @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(incomingInvoiceType, comment);
+        Object mixinResult = mixin().act(property, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
@@ -45,8 +43,11 @@ public class Task_categoriseAsOtherInvoice
         return toReturnElse(goToNext, mixinResult);
     }
 
-    public List<IncomingInvoiceType> choices0Act() {
-        return mixin().choices0Act();
+    public String validateAct(
+            final Property property,
+            final String comment,
+            final boolean goToNext) {
+        return mixin().validateAct(property, comment);
     }
 
     public boolean default2Act() {

@@ -43,6 +43,12 @@ public enum OrderApprovalStateTransitionType
             OrderApprovalState.APPROVED,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
+            AdvancePolicy.MANUAL),
+    DISCARD(
+            OrderApprovalState.NEW,
+            OrderApprovalState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<OrderApprovalState> fromStates;

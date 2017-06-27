@@ -42,8 +42,20 @@ public enum IncomingDocumentCategorisationStateTransitionType
     CATEGORISE(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.CATEGORISED,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR),
+            AdvancePolicy.MANUAL),
+    DISCARD_ASSOCIATED(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    DISCARD(
+            IncomingDocumentCategorisationState.NEW,
+            IncomingDocumentCategorisationState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<IncomingDocumentCategorisationState> fromStates;
