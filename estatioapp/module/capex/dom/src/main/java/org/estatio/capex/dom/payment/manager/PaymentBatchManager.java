@@ -105,7 +105,7 @@ public class PaymentBatchManager {
         transfers = Lists.newArrayList();
 
         List<IncomingInvoice> payableInvoices = incomingInvoiceRepository
-                .findByApprovalStatus(IncomingInvoiceApprovalState.PAYABLE);
+                .findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
         for (IncomingInvoice payableInvoice : payableInvoices) {
             PaymentBatch paymentBatchIfAny = batchThatUniquelyCanPay(payableInvoice);
             Transfer transfer = new Transfer(

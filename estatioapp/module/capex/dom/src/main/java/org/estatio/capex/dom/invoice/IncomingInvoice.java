@@ -281,7 +281,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      * </p>
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
+    @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Property property;
 

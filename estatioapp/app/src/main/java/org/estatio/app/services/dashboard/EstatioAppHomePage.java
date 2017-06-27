@@ -22,12 +22,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
+
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
+import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.event.Event;
@@ -61,6 +69,46 @@ public class EstatioAppHomePage {
         return taskRepository.findTasksIncompleteForOthers();
     }
 
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesNew() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.NEW);
+    }
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesCompleted() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.COMPLETED);
+    }
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesApproved() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED);
+    }
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesApprovedByCountryDirector() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+    }
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesPendingBankAccountCheck() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
+    }
+
+    @Collection(notPersisted = true)
+    @CollectionLayout(paged = 20)
+    public List<IncomingInvoice> getIncomingInvoicesPayable() {
+        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
+    }
+
+
+
+
     @Collection(notPersisted = true)
     public List<Lease> getLeasesAboutToExpire() {
         return leaseRepository.findExpireInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
@@ -71,8 +119,34 @@ public class EstatioAppHomePage {
         return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
     }
 
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TableColumnOrderServiceForIncomingInvoices implements TableColumnOrderService {
+
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if(parent instanceof EstatioAppHomePage && IncomingInvoice.class.isAssignableFrom(collectionType)) {
+                return Lists.newArrayList("seller", "property", "netAmount", "invoiceDate", "number");
+            }
+            return null;
+        }
+
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+    }
+
+
     @Inject
     TaskRepository taskRepository;
+
+    @Inject
+    IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
     LeaseRepository leaseRepository;

@@ -199,7 +199,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private Party buyer;
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "true")
-    @Property(hidden = Where.ALL_TABLES)
+    @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Party seller;
 

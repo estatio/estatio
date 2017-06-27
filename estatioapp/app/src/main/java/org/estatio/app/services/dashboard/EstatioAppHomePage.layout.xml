@@ -26,6 +26,42 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Incoming Invoices">
+                    <row>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesNew" paged="50">
+                                <ns2:named>New</ns2:named>
+                            </ns2:collection>
+                        </col>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesCompleted" paged="50">
+                                <ns2:named>Completed</ns2:named>
+                            </ns2:collection>
+                        </col>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesApproved" paged="50">
+                                <ns2:named>Approved</ns2:named>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                    <row>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesApprovedByCountryDirector" paged="50">
+                                <ns2:named>Approved by Country Director</ns2:named>
+                            </ns2:collection>
+                        </col>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesPendingBankAccountCheck" paged="50">
+                                <ns2:named>Pending Bank Account Check</ns2:named>
+                            </ns2:collection>
+                        </col>
+                        <col span="4">
+                            <ns2:collection id="incomingInvoicesPayable" paged="50">
+                                <ns2:named>Payable</ns2:named>
+                            </ns2:collection>
+                        </col>
+                    </row>
+                </tab>
             </tabGroup>
         </col>
     </row>

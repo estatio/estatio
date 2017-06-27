@@ -143,7 +143,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     },
     CHECK_BANK_ACCOUNT_FOR_CORPORATE(
             IncomingInvoiceApprovalState.APPROVED,
-            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
+            IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
@@ -162,12 +162,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
             AdvancePolicy.MANUAL),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
+            IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC),
     CONFIRM_BANK_ACCOUNT_VERIFIED(
-            IncomingInvoiceApprovalState.PENDING_BACK_ACCOUNT_CHECK,
+            IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             IncomingInvoiceApprovalState.PAYABLE,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),

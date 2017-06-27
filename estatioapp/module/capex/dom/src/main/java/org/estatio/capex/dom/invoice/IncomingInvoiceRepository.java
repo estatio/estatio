@@ -32,6 +32,7 @@ public class IncomingInvoiceRepository {
         return repositoryService.allInstances(IncomingInvoice.class);
     }
 
+
     @Programmatic
     public List<IncomingInvoice> findByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
         return repositoryService.allMatches(
@@ -65,9 +66,8 @@ public class IncomingInvoiceRepository {
     }
 
 
-
     @Programmatic
-    public List<IncomingInvoice> findByApprovalStatus(final IncomingInvoiceApprovalState approvalState) {
+    public List<IncomingInvoice> findByApprovalState(final IncomingInvoiceApprovalState approvalState) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
