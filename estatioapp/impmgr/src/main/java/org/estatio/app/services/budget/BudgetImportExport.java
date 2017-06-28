@@ -13,7 +13,10 @@ import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -101,7 +104,7 @@ public class BudgetImportExport implements Importable {
     @Programmatic
     public List<Object> importData(final Object previousRow) {
         if (previousRow==null){
-            removeExistingBudgetItems();
+            removeExistingBudgetItemsIfNotLinked();
         }
         Charge incomingCharge = fetchCharge(getIncomingChargeReference());
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
@@ -111,10 +114,17 @@ public class BudgetImportExport implements Importable {
         return Lists.newArrayList(budgetItem.getBudget());
     }
 
-    private void removeExistingBudgetItems(){
+    private void removeExistingBudgetItemsIfNotLinked(){
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
-        budget.removeAllBudgetItems();
+        for (BudgetItem item : budget.getItems()){
+            if (orderItemRepository.findByBudgetItem(item).size() == 0 && incomingInvoiceItemRepository.findByBudgetItem(item).size() == 0) {
+                for (PartitionItem pItem : item.getPartitionItems()) {
+                    pItem.remove();
+                }
+                repositoryService.removeAndFlush(item);
+            }
+        }
     }
 
     private BudgetItem findOrCreateBudgetAndBudgetItem(final Charge incomingCharge){
@@ -164,5 +174,14 @@ public class BudgetImportExport implements Importable {
 
     @Inject
     private KeyTableRepository keyTableRepository;
+
+    @Inject
+    private RepositoryService repositoryService;
+
+    @Inject
+    private OrderItemRepository orderItemRepository;
+
+    @Inject
+    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
 }
