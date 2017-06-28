@@ -159,6 +159,14 @@ public class OrderRepository {
     }
 
     @Programmatic
+    public List<Order> findBySellerParty(final Party party) {
+        if (party instanceof Organisation) {
+            return findBySeller((Organisation) party);
+        }
+        return null;
+    }
+
+    @Programmatic
     public List<Order> findBySeller(final Organisation seller) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
