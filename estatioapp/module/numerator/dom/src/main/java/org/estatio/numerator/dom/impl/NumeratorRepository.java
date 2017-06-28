@@ -130,7 +130,8 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
         return findOrCreateNumerator(numeratorName, scopedTo, format, lastIncrement, applicationTenancy);
     }
 
-    private Numerator findOrCreateNumerator(
+    @Programmatic
+    public Numerator findOrCreateNumerator(
             final String numeratorName,
             final Object scopedToIfAny,
             final String format,
@@ -144,18 +145,10 @@ public class NumeratorRepository extends UdoDomainRepositoryAndFactory<Numerator
             throw new RecoverableException("Invalid format string '" + format + "'");
         }
 
-        // existing?
         final Numerator existingIfAny = findNumerator(numeratorName, scopedToIfAny, applicationTenancy);
         if(existingIfAny != null) {
-            String msg = "'" + numeratorName + "' numerator already exists";
-            if(scopedToIfAny != null) {
-                msg += " for " + getContainer().titleOf(scopedToIfAny);
-            }
-            getContainer().warnUser(msg);
             return existingIfAny;
         }
-
-        // else create
         return createNumerator(numeratorName, scopedToIfAny, format, lastIncrement, applicationTenancy);
     }
 

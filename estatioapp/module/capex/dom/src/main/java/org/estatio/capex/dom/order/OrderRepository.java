@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.order;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,12 +15,16 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
+import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.impl.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -74,7 +79,7 @@ public class OrderRepository {
     @Programmatic
     public Order create(
             final Property property,
-            final String number,
+            final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
             final LocalDate orderDate,
@@ -82,8 +87,24 @@ public class OrderRepository {
             final Party buyer,
             final String atPath,
             final OrderApprovalState approvalStateIfAny) {
+
+        final Numerator numerator = numeratorRepository.findOrCreateNumerator(
+                "Order number",
+                null,
+                "%05d",
+                BigInteger.ZERO,
+                applicationTenancyRepository.findByPath(atPath));
+
         final Order order = new Order(
-                property, number, sellerOrderReference, entryDate, orderDate, seller, buyer, atPath, approvalStateIfAny);
+                property,
+                orderNumber == null ? numerator.nextIncrementStr() : orderNumber,
+                sellerOrderReference,
+                entryDate,
+                orderDate,
+                seller,
+                buyer,
+                atPath,
+                approvalStateIfAny);
         serviceRegistry2.injectServicesInto(order);
         repositoryService.persistAndFlush(order);
         return order;
@@ -155,4 +176,7 @@ public class OrderRepository {
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
+    @Inject NumeratorRepository numeratorRepository;
+
+    @Inject ApplicationTenancyRepository applicationTenancyRepository;
 }
