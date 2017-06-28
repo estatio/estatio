@@ -451,6 +451,7 @@ public class IncomingDocAsInvoiceViewModel
             setDescription(invoiceItem.getDescription());
             setNetAmount(invoiceItem.getNetAmount());
             setVatAmount(invoiceItem.getVatAmount());
+            setGrossAmount(invoiceItem.getGrossAmount());
             setTax(invoiceItem.getTax());
             setDueDate(invoiceItem.getDueDate());
             setPeriod(periodFrom(invoiceItem.getStartDate(), invoiceItem.getEndDate()));
