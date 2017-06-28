@@ -5,7 +5,10 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -26,6 +29,10 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
     }
 
     @Override
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
+    @ActionLayout(cssClassFa = "trash-o")
     public IncomingInvoice act(@Nullable final String comment) {
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
         documentIfAny.ifPresent(document ->

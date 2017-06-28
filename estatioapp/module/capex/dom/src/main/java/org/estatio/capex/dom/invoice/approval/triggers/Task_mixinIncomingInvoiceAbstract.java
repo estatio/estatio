@@ -25,7 +25,9 @@ public abstract class Task_mixinIncomingInvoiceAbstract<M extends IncomingInvoic
 
     @Action()
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Object act(@Nullable final String comment, final boolean goToNext) {
+    public Object act(
+            @Nullable final String comment,
+            final boolean goToNext) {
         Object mixinResult = mixin().act(comment);
         return toReturnElse(goToNext, mixinResult);
     }

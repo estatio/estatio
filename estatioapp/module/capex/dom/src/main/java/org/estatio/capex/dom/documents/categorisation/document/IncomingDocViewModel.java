@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -252,23 +251,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public List<BudgetItem> choicesBudgetItem(){
-        List<BudgetItem> result = new ArrayList<>();
-        if (hasProperty()){
-            for (Budget budget : budgetRepository.findByProperty(getProperty())){
-                if (hasCharge()){
-                    result.add(budgetItemRepository.findByBudgetAndCharge(budget, getCharge()));
-                } else {
-                    result.addAll(budget.getItems());
-                }
-            }
-        } else {
-            if (hasCharge()){
-                result = budgetItemRepository.allBudgetItems().stream().filter(x->x.getCharge().equals(getCharge())).collect(Collectors.toList());
-            } else {
-                result = budgetItemRepository.allBudgetItems();
-            }
-        }
-        return result;
+        return budgetItemChooser.choicesBudgetItemFor(getProperty(), getCharge());
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -659,6 +642,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Inject
     @XmlTransient
     protected PaperclipRepository paperclipRepository;
+
+    @XmlTransient
+    @Inject
+    BudgetItemChooser budgetItemChooser;
 
 
 

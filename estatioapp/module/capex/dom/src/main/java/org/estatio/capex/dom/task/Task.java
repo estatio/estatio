@@ -27,12 +27,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.PartyRoleType;
@@ -80,6 +82,10 @@ public class Task implements Comparable<Task> {
         this.description = description;
         this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;
+    }
+
+    public String title() {
+        return String.format("%s: %s", getDescription(), titleService.titleOf(getObject()));
     }
 
     @Getter @Setter
@@ -169,6 +175,13 @@ public class Task implements Comparable<Task> {
     }
 
 
+    private Object getObject() {
+        final StateTransition stateTransition = stateTransitionService.findFor(this);
+        return stateTransition != null ? stateTransition.getDomainObject() : null;
+    }
+
+
+
     @Override
     public int compareTo(final Task other) {
         return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "createdOn,transitionObjectType,description,comment");
@@ -176,5 +189,12 @@ public class Task implements Comparable<Task> {
 
     @Inject
     UserService userService;
+
+    @Inject
+    StateTransitionService stateTransitionService;
+
+    @Inject
+    TitleService titleService;
+
 
 }

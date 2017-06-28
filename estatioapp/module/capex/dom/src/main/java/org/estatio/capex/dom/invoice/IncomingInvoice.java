@@ -3,7 +3,9 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -38,6 +40,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.capex.dom.documents.categorisation.document.BudgetItemChooser;
 import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -200,17 +203,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         @MemberOrder(name="items", sequence = "1")
         public IncomingInvoice act(
                 final Charge charge,
-                final String description,
+                @Nullable final String description,
                 final BigDecimal netAmount,
-                final BigDecimal vatAmount,
-                final BigDecimal grossAmount,
-                final Tax tax,
-                final LocalDate dueDate,
-                final LocalDate startDate,
-                final LocalDate endDate,
-                final Property property,
-                final Project project,
-                final BudgetItem budgetItem) {
+                @Nullable final BigDecimal vatAmount,
+                @Nullable final BigDecimal grossAmount,
+                @Nullable final Tax tax,
+                @Nullable final LocalDate dueDate,
+                @Nullable final LocalDate startDate,
+                @Nullable final LocalDate endDate,
+                @Nullable final Property property,
+                @Nullable final Project project,
+                @Nullable final BudgetItem budgetItem) {
             final BigInteger sequence = incomingInvoice.nextItemSequence();
             incomingInvoiceItemRepository.upsert(
                     sequence,
@@ -234,6 +237,57 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         public String disableAct() {
             return incomingInvoice.reasonDisabledDueToState();
         }
+
+        public LocalDate default6Act() {
+            return ofFirstItem(IncomingInvoiceItem::getDueDate);
+        }
+
+        public LocalDate default7Act() {
+            return ofFirstItem(IncomingInvoiceItem::getStartDate);
+        }
+
+        public LocalDate default8Act() {
+            return ofFirstItem(IncomingInvoiceItem::getEndDate);
+        }
+
+        public Property default9Act() {
+            return incomingInvoice.getProperty();
+        }
+
+        public Project default10Act() {
+            return ofFirstItem(IncomingInvoiceItem::getProject);
+        }
+
+        public List<BudgetItem> choices11Act(
+                final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                final Tax tax,
+                final LocalDate dueDate,
+                final LocalDate startDate,
+                final LocalDate endDate,
+                final Property property,
+                final Project project) {
+
+            return budgetItemChooser.choicesBudgetItemFor(property, charge);
+        }
+
+        private <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
+            final Optional<IncomingInvoiceItem> firstItemIfAny = firstItemIfAny();
+            return firstItemIfAny.map(f).orElse(null);
+        }
+
+        private Optional<IncomingInvoiceItem> firstItemIfAny() {
+            return  incomingInvoice.getItems().stream()
+                    .filter(IncomingInvoiceItem.class::isInstance)
+                    .map(IncomingInvoiceItem.class::cast)
+                    .findFirst();
+        }
+
+        @Inject
+        BudgetItemChooser budgetItemChooser;
 
         @Inject
         IncomingInvoiceItemRepository incomingInvoiceItemRepository;
