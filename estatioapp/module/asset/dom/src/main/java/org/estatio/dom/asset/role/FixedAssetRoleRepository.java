@@ -43,6 +43,12 @@ public class FixedAssetRoleRepository extends UdoDomainRepositoryAndFactory<Fixe
                 "asset", asset);
     }
 
+    public List<FixedAssetRole> findByType(
+            final FixedAssetRoleTypeEnum type) {
+        return allMatches("findByType",
+                "type", type);
+    }
+
     public List<FixedAssetRole> findByAssetAndType(
             final FixedAsset asset,
             final FixedAssetRoleTypeEnum type) {

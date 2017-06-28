@@ -121,15 +121,33 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
     }
 
     @Programmatic
+    public List<Person> findByRoleType(final IPartyRoleType iPartyRoleType) {
+        PartyRoleType partyRoleType = iPartyRoleType.findOrCreateUsing(partyRoleTypeRepository);
+        final List<Party> parties = partyRepository.findByRoleType(partyRoleType);
+        return personsFor(parties);
+    }
+
+    @Programmatic
+    public List<Person> findByRoleType(final PartyRoleType partyRoleType) {
+        final List<Party> parties = partyRepository.findByRoleType(partyRoleType);
+        return personsFor(parties);
+    }
+
+    @Programmatic
     public List<Person> findByRoleTypeAndAtPath(
             final PartyRoleType partyRoleType,
             final String atPath) {
         final List<Party> parties = partyRepository.findByRoleTypeAndAtPath(partyRoleType, atPath);
+        return personsFor(parties);
+    }
+
+    private List<Person> personsFor(final List<Party> parties) {
         return parties.stream()
                 .filter(Person.class::isInstance)
                 .map(Person.class::cast)
                 .collect(Collectors.toList());
     }
+
 
     // //////////////////////////////////////
 

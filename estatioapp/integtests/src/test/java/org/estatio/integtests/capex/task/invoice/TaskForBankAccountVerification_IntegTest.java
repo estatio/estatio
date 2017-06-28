@@ -42,6 +42,7 @@ import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
@@ -140,7 +141,9 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             // and when
             final BankAccountVerificationState currentState = stateTransitionService
                     .currentStateOf(bankAccount, VERIFY_BANK_ACCOUNT);
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT);
+            final Person personToAssignNextToIfAny = null;
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+                    personToAssignNextToIfAny);
             transactionService.nextTransaction();
 
             // then
@@ -220,7 +223,9 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT);
+            final Person personToAssignNextToIfAny = null;
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+                    personToAssignNextToIfAny);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -271,7 +276,9 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT);
+            final Person personToAssignNextToIfAny = null;
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+                    personToAssignNextToIfAny);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -318,7 +325,9 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // given
             assertState(this.bankAccount, NOT_VERIFIED);
-            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT);
+            final Person personToAssignNextToIfAny = null;
+            stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
+                    personToAssignNextToIfAny);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);

@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
+import javax.annotation.Nullable;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -13,6 +16,17 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     public IncomingInvoice_approve(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE);
         this.incomingInvoice = incomingInvoice;
+    }
+
+    @Action()
+    public IncomingInvoice act(
+            @Nullable final String comment) {
+        trigger(comment);
+        return getDomainObject();
+    }
+
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
 }

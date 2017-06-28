@@ -112,11 +112,13 @@ public class StateTransitionRepositoryGeneric {
             final STT transitionType,
             final S fromState,
             final IPartyRoleType taskAssignToIfAny,
+            final Person personToAssignToIfAny,
             final String taskDescription,
             final Class<ST> stateTransitionClass) {
 
-        final Task taskIfAny = createTaskIfRequired(taskAssignToIfAny, taskDescription, stateTransitionClass,
-                domainObject);
+        final Task taskIfAny = createTaskIfRequired(
+                                taskAssignToIfAny, personToAssignToIfAny, taskDescription,
+                                stateTransitionClass, domainObject);
 
         final ST stateTransition = createTransition(domainObject, transitionType, fromState, taskIfAny, stateTransitionClass);
 
@@ -131,6 +133,7 @@ public class StateTransitionRepositoryGeneric {
             >
     Task createTaskIfRequired(
             final IPartyRoleType iRoleAssignTo,
+            final Person personToAssignToIfAny,
             final String taskDescription,
             final Class<ST> stateTransitionClass,
             final DO domainObject) {
@@ -140,7 +143,9 @@ public class StateTransitionRepositoryGeneric {
         final LocalDateTime createdOn = clockService.nowAsLocalDateTime();
         final String transitionObjectType = metaModelService3.toObjectType(stateTransitionClass);
 
-        final Person assignToIfAny = partyRoleTypeService.firstMemberOf(iRoleAssignTo, domainObject);
+        final Person assignToIfAny = personToAssignToIfAny != null
+                                        ? personToAssignToIfAny
+                                        : partyRoleTypeService.firstMemberOf(iRoleAssignTo, domainObject);
 
         final PartyRoleType roleAssignTo =
                 iRoleAssignTo.findOrCreateUsing(partyRoleTypeRepository);

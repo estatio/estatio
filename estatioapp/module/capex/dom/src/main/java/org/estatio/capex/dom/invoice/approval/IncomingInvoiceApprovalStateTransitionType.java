@@ -27,6 +27,7 @@ import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -281,13 +282,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
             final IncomingInvoice domainObject,
             final IncomingInvoiceApprovalState fromState,
             final IPartyRoleType assignToIfAny,
+            final Person personToAssignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingInvoiceApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingInvoiceApprovalStateTransition.Repository.class);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
-        return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
+        return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)

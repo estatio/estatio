@@ -20,6 +20,7 @@ import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 import lombok.Getter;
@@ -126,13 +127,14 @@ public enum IncomingDocumentCategorisationStateTransitionType
             final Document domainObject,
             final IncomingDocumentCategorisationState fromState,
             final IPartyRoleType assignToIfAny,
+            final Person personToAssignToIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingDocumentCategorisationStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingDocumentCategorisationStateTransition.Repository.class);
 
         final String taskDescription = Enums.getFriendlyNameOf(this);
-        return repository.create(domainObject, this, fromState, assignToIfAny, taskDescription);
+        return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)

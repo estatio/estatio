@@ -9,6 +9,15 @@ import org.estatio.dom.party.Person;
 public interface PartyRoleMemberInferenceService {
 
     /**
+     * Determines which {@link Person}(s) are members of the provided {@link PartyRoleType role},
+     * "at all".
+     *
+     * @param partyRoleType - the role, eg MAILROOM
+     */
+    @Programmatic
+    List<Person> inferMembersOf(IPartyRoleType partyRoleType);
+
+    /**
      * Determines which {@link Person}(s) are members of the provided {@link PartyRoleType role}, optionally using the
      * provided domain object as context.
      *

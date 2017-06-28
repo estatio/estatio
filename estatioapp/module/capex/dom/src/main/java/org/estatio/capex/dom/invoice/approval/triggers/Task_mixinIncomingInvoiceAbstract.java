@@ -23,18 +23,6 @@ public abstract class Task_mixinIncomingInvoiceAbstract<M extends IncomingInvoic
         this.task = task;
     }
 
-    @Action()
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Object act(
-            @Nullable final String comment,
-            final boolean goToNext) {
-        Object mixinResult = mixin().act(comment);
-        return toReturnElse(goToNext, mixinResult);
-    }
-
-    public boolean hideAct() {
-        return super.hideAct() || mixin().hideAct();
-    }
 
     @Override
     protected IncomingInvoice doGetDomainObjectIfAny() {

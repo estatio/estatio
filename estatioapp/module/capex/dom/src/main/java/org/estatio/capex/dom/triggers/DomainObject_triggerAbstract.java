@@ -10,6 +10,7 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.dom.party.Person;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "act")
@@ -66,6 +67,10 @@ public abstract class DomainObject_triggerAbstract<
      */
     protected final ST trigger(final String comment) {
         return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, comment);
+    }
+
+    protected final ST trigger(final Person personToAssignTo, final String comment) {
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignTo, comment);
     }
 
     /**

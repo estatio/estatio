@@ -23,13 +23,11 @@ public class PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice
         extends PartyRoleMemberInferenceServiceAbstract<ProjectRoleTypeEnum, IncomingInvoice> {
 
     public PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice() {
-        super(IncomingInvoice.class,
-                ProjectRoleTypeEnum.PROJECT_MANAGER
-        );
+        super(IncomingInvoice.class, ProjectRoleTypeEnum.class);
     }
 
     @Override
-    protected List<Person> doInfer(
+    protected List<Person> doInferMembersOf(
             final ProjectRoleTypeEnum roleType,
             final IncomingInvoice incomingInvoice) {
 
@@ -42,7 +40,20 @@ public class PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice
         final List<ProjectRole> projectRoles =
                 projectRoleRepository.findByProject(project);
 
+        return currentPersonsFor(projectRoles);
+    }
+
+    @Override
+    protected List<Person> doInferMembersOf(final ProjectRoleTypeEnum partyRoleType) {
+        final List<ProjectRole> projectRoles =
+                projectRoleRepository.listAll();
+
+        return currentPersonsFor(projectRoles);
+    }
+
+    private List<Person> currentPersonsFor(final List<ProjectRole> projectRoles) {
         return projectRoles.stream()
+                .filter(ProjectRole::isCurrent)
                 .map(ProjectRole::getParty)
                 .filter(Person.class::isInstance)
                 .map(Person.class::cast)

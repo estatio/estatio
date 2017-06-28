@@ -1,6 +1,5 @@
 package org.estatio.dom.party.role;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.estatio.dom.party.Person;
@@ -9,12 +8,11 @@ public abstract class PartyRoleMemberInferenceServiceAbstract<E extends Enum<E> 
         implements PartyRoleMemberInferenceService {
 
     private final Class<T> domainClass;
-    private final List<E> roleTypes;
+    private final Class<E> roleTypeEnumClass;
 
-    protected PartyRoleMemberInferenceServiceAbstract(
-            final Class<T> domainClass, final E... roleTypes) {
+    protected PartyRoleMemberInferenceServiceAbstract(final Class<T> domainClass, final Class<E> roleTypeEnumClass) {
         this.domainClass = domainClass;
-        this.roleTypes = Arrays.asList(roleTypes);
+        this.roleTypeEnumClass = roleTypeEnumClass;
     }
 
     @Override
@@ -22,7 +20,7 @@ public abstract class PartyRoleMemberInferenceServiceAbstract<E extends Enum<E> 
             final IPartyRoleType partyRoleType,
             final Object domainObject) {
 
-        if(!roleTypes.contains(partyRoleType)) {
+        if(!roleTypeEnumClass.isAssignableFrom(partyRoleType.getClass())) {
             return null;
         }
 
@@ -30,9 +28,22 @@ public abstract class PartyRoleMemberInferenceServiceAbstract<E extends Enum<E> 
             return null;
         }
 
-        return doInfer((E) partyRoleType, domainClass.cast(domainObject));
+        return doInferMembersOf((E) partyRoleType, domainClass.cast(domainObject));
     }
 
-    protected abstract List<Person> doInfer(final E partyRoleType, final T domainObject);
+    @Override
+    public List<Person> inferMembersOf(final IPartyRoleType partyRoleType) {
+
+        if(!roleTypeEnumClass.isAssignableFrom(partyRoleType.getClass())) {
+            return null;
+        }
+
+        return doInferMembersOf((E) partyRoleType);
+    }
+
+    protected abstract List<Person> doInferMembersOf(final E partyRoleType, final T domainObject);
+
+    protected abstract List<Person> doInferMembersOf(final E partyRoleType);
+
 
 }

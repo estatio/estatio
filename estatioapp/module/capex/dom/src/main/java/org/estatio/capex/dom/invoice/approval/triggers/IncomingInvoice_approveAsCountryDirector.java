@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
+import javax.annotation.Nullable;
+
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -13,6 +16,16 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
     public IncomingInvoice_approveAsCountryDirector(IncomingInvoice incomingInvoice) {
         super(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
         this.incomingInvoice = incomingInvoice;
+    }
+
+    @Action()
+    public IncomingInvoice act(@Nullable final String comment) {
+        trigger(comment);
+        return getDomainObject();
+    }
+
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
 

@@ -75,6 +75,11 @@ import lombok.Setter;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
+                name = "findByType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.role.FixedAssetRole "
+                        + "WHERE type == :type"),
+        @javax.jdo.annotations.Query(
                 name = "findByAssetAndType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.role.FixedAssetRole "
@@ -129,37 +134,25 @@ public class FixedAssetRole
         return getAsset().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
-
 
     @javax.jdo.annotations.Column(name = "assetId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private FixedAsset asset;
 
-    // //////////////////////////////////////
-
-
     @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Party party;
-
-    // //////////////////////////////////////
-
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = IPartyRoleType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private FixedAssetRoleTypeEnum type;
 
-    // //////////////////////////////////////
-
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private LocalDate startDate;
-
-    // //////////////////////////////////////
 
     @Property(editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent

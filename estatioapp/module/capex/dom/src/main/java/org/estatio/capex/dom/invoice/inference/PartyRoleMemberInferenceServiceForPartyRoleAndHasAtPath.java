@@ -19,14 +19,10 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
         extends PartyRoleMemberInferenceServiceAbstract<PartyRoleTypeEnum, HasAtPath> {
 
     public PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath() {
-        super(HasAtPath.class,
-                PartyRoleTypeEnum.OFFICE_ADMINISTRATOR,
-                PartyRoleTypeEnum.COUNTRY_DIRECTOR,
-                PartyRoleTypeEnum.TREASURER
-                );
+        super(HasAtPath.class, PartyRoleTypeEnum.class);
     }
 
-    protected final List<Person> doInfer(
+    protected final List<Person> doInferMembersOf(
             final PartyRoleTypeEnum partyRoleType,
             final HasAtPath hasAtPath) {
 
@@ -36,6 +32,10 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
         return personRepository.findByRoleTypeAndAtPath(partyRoleType, atPath);
     }
 
+    @Override
+    protected List<Person> doInferMembersOf(final PartyRoleTypeEnum partyRoleType) {
+        return personRepository.findByRoleType(partyRoleType);
+    }
 
     @Inject
     PersonRepository personRepository;

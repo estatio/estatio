@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 public interface StateTransitionRepository<
@@ -35,7 +36,7 @@ public interface StateTransitionRepository<
             final STT transitionType,
             final S fromState,
             final IPartyRoleType taskAssignToIfAny,
-            final String taskDescription);
+            final Person personToAssignToIfAny, final String taskDescription);
 
     /**
      * Removes all {@link StateTransition}s for the provided domain object.

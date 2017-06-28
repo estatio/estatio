@@ -28,10 +28,7 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Override
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(cssClassFa = "trash-o")
     public IncomingInvoice act(@Nullable final String comment) {
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
@@ -41,11 +38,12 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
                         IncomingDocumentCategorisationStateTransition.class,
                         IncomingDocumentCategorisationStateTransitionType.DISCARD_ASSOCIATED,
                         comment));
-        return super.act(comment);
+        trigger(comment);
+        return getDomainObject();
     }
 
-    @Override public boolean hideAct() {
-        return super.hideAct();
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
     @Inject

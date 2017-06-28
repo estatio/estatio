@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice.inference;
+package org.estatio.capex.dom.order.inference;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
@@ -17,19 +17,19 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndIncomingInvoice
-        extends PartyRoleMemberInferenceServiceAbstract<FixedAssetRoleTypeEnum, IncomingInvoice> {
+public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndOrder
+        extends PartyRoleMemberInferenceServiceAbstract<FixedAssetRoleTypeEnum, Order> {
 
-    public PartyRoleMemberInferenceServiceForFixedAssetRoleAndIncomingInvoice() {
-        super(IncomingInvoice.class, FixedAssetRoleTypeEnum.class);
+    public PartyRoleMemberInferenceServiceForFixedAssetRoleAndOrder() {
+        super(Order.class, FixedAssetRoleTypeEnum.class);
     }
 
     @Override
     protected List<Person> doInferMembersOf(
             final FixedAssetRoleTypeEnum partyRoleType,
-            final IncomingInvoice incomingInvoice) {
+            final Order order) {
 
-        final FixedAsset fixedAsset = incomingInvoice.getProperty();
+        final FixedAsset fixedAsset = order.getProperty();
         if(fixedAsset == null) {
             // can't go any further
             return null;

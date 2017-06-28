@@ -14,6 +14,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 @DomainService(nature = NatureOfService.DOMAIN)
@@ -218,12 +219,39 @@ public class StateTransitionService {
             final STT requiredTransitionTypeIfAny,
             final String comment) {
 
-        ST completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, comment);
+        return trigger(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, null, comment);
+    }
+
+    /**
+     * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
+     *
+     *  @param domainObject - the domain object whose
+     * @param stateTransitionClass - identifies the state chart being applied
+     * @param requiredTransitionTypeIfAny
+     * @param comment
+     */
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST trigger(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final STT requiredTransitionTypeIfAny,
+            final Person personToAssignNextToIfAny,
+            final String comment) {
+
+        ST completedTransition = completeTransitionIfPossible(
+                                        domainObject, stateTransitionClass, requiredTransitionTypeIfAny,
+                                        null, comment);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {
             ST previousTransition = completedTransition;
-            completedTransition = completeTransitionIfPossible(domainObject, stateTransitionClass, null, null);
+            completedTransition = completeTransitionIfPossible(
+                                        domainObject, stateTransitionClass, null, personToAssignNextToIfAny, null);
             keepTransitioning = (completedTransition != null && previousTransition != completedTransition);
         }
 
@@ -241,6 +269,7 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny,
+            final Person personToAssignNextToIfAny,
             final String comment) {
 
         // check the override, if any
@@ -304,13 +333,17 @@ public class StateTransitionService {
                     repositoryService.removeAndFlush(taskIfAny);
                 }
                 pendingTransitionType = nextTransitionType;
-                pendingTransitionIfAny  = createPendingTransition(domainObject, currentStateIfAny, nextTransitionType);
+                pendingTransitionIfAny  = createPendingTransition(
+                                                domainObject, currentStateIfAny, nextTransitionType,
+                                                personToAssignNextToIfAny);
 
 
             } else {
                 // pendingTransitionType == null, so nextTransitionType != null because of outer if
 
-                pendingTransitionIfAny  = createPendingTransition(domainObject, currentStateIfAny, nextTransitionType);
+                pendingTransitionIfAny  = createPendingTransition(
+                                                domainObject, currentStateIfAny, nextTransitionType,
+                                                personToAssignNextToIfAny);
                 pendingTransitionType = nextTransitionType;
             }
         }
@@ -334,7 +367,8 @@ public class StateTransitionService {
         //
         // guard satisfied, so go ahead and complete this pending transition
         //
-        final ST completedTransition = completeTransition(domainObject, pendingTransitionIfAny, comment);
+        final ST completedTransition = completeTransition(
+                                            domainObject, pendingTransitionIfAny, comment);
         return completedTransition;
     }
 
@@ -351,17 +385,17 @@ public class StateTransitionService {
     ST createPendingTransition(
             final DO domainObject,
             final S currentState,
-            final STT transitionType) {
+            final STT transitionType,
+            final Person personToAssignToIfAny) {
 
         final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
                 transitionType.getTaskAssignmentStrategy();
         IPartyRoleType assignToIfAny = null;
         if(taskAssignmentStrategy != null) {
-            assignToIfAny = taskAssignmentStrategy
-                    .getAssignTo(domainObject, serviceRegistry2);
+            assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2);
         }
         return transitionType
-                .createTransition(domainObject, currentState, assignToIfAny, serviceRegistry2);
+                .createTransition(domainObject, currentState, assignToIfAny, personToAssignToIfAny, serviceRegistry2);
     }
 
     private <
@@ -437,6 +471,39 @@ public class StateTransitionService {
 
         STT transitionType = pendingTransitionIfAny.getTransitionType();
         return transitionType.nextTransitionType(domainObject, serviceRegistry2);
+    }
+
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    >  IPartyRoleType peekTaskRoleAssignToAfter(
+            final DO domainObject,
+            final STT precedingTransitionType) {
+
+        final STT nextTransitionType = peekTaskTransitionTypeAfter(domainObject, precedingTransitionType);
+        if (nextTransitionType == null) {
+            return null;
+        }
+        return nextTransitionType.getAssignTo(domainObject, serviceRegistry2);
+    }
+
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > STT peekTaskTransitionTypeAfter(
+            final DO domainObject,
+            final STT precedingTransitionType) {
+
+        NextTransitionSearchStrategy<DO, ST, STT, S> nextTransitionSearchStrategy = precedingTransitionType
+                .getNextTransitionSearchStrategy();
+        return nextTransitionSearchStrategy
+                .nextTransitionType(domainObject, precedingTransitionType, serviceRegistry2);
     }
 
     // ////////////////////////////////////

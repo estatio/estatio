@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 
 public abstract class StateTransitionRepositoryAbstract<
@@ -54,9 +55,13 @@ public abstract class StateTransitionRepositoryAbstract<
             final STT transitionType,
             final S fromState,
             final IPartyRoleType taskAssignToIfAny,
+            final Person personToAssignToIfAny,
             final String taskDescription) {
 
-        return stateTransitionRepositoryGeneric.create(domainObject, transitionType, fromState, taskAssignToIfAny, taskDescription, stateTransitionClass);
+        return stateTransitionRepositoryGeneric.create(
+                domainObject, transitionType, fromState,
+                taskAssignToIfAny, personToAssignToIfAny, taskDescription,
+                stateTransitionClass);
     }
 
     @Override

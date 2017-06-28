@@ -43,6 +43,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
@@ -100,12 +101,13 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
             incomingInvoiceStateTransitionRepository.deleteFor(invoice);
 
             // When
+            final Person personToAssignToIfAny = null;
             incomingInvoiceStateTransitionRepository
                     .create(invoice,
                             IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR,
                             IncomingInvoiceApprovalState.NEW,
                             PartyRoleTypeEnum.COUNTRY_DIRECTOR,
-                            Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
+                            personToAssignToIfAny, Enums.getFriendlyNameOf(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR));
 
             // Then
             final List<IncomingInvoiceApprovalStateTransition> transitions =  incomingInvoiceStateTransitionRepository.findByDomainObject(invoice);
