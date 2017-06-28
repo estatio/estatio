@@ -37,7 +37,7 @@ public abstract class DomainObject_nextTaskTransitionTypeAbstract<
     public String prop() {
         return queryResultsCache.execute(
                 this::doProp,
-                DomainObject_nextTaskTransitionTypeAbstract.class,
+                getClass(),
                 "prop", domainObject);
     }
 

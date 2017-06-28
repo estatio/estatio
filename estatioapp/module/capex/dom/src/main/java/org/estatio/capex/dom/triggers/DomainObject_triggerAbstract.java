@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.triggers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +12,8 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeService;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "act")
@@ -25,7 +28,7 @@ public abstract class DomainObject_triggerAbstract<
     protected final DO domainObject;
     protected final Class<ST> stateTransitionClass;
     protected final List<S> fromStates;
-    private final STT requiredTransitionTypeIfAny;
+    protected final STT requiredTransitionTypeIfAny;
 
     protected DomainObject_triggerAbstract(
             final DO domainObject,
@@ -69,8 +72,44 @@ public abstract class DomainObject_triggerAbstract<
         return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, comment);
     }
 
-    protected final ST trigger(final Person personToAssignTo, final String comment) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignTo, comment);
+    protected final ST trigger(final Person personToAssignNextTo, final String comment) {
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignNextTo, comment);
+    }
+
+    protected Person defaultPersonToAssignNextTo() {
+        if(requiredTransitionTypeIfAny == null) {
+            return null;
+        }
+        IPartyRoleType partyRoleType = peekPartyRoleType();
+        return partyRoleTypeService.firstMemberOf(partyRoleType, domainObject);
+    }
+
+    protected List<Person> choicesPersonToAssignNextTo() {
+        if(requiredTransitionTypeIfAny == null) {
+            return Collections.emptyList();
+        }
+        IPartyRoleType partyRoleType = peekPartyRoleType();
+        return partyRoleTypeService.membersOf(partyRoleType);
+    }
+
+    private <T extends Enum<T> & IPartyRoleType> T peekPartyRoleType() {
+        if(requiredTransitionTypeIfAny == null) {
+            return null;
+        }
+        IPartyRoleType iPartyRoleType = stateTransitionService
+                .peekTaskRoleAssignToAfter(domainObject, requiredTransitionTypeIfAny);
+        return Enum.class.isAssignableFrom(iPartyRoleType.getClass())
+                ? (T) iPartyRoleType
+                : null;
+    }
+
+    protected <T extends Enum<T> & IPartyRoleType> T enumPartyRoleType() {
+        return peekPartyRoleType();
+    }
+
+    protected String enumPartyRoleTypeName() {
+        final Enum roleType = enumPartyRoleType();
+        return roleType != null ? roleType.name() : "";
     }
 
     /**
@@ -82,7 +121,24 @@ public abstract class DomainObject_triggerAbstract<
 
     private boolean canTransition() {
         final S currentState = stateTransitionService.currentStateOf(getDomainObject(), stateTransitionClass);
-        return fromStates.contains(currentState);
+        if(requiredTransitionTypeIfAny != null) {
+            return requiredTransitionTypeIfAny.canTransitionFromStateAndIsMatch(
+                                                        domainObject, currentState, serviceRegistry2);
+        } else {
+            return fromStates.contains(currentState);
+        }
+    }
+
+    protected String reasonGuardNotSatisified() {
+        if(requiredTransitionTypeIfAny != null) {
+            return requiredTransitionTypeIfAny.reasonGuardNotSatisified(domainObject, serviceRegistry2);
+        } else {
+            ST st = stateTransitionService.pendingTransitionOf(domainObject, stateTransitionClass);
+            if (st == null) {
+                return null;
+            }
+            return st.getTransitionType().reasonGuardNotSatisified(domainObject, serviceRegistry2);
+        }
     }
 
     @Inject
@@ -90,5 +146,8 @@ public abstract class DomainObject_triggerAbstract<
 
     @Inject
     protected ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    protected PartyRoleTypeService partyRoleTypeService;
 
 }

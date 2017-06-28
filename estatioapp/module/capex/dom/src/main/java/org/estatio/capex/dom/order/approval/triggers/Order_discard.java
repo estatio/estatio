@@ -49,6 +49,10 @@ public class Order_discard extends
         return cannotTransition();
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 

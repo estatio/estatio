@@ -1,10 +1,11 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.task.Task;
@@ -22,12 +23,13 @@ public class Task_completeIncomingInvoice
     }
 
     @Action()
-    @ActionLayout(contributed = Contributed.AS_ACTION)
+    @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Object act(
-            Person personToAssignTo,
+            final String role,
+            final Person personToAssignTo,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(personToAssignTo, comment);
+        Object mixinResult = mixin().act(role, personToAssignTo, comment);
         return toReturnElse(goToNext, mixinResult);
     }
 
@@ -35,5 +37,20 @@ public class Task_completeIncomingInvoice
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String default0Act() {
+        return mixin().default0Act();
+    }
+
+    public Person default1Act() {
+        return mixin().default1Act();
+    }
+
+    public List<Person> choices1Act() {
+        return mixin().choices1Act();
+    }
+
+    public boolean default3Act() {
+        return true;
+    }
 
 }

@@ -47,4 +47,8 @@ abstract class BankAccount_triggerAbstract
         return cannotTransition();
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
 }

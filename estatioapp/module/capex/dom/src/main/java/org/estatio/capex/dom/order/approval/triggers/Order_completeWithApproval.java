@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -30,6 +31,7 @@ public class Order_completeWithApproval extends
     }
 
     @Action()
+    @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Order act(
             Person approvedBy,
             LocalDate approvedOn,
@@ -61,6 +63,10 @@ public class Order_completeWithApproval extends
 
     public boolean hideAct() {
         return cannotTransition();
+    }
+
+    public String disableAct() {
+        return reasonGuardNotSatisified();
     }
 
     @Inject

@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
@@ -66,7 +67,7 @@ public class BadCommandTargets {
         }
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     public List<BadTarget> findBadCommandTargets() {
 
         Set<String> badObjectTypes = Sets.newTreeSet();
@@ -100,8 +101,5 @@ public class BadCommandTargets {
 
     @Inject
     IsisJdoSupport isisJdoSupport;
-
-    @Inject
-    RepositoryService repositoryService;
 
 }

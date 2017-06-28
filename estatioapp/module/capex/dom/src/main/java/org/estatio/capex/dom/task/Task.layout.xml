@@ -101,17 +101,6 @@
                 <cpt:property id="completedBy" hidden="ALL_TABLES"/>
                 <cpt:property id="completedOn"/>
             </cpt:fieldSet>
-            <cpt:fieldSet name="Next task" id="nextTask">
-                <cpt:property id="nextCategorisationTaskTransitionType" hidden="ALL_TABLES">
-                    <cpt:named>Description</cpt:named>
-                </cpt:property>
-                <cpt:property id="nextCategorisationTaskRoleAssignedTo" hidden="ALL_TABLES">
-                    <cpt:named>Role assigned to</cpt:named>
-                </cpt:property>
-                <cpt:property id="nextCategorisationTaskPersonAssignedTo" hidden="ALL_TABLES">
-                    <cpt:named>Person assigned to</cpt:named>
-                </cpt:property>
-            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup>

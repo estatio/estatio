@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.RestrictTo;
 
 import org.estatio.dom.UdoDomainService;
 
@@ -49,7 +50,7 @@ public class PrototypeMenu extends UdoDomainService<PrototypeMenu> {
      * @return
      * @throws MalformedURLException
      */
-    @Action
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public URL openSwagger() throws MalformedURLException {
         return new java.net.URL("http://localhost:8080/swagger-ui/index.html");
     }

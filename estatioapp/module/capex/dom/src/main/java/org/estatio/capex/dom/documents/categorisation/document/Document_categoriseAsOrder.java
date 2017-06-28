@@ -74,6 +74,10 @@ public class Document_categoriseAsOrder
         return !DocumentTypeData.hasIncomingType(document);
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
     @Inject
     DocumentTypeRepository documentTypeRepository;
 

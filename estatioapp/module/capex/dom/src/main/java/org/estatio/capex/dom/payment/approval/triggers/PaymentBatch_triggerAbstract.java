@@ -42,4 +42,8 @@ abstract class PaymentBatch_triggerAbstract
         return cannotTransition();
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
 }

@@ -46,6 +46,10 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
         return cannotTransition();
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
 

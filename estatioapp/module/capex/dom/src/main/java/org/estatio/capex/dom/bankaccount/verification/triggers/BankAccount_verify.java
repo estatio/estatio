@@ -36,4 +36,8 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
         return super.hideAct();
     }
 
+    @Override public String disableAct() {
+        return super.disableAct();
+    }
+
 }

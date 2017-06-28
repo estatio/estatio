@@ -82,6 +82,11 @@ public class Document_categoriseAsPropertyInvoice
         return !DocumentTypeData.hasIncomingType(document);
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
+
     @Inject
     DocumentTypeRepository documentTypeRepository;
 

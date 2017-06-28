@@ -48,6 +48,10 @@ public class Document_discard
         return !DocumentTypeData.hasIncomingType(document);
     }
 
+    public String disableAct() {
+        return reasonGuardNotSatisified();
+    }
+
     @Inject
     DocumentTypeRepository documentTypeRepository;
 

@@ -3,17 +3,14 @@ package org.estatio.capex.dom.invoice.approval.triggers;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeService;
 
 @Mixin(method = "act")
 public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
@@ -26,10 +23,12 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
     }
 
     @Action()
+    @ActionLayout(cssClassFa = "fa-flag-checkered")
     public IncomingInvoice act(
-            Person personToAssignTo,
+            final String role,
+            final Person personToAssignNextTo,
             @Nullable final String comment) {
-        trigger(personToAssignTo, comment);
+        trigger(personToAssignNextTo, comment);
         return getDomainObject();
     }
 
@@ -37,25 +36,21 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
         return cannotTransition();
     }
 
-    public Person default0Act() {
-        IPartyRoleType partyRoleType = nextPartyRoleType();
-        return partyRoleTypeService.firstMemberOf(partyRoleType, incomingInvoice);
+    public String disableAct() {
+        return reasonGuardNotSatisified();
     }
 
-    public List<Person> choices0Act() {
-        IPartyRoleType partyRoleType = nextPartyRoleType();
-        return partyRoleTypeService.membersOf(partyRoleType);
+    public String default0Act() {
+        return enumPartyRoleTypeName();
     }
 
-    private IPartyRoleType nextPartyRoleType() {
-        return stateTransitionService
-                .peekTaskRoleAssignToAfter(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.COMPLETE);
+    public Person default1Act() {
+        return defaultPersonToAssignNextTo();
+    }
+
+    public List<Person> choices1Act() {
+        return choicesPersonToAssignNextTo();
     }
 
 
-    @Inject
-    StateTransitionService stateTransitionService;
-
-    @Inject
-    PartyRoleTypeService partyRoleTypeService;
 }

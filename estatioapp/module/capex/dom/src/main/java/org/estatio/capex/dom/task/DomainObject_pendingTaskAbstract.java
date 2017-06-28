@@ -36,13 +36,14 @@ public abstract class DomainObject_pendingTaskAbstract<
     public Task prop() {
         return queryResultsCache.execute(
                 this::doProp,
-                DomainObject_pendingTaskAbstract.class,
+                getClass(),
                 "prop", domainObject);
     }
 
     private Task doProp() {
-        final ST transition = stateTransitionRepositoryGeneric.findFirstByDomainObject(domainObject, stateTransitionClass);
-        if(transition == null || transition.isCompleted()) {
+        final ST transition = stateTransitionRepositoryGeneric.findByDomainObjectAndCompleted(
+                                                                    domainObject, false, stateTransitionClass);
+        if(transition == null) {
             return null;
         }
         return transition.getTask();

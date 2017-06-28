@@ -94,21 +94,20 @@
                         <bs3:tab name="Current task">
                             <bs3:row>
                                 <bs3:col span="12">
-                                    <cpt:fieldSet name="Approval">
+                                    <cpt:fieldSet name="Current task">
                                         <cpt:action id="checkApprovalState">
                                             <cpt:named>Check state</cpt:named>
                                         </cpt:action>
                                         <cpt:property id="approvalState">
+                                            <cpt:named>Current state</cpt:named>
                                             <cpt:action id="viewApprovalTransitions" position="RIGHT">
                                                 <cpt:named>Show transitions</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
                                         <cpt:property id="pendingApprovalTask">
+                                            <cpt:named>Current task</cpt:named>
                                             <cpt:action id="completeWithApproval"/>
                                             <cpt:action id="discard"/>
-                                        </cpt:property>
-                                        <cpt:property id="reasonApprovalTaskBlocked">
-                                            <cpt:named>Reason blocked</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="approvedBy"/>
                                         <cpt:property id="approvedOn"/>
@@ -121,13 +120,10 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Next task">
                                         <cpt:property id="nextApprovalTaskTransitionType">
-                                            <cpt:named>Description</cpt:named>
+                                            <cpt:named>Next task</cpt:named>
                                         </cpt:property>
                                         <cpt:property id="nextApprovalTaskRoleAssignedTo">
-                                            <cpt:named>Role assigned to</cpt:named>
-                                        </cpt:property>
-                                        <cpt:property id="nextApprovalTaskPersonAssignedTo">
-                                            <cpt:named>Person assigned to</cpt:named>
+                                            <cpt:named>Assigned to</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

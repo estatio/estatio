@@ -302,8 +302,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return getApprovedOn() == null;
     }
 
+    // TODO: this is inconsistent with IncomingInvoice; the database and this metadata should be changed to not-null.
     @Getter @Setter
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     private OrderApprovalState approvalState;
 
     @Override

@@ -31,4 +31,8 @@ public class BankAccount_cancel extends BankAccount_triggerAbstract {
     @Override public boolean hideAct() {
         return super.hideAct();
     }
+
+    @Override public String disableAct() {
+        return super.disableAct();
+    }
 }

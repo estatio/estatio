@@ -39,7 +39,7 @@ public abstract class DomainObject_nextTaskRoleAssignedToAbstract<
     public PartyRoleType prop() {
         return queryResultsCache.execute(
                 this::doProp,
-                DomainObject_nextTaskRoleAssignedToAbstract.class,
+                getClass(),
                 "prop", domainObject);
     }
 
