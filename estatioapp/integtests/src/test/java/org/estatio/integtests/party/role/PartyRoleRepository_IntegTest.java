@@ -69,14 +69,14 @@ public class PartyRoleRepository_IntegTest extends EstatioIntegrationTest {
 
                     executionContext.executeChild(this, new PersonForDylanClaytonGb()); // gb mailroom
                     executionContext.executeChild(this, new PersonForJonathanRiceGb());  // gb property mgr for OXF
-                    executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
+                    executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb (no role)
                     executionContext.executeChild(this, new PersonForOscarPritchardGb());  // gb country director
                     executionContext.executeChild(this, new PersonForEmmaFarmerGb());   // gb treasurer
 
                     executionContext.executeChild(this, new PersonForThibaultJosueFr());  // fr mailroom
                     executionContext.executeChild(this, new PersonForFifineLacroixFr());  // fr property mgr for VIV and MNS
                     executionContext.executeChild(this, new PersonForOliveBeausoleilFr());  // fr property mgr for MAC
-                    executionContext.executeChild(this, new PersonForRosaireEvrardFr());  // fr country administrator
+                    executionContext.executeChild(this, new PersonForRosaireEvrardFr());  // fr (no role)
                     executionContext.executeChild(this, new PersonForGabrielHerveFr());  // fr country director
                     executionContext.executeChild(this, new PersonForBrunoJeremieFr()); // fr treasurer
                 }
@@ -87,7 +87,7 @@ public class PartyRoleRepository_IntegTest extends EstatioIntegrationTest {
         public void happy_case() {
             assertPartyRoleSize(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR, 2);
             assertPartyRoleSize(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, 3);
-            assertPartyRoleSize(PartyRoleTypeEnum.LEGAL_MANAGER, 2);
+            assertPartyRoleSize(PartyRoleTypeEnum.TREASURER, 2);
             assertPartyRoleSize(PartyRoleTypeEnum.COUNTRY_DIRECTOR, 2);
         }
 

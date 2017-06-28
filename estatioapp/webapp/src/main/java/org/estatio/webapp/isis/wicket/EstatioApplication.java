@@ -26,10 +26,9 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import com.google.inject.util.Providers;
 
-import org.apache.isis.applib.AppManifest;
-import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
+import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 
-import org.estatio.app.EstatioAppManifest;
+import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;

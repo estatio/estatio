@@ -6,7 +6,6 @@ import org.estatio.dom.asset.Property;
 
 public enum IncomingInvoiceType {
 
-    LEGAL,
     CAPEX,
     PROPERTY_EXPENSES,
     SERVICE_CHARGES,

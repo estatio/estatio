@@ -105,10 +105,10 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(party).isNotNull();
 
             //When
-            party.addRole(PartyRoleTypeEnum.LEGAL_MANAGER);
+            party.addRole(PartyRoleTypeEnum.TREASURER);
 
             //Then
-            final List<Party> partyList = partyRepository.findByRoleType(PartyRoleTypeEnum.LEGAL_MANAGER);
+            final List<Party> partyList = partyRepository.findByRoleType(PartyRoleTypeEnum.TREASURER);
             assertThat(partyList.size()).isEqualTo(1);
 
 
@@ -134,11 +134,11 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
             Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
 
             //When
-            party.addRole(PartyRoleTypeEnum.LEGAL_MANAGER);
+            party.addRole(PartyRoleTypeEnum.TREASURER);
 
             //Then
             final List<Party> partyList = partyRepository.findByRoleTypeAndReferenceOrName(
-                    PartyRoleTypeEnum.LEGAL_MANAGER,
+                    PartyRoleTypeEnum.TREASURER,
                     "*ello*");
             assertThat(partyList.size()).isEqualTo(1);
         }

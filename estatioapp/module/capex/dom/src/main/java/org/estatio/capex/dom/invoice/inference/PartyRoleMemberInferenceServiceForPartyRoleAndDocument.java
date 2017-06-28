@@ -27,7 +27,6 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndDocument
     public PartyRoleMemberInferenceServiceForPartyRoleAndDocument() {
         super(Document.class,
                 PartyRoleTypeEnum.OFFICE_ADMINISTRATOR,
-                PartyRoleTypeEnum.LEGAL_MANAGER,
                 PartyRoleTypeEnum.COUNTRY_DIRECTOR,
                 PartyRoleTypeEnum.TREASURER
                 );

@@ -21,9 +21,6 @@ public class IncomingInvoiceTypeTest {
         assertThat(IncomingInvoiceType.parse("CORPORATE_EXPENSES")).isEqualTo(IncomingInvoiceType.CORPORATE_EXPENSES);
         assertThat(IncomingInvoiceType.parse("corporate_expenses")).isEqualTo(IncomingInvoiceType.CORPORATE_EXPENSES);
 
-        assertThat(IncomingInvoiceType.parse("LEGAL")).isEqualTo(IncomingInvoiceType.LEGAL);
-        assertThat(IncomingInvoiceType.parse("legal")).isEqualTo(IncomingInvoiceType.LEGAL);
-
         assertThat(IncomingInvoiceType.parse("LOCAL_EXPENSES")).isEqualTo(IncomingInvoiceType.LOCAL_EXPENSES);
         assertThat(IncomingInvoiceType.parse("local_expenses")).isEqualTo(IncomingInvoiceType.LOCAL_EXPENSES);
 

@@ -73,8 +73,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     // should have also set a property in this case, so the previous check would have been satisfied
                     // just adding this case in the switch stmt "for completeness"
                     return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
-                case LEGAL:
-                    return PartyRoleTypeEnum.LEGAL_MANAGER;
                 case LOCAL_EXPENSES:
                     return PartyRoleTypeEnum.OFFICE_ADMINISTRATOR;
                 case CORPORATE_EXPENSES:
@@ -111,8 +109,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalStateTransitionType,
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
                 switch (incomingInvoice.getType()) {
-                case LEGAL:
-                    return PartyRoleTypeEnum.LEGAL_MANAGER;
                 case CAPEX:
                     return ProjectRoleTypeEnum.PROJECT_MANAGER;
                 case PROPERTY_EXPENSES:

@@ -303,7 +303,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         grpHdr.setCtrlSum(ctrlSum());
         grpHdr.setInitgPty(newPartyIdentification32ForEstatio());
 
-        List<PaymentInstructionInformation3> pmtInfList = cstmrCdtTrfInitn.getPmtInf();
+        List<PaymentInstructionInformation3> pmtInfList = cstmrCdtTrfInitn.getPmtInves();
         PaymentInstructionInformation3 pmtInf = new PaymentInstructionInformation3();
         pmtInfList.add(pmtInf);
 
@@ -318,7 +318,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         pmtInf.setDbtrAcct(cashAccountFor(getDebtorBankAccount()));
         pmtInf.setDbtrAgt(agentFor(getDebtorBankAccount()));
 
-        List<CreditTransferTransactionInformation10> cdtTrfTxInfList = pmtInf.getCdtTrfTxInf();
+        List<CreditTransferTransactionInformation10> cdtTrfTxInfList = pmtInf.getCdtTrfTxInves();
         for (PaymentLine paymentLine : paymentLines) {
             CreditTransferTransactionInformation10 cdtTrfTxInf = new CreditTransferTransactionInformation10();
             cdtTrfTxInfList.add(cdtTrfTxInf);
@@ -348,7 +348,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
             RemittanceInformation5 rmtInf = new RemittanceInformation5();
             cdtTrfTxInf.setRmtInf(rmtInf);
-            List<String> ustrdList = rmtInf.getUstrd();
+            List<String> ustrdList = rmtInf.getUstrds();
             ustrdList.add(ustrdFor(paymentLine));
         }
         return document;

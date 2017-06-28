@@ -20,7 +20,9 @@ import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDateTime;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
@@ -63,6 +65,7 @@ import lombok.Setter;
         )
 })
 @DomainObject(objectType = "task.Task")
+@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Task implements Comparable<Task> {
 

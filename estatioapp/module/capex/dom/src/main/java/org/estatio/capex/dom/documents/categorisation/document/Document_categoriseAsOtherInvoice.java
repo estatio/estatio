@@ -77,7 +77,6 @@ public class Document_categoriseAsOtherInvoice
 
     public List<IncomingInvoiceType> choices0Act() {
         return Lists.newArrayList(
-                IncomingInvoiceType.LEGAL,
                 IncomingInvoiceType.LOCAL_EXPENSES,
                 IncomingInvoiceType.CORPORATE_EXPENSES
         );

@@ -46,10 +46,10 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_completed : COMPLETE\n[hasProperty() | \n legal | local | corporate ]
+    iia_new -down-> iia_completed : COMPLETE\n[hasProperty() | \n local | corporate ]
     iia_new -right-> iia_discarded : DISCARD
 
-    iia_completed --> iia_a : APPROVE\n[legal | capex | \nasset | services_charges ]
+    iia_completed --> iia_a : APPROVE\n[capex | \nasset | services_charges ]
 
     iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n _COUNTRY_DIRECTOR\n[local]
     iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\n FOR_CORPORATE\n[corporate]

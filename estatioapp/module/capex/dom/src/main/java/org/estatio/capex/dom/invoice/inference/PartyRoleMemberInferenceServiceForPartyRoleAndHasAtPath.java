@@ -21,7 +21,6 @@ public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath
     public PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath() {
         super(HasAtPath.class,
                 PartyRoleTypeEnum.OFFICE_ADMINISTRATOR,
-                PartyRoleTypeEnum.LEGAL_MANAGER,
                 PartyRoleTypeEnum.COUNTRY_DIRECTOR,
                 PartyRoleTypeEnum.TREASURER
                 );

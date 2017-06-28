@@ -40,7 +40,6 @@ public class PersonForFaithConwayGb extends FixtureScript {
                     .setFirstName("Faith")
                     .setLastName("Conway")
                     .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.LEGAL_MANAGER)
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
     }
