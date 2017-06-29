@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -163,7 +165,7 @@ public class OrderRepository {
         if (party instanceof Organisation) {
             return findBySeller((Organisation) party);
         }
-        return null;
+        return Lists.newArrayList();
     }
 
     @Programmatic
