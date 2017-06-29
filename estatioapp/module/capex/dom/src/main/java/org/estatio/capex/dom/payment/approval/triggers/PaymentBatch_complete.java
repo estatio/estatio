@@ -2,6 +2,8 @@ package org.estatio.capex.dom.payment.approval.triggers;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
@@ -22,15 +24,20 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "fa-flag-checkered")
-    @Override public PaymentBatch act(@Nullable final String comment) {
-        return super.act(comment);
+    public PaymentBatch act(
+            DateTime requestedExecutionDate,
+            @Nullable final String comment) {
+        paymentBatch.setRequestedExecutionDate(requestedExecutionDate);
+        trigger(comment);
+        return getDomainObject();
     }
 
-    @Override public boolean hideAct() {
-        return super.hideAct();
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
-    @Override public String disableAct() {
-        return super.disableAct();
+    public String disableAct() {
+        return reasonGuardNotSatisified();
     }
+
 }

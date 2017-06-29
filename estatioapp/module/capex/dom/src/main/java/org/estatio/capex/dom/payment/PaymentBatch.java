@@ -1,13 +1,11 @@
 package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -29,10 +27,13 @@ import org.assertj.core.util.Lists;
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
@@ -53,10 +54,7 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.AccountIdentification4Choice;
@@ -159,7 +157,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Getter @Setter
     private BankAccount debtorBankAccount;
 
-
     /**
      * Document > CstmrCdtTrfInitn > GrpHdr > CreDtTm
      */
@@ -189,49 +186,39 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
 
     @Programmatic
-    public boolean hasUniqueAccountToPay(final IncomingInvoice invoice) {
-        Property propertyIfAny = invoice.getProperty();
-        List<FinancialAccount> matchingAccounts = financialAccountsFor(propertyIfAny);
-        return matchingAccounts.size() == 1;
-    }
-
-    private List<FinancialAccount> financialAccountsFor(final Property propertyIfAny) {
-        if(propertyIfAny == null) {
-            return Collections.emptyList();
-        }
-        List<FixedAssetFinancialAccount> fafrList = fixedAssetFinancialAccountRepository.findByFixedAsset(propertyIfAny);
-        return fafrList.stream()
-                .map(FixedAssetFinancialAccount::getFinancialAccount)
-                .filter(fa -> fa == getDebtorBankAccount())
-                .collect(Collectors.toList());
-    }
-
-    @Programmatic
     public boolean contains(final IncomingInvoice invoice) {
-        return lineFor(invoice) != null;
+        return lineIfAnyFor(invoice) != null;
     }
 
     @Programmatic
-    public void updateFor(
-            final IncomingInvoice incomingInvoice,
-            final BigDecimal transferAmount,
-            final String remittanceInformation) {
-        PaymentLine line = lineFor(incomingInvoice);
-        if (line == null) {
-            final int nextSequence = getLines().size() + 1;
-            line = new PaymentLine(this, nextSequence, incomingInvoice, transferAmount, remittanceInformation);
-            serviceRegistry2.injectServicesInto(line);
-            getLines().add(line);
+    public PaymentLine addLineIfRequired(final IncomingInvoice incomingInvoice) {
+        Optional<PaymentLine> lineIfAny = lineIfAnyFor(incomingInvoice);
+        if (lineIfAny.isPresent()) {
+            return lineIfAny.get();
         }
+        final int nextSequence = getLines().size() + 1;
+        final BigDecimal transferAmount = incomingInvoice.getGrossAmount();
+        final String remittanceInformation = incomingInvoice.getInvoiceNumber();
+        final PaymentLine line =
+                new PaymentLine(this, nextSequence, incomingInvoice, transferAmount, remittanceInformation);
+        serviceRegistry2.injectServicesInto(lineIfAny);
+        getLines().add(line);
+        return line;
     }
 
-    private PaymentLine lineFor(final IncomingInvoice invoice) {
-        for (final PaymentLine line : getLines()) {
-            if(line.getCreditorBankAccount() == invoice.getBankAccount()) {
-                return line;
-            }
+    private Optional<PaymentLine> lineIfAnyFor(final IncomingInvoice invoice) {
+        return Lists.newArrayList(getLines()).stream()
+                .filter(line -> line.getInvoice() == invoice)
+                .findFirst();
+    }
+
+
+    @Programmatic
+    public void removeLineFor(final IncomingInvoice incomingInvoice) {
+        Optional<PaymentLine> paymentLineIfAny = lineIfAnyFor(incomingInvoice);
+        if(paymentLineIfAny.isPresent()) {
+            getLines().remove(paymentLineIfAny.get());
         }
-        return null;
     }
 
 
@@ -275,19 +262,35 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 "Cannot modify because payment batch is in state of " + currentState;
     }
 
+    @Mixin(method="act")
+    public static class downloadPaymentFile {
+        private final PaymentBatch paymentBatch;
+        public downloadPaymentFile(final PaymentBatch paymentBatch) {
+            this.paymentBatch = paymentBatch;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed= Contributed.AS_ACTION)
+        public Clob act(final String documentName) {
+            Document document = paymentBatch.convertToXmlDocument();
+            String xml = jaxbService.toXml(document);
+            return new Clob(documentName, "application/pdf", xml);
+        }
+        public String disableAct() {
+            return paymentBatch.getApprovalState() != PaymentBatchApprovalState.COMPLETED
+                    ? "Batch has not been marked as completed"
+                    : null;
+        }
+        public String default0Act() {
+            return paymentBatch.getDebtorBankAccount().getAccountNumber();
+        }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    public Clob downloadClob(String documentName) {
-        Document document = convertToXmlDocument();
-        String xml = jaxbService.toXml(document);
-        return new Clob(documentName, "application/pdf", xml);
-    }
-    public String default0DownloadClob() {
-        return getDebtorBankAccount().getAccountNumber();
+        @Inject
+        JaxbService jaxbService;
+
     }
 
-    @Programmatic
-    public Document convertToXmlDocument() {
+    //region > convertToXmlDocument
+    Document convertToXmlDocument() {
 
         final SortedSet<PaymentLine> paymentLines = getLines();
 
@@ -459,9 +462,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         // TODO
         return "FRLSM-P-SCT01-FR-AA-INSTALL";
     }
-
-    @Inject
-    JaxbService jaxbService;
+    //endregion
 
     @Inject
     ServiceRegistry2 serviceRegistry2;

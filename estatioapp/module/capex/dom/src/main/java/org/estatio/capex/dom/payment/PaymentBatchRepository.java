@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -25,6 +26,18 @@ public class PaymentBatchRepository {
     @Programmatic
     public java.util.List<PaymentBatch> listAll() {
         return repositoryService.allInstances(PaymentBatch.class);
+    }
+
+
+    @Programmatic
+    public PaymentBatch findOrCreateBatchFor(final BankAccount debtorBankAccount) {
+        for (PaymentBatch currentBatch : findCurrentBatches()) {
+            if(currentBatch.getDebtorBankAccount() == debtorBankAccount) {
+                return currentBatch;
+            }
+        }
+        final DateTime createdOn = clockService.nowAsDateTime();
+        return create(createdOn, debtorBankAccount, PaymentBatchApprovalState.NEW);
     }
 
     @Programmatic
@@ -88,5 +101,9 @@ public class PaymentBatchRepository {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    ClockService clockService;
+
 
 }

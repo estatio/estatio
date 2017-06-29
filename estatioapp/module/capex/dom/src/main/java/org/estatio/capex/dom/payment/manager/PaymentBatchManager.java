@@ -2,6 +2,7 @@ package org.estatio.capex.dom.payment.manager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -21,24 +22,26 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
+import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -69,226 +72,315 @@ public class PaymentBatchManager {
 
 
     @XmlElementWrapper
-    @XmlElement(name = "transfers")
+    @XmlElement(name = "payableInvoicesNotInAnyBatch")
     @Getter @Setter
-    private List<Transfer> transfers;
+    private List<IncomingInvoice> payableInvoicesNotInAnyBatch = Lists.newArrayList();
 
-
-    public PaymentBatchManager removeTransfers(List<Transfer> transfers) {
-        this.transfers.removeAll(transfers);
-        return this;
-    }
-
-    public List<Transfer> choices0RemoveTransfers() {
-        return this.transfers;
-    }
-
+    @XmlElementWrapper
+    @XmlElement(name = "currentBatches")
+    @Getter @Setter
+    private List<PaymentBatch> currentBatches = Lists.newArrayList();
 
     ///////////////////////
 
-    @XmlTransient
-    public List<PaymentBatch> getCurrentBatches() {
-        return queryResultsCache.execute(
-                this::doGetCurrentBatches,
-                PaymentBatchManager.class, "getCurrentBatches");
+    @XmlElement(name = "selectedBatch")
+    @Getter @Setter
+    private PaymentBatch selectedBatch;
+
+    private int getSelectedBatchIdx() {
+        return currentBatches.indexOf(selectedBatch);
     }
 
-    private List<PaymentBatch> doGetCurrentBatches() {
-        return paymentBatchRepository.findCurrentBatches();
-    }
+    @XmlElementWrapper
+    @XmlElement(name = "selectedBatchPaymentLines")
+    @Getter @Setter
+    private List<PaymentLine> selectedBatchPaymentLines = Lists.newArrayList();
 
+
+    private void selectBatch(final PaymentBatch selected) {
+        selectedBatch = selected;
+        selectedBatchPaymentLines.clear();
+        selectedBatchPaymentLines.addAll(selectedBatch.getLines());
+    }
 
     ///////////////////////
 
     @Programmatic
     public PaymentBatchManager init(){
-        transfers = Lists.newArrayList();
+        return update();
+    }
 
+    private PaymentBatchManager update() {
+
+        // current batches
+        currentBatches.clear();
+        currentBatches.addAll(paymentBatchRepository.findCurrentBatches());
+        if(!currentBatches.isEmpty()) {
+            selectBatch(currentBatches.get(0));
+        }
+
+        // payable invoices
         List<IncomingInvoice> payableInvoices = incomingInvoiceRepository
                 .findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
-        for (IncomingInvoice payableInvoice : payableInvoices) {
-            PaymentBatch paymentBatchIfAny = batchThatUniquelyCanPay(payableInvoice);
-            Transfer transfer = new Transfer(
-                    paymentBatchIfAny, payableInvoice,
-                    payableInvoice.getGrossAmount(), remittanceInformationFor(payableInvoice));
-            transfers.add(transfer);
+
+        for (PaymentBatch currentBatch : currentBatches) {
+            SortedSet<PaymentLine> lines = currentBatch.getLines();
+            for (PaymentLine line : lines) {
+                payableInvoices.remove(line.getInvoice());
+            }
         }
-        Collections.sort(transfers);
+
+        Collections.sort(payableInvoices);
+        payableInvoicesNotInAnyBatch.clear();
+        payableInvoicesNotInAnyBatch.addAll(payableInvoices);
 
         return this;
-    }
-
-    private static String remittanceInformationFor(final IncomingInvoice payableInvoice) {
-        // TODO: will need to refine this, no doubt...
-        return payableInvoice.getInvoiceNumber();
-    }
-
-    /**
-     * Those batches whose bank account is the only one associated with the {@link IncomingInvoice#getProperty()}
-     * (by way of a {@link FixedAssetFinancialAccount} tuple).
-     */
-    private List<PaymentBatch> canPay(final IncomingInvoice incomingInvoice) {
-        List<PaymentBatch> batchesThatCanPay =
-                getCurrentBatches().stream()
-                    .filter(batch -> batch.hasUniqueAccountToPay(incomingInvoice))
-                    .collect(Collectors.toList());
-        return batchesThatCanPay;
-    }
-
-    /**
-     * The one-and-only batch (if it exists) that has a bank account being the only one associated with
-     * the {@link IncomingInvoice#getProperty()} (by way of a {@link FixedAssetFinancialAccount} tuple).
-     */
-    private PaymentBatch batchThatUniquelyCanPay(IncomingInvoice incomingInvoice) {
-        List<PaymentBatch> paymentBatches = canPay(incomingInvoice);
-        return paymentBatches.size() == 1
-                ? paymentBatches.get(0)
-                : null;
-    }
-
-    ///////////////////////
-
-    /**
-     * For {@link Transfer}s that cannot be uniquely matches to an existing batch (either because they have no
-     * corresponding {@link IncomingInvoice#getProperty() property}, or because there is more than one {@link PaymentBatch}
-     * that has a {@link BankAccount} associated with its property, this action allows {@link Transfer}(s) to be
-     * explicitly associated with the specified {@link PaymentBatch batch} regardless.
-     */
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public PaymentBatchManager assignBatch(PaymentBatch batch, List<Transfer> unmatchedTransfers) {
-        for (Transfer unmatchedTransfer : unmatchedTransfers) {
-            unmatchedTransfer.setPaymentBatch(batch);
-        }
-        return this;
-    }
-
-    public List<PaymentBatch> choices0AssignBatch() {
-        return getCurrentBatches();
-    }
-
-    public List<Transfer> choices1AssignBatch() {
-        return transfers.stream()
-                .filter(transfer -> transfer.getPaymentBatch() == null)
-                .collect(Collectors.toList());
-    }
-
-    ///////////////////////
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public PaymentBatchManager resetBatch(List<Transfer> transfers) {
-        for (Transfer unmatchedTransfer : transfers) {
-            unmatchedTransfer.setPaymentBatch(null);
-        }
-        return this;
-    }
-
-    public List<Transfer> choices0ResetBatch() {
-        return transfers.stream()
-                .filter(transfer -> transfer.getPaymentBatch() != null)
-                .collect(Collectors.toList());
     }
 
 
     ///////////////////////
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "currentBatches", sequence = "1")
-    public PaymentBatchManager createBatch(final BankAccount debtorBankAccount) {
-        final DateTime createdOn = clockService.nowAsDateTime();
-        paymentBatchRepository.create(createdOn, debtorBankAccount, PaymentBatchApprovalState.NEW);
-        updateTransfers();
-        return this;
-    }
+    @Mixin(method="act")
+    public static class matchInvoices {
+        private final PaymentBatchManager paymentBatchManager;
+        public matchInvoices(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
 
-    private void updateTransfers() {
-        for (Transfer transfer : transfers) {
-            if(transfer.getPaymentBatch() == null) {
-                PaymentBatch paymentBatchIfAny = batchThatUniquelyCanPay(transfer.getInvoice());
-                if(paymentBatchIfAny != null) {
-                    transfer.setPaymentBatch(paymentBatchIfAny);
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(cssClassFa = "fa-plus")
+        public PaymentBatchManager act() {
+            for (final IncomingInvoice payableInvoice : paymentBatchManager.payableInvoicesNotInAnyBatch) {
+                final BankAccount uniqueBankAccountIfAny = uniqueAccountToPay(payableInvoice);
+                if(uniqueBankAccountIfAny != null) {
+                    PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateBatchFor(uniqueBankAccountIfAny);
+                    paymentBatch.addLineIfRequired(payableInvoice);
                 }
             }
-        }
-    }
 
-    public List<BankAccount> autoComplete0CreateBatch(final String search) {
-        return bankAccountRepository.autoComplete(search);
-    }
-
-    ///////////////////////
-
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "currentBatches", sequence = "2")
-    public PaymentBatchManager deleteBatch(final PaymentBatch paymentBatch) {
-        List<Transfer> transfers = this.transfers;
-        for (Transfer transfer : transfers) {
-            if(transfer.getPaymentBatch() == paymentBatch) {
-                transfer.setPaymentBatch(null);
-            }
-        }
-        paymentBatchRepository.delete(paymentBatch);
-        return this;
-    }
-
-    public List<PaymentBatch> choices0DeleteBatch() {
-        return getCurrentBatches().stream()
-                .filter(x -> x.getApprovalState() == PaymentBatchApprovalState.NEW)
-                .collect(Collectors.toList());
-    }
-
-    public String validateDeleteBatch(PaymentBatch paymentBatch) {
-        if(paymentBatch.getApprovalState() != PaymentBatchApprovalState.NEW) {
-            return "Only 'NEW' payment batches can be deleted";
-        }
-        return null;
-    }
-
-
-    ///////////////////////
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(cssClassFa = "fa-play")
-    public PaymentBatchManager process(@Nullable String comment) {
-
-        PaymentBatch previousBatch = null;
-        for (Transfer transfer : this.transfers) {
-            PaymentBatch paymentBatch = transfer.getPaymentBatch();
-            paymentBatch.updateFor(transfer.getInvoice(), transfer.getTransferAmount(), transfer.getRemittanceInformation());
-
-            if(paymentBatch != previousBatch) {
-                factoryService.mixin(PaymentBatch_complete.class, paymentBatch).act(comment);
-                previousBatch = paymentBatch;
-            }
+            paymentBatchManager.update();
+            return paymentBatchManager;
         }
 
-        return this;
-    }
+        private BankAccount uniqueAccountToPay(final IncomingInvoice invoice) {
+            Party buyer = invoice.getBuyer();
+            List<BankAccount> bankAccountsForBuyer = bankAccountRepository.findBankAccountsByOwner(buyer);
 
-
-    public String disableProcess() {
-        List<Transfer> transfersWithoutBatch =
-                this.transfers.stream()
-                        .filter(x -> x.getPaymentBatch() == null)
+            final Property propertyIfAny = invoice.getProperty();
+            if (propertyIfAny != null) {
+                List<FixedAssetFinancialAccount> fafrList = fixedAssetFinancialAccountRepository.findByFixedAsset(propertyIfAny);
+                List<FinancialAccount> bankAccountsForProperty = fafrList.stream()
+                        .map(FixedAssetFinancialAccount::getFinancialAccount)
+                        .filter(BankAccount.class::isInstance)
+                        .map(BankAccount.class::cast)
                         .collect(Collectors.toList());
-        return !transfersWithoutBatch.isEmpty()
-                ? transfersWithoutBatch.size() + " transfers do not have a batch assigned"
-                : null;
+
+                bankAccountsForBuyer.retainAll(bankAccountsForProperty);
+            }
+
+            if (bankAccountsForBuyer.size() != 1) {
+                return null;
+            }
+            return bankAccountsForBuyer.get(0);
+        }
+
+
+        @Inject
+        FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+
+        @Inject
+        BankAccountRepository bankAccountRepository;
+
+        @Inject
+        PaymentBatchRepository paymentBatchRepository;
     }
 
     ///////////////////////
 
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    FactoryService factoryService;
+    @Mixin(method="act")
+    public static class nextBatch {
+        private final PaymentBatchManager paymentBatchManager;
+        public nextBatch(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(cssClassFa = "fa-step-forward")
+        public PaymentBatchManager act() {
+            int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+            if(selectedBatchIdx >= 0) {
+                int nextBatchIdx = ++selectedBatchIdx;
+                if(nextBatchIdx < paymentBatchManager.currentBatches.size()) {
+                    paymentBatchManager.selectBatch(paymentBatchManager.currentBatches.get(nextBatchIdx));
+                }
+            }
+            return paymentBatchManager;
+        }
 
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+        public String disableAct() {
+            int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+            if(selectedBatchIdx >= 0) {
+                int nextBatchIdx = ++selectedBatchIdx;
+                if (nextBatchIdx >= paymentBatchManager.currentBatches.size()) {
+                    return "No more batches";
+                }
+            }
+            return null;
+        }
+    }
+
+    @Mixin(method="act")
+    public static class previousBatch {
+        private final PaymentBatchManager paymentBatchManager;
+        public previousBatch(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(cssClassFa = "fa-step-backward")
+        public PaymentBatchManager act() {
+            int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+            if(selectedBatchIdx >= 0) {
+                int previousBatchIdx = --selectedBatchIdx;
+                if(previousBatchIdx >= 0) {
+                    paymentBatchManager.selectBatch(paymentBatchManager.currentBatches.get(previousBatchIdx));
+                }
+            }
+            return paymentBatchManager;
+        }
+
+        public String disableAct() {
+            int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+            if(selectedBatchIdx >= 0) {
+                int previousBatchIdx = --selectedBatchIdx;
+                if(previousBatchIdx < 0) {
+                    return "No more batches";
+                }
+            }
+            return null;
+        }
+    }
+
+    @Mixin(method="act")
+    public static class completeBatches {
+        private final PaymentBatchManager paymentBatchManager;
+        public completeBatches(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+        @ActionLayout(cssClassFa = "fa-flag-checkered")
+        @MemberOrder(name = "currentBatches", sequence = "4")
+        public PaymentBatchManager act(
+                DateTime requestedExecutionDate,
+                @Nullable String comment) {
+
+            List<PaymentBatch> currentBatches = paymentBatchManager.currentBatches;
+            for (PaymentBatch paymentBatch : currentBatches) {
+                if(paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW) {
+                    factoryService.mixin(PaymentBatch_complete.class, paymentBatch).act(requestedExecutionDate, comment);
+                }
+            }
+
+            return paymentBatchManager;
+        }
+        public String disableAct() {
+            return paymentBatchManager.currentBatches.isEmpty() ? "No batches to complete" : null;
+        }
+
+        @Inject
+        FactoryService factoryService;
+    }
+
+
+    ///////////////////////
+
+    @Mixin(method="act")
+    public static class moveInvoice {
+        private final PaymentBatchManager paymentBatchManager;
+        public moveInvoice(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @ActionLayout(cssClassFa = "fa-step-forward")
+        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices, PaymentBatch moveTo) {
+            for (IncomingInvoice incomingInvoice : incomingInvoices) {
+                paymentBatchManager.selectedBatch.removeLineFor(incomingInvoice);
+                moveTo.addLineIfRequired(incomingInvoice);
+            }
+            return paymentBatchManager.update();
+        }
+
+        public List<IncomingInvoice> choices0Act() {
+            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
+            return selectedBatchPaymentLines.stream().map(x -> x.getInvoice()).collect(Collectors.toList());
+        }
+
+        public List<PaymentBatch> choices1Act() {
+            List<PaymentBatch> paymentBatches = Lists.newArrayList(paymentBatchManager.currentBatches);
+            paymentBatches.remove(paymentBatchManager.selectedBatch);
+            return paymentBatches;
+        }
+        public String disableAct() {
+            if(paymentBatchManager.selectedBatch == null) {
+                return "No batch selected";
+            }
+            return choices1Act().isEmpty() ? "No other batches" :  null;
+        }
+    }
+
+    @Mixin(method="act")
+    public static class addInvoice {
+        private final PaymentBatchManager paymentBatchManager;
+        public addInvoice(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices, PaymentBatch addTo) {
+            for (IncomingInvoice incomingInvoice : incomingInvoices) {
+                addTo.addLineIfRequired(incomingInvoice);
+            }
+            return paymentBatchManager.update();
+        }
+
+        public List<IncomingInvoice> choices0Act() {
+            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
+            return selectedBatchPaymentLines.stream().map(PaymentLine::getInvoice).collect(Collectors.toList());
+        }
+
+        public List<PaymentBatch> choices1Act() {
+            return paymentBatchManager.currentBatches;
+        }
+        public String disableAct() {
+            return choices1Act().isEmpty() ? "No batches" :  null;
+        }
+    }
+
+    @Mixin(method="act")
+    public static class removeInvoice {
+        private final PaymentBatchManager paymentBatchManager;
+        public removeInvoice(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices) {
+            for (IncomingInvoice incomingInvoice : incomingInvoices) {
+                paymentBatchManager.selectedBatch.removeLineFor(incomingInvoice);
+            }
+            return paymentBatchManager.update();
+        }
+
+        public List<IncomingInvoice> choices0Act() {
+            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
+            return selectedBatchPaymentLines.stream().map(PaymentLine::getInvoice).collect(Collectors.toList());
+        }
+        public String disableAct() {
+            if(paymentBatchManager.selectedBatch == null) {
+                return "No batch selected";
+            }
+            return null;
+        }
+    }
+
+
+    ///////////////////////
 
     @Inject
     @XmlTransient
@@ -300,29 +392,6 @@ public class PaymentBatchManager {
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    BankAccountRepository bankAccountRepository;
-
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     PaymentBatchRepository paymentBatchRepository;
 
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    ClockService clockService;
-
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    ServiceRegistry2 serviceRegistry2;
-
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    QueryResultsCache queryResultsCache;
 }
