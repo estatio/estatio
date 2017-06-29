@@ -436,7 +436,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
 
 
-    protected boolean isImmutable() {
+    public boolean isImmutable() {
         return !getStatus().invoiceIsChangable();
     }
 
