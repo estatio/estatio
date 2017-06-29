@@ -18,19 +18,26 @@
  */
 package org.estatio.app.services.dashboard;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Ordering;
+
 import org.assertj.core.util.Lists;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -38,10 +45,12 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
+import org.estatio.capex.dom.task.Task_checkState;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.party.PersonRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -51,57 +60,86 @@ public class EstatioAppHomePage {
 
     private static final int MONTHS = 3;
 
-    //region > title
     public String title() {
         return "Home Page";
     }
-    //endregion
+
+
+    ////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<Task> getTasksForMe() {
+
+        List<Task> tasksForMe =
+                queryResultsCache.execute(this::doGetTasksForMe, EstatioAppHomePage.class, "getTasksForMe");
+
+        sort(tasksForMe);
+        return tasksForMe;
+    }
+
+    private List<Task> doGetTasksForMe() {
         return taskRepository.findTasksIncompleteForMe();
     }
 
-    @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
-    public List<Task> getTasksForOthers() {
-        return taskRepository.findTasksIncompleteForOthers();
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    @ActionLayout(
+            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
+    )
+    public EstatioAppHomePage checkStateOfTasksForMe() {
+        return checkStateOf(getTasksForMe());
     }
 
 
+    ////////////////////////////////////////////////
+
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
+    public List<Task> getTasksForOthers() {
+        final List<Task> tasksIncomplete = taskRepository.findTasksIncompleteForOthers();
+        return tasksIncomplete;
+    }
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    @ActionLayout(
+            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
+    )
+    public EstatioAppHomePage checkStateOfTasksForOthers() {
+        return checkStateOf(getTasksForOthers());
+    }
+
+
+    ////////////////////////////////////////////////
+
+    @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesNew() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.NEW);
     }
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<IncomingInvoice> getIncomingInvoicesCompleted() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.COMPLETED);
     }
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<IncomingInvoice> getIncomingInvoicesApproved() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED);
     }
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<IncomingInvoice> getIncomingInvoicesApprovedByCountryDirector() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
     }
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<IncomingInvoice> getIncomingInvoicesPendingBankAccountCheck() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
     }
 
     @Collection(notPersisted = true)
-    @CollectionLayout(paged = 20)
     public List<IncomingInvoice> getIncomingInvoicesPayable() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
     }
@@ -117,6 +155,20 @@ public class EstatioAppHomePage {
     @Collection(notPersisted = true)
     public List<Event> getUpcomingEvents() {
         return eventRepository.findEventsInDateRange(clockService.now(), clockService.now().plusMonths(MONTHS));
+    }
+
+
+
+    private void sort(final List<Task> tasks) {
+        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
+    }
+
+
+    private EstatioAppHomePage checkStateOf(final List<Task> tasks) {
+        for (Task task : tasks) {
+            factoryService.mixin(Task_checkState.class, task).act();
+        }
+        return this;
     }
 
 
@@ -141,6 +193,14 @@ public class EstatioAppHomePage {
         }
     }
 
+    @Inject
+    FactoryService factoryService;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
+    @Inject
+    PersonRepository personRepository;
 
     @Inject
     TaskRepository taskRepository;

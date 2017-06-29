@@ -16,6 +16,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.dom.party.role.PartyRoleTypeService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionService {
@@ -352,6 +355,28 @@ public class StateTransitionService {
             return null;
         }
 
+        final Task taskIfAny = pendingTransitionIfAny.getTask();
+        if(taskIfAny != null) {
+            final PartyRoleType roleAssignedTo = taskIfAny.getAssignedTo();
+            final IPartyRoleType iRoleShouldBeAssignedTo = pendingTransitionType.getTaskAssignmentStrategy()
+                    .getAssignTo(domainObject, serviceRegistry2);
+
+            // always overwrite the role
+            final PartyRoleType roleShouldBeAssignedTo = partyRoleTypeRepository.findOrCreate(roleAssignedTo);
+            if(roleAssignedTo != roleShouldBeAssignedTo) {
+                taskIfAny.setAssignedTo(roleShouldBeAssignedTo);
+            }
+
+            // only overwrite the person if not actually assigned
+            final Person personAssignedToIfAny = taskIfAny.getPersonAssignedTo();
+            if(personAssignedToIfAny == null) {
+                if(iRoleShouldBeAssignedTo != null) {
+                    Person person = partyRoleTypeService.firstMemberOf(iRoleShouldBeAssignedTo, domainObject);
+                    taskIfAny.setPersonAssignedTo(person);
+                }
+            }
+        }
+
         if(! pendingTransitionType.isGuardSatisified(domainObject, serviceRegistry2) ) {
             // cannot apply this state, while there is an available "road" to traverse, it is blocked
             // (there must be a guard prohibiting it for this particular domain object)
@@ -600,6 +625,12 @@ public class StateTransitionService {
     List<StateTransitionServiceSupport> supportServices;
 
     @Inject
+    PartyRoleTypeService partyRoleTypeService;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
     ServiceRegistry2 serviceRegistry2;
 
     @Inject
@@ -613,5 +644,6 @@ public class StateTransitionService {
 
     @Inject
     EventBusService eventBusService;
+
 
 }

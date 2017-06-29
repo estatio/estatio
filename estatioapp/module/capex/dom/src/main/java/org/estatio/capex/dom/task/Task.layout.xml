@@ -12,6 +12,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
+                                <cpt:action id="checkState"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
 
@@ -97,9 +98,9 @@
             </cpt:fieldSet>
             <cpt:fieldSet name="Completion" id="completion">
                 <cpt:property id="completed"/>
-                <cpt:property id="comment" hidden="ALL_TABLES"/>
                 <cpt:property id="completedBy" hidden="ALL_TABLES"/>
                 <cpt:property id="completedOn"/>
+                <cpt:property id="comment" hidden="ALL_TABLES"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">

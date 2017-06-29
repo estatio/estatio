@@ -25,10 +25,8 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-up")
     public IncomingInvoice act(
-            final String role,
-            final Person personToAssignNextTo,
             @Nullable final String comment) {
-        trigger(personToAssignNextTo, comment);
+        trigger(comment);
         return getDomainObject();
     }
 
@@ -38,18 +36,6 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
 
     public String disableAct() {
         return reasonGuardNotSatisified();
-    }
-
-    public String default0Act() {
-        return enumPartyRoleTypeName();
-    }
-
-    public Person default1Act() {
-        return defaultPersonToAssignNextTo();
-    }
-
-    public List<Person> choices1Act() {
-        return choicesPersonToAssignNextTo();
     }
 
 

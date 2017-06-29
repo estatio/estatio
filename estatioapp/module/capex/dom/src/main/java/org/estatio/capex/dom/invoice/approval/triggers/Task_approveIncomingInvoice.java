@@ -27,7 +27,7 @@ public class Task_approveIncomingInvoice
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "fa-thumbs-o-up")
     public Object act(
             final String role,
-            final Person personToAssignNextTo,
+            @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
         Object mixinResult = mixin().act(role, personToAssignNextTo, comment);

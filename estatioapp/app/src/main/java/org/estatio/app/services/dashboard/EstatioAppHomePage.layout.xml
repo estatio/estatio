@@ -1,68 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="0" unreferencedActions="true">
-            <ns2:domainObject>
-                <ns2:named>Dashboard</ns2:named>
-            </ns2:domainObject>
-            <ns2:action id="recentChanges"/>
-            <ns2:action id="downloadLayoutXml"/>
-            <ns2:action id="links"/>
-        </col>
-    </row>
-    <row>
-        <col span="0">
-            <ns2:fieldSet name="General" id="general" unreferencedProperties="true"/>
-        </col>
-        <col span="12">
-            <tabGroup unreferencedCollections="true">
-                <tab name="Tasks">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="tasksForMe" paged="15"/>
-                        </col>
-                        <col span="12">
-                            <ns2:collection id="tasksForOthers" paged="15"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Incoming Invoices">
-                    <row>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesNew" paged="50">
-                                <ns2:named>New</ns2:named>
-                            </ns2:collection>
-                        </col>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesCompleted" paged="50">
-                                <ns2:named>Completed</ns2:named>
-                            </ns2:collection>
-                        </col>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesApproved" paged="50">
-                                <ns2:named>Approved</ns2:named>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                    <row>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesApprovedByCountryDirector" paged="50">
-                                <ns2:named>Approved by Country Director</ns2:named>
-                            </ns2:collection>
-                        </col>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesPendingBankAccountCheck" paged="50">
-                                <ns2:named>Pending Bank Account Check</ns2:named>
-                            </ns2:collection>
-                        </col>
-                        <col span="4">
-                            <ns2:collection id="incomingInvoicesPayable" paged="50">
-                                <ns2:named>Payable</ns2:named>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-</grid>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="0" unreferencedActions="true">
+            <cpt:action id="recentChanges"/>
+            <cpt:action id="downloadLayoutXml"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject>
+                <cpt:named>Dashboard</cpt:named>
+            </cpt:domainObject>
+            <cpt:action id="clearHints2">
+                <cpt:named>Clear hints</cpt:named>
+            </cpt:action>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="0">
+            <cpt:fieldSet name="General" id="general" unreferencedProperties="true"/>
+        </bs3:col>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="Tasks">
+                    <bs3:row>
+                        <bs3:col span="6">
+                            <cpt:collection id="tasksForMe" paged="15">
+                                <cpt:action id="checkStateOfTasksForMe">
+                                    <cpt:named>Check State</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="6">
+                            <cpt:collection id="tasksForOthers" paged="15">
+                                <cpt:action id="checkStateOfTasksForOthers">
+                                    <cpt:named>Check State</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Incoming Invoices">
+                    <bs3:row>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesNew" paged="15">
+                                <cpt:named>New</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesCompleted" paged="15">
+                                <cpt:named>Completed</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesApproved" paged="15">
+                                <cpt:named>Approved</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                    <bs3:row>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesApprovedByCountryDirector" paged="15">
+                                <cpt:named>Approved by Country Director</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesPendingBankAccountCheck" paged="15">
+                                <cpt:named>Pending Bank Account Check</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesPayable" paged="15">
+                                <cpt:named>Payable</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

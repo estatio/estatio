@@ -26,7 +26,7 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public IncomingInvoice act(
             final String role,
-            final Person personToAssignNextTo,
+            @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
         trigger(personToAssignNextTo, comment);
         return getDomainObject();

@@ -26,10 +26,10 @@ public class Task_completeIncomingInvoice
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Object act(
             final String role,
-            final Person personToAssignTo,
+            @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
-        Object mixinResult = mixin().act(role, personToAssignTo, comment);
+        Object mixinResult = mixin().act(role, personToAssignNextTo, comment);
         return toReturnElse(goToNext, mixinResult);
     }
 

@@ -27,7 +27,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.country.dom.impl.Country;
 
@@ -113,6 +115,12 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
     }
 
     @Programmatic
+    public Person me() {
+        final ApplicationUser me = meService.me();
+        return findByUsername(me.getUsername());
+    }
+
+    @Programmatic
     public List<Person> findByRoleTypeAndAtPath(
             final IPartyRoleType iPartyRoleType,
             final String atPath) {
@@ -156,6 +164,9 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    MeService meService;
 
     @Inject
     PartyRoleTypeRepository partyRoleTypeRepository;

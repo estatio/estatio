@@ -33,12 +33,11 @@ public abstract class DomainObject_checkStateAbstract<
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(
             contributed= Contributed.AS_ACTION,
-            cssClassFa = "fa-question-circle" // overrride isis-non-changing.properties
+            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
     )
     public DO act() {
 
-        //stateTransitionService.checkState(domainObject, stateTransitionClass);
-        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null);
+        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null, null);
 
         return domainObject;
     }
