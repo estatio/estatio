@@ -209,7 +209,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @MemberOrder(name = "charge", sequence = "1")
     @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
-    public T editCharge(final Charge charge) {
+    public T editCharge(@Nullable final Charge charge) {
         setCharge(charge);
         return (T) this;
     }
