@@ -116,6 +116,16 @@ public class IncomingDocumentRepository extends DocumentRepository {
     }
 
     @Programmatic
+    public List<Document> matchAllIncomingDocumentsByName(final String searchPhrase) {
+        final List<Document> documents = findAllIncomingDocuments();
+        return Lists.newArrayList(
+                FluentIterable.from(documents)
+                        .filter(document -> document.getName().toLowerCase().contains(searchPhrase.toLowerCase()))
+                        .toList()
+        );
+    }
+
+    @Programmatic
     public List<Document> findAllIncomingDocuments() {
         final List<Document> documents = repositoryService.allInstances(Document.class);
         return Lists.newArrayList(

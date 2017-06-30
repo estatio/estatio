@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -80,12 +81,17 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     }
 
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Document> matchIncomingByName(@MinLength(3) final String nameOrBarcode){
+        return incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode);
+    }
 
 
     public static class UploadDomainEvent extends ActionDomainEvent<DocumentMenu> {}
 
     @Action(domainEvent = UploadDomainEvent.class)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {
         final String name = blob.getName();
         final DocumentType type = DocumentTypeData.INCOMING.findUsing(documentTypeRepository);

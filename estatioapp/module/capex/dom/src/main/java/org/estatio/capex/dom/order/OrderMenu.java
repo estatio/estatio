@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +14,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+
+import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -30,6 +37,22 @@ public class OrderMenu {
         return orderRepository.listAll();
     }
 
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<Order> findOrderByDocumentName(final String nameOrBarcode){
+        List <Order> result = new ArrayList<>();
+        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode)){
+            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)){
+                if (paperclip.getAttachedTo().getClass().isAssignableFrom(Order.class)){
+                    final Order attachedTo = (Order) paperclip.getAttachedTo();
+                    if (!result.contains(attachedTo)) {
+                        result.add(attachedTo);
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     ///////////////////////////////////////////
 
@@ -79,5 +102,11 @@ public class OrderMenu {
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }

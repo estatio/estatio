@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.invoice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +14,12 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+
+import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -32,6 +39,22 @@ public class IncomingInvoiceMenu {
 
 
     ///////////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<IncomingInvoice> findInvoiceByDocumentName(final String nameOrBarcode){
+        List <IncomingInvoice> result = new ArrayList<>();
+        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode)){
+               for (Paperclip paperclip : paperclipRepository.findByDocument(doc)){
+                   if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)){
+                       final IncomingInvoice attachedTo = (IncomingInvoice) paperclip.getAttachedTo();
+                       if (!result.contains(attachedTo)) {
+                           result.add(attachedTo);
+                       }
+                   }
+               }
+        }
+        return result;
+    }
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> findInvoicesByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
@@ -86,5 +109,11 @@ public class IncomingInvoiceMenu {
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
+
+    @Inject
+    PaperclipRepository paperclipRepository;
 
 }
