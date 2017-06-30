@@ -111,9 +111,13 @@ state "PaymentBatchApprovalStateTransitionType" as pa {
 
     state "NEW" as pa_new
     state "COMPLETED" as pa_completed
+    state "APPROVED" as pa_approved
+    state "DISCARDED" as pa_discarded
 
     [*] -right-> pa_new: INSTANTIATE
-    pa_new -down-> pa_completed: COMPLETE (as treasurer)
+    pa_new -down-> pa_completed: COMPLETE\n (as treasurer)
+    pa_completed -down-> pa_approved: APPROVE\n (as financial director)
+    pa_completed -right-> pa_discarded: DISCARD
 
 }
 --

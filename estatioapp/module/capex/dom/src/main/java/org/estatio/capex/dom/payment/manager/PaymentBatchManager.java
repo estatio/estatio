@@ -1,10 +1,11 @@
 package org.estatio.capex.dom.payment.manager;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.assertj.core.util.Lists;
+import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -24,6 +26,11 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.value.Blob;
+import org.apache.isis.applib.value.Clob;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -31,6 +38,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
+import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
@@ -75,7 +83,12 @@ public class PaymentBatchManager {
     @XmlElementWrapper
     @XmlElement(name = "currentBatches")
     @Getter @Setter
-    private List<PaymentBatch> currentBatches = Lists.newArrayList();
+    private List<PaymentBatch> newBatches = Lists.newArrayList();
+
+    @XmlElementWrapper
+    @XmlElement(name = "completeBatches")
+    @Getter @Setter
+    private List<PaymentBatch> completedBatches = Lists.newArrayList();
 
     ///////////////////////
 
@@ -84,7 +97,7 @@ public class PaymentBatchManager {
     private PaymentBatch selectedBatch;
 
     private int getSelectedBatchIdx() {
-        return currentBatches.indexOf(selectedBatch);
+        return newBatches.indexOf(selectedBatch);
     }
 
     @XmlElementWrapper
@@ -109,19 +122,21 @@ public class PaymentBatchManager {
     private PaymentBatchManager update() {
 
         // current batches
-        currentBatches.clear();
-        currentBatches.addAll(paymentBatchRepository.findCurrentBatches());
-        if(!currentBatches.isEmpty()) {
-            selectBatch(currentBatches.get(0));
+        newBatches = paymentBatchRepository.findNewBatches();
+        if(!newBatches.isEmpty()) {
+            selectBatch(newBatches.get(0));
         }
+
+        // complete batches
+        completedBatches = paymentBatchRepository.findCompletedBatches();
 
         // payable invoices
         List<IncomingInvoice> payableInvoices =
                 incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
 
         Collections.sort(payableInvoices);
-        payableInvoicesNotInAnyBatch.clear();
-        payableInvoicesNotInAnyBatch.addAll(payableInvoices);
+        payableInvoicesNotInAnyBatch = payableInvoices;
+
 
         return this;
     }
@@ -206,21 +221,21 @@ public class PaymentBatchManager {
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
             if(selectedBatchIdx >= 0) {
                 int nextBatchIdx = ++selectedBatchIdx;
-                if(nextBatchIdx < paymentBatchManager.currentBatches.size()) {
-                    paymentBatchManager.selectBatch(paymentBatchManager.currentBatches.get(nextBatchIdx));
+                if(nextBatchIdx < paymentBatchManager.newBatches.size()) {
+                    paymentBatchManager.selectBatch(paymentBatchManager.newBatches.get(nextBatchIdx));
                 }
             }
             return paymentBatchManager;
         }
 
         public String disableAct() {
-            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
+            if (paymentBatchManager.newBatches.isEmpty()) {
                 return "No batches";
             }
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
             if(selectedBatchIdx >= 0) {
                 int nextBatchIdx = ++selectedBatchIdx;
-                if (nextBatchIdx >= paymentBatchManager.currentBatches.size()) {
+                if (nextBatchIdx >= paymentBatchManager.newBatches.size()) {
                     return "No more batches";
                 }
             }
@@ -245,14 +260,14 @@ public class PaymentBatchManager {
             if(selectedBatchIdx >= 0) {
                 int previousBatchIdx = --selectedBatchIdx;
                 if(previousBatchIdx >= 0) {
-                    paymentBatchManager.selectBatch(paymentBatchManager.currentBatches.get(previousBatchIdx));
+                    paymentBatchManager.selectBatch(paymentBatchManager.newBatches.get(previousBatchIdx));
                 }
             }
             return paymentBatchManager;
         }
 
         public String disableAct() {
-            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
+            if (paymentBatchManager.newBatches.isEmpty()) {
                 return "No batches";
             }
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
@@ -283,17 +298,140 @@ public class PaymentBatchManager {
             return paymentBatchManager;
         }
         public List<PaymentBatch> choices0Act() {
-            return paymentBatchManager.getCurrentBatches();
+            return paymentBatchManager.newBatches;
         }
 
         public String disableAct() {
-            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
-                return "No batches";
+            if (paymentBatchManager.newBatches.isEmpty()) {
+                return "No new batches";
             }
             return null;
         }
     }
 
+    @Mixin(method="act")
+    public static class completeBatch {
+        private final PaymentBatchManager paymentBatchManager;
+        public completeBatch(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+
+        private PaymentBatch_complete mixin() {
+            return factoryService.mixin(PaymentBatch_complete.class, paymentBatchManager.selectedBatch);
+        }
+
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        @ActionLayout(cssClassFa = "fa-flag-checkered")
+        public PaymentBatchManager act(
+                final DateTime requestedExecutionDate,
+                @Nullable final String comment) {
+            // use the wrapper factory to generate events
+            wrapperFactory.wrap(mixin()).act(requestedExecutionDate, comment);
+
+            // rather than return this manager, create a new one (force page reload)
+            final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
+            serviceRegistry2.injectServicesInto(paymentBatchManager);
+            return paymentBatchManager.init();
+
+        }
+
+        public DateTime default0Act() {
+            return mixin().default0Act();
+        }
+
+        public String validate0Act(DateTime proposed) {
+            return mixin().validate0Act(proposed);
+        }
+
+        public boolean hideAct() {
+            return mixin().hideAct();
+        }
+
+        public String disableAct() {
+            return mixin().disableAct();
+        }
+
+        @Inject
+        WrapperFactory wrapperFactory;
+
+        @Inject
+        FactoryService factoryService;
+
+        @Inject
+        ServiceRegistry2 serviceRegistry2;
+    }
+
+
+    ///////////////////////
+
+
+    @Mixin(method="act")
+    public static class downloadReviewPdf {
+        private final PaymentBatchManager paymentBatchManager;
+        public downloadReviewPdf(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        public Blob act(
+                final PaymentBatch paymentBatch,
+                @Nullable final String documentName) throws IOException {
+            final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("pdf");
+            return factoryService.mixin(PaymentBatch.downloadReviewPdf.class, paymentBatch).act(documentNameToUse);
+        }
+        public List<PaymentBatch> choices0Act() {
+            return paymentBatchManager.getCompletedBatches();
+        }
+
+        public String disableAct() {
+            if (paymentBatchManager.getCompletedBatches().isEmpty()) {
+                return "No completed batches";
+            }
+            return null;
+        }
+
+        @Inject
+        FactoryService factoryService;
+    }
+
+    @Mixin(method="act")
+    public static class downloadPaymentFile {
+        private final PaymentBatchManager paymentBatchManager;
+        public downloadPaymentFile(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        public Clob act(
+                final PaymentBatch paymentBatch,
+                @Nullable final String documentName) {
+            final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("xml");
+            return factoryService.mixin(PaymentBatch.downloadPaymentFile.class, paymentBatch).act(documentNameToUse);
+        }
+        public List<PaymentBatch> choices0Act() {
+            return paymentBatchManager.getCompletedBatches();
+        }
+
+        public String disableAct() {
+            if (paymentBatchManager.getCompletedBatches().isEmpty()) {
+                return "No completed batches";
+            }
+            return null;
+        }
+
+        @Inject
+        FactoryService factoryService;
+    }
 
 
     ///////////////////////
@@ -314,7 +452,7 @@ public class PaymentBatchManager {
                 final IncomingInvoice incomingInvoice,
                 final BankAccount debtorBankAccount) {
 
-            PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateCurrentBatch(debtorBankAccount);
+            PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateBatchFor(debtorBankAccount);
             paymentBatch.addLineIfRequired(incomingInvoice);
 
             return paymentBatchManager.update();

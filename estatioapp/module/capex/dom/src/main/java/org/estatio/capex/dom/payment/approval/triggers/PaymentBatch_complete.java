@@ -27,7 +27,7 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public PaymentBatch act(
-            DateTime requestedExecutionDate,
+            final DateTime requestedExecutionDate,
             @Nullable final String comment) {
         paymentBatch.setRequestedExecutionDate(requestedExecutionDate);
         trigger(comment);

@@ -47,7 +47,7 @@ public class PaymentBatchMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "300.15")
     public List<PaymentBatch> findCurrentPaymentBatches() {
-        return paymentBatchRepository.findCurrentBatches();
+        return paymentBatchRepository.findNewBatches();
     }
 
     @Action(semantics = SemanticsOf.SAFE)

@@ -44,6 +44,18 @@ public enum PaymentBatchApprovalStateTransitionType
             PaymentBatchApprovalState.COMPLETED,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
+            AdvancePolicy.MANUAL),
+    APPROVE(
+            PaymentBatchApprovalState.COMPLETED,
+            PaymentBatchApprovalState.APPROVED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    DISCARD(
+            PaymentBatchApprovalState.COMPLETED,
+            PaymentBatchApprovalState.DISCARDED,
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL);
 
     private final List<PaymentBatchApprovalState> fromStates;

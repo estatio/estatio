@@ -30,17 +30,6 @@ public class PaymentBatchRepository {
 
 
     @Programmatic
-    public PaymentBatch findOrCreateBatchFor(final BankAccount debtorBankAccount) {
-        for (PaymentBatch currentBatch : findCurrentBatches()) {
-            if(currentBatch.getDebtorBankAccount() == debtorBankAccount) {
-                return currentBatch;
-            }
-        }
-        final DateTime createdOn = clockService.nowAsDateTime();
-        return create(createdOn, debtorBankAccount, PaymentBatchApprovalState.NEW);
-    }
-
-    @Programmatic
     public List<PaymentBatch> findByDebtorBankAccountAndApprovalState(
             final BankAccount debtorBankAccount,
             final PaymentBatchApprovalState approvalState) {
@@ -53,9 +42,9 @@ public class PaymentBatchRepository {
     }
 
     @Programmatic
-    public PaymentBatch findCurrentByDebtorBankAccount(final BankAccount debtorBankAccount) {
-        List<PaymentBatch> paymentBatches = findByDebtorBankAccountAndApprovalState(
-                debtorBankAccount, PaymentBatchApprovalState.NEW);
+    public PaymentBatch findNewByDebtorBankAccount(final BankAccount debtorBankAccount) {
+        List<PaymentBatch> paymentBatches =
+                findByDebtorBankAccountAndApprovalState(debtorBankAccount, PaymentBatchApprovalState.NEW);
         return paymentBatches.size() == 1 ? paymentBatches.get(0) :  null;
     }
 
@@ -70,26 +59,28 @@ public class PaymentBatchRepository {
     }
 
     @Programmatic
-    public List<PaymentBatch> findCurrentBatches() {
+    public List<PaymentBatch> findNewBatches() {
+        return findByApprovalState(PaymentBatchApprovalState.NEW);
+    }
+
+    @Programmatic
+    public List<PaymentBatch> findCompletedBatches() {
+        return findByApprovalState(PaymentBatchApprovalState.COMPLETED);
+    }
+
+    @Programmatic
+    public List<PaymentBatch> findByApprovalState(final PaymentBatchApprovalState approvalState) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         PaymentBatch.class,
                         "findByApprovalState",
-                        "approvalState", PaymentBatchApprovalState.NEW));
-    }
-    @Programmatic
-    public PaymentBatch findCurrentBatch(final BankAccount debtorBankAccount) {
-        return repositoryService.uniqueMatch(
-                new QueryDefault<>(
-                        PaymentBatch.class,
-                        "findByDebtorBankAccount",
-                        "debtorBankAccount", debtorBankAccount,
-                        "approvalState", PaymentBatchApprovalState.NEW));
+                        "approvalState", approvalState));
     }
 
+
     @Programmatic
-    public PaymentBatch findOrCreateCurrentBatch(final BankAccount debtorBankAccount) {
-        PaymentBatch paymentBatchIfAny = findCurrentByDebtorBankAccount(debtorBankAccount);
+    public PaymentBatch findOrCreateBatchFor(final BankAccount debtorBankAccount) {
+        PaymentBatch paymentBatchIfAny = findNewByDebtorBankAccount(debtorBankAccount);
 
         if (paymentBatchIfAny != null) {
             return paymentBatchIfAny;

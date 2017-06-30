@@ -119,10 +119,10 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Next task">
-                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                        <cpt:property id="nextApprovalTaskTransitionType" hidden="ALL_TABLES">
                                             <cpt:named>Next task</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo" hidden="ALL_TABLES">
                                             <cpt:named>Assigned to</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>

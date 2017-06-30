@@ -4,6 +4,8 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
+            <cpt:action id="downloadPaymentFile"/>
+            <cpt:action id="downloadReviewPdf"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -77,6 +79,8 @@
                                         <cpt:property id="pendingApprovalTask">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>
+                                            <cpt:action id="approve"/>
+                                            <cpt:action id="discard"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
@@ -86,10 +90,10 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Next task">
-                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                        <cpt:property id="nextApprovalTaskTransitionType" hidden="ALL_TABLES">
                                             <cpt:named>Next task</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo" hidden="ALL_TABLES">
                                             <cpt:named>Assigned to</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>

@@ -169,7 +169,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     // Document > PmtInf > PmtInfId
 
     public String title() {
-        return titleService.titleOf(getDebtorBankAccount()) + " @ " + getCreatedOnYMD();
+        switch (getApprovalState()) {
+        case NEW:
+            return titleService.titleOf(getDebtorBankAccount()) + " (new " + getCreatedOnYMD() + ")";
+        default:
+            return titleService.titleOf(getDebtorBankAccount()) + " @ " + getRequestedExecutionDate().toString("yyyyMMdd-hhmm");
+        }
     }
 
     /**
@@ -301,8 +306,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             return new Clob(documentName, "text/xml", xml);
         }
         public String disableAct() {
-            return paymentBatch.getApprovalState() != PaymentBatchApprovalState.COMPLETED
-                    ? "Batch has not been marked as completed"
+            return paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW
+                    ? "Batch is not yet complete"
                     : null;
         }
         public String default0Act() {
@@ -316,9 +321,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Mixin(method="act")
-    public static class downloadInvoicePdf {
+    public static class downloadReviewPdf {
         private final PaymentBatch paymentBatch;
-        public downloadInvoicePdf(final PaymentBatch paymentBatch) {
+        public downloadReviewPdf(final PaymentBatch paymentBatch) {
             this.paymentBatch = paymentBatch;
         }
         @Action(semantics = SemanticsOf.SAFE)
@@ -367,8 +372,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
 
         public String disableAct() {
-            return paymentBatch.getApprovalState() != PaymentBatchApprovalState.COMPLETED
-                    ? "Batch has not been marked as completed"
+            return paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW
+                    ? "Batch is not yet complete"
                     : null;
         }
         public String default0Act() {
@@ -391,7 +396,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         PdfStamper pdfStamper;
     }
 
-    String fileNameWithSuffix(String suffix) {
+    @Programmatic
+    public String fileNameWithSuffix(String suffix) {
         return String.format("%s-%s.%s",
                 getDebtorBankAccount().getReference(),
                 getRequestedExecutionDate().toString("yyyyMMdd-hhmm"),

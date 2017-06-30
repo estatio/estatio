@@ -52,16 +52,5 @@ public class Document_discard
         return reasonGuardNotSatisified();
     }
 
-    @Inject
-    DocumentTypeRepository documentTypeRepository;
-
-    @Inject
-    PaperclipRepository paperclipRepository;
-
-    @Inject
-    OrderRepository orderRepository;
-
-    @Inject
-    ClockService clockService;
 
 }

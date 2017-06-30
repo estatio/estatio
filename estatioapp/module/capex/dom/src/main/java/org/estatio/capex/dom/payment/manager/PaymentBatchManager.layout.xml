@@ -20,22 +20,31 @@
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="currentBatches" defaultView="table" paged="15"/>
+                    <cpt:collection id="newBatches" defaultView="table" paged="15"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
                 <bs3:col span="3">
                     <cpt:fieldSet id="Selected">
                         <cpt:property id="selectedBatch" labelPosition="TOP">
-                            <cpt:action id="selectBatch" cssClassFa="fa-hand-o-right"/>
+                            <cpt:action id="selectBatch"/>
                             <cpt:action id="previousBatch"/>
                             <cpt:action id="nextBatch"/>
+                            <cpt:action id="completeBatch"/>
                         </cpt:property>
                     </cpt:fieldSet>
                 </bs3:col>
                 <bs3:col span="9">
                     <cpt:collection id="selectedBatchPaymentLines" defaultView="table">
                         <cpt:action id="removeInvoice" cssClassFa="angle-up" cssClass="no-color-thanks"/>
+                    </cpt:collection>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
+                    <cpt:collection id="completedBatches" defaultView="table" paged="15">
+                        <cpt:action id="downloadPaymentFile"/>
+                        <cpt:action id="downloadReviewPdf"/>
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>
