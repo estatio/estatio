@@ -19,6 +19,7 @@
                                         <cpt:property id="buyer"/>
                                         <cpt:property id="seller"/>
                                         <cpt:property id="type"/>
+                                        <cpt:property id="incomingInvoiceType"/>
                                         <cpt:property id="property"/>
                                         <cpt:property id="isCreditFor"/>
                                     </cpt:fieldSet>

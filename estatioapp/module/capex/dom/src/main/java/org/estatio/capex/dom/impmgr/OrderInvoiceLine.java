@@ -324,7 +324,7 @@ public class OrderInvoiceLine {
 
 
                 factoryService.mixin(IncomingInvoice.addItem.class, invoiceObj).act(
-                        chargeObj, line.getInvoiceDescription(),
+                        invoiceObj.getType(), chargeObj, line.getInvoiceDescription(),
                         line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(),
                         invoiceTax,
                         dueDate, startDate, endDate, property, project, null);

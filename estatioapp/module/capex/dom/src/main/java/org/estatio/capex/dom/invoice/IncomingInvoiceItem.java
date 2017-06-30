@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
@@ -102,6 +103,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public IncomingInvoiceItem(
             final BigInteger sequence,
             final IncomingInvoice invoice,
+            final IncomingInvoiceType incomingInvoiceType,
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
@@ -115,6 +117,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final Project project,
             final BudgetItem budgetItem){
         super(invoice);
+        this.incomingInvoiceType = incomingInvoiceType;
 
         setSequence(sequence);
 
@@ -146,6 +149,30 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public FinancialItemType getType() {
         return FinancialItemType.INVOICED;
     }
+
+    /**
+     * Typically the same as the {@link IncomingInvoice#getType() type} defined by the {@link #getInvoice() parent}
+     * {@link IncomingInvoice invoice}, but can be overridden if necessary.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private IncomingInvoiceType incomingInvoiceType;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    public IncomingInvoiceItem editIncomingInvoiceType(final IncomingInvoiceType incomingInvoiceType) {
+        setIncomingInvoiceType(incomingInvoiceType);
+        return this;
+    }
+
+    public IncomingInvoiceType default0EditIncomingInvoiceType(){
+        return getIncomingInvoiceType();
+    }
+
+    public String disableEditIncomingInvoiceType(){
+        return isImmutable() ? itemImmutableReason() : null;
+    }
+
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)
@@ -207,7 +234,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
-    public IncomingInvoiceItem editDescription(final String description) {
+    public IncomingInvoiceItem editDescription(
+                                    @ParameterLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
+                                    final String description) {
         setDescription(description);
         return this;
     }
@@ -330,7 +359,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     private boolean isImmutable(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        // TODO: this logic should be brought into on method on IncomingInvoice
+        // TODO: this logic should be brought into one method on IncomingInvoice
         if (invoice.reasonDisabledDueToState()!=null){
             return true;
         }

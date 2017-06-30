@@ -150,7 +150,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     @Getter @Setter
     private Invoice<?> invoice;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
     @Getter @Setter

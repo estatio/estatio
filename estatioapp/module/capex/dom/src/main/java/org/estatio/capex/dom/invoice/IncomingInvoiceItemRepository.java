@@ -43,6 +43,7 @@ public class IncomingInvoiceItemRepository {
     public IncomingInvoiceItem create(
             final BigInteger sequence,
             final IncomingInvoice invoice,
+            final IncomingInvoiceType incomingInvoiceType,
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
@@ -55,7 +56,7 @@ public class IncomingInvoiceItemRepository {
             final Property property,
             final Project project,
             final BudgetItem budgetItem) {
-        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
+        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
         return invoiceItem;
@@ -65,6 +66,7 @@ public class IncomingInvoiceItemRepository {
     public IncomingInvoiceItem upsert(
             final BigInteger sequence,
             final IncomingInvoice invoice,
+            final IncomingInvoiceType incomingInvoiceType,
             final Charge charge,
             final String description,
             final BigDecimal netAmount,
@@ -82,7 +84,7 @@ public class IncomingInvoiceItemRepository {
             invoiceItem = create(
                     sequence,
                     invoice,
-                    charge,
+                    incomingInvoiceType, charge,
                     description,
                     netAmount,
                     vatAmount,

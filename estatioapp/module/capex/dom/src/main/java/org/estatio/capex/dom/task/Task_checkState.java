@@ -37,6 +37,8 @@ public class Task_checkState {
     > Task act() {
 
         ST st = stateTransitionService.findFor(task);
+        st.getTransitionType();
+        //stateTransitionService.
 
         stateTransitionService.trigger(st, null);
 

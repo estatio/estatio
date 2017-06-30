@@ -211,6 +211,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         @MemberOrder(name="items", sequence = "1")
         public IncomingInvoice act(
+                final IncomingInvoiceType type,
                 final Charge charge,
                 @Nullable final String description,
                 final BigDecimal netAmount,
@@ -227,7 +228,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             incomingInvoiceItemRepository.upsert(
                     sequence,
                     incomingInvoice,
-                    charge,
+                    type, charge,
                     description,
                     netAmount,
                     vatAmount,
@@ -247,27 +248,32 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return incomingInvoice.reasonDisabledDueToState();
         }
 
-        public LocalDate default6Act() {
-            return ofFirstItem(IncomingInvoiceItem::getDueDate);
+        public IncomingInvoiceType default0Act() {
+            return incomingInvoice.getType();
         }
 
         public LocalDate default7Act() {
-            return ofFirstItem(IncomingInvoiceItem::getStartDate);
+            return ofFirstItem(IncomingInvoiceItem::getDueDate);
         }
 
         public LocalDate default8Act() {
+            return ofFirstItem(IncomingInvoiceItem::getStartDate);
+        }
+
+        public LocalDate default9Act() {
             return ofFirstItem(IncomingInvoiceItem::getEndDate);
         }
 
-        public Property default9Act() {
+        public Property default10Act() {
             return incomingInvoice.getProperty();
         }
 
-        public Project default10Act() {
+        public Project default11Act() {
             return ofFirstItem(IncomingInvoiceItem::getProject);
         }
 
-        public List<BudgetItem> choices11Act(
+        public List<BudgetItem> choices12Act(
+                final IncomingInvoiceType type,
                 final Charge charge,
                 final String description,
                 final BigDecimal netAmount,
@@ -330,6 +336,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
+    /**
+     * Default type, used for routing.
+     *
+     * <p>
+     *     This can be overridden for each invoice item.
+     * </p>
+     */
     @Getter @Setter
     @Column(allowsNull = "false")
     private IncomingInvoiceType type;

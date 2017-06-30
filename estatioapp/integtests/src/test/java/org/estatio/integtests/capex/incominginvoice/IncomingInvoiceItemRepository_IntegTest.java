@@ -117,7 +117,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         tax = taxRepository.findByReference("FRF");
 
         mixin(IncomingInvoice.addItem.class, invoice).act(
-                charge, description,
+                invoice.getType(), charge, description,
                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
                 tax, dueDate, null, null, null, null, null);
 

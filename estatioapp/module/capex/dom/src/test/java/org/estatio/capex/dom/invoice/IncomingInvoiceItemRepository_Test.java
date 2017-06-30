@@ -44,7 +44,7 @@ public class IncomingInvoiceItemRepository_Test {
 
         };
         BigInteger sequence = new BigInteger("1");
-        String description = new String();
+        String description = "";
         Tax tax = new Tax();
         LocalDate dueDate = new LocalDate(2017,1,1);
         LocalDate startDate = new LocalDate(2017,1,2);
@@ -52,8 +52,10 @@ public class IncomingInvoiceItemRepository_Test {
         Property property = new Property();
         Project project = new Project();
         BudgetItem budgetItem = new BudgetItem();
+        IncomingInvoiceType type = IncomingInvoiceType.CORPORATE_EXPENSES;
 
         assertThat(invoiceItem.getInvoice()).isNull();
+        assertThat(invoiceItem.getIncomingInvoiceType()).isNull();
         assertThat(invoiceItem.getCharge()).isNull();
         assertThat(invoiceItem.getSequence()).isNull();
         assertThat(invoiceItem.getDescription()).isNull();
@@ -71,6 +73,7 @@ public class IncomingInvoiceItemRepository_Test {
         incomingInvoiceItemRepository.upsert(
                 sequence,
                 mockInvoice,
+                type,
                 mockCharge,
                 description,
                 BigDecimal.ZERO,
@@ -87,6 +90,7 @@ public class IncomingInvoiceItemRepository_Test {
         // then
         assertThat(invoiceItem.getInvoice()).isNull(); // should not updated
         assertThat(invoiceItem.getCharge()).isNull(); // should not updated
+        assertThat(invoiceItem.getIncomingInvoiceType()).isEqualTo(type);
         assertThat(invoiceItem.getSequence()).isEqualTo(sequence);
         assertThat(invoiceItem.getDescription()).isEqualTo(description);
         assertThat(invoiceItem.getNetAmount()).isEqualTo(BigDecimal.ZERO);

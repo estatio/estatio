@@ -7,13 +7,16 @@
         </col>
     </row>
     <row>
-        <col span="12">
+        <col span="4">
             <tabGroup>
                 <tab name="Invoice item">
                     <row>
-                        <col span="4">
+                        <col span="12">
                             <ns2:fieldSet name="Invoice item" id="invoiceItem">
                                 <ns2:property id="invoice"/>
+                                <ns2:property id="incomingInvoiceType">
+                                    <ns2:action id="editIncomingInvoiceType" promptStyle="INLINE" position="RIGHT"/>
+                                </ns2:property>
                                 <ns2:property id="sequence"/>
                                 <ns2:property id="description">
                                     <ns2:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
@@ -21,7 +24,37 @@
                                 <ns2:property id="dueDate"/>
                             </ns2:fieldSet>
                         </col>
-                        <col span="4">
+                    </row>
+                </tab>
+                <tab name="Application level">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Application Tenancy" id="general">
+                                <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>
+                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Metadata">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Metadata" id="metadata">
+                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <ns2:property id="datanucleusVersionLong"/>
+                                <ns2:property id="datanucleusVersionTimestamp"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="4">
+            <tabGroup>
+                <tab name="Dimensions">
+                    <row>
+                        <col span="12">
                             <ns2:fieldSet name="Dimensions" id="dimensions">
                                 <ns2:property id="charge">
                                     <ns2:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
@@ -42,7 +75,24 @@
                                 <ns2:property id="type"/>
                             </ns2:fieldSet>
                         </col>
-                        <col span="4">
+                    </row>
+                </tab>
+                <tab name="dummy_1">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet id="dummy_1">
+                                <ns2:property id="dummy_1"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="4">
+            <tabGroup>
+                <tab name="Amounts">
+                    <row>
+                        <col span="12">
                             <ns2:fieldSet name="Amounts" id="amounts">
                                 <ns2:action id="updateAmounts" position="PANEL"/>
                                 <ns2:property id="netAmount"/>
@@ -55,42 +105,37 @@
                                 <ns2:property id="grossAmount"/>
                             </ns2:fieldSet>
                         </col>
-                        <!--temporarily hides actions for demo purposes TODO: bring them to subclass-->
-                        <col span="0">
-                            <ns2:fieldSet name="hidden" id="hidden">
-                                <ns2:action id="remove"/>
-                                <ns2:action id="changeDescription"/>
-                                <ns2:action id="changeEffectiveDates"/>
-                                <ns2:action id="verify"/>
-                            </ns2:fieldSet>
-                        </col>
                     </row>
                 </tab>
-                <tab name="Other">
+                <tab name="dummy_2">
                     <row>
                         <col span="12">
-                            <ns2:fieldSet name="Application Tenancy" id="general">
-                                <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>
-                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" unreferencedProperties="true">
-                                <ns2:property id="effectiveStartDate" hidden="EVERYWHERE"/>
-                                <ns2:property id="effectiveEndDate" hidden="EVERYWHERE"/>
-                                <ns2:property id="source" hidden="EVERYWHERE"/>
-                                <ns2:property id="quantity" hidden="EVERYWHERE"/>
+                            <ns2:fieldSet id="dummy_2">
+                                <ns2:property id="dummy_2"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
                 </tab>
             </tabGroup>
         </col>
-        <col span="6">
+    </row>
+    <row>
+        <col span="0">
+            <ns2:fieldSet name="hidden" id="hidden">
+                <!-- hides actions for demo purposes TODO: bring them to subclass-->
+                <ns2:action id="remove"/>
+                <ns2:action id="changeDescription"/>
+                <ns2:action id="changeEffectiveDates"/>
+                <ns2:action id="verify"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="0">
+            <ns2:fieldSet name="Other" unreferencedProperties="true">
+                <ns2:property id="effectiveStartDate" hidden="EVERYWHERE"/>
+                <ns2:property id="effectiveEndDate" hidden="EVERYWHERE"/>
+                <ns2:property id="source" hidden="EVERYWHERE"/>
+                <ns2:property id="quantity" hidden="EVERYWHERE"/>
+            </ns2:fieldSet>
         </col>
     </row>
     <row>
@@ -102,7 +147,6 @@
                     </row>
                 </tab>
             </tabGroup>
-
         </col>
     </row>
 </grid>

@@ -519,6 +519,7 @@ public class IncomingDocAsInvoiceViewModel
             incomingInvoiceItemRepository.create(
                     BigInteger.ONE,
                     incomingInvoice,
+                    incomingInvoiceType,
                     getCharge(),
                     getDescription(),
                     getNetAmount(),
