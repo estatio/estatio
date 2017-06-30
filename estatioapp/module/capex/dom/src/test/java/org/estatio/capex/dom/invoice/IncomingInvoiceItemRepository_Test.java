@@ -90,7 +90,7 @@ public class IncomingInvoiceItemRepository_Test {
         // then
         assertThat(invoiceItem.getInvoice()).isNull(); // should not updated
         assertThat(invoiceItem.getCharge()).isNull(); // should not updated
-        assertThat(invoiceItem.getIncomingInvoiceType()).isEqualTo(type);
+        assertThat(invoiceItem.getIncomingInvoiceType()).isNull(); // should not be updated
         assertThat(invoiceItem.getSequence()).isEqualTo(sequence);
         assertThat(invoiceItem.getDescription()).isEqualTo(description);
         assertThat(invoiceItem.getNetAmount()).isEqualTo(BigDecimal.ZERO);
