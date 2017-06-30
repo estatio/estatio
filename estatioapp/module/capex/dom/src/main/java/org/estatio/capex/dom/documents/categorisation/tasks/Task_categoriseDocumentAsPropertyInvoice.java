@@ -52,6 +52,9 @@ public class Task_categoriseDocumentAsPropertyInvoice
     }
 
     public String disableAct() {
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
         return mixin().disableAct();
     }
 

@@ -39,6 +39,9 @@ public class Task_approveIncomingInvoice
     }
 
     public String disableAct() {
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
         return mixin().disableAct();
     }
 

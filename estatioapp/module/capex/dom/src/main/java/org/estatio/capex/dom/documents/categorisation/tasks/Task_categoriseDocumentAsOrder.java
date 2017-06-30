@@ -59,6 +59,9 @@ public class Task_categoriseDocumentAsOrder
     }
 
     public String disableAct() {
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
         return mixin().disableAct();
     }
 

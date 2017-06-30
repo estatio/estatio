@@ -45,7 +45,10 @@ public class Task_discardDocument
     }
 
     public String disableAct() {
-        return mixin().disableAct();
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
+        return  mixin().disableAct();
     }
 
     @Override

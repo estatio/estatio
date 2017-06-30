@@ -352,6 +352,15 @@ public class StateTransitionService {
             return null;
         }
 
+        if(domainObject instanceof Stateful) {
+            final Stateful stateful = (Stateful) domainObject;
+            final S currentStateAccordingToDomainObject = stateful.getStateOf(stateTransitionClass);
+            if(currentStateAccordingToDomainObject == null && mostRecentTransitionIfAny != null) {
+                // self-healing
+                stateful.setStateOf(stateTransitionClass, mostRecentTransitionIfAny.getToState());
+            }
+        }
+
         final Task taskIfAny = pendingTransitionIfAny.getTask();
         if(taskIfAny != null) {
             final PartyRoleType roleAssignedTo = taskIfAny.getAssignedTo();

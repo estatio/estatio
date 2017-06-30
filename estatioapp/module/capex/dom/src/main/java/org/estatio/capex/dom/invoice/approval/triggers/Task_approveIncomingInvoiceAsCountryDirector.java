@@ -34,6 +34,9 @@ public class Task_approveIncomingInvoiceAsCountryDirector
     }
 
     public String disableAct() {
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
         return mixin().disableAct();
     }
 

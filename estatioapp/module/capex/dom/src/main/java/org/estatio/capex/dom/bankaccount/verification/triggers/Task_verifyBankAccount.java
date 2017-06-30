@@ -45,6 +45,9 @@ public class Task_verifyBankAccount
     }
 
     public String disableAct() {
+        if(doGetDomainObjectIfAny() == null) {
+            return null;
+        }
         return mixin().disableAct();
     }
 
