@@ -18,7 +18,6 @@
  */
 package org.estatio.capex.dom.documents.categorisation.invoice;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -517,7 +516,7 @@ public class IncomingDocAsInvoiceViewModel
             item.setBudgetItem(getBudgetItem());
         } else {
             incomingInvoiceItemRepository.create(
-                    BigInteger.ONE,
+                    incomingInvoice.nextItemSequence(),
                     incomingInvoice,
                     incomingInvoiceType,
                     getCharge(),
