@@ -62,11 +62,12 @@ import lombok.Setter;
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Queries({
         @Query(
-                name = "findByInvoiceAndCharge", language = "JDOQL",
+                name = "findByInvoiceAndChargeAndSequence", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
                         + "WHERE invoice == :invoice "
-                        + "   && charge == :charge "),
+                        + "   && charge == :charge "
+                        + "   && sequence == :sequence "),
         @Query(
                 name = "findByProjectAndCharge", language = "JDOQL",
                 value = "SELECT "

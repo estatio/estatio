@@ -28,13 +28,14 @@ import org.estatio.dom.tax.Tax;
 public class IncomingInvoiceItemRepository {
 
     @Programmatic
-    public IncomingInvoiceItem findByInvoiceAndCharge(final IncomingInvoice invoice, final Charge charge) {
+    public IncomingInvoiceItem findByInvoiceAndChargeAndSequence(final IncomingInvoice invoice, final Charge charge, final BigInteger sequence) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findByInvoiceAndCharge",
+                        "findByInvoiceAndChargeAndSequence",
                         "invoice", invoice,
-                        "charge", charge
+                        "charge", charge,
+                        "sequence", sequence
                 ));
     }
 
@@ -76,7 +77,7 @@ public class IncomingInvoiceItemRepository {
             final Property property,
             final Project project,
             final BudgetItem budgetItem) {
-        IncomingInvoiceItem invoiceItem = findByInvoiceAndCharge(invoice, charge);
+        IncomingInvoiceItem invoiceItem = findByInvoiceAndChargeAndSequence(invoice, charge, sequence);
         if (invoiceItem == null) {
             invoiceItem = create(
                     sequence,

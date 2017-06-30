@@ -1,6 +1,7 @@
 package org.estatio.integtests.capex.incominginvoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 
@@ -68,30 +69,35 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
     Tax tax;
 
     @Test
-    public void findByInvoiceAndCharge_works() throws Exception {
+    public void findByInvoiceAndChargeAndSequence_works() throws Exception {
 
         // given
-        IncomingInvoice invoice = createIncomingInvoiceAndItem();
+        IncomingInvoice invoice = createIncomingInvoiceAndTwoItemsWithSameCharge();
 
         // when
         Charge chargeToFindOnItem = charge;
-        IncomingInvoiceItem item = incomingInvoiceItemRepository.findByInvoiceAndCharge(invoice, chargeToFindOnItem);
+        IncomingInvoiceItem item1 = incomingInvoiceItemRepository.findByInvoiceAndChargeAndSequence(invoice, chargeToFindOnItem, BigInteger.valueOf(1L));
+        IncomingInvoiceItem item2 = incomingInvoiceItemRepository.findByInvoiceAndChargeAndSequence(invoice, chargeToFindOnItem, BigInteger.valueOf(2L));
 
         // then
-        assertThat(item).isNotNull();
-        assertThat(item.getInvoice()).isEqualTo(invoice);
-        assertThat(item.getCharge()).isEqualTo(charge);
+        assertThat(item1.getInvoice()).isEqualTo(invoice);
+        assertThat(item1.getCharge()).isEqualTo(charge);
+        assertThat(item1.getSequence()).isEqualTo(BigInteger.valueOf(1L));
+
+        assertThat(item2.getInvoice()).isEqualTo(invoice);
+        assertThat(item2.getCharge()).isEqualTo(charge);
+        assertThat(item2.getSequence()).isEqualTo(BigInteger.valueOf(2L));
 
         // and when
         Charge chargeNotToBeFoundOnItem = chargeRepository.findByReference("OTHER");
-        item = incomingInvoiceItemRepository.findByInvoiceAndCharge(invoice, chargeNotToBeFoundOnItem);
+        IncomingInvoiceItem itemNotToBeFound = incomingInvoiceItemRepository.findByInvoiceAndChargeAndSequence(invoice, chargeNotToBeFoundOnItem, BigInteger.valueOf(1L));
 
         // then
-        assertThat(item).isNull();
+        assertThat(itemNotToBeFound).isNull();
 
     }
 
-    private IncomingInvoice createIncomingInvoiceAndItem(){
+    private IncomingInvoice createIncomingInvoiceAndTwoItemsWithSameCharge(){
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
@@ -109,6 +115,11 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         charge = chargeRepository.findByReference("WORKS");
         description = "some description";
         tax = taxRepository.findByReference("FRF");
+
+        mixin(IncomingInvoice.addItem.class, invoice).act(
+                charge, description,
+                BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                tax, dueDate, null, null, null, null, null);
 
         mixin(IncomingInvoice.addItem.class, invoice).act(
                 charge, description,

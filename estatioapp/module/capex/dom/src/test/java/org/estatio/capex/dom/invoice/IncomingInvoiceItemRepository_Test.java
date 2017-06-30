@@ -38,7 +38,7 @@ public class IncomingInvoiceItemRepository_Test {
         // given
         IncomingInvoiceItemRepository incomingInvoiceItemRepository = new IncomingInvoiceItemRepository(){
             @Override
-            public IncomingInvoiceItem findByInvoiceAndCharge(final IncomingInvoice invoice, final Charge charge) {
+            public IncomingInvoiceItem findByInvoiceAndChargeAndSequence(final IncomingInvoice invoice, final Charge charge, final BigInteger sequence) {
                 return invoiceItem;
             }
 
