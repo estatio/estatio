@@ -435,9 +435,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return getPeriod();
     }
 
-//    public List<Charge> autoComplete0ChangeDimensions(@MinLength(3) final String search) {
-//        return autoComplete0EditCharge(search);
-//    }
+    public List<Charge> autoComplete0ChangeDimensions(@MinLength(3) final String search) {
+        return autoComplete0EditCharge(search);
+    }
 
     public List<Property> choices1ChangeDimensions() {
         return choicesProperty();
