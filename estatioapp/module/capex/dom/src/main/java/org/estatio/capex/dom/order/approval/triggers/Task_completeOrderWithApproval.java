@@ -49,6 +49,8 @@ public class Task_completeOrderWithApproval
         return super.hideAct() || mixin().hideAct();
     }
 
-
+    public String disableAct() {
+        return mixin().disableAct();
+    }
 
 }

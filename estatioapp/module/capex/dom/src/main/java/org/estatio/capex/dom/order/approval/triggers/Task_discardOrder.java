@@ -33,5 +33,9 @@ public class Task_discardOrder
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
 
 }

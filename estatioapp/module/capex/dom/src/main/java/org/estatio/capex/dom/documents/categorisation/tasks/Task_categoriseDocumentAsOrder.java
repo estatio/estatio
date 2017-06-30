@@ -58,6 +58,10 @@ public class Task_categoriseDocumentAsOrder
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
     @Override
     protected Document doGetDomainObjectIfAny() {
         final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);

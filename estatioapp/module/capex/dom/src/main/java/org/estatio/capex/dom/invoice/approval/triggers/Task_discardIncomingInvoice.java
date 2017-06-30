@@ -33,5 +33,12 @@ public class Task_discardIncomingInvoice
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
+    public boolean default1Act() {
+        return true;
+    }
 
 }

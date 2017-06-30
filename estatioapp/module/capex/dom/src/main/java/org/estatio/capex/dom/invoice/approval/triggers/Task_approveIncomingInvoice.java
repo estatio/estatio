@@ -38,6 +38,10 @@ public class Task_approveIncomingInvoice
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
     public String default0Act() {
         return mixin().default0Act();
     }

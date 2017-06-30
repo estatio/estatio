@@ -37,6 +37,10 @@ public class Task_completeIncomingInvoice
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
     public String default0Act() {
         return mixin().default0Act();
     }

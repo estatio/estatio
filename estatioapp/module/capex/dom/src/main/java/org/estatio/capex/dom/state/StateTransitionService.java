@@ -159,8 +159,6 @@ public class StateTransitionService {
      * </p>
      *
      * @param stateTransition - expected to for a task still incomplete, and applicable to its domain object's state
-     * @param comment - used to complete the task.
-     *
      * @return - the next state transition, or null if there isn't one defined by the transition just completing/ed
      */
     public <
@@ -168,9 +166,7 @@ public class StateTransitionService {
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-    > ST trigger(
-            final ST stateTransition,
-            final String comment) {
+    > ST checkState(final ST stateTransition) {
 
         if(stateTransition.getTask().isCompleted()) {
             return null;
@@ -178,7 +174,8 @@ public class StateTransitionService {
 
         final DO domainObject = stateTransition.getDomainObject();
         final STT transitionType = stateTransition.getTransitionType();
-        return trigger(domainObject, transitionType, comment);
+        Class<ST> stClass = transitionClassFor(transitionType);
+        return trigger(domainObject, stClass, null, null);
     }
 
     /**

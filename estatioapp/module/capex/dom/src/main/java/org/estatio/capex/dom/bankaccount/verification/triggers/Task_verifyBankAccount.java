@@ -44,6 +44,10 @@ public class Task_verifyBankAccount
         return super.hideAct() || mixin().hideAct();
     }
 
+    public String disableAct() {
+        return mixin().disableAct();
+    }
+
     @Override
     protected BankAccount doGetDomainObjectIfAny() {
         final BankAccountVerificationStateTransition transition = repository.findByTask(this.task);
