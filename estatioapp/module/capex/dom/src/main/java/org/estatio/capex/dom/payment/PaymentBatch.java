@@ -1,6 +1,8 @@
 package org.estatio.capex.dom.payment;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -36,26 +38,36 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.jaxb.JaxbService;
+import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
+import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
+import org.incode.module.communications.dom.mixins.DocumentConstants;
+
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonRepository;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.AccountIdentification4Choice;
 import iso.std.iso._20022.tech.xsd.pain_001_001.ActiveOrHistoricCurrencyAndAmount;
@@ -104,6 +116,14 @@ import lombok.Setter;
                         + "ORDER BY createdOn DESC "
         ),
         @Query(
+                name = "findByCreatedOnBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.payment.PaymentBatch "
+                        + "WHERE createdOn >= :startDate "
+                        + "   && createdOn <= :endDate "
+                        + "ORDER BY createdOn DESC "
+        ),
+        @Query(
                 name = "findByApprovalState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.payment.PaymentBatch "
@@ -148,11 +168,14 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     // TODO: derive somehow...
     // Document > PmtInf > PmtInfId
 
+    public String title() {
+        return titleService.titleOf(getDebtorBankAccount()) + " @ " + getCreatedOnYMD();
+    }
+
     /**
      * Document > PmtInf > DbtrAcct > Id > IBAN
      * Document > PmtInf > DbtrAgt > FinInstnId > BIC
      */
-    @Title(sequence = "1")
     @Column(allowsNull = "false", name = "debtorBankAccountId")
     @Getter @Setter
     private BankAccount debtorBankAccount;
@@ -160,7 +183,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     /**
      * Document > CstmrCdtTrfInitn > GrpHdr > CreDtTm
      */
-    @Title(sequence = "2", prepend = "@")
     @Column(allowsNull = "false")
     @Getter @Setter
     private DateTime createdOn;
@@ -191,19 +213,22 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Programmatic
-    public PaymentLine addLineIfRequired(final IncomingInvoice incomingInvoice) {
+    public void addLineIfRequired(final IncomingInvoice incomingInvoice) {
         Optional<PaymentLine> lineIfAny = lineIfAnyFor(incomingInvoice);
         if (lineIfAny.isPresent()) {
-            return lineIfAny.get();
+            return;
         }
         final int nextSequence = getLines().size() + 1;
-        final BigDecimal transferAmount = incomingInvoice.getGrossAmount();
+        BigDecimal transferAmount = coalesce(incomingInvoice.getGrossAmount(), BigDecimal.ZERO);
         final String remittanceInformation = incomingInvoice.getInvoiceNumber();
         final PaymentLine line =
                 new PaymentLine(this, nextSequence, incomingInvoice, transferAmount, remittanceInformation);
         serviceRegistry2.injectServicesInto(lineIfAny);
         getLines().add(line);
-        return line;
+    }
+
+    private static BigDecimal coalesce(final BigDecimal amount, final BigDecimal other) {
+        return amount != null ? amount : other;
     }
 
     private Optional<PaymentLine> lineIfAnyFor(final IncomingInvoice invoice) {
@@ -273,7 +298,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         public Clob act(final String documentName) {
             Document document = paymentBatch.convertToXmlDocument();
             String xml = jaxbService.toXml(document);
-            return new Clob(documentName, "application/pdf", xml);
+            return new Clob(documentName, "text/xml", xml);
         }
         public String disableAct() {
             return paymentBatch.getApprovalState() != PaymentBatchApprovalState.COMPLETED
@@ -281,13 +306,98 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                     : null;
         }
         public String default0Act() {
-            return paymentBatch.getDebtorBankAccount().getAccountNumber();
+            return paymentBatch.fileNameWithSuffix("xml");
         }
+
 
         @Inject
         JaxbService jaxbService;
 
     }
+
+    @Mixin(method="act")
+    public static class downloadInvoicePdf {
+        private final PaymentBatch paymentBatch;
+        public downloadInvoicePdf(final PaymentBatch paymentBatch) {
+            this.paymentBatch = paymentBatch;
+        }
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed= Contributed.AS_ACTION)
+        public Blob act(final String documentName) throws IOException {
+
+            // TODO: prepend an overview
+
+            final List<byte[]> pdfBytes = Lists.newArrayList();
+            final SortedSet<PaymentLine> lines = paymentBatch.getLines();
+            for (final PaymentLine line : lines) {
+                final IncomingInvoice invoice = line.getInvoice();
+
+                final Optional<org.incode.module.document.dom.impl.docs.Document> document =
+                        lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
+                if(document.isPresent()) {
+                    byte[] docBytes = document.get().asBytes();
+
+                    IncomingInvoiceApprovalStateTransition transitionIfAny =
+                            stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+
+                    List<String> origLines = Lists.newArrayList();
+                    if(transitionIfAny != null) {
+                        Task task = transitionIfAny.getTask();
+                        if (task != null) {
+                            Person personAssignedTo = task.getPersonAssignedTo();
+                            if (personAssignedTo != null) {
+                                origLines.add(String.format(
+                                        "Approved by: %s %s",
+                                        personAssignedTo.getFirstName(), personAssignedTo.getLastName()));
+                            }
+                        }
+                        origLines.add("Approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
+                    }
+                    URI uri = deepLinkService.deepLinkFor(invoice);
+
+                    docBytes = pdfStamper.firstPageOf(docBytes, origLines, uri.toString());
+
+                    pdfBytes.add(docBytes);
+                }
+            }
+            byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});
+            byte[] pdfMergedBytes = pdfBoxService.merge(mergedBytes);
+            return new Blob(documentName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, pdfMergedBytes);
+        }
+
+        public String disableAct() {
+            return paymentBatch.getApprovalState() != PaymentBatchApprovalState.COMPLETED
+                    ? "Batch has not been marked as completed"
+                    : null;
+        }
+        public String default0Act() {
+            return paymentBatch.fileNameWithSuffix("pdf");
+        }
+
+        @Inject
+        PdfBoxService pdfBoxService;
+
+        @Inject
+        LookupAttachedPdfService lookupAttachedPdfService;
+
+        @Inject
+        IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
+
+        @Inject
+        DeepLinkService deepLinkService;
+
+        @Inject
+        PdfStamper pdfStamper;
+    }
+
+    String fileNameWithSuffix(String suffix) {
+        return String.format("%s-%s.%s",
+                getDebtorBankAccount().getReference(),
+                getRequestedExecutionDate().toString("yyyyMMdd-hhmm"),
+                suffix);
+    }
+
 
     //region > convertToXmlDocument
     Document convertToXmlDocument() {
@@ -304,7 +414,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         grpHdr.setCreDtTm(newDateTime(getCreatedOn()));
         grpHdr.setNbOfTxs("" + paymentLines.size());
         grpHdr.setCtrlSum(ctrlSum());
-        grpHdr.setInitgPty(newPartyIdentification32ForEstatio());
+        grpHdr.setInitgPty(newPartyIdentification32ForDebtorOwner());
 
         List<PaymentInstructionInformation3> pmtInfList = cstmrCdtTrfInitn.getPmtInves();
         PaymentInstructionInformation3 pmtInf = new PaymentInstructionInformation3();
@@ -316,7 +426,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         pmtInf.setPmtMtd(PaymentMethod3Code.TRF);
         pmtInf.setBtchBookg(false);
         pmtInf.setReqdExctnDt(newDateTime(getRequestedExecutionDate()));
-        pmtInf.setDbtr(newPartyIdentification32ForEstatio());
+        pmtInf.setDbtr(newPartyIdentification32ForDebtorOwner());
 
         pmtInf.setDbtrAcct(cashAccountFor(getDebtorBankAccount()));
         pmtInf.setDbtrAgt(agentFor(getDebtorBankAccount()));
@@ -402,8 +512,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private PartyIdentification32 newPartyIdentification32ForEstatio() {
-        return newPartyIdentification32("Estatio");
+    private PartyIdentification32 newPartyIdentification32ForDebtorOwner() {
+        return newPartyIdentification32(getDebtorBankAccount().getOwner().getName());
     }
 
     private PartyIdentification32 newPartyIdentification32(final String nm) {
@@ -459,8 +569,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     private String msgId() {
-        // TODO
-        return "FRLSM-P-SCT01-FR-AA-INSTALL";
+        Person meAsPerson = personRepository.me();
+        String userName =
+                meAsPerson != null
+                        ? meAsPerson.getReference()
+                        : meService.me().getUsername();
+
+        return getDebtorBankAccount().getOwner().getReference() + "-" + userName;
     }
     //endregion
 
@@ -471,6 +586,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+    MeService meService;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    TitleService titleService;
+
 
 }

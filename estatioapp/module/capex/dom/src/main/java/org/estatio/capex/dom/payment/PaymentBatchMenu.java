@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -16,10 +18,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 
 @DomainService(
@@ -45,11 +45,17 @@ public class PaymentBatchMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "300.20")
-    public List<PaymentBatch> findPaymentBatchByDebtorBankAccount(
-            final BankAccount debtorBankAccount,
-            final PaymentBatchApprovalState approvalState) {
-        return paymentBatchRepository.findByDebtorBankAccountAndApprovalState(debtorBankAccount, approvalState);
+    @MemberOrder(sequence = "300.15")
+    public List<PaymentBatch> findCurrentPaymentBatches() {
+        return paymentBatchRepository.findCurrentBatches();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "300.15")
+    public List<PaymentBatch> findRecentPaymentBatches() {
+        DateTime now = clockService.nowAsDateTime();
+        DateTime threeMonthsAgo = now.minusMonths(3);
+        return paymentBatchRepository.findByCreatedOnBetween(threeMonthsAgo, now);
     }
 
 

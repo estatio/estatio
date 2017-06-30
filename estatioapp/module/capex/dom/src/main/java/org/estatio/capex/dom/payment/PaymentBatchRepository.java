@@ -53,6 +53,13 @@ public class PaymentBatchRepository {
     }
 
     @Programmatic
+    public PaymentBatch findCurrentByDebtorBankAccount(final BankAccount debtorBankAccount) {
+        List<PaymentBatch> paymentBatches = findByDebtorBankAccountAndApprovalState(
+                debtorBankAccount, PaymentBatchApprovalState.NEW);
+        return paymentBatches.size() == 1 ? paymentBatches.get(0) :  null;
+    }
+
+    @Programmatic
     public List<PaymentBatch> findByDebtorBankAccount(
             final BankAccount debtorBankAccount) {
         return repositoryService.allMatches(
@@ -81,6 +88,27 @@ public class PaymentBatchRepository {
     }
 
     @Programmatic
+    public PaymentBatch findOrCreateCurrentBatch(final BankAccount debtorBankAccount) {
+        PaymentBatch paymentBatchIfAny = findCurrentByDebtorBankAccount(debtorBankAccount);
+
+        if (paymentBatchIfAny != null) {
+            return paymentBatchIfAny;
+        }
+        return create(clockService.nowAsDateTime(), debtorBankAccount, PaymentBatchApprovalState.NEW);
+    }
+
+
+    @Programmatic
+    public List<PaymentBatch> findByCreatedOnBetween(DateTime startDate, DateTime endDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        PaymentBatch.class,
+                        "findByCreatedOnBetween",
+                        "startDate", startDate,
+                        "endDate", endDate));
+    }
+
+    @Programmatic
     public PaymentBatch create(
             final DateTime createdOn,
             final BankAccount debtorBankAccount,
@@ -104,6 +132,5 @@ public class PaymentBatchRepository {
 
     @Inject
     ClockService clockService;
-
 
 }

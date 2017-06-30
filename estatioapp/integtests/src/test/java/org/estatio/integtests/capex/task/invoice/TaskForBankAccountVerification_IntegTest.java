@@ -181,6 +181,8 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             // given
             seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountForTopModelGb.REF);
+            // bank accounts now need BICs so can verify
+            bankAccount.setBic("123456789");
 
             assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(NOT_VERIFIED);
         }

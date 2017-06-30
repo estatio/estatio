@@ -27,9 +27,14 @@ public interface StateTransitionRepository<
     @Programmatic
     ST findByTask(final Task task);
 
-    /**
-     * Creates the transition with corresponding {@link Task}.
-     */
+    @Programmatic
+    ST findByDomainObjectAndToState(
+            final DO domainObject,
+            final S toState);
+
+        /**
+         * Creates the transition with corresponding {@link Task}.
+         */
     @Programmatic
     ST create(
             final DO domainObject,

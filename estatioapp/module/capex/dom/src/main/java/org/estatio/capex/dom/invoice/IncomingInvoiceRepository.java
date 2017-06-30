@@ -81,7 +81,9 @@ public class IncomingInvoiceRepository {
                 new QueryDefault<>(
                         IncomingInvoice.class,
                         "findByInvoiceNumberAndSellerAndInvoiceDate",
-                        "invoiceNumber", invoiceNumber, "seller", seller, "invoiceDate", invoiceDate));
+                        "invoiceNumber", invoiceNumber,
+                        "seller", seller,
+                        "invoiceDate", invoiceDate));
     }
 
     @Programmatic
@@ -91,6 +93,15 @@ public class IncomingInvoiceRepository {
                         IncomingInvoice.class,
                         "findByBankAccount",
                         "bankAccount", bankAccount));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalState(final IncomingInvoiceApprovalState approvalState) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findNotInAnyPaymentBatchByApprovalState",
+                        "approvalState", approvalState));
     }
 
     @Programmatic

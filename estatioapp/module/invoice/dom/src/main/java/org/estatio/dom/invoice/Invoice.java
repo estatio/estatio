@@ -168,6 +168,7 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private String applicationTenancyPath;
 
+    @Property(hidden = Where.ALL_TABLES)
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."

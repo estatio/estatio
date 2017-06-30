@@ -1,6 +1,8 @@
 package org.estatio.capex.dom.state;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -68,6 +70,25 @@ public abstract class StateTransitionRepositoryAbstract<
     @Programmatic
     public void deleteFor(final DO domainObject) {
         stateTransitionRepositoryGeneric.deleteFor(domainObject, stateTransitionClass);
+    }
+
+    @Programmatic
+    public ST findByDomainObjectAndToState(
+            final DO domainObject,
+            final S toState) {
+
+        final List<ST> transitions = stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
+        final List<ST> completedTransitions =
+                transitions.stream()
+                        .filter(x -> x.getToState() == toState)
+                        .sorted(completedOn().reversed())
+                        .collect(Collectors.toList());
+
+        return completedTransitions.isEmpty() ? null : completedTransitions.get(0);
+    }
+
+    private Comparator<ST> completedOn() {
+        return Comparator.comparing(StateTransitionAbstract::getCompletedOn);
     }
 
     @Inject

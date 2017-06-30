@@ -37,6 +37,9 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
     }
 
     @Override public String disableAct() {
+        if(bankAccount.getBic() == null) {
+            return "BIC is required";
+        }
         return super.disableAct();
     }
 

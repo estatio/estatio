@@ -48,6 +48,9 @@
                                     <cpt:action id="approveIncomingInvoiceAsCountryDirector">
                                         <cpt:named>Approve as Country Director</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceLocalAsCountryDirector">
+                                        <cpt:named>Approve (Local) as Country Director</cpt:named>
+                                    </cpt:action>
                                     <cpt:action id="discardIncomingInvoice">
                                         <cpt:named>Discard</cpt:named>
                                     </cpt:action>

@@ -126,7 +126,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
-            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
@@ -139,7 +139,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     CHECK_BANK_ACCOUNT_FOR_CORPORATE(
-            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
@@ -191,7 +191,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return state == BankAccountVerificationState.VERIFIED;
         }
     },
-    PAY_BY_IBQ(
+    PAY_BY_IBP(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatching(),

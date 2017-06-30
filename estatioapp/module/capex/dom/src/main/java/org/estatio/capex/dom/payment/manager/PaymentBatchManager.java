@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,16 +15,15 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.assertj.core.util.Lists;
-import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -33,8 +31,6 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
@@ -120,15 +116,8 @@ public class PaymentBatchManager {
         }
 
         // payable invoices
-        List<IncomingInvoice> payableInvoices = incomingInvoiceRepository
-                .findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
-
-        for (PaymentBatch currentBatch : currentBatches) {
-            SortedSet<PaymentLine> lines = currentBatch.getLines();
-            for (PaymentLine line : lines) {
-                payableInvoices.remove(line.getInvoice());
-            }
-        }
+        List<IncomingInvoice> payableInvoices =
+                incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
 
         Collections.sort(payableInvoices);
         payableInvoicesNotInAnyBatch.clear();
@@ -141,13 +130,17 @@ public class PaymentBatchManager {
     ///////////////////////
 
     @Mixin(method="act")
-    public static class matchInvoices {
+    public static class autoCreateBatches {
         private final PaymentBatchManager paymentBatchManager;
-        public matchInvoices(final PaymentBatchManager paymentBatchManager) {
+        public autoCreateBatches(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
 
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
         @ActionLayout(cssClassFa = "fa-plus")
         public PaymentBatchManager act() {
             for (final IncomingInvoice payableInvoice : paymentBatchManager.payableInvoicesNotInAnyBatch) {
@@ -203,7 +196,11 @@ public class PaymentBatchManager {
         public nextBatch(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
         @ActionLayout(cssClassFa = "fa-step-forward")
         public PaymentBatchManager act() {
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
@@ -217,6 +214,9 @@ public class PaymentBatchManager {
         }
 
         public String disableAct() {
+            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
+                return "No batches";
+            }
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
             if(selectedBatchIdx >= 0) {
                 int nextBatchIdx = ++selectedBatchIdx;
@@ -234,7 +234,11 @@ public class PaymentBatchManager {
         public previousBatch(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
         @ActionLayout(cssClassFa = "fa-step-backward")
         public PaymentBatchManager act() {
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
@@ -248,6 +252,9 @@ public class PaymentBatchManager {
         }
 
         public String disableAct() {
+            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
+                return "No batches";
+            }
             int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
             if(selectedBatchIdx >= 0) {
                 int previousBatchIdx = --selectedBatchIdx;
@@ -260,71 +267,36 @@ public class PaymentBatchManager {
     }
 
     @Mixin(method="act")
-    public static class completeBatches {
+    public static class selectBatch {
         private final PaymentBatchManager paymentBatchManager;
-        public completeBatches(final PaymentBatchManager paymentBatchManager) {
+        public selectBatch(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
-        @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-        @ActionLayout(cssClassFa = "fa-flag-checkered")
-        @MemberOrder(name = "currentBatches", sequence = "4")
-        public PaymentBatchManager act(
-                DateTime requestedExecutionDate,
-                @Nullable String comment) {
-
-            List<PaymentBatch> currentBatches = paymentBatchManager.currentBatches;
-            for (PaymentBatch paymentBatch : currentBatches) {
-                if(paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW) {
-                    factoryService.mixin(PaymentBatch_complete.class, paymentBatch).act(requestedExecutionDate, comment);
-                }
-            }
-
+        @Action(
+                semantics = SemanticsOf.SAFE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        @ActionLayout(cssClassFa = "fa-hand-o-right")
+        public PaymentBatchManager act(final PaymentBatch paymentBatch) {
+            paymentBatchManager.selectBatch(paymentBatch);
             return paymentBatchManager;
         }
-        public String disableAct() {
-            return paymentBatchManager.currentBatches.isEmpty() ? "No batches to complete" : null;
+        public List<PaymentBatch> choices0Act() {
+            return paymentBatchManager.getCurrentBatches();
         }
 
-        @Inject
-        FactoryService factoryService;
+        public String disableAct() {
+            if (paymentBatchManager.getCurrentBatches().isEmpty()) {
+                return "No batches";
+            }
+            return null;
+        }
     }
+
 
 
     ///////////////////////
-
-    @Mixin(method="act")
-    public static class moveInvoice {
-        private final PaymentBatchManager paymentBatchManager;
-        public moveInvoice(final PaymentBatchManager paymentBatchManager) {
-            this.paymentBatchManager = paymentBatchManager;
-        }
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @ActionLayout(cssClassFa = "fa-step-forward")
-        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices, PaymentBatch moveTo) {
-            for (IncomingInvoice incomingInvoice : incomingInvoices) {
-                paymentBatchManager.selectedBatch.removeLineFor(incomingInvoice);
-                moveTo.addLineIfRequired(incomingInvoice);
-            }
-            return paymentBatchManager.update();
-        }
-
-        public List<IncomingInvoice> choices0Act() {
-            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
-            return selectedBatchPaymentLines.stream().map(x -> x.getInvoice()).collect(Collectors.toList());
-        }
-
-        public List<PaymentBatch> choices1Act() {
-            List<PaymentBatch> paymentBatches = Lists.newArrayList(paymentBatchManager.currentBatches);
-            paymentBatches.remove(paymentBatchManager.selectedBatch);
-            return paymentBatches;
-        }
-        public String disableAct() {
-            if(paymentBatchManager.selectedBatch == null) {
-                return "No batch selected";
-            }
-            return choices1Act().isEmpty() ? "No other batches" :  null;
-        }
-    }
 
     @Mixin(method="act")
     public static class addInvoice {
@@ -332,25 +304,37 @@ public class PaymentBatchManager {
         public addInvoice(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices, PaymentBatch addTo) {
-            for (IncomingInvoice incomingInvoice : incomingInvoices) {
-                addTo.addLineIfRequired(incomingInvoice);
-            }
+
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        public PaymentBatchManager act(
+                final IncomingInvoice incomingInvoice,
+                final BankAccount debtorBankAccount) {
+
+            PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateCurrentBatch(debtorBankAccount);
+            paymentBatch.addLineIfRequired(incomingInvoice);
+
             return paymentBatchManager.update();
         }
 
         public List<IncomingInvoice> choices0Act() {
-            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
-            return selectedBatchPaymentLines.stream().map(PaymentLine::getInvoice).collect(Collectors.toList());
+            return paymentBatchManager.payableInvoicesNotInAnyBatch;
         }
 
-        public List<PaymentBatch> choices1Act() {
-            return paymentBatchManager.currentBatches;
+        public List<BankAccount> choices1Act(final IncomingInvoice incomingInvoice) {
+            if(incomingInvoice == null) {
+                return Lists.newArrayList();
+            }
+            return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getBuyer());
         }
-        public String disableAct() {
-            return choices1Act().isEmpty() ? "No batches" :  null;
-        }
+
+        @Inject
+        PaymentBatchRepository paymentBatchRepository;
+        @Inject
+        BankAccountRepository bankAccountRepository;
     }
 
     @Mixin(method="act")
@@ -359,7 +343,11 @@ public class PaymentBatchManager {
         public removeInvoice(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
         public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices) {
             for (IncomingInvoice incomingInvoice : incomingInvoices) {
                 paymentBatchManager.selectedBatch.removeLineFor(incomingInvoice);

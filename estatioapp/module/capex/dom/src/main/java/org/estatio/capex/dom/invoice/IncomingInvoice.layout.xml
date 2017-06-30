@@ -63,16 +63,16 @@
                             <bs3:row>
                                 <bs3:col span="6">
                                     <cpt:fieldSet name="Amounts">
-                                        <cpt:property id="netAmount"/>
+                                        <cpt:property id="netAmount" hidden="NOWHERE"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="6">
                                     <cpt:fieldSet name="Total (of items)">
-                                        <cpt:property id="totalNetAmount" labelPosition="NONE"/>
-                                        <cpt:property id="totalVatAmount" labelPosition="NONE"/>
-                                        <cpt:property id="totalGrossAmount" labelPosition="NONE"/>
+                                        <cpt:property id="totalNetAmount" labelPosition="NONE" hidden="ALL_TABLES"/>
+                                        <cpt:property id="totalVatAmount" labelPosition="NONE" hidden="ALL_TABLES"/>
+                                        <cpt:property id="totalGrossAmount" labelPosition="NONE" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -144,10 +144,10 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Next task">
-                                        <cpt:property id="nextApprovalTaskTransitionType">
+                                        <cpt:property id="nextApprovalTaskTransitionType" hidden="ALL_TABLES">
                                             <cpt:named>Next task</cpt:named>
                                         </cpt:property>
-                                        <cpt:property id="nextApprovalTaskRoleAssignedTo">
+                                        <cpt:property id="nextApprovalTaskRoleAssignedTo" hidden="ALL_TABLES">
                                             <cpt:named>Assigned to</cpt:named>
                                         </cpt:property>
                                     </cpt:fieldSet>
@@ -191,13 +191,13 @@
             temporarily hides actions, properties and collections ...
             -->
             <cpt:fieldSet name="hidden" id="hidden">
-                <cpt:action id="remove"/>
-                <cpt:property id="status"/>
-                <cpt:property id="collectionNumber"/>
-                <cpt:property id="currency"/>
-                <cpt:property id="paidBy"/>
-                <cpt:property id="relatesTo"/>
-                <cpt:property id="sendTo"/>
+                <cpt:action id="remove" hidden="EVERYWHERE"/>
+                <cpt:property id="status" hidden="EVERYWHERE"/>
+                <cpt:property id="collectionNumber" hidden="EVERYWHERE"/>
+                <cpt:property id="currency" hidden="EVERYWHERE"/>
+                <cpt:property id="paidBy" hidden="EVERYWHERE"/>
+                <cpt:property id="relatesTo" hidden="EVERYWHERE"/>
+                <cpt:property id="sendTo" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="0">

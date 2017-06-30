@@ -111,6 +111,15 @@ import lombok.Setter;
                         + "WHERE dateReceived >= :fromDate "
                         + "   && dateReceived <= :toDate "),
         @Query(
+                name = "findNotInAnyPaymentBatchByApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE !(SELECT invoice "
+                        +         "  FROM org.estatio.capex.dom.payment.PaymentLine).contains(this) "
+                        + "   && approvalState == :approvalState "
+                        + "ORDER BY invoiceDate ASC "
+        ),
+        @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
@@ -359,6 +368,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
+    @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal netAmount;
