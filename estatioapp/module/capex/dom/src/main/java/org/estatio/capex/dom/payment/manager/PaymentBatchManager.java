@@ -348,10 +348,13 @@ public class PaymentBatchManager {
         }
 
         public boolean hideAct() {
-            return mixin().hideAct();
+            return paymentBatchManager.selectedBatch == null || mixin().hideAct();
         }
 
         public String disableAct() {
+            if(paymentBatchManager.selectedBatch == null) {
+                return "No batch selected";
+            }
             return mixin().disableAct();
         }
 
