@@ -441,7 +441,7 @@ public class AgreementRole
     }
 
     public boolean hideRemove() {
-        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
     // //////////////////////////////////////

@@ -16,6 +16,8 @@
  */
 package org.estatio.dom.invoice;
 
+import org.estatio.dom.party.role.IPartyRoleType;
+
 public final class Constants {
     
     private Constants(){}
@@ -28,5 +30,14 @@ public final class Constants {
         public static final String COLLECTION_NUMBER = "Collection number";
     }
 
+    public enum InvoiceRoleTypeEnum implements IPartyRoleType {
+
+        BUYER,
+        SELLER;
+
+        @Override public String getKey() {
+            return this.name();
+        }
+    }
 
 }

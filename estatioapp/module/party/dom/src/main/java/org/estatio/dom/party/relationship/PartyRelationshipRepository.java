@@ -106,7 +106,7 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(final Party.RemoveEvent ev) {
+    public void on(final Party.DeleteEvent ev) {
         Party sourceParty = ev.getSource();
         Party replacementParty = ev.getReplacement();
 

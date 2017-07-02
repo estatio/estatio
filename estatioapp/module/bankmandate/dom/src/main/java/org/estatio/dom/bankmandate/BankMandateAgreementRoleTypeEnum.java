@@ -17,6 +17,9 @@ public enum BankMandateAgreementRoleTypeEnum implements IAgreementRoleType {
         return BankMandateAgreementTypeEnum.MANDATE;
     }
 
+    @Override public String getKey() {
+        return name();
+    }
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends
             AgreementRoleTypeServiceSupportAbstract<BankMandateAgreementRoleTypeEnum> {

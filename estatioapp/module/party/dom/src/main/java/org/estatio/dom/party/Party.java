@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -190,7 +191,7 @@ public abstract class Party
         return null;
     }
 
-    public static class RemoveEvent extends ActionDomainEvent<Party> {
+    public static class DeleteEvent extends ActionDomainEvent<Party> {
         private static final long serialVersionUID = 1L;
 
         public Party getReplacement() {
@@ -198,23 +199,31 @@ public abstract class Party
         }
     }
 
-    @Action(domainEvent = Party.RemoveEvent.class)
-    public void remove() {
-        removeAndReplace(null);
+    @Action(domainEvent = DeleteEvent.class, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Party delete(@Parameter(optionality = Optionality.OPTIONAL) Party replaceWith) {
+        for (PartyRole partyRole: getRoles()){
+            partyRole.remove();
+        }
+        remove(this);
+        return replaceWith;
     }
 
-    @Action(domainEvent = Party.RemoveEvent.class)
-    public void removeAndReplace(@Parameter(optionality = Optionality.OPTIONAL) Party replaceWith) {
-        getContainer().remove(this);
-        getContainer().flush();
+    public boolean hideDelete() {
+        return !EstatioRole.SUPERUSER.isApplicableFor(getUser());
     }
 
-    public boolean hideRemoveAndReplace() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
-    }
-
-    public String validateRemoveAndReplace(final Party party) {
+    public String validateDelete(final Party party) {
         return party != this ? null : "Cannot replace a party with itself";
+    }
+
+
+    public static class FixEvent extends ActionDomainEvent<Party> {
+        private static final long serialVersionUID = 1L;
+    }
+
+    @Action(domainEvent = FixEvent.class, semantics = SemanticsOf.IDEMPOTENT)
+    public Party fix() {
+        return this;
     }
 
     @Persistent(mappedBy = "party", dependentElement = "true")

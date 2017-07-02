@@ -100,7 +100,7 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
         @Test
         public void invalidBecauseNoReplacement() throws Exception {
             // when
-            Party.RemoveEvent event = new Party.RemoveEvent();
+            Party.DeleteEvent event = new Party.DeleteEvent();
             event.setSource(oldParty);
             event.setArguments(Lists.newArrayList());
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
@@ -113,7 +113,7 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-            Party.RemoveEvent event = new Party.RemoveEvent();
+            Party.DeleteEvent event = new Party.DeleteEvent();
             event.setSource(oldParty);
             event.setArguments(Lists.newArrayList(newParty));
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);
@@ -132,7 +132,7 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
             expectedException.expect(InvalidException.class);
 
             // when
-            wrap(oldParty).remove();
+            wrap(oldParty).delete(null);
         }
     }
 

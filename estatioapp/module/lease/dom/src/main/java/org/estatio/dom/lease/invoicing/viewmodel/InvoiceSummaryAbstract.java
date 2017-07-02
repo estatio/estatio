@@ -121,7 +121,7 @@ public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, 
     }
 
     public boolean hideSaveAllAsHistoric(){
-        return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(userService.getUser());
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
 
     @CollectionLayout(defaultView = "table")

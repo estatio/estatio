@@ -33,7 +33,7 @@ import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Party.RemoveEvent;
+import org.estatio.dom.party.Party.DeleteEvent;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
@@ -147,7 +147,7 @@ public class PartyRelationshipRepository_IntegTest extends EstatioIntegrationTes
             final Party parent = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             final Party currentChild = partyRepository.findPartyByReference(PersonForGinoVannelliGb.REF);
             final Party replacementChild = personRepository.newPerson("TEST", "JR", "JR", "Ewing", PersonGenderType.MALE, currentChild.getApplicationTenancy());
-            Party.RemoveEvent event = new RemoveEvent();
+            DeleteEvent event = new DeleteEvent();
             event.setSource(currentChild);
             event.setArguments(Lists.newArrayList(replacementChild));
             event.setEventPhase(AbstractDomainEvent.Phase.VALIDATE);

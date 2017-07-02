@@ -26,12 +26,14 @@ import javax.jdo.annotations.Unique;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.TitleType;
+import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithTitleComparable;
 
@@ -81,6 +83,13 @@ public class AgreementRoleType
         super("title");
     }
 
+
+    @Override
+    @Programmatic
+    public String getKey() {
+        return StringUtils.enumDeTitle(getTitle());
+    }
+
     public String title() {
         return TitleBuilder.start()
                 .withName(getTitle())
@@ -99,7 +108,8 @@ public class AgreementRoleType
     @Getter @Setter
     private String title;
 
-    // //////////////////////////////////////
+
+
 
     @javax.jdo.annotations.Column(name = "appliesToAgreementTypeId", allowsNull = "false")
     @Getter

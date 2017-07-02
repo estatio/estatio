@@ -16,9 +16,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.capex.dom.order.subscriptions;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -28,7 +27,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.UdoDomainService;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Party;
 
 @DomainService(
@@ -47,41 +49,36 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
 
-        List<AgreementRole> agreementRoles;
         switch (ev.getEventPhase()) {
         case VALIDATE:
-            agreementRoles = agreementRoleRepository.findByParty(sourceParty);
 
-            if (replacementParty == null && agreementRoles.size() > 0) {
-                ev.invalidate("Party is being used in an agreement role: remove roles or provide a replacement");
-            } else {
-                scratchpad.put(onPartyRemoveScratchpadKey = UUID.randomUUID(), agreementRoles);
+            if (replacementParty == null && orderRepository.findBySellerParty(sourceParty).size() > 0){
+                ev.invalidate("Party is in use as seller in an order. Provide replacement");
             }
+
             break;
         case EXECUTING:
-            agreementRoles = (List<AgreementRole>) scratchpad.get(onPartyRemoveScratchpadKey);
-            for (AgreementRole agreementRole : agreementRoles) {
-                agreementRole.setParty(replacementParty);
+
+            if (replacementParty != null) {
+                for (Order order : orderRepository.findBySellerParty(sourceParty)) {
+                    order.setSeller(replacementParty);
+                }
             }
+
             break;
         default:
             break;
         }
     }
 
-
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.FixEvent ev) {
         Party sourceParty = (Party) ev.getSource();
-
-        final List<AgreementRole> roles = agreementRoleRepository.findByParty(sourceParty);
-
-        for (AgreementRole role : roles){
-            sourceParty.addRole(role.getType());
+        if (orderRepository.findBySellerParty(sourceParty).size() > 0) {
+            sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER); ;
         }
-
     }
 
     private transient UUID onPartyRemoveScratchpadKey;
@@ -90,6 +87,7 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
     private Scratchpad scratchpad;
 
     @Inject
-    private AgreementRoleRepository agreementRoleRepository;
+    private OrderRepository orderRepository;
+
 
 }

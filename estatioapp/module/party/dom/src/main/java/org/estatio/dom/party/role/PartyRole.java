@@ -23,10 +23,12 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -105,6 +107,13 @@ public class PartyRole
     @Getter @Setter
     @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private PartyRoleType roleType;
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Party remove() {
+        Party party = getParty();
+        remove(this);
+        return party;
+    }
 
     @Override
     @PropertyLayout(hidden = Where.ALL_TABLES)

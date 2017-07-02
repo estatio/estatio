@@ -36,7 +36,6 @@ import org.estatio.fixture.party.PersonForGinoVannelliGb;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class Party_IntegTest extends EstatioIntegrationTest {
@@ -69,7 +68,7 @@ public class Party_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() {
             Party party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
-            wrap(party).remove();
+            wrap(party).delete(null);
             assertNull(partyRepository.findPartyByReferenceOrNull(PersonForJohnDoeNl.REF));
         }
 

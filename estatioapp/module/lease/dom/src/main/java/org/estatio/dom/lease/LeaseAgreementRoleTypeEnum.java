@@ -21,6 +21,10 @@ public enum LeaseAgreementRoleTypeEnum implements IAgreementRoleType {
         return LEASE;
     }
 
+    @Override public String getKey() {
+        return name();
+    }
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends AgreementRoleTypeServiceSupportAbstract<LeaseAgreementRoleTypeEnum> {
         public SupportService() {

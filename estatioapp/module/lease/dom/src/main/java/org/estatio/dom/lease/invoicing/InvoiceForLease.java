@@ -538,7 +538,7 @@ public class InvoiceForLease
         }
 
         public boolean hide$$() {
-            return !EstatioRole.ADMINISTRATOR.hasRoleWithSuffix(userService.getUser());
+            return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
         }
 
         @Inject

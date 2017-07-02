@@ -23,6 +23,10 @@ public enum GuaranteeAgreementRoleTypeEnum implements IAgreementRoleType {
         return GuaranteeAgreementTypeEnum.GUARANTEE;
     }
 
+    @Override public String getKey() {
+        return name();
+    }
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SupportService extends AgreementRoleTypeServiceSupportAbstract<GuaranteeAgreementRoleTypeEnum> {
         public SupportService() {
