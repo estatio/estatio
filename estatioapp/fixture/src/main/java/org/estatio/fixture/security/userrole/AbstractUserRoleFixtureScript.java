@@ -44,11 +44,12 @@ public abstract class AbstractUserRoleFixtureScript extends FixtureScript {
             final String userName,
             final String roleName,
             final ExecutionContext executionContext) {
-        final ApplicationUser user = applicationUserRepository.findByUsername(userName);
+        final ApplicationUser user = applicationUserRepository.findOrCreateUserByUsername(userName);
         final ApplicationRole applicationRole = applicationRoleRepository.findByName(roleName);
-        if(applicationRole != null) {
-            user.addRole(applicationRole);
+        if(applicationRole == null) {
+            throw new IllegalArgumentException(String.format("Role [%s] not found", roleName));
         }
+        user.addRole(applicationRole);
         executionContext.addResult(this, roleName, applicationRole);
         return user;
     }

@@ -29,25 +29,27 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
+import org.isisaddons.module.security.dom.role.ApplicationRoleRepository;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.PartySubscriptions;
 import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.PersonRepository;
+import org.estatio.dom.roles.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.fixture.security.users.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
 
@@ -89,8 +91,15 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
 
         }
 
+        @Inject ApplicationRoleRepository applicationRoleRepository;
+
         @Before
         public void setUp() throws Exception {
+
+            assertThat(applicationRoleRepository.allRoles().stream().map(x -> x.getName())).contains("estatio-superuser");
+
+
+
             oldParty = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
@@ -107,7 +116,7 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
             partySubscriptions.on(event);
 
             // then
-            assertTrue(event.isInvalid());
+            assertThat(event.isInvalid()).isTrue();
         }
 
         @Test
@@ -122,8 +131,8 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
             partySubscriptions.on(event);
 
             // then
-            assertThat(agreementRoleRepository.findByParty(oldParty).size(), is(0));
-            assertThat(agreementRoleRepository.findByParty(newParty).size(), is(1));
+            assertThat(agreementRoleRepository.findByParty(oldParty).size()).isEqualTo(0);
+            assertThat(agreementRoleRepository.findByParty(newParty).size()).isEqualTo(1);
         }
 
         @Test
@@ -131,9 +140,17 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
             // then
             expectedException.expect(InvalidException.class);
 
+            // WHen
+            sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.SUPERUSER.getRoleName()),
+                    new Runnable() {
+                        @Override public void run() {
+                            wrap(oldParty).delete(null);
+                        }
+                    });
             // when
-            wrap(oldParty).delete(null);
         }
     }
+
+    @Inject SudoService sudoService;
 
 }
