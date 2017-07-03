@@ -219,14 +219,14 @@ public class IncomingDocAsInvoiceViewModel
 
         for (Order order : orderRepository.matchByOrderNumber(searchString)){
             for (OrderItem item : order.getItems()) {
-                if (!result.contains(item)) {
+                if (!result.contains(item) && !item.isInvoiced()) {
                     result.add(item);
                 }
             }
         }
 
         for (OrderItem item : orderItemRepository.matchByDescription(searchString)) {
-            if (!result.contains(item)) {
+            if (!result.contains(item) && !item.isInvoiced()) {
                 result.add(item);
             }
         }

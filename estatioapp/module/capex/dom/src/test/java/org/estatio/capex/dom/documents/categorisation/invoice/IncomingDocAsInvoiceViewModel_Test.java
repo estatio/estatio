@@ -16,6 +16,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -37,6 +38,9 @@ public class IncomingDocAsInvoiceViewModel_Test {
     private OrderItemRepository mockOrderItemRepository;
 
     @Mock
+    private OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+    @Mock
     private BankAccountRepository mockBankAccountRepository;
 
     @Test
@@ -56,16 +60,20 @@ public class IncomingDocAsInvoiceViewModel_Test {
         OrderItem oi1 = new OrderItem();
         oi1.setCharge(charge);
         oi1.setProject(project);
+        oi1.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
 
         OrderItem oi2 = new OrderItem();
         oi2.setCharge(charge);
         oi2.setProject(project);
+        oi2.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
 
         OrderItem oi3 = new OrderItem();
         oi3.setCharge(charge);
+        oi3.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
 
         OrderItem oi4 = new OrderItem();
         oi4.setCharge(someOtherCharge); // charge is mandatory on OrderItem
+        oi4.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
 
         Order o1 = new Order();
         o1.getItems().add(oi1);
@@ -87,6 +95,8 @@ public class IncomingDocAsInvoiceViewModel_Test {
         // expect
         context.checking(new Expectations() {
             {
+                allowing(mockOrderItemInvoiceItemLinkRepository).findByOrderItem(with(any(OrderItem.class)));
+                will(returnValue(Arrays.asList()));
                 allowing(mockOrderRepository).matchByOrderNumber(with(any(String.class)));
                 will(returnValue(Arrays.asList(
                         o1, o2, o3

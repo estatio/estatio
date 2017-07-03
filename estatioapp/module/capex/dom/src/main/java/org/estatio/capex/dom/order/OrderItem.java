@@ -2,6 +2,7 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -33,6 +34,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
@@ -233,5 +236,21 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return PeriodUtil.periodFromInterval(new LocalDateInterval(getStartDate(), getEndDate(), AbstractInterval.IntervalEnding.INCLUDING_END_DATE));
     }
 
+    @Programmatic
+    public boolean isInvoiced(){
+        if (getNetAmount()==null){
+            return false;
+        }
+        BigDecimal invoicedNetAmount = BigDecimal.ZERO;
+        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByOrderItem(this)){
+            if (link.getInvoiceItem().getNetAmount()!=null) {
+                invoicedNetAmount = invoicedNetAmount.add(link.getInvoiceItem().getNetAmount());
+            }
+        }
+        return invoicedNetAmount.compareTo(getNetAmount()) >= 0 ? true : false;
+    }
+
+    @Inject
+    public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 }
