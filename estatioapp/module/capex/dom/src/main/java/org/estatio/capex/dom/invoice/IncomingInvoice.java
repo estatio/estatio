@@ -55,6 +55,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
@@ -398,9 +399,30 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     private BigDecimal grossAmount;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editSeller(
+            @Nullable
+            final Party seller){
+        setSeller(seller);
+        return this;
+    }
 
+    public String disableEditSeller(){
+        if (isImmutable()){
+            return "The invoice cannot be changed";
+        }
+        return sellerIsImmutable() ? "Seller is immutable because an item is linked to an order" : null;
+    }
 
-
+    private boolean sellerIsImmutable(){
+        for (InvoiceItem item : getItems()){
+            IncomingInvoiceItem ii = (IncomingInvoiceItem) item;
+            if (ii.isLinkedToOrderItem()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")

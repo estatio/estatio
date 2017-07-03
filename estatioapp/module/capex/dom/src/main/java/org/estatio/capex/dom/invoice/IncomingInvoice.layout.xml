@@ -17,7 +17,9 @@
                                     <cpt:fieldSet name="General" id="general">
                                         <cpt:property id="invoiceNumber"/>
                                         <cpt:property id="buyer"/>
-                                        <cpt:property id="seller"/>
+                                        <cpt:property id="seller">
+                                            <cpt:action id="editSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
                                         <cpt:property id="type"/>
                                         <cpt:property id="incomingInvoiceType"/>
                                         <cpt:property id="property"/>

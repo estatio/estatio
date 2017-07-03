@@ -412,7 +412,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return false;
     }
 
-    private boolean isLinkedToOrderItem(){
+    boolean isLinkedToOrderItem(){
         if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>0){
             return true;
         }
