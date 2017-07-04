@@ -75,6 +75,11 @@ public class InvoiceDocAndCommService {
         if (document == null) {
             return null;
         }
+        return findFirstCommunication(document);
+    }
+
+    @Programmatic
+    public Communication findFirstCommunication(final Document document) {
         final List<Paperclip> paperclips = paperclipRepository.findByDocument(document);
         return (Communication) paperclips
                 .stream()

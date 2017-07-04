@@ -35,8 +35,9 @@ import org.incode.module.document.dom.impl.docs.DocumentState;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
 import lombok.Data;
 
@@ -102,12 +103,19 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_sendAbstract extend
             return;
         }
 
+        if(invoiceDocAndCommService.findFirstCommunication(document) != null) {
+            return;
+        }
         final InvoiceAndDocument invoiceAndDocument = new InvoiceAndDocument(invoice, document);
         if(!filter.apply(invoiceAndDocument)) {
             return;
         }
         invoiceAndDocuments.add(invoiceAndDocument);
     }
+
+
+    @Inject
+    InvoiceDocAndCommService invoiceDocAndCommService;
 
     @Inject
     FactoryService factoryService;

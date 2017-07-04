@@ -32,13 +32,16 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_backgroundPrepare;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAbstract extends InvoiceSummaryForPropertyDueDateStatus_actionAbstract {
 
@@ -64,13 +67,33 @@ public abstract class InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareAb
     }
 
     private List<InvoiceForLease> invoicesToPrepare() {
-        return FluentIterable.from(invoiceSummary.getInvoices()).filter(filter()).toList();
+        final List<InvoiceForLease> invoices = invoiceSummary.getInvoices();
+        return FluentIterable.from(invoices)
+                .filter(invoice -> noDocumentOrNotYetSent(invoice))
+                .filter(filter())
+                .toList();
+    }
+
+    private boolean noDocumentOrNotYetSent(final InvoiceForLease invoice) {
+
+        final Document document = findMostRecentAttachedTo(invoice, getDocumentType());
+        if(document == null) {
+            return true;
+        }
+        if(document.getState() == DocumentState.NOT_RENDERED) {
+            return true;
+        }
+
+        return invoiceDocAndCommService.findFirstCommunication(document) == null;
     }
 
     abstract Predicate<Invoice> filter();
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    InvoiceDocAndCommService invoiceDocAndCommService;
 
 
 }
