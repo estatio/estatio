@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.invoice;
+package org.estatio.capex.dom.invoice;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +16,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
