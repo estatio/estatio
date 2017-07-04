@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents.categorisation.triggers;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;

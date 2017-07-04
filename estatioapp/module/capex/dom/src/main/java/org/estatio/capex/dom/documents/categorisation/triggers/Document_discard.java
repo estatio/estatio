@@ -1,20 +1,15 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents.categorisation.triggers;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")

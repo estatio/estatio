@@ -1,8 +1,11 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents.categorisation.triggers;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -18,17 +21,16 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
 
 @Mixin(method = "act")
-public class Document_categoriseAsPropertyInvoice
+public class Document_categoriseAsOtherInvoice
         extends Document_triggerAbstract {
 
     private final Document document;
 
-    public Document_categoriseAsPropertyInvoice(final Document document) {
+    public Document_categoriseAsOtherInvoice(final Document document) {
         super(document, IncomingDocumentCategorisationStateTransitionType.CATEGORISE);
         this.document = document;
     }
@@ -38,7 +40,7 @@ public class Document_categoriseAsPropertyInvoice
     )
     @ActionLayout(cssClassFa = "folder-open-o")
     public Object act(
-            final Property property,
+            final IncomingInvoiceType incomingInvoiceType,
             @Nullable final String comment) {
 
         final Document document = getDomainObject();
@@ -49,9 +51,9 @@ public class Document_categoriseAsPropertyInvoice
         LocalDate dueDate = document.getCreatedAt().toLocalDate().plusDays(30);
 
         final IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
-                IncomingInvoiceType.PROPERTY_EXPENSES, // a reasonable default
+                incomingInvoiceType,
                 null, // invoiceNumber
-                property,
+                null, // property
                 document.getAtPath(),
                 null, // buyer
                 null, // seller
@@ -69,6 +71,13 @@ public class Document_categoriseAsPropertyInvoice
         trigger(comment);
 
         return incomingInvoice;
+    }
+
+    public List<IncomingInvoiceType> choices0Act() {
+        return Lists.newArrayList(
+                IncomingInvoiceType.LOCAL_EXPENSES,
+                IncomingInvoiceType.CORPORATE_EXPENSES
+        );
     }
 
 

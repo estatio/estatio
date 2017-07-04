@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.tasks;
+package org.estatio.capex.dom.documents.categorisation.triggers;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.document.Document_categoriseAsOrder;
 import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
