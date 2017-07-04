@@ -1,6 +1,4 @@
-package org.estatio.capex.dom.task;
-
-import java.util.List;
+package org.estatio.capex.dom.dobj;
 
 import javax.inject.Inject;
 
@@ -11,13 +9,13 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
-import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 
 /**
- * Subclasses should be annotated using: @Mixin(method = "coll")
+ * Subclasses should be annotated using: @Mixin(method = "act")
  */
-public abstract class DomainObject_tasksAbstract<
+public abstract class DomainObject_checkStateAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
         STT extends StateTransitionType<DO, ST, STT, S>,
@@ -27,19 +25,25 @@ public abstract class DomainObject_tasksAbstract<
     protected final DO domainObject;
     private final Class<ST> stateTransitionClass;
 
-    public DomainObject_tasksAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
+    public DomainObject_checkStateAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Task> coll() {
-        final List<ST> transitions = stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
-        return Task.from(transitions);
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(
+            contributed= Contributed.AS_ACTION,
+            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
+    )
+    public DO act() {
+
+        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null, null);
+
+        return domainObject;
     }
 
+
     @Inject
-    protected StateTransitionRepositoryGeneric stateTransitionRepositoryGeneric;
+    StateTransitionService stateTransitionService;
 
 }

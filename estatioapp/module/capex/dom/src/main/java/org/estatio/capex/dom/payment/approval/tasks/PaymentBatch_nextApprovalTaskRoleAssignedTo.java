@@ -6,7 +6,7 @@ import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_nextTaskRoleAssignedToAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_nextTaskRoleAssignedToAbstract;
 
 @Mixin(method="prop")
 public class PaymentBatch_nextApprovalTaskRoleAssignedTo

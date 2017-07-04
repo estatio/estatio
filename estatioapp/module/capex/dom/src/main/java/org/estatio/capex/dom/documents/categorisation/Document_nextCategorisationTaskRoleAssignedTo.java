@@ -4,7 +4,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.task.DomainObject_nextTaskRoleAssignedToAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_nextTaskRoleAssignedToAbstract;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method="prop")

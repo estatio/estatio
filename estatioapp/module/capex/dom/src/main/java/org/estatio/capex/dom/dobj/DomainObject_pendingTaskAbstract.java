@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.task;
+package org.estatio.capex.dom.dobj;
 
 import javax.inject.Inject;
 
@@ -12,6 +12,7 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.task.Task;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "prop")

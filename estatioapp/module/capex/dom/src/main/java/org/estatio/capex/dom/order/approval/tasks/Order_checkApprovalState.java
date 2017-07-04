@@ -6,7 +6,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_checkStateAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_checkStateAbstract;
 
 @Mixin(method="act")
 public class Order_checkApprovalState

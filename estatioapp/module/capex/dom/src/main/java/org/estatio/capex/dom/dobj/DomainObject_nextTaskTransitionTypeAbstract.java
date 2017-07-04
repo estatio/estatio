@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.task;
+package org.estatio.capex.dom.dobj;
 
 import javax.inject.Inject;
 

@@ -6,7 +6,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_tasksAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_tasksAbstract;
 
 @Mixin(method = "coll")
 public class Order_approvalTasks extends

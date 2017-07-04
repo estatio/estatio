@@ -1,4 +1,6 @@
-package org.estatio.capex.dom.task;
+package org.estatio.capex.dom.dobj;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -9,13 +11,14 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.task.Task;
 
 /**
- * Subclasses should be annotated using: @Mixin(method = "act")
+ * Subclasses should be annotated using: @Mixin(method = "coll")
  */
-public abstract class DomainObject_checkStateAbstract<
+public abstract class DomainObject_tasksAbstract<
         DO,
         ST extends StateTransitionAbstract<DO, ST, STT, S>,
         STT extends StateTransitionType<DO, ST, STT, S>,
@@ -25,25 +28,19 @@ public abstract class DomainObject_checkStateAbstract<
     protected final DO domainObject;
     private final Class<ST> stateTransitionClass;
 
-    public DomainObject_checkStateAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
+    public DomainObject_tasksAbstract(final DO domainObject, final Class<ST> stateTransitionClass) {
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(
-            contributed= Contributed.AS_ACTION,
-            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
-    )
-    public DO act() {
-
-        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null, null);
-
-        return domainObject;
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<Task> coll() {
+        final List<ST> transitions = stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
+        return Task.from(transitions);
     }
 
-
     @Inject
-    StateTransitionService stateTransitionService;
+    protected StateTransitionRepositoryGeneric stateTransitionRepositoryGeneric;
 
 }

@@ -6,7 +6,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.task.DomainObject_pendingTaskAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_pendingTaskAbstract;
 
 @Mixin(method="prop")
 public class IncomingInvoice_pendingApprovalTask
