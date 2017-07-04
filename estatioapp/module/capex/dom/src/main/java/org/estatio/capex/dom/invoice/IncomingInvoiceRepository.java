@@ -96,12 +96,15 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalState(final IncomingInvoiceApprovalState approvalState) {
+    public List<IncomingInvoice> findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
-                        "findNotInAnyPaymentBatchByApprovalState",
-                        "approvalState", approvalState));
+                        "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod",
+                        "approvalState", approvalState,
+                        "paymentMethod", paymentMethod));
     }
 
     @Programmatic

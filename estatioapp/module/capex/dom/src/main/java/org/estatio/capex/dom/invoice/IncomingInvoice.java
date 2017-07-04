@@ -112,12 +112,13 @@ import lombok.Setter;
                         + "WHERE dateReceived >= :fromDate "
                         + "   && dateReceived <= :toDate "),
         @Query(
-                name = "findNotInAnyPaymentBatchByApprovalState", language = "JDOQL",
+                name = "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE !(SELECT invoice "
                         +         "  FROM org.estatio.capex.dom.payment.PaymentLine).contains(this) "
                         + "   && approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "
                         + "ORDER BY invoiceDate ASC "
         ),
         @Query(

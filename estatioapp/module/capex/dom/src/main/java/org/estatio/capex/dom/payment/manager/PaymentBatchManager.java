@@ -45,6 +45,7 @@ import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
@@ -132,7 +133,9 @@ public class PaymentBatchManager {
 
         // payable invoices
         List<IncomingInvoice> payableInvoices =
-                incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
+                incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
+                        IncomingInvoiceApprovalState.PAYABLE,
+                        PaymentMethod.BANK_TRANSFER);
 
         Collections.sort(payableInvoices);
         payableInvoicesNotInAnyBatch = payableInvoices;
