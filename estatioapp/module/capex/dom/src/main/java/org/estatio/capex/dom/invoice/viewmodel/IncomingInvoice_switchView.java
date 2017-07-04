@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice;
+package org.estatio.capex.dom.invoice.viewmodel;
 
 import java.util.List;
 import java.util.Optional;

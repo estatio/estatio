@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice;
+package org.estatio.capex.dom.order.pdf;
 
 import java.util.Optional;
 
@@ -19,20 +19,21 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.capex.dom.order.Order;
 
 @Mixin(method = "prop")
-public class IncomingInvoice_pdf {
-    private final IncomingInvoice incomingInvoice;
+public class Order_pdf {
+    private final Order order;
 
-    public IncomingInvoice_pdf(final IncomingInvoice incomingInvoice) {
-        this.incomingInvoice = incomingInvoice;
+    public Order_pdf(final Order order) {
+        this.order = order;
     }
 
     @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob prop() {
-        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        Optional<Document> documentIfAny = lookupAttachedPdfService.lookupOrderPdfFrom(order);
         return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
     }
 

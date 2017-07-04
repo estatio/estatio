@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.order;
+package org.estatio.capex.dom.order.viewmodel;
 
 import java.util.Optional;
 
@@ -16,6 +16,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
+import org.estatio.capex.dom.order.Order;
 
 @Mixin(method = "act")
 public class Order_switchView {
