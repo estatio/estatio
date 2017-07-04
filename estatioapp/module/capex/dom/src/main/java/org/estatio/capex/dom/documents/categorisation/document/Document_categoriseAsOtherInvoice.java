@@ -23,7 +23,6 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
 
 @Mixin(method = "act")
 public class Document_categoriseAsOtherInvoice
@@ -50,7 +49,6 @@ public class Document_categoriseAsOtherInvoice
 
         LocalDate dateReceived = document.getCreatedAt().toLocalDate();
         LocalDate dueDate = document.getCreatedAt().toLocalDate().plusDays(30);
-        PaymentMethod paymentMethod = PaymentMethod.MANUAL_PROCESS;
 
         final IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
                 incomingInvoiceType,
@@ -61,7 +59,7 @@ public class Document_categoriseAsOtherInvoice
                 null, // seller
                 null, // invoiceDate
                 dueDate,
-                paymentMethod,
+                null,
                 InvoiceStatus.NEW,
                 dateReceived,
                 null, // bankAccount
