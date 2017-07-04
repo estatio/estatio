@@ -30,7 +30,7 @@ public class OrganisationForPoisonNl extends OrganisationAbstract {
         createOrganisation(
                 AT_PATH,
                 REF,
-                "Poison Perfumeries",
+                "Poison Perfumeries B.V.",
                 "Herengracht 100",
                 null,
                 "1010 AA",
