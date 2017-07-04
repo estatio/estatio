@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.orderinvoice;
+package org.estatio.capex.dom.order.itemmixins;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 
 @Mixin
 public class InvoiceItem_OrderItems {

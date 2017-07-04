@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.invoice;
+package org.estatio.capex.dom.invoice.itemmixins;
 
 import java.util.List;
 
@@ -10,20 +10,22 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.capex.dom.project.ProjectItem;
 
 @Mixin
-public class BudgetItem_IncomingInvoiceItems {
+public class ProjectItem_IncomingInvoiceItems {
 
-    private final BudgetItem BudgetItem;
-    public BudgetItem_IncomingInvoiceItems(BudgetItem BudgetItem){
-        this.BudgetItem = BudgetItem;
+    private final ProjectItem projectItem;
+    public ProjectItem_IncomingInvoiceItems(ProjectItem projectItem){
+        this.projectItem = projectItem;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<IncomingInvoiceItem> invoiceItems() {
-        return incomingInvoiceItemRepository.findByBudgetItem(BudgetItem);
+        return incomingInvoiceItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge());
     }
 
     @Inject

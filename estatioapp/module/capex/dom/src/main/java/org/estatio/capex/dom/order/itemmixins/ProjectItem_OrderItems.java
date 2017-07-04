@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.order;
+package org.estatio.capex.dom.order.itemmixins;
 
 import java.util.List;
 
@@ -10,6 +10,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.project.ProjectItem;
 
 @Mixin
