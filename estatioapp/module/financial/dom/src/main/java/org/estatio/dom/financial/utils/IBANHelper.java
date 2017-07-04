@@ -18,8 +18,9 @@
  */
 package org.estatio.dom.financial.utils;
 
-import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.incode.module.country.dom.impl.Country;
+
+import org.estatio.dom.financial.bankaccount.BankAccount;
 
 public final class IBANHelper {
 
@@ -139,7 +140,6 @@ public final class IBANHelper {
                 if (iban.length() != format.format().length()) {
                     return;
                 }
-                iban = IBANValidator.fixChecksum(iban);
                 if (IBANValidator.valid(iban)) {
                     account.setIban(iban);
                 }
