@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.tasks;
+package org.estatio.capex.dom.task.pdf;
 
 import javax.inject.Inject;
 
