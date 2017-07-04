@@ -40,6 +40,11 @@ public class Task_approveIncomingInvoiceLocalAsCountryDirector
         return mixin().disableAct();
     }
 
+
+    public String validate0Act(String comment) {
+        return validateCommentIfByProxy(comment);
+    }
+
     public boolean default1Act() {
         return true;
     }

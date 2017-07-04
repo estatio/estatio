@@ -45,6 +45,10 @@ public class Task_approveIncomingInvoice
         return mixin().disableAct();
     }
 
+    public String validate2Act(String comment) {
+        return validateCommentIfByProxy(comment);
+    }
+
     public String default0Act() {
         return mixin().default0Act();
     }
@@ -60,5 +64,6 @@ public class Task_approveIncomingInvoice
     public boolean default3Act() {
         return true;
     }
+
 
 }

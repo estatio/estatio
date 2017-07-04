@@ -58,12 +58,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "),
         @Query(
-                name = "findByAssignedToIncomplete", language = "JDOQL",
+                name = "findByIncomplete", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "
-                        + "WHERE assignedTo == :assignedTo "
-                        + "   && completedBy == null "
-                        + "ORDER BY createdOn ASC "
+                        + "WHERE completedBy == null "
+                        + "ORDER BY personAssignedTo, createdOn ASC "
         )
 })
 @DomainObject(objectType = "task.Task")

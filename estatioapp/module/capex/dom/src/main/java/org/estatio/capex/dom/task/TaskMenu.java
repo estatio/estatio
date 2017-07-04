@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-
-import org.estatio.dom.party.role.PartyRoleType;
+import org.apache.isis.applib.annotation.RestrictTo;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -17,12 +17,9 @@ import org.estatio.dom.party.role.PartyRoleType;
 @DomainServiceLayout(named = "Tasks")
 public class TaskMenu {
 
+    @Action(restrictTo = RestrictTo.PROTOTYPING)
     public List<Task> allTasks(){
         return taskRepository.listAll();
-    }
-
-    public List<Task> findTasksAssignedTo(PartyRoleType partyRoleType){
-        return taskRepository.findByAssignedToIncomplete(partyRoleType);
     }
 
     @Inject
