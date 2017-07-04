@@ -406,6 +406,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     private BigDecimal grossAmount;
 
+    @Programmatic
+    @Override
+    public boolean isImmutable() {
+        return reasonDisabledDueToState()!=null;
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editSeller(
             @Nullable
@@ -416,7 +422,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public String disableEditSeller(){
         if (isImmutable()){
-            return "The invoice cannot be changed";
+            return reasonDisabledDueToState();
         }
         return sellerIsImmutable() ? "Seller is immutable because an item is linked to an order" : null;
     }

@@ -362,11 +362,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     private boolean isImmutable(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        // TODO: this logic should be brought into one method on IncomingInvoice
-        if (invoice.reasonDisabledDueToState()!=null){
-            return true;
-        }
-        return getInvoice().isImmutable();
+        return invoice.isImmutable();
     }
 
     private String itemImmutableReason(){
