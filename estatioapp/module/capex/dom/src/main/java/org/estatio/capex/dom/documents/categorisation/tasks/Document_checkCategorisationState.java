@@ -1,19 +1,22 @@
-package org.estatio.capex.dom.documents.categorisation;
+package org.estatio.capex.dom.documents.categorisation.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.dobj.DomainObject_checkStateAbstract;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method="act")
 public class Document_checkCategorisationState
         extends DomainObject_checkStateAbstract<
                             Document,
-                            IncomingDocumentCategorisationStateTransition,
-                            IncomingDocumentCategorisationStateTransitionType,
-                            IncomingDocumentCategorisationState> {
+        IncomingDocumentCategorisationStateTransition,
+        IncomingDocumentCategorisationStateTransitionType,
+        IncomingDocumentCategorisationState> {
 
 
     public Document_checkCategorisationState(final Document document) {
