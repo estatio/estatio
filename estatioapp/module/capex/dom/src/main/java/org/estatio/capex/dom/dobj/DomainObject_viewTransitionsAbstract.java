@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.state;
+package org.estatio.capex.dom.dobj;
 
 import java.util.List;
 
@@ -8,6 +8,11 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.estatio.capex.dom.state.State;
+import org.estatio.capex.dom.state.StateTransitionAbstract;
+import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
+import org.estatio.capex.dom.state.StateTransitionType;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "act")

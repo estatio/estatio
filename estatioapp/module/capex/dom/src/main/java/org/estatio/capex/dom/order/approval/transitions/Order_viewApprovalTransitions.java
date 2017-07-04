@@ -8,7 +8,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.capex.dom.state.DomainObject_viewTransitionsAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 
 @Mixin(method = "act")
 public class Order_viewApprovalTransitions

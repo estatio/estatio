@@ -2,7 +2,7 @@ package org.estatio.capex.dom.bankaccount.verification;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method="prop")

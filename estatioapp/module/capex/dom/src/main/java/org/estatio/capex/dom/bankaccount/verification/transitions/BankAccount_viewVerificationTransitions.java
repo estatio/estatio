@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.capex.dom.state.DomainObject_viewTransitionsAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method = "act")

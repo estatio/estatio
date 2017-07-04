@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.state;
+package org.estatio.capex.dom.dobj;
 
 import javax.inject.Inject;
 
@@ -7,6 +7,11 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+
+import org.estatio.capex.dom.state.State;
+import org.estatio.capex.dom.state.StateTransitionAbstract;
+import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.capex.dom.state.StateTransitionType;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "prop")

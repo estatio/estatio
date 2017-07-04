@@ -3,7 +3,7 @@ package org.estatio.capex.dom.payment.approval;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.state.DomainObject_currentStateAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
 
 @Mixin(method="prop")
 public class PaymentBatch_approvalState

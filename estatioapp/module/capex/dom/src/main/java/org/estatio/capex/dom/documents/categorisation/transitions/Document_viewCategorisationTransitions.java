@@ -9,7 +9,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.state.DomainObject_viewTransitionsAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
