@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.orderinvoice;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -8,6 +9,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
@@ -58,4 +61,11 @@ public class OrderItemInvoiceItemLink {
     @Column(allowsNull = "false", name = "invoiceItemId")
     private IncomingInvoiceItem invoiceItem;
 
+    @Programmatic
+    public void remove() {
+        repositoryService.removeAndFlush(this);
+    }
+
+    @Inject
+    private RepositoryService repositoryService;
 }

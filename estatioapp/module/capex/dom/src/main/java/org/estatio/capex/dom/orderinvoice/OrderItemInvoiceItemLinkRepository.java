@@ -16,24 +16,24 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
         super(OrderItemInvoiceItemLinkRepository.class, OrderItemInvoiceItemLink.class);
     }
 
-    public OrderItemInvoiceItemLink createBudgetCalculationResultLink(
+    public OrderItemInvoiceItemLink createOrderItemInvoiceItemLink(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem){
 
-        OrderItemInvoiceItemLink budgetCalculationResultLink = newTransientInstance(OrderItemInvoiceItemLink.class);
-        budgetCalculationResultLink.setOrderItem(orderItem);
-        budgetCalculationResultLink.setInvoiceItem(invoiceItem);
+        OrderItemInvoiceItemLink orderItemInvoiceItemLink = newTransientInstance(OrderItemInvoiceItemLink.class);
+        orderItemInvoiceItemLink.setOrderItem(orderItem);
+        orderItemInvoiceItemLink.setInvoiceItem(invoiceItem);
 
-        persist(budgetCalculationResultLink);
+        persist(orderItemInvoiceItemLink);
 
-        return budgetCalculationResultLink;
+        return orderItemInvoiceItemLink;
     }
 
     public OrderItemInvoiceItemLink findOrCreateLink(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem) {
         return findUnique(orderItem, invoiceItem)  == null ?
-                createBudgetCalculationResultLink(orderItem, invoiceItem) :
+                createOrderItemInvoiceItemLink(orderItem, invoiceItem) :
                 findUnique(orderItem, invoiceItem);
     }
 

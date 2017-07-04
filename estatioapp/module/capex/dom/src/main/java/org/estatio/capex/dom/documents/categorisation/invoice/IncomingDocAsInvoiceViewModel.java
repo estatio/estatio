@@ -18,7 +18,6 @@
  */
 package org.estatio.capex.dom.documents.categorisation.invoice;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -31,9 +30,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -64,6 +60,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.order.OrderItemService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -215,51 +212,14 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     public List<OrderItem> autoCompleteOrderItem(@MinLength(3) final String searchString){
-        List<OrderItem> result = new ArrayList<>();
 
-        for (Order order : orderRepository.matchByOrderNumber(searchString)){
-            for (OrderItem item : order.getItems()) {
-                if (!result.contains(item) && !item.isInvoiced()) {
-                    result.add(item);
-                }
-            }
-        }
+        return orderItemService.searchOrderItem(
+                searchString,
+                getSeller(),
+                getCharge(),
+                getProject(),
+                getProperty());
 
-        for (OrderItem item : orderItemRepository.matchByDescription(searchString)) {
-            if (!result.contains(item) && !item.isInvoiced()) {
-                result.add(item);
-            }
-        }
-
-        if (hasSeller()){
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                    .filter(x->x.getOrdr().getSeller()!=null && x.getOrdr().getSeller().equals(getSeller()))
-                    .toList()
-            );
-        }
-        if (hasCharge()) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getCharge().equals(getCharge()))
-                            .toList()
-            );
-        }
-        if (hasProject()) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getProject()!=null && x.getProject().equals(getProject()))
-                            .toList()
-            );
-        }
-        if (hasProperty()) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getProperty()!=null && x.getProperty().equals(getProperty()))
-                            .toList()
-            );
-        }
-        return result;
     }
 
     private void autoFillIn(){
@@ -632,5 +592,11 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     FactoryService factoryService;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    OrderItemService orderItemService;
 
 }

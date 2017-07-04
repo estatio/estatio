@@ -22,6 +22,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -35,6 +36,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
@@ -419,7 +422,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return false;
     }
 
-    @Action()
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Invoice removeItem(){
         Invoice invoice = getInvoice();
         if (isLinkedToOrderItem()){
@@ -430,6 +433,46 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         repositoryService.removeAndFlush(this);
         return invoice;
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(name = "orderItems", sequence = "1")
+    public IncomingInvoiceItem updateOrCreateOrderItem(
+            @Nullable
+            final OrderItem orderItem){
+        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
+            link.remove();
+        }
+        if (orderItem!=null){
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, this);
+        }
+        return this;
+    }
+
+    public OrderItem default0UpdateOrCreateOrderItem(){
+        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size() > 0 ?
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem()
+                : null;
+    }
+
+    public List<OrderItem> autoComplete0UpdateOrCreateOrderItem(@MinLength(3) final String searchString){
+
+       return orderItemService.searchOrderItem(
+               searchString,
+               getInvoice().getSeller(),
+               getCharge(),
+               getProject(),
+               (org.estatio.dom.asset.Property) getFixedAsset());
+
+    }
+
+    public String disableUpdateOrCreateOrderItem(){
+        // safeguard: there should at most be 1 linked order item
+        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
+            return "Error: More than 1 linked order item found";
+        }
+        return isImmutable() ? itemImmutableReason() : null;
+    }
+
 
     public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
@@ -446,5 +489,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Inject
     private ProjectRepository projectRepository;
+
+    @Inject
+    private OrderItemService orderItemService;
 
 }

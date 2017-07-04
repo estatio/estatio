@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,6 +26,7 @@ import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
 import org.estatio.numerator.dom.impl.Numerator;
 import org.estatio.numerator.dom.impl.NumeratorRepository;
 
@@ -177,6 +179,19 @@ public class OrderRepository {
                         "seller", seller));
     }
 
+    @Programmatic
+    public List<Order> matchBySellerReferenceOrName(final String searchString) {
+        List<Order> result = new ArrayList<>();
+        for (Party party : partyRepository.findParties(searchString)){
+            for (Order order : findBySellerParty(party)) {
+                if (!result.contains(order)){
+                    result.add(order);
+                }
+            }
+        }
+        return result;
+    }
+
     @Inject
     RepositoryService repositoryService;
 
@@ -189,4 +204,6 @@ public class OrderRepository {
     @Inject NumeratorRepository numeratorRepository;
 
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
+
+    @Inject PartyRepository partyRepository;
 }
