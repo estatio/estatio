@@ -459,12 +459,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public String reasonDisabledDueToState() {
-        IncomingInvoiceApprovalState currentState = getApprovalState();
-        return currentState == IncomingInvoiceApprovalState.NEW ?
-                null :
-                "Cannot modify because invoice is in state of " + currentState;
+        final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
+        switch (approvalState1) {
+        case NEW:
+        case COMPLETED:
+            return null;
+        default:
+            return "Cannot modify because invoice is in state of " + getApprovalState();
+        }
     }
-
 
     @Programmatic
     public String reasonIncomplete(){
