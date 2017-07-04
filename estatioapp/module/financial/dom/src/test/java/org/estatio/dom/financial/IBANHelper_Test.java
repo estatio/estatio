@@ -19,11 +19,13 @@
 package org.estatio.dom.financial;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
-import org.incode.module.country.dom.impl.Country;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
@@ -80,6 +82,7 @@ public class IBANHelper_Test {
         }
 
         @Test
+        @Ignore
         public void testCreateIBANfromFields() {
             BankAccount ba = new BankAccount();
             ba.setCountry(country);

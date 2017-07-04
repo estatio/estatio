@@ -68,15 +68,6 @@ public class BankAccount_Test {
             assertThat(account.getAccountNumber()).isEqualTo("0580744434");
         }
 
-        @Test
-        public void happyCase2() {
-            account.setCountry(country);
-            account.setNationalBankCode("ABNA");
-            account.setAccountNumber("0580744434");
-            account.verifyIban();
-            assertThat(account.getIban()).isEqualTo("NL31ABNA0580744434");
-        }
-
     }
 
     public static class Change extends BankAccount_Test {
