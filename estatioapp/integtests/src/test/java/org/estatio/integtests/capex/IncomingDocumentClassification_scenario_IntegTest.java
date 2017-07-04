@@ -80,7 +80,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //        private void findIncomingDocuments_works() {
 //
 //            // given, when
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //            task1 = tasks.get(0);
 //            task2 = tasks.get(1);
 //
@@ -134,7 +134,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //
 //            // and when
 //            transactionService.nextTransaction();
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //
 //            // then
 //            assertThat(tasks.size()).isEqualTo(1);
@@ -161,7 +161,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //        private void categoriseAsInvoice_works() {
 //
 //            // given
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //            assertThat(tasks.size()).isEqualTo(1);
 //            task2 = tasks.get(0);
 //            final Document document2 = documentFor(task2);
@@ -173,7 +173,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            wrap(mixin(Task_categoriseDocumentAsOtherInvoice.class, task2))
 //                    .act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, propertyForOxf, null, true);
 //            transactionService.nextTransaction();
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //
 //            // then state has changed
 //            state = stateTransitionService
@@ -206,7 +206,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //        private void resetClassification_works() {
 //
 //            // given
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //            assertThat(tasks.size()).isEqualTo(0);
 //            List<Document> unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
 //            assertThat(unclassified.size()).isEqualTo(1);
@@ -216,7 +216,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            transactionService.nextTransaction();
 //
 //            // then
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //            assertThat(tasks.size()).isEqualTo(1);
 //            unclassified = incomingDocumentRepository.findUnclassifiedIncomingInvoices();
 //            assertThat(unclassified.size()).isEqualTo(0);
@@ -312,7 +312,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //        private void createInvoice_works(){
 //
 //            // given
-//            tasks = taskRepository.findTasksIncompleteFor(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+//            tasks = taskRepository.findIncompleteByPersonAssignedTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
 //            assertThat(tasks.size()).isEqualTo(1);
 //            task2 = tasks.get(0);
 //

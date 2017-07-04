@@ -58,12 +58,41 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "),
         @Query(
-                name = "findByIncomplete", language = "JDOQL",
+                name = "findIncomplete", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "
                         + "WHERE completedBy == null "
-                        + "ORDER BY personAssignedTo, createdOn ASC "
-        )
+                        + "ORDER BY personAssignedTo, createdOn ASC "),
+        @Query(
+                name = "findIncompleteByPersonAssignedTo", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == :personAssignedTo "
+                        + "ORDER BY createdOn ASC "),
+        @Query(
+                name = "findIncompleteByNotPersonAssignedTo", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo != :personAssignedTo "
+                        + "ORDER BY createdOn ASC "),
+        @Query(
+                name = "findIncompleteByPersonAssignedToAndCreatedOnBefore", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == :personAssignedTo "
+                        + "   && createdOn        <  :createdOn "
+                        + "ORDER BY createdOn DESC "),
+        @Query(
+                name = "findIncompleteByPersonAssignedToAndCreatedOnAfter", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == :personAssignedTo "
+                        + "   && createdOn        >  :createdOn "
+                        + "ORDER BY createdOn ASC ")
 })
 @DomainObject(objectType = "task.Task")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)

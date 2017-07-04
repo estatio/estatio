@@ -12,6 +12,8 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General">
+                                <cpt:action id="previous"/>
+                                <cpt:action id="next"/>
                                 <cpt:action id="checkState"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
@@ -59,6 +61,7 @@
                                     <cpt:action id="verifyBankAccount">
                                         <cpt:named>Verify</cpt:named>
                                     </cpt:action>
+
 
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>

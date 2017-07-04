@@ -83,7 +83,7 @@ public class EstatioAppHomePage {
     }
 
     private List<Task> doGetTasksForMe() {
-        return taskRepository.findTasksIncompleteForMe();
+        return taskRepository.findIncompleteForMe();
     }
 
 
@@ -102,7 +102,7 @@ public class EstatioAppHomePage {
 
     @Collection(notPersisted = true)
     public List<Task> getTasksForOthers() {
-        final List<Task> tasksIncomplete = taskRepository.findTasksIncompleteForOthers();
+        final List<Task> tasksIncomplete = taskRepository.findIncompleteForOthers();
         return tasksIncomplete;
     }
 

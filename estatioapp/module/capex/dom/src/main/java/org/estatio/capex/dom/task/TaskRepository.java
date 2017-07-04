@@ -1,14 +1,19 @@
 package org.estatio.capex.dom.task;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Ordering;
+
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.party.Person;
@@ -33,49 +38,109 @@ public class TaskRepository {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Task.class,
-                        "findByIncomplete"));
+                        "findIncomplete"));
     }
 
     @Programmatic
-    public List<Task> findTasksIncompleteForMe() {
+    public List<Task> findIncompleteForMe() {
         final Person meAsPerson = personRepository.me();
-        return findTasksIncompleteFor(meAsPerson);
+        return findIncompleteByPersonAssignedTo(meAsPerson);
     }
 
     @Programmatic
-    public List<Task> findTasksIncompleteFor(final Person person) {
-        // get all tasks.
-        final List<Task> tasks = findTasksIncomplete();
-
-        List<Task> myTasks =
-                tasks.stream()
-                        .filter(x -> x.getPersonAssignedTo() == person)
-                        .collect(Collectors.toList());
-
-        return myTasks;
+    public List<Task> findIncompleteForOthers() {
+        final Person meAsPerson = personRepository.me();
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByNotPersonAssignedTo",
+                        "personAssignedTo", meAsPerson));
     }
 
     @Programmatic
-    public List<Task> findTasksIncompleteForOthers() {
+    public List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
+        return queryResultsCache.execute(
+                () -> doFindIncompleteByPersonAssignedTo(personAssignedTo),
+                getClass(),
+                "findIncompleteByPersonAssignedTo", personAssignedTo);
+    }
 
-        final List<Task> tasks = findTasksIncomplete();
+    private List<Task> doFindIncompleteByPersonAssignedTo(final Person personAssignedTo) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByPersonAssignedTo",
+                        "personAssignedTo", personAssignedTo));
+    }
 
-        List<Task> myTasks = findTasksIncompleteForMe();
-        tasks.removeAll(myTasks);
+    @Programmatic
+    public List<Task> findIncompleteForAndCreatedOnBefore(final Person personAssignedTo, final LocalDateTime createdOn) {
+        return queryResultsCache.execute(
+                () -> doFindIncompleteForAndCreatedOnBefore(personAssignedTo, createdOn),
+                getClass(),
+                "findIncompleteForAndCreatedOnBefore", personAssignedTo, createdOn);
+    }
 
+    private List<Task> doFindIncompleteForAndCreatedOnBefore(
+            final Person personAssignedTo,
+            final LocalDateTime createdOn) {
+        final List<Task> tasks = repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByPersonAssignedToAndCreatedOnBefore",
+                        "personAssignedTo", personAssignedTo,
+                        "createdOn", createdOn));
+        tasks.sort(Ordering.natural().nullsLast().reverse().onResultOf(Task::getCreatedOn));
         return tasks;
+    }
+
+    @Programmatic
+    public List<Task> findIncompleteForAndCreatedOnAfter(final Person personAssignedTo, final LocalDateTime createdOn) {
+        return queryResultsCache.execute(
+                () -> doFindIncompleteForAndCreatedOnAfter(personAssignedTo, createdOn),
+                getClass(),
+                "findIncompleteForAndCreatedOnAfter", personAssignedTo, createdOn);
+    }
+
+    private List<Task> doFindIncompleteForAndCreatedOnAfter(
+            final Person personAssignedTo,
+            final LocalDateTime createdOn) {
+        final List<Task> tasks = repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByPersonAssignedToAndCreatedOnAfter",
+                        "personAssignedTo", personAssignedTo,
+                        "createdOn", createdOn));
+        tasks.sort(Ordering.natural().nullsLast().onResultOf(Task::getCreatedOn));
+        return tasks;
+    }
+
+    @Programmatic
+    public Task nextTaskBefore(final Task previousTask) {
+
+        final Person previousAssignedTo = previousTask.getPersonAssignedTo();
+        final LocalDateTime previousCreatedOn = previousTask.getCreatedOn();
+        final List<Task> tasksIncompleteForAndCreatedOnBefore = findIncompleteForAndCreatedOnBefore(
+                previousAssignedTo, previousCreatedOn);
+        final Optional<Task> firstTaskIfAny =
+                tasksIncompleteForAndCreatedOnBefore
+                        .stream()
+                        .findFirst();
+
+        return firstTaskIfAny.orElse(previousTask);
     }
 
     @Programmatic
     public Task nextTaskAfter(final Task previousTask) {
 
-        final Person previousTaskAssignedTo = previousTask.getPersonAssignedTo();
-        final List<Task> results = findTasksIncompleteFor(previousTaskAssignedTo);
+        final Person previousAssignedTo = previousTask.getPersonAssignedTo();
+        final LocalDateTime previousCreatedOn = previousTask.getCreatedOn();
+        final Optional<Task> firstTaskIfAny =
+                findIncompleteForAndCreatedOnAfter(previousAssignedTo, previousCreatedOn)
+                        .stream()
+                        .findFirst();
 
-        results.removeIf(task -> task.getCreatedOn().isBefore(previousTask.getCreatedOn()));
-        final List<Task> tasks = results;
-
-        return tasks.size() > 0 ? tasks.get(0) : null;
+        return firstTaskIfAny.orElse(previousTask);
     }
 
     @Inject
@@ -83,5 +148,8 @@ public class TaskRepository {
 
     @Inject
     PersonRepository personRepository;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 }

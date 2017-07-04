@@ -10,13 +10,12 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
  * Base class for mixins on {@link Task} that delegate to a corresponding mixin on some domain object which will
  * result in a {@link Task} being completed.
  */
-public abstract class Task_mixinAbstract<M, DO> {
+public abstract class Task_mixinAbstract<M, DO> extends Task_abstract {
 
-    protected final Task task;
     private final Class<M> mixinClass;
 
     public Task_mixinAbstract(final Task task, final Class<M> mixinClass) {
-        this.task = task;
+        super(task);
         this.mixinClass = mixinClass;
     }
 
@@ -31,6 +30,7 @@ public abstract class Task_mixinAbstract<M, DO> {
     }
 
     protected abstract DO doGetDomainObjectIfAny();
+
 
     @Inject
     TaskRepository taskRepository;
