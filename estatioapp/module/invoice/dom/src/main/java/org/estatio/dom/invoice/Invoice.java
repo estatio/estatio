@@ -435,8 +435,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
 
 
-
-
+    @Programmatic
     public boolean isImmutable() {
         return !getStatus().invoiceIsChangable();
     }

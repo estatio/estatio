@@ -76,6 +76,18 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findByApprovalStateAndPaymentMethod(
+            final IncomingInvoiceApprovalState approvalState,
+            final PaymentMethod paymentMethod) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByApprovalStateAndPaymentMethod",
+                        "approvalState", approvalState,
+                        "paymentMethod", paymentMethod));
+    }
+
+    @Programmatic
     public IncomingInvoice findByInvoiceNumberAndSellerAndInvoiceDate(final String invoiceNumber, final Party seller, final LocalDate invoiceDate){
         return repositoryService.firstMatch(
                 new QueryDefault<>(

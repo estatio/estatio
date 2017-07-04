@@ -18,8 +18,8 @@
  */
 package org.estatio.app.services.dashboard;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -43,14 +43,19 @@ import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.payment.PaymentBatch;
+import org.estatio.capex.dom.payment.PaymentBatchMenu;
+import org.estatio.capex.dom.payment.PaymentBatchRepository;
+import org.estatio.capex.dom.payment.PaymentLine;
+import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.dom.task.Task_checkState;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.PersonRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -71,9 +76,9 @@ public class EstatioAppHomePage {
     public List<Task> getTasksForMe() {
 
         List<Task> tasksForMe =
-                queryResultsCache.execute(this::doGetTasksForMe, EstatioAppHomePage.class, "getTasksForMe");
+                queryResultsCache.execute(
+                        this::doGetTasksForMe, EstatioAppHomePage.class, "getTasksForMe");
 
-        sort(tasksForMe);
         return tasksForMe;
     }
 
@@ -129,23 +134,74 @@ public class EstatioAppHomePage {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED);
     }
 
-    @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesApprovedByCountryDirector() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
-    }
-
-    @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesPendingBankAccountCheck() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
     }
 
+
     @Collection(notPersisted = true)
-    public List<IncomingInvoice> getIncomingInvoicesPayable() {
-        return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE);
+    public List<IncomingInvoice> getIncomingInvoicesPayableByTransferNotInBatch() {
+        return incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
+                                                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
     }
 
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesPayableByDirectDebit() {
+        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.DIRECT_DEBIT);
+    }
 
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesPayableByManualProcess() {
+        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.MANUAL_PROCESS);
+    }
 
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesPayableByOther() {
+        final List<IncomingInvoice> invoices = Lists.newArrayList(
+                incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.PAYABLE) );
+
+        final List<IncomingInvoice> byDirectDebit = getIncomingInvoicesPayableByDirectDebit();
+        final List<IncomingInvoice> byTransfer = getIncomingInvoicesPayableAndBankTransfer();
+        final List<IncomingInvoice> byManualProcess = getIncomingInvoicesPayableByManualProcess();
+
+        invoices.removeAll(byDirectDebit);
+        invoices.removeAll(byTransfer);
+        invoices.removeAll(byManualProcess);
+
+        return invoices;
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesInNewBatch() {
+        final List<PaymentBatch> newBatches = paymentBatchRepository.findNewBatches();
+        return findIncomingInvoicesWithin(newBatches);
+    }
+
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesInCompletedBatch() {
+        final List<PaymentBatch> completedBatches = paymentBatchRepository.findCompletedBatches();
+        return findIncomingInvoicesWithin(completedBatches);
+    }
+
+    private List<IncomingInvoice> findIncomingInvoicesWithin(final List<PaymentBatch> batches) {
+        final List<IncomingInvoice> invoices = Lists.newArrayList();
+        for (PaymentBatch completedBatch : batches) {
+            invoices.addAll(
+                    Lists.newArrayList(completedBatch.getLines())
+                            .stream()
+                            .map(PaymentLine::getInvoice)
+                            .collect(Collectors.toList()));
+        }
+        invoices.sort(Ordering.natural().nullsLast().onResultOf(IncomingInvoice::getInvoiceDate));
+        return invoices;
+    }
+
+    private List<IncomingInvoice> getIncomingInvoicesPayableAndBankTransfer() {
+        return incomingInvoiceRepository.findByApprovalStateAndPaymentMethod(
+                IncomingInvoiceApprovalState.PAYABLE, PaymentMethod.BANK_TRANSFER);
+    }
+
+    ////////////////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
     public List<Lease> getLeasesAboutToExpire() {
@@ -159,10 +215,6 @@ public class EstatioAppHomePage {
 
 
 
-    private void sort(final List<Task> tasks) {
-        Collections.sort(tasks, Ordering.natural().nullsFirst().onResultOf(Task::getCreatedOn));
-    }
-
 
     private EstatioAppHomePage checkStateOf(final List<Task> tasks) {
         for (Task task : tasks) {
@@ -170,7 +222,6 @@ public class EstatioAppHomePage {
         }
         return this;
     }
-
 
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class TableColumnOrderServiceForIncomingInvoices implements TableColumnOrderService {
@@ -193,6 +244,15 @@ public class EstatioAppHomePage {
         }
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-magic")
+    public PaymentBatchManager preparePaymentBatches() {
+        return paymentBatchMenu.preparePaymentBatches();
+    }
+
+    @Inject
+    PaymentBatchMenu paymentBatchMenu;
+
     @Inject
     FactoryService factoryService;
 
@@ -200,7 +260,7 @@ public class EstatioAppHomePage {
     QueryResultsCache queryResultsCache;
 
     @Inject
-    PersonRepository personRepository;
+    PaymentBatchRepository paymentBatchRepository;
 
     @Inject
     TaskRepository taskRepository;

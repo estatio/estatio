@@ -82,6 +82,12 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE approvalState == :approvalState "),
         @Query(
+                name = "findByApprovalStateAndPaymentMethod", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE approvalState == :approvalState "
+                        + "   && paymentMethod == :paymentMethod "),
+        @Query(
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "

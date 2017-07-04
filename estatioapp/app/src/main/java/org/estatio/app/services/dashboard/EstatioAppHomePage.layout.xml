@@ -61,19 +61,32 @@
                     </bs3:row>
                     <bs3:row>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesApprovedByCountryDirector" paged="15">
-                                <cpt:named>Approved by Country Director</cpt:named>
-                            </cpt:collection>
-                        </bs3:col>
-                        <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesPendingBankAccountCheck" paged="15">
                                 <cpt:named>Pending Bank Account Check</cpt:named>
                                 <cpt:action id="verifyBankAccounts"/>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">
-                            <cpt:collection id="incomingInvoicesPayable" paged="15">
-                                <cpt:named>Payable</cpt:named>
+                            <cpt:collection id="incomingInvoicesPayableByTransferNotInBatch" paged="15">
+                                <cpt:named>Payable by Transfer (not in batch)</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesPayableByDirectDebit" paged="15">
+                                <cpt:named>Payable by Direct Debit</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesPayableByManualProcess" paged="15">
+                                <cpt:named>Payable by Manual Process</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesPayableByOther" paged="15">
+                                <cpt:named>Payable by Other</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:collection id="incomingInvoicesInNewBatch" paged="15">
+                                <cpt:named>In (new) Payment Batch</cpt:named>
+                                <cpt:action id="preparePaymentBatches"/>
+                            </cpt:collection>
+                            <cpt:collection id="incomingInvoicesInCompletedBatch" paged="15">
+                                <cpt:named>In (completed) Payment Batch</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
