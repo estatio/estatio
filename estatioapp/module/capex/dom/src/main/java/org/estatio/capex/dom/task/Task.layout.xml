@@ -14,6 +14,7 @@
                             <cpt:fieldSet name="General">
                                 <cpt:action id="previous"/>
                                 <cpt:action id="next"/>
+                                <cpt:action id="snooze"/>
                                 <cpt:action id="checkState"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
