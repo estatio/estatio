@@ -110,7 +110,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 .withName(getDescription().concat(" "))
                 .withName(getNetAmount())
                 .withName(" ")
-                .withName(getOrdr().getSellerOrderReference().concat(" "))
                 .withName(getOrdr().getOrderNumber())
                 .toString();
     }
