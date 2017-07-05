@@ -15,7 +15,6 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
 import org.estatio.capex.dom.order.Order;
 
 @Mixin(method = "act")

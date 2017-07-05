@@ -12,7 +12,7 @@ import org.estatio.capex.dom.coda.CodaMappingFilter;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.coda.CodaTransactionType;
 import org.estatio.capex.dom.coda.DocumentType;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;

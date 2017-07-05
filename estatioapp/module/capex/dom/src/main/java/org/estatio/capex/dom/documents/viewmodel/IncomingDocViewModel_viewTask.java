@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents.viewmodel;
 
 import javax.inject.Inject;
 

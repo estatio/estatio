@@ -24,9 +24,9 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
-import org.estatio.capex.dom.documents.categorisation.order.IncomingDocAsOrderViewModel;
+import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
+import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.order.viewmodel.IncomingDocAsOrderViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {

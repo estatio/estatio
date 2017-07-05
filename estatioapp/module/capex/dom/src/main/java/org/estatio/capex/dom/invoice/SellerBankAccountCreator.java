@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.invoice;
+package org.estatio.capex.dom.invoice;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;

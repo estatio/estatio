@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.capex.dom.documents.categorisation.invoice;
+package org.estatio.capex.dom.invoice.viewmodel;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,12 +49,13 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.capex.dom.invoice.SellerBankAccountCreator;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -111,7 +112,7 @@ import lombok.Setter;
 @Getter @Setter
 public class IncomingDocAsInvoiceViewModel
         extends IncomingDocViewModel<IncomingInvoice>
-        implements SellerBankAccountCreator  {
+        implements SellerBankAccountCreator {
 
     /**
      * for unit testing

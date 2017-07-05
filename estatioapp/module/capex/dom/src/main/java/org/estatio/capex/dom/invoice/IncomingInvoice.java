@@ -40,8 +40,7 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.documents.categorisation.document.BudgetItemChooser;
-import org.estatio.capex.dom.documents.categorisation.invoice.SellerBankAccountCreator;
+import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;

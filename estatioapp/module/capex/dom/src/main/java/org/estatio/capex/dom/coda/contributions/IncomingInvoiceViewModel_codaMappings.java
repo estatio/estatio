@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingFilter;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
-import org.estatio.capex.dom.documents.categorisation.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 import org.estatio.dom.charge.Charge;
 
 @Mixin

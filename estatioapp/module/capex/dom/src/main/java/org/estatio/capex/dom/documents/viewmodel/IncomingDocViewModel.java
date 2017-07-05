@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents.viewmodel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
+import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;

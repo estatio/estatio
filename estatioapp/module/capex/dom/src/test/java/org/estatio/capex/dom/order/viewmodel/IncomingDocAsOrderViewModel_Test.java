@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.order;
+package org.estatio.capex.dom.order.viewmodel;
 
 import java.math.BigDecimal;
 

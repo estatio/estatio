@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.order;
+package org.estatio.capex.dom.order.viewmodel;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.categorisation.document.IncomingDocViewModel;
+import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.party.Party;

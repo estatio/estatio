@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.documents.categorisation.document;
+package org.estatio.capex.dom.documents;
 
 import java.util.List;
 import java.util.Objects;
