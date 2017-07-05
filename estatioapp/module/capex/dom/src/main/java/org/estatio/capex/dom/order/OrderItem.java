@@ -246,7 +246,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 invoicedNetAmount = invoicedNetAmount.add(link.getInvoiceItem().getNetAmount());
             }
         }
-        return invoicedNetAmount.compareTo(getNetAmount()) >= 0 ? true : false;
+        return invoicedNetAmount.abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
+
     }
 
     @Inject

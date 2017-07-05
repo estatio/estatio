@@ -50,6 +50,41 @@ public class OrderItem_Test {
     }
 
     @Test
+    public void isInvoiced_works_with_negative_amounts() throws Exception {
+
+        // given
+        OrderItem orderItem = new OrderItem();
+        orderItem.setNetAmount(new BigDecimal("-100.00"));
+        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+
+        // when
+        item1.setNetAmount(new BigDecimal("-50.00"));
+        item2.setNetAmount(new BigDecimal("-49.99"));
+        orderItem.orderItemInvoiceItemLinkRepository = setupOrderItemInvoiceItemLinkRepository(item1, item2);
+
+        // then
+        assertThat(orderItem.isInvoiced()).isFalse();
+
+        // and when
+        item1.setNetAmount(new BigDecimal("-50.00"));
+        item2.setNetAmount(new BigDecimal("-50.00"));
+        orderItem.orderItemInvoiceItemLinkRepository = setupOrderItemInvoiceItemLinkRepository(item1, item2);
+
+        // then
+        assertThat(orderItem.isInvoiced()).isTrue();
+
+        // and when
+        item1.setNetAmount(new BigDecimal("-50.00"));
+        item2.setNetAmount(new BigDecimal("-50.01"));
+        orderItem.orderItemInvoiceItemLinkRepository = setupOrderItemInvoiceItemLinkRepository(item1, item2);
+
+        // then
+        assertThat(orderItem.isInvoiced()).isTrue();
+
+    }
+
+    @Test
     public void isInvoiced_works_when_no_netamount_on_orderItem() throws Exception {
         // given
         OrderItem orderItem = new OrderItem();
