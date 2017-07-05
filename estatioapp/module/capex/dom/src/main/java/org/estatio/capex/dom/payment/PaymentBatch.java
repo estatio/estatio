@@ -3,6 +3,7 @@ package org.estatio.capex.dom.payment;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -351,31 +352,38 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
                 final Optional<org.incode.module.document.dom.impl.docs.Document> document =
                         lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
+
                 if(document.isPresent()) {
-                    byte[] docBytes = document.get().asBytes();
+                    final byte[] docBytes = document.get().asBytes();
 
                     IncomingInvoiceApprovalStateTransition transitionIfAny =
                             stateTransitionRepository.findByDomainObjectAndToState(invoice,
                                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
 
-                    List<String> origLines = Lists.newArrayList();
+                    List<String> leftLines = Lists.newArrayList();
                     if(transitionIfAny != null) {
                         Task task = transitionIfAny.getTask();
                         if (task != null) {
                             Person personAssignedTo = task.getPersonAssignedTo();
                             if (personAssignedTo != null) {
-                                origLines.add(String.format(
-                                        "Approved by: %s %s",
+                                leftLines.add(String.format(
+                                        "approved by: %s %s",
                                         personAssignedTo.getFirstName(), personAssignedTo.getLastName()));
                             }
                         }
-                        origLines.add("Approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
+                        leftLines.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
                     }
+
+                    final List<String> rightLines = Lists.newArrayList();
+                    rightLines.add(String.format("debtor IBAN: %s", line.getBatch().getDebtorBankAccount().getIban()));
+                    rightLines.add(String.format("crdtor IBAN: %s", line.getCreditorBankAccount().getIban()));
+                    rightLines.add(String.format("gross Amt  : %s", new DecimalFormat("0.00").format(line.getAmount())));
+
                     URI uri = deepLinkService.deepLinkFor(invoice);
+                    final byte[] firstPageDocBytes =
+                            pdfStamper.firstPageOf(docBytes, leftLines, rightLines, uri.toString());
 
-                    docBytes = pdfStamper.firstPageOf(docBytes, origLines, uri.toString());
-
-                    pdfBytes.add(docBytes);
+                    pdfBytes.add(firstPageDocBytes);
                 }
             }
             byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});

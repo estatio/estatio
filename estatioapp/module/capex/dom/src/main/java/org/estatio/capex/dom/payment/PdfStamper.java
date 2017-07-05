@@ -19,6 +19,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import org.apache.pdfbox.util.Matrix;
 import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -40,9 +41,10 @@ public class PdfStamper {
         }
     }
 
-    private static final float X_MARGIN = 70F;
+    private static final float X_MARGIN_LEFT = 50F;
+    private static final float X_MARGIN_RIGHT = 290F;
     private static final float Y_BOX_BASE = 100F;
-    private static final float BOX_WIDTH = 200F;
+    private static final float BOX_WIDTH = 240F;
     private static final int BOX_LINE_WIDTH = 1;
     private static final int BOX_Y_PADDING = 4;
     private static final Color BOX_FILL = new Color(240, 240, 240); // lightGrey
@@ -50,17 +52,20 @@ public class PdfStamper {
     private static final float TEXT_LINE_HEIGHT = 14F;
     private static final int TEXT_X_PADDING = 4;
     private static final Color TEXT_COLOR = Color.DARK_GRAY;
-    private static final PDFont TEXT_FONT = PDType1Font.HELVETICA_BOLD;
+    private static final PDFont TEXT_FONT = PDType1Font.COURIER;
     private static final int TEXT_FONT_SIZE = 10;
 
     private static final Color HYPERLINK_COLOR = Color.BLUE;
 
-    private static final String PAGES_ORIG = "# pages orig: ";
-
     @Programmatic
-    public byte[] firstPageOf(byte[] docBytes, final List<String> origLines, final String hyperlink) throws IOException {
+    public byte[] firstPageOf(
+            byte[] docBytes,
+            final List<String> leftLineTexts,
+            final List<String> rightLineTexts,
+            final String hyperlink) throws IOException {
 
-        List<Line> lines = asLines(origLines);
+        List<Line> leftLines = asLines(leftLineTexts);
+        List<Line> rightLines = asLines(rightLineTexts);
 
         final PDDocument pdDoc = PDDocument.load(docBytes);
         try {
@@ -70,11 +75,11 @@ public class PdfStamper {
 
             if (!splitDocs.isEmpty()) {
 
-                lines.add(new Line(PAGES_ORIG + splitDocs.size(), TEXT_COLOR, null));
-                lines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
+                leftLines.add(new Line(String.format("# orig pgs : %d", splitDocs.size()), TEXT_COLOR, null));
+                leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
 
                 PDDocument docOfFirstPage = splitDocs.get(0);
-                docBytes = stamp(docOfFirstPage, lines);
+                docBytes = stamp(docOfFirstPage, leftLines, rightLines);
 
                 for (PDDocument splitDoc : splitDocs) {
                     splitDoc.close();
@@ -87,27 +92,47 @@ public class PdfStamper {
 
         return docBytes;
     }
-
     private byte[] stamp(
             final PDDocument docOfFirstPage,
-            final List<Line> lines) throws IOException {
+            final List<Line> leftLines,
+            final List<Line> rightLines) throws IOException {
 
-        final byte[] docBytes;PDPage pdPage = docOfFirstPage.getPage(0);
-        final PDPageContentStream contentStream =
+        final byte[] docBytes;
+        PDPage pdPage = docOfFirstPage.getPage(0);
+
+        final float pageHeight = pdPage.getMediaBox().getHeight();
+
+        final PDPageContentStream prependStream =
+                new PDPageContentStream(docOfFirstPage, pdPage, PDPageContentStream.AppendMode.PREPEND, false);
+        try {
+            prependStream.transform(Matrix.getScaleInstance(0.9f, 0.9f));
+            prependStream.transform(Matrix.getTranslateInstance(0f, pageHeight * 0.1f));
+        } finally {
+            prependStream.close();
+        }
+
+        final PDPageContentStream appendStream =
                 new PDPageContentStream(docOfFirstPage, pdPage, PDPageContentStream.AppendMode.APPEND, true, true);
+
         try {
 
-            final float height = lines.size() * TEXT_LINE_HEIGHT + BOX_Y_PADDING;
+            final int leftLineSize = leftLines.size();
+            final int rightLineSize = rightLines.size();
+
+            final float height = Math.max(leftLineSize, rightLineSize) * TEXT_LINE_HEIGHT + BOX_Y_PADDING;
             final float y = Y_BOX_BASE - height;
 
-            addBox(height, y, contentStream);
-            float yLine = addLines(lines, height, y, contentStream);
+            float x = X_MARGIN_LEFT;
+            float yLine = addLines(x, y, height, leftLines, appendStream);
 
-            String hyperlink = lines.get(lines.size() - 1).hyperlink;
-            addHyperlink(hyperlink, yLine + TEXT_LINE_HEIGHT - 6, contentStream, pdPage);
+            String hyperlink = leftLines.get(leftLineSize - 1).hyperlink;
+            addHyperlink(x, yLine + TEXT_LINE_HEIGHT - 6, hyperlink, pdPage);
+
+            x = X_MARGIN_RIGHT;
+            addLines(x, y, height, rightLines, appendStream);
 
         } finally {
-            contentStream.close();
+            appendStream.close();
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,20 +141,26 @@ public class PdfStamper {
         return docBytes;
     }
 
-    private void addBox(final float height, final float y, final PDPageContentStream cs) throws IOException {
+    private void addBox(
+            final float x, final float y, final float height,
+            final PDPageContentStream cs) throws IOException {
         cs.setLineWidth(BOX_LINE_WIDTH);
         cs.setStrokingColor(Color.DARK_GRAY);
-        cs.addRect(X_MARGIN - (float) BOX_LINE_WIDTH, y - (float) BOX_LINE_WIDTH, BOX_WIDTH + 2* (float) BOX_LINE_WIDTH, height + 2* (float) BOX_LINE_WIDTH);
+        cs.addRect(
+                x - (float) BOX_LINE_WIDTH,
+                y - (float) BOX_LINE_WIDTH,
+                BOX_WIDTH + 2* (float) BOX_LINE_WIDTH,
+                height + 2* (float) BOX_LINE_WIDTH);
         cs.stroke();
         cs.setNonStrokingColor(BOX_FILL);
-        cs.addRect(X_MARGIN, y, BOX_WIDTH, height);
+        cs.addRect(x, y, BOX_WIDTH, height);
         cs.fill();
     }
 
     private float addLines(
-            final List<Line> lines,
+            final float x, final float y,
             final float height,
-            final float y,
+            final List<Line> lines,
             final PDPageContentStream cs) throws IOException {
         cs.setFont(TEXT_FONT, TEXT_FONT_SIZE);
         float yLine = y + height - TEXT_LINE_HEIGHT;
@@ -137,7 +168,7 @@ public class PdfStamper {
 
             cs.setNonStrokingColor(line.color);
             cs.beginText();
-            cs.newLineAtOffset(X_MARGIN + TEXT_X_PADDING, yLine);
+            cs.newLineAtOffset(x + TEXT_X_PADDING, yLine);
             cs.showText(line.text);
             cs.endText();
 
@@ -148,9 +179,8 @@ public class PdfStamper {
     }
 
     private void addHyperlink(
+            final float x, final float y,
             final String hyperlink,
-            final float y,
-            final PDPageContentStream cs,
             final PDPage pdPage) throws IOException {
 
         PDAnnotationLink txtLink = new PDAnnotationLink();
@@ -160,11 +190,9 @@ public class PdfStamper {
         underline.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
         txtLink.setBorderStyle(underline);
 
-//        cs.setNonStrokingColor(BOX_FILL);
-//        cs.setLineWidth(0);
-        position.setLowerLeftX(X_MARGIN);
+        position.setLowerLeftX(x);
         position.setLowerLeftY(y);
-        position.setUpperRightX(X_MARGIN + BOX_WIDTH);
+        position.setUpperRightX(X_MARGIN_LEFT + BOX_WIDTH);
         position.setUpperRightY(y + TEXT_LINE_HEIGHT);
         txtLink.setRectangle(position);
 
