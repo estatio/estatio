@@ -325,18 +325,28 @@ public class StateTransitionService {
         if(pendingTransitionType != nextTransitionType) {
             if(pendingTransitionType != null) {
 
-                // for both nextTransitionType == null and != null
+                if(nextTransitionType != null) {
 
-                final Task taskIfAny = pendingTransitionIfAny.getTask();
-                repositoryService.remove(pendingTransitionIfAny);
-                if(taskIfAny != null) {
-                    repositoryService.removeAndFlush(taskIfAny);
+                    final Task taskIfAny = pendingTransitionIfAny.getTask();
+                    repositoryService.remove(pendingTransitionIfAny);
+                    if(taskIfAny != null) {
+                        repositoryService.removeAndFlush(taskIfAny);
+                    }
+                    pendingTransitionType = nextTransitionType;
+                    pendingTransitionIfAny  = createPendingTransition(
+                                                    domainObject, currentStateIfAny, nextTransitionType,
+                                                    personToAssignNextToIfAny);
+                } else {
+
+                    // in this branch the transition strategy for the most recently completed transition
+                    // must have returned null for nextTransitionType, and yet a pending transition does exist
+                    // (pendingTransitionType is not null).  This can only have come about if that pending
+                    // transition was created directly (using createPendingTransition(...)).
+
+                    // We don't want to discard this pending transition, so we use instead update nextTransitionType
+                    // to this existing pending value.
+                    nextTransitionType = pendingTransitionType;
                 }
-                pendingTransitionType = nextTransitionType;
-                pendingTransitionIfAny  = createPendingTransition(
-                                                domainObject, currentStateIfAny, nextTransitionType,
-                                                personToAssignNextToIfAny);
-
 
             } else {
                 // pendingTransitionType == null, so nextTransitionType != null because of outer if
