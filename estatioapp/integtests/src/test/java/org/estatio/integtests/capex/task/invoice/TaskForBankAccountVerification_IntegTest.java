@@ -18,9 +18,12 @@
  */
 package org.estatio.integtests.capex.task.invoice;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.io.Resources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +31,9 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.HiddenException;
+import org.apache.isis.applib.value.Blob;
 
+import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsVerificationProof;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
@@ -48,6 +53,7 @@ import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.TickingFixtureClock;
+import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.CANCELLED;
@@ -168,7 +174,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
         BankAccount bankAccount;
 
         @Before
-        public void setupData() {
+        public void setupData() throws IOException {
 
             runFixtureScript(new FixtureScript() {
                 @Override
@@ -184,8 +190,16 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 
+            final String fileName = "1020100123.pdf";
+            final byte[] pdfBytes = Resources.toByteArray(
+                    Resources.getResource(IncomingDocumentPresentationSubscriber_IntegTest.class, fileName));
+            final Blob blob = new Blob(fileName, "application/pdf", pdfBytes);
+
+            wrap(mixin(BankAccount_attachPdfAsVerificationProof.class, bankAccount)).act(blob);
+
             assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(NOT_VERIFIED);
         }
+
 
         @Before
         public void setupClock() {
