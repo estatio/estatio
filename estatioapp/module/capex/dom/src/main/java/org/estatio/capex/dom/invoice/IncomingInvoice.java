@@ -471,6 +471,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public String reasonDisabledDueToState() {
         final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
+        // guard for historic invoices (and invoice items)
+        if (approvalState1==null){
+            return "Cannot modify";
+        }
         switch (approvalState1) {
         case NEW:
         case COMPLETED:
