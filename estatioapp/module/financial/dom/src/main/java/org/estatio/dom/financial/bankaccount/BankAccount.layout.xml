@@ -21,9 +21,6 @@
                                 <cpt:property id="name">
                                     <cpt:action id="changeName" position="BELOW"/>
                                 </cpt:property>
-                                <cpt:property id="externalReference">
-                                    <cpt:action id="change" position="BELOW"/>
-                                </cpt:property>
                                 <cpt:property id="balance"/>
 
                                 <cpt:property id="owner">
@@ -85,8 +82,11 @@
         </bs3:col>
         <bs3:col span="6">
             <cpt:fieldSet name="IBAN details" id="ibanDetails">
+                <cpt:action id="change" position="PANEL"/>
                 <cpt:property id="iban"/>
                 <cpt:property id="validIban"/>
+                <cpt:property id="bic"/>
+                <cpt:property id="externalReference"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Account Details" id="accountDetails">
                 <cpt:property id="bank"/>
@@ -95,9 +95,6 @@
                 <cpt:property id="nationalBankCode"/>
                 <cpt:property id="branchCode"/>
                 <cpt:property id="accountNumber"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Other details" id="otherDetails">
-                <cpt:property id="bic"/>
             </cpt:fieldSet>
         </bs3:col>
     </bs3:row>

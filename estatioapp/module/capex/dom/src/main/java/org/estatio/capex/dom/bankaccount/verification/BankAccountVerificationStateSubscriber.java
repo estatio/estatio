@@ -29,6 +29,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
     }
 
     @Programmatic
+    @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void toResetWhen(BankAccount.ChangeEvent ev) {
         if(ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {

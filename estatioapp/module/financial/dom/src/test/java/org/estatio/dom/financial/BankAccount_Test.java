@@ -78,7 +78,7 @@ public class BankAccount_Test {
             BankAccount bankAccount = new BankAccount();
             final String iban = "NL91RABO0145814734";
             assertTrue(IBANValidator.valid(iban));
-            assertNull(bankAccount.validateChange(iban, null, null));
+            assertNull(bankAccount.validate0Change(iban));
             // When
             bankAccount.change(iban, "BIC", "EXT");
             // Then

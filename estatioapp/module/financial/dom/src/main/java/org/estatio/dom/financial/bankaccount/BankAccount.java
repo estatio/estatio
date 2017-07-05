@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.financial.bankaccount;
 
+import javax.annotation.Nullable;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -29,9 +30,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
@@ -39,6 +38,7 @@ import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.incode.module.base.dom.types.NameType;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.financial.FinancialAccount;
@@ -132,11 +132,13 @@ public class BankAccount
             domainEvent = ChangeEvent.class
     )
     public BankAccount change(
-            @ParameterLayout(typicalLength = IbanType.Meta.MAX_LEN)
+            @Parameter(maxLength = IbanType.Meta.MAX_LEN)
             final String iban,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
+            @Parameter(maxLength = AccountNumberType.Meta.MAX_LEN)
             final String bic,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
+            @Parameter(maxLength = NameType.Meta.MAX_LEN)
             final String externalReference) {
         setIban(iban);
         setName(iban);
@@ -150,10 +152,7 @@ public class BankAccount
         return this;
     }
 
-    public String validateChange(
-            final String iban,
-            final String bic,
-            final String externalReference) {
+    public String validate0Change(final String iban) {
         if (!IBANValidator.valid(iban)) {
             return "Not a valid IBAN number";
         }
