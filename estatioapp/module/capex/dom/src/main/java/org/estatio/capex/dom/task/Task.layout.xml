@@ -14,8 +14,6 @@
                             <cpt:fieldSet name="General">
                                 <cpt:action id="previous"/>
                                 <cpt:action id="next"/>
-                                <cpt:action id="snooze"/>
-                                <cpt:action id="checkState"/>
                                 <cpt:property id="description"/>
                                 <cpt:property id="object">
 
@@ -94,12 +92,14 @@
                 </bs3:tab>
             </bs3:tabGroup>
             <cpt:fieldSet name="Assignment" id="assignedTo">
+                <cpt:action id="checkState"/>
                 <cpt:property id="assignedTo"/>
                 <cpt:property id="personAssignedTo">
                     <cpt:action id="assignTo"/>
                 </cpt:property>
                 <cpt:property id="createdOn">
                     <cpt:named>Assigned on</cpt:named>
+                    <cpt:action id="snooze"/>
                 </cpt:property>
                 <cpt:property id="transition" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
