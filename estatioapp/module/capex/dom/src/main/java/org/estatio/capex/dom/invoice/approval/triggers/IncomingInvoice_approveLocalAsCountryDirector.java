@@ -21,9 +21,13 @@ public class IncomingInvoice_approveLocalAsCountryDirector extends IncomingInvoi
 
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-up")
-    public IncomingInvoice act(
+    public Object act(
             @Nullable final String comment) {
         trigger(comment);
+        return objectToReturn();
+    }
+
+    protected Object objectToReturn() {
         return getDomainObject();
     }
 

@@ -5,15 +5,15 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
-                    <cpt:action id="previous">
-                        <cpt:metadataError>No such action</cpt:metadataError>
-                    </cpt:action>
-                    <cpt:action id="next">
-                        <cpt:metadataError>No such action</cpt:metadataError>
-                    </cpt:action>
-                    <cpt:action id="all">
-                        <cpt:metadataError>No such action</cpt:metadataError>
-                    </cpt:action>
+                    <cpt:action id="save"/>
+                    <cpt:action id="cancel"/>
+                    <cpt:action id="approve"/>
+                    <cpt:action id="approveAsCountryDirector"/>
+                    <cpt:action id="approveLocalAsCountryDirector"/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="0" unreferencedActions="false">
                     <cpt:action id="recentAuditEntries"/>
                     <cpt:action id="findChangesByDate"/>
                     <cpt:action id="recentChanges"/>

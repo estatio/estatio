@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
@@ -10,7 +8,6 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.dom.party.Person;
 
 @Mixin(method = "act")
 public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_triggerAbstract {
@@ -24,9 +21,13 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
 
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-up")
-    public IncomingInvoice act(
+    public Object act(
             @Nullable final String comment) {
         trigger(comment);
+        return objectToReturn();
+    }
+
+    protected Object objectToReturn() {
         return getDomainObject();
     }
 

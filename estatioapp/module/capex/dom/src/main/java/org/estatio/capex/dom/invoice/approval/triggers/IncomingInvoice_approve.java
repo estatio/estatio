@@ -24,13 +24,19 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
 
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
-    public IncomingInvoice act(
+    public Object act(
             final String role,
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment) {
         trigger(personToAssignNextTo, comment);
+        return objectToReturn();
+    }
+
+    protected Object objectToReturn() {
         return getDomainObject();
     }
+
+
 
     public boolean hideAct() {
         return cannotTransition();
