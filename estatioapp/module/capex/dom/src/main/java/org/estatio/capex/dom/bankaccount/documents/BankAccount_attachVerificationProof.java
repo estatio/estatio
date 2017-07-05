@@ -18,6 +18,8 @@ import org.estatio.dom.invoice.DocumentTypeData;
 @Mixin
 public class BankAccount_attachVerificationProof {
 
+    public static final String ROLE_NAME_FOR_IBAN_PROOF = "iban proof";
+
     private final BankAccount bankAccount;
 
     public BankAccount_attachVerificationProof(BankAccount bankAccount) {
@@ -31,7 +33,7 @@ public class BankAccount_attachVerificationProof {
             final Blob document) {
         final String name = document.getName();
         final DocumentType type = DocumentTypeData.IBAN_PROOF.findUsing(documentTypeRepository);
-        documentService.createAndAttachDocumentForBlob(type, bankAccount.getAtPath(), name, document, "iban proof", bankAccount);
+        documentService.createAndAttachDocumentForBlob(type, bankAccount.getAtPath(), name, document, ROLE_NAME_FOR_IBAN_PROOF, bankAccount);
         return bankAccount;
     }
 
