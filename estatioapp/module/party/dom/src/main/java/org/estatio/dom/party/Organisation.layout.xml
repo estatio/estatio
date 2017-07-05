@@ -23,7 +23,6 @@
                                         <ns2:named>Change</ns2:named>
                                     </ns2:action>
                                 </ns2:property>
-                                <ns2:property id="applicationTenancyPath"/>
                             </ns2:fieldSet>
                         </col>
                     </row>
@@ -47,6 +46,7 @@
                         <col span="12">
                             <ns2:fieldSet name="Application Level" id="applicationLevel">
                                 <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationTenancyPath"/>
                             </ns2:fieldSet>
                         </col>
                     </row>

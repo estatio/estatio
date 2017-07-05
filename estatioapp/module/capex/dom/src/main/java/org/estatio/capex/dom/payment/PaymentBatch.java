@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -223,13 +224,26 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         if (lineIfAny.isPresent()) {
             return;
         }
-        final int nextSequence = getLines().size() + 1;
+        final int sequenceToUse = findFreeSequence();
         BigDecimal transferAmount = coalesce(incomingInvoice.getGrossAmount(), BigDecimal.ZERO);
         final String remittanceInformation = incomingInvoice.getInvoiceNumber();
         final PaymentLine line =
-                new PaymentLine(this, nextSequence, incomingInvoice, transferAmount, remittanceInformation);
+                new PaymentLine(this, sequenceToUse, incomingInvoice, transferAmount, remittanceInformation);
         serviceRegistry2.injectServicesInto(lineIfAny);
         getLines().add(line);
+    }
+
+    private int findFreeSequence() {
+        final List<Integer> usedSequences =
+                Lists.newArrayList(getLines()).stream()
+                        .map(PaymentLine::getSequence)
+                        .collect(Collectors.toList());
+        for(int i = 1; i<Integer.MAX_VALUE; i++) {
+            if(!usedSequences.contains(i)) {
+                return i;
+            }
+        }
+        throw new IllegalStateException("Unable to locate free sequence number to use");
     }
 
     private static BigDecimal coalesce(final BigDecimal amount, final BigDecimal other) {
@@ -246,9 +260,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Programmatic
     public void removeLineFor(final IncomingInvoice incomingInvoice) {
         Optional<PaymentLine> paymentLineIfAny = lineIfAnyFor(incomingInvoice);
-        if(paymentLineIfAny.isPresent()) {
-            getLines().remove(paymentLineIfAny.get());
-        }
+        paymentLineIfAny.ifPresent(paymentLine -> getLines().remove(paymentLine));
     }
 
 

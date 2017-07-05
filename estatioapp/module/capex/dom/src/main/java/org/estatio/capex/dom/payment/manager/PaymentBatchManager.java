@@ -162,8 +162,11 @@ public class PaymentBatchManager {
         @ActionLayout(cssClassFa = "fa-plus")
         public PaymentBatchManager act() {
             for (final IncomingInvoice payableInvoice : paymentBatchManager.payableInvoicesNotInAnyBatch) {
-                final BankAccount uniqueBankAccountIfAny = uniqueAccountToPay(payableInvoice);
-                if(uniqueBankAccountIfAny != null) {
+                if (payableInvoice.getBankAccount() == null || payableInvoice.getBankAccount().getBic() == null) {
+                    continue;
+                }
+                final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
+                if(uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
                     PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateBatchFor(uniqueBankAccountIfAny);
                     paymentBatch.addLineIfRequired(payableInvoice);
                 }
@@ -173,7 +176,7 @@ public class PaymentBatchManager {
             return paymentBatchManager;
         }
 
-        private BankAccount uniqueAccountToPay(final IncomingInvoice invoice) {
+        private BankAccount uniqueDebtorAccountToPay(final IncomingInvoice invoice) {
             Party buyer = invoice.getBuyer();
             List<BankAccount> bankAccountsForBuyer = bankAccountRepository.findBankAccountsByOwner(buyer);
 
@@ -303,6 +306,9 @@ public class PaymentBatchManager {
         public List<PaymentBatch> choices0Act() {
             return paymentBatchManager.newBatches;
         }
+        public PaymentBatch default0Act() {
+            return paymentBatchManager.selectedBatch;
+        }
 
         public String disableAct() {
             if (paymentBatchManager.newBatches.isEmpty()) {
@@ -324,7 +330,7 @@ public class PaymentBatchManager {
         }
 
         @Action(
-                semantics = SemanticsOf.SAFE,
+                semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
                 command = CommandReification.DISABLED,
                 publishing = Publishing.DISABLED
         )
@@ -338,6 +344,7 @@ public class PaymentBatchManager {
             // rather than return this manager, create a new one (force page reload)
             final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
             serviceRegistry2.injectServicesInto(paymentBatchManager);
+            paymentBatchManager.selectedBatch = this.paymentBatchManager.selectedBatch;
             return paymentBatchManager.init();
 
         }
@@ -473,6 +480,24 @@ public class PaymentBatchManager {
                 return Lists.newArrayList();
             }
             return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getBuyer());
+        }
+
+        public String validateAct(
+                final IncomingInvoice incomingInvoice,
+                final BankAccount debtorBankAccount) {
+            if(incomingInvoice.getBankAccount() == null) {
+                return "No creditor bank account on invoice";
+            }
+            if(incomingInvoice.getBankAccount().getBic() == null) {
+                return "Creditor bank account has no BIC";
+            }
+            if(debtorBankAccount == null) {
+                return null;
+            }
+            if(debtorBankAccount.getBic() == null) {
+                return "Bank account has no BIC";
+            }
+            return null;
         }
 
         @Inject

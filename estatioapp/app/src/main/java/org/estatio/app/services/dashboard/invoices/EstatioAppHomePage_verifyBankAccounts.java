@@ -32,9 +32,11 @@ public class EstatioAppHomePage_verifyBankAccounts {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout(position = ActionLayout.Position.PANEL)
-    public EstatioAppHomePage act(@Nullable String comment) {
+    public EstatioAppHomePage act(
+            final List<IncomingInvoice> invoices,
+            @Nullable
+            final String comment) {
 
-        final List<IncomingInvoice> invoices = homePage.getIncomingInvoicesPendingBankAccountCheck();
         for (IncomingInvoice invoice : invoices) {
             final BankAccount bankAccount = invoice.getBankAccount();
             factoryService.mixin(BankAccount_verify.class, bankAccount).act(comment);
@@ -43,6 +45,14 @@ public class EstatioAppHomePage_verifyBankAccounts {
 
         return homePage;
     }
+
+    public List<IncomingInvoice> choices0Act() {
+        return homePage.getIncomingInvoicesPendingBankAccountCheck();
+    }
+    public List<IncomingInvoice> default0Act() {
+        return choices0Act();
+    }
+
 
     @Inject
     FactoryService factoryService;

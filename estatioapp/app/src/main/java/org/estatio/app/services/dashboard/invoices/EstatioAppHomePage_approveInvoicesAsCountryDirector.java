@@ -30,18 +30,23 @@ public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, restrictTo = RestrictTo.PROTOTYPING)
     @ActionLayout(position = ActionLayout.Position.PANEL)
-    public EstatioAppHomePage act(@Nullable String comment) {
+    public EstatioAppHomePage act(
+            final List<IncomingInvoice> invoices,
+            @Nullable
+            final String comment) {
 
-        List<IncomingInvoice> invoices = homePage.getIncomingInvoicesApproved();
-        for (IncomingInvoice invoice : invoices) {
-            factoryService.mixin(IncomingInvoice_approveAsCountryDirector.class, invoice).act(comment);
-        }
-        invoices = homePage.getIncomingInvoicesApproved();
         for (IncomingInvoice invoice : invoices) {
             factoryService.mixin(IncomingInvoice_approveAsCountryDirector.class, invoice).act(comment);
         }
 
         return homePage;
+    }
+
+    public List<IncomingInvoice> choices0Act() {
+        return homePage.getIncomingInvoicesApproved();
+    }
+    public List<IncomingInvoice> default0Act() {
+        return choices0Act();
     }
 
     @Inject

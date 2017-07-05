@@ -75,6 +75,7 @@
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByManualProcess" paged="15">
                                 <cpt:named>Payable by Manual Process</cpt:named>
+                                <cpt:action id="updateAsPayableByTransfer"/>
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByOther" paged="15">
                                 <cpt:named>Payable by Other</cpt:named>

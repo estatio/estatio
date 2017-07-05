@@ -27,10 +27,18 @@
                 <bs3:col span="3">
                     <cpt:fieldSet id="Selected">
                         <cpt:property id="selectedBatch" labelPosition="TOP">
-                            <cpt:action id="selectBatch"/>
-                            <cpt:action id="previousBatch"/>
-                            <cpt:action id="nextBatch"/>
-                            <cpt:action id="completeBatch"/>
+                            <cpt:action id="selectBatch">
+                                <cpt:named>Select</cpt:named>
+                            </cpt:action>
+                            <cpt:action id="previousBatch">
+                                <cpt:named>Previous</cpt:named>
+                            </cpt:action>
+                            <cpt:action id="nextBatch">
+                                <cpt:named>Next</cpt:named>
+                            </cpt:action>
+                            <cpt:action id="completeBatch">
+                                <cpt:named>Complete</cpt:named>
+                            </cpt:action>
                         </cpt:property>
                     </cpt:fieldSet>
                 </bs3:col>
