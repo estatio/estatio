@@ -204,9 +204,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     stateTransitionService
                             .trigger(bankAccount, BankAccountVerificationStateTransitionType.INSTANTIATE, null);
                 }
-                // re-evaluate the state machine.
+                // re-evaluate the state machine, and create pending transition if required
                 stateTransitionService
                         .trigger(bankAccount, BankAccountVerificationStateTransition.class, null, null);
+                final BankAccountVerificationState state =
+                        stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+                if(state == BankAccountVerificationState.NOT_VERIFIED) {
+                    stateTransitionService.createPendingTransition(
+                            bankAccount, state,
+                            BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null);
+                }
             }
             return bankAccount;
         }
