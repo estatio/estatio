@@ -98,7 +98,7 @@ public abstract class DomainObject_triggerAbstract<
         }
         IPartyRoleType iPartyRoleType = stateTransitionService
                 .peekTaskRoleAssignToAfter(domainObject, requiredTransitionTypeIfAny);
-        return Enum.class.isAssignableFrom(iPartyRoleType.getClass())
+        return iPartyRoleType != null && Enum.class.isAssignableFrom(iPartyRoleType.getClass())
                 ? (T) iPartyRoleType
                 : null;
     }

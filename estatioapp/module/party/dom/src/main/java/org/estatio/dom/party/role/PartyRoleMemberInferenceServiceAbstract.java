@@ -20,6 +20,10 @@ public abstract class PartyRoleMemberInferenceServiceAbstract<E extends Enum<E> 
             final IPartyRoleType partyRoleType,
             final Object domainObject) {
 
+        if(partyRoleType == null) {
+            return null;
+        }
+
         if(!roleTypeEnumClass.isAssignableFrom(partyRoleType.getClass())) {
             return null;
         }
@@ -33,6 +37,10 @@ public abstract class PartyRoleMemberInferenceServiceAbstract<E extends Enum<E> 
 
     @Override
     public List<Person> inferMembersOf(final IPartyRoleType partyRoleType) {
+
+        if(partyRoleType == null) {
+            return null;
+        }
 
         if(!roleTypeEnumClass.isAssignableFrom(partyRoleType.getClass())) {
             return null;
