@@ -36,7 +36,7 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
 
     public DateTime default0Act() {
         final DateTime now = clockService.nowAsDateTime();
-        return now.plusHours(1).minusMinutes(now.getMinuteOfHour()).minusSeconds(now.getSecondOfMinute()).minusMillis(now.getMillisOfSecond());
+        return now.plusHours(2).minusMinutes(now.getMinuteOfHour()).minusSeconds(now.getSecondOfMinute()).minusMillis(now.getMillisOfSecond());
     }
 
     public String validate0Act(DateTime proposed) {

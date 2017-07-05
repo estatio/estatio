@@ -123,7 +123,11 @@
                 <bs3:tab name="Lines">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="lines"/>
+                            <cpt:collection id="lines">
+                                <cpt:action id="removeInvoice">
+                                    <cpt:named>Remove line</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

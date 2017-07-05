@@ -518,22 +518,27 @@ public class PaymentBatchManager {
                 publishing = Publishing.DISABLED
         )
         public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices) {
-            for (IncomingInvoice incomingInvoice : incomingInvoices) {
-                paymentBatchManager.selectedBatch.removeLineFor(incomingInvoice);
-            }
+            mixin().act(incomingInvoices);
             return paymentBatchManager.update();
         }
-
         public List<IncomingInvoice> choices0Act() {
-            List<PaymentLine> selectedBatchPaymentLines = paymentBatchManager.selectedBatchPaymentLines;
-            return selectedBatchPaymentLines.stream().map(PaymentLine::getInvoice).collect(Collectors.toList());
+            return mixin().choices0Act();
         }
         public String disableAct() {
             if(paymentBatchManager.selectedBatch == null) {
                 return "No batch selected";
             }
-            return null;
+            return mixin().disableAct();
         }
+
+        private PaymentBatch.removeInvoice mixin() {
+            return factoryService.mixin(PaymentBatch.removeInvoice.class, paymentBatchManager.selectedBatch);
+        }
+
+
+        @Inject
+        FactoryService factoryService;
+
     }
 
 

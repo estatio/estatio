@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -64,10 +65,16 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
         this.amount = transferAmount;
     }
 
+    public String title() {
+        return String.format("%s: %s to %s",
+                getBatch().getDebtorBankAccount().getIban(),
+                new DecimalFormat("0.00").format(getAmount()),
+                getCreditorBankAccount().getIban());
+    }
+
     @Column(allowsNull = "false", name = "batchId")
     @Getter @Setter
     private PaymentBatch batch;
-
 
     /**
      * Document > PmtInf > CdtTrfTxInf > PmtId > EndToEndId

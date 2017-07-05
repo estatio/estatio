@@ -35,6 +35,7 @@ import org.joda.time.DateTime;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -42,6 +43,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.jaxb.JaxbService;
@@ -289,6 +291,40 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
 
+
+    @Mixin(method="act")
+    public static class removeInvoice {
+        private final PaymentBatch paymentBatch;
+        public removeInvoice(final PaymentBatch paymentBatch) {
+            this.paymentBatch = paymentBatch;
+        }
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        public PaymentBatch act(final List<IncomingInvoice> incomingInvoices) {
+            for (IncomingInvoice incomingInvoice : incomingInvoices) {
+                paymentBatch.removeLineFor(incomingInvoice);
+            }
+            return paymentBatch;
+        }
+
+        public List<IncomingInvoice> choices0Act() {
+            return Lists.newArrayList(paymentBatch.getLines()).stream()
+                    .map(PaymentLine::getInvoice)
+                    .collect(Collectors.toList());
+        }
+        public String disableAct() {
+            final String reason = paymentBatch.reasonDisabledDueToState();
+            if(reason != null) {
+                return reason;
+            }
+            return choices0Act().isEmpty() ? "No invoices to remove" : null;
+        }
+    }
+
+
     @Programmatic
     public void removeLineFor(final IncomingInvoice incomingInvoice) {
         Optional<PaymentLine> paymentLineIfAny = lineIfAnyFor(incomingInvoice);
@@ -422,11 +458,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             return new Blob(documentName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, pdfMergedBytes);
         }
 
-        public String disableAct() {
-            return paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW
-                    ? "Batch is not yet complete"
-                    : null;
-        }
         public String default0Act() {
             return paymentBatch.fileNameWithSuffix("pdf");
         }
@@ -450,11 +481,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Programmatic
     public String fileNameWithSuffix(String suffix) {
         return String.format("%s-%s.%s",
-                getDebtorBankAccount().getReference(),
-                getRequestedExecutionDate().toString("yyyyMMdd-hhmm"),
-                suffix);
+                    getDebtorBankAccount().getReference(),
+                    (getRequestedExecutionDate() != null
+                            ? getRequestedExecutionDate().toString("yyyyMMdd-HHmm")
+                            : "DRAFT"),
+                    suffix);
     }
-
 
     //region > convertToXmlDocument
     Document convertToXmlDocument() {
