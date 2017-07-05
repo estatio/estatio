@@ -33,13 +33,14 @@ public class Task_categoriseDocumentAsOrder
             @Nullable final Property property,
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(property, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
             viewModel.setOriginatingTask(task);
         }
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public String validateAct(

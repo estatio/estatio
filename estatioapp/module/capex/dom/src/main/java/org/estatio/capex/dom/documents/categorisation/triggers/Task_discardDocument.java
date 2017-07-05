@@ -31,8 +31,9 @@ public class Task_discardDocument
     public Object act(
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Document mixinResult = mixin().act(comment);
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public boolean default1Act() {

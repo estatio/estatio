@@ -35,13 +35,14 @@ public class Task_categoriseDocumentAsOtherInvoice
             final IncomingInvoiceType incomingInvoiceType,
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(incomingInvoiceType, comment);
         if(mixinResult instanceof IncomingDocViewModel) {
             IncomingDocViewModel viewModel = (IncomingDocViewModel) mixinResult;
             // to support 'goToNext' when finished with the view model
             viewModel.setOriginatingTask(task);
         }
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public List<IncomingInvoiceType> choices0Act() {

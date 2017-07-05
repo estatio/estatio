@@ -25,8 +25,9 @@ public class Task_approveIncomingInvoiceAsCountryDirector
     public  Object act(
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(comment);
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public boolean hideAct() {

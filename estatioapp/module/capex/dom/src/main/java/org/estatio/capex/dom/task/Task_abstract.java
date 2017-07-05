@@ -12,7 +12,7 @@ public abstract class Task_abstract {
         this.task = task;
     }
 
-    protected Object toReturnElse(final boolean goToNext, final Object otherwise) {
+    protected Object nextTaskOrWarnIfRequired(final boolean goToNext) {
         if (goToNext){
             final Task nextTask = nextTaskAfter(task);
             if (nextTask != null) {
@@ -22,7 +22,16 @@ public abstract class Task_abstract {
             messageService.informUser("No more tasks");
         }
 
-        return otherwise;
+        return null;
+    }
+
+    protected static Object coalesce(final Object... candidates) {
+        for (Object candidate : candidates) {
+            if(candidate != null) {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     protected Task nextTaskBefore(final Task task) {

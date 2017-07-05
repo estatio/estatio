@@ -33,8 +33,9 @@ public class Task_completeOrderWithApproval
             LocalDate approvedOn,
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(approvedBy, approvedOn, comment);
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public List<Person> autoComplete0Act(@MinLength(3) final String searchPhrase) {

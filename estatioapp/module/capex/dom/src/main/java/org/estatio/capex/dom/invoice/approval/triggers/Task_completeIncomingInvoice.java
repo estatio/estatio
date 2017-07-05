@@ -29,8 +29,9 @@ public class Task_completeIncomingInvoice
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
+        final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(role, personToAssignNextTo, comment);
-        return toReturnElse(goToNext, mixinResult);
+        return coalesce(nextTaskIfAny, mixinResult);
     }
 
     public boolean hideAct() {
