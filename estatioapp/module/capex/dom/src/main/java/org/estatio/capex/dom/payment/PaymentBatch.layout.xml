@@ -29,8 +29,15 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Application Tenancy" id="applicationTenancy">
                                         <cpt:property id="applicationTenancy"/>
-                                        <cpt:property id="atPath"/>
+                                        <cpt:property id="atPath" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -46,7 +53,6 @@
                                         <cpt:property id="datanucleusVersionLong"/>
                                         <cpt:property id="datanucleusVersionTimestamp"/>
                                     </cpt:fieldSet>
-                                    <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -54,8 +60,16 @@
                 </bs3:col>
             </bs3:row>
             <bs3:row>
-                <bs3:col span="12">
-                    <cpt:fieldSet name="Dates">
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Amounts">
+                        <cpt:property id="totalNetAmount" hidden="ALL_TABLES"/>
+                        <cpt:property id="totalVatAmount" hidden="ALL_TABLES"/>
+                        <cpt:property id="totalGrossAmount"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Details">
+                        <cpt:property id="numPayments"/>
                         <cpt:property id="requestedExecutionDate"/>
                     </cpt:fieldSet>
                 </bs3:col>
@@ -76,7 +90,7 @@
                                                 <cpt:named>Show transitions</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
-                                        <cpt:property id="pendingApprovalTask">
+                                        <cpt:property id="pendingApprovalTask" hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>

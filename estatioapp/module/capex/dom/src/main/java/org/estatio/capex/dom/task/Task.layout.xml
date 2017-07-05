@@ -105,7 +105,7 @@
             </cpt:fieldSet>
             <cpt:fieldSet name="Completion" id="completion">
                 <cpt:property id="completed"/>
-                <cpt:property id="completedBy" hidden="ALL_TABLES"/>
+                <cpt:property id="completedBy"/>
                 <cpt:property id="completedOn"/>
                 <cpt:property id="comment" hidden="ALL_TABLES"/>
             </cpt:fieldSet>

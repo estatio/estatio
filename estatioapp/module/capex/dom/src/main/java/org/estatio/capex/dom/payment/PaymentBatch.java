@@ -5,10 +5,12 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -39,7 +41,9 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
@@ -167,8 +171,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
 
-    // TODO: derive somehow...
-    // Document > PmtInf > PmtInfId
 
     public String title() {
         switch (getApprovalState()) {
@@ -200,6 +202,35 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Column(allowsNull = "true")
     @Getter @Setter
     private DateTime requestedExecutionDate;
+
+
+    @Property(notPersisted = true)
+    public BigDecimal getTotalNetAmount() {
+        return sum(IncomingInvoice::getNetAmount);
+    }
+
+    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
+    public BigDecimal getTotalVatAmount() {
+        return sum(IncomingInvoice::getVatAmount);
+    }
+
+    @Property(notPersisted = true)
+    public BigDecimal getTotalGrossAmount() {
+        return sum(IncomingInvoice::getGrossAmount);
+    }
+
+    @Property(notPersisted = true)
+    public int getNumPayments() {
+        return getLines().size();
+    }
+
+    private BigDecimal sum(final Function<IncomingInvoice, BigDecimal> functionToObtainAmount) {
+        return Lists.newArrayList(getLines()).stream()
+                .map(PaymentLine::getInvoice)
+                .map(functionToObtainAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
