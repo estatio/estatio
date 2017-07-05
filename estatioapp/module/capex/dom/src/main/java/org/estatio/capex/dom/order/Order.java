@@ -19,6 +19,7 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.assertj.core.util.Lists;
@@ -219,8 +220,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         public Order act(
                 final Charge charge,
                 final String description,
+                @Digits(integer=13, fraction = 2)
                 final BigDecimal netAmount,
-                @Nullable final BigDecimal vatAmount,
+                @Nullable
+                @Digits(integer=13, fraction = 2)
+                final BigDecimal vatAmount,
+                @Digits(integer=13, fraction = 2)
                 final BigDecimal grossAmount,
                 @Nullable final Tax tax,
                 final LocalDate startDate,

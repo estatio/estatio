@@ -263,14 +263,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return this;
     }
 
-    public List<Budget> choices0CreateBudgetItem(final Budget budget, final Charge charge){
+    public List<Budget> choices0CreateBudgetItem(){
         if (hasProperty()){
             return budgetRepository.findByProperty(getProperty());
         }
         return budgetRepository.allBudgets();
     }
 
-    public List<Charge> choices1CreateBudgetItem(final Budget budget, final Charge charge){
+    public List<Charge> choices1CreateBudgetItem(){
         if (hasCharge()){
             return Arrays.asList(getCharge());
         }
@@ -283,7 +283,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return this;
     }
 
-    public List<Budget> choices0CreateNextBudget(final Budget budget){
+    public List<Budget> choices0CreateNextBudget(){
         if (hasProperty()){
             return budgetRepository.findByProperty(getProperty());
         }
@@ -470,11 +470,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     public IncomingDocViewModel changeItemDetails(
             final String description,
+            @Digits(integer=13, fraction = 2)
             final BigDecimal netAmount,
+            @Digits(integer=13, fraction = 2)
             @Nullable
             final BigDecimal vatAmount,
             @Nullable
             final Tax tax,
+            @Digits(integer=13, fraction = 2)
             @Nullable
             final BigDecimal grossAmount
     ){

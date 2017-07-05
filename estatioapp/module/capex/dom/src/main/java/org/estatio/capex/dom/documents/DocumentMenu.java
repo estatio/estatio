@@ -40,10 +40,8 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
@@ -116,11 +114,6 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
     DocumentTypeRepository documentTypeRepository;
 
     @Inject
-    DocumentService documentService;
-
-    @Inject
     IncomingDocumentRepository incomingDocumentRepository;
 
-    @Inject
-    PaperclipRepository paperclipRepository;
 }

@@ -221,9 +221,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final IncomingInvoiceType type,
                 final Charge charge,
                 @Nullable final String description,
+                @Digits(integer=13, fraction = 2)
                 final BigDecimal netAmount,
-                @Nullable final BigDecimal vatAmount,
-                @Nullable final BigDecimal grossAmount,
+                @Nullable
+                @Digits(integer=13, fraction = 2)
+                final BigDecimal vatAmount,
+                @Nullable
+                @Digits(integer=13, fraction = 2)
+                final BigDecimal grossAmount,
                 @Nullable final Tax tax,
                 @Nullable final LocalDate dueDate,
                 @Nullable final LocalDate startDate,
