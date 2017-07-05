@@ -27,13 +27,13 @@ public class BankAccount_detachVerificationProof {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(name = "documents", sequence = "2")
+    @MemberOrder(name = "documents", sequence = "3")
     public BankAccount act(
             final DocumentAbstract document) {
 
         final Paperclip paperclipIfAny = paperclipRepository
                 .findByDocumentAndAttachedToAndRoleName(document, bankAccount,
-                        BankAccount_attachVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+                        BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
         if(paperclipIfAny != null) {
             paperclipRepository.delete(paperclipIfAny);
         }
@@ -69,7 +69,7 @@ public class BankAccount_detachVerificationProof {
     }
 
     private List<Paperclip> doFindIbanProofPaperclips() {
-        return paperclipRepository.findByAttachedToAndRoleName(bankAccount, BankAccount_attachVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+        return paperclipRepository.findByAttachedToAndRoleName(bankAccount, BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
     }
 
     @Inject

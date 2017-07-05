@@ -3,6 +3,7 @@ package org.estatio.capex.dom.documents;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -28,21 +29,41 @@ public class LookupAttachedPdfService {
     }
 
     @Programmatic
+    public List<Document> lookupIncomingInvoicePdfsFrom(final IncomingInvoice incomingInvoice) {
+        return lookupPdfsFrom(incomingInvoice, DocumentTypeData.INCOMING_INVOICE);
+    }
+
+    @Programmatic
     public Optional<Document> lookupOrderPdfFrom(final Order order) {
         return lookupPdfFrom(order, DocumentTypeData.INCOMING_ORDER);
+    }
+
+    @Programmatic
+    public List<Document> lookupOrderPdfsFrom(final Order order) {
+        return lookupPdfsFrom(order, DocumentTypeData.INCOMING_ORDER);
     }
 
     @Programmatic
     public Optional<Document> lookupPdfFrom(
             final Object domainObject,
             final DocumentTypeData documentTypeData) {
-        return queryResultsCache.execute(
-                () -> doLookupPdfFrom(domainObject, documentTypeData),
-                LookupAttachedPdfService.class,
-                "lookupPdfFrom", domainObject, documentTypeData);
+        final List<Document> documents = lookupPdfsFrom(domainObject, documentTypeData);
+        return documents.isEmpty()
+                ? Optional.empty()
+                : Optional.of(documents.get(0));
     }
 
-    private Optional<Document> doLookupPdfFrom(
+    @Programmatic
+    public List<Document> lookupPdfsFrom(
+            final Object domainObject,
+            final DocumentTypeData documentTypeData) {
+        return queryResultsCache.execute(
+                () -> doLookupPdfsFrom(domainObject, documentTypeData),
+                LookupAttachedPdfService.class,
+                "lookupPdfsFrom", domainObject, documentTypeData);
+    }
+
+    private List<Document> doLookupPdfsFrom(
             final Object domainObject,
             final DocumentTypeData documentTypeData) {
         final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(domainObject);
@@ -52,7 +73,7 @@ public class LookupAttachedPdfService {
                 .map(Document.class::cast)
                 .filter(documentTypeData::isDocTypeFor)
                 .filter(document -> Objects.equals(document.getMimeType(), "application/pdf"))
-                .findFirst();
+                .collect(Collectors.toList());
     }
 
 

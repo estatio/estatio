@@ -15,20 +15,20 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
 
-@Mixin
-public class BankAccount_attachVerificationProof {
+@Mixin(method = "act")
+public class BankAccount_attachPdfAsVerificationProof {
 
     public static final String ROLE_NAME_FOR_IBAN_PROOF = "iban proof";
 
     private final BankAccount bankAccount;
 
-    public BankAccount_attachVerificationProof(BankAccount bankAccount) {
+    public BankAccount_attachPdfAsVerificationProof(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 
     @Action()
-    @MemberOrder(name = "documents", sequence = "1")
-    public BankAccount $$(
+    @MemberOrder(name = "documents", sequence = "2")
+    public BankAccount act(
             @Parameter(fileAccept = "application/pdf")
             final Blob document) {
         final String name = document.getName();
