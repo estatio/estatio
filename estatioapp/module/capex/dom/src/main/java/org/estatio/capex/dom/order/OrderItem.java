@@ -88,6 +88,11 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE project == :project "),
         @Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE property == :property "),
+        @Query(
                 name = "findByBudgetItem", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
