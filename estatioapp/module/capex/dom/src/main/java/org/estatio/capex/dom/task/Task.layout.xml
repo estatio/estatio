@@ -116,7 +116,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Content" id="content">
-                                <cpt:property id="incomingDocumentPdf" hidden="ALL_TABLES"/>
+                                <cpt:property id="pdf" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

@@ -19,10 +19,10 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.task.Task;
 
 @Mixin(method = "prop")
-public class Task_incomingDocumentPdf {
+public class Task_pdf {
     private final Task task;
 
-    public Task_incomingDocumentPdf(final Task task) {
+    public Task_pdf(final Task task) {
         this.task = task;
     }
 
@@ -32,7 +32,7 @@ public class Task_incomingDocumentPdf {
     @PdfJsViewer(initialPageNum = 1, initialScale = Scale.PAGE_WIDTH, initialHeight = 1500)
     @Action(
             semantics = SemanticsOf.SAFE,
-            domainEvent = Task_incomingDocumentPdf.DomainEvent.class
+            domainEvent = Task_pdf.DomainEvent.class
     )
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public Blob prop() {

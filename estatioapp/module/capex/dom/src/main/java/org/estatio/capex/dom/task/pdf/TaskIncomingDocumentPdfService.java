@@ -14,6 +14,7 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
@@ -21,6 +22,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class TaskIncomingDocumentPdfService {
@@ -57,6 +59,14 @@ public class TaskIncomingDocumentPdfService {
                     (IncomingInvoiceApprovalStateTransition) stateTransition;
             final IncomingInvoice invoice = iiast.getInvoice();
             final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
+            return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
+        }
+
+        if(stateTransition instanceof BankAccountVerificationStateTransition) {
+            final BankAccountVerificationStateTransition bavst =
+                    (BankAccountVerificationStateTransition) stateTransition;
+            final BankAccount bankAccount = bavst.getBankAccount();
+            final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIbanProofPdfFrom(bankAccount);
             return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
         }
 
