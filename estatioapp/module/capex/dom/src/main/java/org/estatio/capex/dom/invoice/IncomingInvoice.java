@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -53,6 +55,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -345,6 +348,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         public boolean hideAct() {
             return cannotTransition();
         }
+
+        public List<BankAccount> autoComplete0Act(@MinLength(3) final String searchString){
+            if (incomingInvoice.getSeller()!=null) {
+                return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getSeller());
+            } else {
+                // empty
+                return new ArrayList<>();
+            }
+        }
+
+        @Inject BankAccountRepository bankAccountRepository;
 
     }
 
