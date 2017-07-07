@@ -85,7 +85,10 @@
                 <cpt:action id="change" position="PANEL"/>
                 <cpt:property id="iban"/>
                 <cpt:property id="validIban"/>
-                <cpt:property id="bic"/>
+                <cpt:property id="bic">
+                    <cpt:action id="updateBic"/>
+                    <cpt:action id="lookupBic"/>
+                </cpt:property>
                 <cpt:property id="externalReference"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Account Details" id="accountDetails">
