@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
@@ -113,6 +114,7 @@ public interface StateTransitionType<
             final S fromState,
             final IPartyRoleType assignToIfAny,
             final Person personToAssignToIfAny,
+            final String taskDescriptionIfAny,
             final ServiceRegistry2 serviceRegistry2);
 
     /**
@@ -252,6 +254,21 @@ public interface StateTransitionType<
     @Programmatic
     default String reasonGuardNotSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
         return null;
+    }
+
+    public static class Util {
+        public static <
+                DO,
+                ST extends StateTransition<DO, ST, STT, S> ,
+                STT extends Enum & StateTransitionType<DO, ST, STT, S>,
+                S extends State<S>
+            > String taskDescriptionUsing(
+                final String taskDescriptionIfAny,
+                final STT transitionType) {
+            return Enums.getFriendlyNameOf(transitionType) + (taskDescriptionIfAny != null ? " (" + taskDescriptionIfAny + ")": "");
+        }
+
+
     }
 
 

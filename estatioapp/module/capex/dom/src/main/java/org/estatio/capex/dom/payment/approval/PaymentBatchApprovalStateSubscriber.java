@@ -41,7 +41,7 @@ public class PaymentBatchApprovalStateSubscriber extends AbstractSubscriber {
         PaymentBatchApprovalState approvalState = paymentBatch.getApprovalState();
         if(approvalState == PaymentBatchApprovalStateTransitionType.INSTANTIATE.getToState()) {
             // ie was set in the persisting callback
-            stateTransitionService.trigger(paymentBatch, PaymentBatchApprovalStateTransitionType.INSTANTIATE, null);
+            stateTransitionService.trigger(paymentBatch, PaymentBatchApprovalStateTransitionType.INSTANTIATE, null, null);
         }
     }
 

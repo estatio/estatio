@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 
 @Mixin(method = "act")
 public class IncomingInvoice_viewApprovalTransitions

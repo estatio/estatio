@@ -24,7 +24,7 @@ public class StateTransitionServiceMenu {
 
         final List<IncomingInvoice> incomingInvoices = incomingInvoiceRepository.listAll();
         for (IncomingInvoice incomingInvoice : incomingInvoices) {
-            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
         }
 
     }

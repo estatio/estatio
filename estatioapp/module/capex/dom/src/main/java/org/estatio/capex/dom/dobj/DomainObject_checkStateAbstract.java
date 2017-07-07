@@ -37,7 +37,7 @@ public abstract class DomainObject_checkStateAbstract<
     )
     public DO act() {
 
-        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null, null);
+        stateTransitionService.trigger(domainObject, stateTransitionClass, null, null, null, null);
 
         return domainObject;
     }

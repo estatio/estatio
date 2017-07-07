@@ -8,14 +8,13 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.state.AdvancePolicy;
+import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.party.PartyRoleTypeEnum;
@@ -127,12 +126,14 @@ public enum PaymentBatchApprovalStateTransitionType
             final PaymentBatchApprovalState fromState,
             final IPartyRoleType assignToIfAny,
             final Person personToAssignToIfAny,
+            final String taskDescriptionIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final PaymentBatchApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(PaymentBatchApprovalStateTransition.Repository.class);
 
-        final String taskDescription = Enums.getFriendlyNameOf(this);
+        final String taskDescription = Util.taskDescriptionUsing(taskDescriptionIfAny, this);
+
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 

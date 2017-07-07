@@ -24,7 +24,7 @@ public class PaymentBatch_approve extends PaymentBatch_triggerAbstract {
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public PaymentBatch act(
             @Nullable final String comment) {
-        trigger(comment);
+        trigger(comment, null);
         return getDomainObject();
     }
 

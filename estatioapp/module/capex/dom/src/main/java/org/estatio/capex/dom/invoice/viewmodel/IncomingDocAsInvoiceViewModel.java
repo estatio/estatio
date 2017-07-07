@@ -455,7 +455,7 @@ public class IncomingDocAsInvoiceViewModel
 
         // if changed the type, then we need to re-evaluate the state machine
         if(previousType != getIncomingInvoiceType()) {
-            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null);
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, null, null, null);
         }
 
         // upsert invoice item

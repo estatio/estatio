@@ -18,7 +18,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void toInstantiateWhen(BankAccount.PersistedLifecycleEvent ev) {
-        stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.INSTANTIATE, null);
+        stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.INSTANTIATE, null, null);
     }
 
     @Programmatic
@@ -33,7 +33,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
     @org.axonframework.eventhandling.annotation.EventHandler
     public void toResetWhen(BankAccount.ChangeEvent ev) {
         if(ev.getEventPhase() == AbstractDomainEvent.Phase.EXECUTED) {
-            stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.RESET, null);
+            stateTransitionService.trigger(ev.getSource(), BankAccountVerificationStateTransitionType.RESET, null, null);
         }
     }
 

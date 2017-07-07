@@ -39,9 +39,9 @@ public class Order_discard extends
                         document,
                         IncomingDocumentCategorisationStateTransition.class,
                         IncomingDocumentCategorisationStateTransitionType.DISCARD_ASSOCIATED,
-                        comment));
+                        comment, null));
 
-        trigger(comment);
+        trigger(comment, null);
         return getDomainObject();
     }
 

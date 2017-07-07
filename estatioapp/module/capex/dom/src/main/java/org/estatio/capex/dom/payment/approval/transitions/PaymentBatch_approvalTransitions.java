@@ -4,27 +4,27 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
+import org.estatio.capex.dom.dobj.DomainObject_transitionsAbstract;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 
-@Mixin(method = "act")
-public class PaymentBatch_viewApprovalTransitions extends
-        DomainObject_viewTransitionsAbstract<
-                PaymentBatch,
-                PaymentBatchApprovalStateTransition,
-                PaymentBatchApprovalStateTransitionType,
-                PaymentBatchApprovalState> {
+@Mixin(method = "coll")
+public class PaymentBatch_approvalTransitions extends
+        DomainObject_transitionsAbstract<
+                        PaymentBatch,
+                        PaymentBatchApprovalStateTransition,
+                        PaymentBatchApprovalStateTransitionType,
+                        PaymentBatchApprovalState> {
 
-    public PaymentBatch_viewApprovalTransitions(final PaymentBatch paymentBatch) {
+    public PaymentBatch_approvalTransitions(final PaymentBatch paymentBatch) {
         super(paymentBatch, PaymentBatchApprovalStateTransition.class);
     }
 
     // necessary because Isis' metamodel unable to infer return type from generic method
     @Override
-    public List<PaymentBatchApprovalStateTransition> act() {
-        return super.act();
+    public List<PaymentBatchApprovalStateTransition> coll() {
+        return super.coll();
     }
 }

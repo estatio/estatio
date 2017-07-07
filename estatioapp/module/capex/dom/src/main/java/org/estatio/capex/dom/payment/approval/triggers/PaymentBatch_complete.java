@@ -30,7 +30,7 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
             final DateTime requestedExecutionDate,
             @Nullable final String comment) {
         paymentBatch.setRequestedExecutionDate(requestedExecutionDate);
-        trigger(comment);
+        trigger(comment, null);
         return getDomainObject();
     }
 

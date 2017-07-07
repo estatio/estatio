@@ -24,7 +24,7 @@ public class PaymentBatch_discard extends PaymentBatch_triggerAbstract {
     @ActionLayout(cssClassFa = "trash-o")
     public PaymentBatch act(
             @Nullable final String comment) {
-        trigger(comment);
+        trigger(comment, null);
         return getDomainObject();
     }
 

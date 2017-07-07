@@ -41,7 +41,7 @@ public class OrderApprovalStateSubscriber extends AbstractSubscriber {
         OrderApprovalState approvalState = order.getApprovalState();
         if(approvalState == OrderApprovalStateTransitionType.INSTANTIATE.getToState()) {
             // ie was set in the persisting callback
-            stateTransitionService.trigger(order, OrderApprovalStateTransitionType.INSTANTIATE, null);
+            stateTransitionService.trigger(order, OrderApprovalStateTransitionType.INSTANTIATE, null, null);
         }
     }
 

@@ -66,7 +66,7 @@ public class Document_categoriseAsPropertyInvoice
 
         paperclipRepository.attach(document, null, incomingInvoice);
 
-        trigger(comment);
+        trigger(comment, null);
 
         return incomingInvoice;
     }

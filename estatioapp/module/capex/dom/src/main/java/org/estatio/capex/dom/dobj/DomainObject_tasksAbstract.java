@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -36,8 +38,10 @@ public abstract class DomainObject_tasksAbstract<
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Task> coll() {
-        final List<ST> transitions = stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
-        return Task.from(transitions);
+        final List<ST> stateTransitions =
+                stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
+        stateTransitions.sort(Ordering.natural().reverse().onResultOf(StateTransitionAbstract::getCreatedOn));
+        return Task.from(stateTransitions);
     }
 
     @Inject

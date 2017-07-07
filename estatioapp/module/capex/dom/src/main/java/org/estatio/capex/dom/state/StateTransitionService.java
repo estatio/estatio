@@ -175,15 +175,15 @@ public class StateTransitionService {
         final DO domainObject = stateTransition.getDomainObject();
         final STT transitionType = stateTransition.getTransitionType();
         Class<ST> stClass = transitionClassFor(transitionType);
-        return trigger(domainObject, stClass, null, null);
+        return trigger(domainObject, stClass, null, null, null);
     }
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that
-     *
-     * @param domainObject - the domain object whose
+     *  @param domainObject - the domain object whose
      * @param requiredTransitionType - the type of transition being applied (but can be null for very first time)
-     * @param comment
+     * @param currentTaskCommentIfAny
+     * @param nextTaskDescriptionIfAny
      */
     @Programmatic
     public <
@@ -194,18 +194,20 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final STT requiredTransitionType,
-            final String comment) {
+            final String currentTaskCommentIfAny,
+            final String nextTaskDescriptionIfAny) {
         final Class<ST> stateTransitionClass = transitionClassFor(requiredTransitionType);
-        return trigger(domainObject, stateTransitionClass, requiredTransitionType, comment);
+        return trigger(domainObject, stateTransitionClass, requiredTransitionType,
+                currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
-     *
-     *  @param domainObject - the domain object whose
+     *   @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
      * @param requiredTransitionTypeIfAny
-     * @param comment
+     * @param currentTaskCommentIfAny
+     * @param nextTaskDescriptionIfAny
      */
     @Programmatic
     public <
@@ -217,18 +219,20 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requiredTransitionTypeIfAny,
-            final String comment) {
+            final String currentTaskCommentIfAny,
+            final String nextTaskDescriptionIfAny) {
 
-        return trigger(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, null, comment);
+        return trigger(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, null, currentTaskCommentIfAny,
+                nextTaskDescriptionIfAny);
     }
 
     /**
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
-     *
-     *  @param domainObject - the domain object whose
+     *   @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
      * @param requiredTransitionTypeIfAny
-     * @param comment
+     * @param currentTaskCommentIfAny
+     * @param nextTaskDescriptionIfAny
      */
     @Programmatic
     public <
@@ -241,17 +245,19 @@ public class StateTransitionService {
             final Class<ST> stateTransitionClass,
             final STT requiredTransitionTypeIfAny,
             final Person personToAssignNextToIfAny,
-            final String comment) {
+            final String currentTaskCommentIfAny,
+            final String nextTaskDescriptionIfAny) {
 
         ST completedTransition = completeTransitionIfPossible(
                                         domainObject, stateTransitionClass, requiredTransitionTypeIfAny,
-                                        null, comment);
+                                        null, currentTaskCommentIfAny, nextTaskDescriptionIfAny);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {
             ST previousTransition = completedTransition;
             completedTransition = completeTransitionIfPossible(
-                                        domainObject, stateTransitionClass, null, personToAssignNextToIfAny, null);
+                                        domainObject, stateTransitionClass, null, personToAssignNextToIfAny, null,
+                                        nextTaskDescriptionIfAny);
             keepTransitioning = (completedTransition != null && previousTransition != completedTransition);
         }
 
@@ -270,7 +276,8 @@ public class StateTransitionService {
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny,
             final Person personToAssignNextToIfAny,
-            final String comment) {
+            final String comment,
+            final String nextTaskDescriptionIfAny) {
 
         // check the override, if any
         if(requestedTransitionTypeIfAny != null) {
@@ -335,7 +342,7 @@ public class StateTransitionService {
                     pendingTransitionType = nextTransitionType;
                     pendingTransitionIfAny  = createPendingTransition(
                                                     domainObject, currentStateIfAny, nextTransitionType,
-                                                    personToAssignNextToIfAny);
+                                                    personToAssignNextToIfAny, nextTaskDescriptionIfAny);
                 } else {
 
                     // in this branch the transition strategy for the most recently completed transition
@@ -353,7 +360,7 @@ public class StateTransitionService {
 
                 pendingTransitionIfAny  = createPendingTransition(
                                                 domainObject, currentStateIfAny, nextTransitionType,
-                                                personToAssignNextToIfAny);
+                                                personToAssignNextToIfAny, nextTaskDescriptionIfAny);
                 pendingTransitionType = nextTransitionType;
             }
         }
@@ -427,7 +434,8 @@ public class StateTransitionService {
             final DO domainObject,
             final S currentState,
             final STT transitionType,
-            final Person personToAssignToIfAny) {
+            final Person personToAssignToIfAny,
+            final String taskDescriptionIfAny) {
 
         final TaskAssignmentStrategy<DO, ST, STT, S> taskAssignmentStrategy =
                 transitionType.getTaskAssignmentStrategy();
@@ -436,7 +444,7 @@ public class StateTransitionService {
             assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2);
         }
         return transitionType
-                .createTransition(domainObject, currentState, assignToIfAny, personToAssignToIfAny, serviceRegistry2);
+                .createTransition(domainObject, currentState, assignToIfAny, personToAssignToIfAny, taskDescriptionIfAny, serviceRegistry2);
     }
 
     private <

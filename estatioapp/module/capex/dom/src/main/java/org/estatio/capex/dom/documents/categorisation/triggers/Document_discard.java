@@ -30,7 +30,7 @@ public class Document_discard
     public Document act(
             @Nullable final String comment) {
 
-        trigger(comment);
+        trigger(comment, null);
 
         return document;
     }

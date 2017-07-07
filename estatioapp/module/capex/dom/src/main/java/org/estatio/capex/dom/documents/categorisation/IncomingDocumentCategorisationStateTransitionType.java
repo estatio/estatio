@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -128,12 +127,13 @@ public enum IncomingDocumentCategorisationStateTransitionType
             final IncomingDocumentCategorisationState fromState,
             final IPartyRoleType assignToIfAny,
             final Person personToAssignToIfAny,
-            final ServiceRegistry2 serviceRegistry2) {
+            final String taskDescriptionIfAny, final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingDocumentCategorisationStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingDocumentCategorisationStateTransition.Repository.class);
 
-        final String taskDescription = Enums.getFriendlyNameOf(this);
+        final String taskDescription = Util.taskDescriptionUsing(taskDescriptionIfAny, this);
+
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 

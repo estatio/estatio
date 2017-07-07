@@ -68,12 +68,19 @@ public abstract class DomainObject_triggerAbstract<
      *
      * @return - the {@link StateTransition} most recently completed for the domain object.
      */
-    protected final ST trigger(final String comment) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, comment);
+    protected final ST trigger(
+            final String currentTaskCommentIfAny,
+            final String nextTaskDescriptionIfAny) {
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny,
+                currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
-    protected final ST trigger(final Person personToAssignNextTo, final String comment) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignNextTo, comment);
+    protected final ST trigger(
+            final Person personToAssignNextTo,
+            final String currentTaskCommentIfAny,
+            final String nextTaskDescriptionIfAny) {
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignNextTo, currentTaskCommentIfAny,
+                nextTaskDescriptionIfAny);
     }
 
     protected Person defaultPersonToAssignNextTo() {
@@ -113,7 +120,7 @@ public abstract class DomainObject_triggerAbstract<
     }
 
     /**
-     * Subclasses must call, typically in their <tt>hideAct()</tt> guargs, in order to check whether {@link #trigger(String)}.
+     * Subclasses must call, typically in their <tt>hideAct()</tt> guargs, in order to check whether {@link #trigger(String, String)}.
      */
     protected final boolean cannotTransition() {
         return !canTransition();

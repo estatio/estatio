@@ -149,7 +149,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
                     .currentStateOf(bankAccount, VERIFY_BANK_ACCOUNT);
             final Person personToAssignNextToIfAny = null;
             stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
-                    personToAssignNextToIfAny);
+                    personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
             // then
@@ -241,7 +241,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
             stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
-                    personToAssignNextToIfAny);
+                    personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -294,7 +294,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertState(bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
             stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
-                    personToAssignNextToIfAny);
+                    personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
@@ -343,7 +343,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertState(this.bankAccount, NOT_VERIFIED);
             final Person personToAssignNextToIfAny = null;
             stateTransitionService.createPendingTransition(bankAccount, NOT_VERIFIED, VERIFY_BANK_ACCOUNT,
-                    personToAssignNextToIfAny);
+                    personToAssignNextToIfAny, null);
             transactionService.nextTransaction();
 
             List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);

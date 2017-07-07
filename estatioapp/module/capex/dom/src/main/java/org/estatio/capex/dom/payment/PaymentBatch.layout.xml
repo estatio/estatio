@@ -123,7 +123,7 @@
                 <bs3:tab name="Lines">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="lines">
+                            <cpt:collection id="lines" defaultView="table">
                                 <cpt:action id="removeInvoice">
                                     <cpt:named>Remove line</cpt:named>
                                 </cpt:action>
@@ -146,9 +146,23 @@
     <bs3:row>
         <bs3:col span="12">
             <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="Approval Tasks and State Transitions">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="approvalTasks" defaultView="table">
+                                <cpt:named>Tasks</cpt:named>
+                            </cpt:collection>
+                            <cpt:collection id="approvalTransitions" defaultView="table">
+                                <cpt:named>Transitions</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
                 <bs3:tab name="_">
                     <bs3:row>
-                        <bs3:col span="12"></bs3:col>
+                        <bs3:col span="12">
+                            <cpt:collection id="dummy"/>
+                        </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>

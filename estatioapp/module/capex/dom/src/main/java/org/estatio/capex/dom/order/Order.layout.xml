@@ -151,13 +151,28 @@
     <bs3:row>
         <bs3:col span="12">
             <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="Approval Tasks and State Transitions">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="approvalTasks" defaultView="table">
+                                <cpt:named>Tasks</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="12">
+                            <cpt:collection id="approvalTransitions" defaultView="table">
+                                <cpt:named>Transitions</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
                 <bs3:tab name="_">
                     <bs3:row>
-                        <bs3:col span="12"></bs3:col>
+                        <bs3:col span="12">
+                            <cpt:collection id="dummy"/>
+                        </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-
         </bs3:col>
     </bs3:row>
 </bs3:grid>

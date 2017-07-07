@@ -39,7 +39,7 @@ abstract class BankAccount_triggerAbstract
     @MemberOrder(sequence = "9")
     public BankAccount act(
             @Nullable final String comment) {
-        trigger(comment);
+        trigger(comment, null);
         return getDomainObject();
     }
 

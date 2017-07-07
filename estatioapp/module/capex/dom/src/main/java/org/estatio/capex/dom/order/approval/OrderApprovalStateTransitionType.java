@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.state.AdvancePolicy;
@@ -121,12 +120,14 @@ public enum OrderApprovalStateTransitionType
             final OrderApprovalState fromState,
             final IPartyRoleType assignToIfAny,
             final Person personToAssignToIfAny,
+            final String taskDescriptionIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final OrderApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(OrderApprovalStateTransition.Repository.class);
 
-        final String taskDescription = Enums.getFriendlyNameOf(this);
+        final String taskDescription = Util.taskDescriptionUsing(taskDescriptionIfAny, this);
+
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 

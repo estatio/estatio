@@ -107,9 +107,15 @@ public class Task implements Comparable<Task> {
             final String transitionObjectType) {
         this.assignedTo = assignedTo;
         this.personAssignedTo = personAssignedTo;
-        this.description = description;
+        this.description = trimIfRequired(description, DescriptionType.Meta.MAX_LEN);
         this.createdOn = createdOn;
         this.transitionObjectType = transitionObjectType;
+    }
+
+    private static String trimIfRequired(final String str, final int maxLen) {
+        return str != null && str.length() > maxLen
+                ? str.substring(0, maxLen)
+                : str;
     }
 
     public String title() {

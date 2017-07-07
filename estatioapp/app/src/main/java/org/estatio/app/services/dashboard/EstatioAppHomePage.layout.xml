@@ -31,7 +31,7 @@
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="6">
-                            <cpt:collection id="tasksForOthers" paged="15">
+                            <cpt:collection id="tasksForOthers" paged="15" defaultView="hide">
                                 <cpt:action id="checkStateOfTasksForOthers">
                                     <cpt:named>Check State</cpt:named>
                                 </cpt:action>

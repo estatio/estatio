@@ -6,10 +6,11 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -50,6 +51,18 @@ public enum IncomingInvoiceApprovalStateTransitionType
     // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
             (IncomingInvoiceApprovalState)null,
+            IncomingInvoiceApprovalState.NEW,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    REJECT(
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                    IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
+                    IncomingInvoiceApprovalState.PAYABLE
+            ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
             TaskAssignmentStrategy.none(),
@@ -202,17 +215,17 @@ public enum IncomingInvoiceApprovalStateTransitionType
             if (bankAccount != null) {
                 if(stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class) == null) {
                     stateTransitionService
-                            .trigger(bankAccount, BankAccountVerificationStateTransitionType.INSTANTIATE, null);
+                            .trigger(bankAccount, BankAccountVerificationStateTransitionType.INSTANTIATE, null, null);
                 }
                 // re-evaluate the state machine, and create pending transition if required
                 stateTransitionService
-                        .trigger(bankAccount, BankAccountVerificationStateTransition.class, null, null);
+                        .trigger(bankAccount, BankAccountVerificationStateTransition.class, null, null, null);
                 final BankAccountVerificationState state =
                         stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
                 if(state == BankAccountVerificationState.NOT_VERIFIED) {
                     stateTransitionService.createPendingTransition(
                             bankAccount, state,
-                            BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null);
+                            BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null, null);
                 }
             }
             return bankAccount;
@@ -356,12 +369,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
             final IncomingInvoiceApprovalState fromState,
             final IPartyRoleType assignToIfAny,
             final Person personToAssignToIfAny,
+            final String taskDescriptionIfAny,
             final ServiceRegistry2 serviceRegistry2) {
 
         final IncomingInvoiceApprovalStateTransition.Repository repository =
                 serviceRegistry2.lookupService(IncomingInvoiceApprovalStateTransition.Repository.class);
 
-        final String taskDescription = Enums.getFriendlyNameOf(this);
+        final String taskDescription = Util.taskDescriptionUsing(taskDescriptionIfAny, this);
+
         return repository.create(domainObject, this, fromState, assignToIfAny, personToAssignToIfAny, taskDescription);
     }
 

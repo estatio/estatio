@@ -23,7 +23,7 @@ public class IncomingInvoice_approveLocalAsCountryDirector extends IncomingInvoi
     @ActionLayout(cssClassFa = "fa-thumbs-up")
     public Object act(
             @Nullable final String comment) {
-        trigger(comment);
+        trigger(comment, null);
         return objectToReturn();
     }
 

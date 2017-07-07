@@ -57,7 +57,7 @@ public class Document_categoriseAsOrder
 
         paperclipRepository.attach(document, null, order);
 
-        trigger(comment);
+        trigger(comment, null);
 
         return order;
     }

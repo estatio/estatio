@@ -23,7 +23,7 @@ public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubsc
         case EXECUTED:
             final Document document = (Document) ev.getReturnValue();
             stateTransitionService.trigger(
-                    document, IncomingDocumentCategorisationStateTransitionType.INSTANTIATE, null);
+                    document, IncomingDocumentCategorisationStateTransitionType.INSTANTIATE, null, null);
             break;
         }
     }

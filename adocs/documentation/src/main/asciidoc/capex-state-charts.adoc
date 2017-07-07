@@ -30,23 +30,25 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     state "NEW" as iia_new
 
-    state "COMPLETED" as iia_completed
-    note right of iia_completed: immutable from this point on
-
     state "DISCARDED" as iia_discarded
     note right of iia_discarded: associated document\nalso discarded
 
-    state "APPROVED" as iia_a
-    state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
-    
-    state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac
+    state "pending" as iia_pp {
+        state "COMPLETED" as iia_completed
+        note right of iia_completed: immutable from this point on
 
-    state "PAYABLE" as iia_payable
+        state "APPROVED" as iia_a
+        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+
+        state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac
+        state "PAYABLE" as iia_payable
+    }
+
     state "PAID" as iia_paid
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new -down-> iia_completed : COMPLETE\n[hasProperty() | \n local | corporate ]
+    iia_new --> iia_completed : COMPLETE\n[hasProperty() | \n local | corporate ]
     iia_new -right-> iia_discarded : DISCARD
 
     iia_completed --> iia_a : APPROVE\n[capex | \nasset | services_charges ]
@@ -54,13 +56,16 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
     iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n _COUNTRY_DIRECTOR\n[local]
     iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\n FOR_CORPORATE\n[corporate]
     
-    iia_a -down-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+    iia_a -right-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
     
     iia_abcd --> iia_pbac : CHECK_BANK_ACCOUNT
 
-    iia_pbac --> iia_payable : CONFIRM_\nBANK_ACCOUNT_\nVERIFIED\n [bank account verified ||\n direct debit]
+    iia_pp -up-> iia_new: \n  REJECT
+
+    iia_pbac --> iia_payable : CONFIRM_\n  BANK_ACCOUNT_\n  VERIFIED\n [bank account verified ||\n ! bank_transfer]
     iia_payable --> iia_paid: PAY_BY_IBP\n[paymentMethod=\n"BANK_TRANSFER"]
     iia_payable --> iia_paid: PAY_BY_DD\n[paymentMethod=\n"DIRECT_DEBIT"]
+
 }
 --
 

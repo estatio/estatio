@@ -51,7 +51,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
         IncomingInvoiceApprovalState approvalState = incomingInvoice.getApprovalState();
         if(approvalState == IncomingInvoiceApprovalStateTransitionType.INSTANTIATE.getToState()) {
             // ie was set in the persisting callback
-            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null);
+            stateTransitionService.trigger(incomingInvoice, IncomingInvoiceApprovalStateTransitionType.INSTANTIATE, null, null);
         }
 
     }
@@ -72,7 +72,7 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
             case VERIFY_BANK_ACCOUNT:
                 final List<IncomingInvoice> incomingInvoices = findIncomingInvoicesUsing(bankAccount);
                 for (IncomingInvoice incomingInvoice : incomingInvoices) {
-                    stateTransitionService.trigger(incomingInvoice, CONFIRM_BANK_ACCOUNT_VERIFIED, null);
+                    stateTransitionService.trigger(incomingInvoice, CONFIRM_BANK_ACCOUNT_VERIFIED, null, null);
                 }
 
                 break;

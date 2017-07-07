@@ -37,8 +37,10 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
                         document,
                         IncomingDocumentCategorisationStateTransition.class,
                         IncomingDocumentCategorisationStateTransitionType.DISCARD_ASSOCIATED,
-                        comment));
-        trigger(comment);
+                        comment,
+                        null));
+
+        trigger(comment, null);
         return getDomainObject();
     }
 

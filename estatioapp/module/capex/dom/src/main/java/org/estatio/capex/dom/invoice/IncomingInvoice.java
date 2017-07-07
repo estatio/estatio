@@ -127,13 +127,15 @@ import lombok.Setter;
                         +         "  FROM org.estatio.capex.dom.payment.PaymentLine).contains(this) "
                         + "   && approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "
-                        + "ORDER BY invoiceDate ASC "
+                        + "ORDER BY invoiceDate ASC " // oldest first
         ),
         @Query(
                 name = "findByBankAccount", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE bankAccount == :bankAccount ")
+                        + "WHERE bankAccount == :bankAccount "
+                        + "ORDER BY invoiceDate DESC " // newest first
+        )
 })
 @Indices({
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" })
@@ -341,7 +343,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final BankAccount bankAccount,
                 @Nullable final String comment){
             incomingInvoice.setBankAccount(bankAccount);
-            trigger(comment);
+            trigger(comment, null);
             return  incomingInvoice;
         }
 
