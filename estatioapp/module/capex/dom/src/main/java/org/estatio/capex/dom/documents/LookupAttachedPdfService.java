@@ -25,6 +25,9 @@ import org.estatio.dom.invoice.DocumentTypeData;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LookupAttachedPdfService {
 
+    private static final String ROLE_NAME_FOR_IBAN_PROOF =
+            BankAccount_attachInvoiceAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF;
+
     @Programmatic
     public Optional<Document> lookupIncomingInvoicePdfFrom(final IncomingInvoice incomingInvoice) {
         return lookupPdfFrom(incomingInvoice, DocumentTypeData.INCOMING_INVOICE, null);
@@ -35,8 +38,14 @@ public class LookupAttachedPdfService {
         return lookupPdfsFrom(incomingInvoice, DocumentTypeData.INCOMING_INVOICE, null);
     }
 
+    @Programmatic
     public Optional<Document> lookupIbanProofPdfFrom(final BankAccount bankAccount) {
-        return lookupPdfFrom(bankAccount, null, BankAccount_attachInvoiceAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+        return lookupPdfFrom(bankAccount, null, ROLE_NAME_FOR_IBAN_PROOF);
+    }
+
+    @Programmatic
+    public List<Document> lookupIbanProofPdfsFrom(final BankAccount bankAccount) {
+        return lookupPdfsFrom(bankAccount, null, ROLE_NAME_FOR_IBAN_PROOF);
     }
 
     @Programmatic
