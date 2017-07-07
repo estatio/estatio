@@ -12,6 +12,7 @@ import org.assertj.core.util.Lists;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -24,19 +25,18 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method="act")
-public class BankAccount_attachInvoiceAsVerificationProof {
+public class BankAccount_attachInvoiceAsIbanProof {
 
-    public static final String ROLE_NAME_FOR_IBAN_PROOF = BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF;
+    public static final String ROLE_NAME_FOR_IBAN_PROOF = BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF;
     public static final Predicate<Paperclip> HAS_IBAN_PROOF_DOCTYPE = paperclip -> DocumentTypeData.IBAN_PROOF.isDocTypeFor(paperclip.getDocument());
 
     private final BankAccount bankAccount;
 
-    public BankAccount_attachInvoiceAsVerificationProof(BankAccount bankAccount) {
+    public BankAccount_attachInvoiceAsIbanProof(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 
-    @Action()
-    @MemberOrder(name = "documents", sequence = "1")
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BankAccount act(final Document document) {
         paperclipRepository.attach(document, ROLE_NAME_FOR_IBAN_PROOF, bankAccount);
         return bankAccount;

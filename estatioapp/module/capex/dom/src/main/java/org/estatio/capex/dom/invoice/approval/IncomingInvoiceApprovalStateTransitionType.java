@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsVerificationProof;
+import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
@@ -244,7 +244,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
             if (documentIfAny.isPresent()) {
                 final Document document = documentIfAny.get();
-                paperclipRepository.attach(document, BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF, bankAccount);
+                paperclipRepository.attach(document, BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF, bankAccount);
             }
         }
 

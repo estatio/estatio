@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <bs3:row>
-        <bs3:col span="12" unreferencedActions="true">
-            <cpt:domainObject/>
-            <cpt:action id="findTransaction"/>
-        </bs3:col>
-    </bs3:row>
-    <bs3:row>
         <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12" unreferencedActions="true">
+                    <cpt:domainObject/>
+                </bs3:col>
+            </bs3:row>
             <bs3:tabGroup>
                 <bs3:tab name="General">
                     <bs3:row>
@@ -21,8 +20,6 @@
                                 <cpt:property id="name">
                                     <cpt:action id="changeName" position="BELOW"/>
                                 </cpt:property>
-                                <cpt:property id="balance"/>
-
                                 <cpt:property id="owner">
                                     <cpt:action id="changeOwner"/>
                                 </cpt:property>
@@ -65,6 +62,48 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="IBAN details">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="IBAN details" id="ibanDetails">
+                                <cpt:action id="change" position="PANEL"/>
+                                <cpt:property id="iban"/>
+                                <cpt:property id="validIban"/>
+                                <cpt:property id="bic">
+                                    <cpt:action id="updateBic"/>
+                                    <cpt:action id="lookupBic"/>
+                                </cpt:property>
+                                <cpt:property id="externalReference"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Account details">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Account Details" id="accountDetails">
+                                <cpt:property id="bank"/>
+                                <cpt:property id="country"/>
+                                <cpt:property id="nationalCheckCode"/>
+                                <cpt:property id="nationalBankCode"/>
+                                <cpt:property id="branchCode"/>
+                                <cpt:property id="accountNumber"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Balance">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Balance" id="balance">
+                                <cpt:action id="findTransaction"/>
+                                <cpt:property id="balance"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
             <cpt:fieldSet name="Verification state">
                 <cpt:action id="checkVerificationState">
                     <cpt:named>Check state</cpt:named>
@@ -81,29 +120,33 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="IBAN details" id="ibanDetails">
-                <cpt:action id="change" position="PANEL"/>
-                <cpt:property id="iban"/>
-                <cpt:property id="validIban"/>
-                <cpt:property id="bic">
-                    <cpt:action id="updateBic"/>
-                    <cpt:action id="lookupBic"/>
-                </cpt:property>
-                <cpt:property id="externalReference"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Account Details" id="accountDetails">
-                <cpt:property id="bank"/>
-                <cpt:property id="country"/>
-                <cpt:property id="nationalCheckCode"/>
-                <cpt:property id="nationalBankCode"/>
-                <cpt:property id="branchCode"/>
-                <cpt:property id="accountNumber"/>
-            </cpt:fieldSet>
+            <bs3:tabGroup>
+                <bs3:tab name="IBAN Proof">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="" id="ibanProof">
+                                <cpt:property id="ibanProof" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
         </bs3:col>
     </bs3:row>
     <bs3:row>
         <bs3:col span="12">
             <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="Documents">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="documents">
+                                <cpt:action id="attachPdfAsIbanProof"/>
+                                <cpt:action id="attachInvoiceAsIbanProof"/>
+                                <cpt:action id="detachIbanProof"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
                 <bs3:tab name="Verification Tasks and State Transitions">
                     <bs3:row>
                         <bs3:col span="12">

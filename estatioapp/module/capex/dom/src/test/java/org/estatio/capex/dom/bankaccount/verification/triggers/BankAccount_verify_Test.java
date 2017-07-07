@@ -14,7 +14,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsVerificationProof;
+import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.PaperclipForBankAccount;
 
@@ -89,7 +89,7 @@ public class BankAccount_verify_Test {
         void allowingPaperclipRepositoryToReturn(final List<Paperclip> result) {
             context.checking(new Expectations() {{
                 allowing(mockPaperclipRepository).findByAttachedToAndRoleName(bankAccount,
-                        BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+                        BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF);
                 will(returnValue(result));
             }});
         }

@@ -14,7 +14,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsVerificationProof;
+import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
@@ -51,7 +51,7 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
 
         final List<Paperclip> paperclips =
                 paperclipRepository.findByAttachedToAndRoleName(
-                        bankAccount, BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+                        bankAccount, BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF);
 
         if(paperclips.isEmpty()) {
             return "IBAN proof must first be attached";

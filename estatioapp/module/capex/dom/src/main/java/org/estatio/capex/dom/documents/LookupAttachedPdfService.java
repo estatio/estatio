@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -16,7 +18,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachInvoiceAsVerificationProof;
+import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachInvoiceAsIbanProof;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -26,7 +28,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 public class LookupAttachedPdfService {
 
     private static final String ROLE_NAME_FOR_IBAN_PROOF =
-            BankAccount_attachInvoiceAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF;
+            BankAccount_attachInvoiceAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF;
 
     @Programmatic
     public Optional<Document> lookupIncomingInvoicePdfFrom(final IncomingInvoice incomingInvoice) {

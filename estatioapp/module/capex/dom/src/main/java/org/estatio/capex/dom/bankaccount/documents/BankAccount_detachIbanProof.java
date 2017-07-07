@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -15,25 +14,27 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
 @Mixin(method="act")
-public class BankAccount_detachVerificationProof {
+public class BankAccount_detachIbanProof {
 
     private final BankAccount bankAccount;
 
-    public BankAccount_detachVerificationProof(BankAccount bankAccount) {
+    public BankAccount_detachIbanProof(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(name = "documents", sequence = "3")
     public BankAccount act(
             final DocumentAbstract document) {
 
         final Paperclip paperclipIfAny = paperclipRepository
                 .findByDocumentAndAttachedToAndRoleName(document, bankAccount,
-                        BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+                        BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF);
         if(paperclipIfAny != null) {
             paperclipRepository.delete(paperclipIfAny);
         }
@@ -55,7 +56,11 @@ public class BankAccount_detachVerificationProof {
             return "No documents to detach";
         case 1:
             // otherwise get into the complication of having to move the IBAN back into unverified...
-            return "Cannot remove only bank verification proof - attach other proof first";
+            final BankAccountVerificationState currentState =
+                    stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+            if(currentState == BankAccountVerificationState.VERIFIED) {
+                return "Cannot remove only iban proof - attach other proof first";
+            }
         default:
             return null;
         }
@@ -69,11 +74,13 @@ public class BankAccount_detachVerificationProof {
     }
 
     private List<Paperclip> doFindIbanProofPaperclips() {
-        return paperclipRepository.findByAttachedToAndRoleName(bankAccount, BankAccount_attachPdfAsVerificationProof.ROLE_NAME_FOR_IBAN_PROOF);
+        return paperclipRepository.findByAttachedToAndRoleName(bankAccount, BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF);
     }
 
     @Inject
     PaperclipRepository paperclipRepository;
+
+    @Inject StateTransitionService stateTransitionService;
 
     @Inject
     QueryResultsCache queryResultsCache;

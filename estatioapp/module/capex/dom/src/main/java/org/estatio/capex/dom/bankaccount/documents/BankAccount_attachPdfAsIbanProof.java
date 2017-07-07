@@ -7,9 +7,9 @@ import java.util.function.Predicate;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.api.DocumentService;
@@ -22,18 +22,17 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
 
 @Mixin(method = "act")
-public class BankAccount_attachPdfAsVerificationProof {
+public class BankAccount_attachPdfAsIbanProof {
 
     public static final String ROLE_NAME_FOR_IBAN_PROOF = "iban proof";
 
     private final BankAccount bankAccount;
 
-    public BankAccount_attachPdfAsVerificationProof(BankAccount bankAccount) {
+    public BankAccount_attachPdfAsIbanProof(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 
-    @Action()
-    @MemberOrder(name = "documents", sequence = "2")
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public BankAccount act(
             @Parameter(fileAccept = "application/pdf")
             final Blob document) {
