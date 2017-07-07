@@ -62,7 +62,7 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     iia_pp -up-> iia_new: \n  REJECT
 
-    iia_pbac --> iia_payable : CONFIRM_\n  BANK_ACCOUNT_\n  VERIFIED\n [bank account verified ||\n ! bank_transfer]
+    iia_pbac --> iia_payable : CONFIRM_\n  BANK_ACCOUNT_\n  VERIFIED\n [bank account verified ||\n paymentMethod=\n"DIRECT_DEBIT" ]
     iia_payable --> iia_paid: PAY_BY_IBP\n[paymentMethod=\n"BANK_TRANSFER"]
     iia_payable --> iia_paid: PAY_BY_DD\n[paymentMethod=\n"DIRECT_DEBIT"]
 

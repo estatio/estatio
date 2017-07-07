@@ -16,6 +16,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
@@ -259,23 +260,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isGuardSatisified(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            return isBankAccountVerified(incomingInvoice, serviceRegistry2) ||
+
+            final BankAccountVerificationChecker bankAccountVerificationChecker =
+                    serviceRegistry2.lookupService(BankAccountVerificationChecker.class);
+
+            return bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
                    incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
         }
 
-        private boolean isBankAccountVerified(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            final StateTransitionService stateTransitionService =
-                    serviceRegistry2.lookupService(StateTransitionService.class);
-
-            final BankAccount bankAccount = incomingInvoice.getBankAccount();
-
-            BankAccountVerificationState state = stateTransitionService
-                    .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
-
-            return state == BankAccountVerificationState.VERIFIED;
-        }
     },
     PAY_BY_IBP(
             IncomingInvoiceApprovalState.PAYABLE,
