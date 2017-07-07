@@ -35,7 +35,9 @@ public class Task_verifyBankAccount
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = DomainEvent.class)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Object act(@Nullable final String comment, final boolean goToNext) {
+    public Object act(
+            @Nullable final String comment,
+            final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
         Object mixinResult = mixin().act(comment);
         return coalesce(nextTaskIfAny, mixinResult);
@@ -50,6 +52,10 @@ public class Task_verifyBankAccount
             return null;
         }
         return mixin().disableAct();
+    }
+
+    public boolean default1Act() {
+        return true;
     }
 
     @Override
