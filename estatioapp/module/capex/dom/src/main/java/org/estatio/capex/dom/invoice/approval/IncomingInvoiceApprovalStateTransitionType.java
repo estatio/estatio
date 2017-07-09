@@ -2,7 +2,6 @@ package org.estatio.capex.dom.invoice.approval;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -12,15 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
-
-import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
@@ -28,12 +19,10 @@ import org.estatio.capex.dom.state.AdvancePolicy;
 import org.estatio.capex.dom.state.NextTransitionSearchStrategy;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionRepository;
-import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.Person;
@@ -71,7 +60,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     COMPLETE(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.COMPLETED,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
             AdvancePolicy.MANUAL) {
         @Override
@@ -120,7 +109,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
             AdvancePolicy.MANUAL) {
         @Override
@@ -149,7 +138,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL) {
         @Override
@@ -162,7 +151,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     CHECK_BANK_ACCOUNT_FOR_CORPORATE(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
         @Override
@@ -171,89 +160,23 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             return incomingInvoice.getType() == IncomingInvoiceType.CORPORATE_EXPENSES;
         }
-
-        @Override
-        public void applyTo(
-                final IncomingInvoice incomingInvoice,
-                final Class<IncomingInvoiceApprovalStateTransition> stateTransitionClass,
-                final ServiceRegistry2 serviceRegistry2) {
-            CHECK_BANK_ACCOUNT.applyTo(incomingInvoice, stateTransitionClass, serviceRegistry2);
-        }
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.APPROVED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL),
     CHECK_BANK_ACCOUNT(
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC) {
-        @Override
-        public void applyTo(
-                final IncomingInvoice incomingInvoice,
-                final Class<IncomingInvoiceApprovalStateTransition> stateTransitionClass,
-                final ServiceRegistry2 serviceRegistry2) {
-            super.applyTo(incomingInvoice, stateTransitionClass, serviceRegistry2);
-            if(CONFIRM_BANK_ACCOUNT_VERIFIED.isGuardSatisified(incomingInvoice, serviceRegistry2)) {
-                return;
-            }
-
-            final BankAccount bankAccount = triggerBankVerificationState(incomingInvoice, serviceRegistry2);
-            attachDocumentAsPossibleIbanProof(incomingInvoice, bankAccount, serviceRegistry2);
-        }
-
-        private BankAccount triggerBankVerificationState(
-                final IncomingInvoice incomingInvoice,
-                final ServiceRegistry2 serviceRegistry2) {
-            final StateTransitionService stateTransitionService =
-                    serviceRegistry2.lookupService(StateTransitionService.class);
-
-            final BankAccount bankAccount = incomingInvoice.getBankAccount();
-            if (bankAccount != null) {
-                if(stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class) == null) {
-                    stateTransitionService
-                            .trigger(bankAccount, BankAccountVerificationStateTransitionType.INSTANTIATE, null, null);
-                }
-                // re-evaluate the state machine, and create pending transition if required
-                stateTransitionService
-                        .trigger(bankAccount, BankAccountVerificationStateTransition.class, null, null, null);
-                final BankAccountVerificationState state =
-                        stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
-                if(state == BankAccountVerificationState.NOT_VERIFIED) {
-                    stateTransitionService.createPendingTransition(
-                            bankAccount, state,
-                            BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null, null);
-                }
-            }
-            return bankAccount;
-        }
-
-        private void attachDocumentAsPossibleIbanProof(
-                final IncomingInvoice incomingInvoice,
-                final BankAccount bankAccount, final ServiceRegistry2 serviceRegistry2) {
-            final LookupAttachedPdfService lookupAttachedPdfService =
-                    serviceRegistry2.lookupService(LookupAttachedPdfService.class);
-
-            final PaperclipRepository paperclipRepository = serviceRegistry2
-                    .lookupService(PaperclipRepository.class);
-
-            final Optional<Document> documentIfAny =
-                    lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
-            if (documentIfAny.isPresent()) {
-                final Document document = documentIfAny.get();
-                paperclipRepository.attach(document, BankAccount_attachPdfAsIbanProof.ROLE_NAME_FOR_IBAN_PROOF, bankAccount);
-            }
-        }
-
-    },
+            AdvancePolicy.AUTOMATIC),
     CONFIRM_BANK_ACCOUNT_VERIFIED(
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             IncomingInvoiceApprovalState.PAYABLE,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
         @Override
@@ -272,13 +195,13 @@ public enum IncomingInvoiceApprovalStateTransitionType
     PAY_BY_IBP(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
     PAY_BY_DD(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
-            NextTransitionSearchStrategy.firstMatching(),
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
     DISCARD(

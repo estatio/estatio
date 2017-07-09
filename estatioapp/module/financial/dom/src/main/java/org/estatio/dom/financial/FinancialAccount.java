@@ -30,9 +30,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -49,6 +52,7 @@ import org.incode.module.base.dom.with.WithReferenceGetter;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -107,13 +111,24 @@ public class FinancialAccount
 //        super("type, reference");
     }
 
-    public String title() {
-        return TitleBuilder.start()
-                .withReference(getReference())
-                .withName(getName())
-                .toString();
-    }
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class FinancialAccountTitleSubscriber extends AbstractSubscriber {
 
+        @Programmatic
+        @com.google.common.eventbus.Subscribe
+        @org.axonframework.eventhandling.annotation.EventHandler
+        public void titleOf(BankAccount.TitleUiEvent ev) {
+            final BankAccount bankAccount = ev.getSource();
+
+            if(ev.getTitle() == null) {
+                String title = TitleBuilder.start()
+                        .withReference(bankAccount.getReference())
+                        .withName(bankAccount.getName())
+                        .toString();
+                ev.setTitle(title);
+            }
+        }
+    }
 
     @PropertyLayout(
             named = "Application Level",

@@ -124,7 +124,7 @@
                 <bs3:tab name="IBAN Proof">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="" id="ibanProof">
+                            <cpt:fieldSet name="IBAN Proof" id="ibanProof">
                                 <cpt:property id="ibanProof" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>

@@ -74,7 +74,10 @@ import lombok.Setter;
         , removingLifecycleEvent = BankAccount.RemovingLifecycleEvent.class
         , autoCompleteRepository = BankAccountRepository.class
 )
-@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+@DomainObjectLayout(
+        bookmarking = BookmarkPolicy.AS_ROOT
+        , titleUiEvent = BankAccount.TitleUiEvent.class
+)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class BankAccount
         extends FinancialAccount {
@@ -82,6 +85,7 @@ public class BankAccount
     public static class PersistedLifecycleEvent extends ObjectPersistedEvent<BankAccount> {}
     public static class UpdatedLifecycleEvent extends ObjectUpdatedEvent<BankAccount> {}
     public static class RemovingLifecycleEvent extends ObjectRemovingEvent<BankAccount> {}
+    public static class TitleUiEvent extends org.apache.isis.applib.services.eventbus.TitleUiEvent <BankAccount> {}
 
     @Column(name = "bankPartyId", allowsNull = "true")
     @Getter @Setter

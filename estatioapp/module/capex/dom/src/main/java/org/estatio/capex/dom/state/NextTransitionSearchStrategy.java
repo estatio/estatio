@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.state;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 /**
@@ -44,6 +47,18 @@ public interface NextTransitionSearchStrategy<
             S extends State<S>
             > NextTransitionSearchStrategy<DO,ST,STT,S> firstMatching() {
 
+        return firstMatchingExcluding( /* none */);
+    }
+
+    public static <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > NextTransitionSearchStrategy<DO,ST,STT,S> firstMatchingExcluding(STT... excluding) {
+
+        final List<STT> excludingList = Arrays.asList(excluding);
+
         return (domainObject, completedTransitionType, serviceRegistry2) -> {
 
             final StateTransitionService stateTransitionService = serviceRegistry2
@@ -52,6 +67,9 @@ public interface NextTransitionSearchStrategy<
             final STT[] allTransitionsTypes =
                     stateTransitionService.supportFor(completedTransitionType).allTransitionTypes();
             for (STT candidateNextTransitionType : allTransitionsTypes) {
+                if(excludingList.contains(candidateNextTransitionType)) {
+                    continue;
+                }
                 if (candidateNextTransitionType.canTransitionFromStateAndIsMatch(
                         domainObject, completedTransitionType.getToState(), serviceRegistry2)) {
                     return candidateNextTransitionType;
@@ -61,5 +79,13 @@ public interface NextTransitionSearchStrategy<
         };
     }
 
+    public static <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > NextTransitionSearchStrategy<DO,ST,STT,S> exactly(STT next) {
+        return (domainObject, completedTransitionType, serviceRegistry2) -> next;
+    }
 
 }

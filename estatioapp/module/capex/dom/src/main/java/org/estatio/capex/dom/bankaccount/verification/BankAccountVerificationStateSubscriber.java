@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -21,8 +22,20 @@ import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
-@DomainService(nature = NatureOfService.DOMAIN)
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
+
+    @Programmatic
+    @com.google.common.eventbus.Subscribe
+    @org.axonframework.eventhandling.annotation.EventHandler
+    public void titleOf(BankAccount.TitleUiEvent ev) {
+        final BankAccount bankAccount = ev.getSource();
+        final BankAccountVerificationState state = stateTransitionService
+                .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+
+        final String title = String.format("%s (%s)", bankAccount.getReference(), Enums.getFriendlyNameOf(state));
+        ev.setTitle(title);
+    }
 
     @Programmatic
     @com.google.common.eventbus.Subscribe
@@ -67,7 +80,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
                 }
 
                 triggerBankVerificationState(incomingInvoice);
-                attachDocumentAsPossibleIbanProof(incomingInvoice);
+                attachDocumentAsPossibleIbanProofIfNone(incomingInvoice);
 
                 break;
             default:
@@ -89,24 +102,25 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
                     .trigger(bankAccount, BankAccountVerificationStateTransitionType.INSTANTIATE, null, null);
         }
 
-        // (re-evaluate the state machine, and create pending transition if required)
+        // create the required pending transition, if none already.
         stateTransitionService
-                .trigger(bankAccount, BankAccountVerificationStateTransition.class, null, null, null);
-        final BankAccountVerificationState state =
-                stateTransitionService.currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
-        if(state == BankAccountVerificationState.NOT_VERIFIED) {
-            stateTransitionService.createPendingTransition(
-                    bankAccount, state,
-                    BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null, null);
-        }
+                .triggerPending(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null, null);
     }
 
-    private void attachDocumentAsPossibleIbanProof(final IncomingInvoice incomingInvoice) {
+    private void attachDocumentAsPossibleIbanProofIfNone(final IncomingInvoice incomingInvoice) {
 
         final BankAccount bankAccount = incomingInvoice.getBankAccount();
         if(bankAccount == null) {
             return;
         }
+
+        // if already have some proof, then no need to attach any other
+        final Optional<Document> currentProofIfAny = lookupAttachedPdfService.lookupIbanProofPdfFrom(bankAccount);
+        if(currentProofIfAny.isPresent()) {
+            return;
+        }
+
+        // else, attach this invoice as possible iban proof.
         final Optional<Document> documentIfAny =
                 lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
         if (documentIfAny.isPresent()) {
@@ -115,6 +129,8 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
                     bankAccount);
         }
     }
+
+
 
 
 

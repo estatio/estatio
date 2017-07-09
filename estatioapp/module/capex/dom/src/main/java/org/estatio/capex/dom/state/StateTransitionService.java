@@ -205,7 +205,7 @@ public class StateTransitionService {
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
      *   @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
-     * @param requiredTransitionTypeIfAny
+     * @param requestedTransitionTypeIfAny
      * @param currentTaskCommentIfAny
      * @param nextTaskDescriptionIfAny
      */
@@ -218,11 +218,11 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requiredTransitionTypeIfAny,
+            final STT requestedTransitionTypeIfAny,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
 
-        return trigger(domainObject, stateTransitionClass, requiredTransitionTypeIfAny, null, currentTaskCommentIfAny,
+        return trigger(domainObject, stateTransitionClass, requestedTransitionTypeIfAny, null, currentTaskCommentIfAny,
                 nextTaskDescriptionIfAny);
     }
 
@@ -230,7 +230,7 @@ public class StateTransitionService {
      * Apply the transition to the domain object and, if supported, create a {@link Task} for the <i>next</i> transition after that.
      *   @param domainObject - the domain object whose
      * @param stateTransitionClass - identifies the state chart being applied
-     * @param requiredTransitionTypeIfAny
+     * @param requestedTransitionTypeIfAny
      * @param currentTaskCommentIfAny
      * @param nextTaskDescriptionIfAny
      */
@@ -243,13 +243,13 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requiredTransitionTypeIfAny,
+            final STT requestedTransitionTypeIfAny,
             final Person personToAssignNextToIfAny,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
 
         ST completedTransition = completeTransitionIfPossible(
-                                        domainObject, stateTransitionClass, requiredTransitionTypeIfAny,
+                                        domainObject, stateTransitionClass, requestedTransitionTypeIfAny,
                                         null, currentTaskCommentIfAny, nextTaskDescriptionIfAny);
 
         boolean keepTransitioning = (completedTransition != null);
@@ -263,6 +263,24 @@ public class StateTransitionService {
 
         return mostRecentlyCompletedTransitionOf(domainObject, stateTransitionClass);
     }
+
+
+    @Programmatic
+    public <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST triggerPending(
+            final DO domainObject,
+            final STT requestedTransitionType,
+            final Person personToAssignNextToIfAny,
+            final String nextTaskDescriptionIfAny) {
+        final Class<ST> stateTransitionClass = transitionClassFor(requestedTransitionType);
+        return pendingTransitionIfPossible(
+                domainObject, stateTransitionClass, requestedTransitionType, personToAssignNextToIfAny, nextTaskDescriptionIfAny);
+    }
+
 
     // ////////////////////////////////////
 
@@ -278,7 +296,30 @@ public class StateTransitionService {
             final Person personToAssignNextToIfAny,
             final String comment,
             final String nextTaskDescriptionIfAny) {
+        final ST pendingTransitionIfAny =
+                pendingTransitionIfPossible(domainObject, stateTransitionClass,
+                    requestedTransitionTypeIfAny, personToAssignNextToIfAny,
+                nextTaskDescriptionIfAny);
+        if (pendingTransitionIfAny == null)
+            return null;
 
+        //
+        // guard satisfied, so go ahead and complete this pending transition
+        //
+        final ST completedTransition = completeTransition(
+                                            domainObject, pendingTransitionIfAny, comment);
+        return completedTransition;
+    }
+    private <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+    > ST pendingTransitionIfPossible(
+            final DO domainObject,
+            final Class<ST> stateTransitionClass,
+            final STT requestedTransitionTypeIfAny,
+            final Person personToAssignNextToIfAny, final String nextTaskDescriptionIfAny) {
         // check the override, if any
         if(requestedTransitionTypeIfAny != null) {
             boolean canTransition = requestedTransitionTypeIfAny.canTransitionFromCurrentStateAndIsMatch(domainObject,
@@ -411,17 +452,15 @@ public class StateTransitionService {
             // do not proceed if this is an explicit transition and no explicit transition type provided.
             return null;
         }
-
-        //
-        // guard satisfied, so go ahead and complete this pending transition
-        //
-        final ST completedTransition = completeTransition(
-                                            domainObject, pendingTransitionIfAny, comment);
-        return completedTransition;
+        return pendingTransitionIfAny;
     }
 
     /**
      * Has public visibility only so can be used in tests.
+     *
+     * <p>
+     *     Should instead use {@link #trigger(Object, StateTransitionType, String, String)}.
+     * </p>
      */
     @Programmatic
     public <
@@ -443,6 +482,7 @@ public class StateTransitionService {
         if(taskAssignmentStrategy != null) {
             assignToIfAny = taskAssignmentStrategy.getAssignTo(domainObject, serviceRegistry2);
         }
+
         return transitionType
                 .createTransition(domainObject, currentState, assignToIfAny, personToAssignToIfAny, taskDescriptionIfAny, serviceRegistry2);
     }
