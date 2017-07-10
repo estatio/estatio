@@ -8,6 +8,8 @@ import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
@@ -36,6 +38,19 @@ import lombok.Setter;
 @Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@Queries({
+        @Query(
+                name = "findByInvoice", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.payment.PaymentLine "
+                        + "WHERE invoice == :invoice "),
+        @Query(
+                name = "findByInvoiceAndBatchApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.payment.PaymentLine "
+                        + "WHERE invoice == :invoice "
+                        + "   && batch.approvalState == :approvalState ")
+})
 @Uniques({
         @Unique(
                 name = "PaymentLine_batch_sequence", members = {"batch", "sequence"}
