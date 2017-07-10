@@ -19,6 +19,7 @@
 package org.estatio.capex.dom.documents;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -151,23 +152,29 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     @Programmatic
     public Document upsertAndArchive(final DocumentType type, final String atPath, final String name, final Blob blob){
-        Document document = null;
-        final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
-        if (incomingDocumentsWithSameName.size()>0){
-            document = incomingDocumentsWithSameName.get(0);
+        synchronized (this) {
+            Document document = null;
+            final List<Document> incomingDocumentsWithSameName = findAllIncomingDocumentsByName(name);
+            if (incomingDocumentsWithSameName.size()>0){
+                document = incomingDocumentsWithSameName.get(0);
+            }
+            if (document!=null){
+                if(Arrays.equals(document.getBlobBytes(), blob.getBytes())) {
+                    return document;
+                }
+                // else...
+                String prefix = "arch-".concat(clockService.nowAsLocalDateTime().toString("yyyy-MM-dd-HH-mm-ss")).concat("-");
+                String archivedName = prefix.concat(document.getName());
+                Document archivedDocument = documentService.createForBlob(document.getType(), document.getAtPath(), archivedName, document.getBlob());
+                // update blobbytes of document
+                document.setBlobBytes(blob.getBytes());
+                // attach document to archived document
+                paperclipRepository.attach(document, "", archivedDocument);
+            } else {
+                document = documentService.createForBlob(type, atPath, name, blob);
+            }
+            return document;
         }
-        if (document!=null){
-            String prefix = "arch-".concat(clockService.nowAsLocalDateTime().toString("yyyy-MM-dd-HH-mm-ss")).concat("-");
-            String archivedName = prefix.concat(document.getName());
-            Document archivedDocument = documentService.createForBlob(document.getType(), document.getAtPath(), archivedName, document.getBlob());
-            // update blobbytes of document
-            document.setBlobBytes(blob.getBytes());
-            // attach document to archived document
-            paperclipRepository.attach(document, "", archivedDocument);
-        } else {
-            document = documentService.createForBlob(type, atPath, name, blob);
-        }
-        return document;
     }
 
     @Inject
