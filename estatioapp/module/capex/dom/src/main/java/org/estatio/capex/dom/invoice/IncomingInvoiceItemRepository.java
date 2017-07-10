@@ -59,6 +59,7 @@ public class IncomingInvoiceItemRepository {
         final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
+        invoice.recalculateAmounts();
         return invoiceItem;
     }
 
@@ -142,6 +143,9 @@ public class IncomingInvoiceItemRepository {
         invoiceItem.setFixedAsset(property);
         invoiceItem.setProject(project);
         invoiceItem.setBudgetItem(budgetItem);
+
+        IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
+        invoice.recalculateAmounts();
     }
 
     @Programmatic

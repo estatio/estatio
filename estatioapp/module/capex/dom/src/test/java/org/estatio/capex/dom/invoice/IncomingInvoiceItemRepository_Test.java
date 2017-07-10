@@ -3,6 +3,7 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
@@ -53,8 +54,9 @@ public class IncomingInvoiceItemRepository_Test {
         Project project = new Project();
         BudgetItem budgetItem = new BudgetItem();
         IncomingInvoiceType type = IncomingInvoiceType.CORPORATE_EXPENSES;
+        invoiceItem.setInvoice(mockInvoice);
 
-        assertThat(invoiceItem.getInvoice()).isNull();
+        assertThat(invoiceItem.getInvoice()).isEqualTo(mockInvoice);
         assertThat(invoiceItem.getIncomingInvoiceType()).isNull();
         assertThat(invoiceItem.getCharge()).isNull();
         assertThat(invoiceItem.getSequence()).isNull();
@@ -68,6 +70,13 @@ public class IncomingInvoiceItemRepository_Test {
         assertThat(invoiceItem.getEndDate()).isNull();
         assertThat(invoiceItem.getFixedAsset()).isNull();
         assertThat(invoiceItem.getProject()).isNull();
+
+        // expect
+        context.checking(new Expectations(){
+            {
+                oneOf(mockInvoice).recalculateAmounts();
+            }
+        });
 
         // when
         incomingInvoiceItemRepository.upsert(
@@ -88,7 +97,7 @@ public class IncomingInvoiceItemRepository_Test {
                 budgetItem);
 
         // then
-        assertThat(invoiceItem.getInvoice()).isNull(); // should not updated
+        assertThat(invoiceItem.getInvoice()).isEqualTo(mockInvoice); // should not updated
         assertThat(invoiceItem.getCharge()).isNull(); // should not updated
         assertThat(invoiceItem.getIncomingInvoiceType()).isNull(); // should not be updated
         assertThat(invoiceItem.getSequence()).isEqualTo(sequence);
@@ -104,10 +113,5 @@ public class IncomingInvoiceItemRepository_Test {
         assertThat(invoiceItem.getProject()).isEqualTo(project);
 
     }
-
-    @Test
-    public void updateInvoiceItem() throws Exception {
-
-    }
-
+    
 }

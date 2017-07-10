@@ -212,6 +212,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setVatAmount(vatAmount);
         setGrossAmount(grossAmount);
         setTax(tax);
+        IncomingInvoice invoice = (IncomingInvoice) getInvoice();
+        invoice.recalculateAmounts();
         return this;
     }
 
