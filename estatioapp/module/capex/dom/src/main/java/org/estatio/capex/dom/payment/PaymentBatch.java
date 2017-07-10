@@ -74,6 +74,7 @@ import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
@@ -417,11 +418,17 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             for (final PaymentLine line : lines) {
                 final IncomingInvoice invoice = line.getInvoice();
 
-                final Optional<org.incode.module.document.dom.impl.docs.Document> document =
+                final BankAccount bankAccount = invoice.getBankAccount();
+
+                final Optional<org.incode.module.document.dom.impl.docs.Document> invoiceDocIfAny =
                         lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
 
-                if(document.isPresent()) {
-                    final byte[] docBytes = document.get().asBytes();
+                if(invoiceDocIfAny.isPresent()) {
+                    final org.incode.module.document.dom.impl.docs.Document invoiceDoc = invoiceDocIfAny.get();
+                    final byte[] invoiceDocBytes = invoiceDoc.asBytes();
+
+                    final Optional<org.incode.module.document.dom.impl.docs.Document> ibanProofDocIfAny = lookupAttachedPdfService
+                            .lookupIbanProofPdfFrom(bankAccount);
 
                     IncomingInvoiceApprovalStateTransition transitionIfAny =
                             stateTransitionRepository.findByDomainObjectAndToState(invoice,
@@ -446,11 +453,33 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                     rightLines.add(String.format("crdtor IBAN: %s", line.getCreditorBankAccount().getIban()));
                     rightLines.add(String.format("gross Amt  : %s", new DecimalFormat("0.00").format(line.getAmount())));
 
-                    URI uri = deepLinkService.deepLinkFor(invoice);
-                    final byte[] firstPageDocBytes =
-                            pdfStamper.firstPageOf(docBytes, leftLines, rightLines, uri.toString());
+                    boolean attachProof = false;
+                    final String proof;
+                    if(ibanProofDocIfAny.isPresent()) {
+                        final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
+                        if (DocumentTypeData.IBAN_PROOF.isDocTypeFor(ibanProofDoc)) {
+                            proof = "Separate IBAN proof (next page)";
+                            attachProof = true;
+                        } else {
+                            proof = "Invoice used as IBAN proof";
+                        }
+                    } else {
+                        proof = "No IBAN proof";
+                    }
+                    rightLines.add(proof);
 
-                    pdfBytes.add(firstPageDocBytes);
+                    URI uri = deepLinkService.deepLinkFor(invoice);
+                    final byte[] firstPageInvoiceDocBytes =
+                            pdfStamper.firstPageWithStampOf(invoiceDocBytes, leftLines, rightLines, uri.toString());
+
+                    pdfBytes.add(firstPageInvoiceDocBytes);
+
+                    if(attachProof) {
+                        final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
+                        final byte[] ibanProofBytes = ibanProofDoc.asBytes();
+                        final byte[] firstPageIbanProofDocBytes = pdfStamper.firstPageOf(ibanProofBytes);
+                        pdfBytes.add(firstPageIbanProofDocBytes);
+                    }
                 }
             }
             byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});

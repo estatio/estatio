@@ -14,8 +14,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
@@ -28,7 +26,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfStamper {
-
 
     static class Line {
         private final String text;
@@ -51,14 +48,46 @@ public class PdfStamper {
 
     private static final float TEXT_LINE_HEIGHT = 14F;
     private static final int TEXT_X_PADDING = 4;
-    private static final Color TEXT_COLOR = Color.DARK_GRAY;
+    private static final Color TEXT_COLOR = Color.BLUE;
     private static final PDFont TEXT_FONT = PDType1Font.COURIER;
     private static final int TEXT_FONT_SIZE = 10;
 
-    private static final Color HYPERLINK_COLOR = Color.BLUE;
+    private static final Color HYPERLINK_COLOR = Color.MAGENTA;
+
+    private static final float SCALE = 0.85f;
+    private static final float SCALE_X = SCALE;
+    private static final float SCALE_Y = SCALE;
 
     @Programmatic
-    public byte[] firstPageOf(
+    public byte[] firstPageOf(final byte[] docBytes) throws IOException {
+
+        final PDDocument pdDoc = PDDocument.load(docBytes);
+        try {
+
+            final Splitter splitter = new Splitter();
+            final List<PDDocument> splitDocs = splitter.split(pdDoc);
+
+            if (splitDocs.isEmpty()) {
+                throw new IllegalArgumentException("Unable to split into multiple documents");
+            }
+
+            PDDocument docOfFirstPage = splitDocs.get(0);
+
+            final byte[] bytes = asBytes(docOfFirstPage);
+
+            for (PDDocument splitDoc : splitDocs) {
+                splitDoc.close();
+            }
+
+            return bytes;
+
+        } finally {
+            pdDoc.close();
+        }
+    }
+
+    @Programmatic
+    public byte[] firstPageWithStampOf(
             byte[] docBytes,
             final List<String> leftLineTexts,
             final List<String> rightLineTexts,
@@ -92,6 +121,14 @@ public class PdfStamper {
 
         return docBytes;
     }
+
+    private static byte[] asBytes(final PDDocument doc) throws IOException {
+        final byte[] firstPageDocBytes;ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doc.save(baos);
+        firstPageDocBytes = baos.toByteArray();
+        return firstPageDocBytes;
+    }
+
     private byte[] stamp(
             final PDDocument docOfFirstPage,
             final List<Line> leftLines,
@@ -105,8 +142,8 @@ public class PdfStamper {
         final PDPageContentStream prependStream =
                 new PDPageContentStream(docOfFirstPage, pdPage, PDPageContentStream.AppendMode.PREPEND, false);
         try {
-            prependStream.transform(Matrix.getScaleInstance(0.9f, 0.9f));
-            prependStream.transform(Matrix.getTranslateInstance(0f, pageHeight * 0.1f));
+            prependStream.transform(Matrix.getScaleInstance(SCALE_X, SCALE_Y));
+            prependStream.transform(Matrix.getTranslateInstance(0f, pageHeight * (1 - SCALE_Y)));
         } finally {
             prependStream.close();
         }
@@ -203,14 +240,9 @@ public class PdfStamper {
     }
 
     private List<Line> asLines(final List<String> origLines) {
-        return origLines.stream().map(x -> new Line(x, Color.DARK_GRAY, null)).collect(Collectors.toCollection(
+        return origLines.stream().map(x -> new Line(x, TEXT_COLOR, null)).collect(Collectors.toCollection(
                 (Supplier<List<Line>>) Lists::newArrayList));
     }
 
-    private PDColor asPdColor(final Color color) {
-        float[] components = new float[] {
-                color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f };
-        return new PDColor(components, PDDeviceRGB.INSTANCE);
-    }
 
 }

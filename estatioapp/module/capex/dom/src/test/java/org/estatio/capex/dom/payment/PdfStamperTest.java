@@ -19,7 +19,7 @@ public class PdfStamperTest {
         URL resource = Resources.getResource(PdfStamperTest.class, "sample-invoice.pdf");
         byte[] bytes = Resources.toByteArray(resource);
 
-        byte[] firstPageBytes = new PdfStamper().firstPageOf(bytes,
+        byte[] firstPageBytes = new PdfStamper().firstPageWithStampOf(bytes,
                 Arrays.asList(
                     "approved by: Joe Bloggs",
                     "approved on: 3-May-2017 14:15",
