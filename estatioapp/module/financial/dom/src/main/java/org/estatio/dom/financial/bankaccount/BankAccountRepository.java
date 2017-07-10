@@ -55,7 +55,7 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
         bankAccount.setReference(iban);
         bankAccount.setName(iban);
         bankAccount.setIban(iban);
-        bankAccount.setBic(bic);
+        bankAccount.setBic(BankAccount.trimBic(bic));
         bankAccount.refresh();
         persistIfNotAlready(bankAccount);
         return bankAccount;

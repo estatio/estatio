@@ -82,7 +82,7 @@ public class BankAccountImport implements ExcelFixtureRowHandler, Importable {
             } else {
                 bankAccount.setIban(iban);
                 bankAccount.verifyIban();
-                bankAccount.setBic(bic);
+                bankAccount.setBic(BankAccount.trimBic(bic));
             }
             if (propertyReference != null) {
                 final Property property = propertyRepository.findPropertyByReference(propertyReference);

@@ -146,7 +146,7 @@ public class BankAccount
             final String externalReference) {
         setIban(iban);
         setName(iban);
-        setBic(bic);
+        setBic(trimBic(bic));
         setExternalReference(externalReference);
         // TODO: Changing references is not really a good thing. in this case
         // there's no harm but we should come up with a pattern where we
@@ -190,6 +190,14 @@ public class BankAccount
     public static class RemoveEvent extends ActionDomainEvent<BankAccount> {
         private static final long serialVersionUID = 1L;
     }
+
+
+
+    public static String trimBic(final String str) {
+        // also trims non-breaking spaces
+        return str == null ? null : str.replace((char) 160, ' ').trim();
+    }
+
 
     public static class AccountNumberType {
 

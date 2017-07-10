@@ -618,9 +618,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return "NL";
     }
 
-    private FinancialInstitutionIdentification7 financialInstitutionIdentificationFor(final BankAccount bankAccount1) {
+    private FinancialInstitutionIdentification7 financialInstitutionIdentificationFor(final BankAccount bankAccount) {
         FinancialInstitutionIdentification7 cdtrAgtFinInstnId = new FinancialInstitutionIdentification7();
-        cdtrAgtFinInstnId.setBIC(bankAccount1.getBic());
+        cdtrAgtFinInstnId.setBIC(BankAccount.trimBic(bankAccount.getBic()));
         return cdtrAgtFinInstnId;
     }
 

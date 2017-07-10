@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -24,7 +23,7 @@ public class BankAccount_updateBic {
             semantics = SemanticsOf.IDEMPOTENT
     )
     public BankAccount act(@Nullable String bic) throws MalformedURLException {
-        bankAccount.setBic(bic);
+        bankAccount.setBic(BankAccount.trimBic(bic));
         return bankAccount;
     }
 
