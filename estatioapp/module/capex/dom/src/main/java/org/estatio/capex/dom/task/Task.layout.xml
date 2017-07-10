@@ -14,7 +14,12 @@
                             <cpt:fieldSet name="General">
                                 <cpt:action id="previous"/>
                                 <cpt:action id="next"/>
-                                <cpt:property id="description"/>
+                                <cpt:property id="description">
+                                    <cpt:action id="updateDescription">
+                                        <cpt:named>Update</cpt:named>
+                                        <cpt:describedAs>Feel free to use for short notes</cpt:describedAs>
+                                    </cpt:action>
+                                </cpt:property>
                                 <cpt:property id="object">
 
                                     <!-- document categorisation -->
@@ -64,6 +69,18 @@
 
                                     <cpt:action id="viewTransition" position="RIGHT"/>
                                 </cpt:property>
+                                <cpt:property id="createdOn">
+                                    <cpt:named>Priority</cpt:named>
+                                    <cpt:action id="reprioritizeBringForward">
+                                        <cpt:named>Bring forward</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="reprioritizePushback">
+                                        <cpt:named>Push back</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="reprioritizeAbsolute">
+                                        <cpt:named>To date</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -96,10 +113,6 @@
                 <cpt:property id="assignedTo"/>
                 <cpt:property id="personAssignedTo">
                     <cpt:action id="assignTo"/>
-                </cpt:property>
-                <cpt:property id="createdOn">
-                    <cpt:named>Assigned on</cpt:named>
-                    <cpt:action id="snooze"/>
                 </cpt:property>
                 <cpt:property id="transition" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
