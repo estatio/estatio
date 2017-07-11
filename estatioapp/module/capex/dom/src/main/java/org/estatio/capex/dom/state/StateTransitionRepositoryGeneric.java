@@ -193,7 +193,14 @@ public class StateTransitionRepositoryGeneric {
     void deleteFor(final DO domainObject, final Class<ST> stateTransitionClass) {
         final List<ST> stateTransitions = findByDomainObject(domainObject, stateTransitionClass);
         for (ST transition : stateTransitions) {
+            Task taskToRemove = null;
+            if (transition.getTask()!=null) {
+                taskToRemove = transition.getTask();
+            }
             repositoryService.removeAndFlush(transition);
+            if (taskToRemove!=null) {
+                repositoryService.removeAndFlush(taskToRemove);
+            }
         }
         transactionService.flushTransaction();
     }
