@@ -18,6 +18,7 @@
  */
 package org.estatio.capex.dom.invoice.viewmodel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -60,8 +61,8 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.OrderItemService;
+import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -552,6 +553,60 @@ public class IncomingDocAsInvoiceViewModel
         return firstItemIfAny;
     }
 
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(multiLine = 5)
+    public String getNotification(){
+        if (possibleDoubleInvoice()!=null){
+            return possibleDoubleInvoice();
+        }
+        if (sameInvoiceNumber()!=null){
+            return sameInvoiceNumber();
+        }
+        return null;
+    }
+
+    public boolean hideNotification(){
+        if (getNotification()!=null){
+            return false;
+        }
+        return true;
+    }
+
+    private String possibleDoubleInvoice(){
+        if (getInvoiceNumber()==null || getSeller()==null || getInvoiceDate()==null){
+            return null;
+        }
+        if (getDomainObject()!=null){
+            IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+            if (possibleDouble!=null && !possibleDouble.equals(domainObject)){
+                return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
+            }
+        }
+        return null;
+    }
+
+    private String sameInvoiceNumber(){
+        if (getInvoiceNumber()==null || getSeller()==null){
+            return null;
+        }
+        if (getDomainObject()!=null){
+            List<IncomingInvoice> similarNumberedInvoices = new ArrayList<>();
+            for (IncomingInvoice invoice : incomingInvoiceRepository.findByInvoiceNumberAndSeller(getInvoiceNumber(), getSeller())) {
+                if (!invoice.equals(getDomainObject())) {
+                    similarNumberedInvoices.add(invoice);
+                }
+            }
+            if (similarNumberedInvoices.size()>0){
+                String message = "WARNING: Invoices with the same number of this seller are found with invoice date(s): ";
+                for (IncomingInvoice invoice : similarNumberedInvoices){
+                    message = message.concat(invoice.getInvoiceDate().toString()).concat("; ");
+                }
+                return message;
+            }
+        }
+        return null;
+    }
+
     @Inject
     @XmlTransient
     @Getter(AccessLevel.NONE)
@@ -599,5 +654,5 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     OrderItemService orderItemService;
-
+    
 }

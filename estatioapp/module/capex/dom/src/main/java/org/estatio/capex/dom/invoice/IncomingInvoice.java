@@ -95,6 +95,12 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE invoiceNumber == :invoiceNumber "),
         @Query(
+                name = "findByInvoiceNumberAndSeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE invoiceNumber == :invoiceNumber "
+                        + " && seller == :seller "),
+        @Query(
                 name = "findByInvoiceNumberAndSellerAndInvoiceDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "

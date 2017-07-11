@@ -99,6 +99,17 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findByInvoiceNumberAndSeller(final String invoiceNumber, final Party seller) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByInvoiceNumberAndSeller",
+                        "invoiceNumber", invoiceNumber,
+                        "seller", seller));
+    }
+
+
+    @Programmatic
     public List<IncomingInvoice> findByBankAccount(final BankAccount bankAccount) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
@@ -194,5 +205,6 @@ public class IncomingInvoiceRepository {
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
+
 
 }
