@@ -528,12 +528,60 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public String reasonIncomplete(){
-        if (getBankAccount() == null) {
-            return "Bank account is required";
+        StringBuffer buffer = new StringBuffer();
+        if (getInvoiceNumber()==null){
+            buffer.append("invoice number, ");
         }
-        return null;
+        if (getBuyer()==null){
+            buffer.append("buyer, ");
+        }
+        if (getSeller()==null){
+            buffer.append("seller, ");
+        }
+        if (getDateReceived()==null){
+            buffer.append("date received, ");
+        }
+        if (getDueDate()==null){
+            buffer.append("due date, ");
+        }
+        if (getPaymentMethod()==null){
+            buffer.append("payment method, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+        if (getBankAccount() == null) {
+            buffer.append("bank account, ");
+        }
+
+        if (reasonItemsIncomplete()!=null){
+            buffer.append(reasonItemsIncomplete());
+        }
+
+        if (buffer.length()==0){
+            return null;
+        } else {
+            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
+        }
     }
 
+    @Programmatic
+    public String reasonItemsIncomplete(){
+        StringBuffer buffer = new StringBuffer();
+        for (InvoiceItem item : getItems()){
+            IncomingInvoiceItem incomingInvoiceItem = (IncomingInvoiceItem) item;
+            if (incomingInvoiceItem.reasonIncomplete()!=null) {
+                buffer.append("(on item ");
+                buffer.append(incomingInvoiceItem.getSequence().toString());
+                buffer.append(") ");
+                buffer.append(incomingInvoiceItem.reasonIncomplete());
+            }
+        }
+        return buffer.length() == 0 ? null : buffer.toString();
+    }
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;

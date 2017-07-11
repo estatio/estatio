@@ -354,42 +354,8 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     protected String minimalRequiredDataToComplete(){
-        StringBuffer buffer = new StringBuffer();
-        if (getInvoiceNumber()==null){
-            buffer.append("invoice number, ");
-        }
-        if (getBuyer()==null){
-            buffer.append("buyer, ");
-        }
-        if (getSeller()==null){
-            buffer.append("seller, ");
-        }
-        if (getDateReceived()==null){
-            buffer.append("date received, ");
-        }
-        if (getDueDate()==null){
-            buffer.append("due date, ");
-        }
-        if (getPaymentMethod()==null){
-            buffer.append("payment method, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
-        }
-        if (getPeriod()==null){
-            buffer.append("period, ");
-        }
-        if (buffer.length()==0){
-            return null;
-        } else {
-            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
-        }
+        return domainObject.reasonIncomplete();
     }
-
-
 
     @Programmatic
     public void init() {

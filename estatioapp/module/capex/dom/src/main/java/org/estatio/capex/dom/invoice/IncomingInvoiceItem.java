@@ -471,9 +471,27 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return isImmutable() ? itemImmutableReason() : null;
     }
 
-
     public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
+    }
+
+    @Programmatic
+    public String reasonIncomplete(){
+        StringBuffer buffer = new StringBuffer();
+        if (getStartDate()==null){
+            buffer.append("start date, ");
+        }
+        if (getEndDate()==null){
+            buffer.append("end date, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+
+        return buffer.length() == 0 ? null : buffer.toString();
     }
 
     @Inject
