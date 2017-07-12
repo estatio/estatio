@@ -294,7 +294,7 @@ public class OrderInvoiceLine {
                 factoryService.mixin(Order.addItem.class, order).act(
                         chargeObj, line.orderDescription,
                         line.netAmount, line.vatAmount, line.grossAmount,
-                        tax, startDate, endDate, property, project, null);
+                        tax, line.period, property, project, null);
 
                 project.addItem(chargeObj, chargeObj.getDescription(), null, null, null, property, null);
             }

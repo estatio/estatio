@@ -214,8 +214,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
                     getNetAmount(),
                     getGrossAmount(),
                     getTax(),
-                    getStartDateFromPeriod(),
-                    getEndDateFromPeriod(),
+                    getPeriod(),
                     getProperty(),
                     getProject(),
                     getBudgetItem()

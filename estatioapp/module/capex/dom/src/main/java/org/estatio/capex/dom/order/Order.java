@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -40,8 +41,10 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
@@ -51,9 +54,11 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 
@@ -219,33 +224,104 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         @MemberOrder(name="items", sequence = "1")
         public Order act(
                 final Charge charge,
-                final String description,
+                @Nullable final String description,
                 @Digits(integer=13, fraction = 2)
                 final BigDecimal netAmount,
                 @Nullable
                 @Digits(integer=13, fraction = 2)
                 final BigDecimal vatAmount,
+                @Nullable
                 @Digits(integer=13, fraction = 2)
                 final BigDecimal grossAmount,
                 @Nullable final Tax tax,
-                final LocalDate startDate,
-                final LocalDate endDate,
+                @Nullable final String period,
                 @Nullable final org.estatio.dom.asset.Property property,
                 @Nullable final Project project,
                 @Nullable final BudgetItem budgetItem
         ) {
             orderItemRepository.upsert(
-                    order, charge, description, netAmount, vatAmount, grossAmount, tax, startDate, endDate, property, project, budgetItem);
+                    order, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
             // (we think there's) no need to add to the getItems(), because the item points back to this order.
             return order;
+        }
+
+        public List<Charge> choices0Act(){
+            List<Charge> result = chargeRepository.allIncoming();
+            for (OrderItem item : order.getItems()) {
+                if (item.getCharge()!=null && result.contains(item.getCharge())) {
+                    result.remove(item.getCharge());
+                }
+            }
+            return result;
+        }
+
+        public String default6Act(){
+            return ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
+        }
+
+        public org.estatio.dom.asset.Property default7Act(){
+            return ofFirstItem(OrderItem::getProperty);
+        }
+
+        public Project default8Act(){
+            return ofFirstItem(OrderItem::getProject);
+        }
+
+        public String validateAct(final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                final Tax tax,
+                final String period,
+                final org.estatio.dom.asset.Property property,
+                final Project project,
+                final BudgetItem budgetItem){
+            if (period!=null && !period.equals("")) {
+                return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
+            }
+            return null;
+        }
+
+        public List<BudgetItem> choices9Act(
+                final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                final Tax tax,
+                final String period,
+                final org.estatio.dom.asset.Property property,
+                final Project project,
+                final BudgetItem budgetItem) {
+
+            return budgetItemChooser.choicesBudgetItemFor(property, charge);
         }
 
         public String disableAct() {
             return order.reasonDisabledDueToState();
         }
 
+        private <T> T ofFirstItem(final Function<OrderItem, T> f) {
+            final Optional<OrderItem> firstItemIfAny = firstItemIfAny();
+            return firstItemIfAny.map(f).orElse(null);
+        }
+
+        private Optional<OrderItem> firstItemIfAny() {
+            return  order.getItems().stream()
+                    .filter(OrderItem.class::isInstance)
+                    .map(OrderItem.class::cast)
+                    .findFirst();
+        }
+
         @Inject
         OrderItemRepository orderItemRepository;
+
+        @Inject
+        BudgetItemChooser budgetItemChooser;
+
+        @Inject
+        ChargeRepository chargeRepository;
 
     }
 
