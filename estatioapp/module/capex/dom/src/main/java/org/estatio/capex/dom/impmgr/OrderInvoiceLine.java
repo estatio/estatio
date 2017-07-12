@@ -42,7 +42,6 @@ import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
-import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRole;
@@ -264,9 +263,6 @@ public class OrderInvoiceLine {
             final Party buyer =  deriveBuyerFrom(property);
             final String atPath = "/FRA";
 
-            final LocalDate startDate = PeriodUtil.yearFromPeriod(line.period).startDate();
-            final LocalDate endDate = PeriodUtil.yearFromPeriod(line.period).endDate();
-
             if(property == null) {
                 return line;
             }
@@ -327,7 +323,7 @@ public class OrderInvoiceLine {
                         invoiceObj.getType(), chargeObj, line.getInvoiceDescription(),
                         line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(),
                         invoiceTax,
-                        dueDate, startDate, endDate, property, project, null);
+                        dueDate, line.period, property, project, null);
 
             }
 

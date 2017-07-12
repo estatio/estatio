@@ -39,10 +39,11 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
@@ -51,9 +52,11 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.Invoice;
@@ -241,8 +244,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final BigDecimal grossAmount,
                 @Nullable final Tax tax,
                 @Nullable final LocalDate dueDate,
-                @Nullable final LocalDate startDate,
-                @Nullable final LocalDate endDate,
+                @Nullable final String period,
                 @Nullable final Property property,
                 @Nullable final Project project,
                 @Nullable final BudgetItem budgetItem) {
@@ -257,8 +259,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                     grossAmount,
                     tax,
                     dueDate,
-                    startDate,
-                    endDate,
+                    PeriodUtil.yearFromPeriod(period).startDate(),
+                    PeriodUtil.yearFromPeriod(period).endDate(),
                     property,
                     project,
                     budgetItem);
@@ -278,23 +280,23 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return ofFirstItem(IncomingInvoiceItem::getDueDate);
         }
 
-        public LocalDate default8Act() {
-            return ofFirstItem(IncomingInvoiceItem::getStartDate);
+        public String default8Act() {
+            return ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(IncomingInvoiceItem::getStartDate), ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
         }
 
-        public LocalDate default9Act() {
-            return ofFirstItem(IncomingInvoiceItem::getEndDate);
-        }
-
-        public Property default10Act() {
+        public Property default9Act() {
             return incomingInvoice.getProperty();
         }
 
-        public Project default11Act() {
+        public Project default10Act() {
             return ofFirstItem(IncomingInvoiceItem::getProject);
         }
 
-        public List<BudgetItem> choices12Act(
+        public List<Charge> choices1Act(){
+            return chargeRepository.allIncoming();
+        }
+
+        public List<BudgetItem> choices11Act(
                 final IncomingInvoiceType type,
                 final Charge charge,
                 final String description,
@@ -303,12 +305,31 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final BigDecimal grossAmount,
                 final Tax tax,
                 final LocalDate dueDate,
-                final LocalDate startDate,
-                final LocalDate endDate,
+                final String period,
                 final Property property,
-                final Project project) {
+                final Project project,
+                final BudgetItem budgetItem) {
 
             return budgetItemChooser.choicesBudgetItemFor(property, charge);
+        }
+
+        public String validateAct(
+                final IncomingInvoiceType type,
+                final Charge charge,
+                final String description,
+                final BigDecimal netAmount,
+                final BigDecimal vatAmount,
+                final BigDecimal grossAmount,
+                final Tax tax,
+                final LocalDate dueDate,
+                final String period,
+                final Property property,
+                final Project project,
+                final BudgetItem budgetItem){
+            if (period!=null && !period.equals("")) {
+                return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
+            }
+            return null;
         }
 
         private <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
@@ -328,6 +349,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         @Inject
         IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+        
+        @Inject
+        ChargeRepository chargeRepository;
 
     }
 

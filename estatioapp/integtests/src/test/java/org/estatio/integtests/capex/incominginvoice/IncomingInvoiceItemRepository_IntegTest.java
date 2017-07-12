@@ -119,12 +119,12 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         mixin(IncomingInvoice.addItem.class, invoice).act(
                 invoice.getType(), charge, description,
                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                tax, dueDate, null, null, null, null, null);
+                tax, dueDate, null,  null, null, null);
 
         mixin(IncomingInvoice.addItem.class, invoice).act(
                 invoice.getType(), charge, description,
                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                tax, dueDate, null, null, null, null, null);
+                tax, dueDate, null,  null, null, null);
 
         return invoice;
     }
