@@ -84,6 +84,12 @@ import lombok.Setter;
                         "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +
                         "WHERE budget == :budget "),
         @Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +
+                        "WHERE budget.property == :property " +
+                        "ORDER BY budget.startDate DESC "),
+        @Query(
                 name = "findByBudgetAndCharge", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetitem.BudgetItem " +

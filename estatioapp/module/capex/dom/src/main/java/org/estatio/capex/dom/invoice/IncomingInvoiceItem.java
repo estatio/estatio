@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
@@ -335,6 +336,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return getBudgetItem();
     }
 
+    public List<BudgetItem> choices0EditBudgetItem() {
+        return budgetItemChooser.choicesBudgetItemFor((org.estatio.dom.asset.Property) getFixedAsset(), getCharge());
+    }
+
     public String disableEditBudgetItem(){
         if (isImmutable()){
             return itemImmutableReason();
@@ -508,5 +513,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Inject
     private OrderItemService orderItemService;
+
+    @Inject
+    private BudgetItemChooser budgetItemChooser;
 
 }

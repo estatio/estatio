@@ -21,8 +21,6 @@ package org.estatio.dom.budgeting.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -37,7 +35,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 
@@ -123,10 +120,8 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
         return budgetItem;
     }
 
-    @Inject
-    BudgetRepository budgetRepository;
-
-    @Inject
-    private BudgetItemValueRepository budgetItemValueRepository;
+    public List<BudgetItem> findByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
+    }
 
 }

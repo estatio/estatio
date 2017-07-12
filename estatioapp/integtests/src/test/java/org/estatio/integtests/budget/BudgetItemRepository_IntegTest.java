@@ -62,11 +62,11 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             // when
-            final List<BudgetItem> budgetList = budgetItemRepository.findByBudget(budget);
+            final List<BudgetItem> budgetItemList = budgetItemRepository.findByProperty(property);
             // then
-            assertThat(budgetList.size()).isEqualTo(2);
+            assertThat(budgetItemList.size()).isEqualTo(4);
+            assertThat(budgetItemList.get(0).getBudget().getStartDate()).isEqualTo(BudgetsForOxf.BUDGET_2016_START_DATE);
 
         }
 

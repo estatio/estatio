@@ -13,8 +13,6 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.charge.Charge;
@@ -28,11 +26,11 @@ public class BudgetItemChooser {
         boolean hasProperty = property != null;
         boolean hasCharge = charge != null;
         if (hasProperty) {
-            for (Budget budget : budgetRepository.findByProperty(property)) {
-                if (hasCharge) {
-                    result.add(budgetItemRepository.findByBudgetAndCharge(budget, charge));
+            for (BudgetItem budgetItem : budgetItemRepository.findByProperty(property)) {
+                if (hasCharge && charge==budgetItem.getCharge()) {
+                    result.add(budgetItem);
                 } else {
-                    result.addAll(budget.getItems());
+                    result.add(budgetItem);
                 }
             }
         } else {
@@ -47,9 +45,6 @@ public class BudgetItemChooser {
         }
         return result;
     }
-
-    @Inject
-    BudgetRepository budgetRepository;
 
     @Inject
     BudgetItemRepository budgetItemRepository;
