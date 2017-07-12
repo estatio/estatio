@@ -145,13 +145,6 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
     }
 
-
-    @Programmatic
-    public String minimalRequiredDataToComplete(){
-        return getDomainObject().reasonIncomplete();
-    }
-
-
     @Programmatic
     public void init() {
 

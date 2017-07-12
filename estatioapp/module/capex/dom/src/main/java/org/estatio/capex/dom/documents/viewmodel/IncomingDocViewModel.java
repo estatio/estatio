@@ -131,10 +131,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private Task originatingTask;
 
     @Programmatic
-    protected abstract String minimalRequiredDataToComplete();
-
-
-    @Programmatic
     public void modifyProperty(final Property property) {
         setProperty(property);
         deriveBuyer();

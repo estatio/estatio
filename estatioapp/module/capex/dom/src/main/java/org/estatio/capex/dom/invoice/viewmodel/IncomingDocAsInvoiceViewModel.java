@@ -353,10 +353,6 @@ public class IncomingDocAsInvoiceViewModel
                 bankAccountRepository.findBankAccountsByOwner(party).get(0) : null;
     }
 
-    protected String minimalRequiredDataToComplete(){
-        return domainObject.reasonIncomplete();
-    }
-
     @Programmatic
     public void init() {
         IncomingInvoice incomingInvoice = getDomainObject();
