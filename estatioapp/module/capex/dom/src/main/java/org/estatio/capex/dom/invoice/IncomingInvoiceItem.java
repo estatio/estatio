@@ -432,6 +432,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return invoice;
     }
 
+    public String disableRemoveItem(){
+        return isImmutable() ? itemImmutableReason() : null;
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItems", sequence = "1")
     public IncomingInvoiceItem updateOrCreateOrderItem(
@@ -468,10 +472,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
             return "Error: More than 1 linked order item found";
         }
-        return isImmutable() ? itemImmutableReason() : null;
-    }
-
-    public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
     }
 

@@ -347,6 +347,51 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                 "Cannot modify because order is in state of " + currentState;
     }
 
+    @Programmatic
+    public boolean isImmutable(){
+        return reasonDisabledDueToState()!=null;
+    }
+
+    @Programmatic
+    public String reasonIncomplete(){
+        StringBuffer buffer = new StringBuffer();
+        if (getOrderNumber()==null){
+            buffer.append("order number, ");
+        }
+        if (getBuyer()==null){
+            buffer.append("buyer, ");
+        }
+        if (getSeller()==null){
+            buffer.append("seller, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+
+        if (reasonItemsIncomplete()!=null){
+            buffer.append(reasonItemsIncomplete());
+        }
+
+        final int buflen = buffer.length();
+        return buflen != 0
+                ? buffer.replace(buflen - 2, buflen, " required").toString()
+                : null;
+    }
+
+    @Programmatic
+    public String reasonItemsIncomplete(){
+        StringBuffer buffer = new StringBuffer();
+        for (OrderItem item : getItems()){
+            if (item.reasonIncomplete()!=null) {
+                buffer.append("(on item) ");
+                buffer.append(item.reasonIncomplete());
+            }
+        }
+        return buffer.length() == 0 ? null : buffer.toString();
+    }
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;

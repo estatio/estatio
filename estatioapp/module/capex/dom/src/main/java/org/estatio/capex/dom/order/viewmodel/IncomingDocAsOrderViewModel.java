@@ -148,35 +148,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
     @Programmatic
     public String minimalRequiredDataToComplete(){
-        StringBuilder buffer = new StringBuilder();
-        if (getOrderNumber()==null){
-            buffer.append("order number, ");
-        }
-        if (getBuyer()==null){
-            buffer.append("buyer, ");
-        }
-        if (getSeller()==null){
-            buffer.append("seller, ");
-        }
-        if (getDescription()==null){
-            buffer.append("description, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
-        }
-        if (getCharge()==null){
-            buffer.append("charge, ");
-        }
-        if (getPeriod()==null){
-            buffer.append("period, ");
-        }
-        final int buflen = buffer.length();
-        return buflen != 0
-                ? buffer.replace(buflen - 2, buflen, " required").toString()
-                : null;
+        return getDomainObject().reasonIncomplete();
     }
 
 

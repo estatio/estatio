@@ -43,7 +43,15 @@ public enum OrderApprovalStateTransitionType
             OrderApprovalState.APPROVED,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.MANUAL){
+
+        @Override
+        public String reasonGuardNotSatisified(
+                final Order order,
+                final ServiceRegistry2 serviceRegistry2) {
+            return order.reasonIncomplete();
+        }
+    },
     DISCARD(
             OrderApprovalState.NEW,
             OrderApprovalState.DISCARDED,

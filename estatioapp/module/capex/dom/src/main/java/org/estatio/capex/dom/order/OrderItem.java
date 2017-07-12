@@ -17,13 +17,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -255,7 +258,40 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     }
 
+    @Programmatic
+    private boolean isImmutable(){
+        return getOrdr().isImmutable();
+    }
+
+    @Programmatic
+    public String reasonIncomplete(){
+        StringBuffer buffer = new StringBuffer();
+        if (getDescription()==null){
+            buffer.append("description, ");
+        }
+        if (getCharge()==null){
+            buffer.append("charge, ");
+        }
+        if (getStartDate()==null){
+            buffer.append("start date, ");
+        }
+        if (getEndDate()==null){
+            buffer.append("end date, ");
+        }
+        if (getNetAmount()==null){
+            buffer.append("net amount, ");
+        }
+        if (getGrossAmount()==null){
+            buffer.append("gross amount, ");
+        }
+
+        return buffer.length() == 0 ? null : buffer.toString();
+    }
+
     @Inject
     public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
+    @Inject
+    private RepositoryService repositoryService;
 
 }
