@@ -288,6 +288,21 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return buffer.length() == 0 ? null : buffer.toString();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Order removeItem(){
+        Order order = getOrdr();
+        repositoryService.removeAndFlush(this);
+        return order;
+    }
+
+    public String disableRemoveItem(){
+        return isImmutable() ? itemImmutableReason() : null;
+    }
+
+    private String itemImmutableReason(){
+        return "The order cannot be changed";
+    }
+
     @Inject
     public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
