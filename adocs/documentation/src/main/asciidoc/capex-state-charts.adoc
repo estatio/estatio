@@ -35,10 +35,14 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     state "pending" as iia_pp {
         state "COMPLETED" as iia_completed
-        note right of iia_completed: immutable from this point on
+        note right of iia_completed: mutable up to here, \nbut not after
 
         state "APPROVED" as iia_a
-        state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+
+        state "final approval" as iia_final {
+            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
+            state "APPROVED_BY_ \n CORPORATE_MANAGER" as iia_abcm
+        }
 
         state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac
         state "PAYABLE" as iia_payable
@@ -53,12 +57,12 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     iia_completed --> iia_a : APPROVE\n[capex | \nasset | services_charges ]
 
-    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS\n _COUNTRY_DIRECTOR\n[local]
-    iia_completed --> iia_pbac : CHECK_BANK_ACCOUNT_\n FOR_CORPORATE\n[corporate]
+    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS_\n COUNTRY_DIRECTOR\n[local]
+    iia_completed --> iia_abcm : APPROVE_\nAS_\n CORPORATE_MANAGER\n[corporate]
+
+    iia_a --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
     
-    iia_a -right-> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
-    
-    iia_abcd --> iia_pbac : CHECK_BANK_ACCOUNT
+    iia_final --> iia_pbac : CHECK_BANK_ACCOUNT
 
     iia_pp -up-> iia_new: \n  REJECT
 
