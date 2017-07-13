@@ -319,7 +319,8 @@ public class StateTransitionService {
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final STT requestedTransitionTypeIfAny,
-            final Person personToAssignNextToIfAny, final String nextTaskDescriptionIfAny) {
+            final Person personToAssignNextToIfAny,
+            final String nextTaskDescriptionIfAny) {
         // check the override, if any
         if(requestedTransitionTypeIfAny != null) {
             boolean canTransition = requestedTransitionTypeIfAny.canTransitionFromCurrentStateAndIsMatch(domainObject,
