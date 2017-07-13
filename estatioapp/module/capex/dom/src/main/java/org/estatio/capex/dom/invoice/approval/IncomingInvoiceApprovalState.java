@@ -8,6 +8,7 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     DISCARDED,
     APPROVED,
     APPROVED_BY_COUNTRY_DIRECTOR,
+    APPROVED_BY_CORPORATE_MANAGER,
     PENDING_BANK_ACCOUNT_CHECK,
     PAYABLE,
     PAID

@@ -72,8 +72,8 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
 
             switch (transitionType) {
 
-            case CHECK_BANK_ACCOUNT_FOR_CORPORATE:
-            case CHECK_BANK_ACCOUNT:
+            case COMPLETE: // do so as early as possible so that verification can run in parallel with approval
+            case CHECK_BANK_ACCOUNT: // belt-n-braces, do late as well
 
                 if(bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice)) {
                     return;

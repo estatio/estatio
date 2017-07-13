@@ -51,7 +51,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.APPROVED,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
-                    IncomingInvoiceApprovalState.PAYABLE
+                    IncomingInvoiceApprovalState.PAYABLE,
+                    IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER
             ),
             IncomingInvoiceApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),
@@ -148,12 +149,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return incomingInvoice.getType() == IncomingInvoiceType.LOCAL_EXPENSES;
         }
     },
-    CHECK_BANK_ACCOUNT_FOR_CORPORATE(
+    APPROVE_AS_CORPORATE_MANAGER(
             IncomingInvoiceApprovalState.COMPLETED,
-            IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
+            IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC) {
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_MANAGER),
+            AdvancePolicy.MANUAL) {
         @Override
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
@@ -168,7 +169,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
             AdvancePolicy.MANUAL),
     CHECK_BANK_ACCOUNT(
-            IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+            Lists.newArrayList(
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER
+            ),
             IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
