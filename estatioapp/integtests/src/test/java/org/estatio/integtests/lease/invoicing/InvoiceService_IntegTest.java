@@ -184,7 +184,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
         }
 
         public void step3_approveInvoice() throws Exception {
-            final List<Invoice<?>> allInvoices = invoiceMenu.allInvoices();
+            final List<Invoice> allInvoices = invoiceMenu.allInvoices();
             final Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             //estatioNumeratorRepository.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO, invoice.getApplicationTenancy());
 
