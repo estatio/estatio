@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -28,6 +30,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.google.common.base.Joiner;
 
 import org.assertj.core.util.Lists;
 import org.joda.time.DateTime;
@@ -79,8 +83,6 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.AccountIdentification4Choice;
-import iso.std.iso._20022.tech.xsd.pain_001_001.ActiveOrHistoricCurrencyAndAmount;
-import iso.std.iso._20022.tech.xsd.pain_001_001.AmountType3Choice;
 import iso.std.iso._20022.tech.xsd.pain_001_001.BranchAndFinancialInstitutionIdentification4;
 import iso.std.iso._20022.tech.xsd.pain_001_001.CashAccount16;
 import iso.std.iso._20022.tech.xsd.pain_001_001.CreditTransferTransactionInformation10;
@@ -89,11 +91,10 @@ import iso.std.iso._20022.tech.xsd.pain_001_001.Document;
 import iso.std.iso._20022.tech.xsd.pain_001_001.FinancialInstitutionIdentification7;
 import iso.std.iso._20022.tech.xsd.pain_001_001.GroupHeader32;
 import iso.std.iso._20022.tech.xsd.pain_001_001.PartyIdentification32;
-import iso.std.iso._20022.tech.xsd.pain_001_001.PaymentIdentification1;
 import iso.std.iso._20022.tech.xsd.pain_001_001.PaymentInstructionInformation3;
 import iso.std.iso._20022.tech.xsd.pain_001_001.PaymentMethod3Code;
-import iso.std.iso._20022.tech.xsd.pain_001_001.PostalAddress6;
-import iso.std.iso._20022.tech.xsd.pain_001_001.RemittanceInformation5;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -334,6 +335,61 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
 
 
+    public List<CreditTransfer> getTransfers() {
+
+        List<CreditTransfer> transfers = Lists.newArrayList();
+
+        final AtomicInteger seq = new AtomicInteger(1);
+
+        final Map<BankAccount, List<PaymentLine>> lineBySeller =
+                Lists.newArrayList(getLines()).stream().
+                        collect(groupingBy(PaymentLine::getCreditorBankAccount,
+                                toCollection(ArrayList::new)));
+
+        for (Map.Entry<BankAccount, List<PaymentLine>> linesByBankAccount : lineBySeller.entrySet()) {
+            final CreditTransfer creditTransfer = new CreditTransfer();
+            creditTransfer.setBatch(this);
+
+            final BankAccount bankAccount = linesByBankAccount.getKey();
+            final List<PaymentLine> lines = linesByBankAccount.getValue();
+
+            final String sequenceNums = extractAndJoin(lines, line -> ""+line.getSequence(), "-");
+            final String endToEndId = String.format("%s-%s-%s",
+                                            getCreatedOnYMD(), formattedSeq(seq), sequenceNums);
+            creditTransfer.setEndToEndId(endToEndId);
+
+            creditTransfer.setSellerBankAccount(bankAccount);
+
+            creditTransfer.setLines(lines);
+
+            final BigDecimal amount = lines.stream()
+                                            .map(PaymentLine::getAmount)
+                                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            creditTransfer.setAmount(amount);
+
+            //  -PM-19229-12-2016-2-RO
+            //  -2017-01-04-RO
+            //  -L 17-01-302-RO
+            //  -FC-1702CS1-0002-RO
+            //  -AF1T2017ASL-RO
+            final String remittanceInformation = extractAndJoin(lines, line -> line.getInvoice().getInvoiceNumber(), ";");
+            creditTransfer.setRemittanceInformation(remittanceInformation);
+
+            creditTransfer.setSeller(bankAccount.getOwner());
+            creditTransfer.setSellerPostalAddressCountry(ctryFor(bankAccount.getOwner()));
+
+            transfers.add(creditTransfer);
+        }
+
+        return transfers;
+    }
+
+    String extractAndJoin(final List<PaymentLine> lines, final Function<PaymentLine, String> func, final String separator) {
+        final List<String> invoiceNumbers = lines.stream().map(func)
+                .collect(Collectors.toList());
+        return Joiner.on(separator).join(invoiceNumbers);
+    }
+
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
     private PaymentBatchApprovalState approvalState;
@@ -549,52 +605,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         pmtInf.setDbtrAcct(cashAccountFor(getDebtorBankAccount()));
         pmtInf.setDbtrAgt(agentFor(getDebtorBankAccount()));
 
-        List<CreditTransferTransactionInformation10> cdtTrfTxInfList = pmtInf.getCdtTrfTxInves();
-        for (PaymentLine paymentLine : paymentLines) {
-            CreditTransferTransactionInformation10 cdtTrfTxInf = new CreditTransferTransactionInformation10();
-            cdtTrfTxInfList.add(cdtTrfTxInf);
+        final List<CreditTransferTransactionInformation10> cdtTrfTxInfList = pmtInf.getCdtTrfTxInves();
+        cdtTrfTxInfList.addAll(getTransfers().stream().map(CreditTransfer::asXml).collect(Collectors.toList()));
 
-            PaymentIdentification1 pmtId = new PaymentIdentification1();
-            cdtTrfTxInf.setPmtId(pmtId);
-            pmtId.setEndToEndId(endToEndId(seq, paymentLine));
-
-            AmountType3Choice amt = new AmountType3Choice();
-            cdtTrfTxInf.setAmt(amt);
-            ActiveOrHistoricCurrencyAndAmount instdAmt = new ActiveOrHistoricCurrencyAndAmount();
-            amt.setInstdAmt(instdAmt);
-            instdAmt.setCcy("EUR");
-            instdAmt.setValue(paymentLine.getAmount());
-
-            BankAccount creditorBankAccount = paymentLine.getCreditorBankAccount();
-
-            cdtTrfTxInf.setCdtrAgt(agentFor(creditorBankAccount));
-            cdtTrfTxInf.setCdtrAcct(cashAccountFor(creditorBankAccount));
-
-            PartyIdentification32 cdtr = new PartyIdentification32();
-            cdtTrfTxInf.setCdtr(cdtr);
-            cdtr.setNm(paymentLine.getCreditor().getName());
-            PostalAddress6 pstlAdr = new PostalAddress6();
-            cdtr.setPstlAdr(pstlAdr);
-            pstlAdr.setCtry(ctryFor(paymentLine.getCreditor()));
-
-            RemittanceInformation5 rmtInf = new RemittanceInformation5();
-            cdtTrfTxInf.setRmtInf(rmtInf);
-            List<String> ustrdList = rmtInf.getUstrds();
-            ustrdList.add(ustrdFor(paymentLine));
-        }
         return document;
     }
 
-    //  -PM-19229-12-2016-2-RO
-    //  -2017-01-04-RO
-    //  -L 17-01-302-RO
-    //  -FC-1702CS1-0002-RO
-    //  -AF1T2017ASL-RO
-    private String ustrdFor(final PaymentLine paymentLine) {
-        return paymentLine.getRemittanceInformation();
-    }
-
-    private CashAccount16 cashAccountFor(final BankAccount bankAccount) {
+    static CashAccount16 cashAccountFor(final BankAccount bankAccount) {
         CashAccount16 cdtrAcct = new CashAccount16();
         AccountIdentification4Choice cdtrChoice = new AccountIdentification4Choice();
         cdtrAcct.setId(cdtrChoice);
@@ -602,13 +619,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return cdtrAcct;
     }
 
-    private BranchAndFinancialInstitutionIdentification4 agentFor(final BankAccount debtorBankAccount) {
+    static BranchAndFinancialInstitutionIdentification4 agentFor(final BankAccount debtorBankAccount) {
         BranchAndFinancialInstitutionIdentification4 dbtrAgt = new BranchAndFinancialInstitutionIdentification4();
         dbtrAgt.setFinInstnId(financialInstitutionIdentificationFor(debtorBankAccount));
         return dbtrAgt;
     }
 
-    private static String ctryFor(final HasAtPath hasAtPath) {
+    static String ctryFor(final HasAtPath hasAtPath) {
         String applicationTenancyPath = hasAtPath.getAtPath();
         if(applicationTenancyPath.startsWith("/FRA")) { return "FR"; }
         if(applicationTenancyPath.startsWith("/ITA")) { return "IT"; }
@@ -618,7 +635,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return "NL";
     }
 
-    private FinancialInstitutionIdentification7 financialInstitutionIdentificationFor(final BankAccount bankAccount) {
+    static FinancialInstitutionIdentification7 financialInstitutionIdentificationFor(final BankAccount bankAccount) {
         FinancialInstitutionIdentification7 cdtrAgtFinInstnId = new FinancialInstitutionIdentification7();
         cdtrAgtFinInstnId.setBIC(BankAccount.trimBic(bankAccount.getBic()));
         return cdtrAgtFinInstnId;
@@ -641,7 +658,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     // 2017-05-24-0000
-    String pmtInfIdFor(final AtomicInteger seq) {
+    private String pmtInfIdFor(final AtomicInteger seq) {
         return String.format("%s-%s", getCreatedOnYMD(), formattedSeq(seq));
     }
 
@@ -653,26 +670,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return getCreatedOn().toString("yyyy-MM-dd");
     }
 
-    // in sample XML, was : 2017-05-24-0004-2405201711100200001
-    // this method instead: 2017-05-24-0004-11100200001   (if there is an attached doc)
-    //                  or: 2017-05-24-0004-X123456       (if there is no attached doc; use the internal invoice Id)
-    private String endToEndId(final AtomicInteger seq, final PaymentLine paymentLine) {
-        IncomingInvoice invoice = paymentLine.getInvoice();
-        Optional<org.incode.module.document.dom.impl.docs.Document> document = lookupAttachedPdfService
-                .lookupIncomingInvoicePdfFrom(invoice);
-        return document.isPresent()
-                ? String.format(
-                        "%s-%s-%s", getCreatedOnYMD(), formattedSeq(seq),
-                        stripPdfSuffixIfAny(document.get().getName()))
-                : String.format(
-                        "%s-%s-X%s", getCreatedOnYMD(), formattedSeq(seq),
-                invoice.getId());
-    }
-
-    private static String stripPdfSuffixIfAny(final String docName) {
-        int i = docName.lastIndexOf(".pdf");
-        return i > 0 ? docName.substring(0, i): docName;
-    }
 
     private static XMLGregorianCalendar newDateTime(final DateTime dateTime) {
         if(dateTime == null) {
@@ -700,8 +697,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
-    @Inject
-    LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
     MeService meService;

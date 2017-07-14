@@ -81,10 +81,10 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     }
 
     public String title() {
-        return String.format("%s: %s to %s",
-                getBatch().getDebtorBankAccount().getIban(),
+        return String.format("%s: %s for %s",
+                getCreditorBankAccount().getIban(),
                 new DecimalFormat("0.00").format(getAmount()),
-                getCreditorBankAccount().getIban());
+                getInvoice().getInvoiceNumber());
     }
 
     @Column(allowsNull = "false", name = "batchId")

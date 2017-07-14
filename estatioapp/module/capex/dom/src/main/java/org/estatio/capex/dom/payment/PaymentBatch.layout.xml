@@ -120,6 +120,13 @@
         </bs3:col>
         <bs3:col span="8">
             <bs3:tabGroup>
+                <bs3:tab name="Transfers">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="transfers" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
                 <bs3:tab name="Lines">
                     <bs3:row>
                         <bs3:col span="12">

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Credit Transfer">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="General" id="general">
+                                <cpt:property id="batch" hidden="REFERENCES_PARENT"/>
+                                <cpt:property id="endToEndId"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="sync" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="links" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="rebuildMetaModel" position="PANEL_DROPDOWN"/>
+
+                                <cpt:property id="endToEndId"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Seller" id="seller">
+                <cpt:property id="seller"/>
+                <cpt:property id="sellerName" hidden="OBJECT_FORMS"/>
+                <cpt:property id="sellerBankAccount"/>
+                <cpt:property id="sellerIban" hidden="OBJECT_FORMS"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Amount" id="amount">
+                <cpt:property id="amount"/>
+                <cpt:property id="remittanceInformation"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Lines">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="lines" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy-to-make-first-tab-appear">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy-fieldset">
+                                <cpt:property id="dummy-property"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true"/>
+    </bs3:row>
+</bs3:grid>
