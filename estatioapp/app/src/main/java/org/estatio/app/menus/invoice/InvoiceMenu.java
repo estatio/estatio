@@ -19,6 +19,7 @@
 package org.estatio.app.menus.invoice;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -142,7 +143,9 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
     @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesByInvoiceNumber(
             final String invoiceNumber) {
-        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber);
+        return invoiceRepository.findMatchingInvoiceNumber(invoiceNumber).stream()
+                .filter(i -> i instanceof InvoiceForLease)
+                .collect(Collectors.toList());
     }
 
 
@@ -167,8 +170,10 @@ public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "98")
-    public List<Invoice<?>> allInvoices() {
-        return (List)invoiceRepository.allInvoices();
+    public List<Invoice> allInvoices() {
+        return invoiceRepository.allInvoices().stream()
+                .filter(i -> i instanceof InvoiceForLease)
+                .collect(Collectors.toList());
     }
 
 
