@@ -85,7 +85,8 @@ public class IncomingInvoiceItemRepository {
             invoiceItem = create(
                     sequence,
                     invoice,
-                    incomingInvoiceType, charge,
+                    incomingInvoiceType,
+                    charge,
                     description,
                     netAmount,
                     vatAmount,

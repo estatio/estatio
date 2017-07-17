@@ -21,7 +21,9 @@
                                 <ns2:property id="description">
                                     <ns2:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
                                 </ns2:property>
-                                <ns2:property id="dueDate"/>
+                                <ns2:property id="dueDate">
+                                    <ns2:action id="editDueDate" promptStyle="INLINE" position="RIGHT"/>
+                                </ns2:property>
                             </ns2:fieldSet>
                         </col>
                     </row>

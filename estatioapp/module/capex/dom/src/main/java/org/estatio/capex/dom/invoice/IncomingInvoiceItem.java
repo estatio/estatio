@@ -257,6 +257,21 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    public IncomingInvoiceItem editDueDate(final LocalDate dueDate){
+        setDueDate(dueDate);
+        return this;
+    }
+
+    public LocalDate default0EditDueDate(){
+        return getDueDate();
+    }
+
+    public String disableEditDueDate(){
+        return isImmutable() ? itemImmutableReason() : null;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
     public IncomingInvoiceItem editCharge(@Nullable final Charge charge) {
         setCharge(charge);
         return this;
@@ -507,7 +522,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private ChargeRepository chargeRepository;
 
     @Inject
-    private RepositoryService repositoryService;
+    RepositoryService repositoryService;
 
     @Inject
     private ProjectRepository projectRepository;

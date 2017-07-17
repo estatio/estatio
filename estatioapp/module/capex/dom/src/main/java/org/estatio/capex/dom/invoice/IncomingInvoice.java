@@ -36,6 +36,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -252,7 +253,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             incomingInvoiceItemRepository.upsert(
                     sequence,
                     incomingInvoice,
-                    type, charge,
+                    type,
+                    charge,
                     description,
                     netAmount,
                     vatAmount,
@@ -277,11 +279,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         public LocalDate default7Act() {
-            return ofFirstItem(IncomingInvoiceItem::getDueDate);
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getDueDate);
         }
 
         public String default8Act() {
-            return ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(IncomingInvoiceItem::getStartDate), ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(incomingInvoice.ofFirstItem(IncomingInvoiceItem::getStartDate), incomingInvoice.ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
         }
 
         public Property default9Act() {
@@ -289,7 +291,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         public Project default10Act() {
-            return ofFirstItem(IncomingInvoiceItem::getProject);
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getProject);
         }
 
         public List<Charge> choices1Act(){
@@ -332,18 +334,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return null;
         }
 
-        private <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
-            final Optional<IncomingInvoiceItem> firstItemIfAny = firstItemIfAny();
-            return firstItemIfAny.map(f).orElse(null);
-        }
-
-        private Optional<IncomingInvoiceItem> firstItemIfAny() {
-            return  incomingInvoice.getItems().stream()
-                    .filter(IncomingInvoiceItem.class::isInstance)
-                    .map(IncomingInvoiceItem.class::cast)
-                    .findFirst();
-        }
-
         @Inject
         BudgetItemChooser budgetItemChooser;
 
@@ -353,6 +343,160 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         @Inject
         ChargeRepository chargeRepository;
 
+    }
+
+    @Mixin(method="act")
+    public static class splitItem {
+
+        private final IncomingInvoice incomingInvoice;
+        public splitItem(final IncomingInvoice incomingInvoice) {
+            this.incomingInvoice = incomingInvoice;
+        }
+
+        @MemberOrder(name = "items", sequence = "2")
+        public IncomingInvoice act(
+                final IncomingInvoiceItem item,
+                final String newItemDescription,
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemNetAmount,
+                @Nullable
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemVatAmount,
+                @Nullable
+                final Tax newItemtax,
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                @Nullable
+                final Property newItemProperty,
+                @Nullable
+                final Project newItemProject,
+                @Nullable
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod
+        ) {
+            if (item.getNetAmount() != null) {
+                item.setNetAmount(item.getNetAmount().subtract(newItemNetAmount));
+            }
+            if (item.getVatAmount() != null && newItemVatAmount != null) {
+                item.setVatAmount(item.getVatAmount().subtract(newItemVatAmount));
+            }
+            if (item.getGrossAmount() != null) {
+                item.setGrossAmount(item.getGrossAmount().subtract(newItemGrossAmount));
+            }
+            factoryService.mixin(IncomingInvoice.addItem.class, incomingInvoice)
+                    .act(
+                            incomingInvoice.getType(),
+                            newItemCharge,
+                            newItemDescription,
+                            newItemNetAmount,
+                            newItemVatAmount,
+                            newItemGrossAmount,
+                            newItemtax,
+                            incomingInvoice.getDueDate(),
+                            newItemPeriod,
+                            newItemProperty,
+                            newItemProject,
+                            newItemBudgetItem);
+            return incomingInvoice;
+        }
+
+        public String disableAct() {
+            if (incomingInvoice.isImmutable()) {
+                return incomingInvoice.reasonDisabledDueToState();
+            }
+            return incomingInvoice.getItems().size() < 1 ? "No items" : null;
+        }
+
+        public IncomingInvoiceItem default0Act() {
+            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().first() : null;
+        }
+
+        public Tax default4Act() {
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getTax);
+        }
+
+        public Property default7Act() {
+            return incomingInvoice.getProperty();
+        }
+
+        public Project default8Act() {
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getProject);
+        }
+
+        public String default10Act() {
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getPeriod);
+        }
+
+        public List<IncomingInvoiceItem> choices0Act() {
+            List<IncomingInvoiceItem> choiceList = new ArrayList<>();
+            for (InvoiceItem item : incomingInvoice.getItems()) {
+                choiceList.add((IncomingInvoiceItem) item);
+            }
+            return choiceList;
+        }
+
+        public List<Charge> choices6Act(){
+            return chargeRepository.allIncoming();
+        }
+
+        public List<BudgetItem> choices9Act(
+                final IncomingInvoiceItem item,
+                final String newItemDescription,
+                final BigDecimal newItemNetAmount,
+                final BigDecimal newItemVatAmount,
+                final Tax newItemtax,
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                final Property newItemProperty,
+                final Project newItemProject,
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod) {
+
+            return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
+        }
+
+        public String validateAct(
+                final IncomingInvoiceItem item,
+                final String newItemDescription,
+                final BigDecimal newItemNetAmount,
+                final BigDecimal newItemVatAmount,
+                final Tax newItemtax,
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                final Property newItemProperty,
+                final Project newItemProject,
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod){
+            if (newItemPeriod!=null && !newItemPeriod.equals("")) {
+                return PeriodUtil.isValidPeriod(newItemPeriod) ? null : "Not a valid period";
+            }
+            return null;
+        }
+
+        @Inject
+        FactoryService factoryService;
+
+        @Inject
+        BudgetItemChooser budgetItemChooser;
+
+        @Inject
+        ChargeRepository chargeRepository;
+
+    }
+
+    @Programmatic
+    public <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
+        final Optional<IncomingInvoiceItem> firstItemIfAny = firstItemIfAny();
+        return firstItemIfAny.map(f).orElse(null);
+    }
+
+    @Programmatic
+    public Optional<IncomingInvoiceItem> firstItemIfAny() {
+        return  getItems().stream()
+                .filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .findFirst();
     }
 
 
@@ -609,6 +753,5 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
-
 
 }
