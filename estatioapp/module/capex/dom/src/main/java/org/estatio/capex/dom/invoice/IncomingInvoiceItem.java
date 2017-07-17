@@ -427,13 +427,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Invoice removeItem(){
-        Invoice invoice = getInvoice();
+        IncomingInvoice invoice = (IncomingInvoice) getInvoice();
         if (isLinkedToOrderItem()){
             for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
                 repositoryService.removeAndFlush(link);
             }
         }
         repositoryService.removeAndFlush(this);
+        invoice.recalculateAmounts();
         return invoice;
     }
 
