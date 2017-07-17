@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -94,7 +96,6 @@ import iso.std.iso._20022.tech.xsd.pain_001_001.PartyIdentification32;
 import iso.std.iso._20022.tech.xsd.pain_001_001.PaymentInstructionInformation3;
 import iso.std.iso._20022.tech.xsd.pain_001_001.PaymentMethod3Code;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -340,7 +341,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
 
-
     public List<CreditTransfer> getTransfers() {
 
         List<CreditTransfer> transfers = Lists.newArrayList();
@@ -348,9 +348,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         final AtomicInteger seq = new AtomicInteger(1);
 
         final Map<BankAccount, List<PaymentLine>> lineBySeller =
-                Lists.newArrayList(getLines()).stream().
-                        collect(groupingBy(PaymentLine::getCreditorBankAccount,
-                                toCollection(ArrayList::new)));
+                Lists.newArrayList(getLines()).stream()
+                        .sorted(Comparator.comparing(PaymentLine::getSequence))
+                        .collect(groupingBy(PaymentLine::getCreditorBankAccount,
+                                toSortedList(Comparator.comparing(PaymentLine::getSequence))));
 
         for (Map.Entry<BankAccount, List<PaymentLine>> linesByBankAccount : lineBySeller.entrySet()) {
             final CreditTransfer creditTransfer = new CreditTransfer();
@@ -388,6 +389,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
 
         return transfers;
+    }
+
+    private static <T> Collector<T,?,List<T>> toSortedList(Comparator<? super T> c) {
+        return Collectors.collectingAndThen(
+                Collectors.toCollection(ArrayList::new), l->{ l.sort(c); return l; } );
     }
 
     String extractAndJoin(final List<PaymentLine> lines, final Function<PaymentLine, String> func, final String separator) {
