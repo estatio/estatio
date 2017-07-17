@@ -256,6 +256,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Programmatic
     public void addLineIfRequired(final IncomingInvoice incomingInvoice) {
+        if(!getApprovalState().isModifiable()) {
+            // no-op if not modifiable.
+            // this shouldn't happen because calling actions should have appropriate guards;
+            // so this is just belt-n-braces
+            return;
+        }
         Optional<PaymentLine> lineIfAny = lineIfAnyFor(incomingInvoice);
         if (lineIfAny.isPresent()) {
             return;
@@ -424,9 +430,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Programmatic
     public String reasonDisabledDueToState() {
         PaymentBatchApprovalState currentState = getApprovalState();
-        return currentState == PaymentBatchApprovalState.NEW ?
-                null :
-                "Cannot modify because payment batch is in state of " + currentState;
+        return currentState.isModifiable()
+                ? null
+                : "Cannot modify because payment batch is in state of " + currentState;
     }
 
     @Mixin(method="act")

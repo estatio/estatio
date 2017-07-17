@@ -6,5 +6,9 @@ public enum PaymentBatchApprovalState implements State<PaymentBatchApprovalState
     NEW,
     COMPLETED, // by the treasurer
     APPROVED,
-    DISCARDED
+    DISCARDED;
+
+    public boolean isModifiable() {
+        return this == NEW || this == COMPLETED;
+    }
 }

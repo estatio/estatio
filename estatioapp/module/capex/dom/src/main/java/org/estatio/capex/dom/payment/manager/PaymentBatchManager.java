@@ -167,7 +167,7 @@ public class PaymentBatchManager {
                 }
                 final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
                 if(uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
-                    PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateBatchFor(uniqueBankAccountIfAny);
+                    PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(uniqueBankAccountIfAny);
                     paymentBatch.addLineIfRequired(payableInvoice);
                 }
             }
@@ -465,7 +465,7 @@ public class PaymentBatchManager {
                 final IncomingInvoice incomingInvoice,
                 final BankAccount debtorBankAccount) {
 
-            PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateBatchFor(debtorBankAccount);
+            PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(debtorBankAccount);
             paymentBatch.addLineIfRequired(incomingInvoice);
 
             return paymentBatchManager.update();

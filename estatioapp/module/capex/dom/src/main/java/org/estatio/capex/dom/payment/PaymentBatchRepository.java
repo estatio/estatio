@@ -79,7 +79,7 @@ public class PaymentBatchRepository {
 
 
     @Programmatic
-    public PaymentBatch findOrCreateBatchFor(final BankAccount debtorBankAccount) {
+    public PaymentBatch findOrCreateNewByDebtorBankAccount(final BankAccount debtorBankAccount) {
         PaymentBatch paymentBatchIfAny = findNewByDebtorBankAccount(debtorBankAccount);
 
         if (paymentBatchIfAny != null) {
