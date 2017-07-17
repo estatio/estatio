@@ -72,28 +72,28 @@ public class PaymentBatch_Test {
         List<CreditTransfer> transfers = paymentBatch.getTransfers();
         
         assertThat(transfers).hasSize(2);
-        final CreditTransfer transfer0 = transfers.get(0);
-        final CreditTransfer transfer1 = transfers.get(1);
+        final CreditTransfer transfer1 = transfers.get(0);
+        final CreditTransfer transfer2 = transfers.get(1);
 
         assertThat(transfer1.getBatch()).isEqualTo(paymentBatch);
         assertThat(transfer1.getSellerName()).isEqualTo(seller1.getName());
         assertThat(transfer1.getAmount()).isEqualTo(invoice1.getGrossAmount().add(invoice3.getGrossAmount()));
-        assertThat(transfer1.getEndToEndId()).isEqualTo("2017-07-14-0002-1-3"); // the "1-3" suffix indicates payment lines with sequence 1 and 3 together
+        assertThat(transfer1.getEndToEndId()).isEqualTo("2017-07-14-0001-1-3"); // the "1-3" suffix indicates payment lines with sequence 1 and 3 together
         assertThat(transfer1.getRemittanceInformation()).isEqualTo("AF3T2017;REDD2016VT");
         assertThat(transfer1.getSellerBankAccount()).isEqualTo(seller1BankAccount);
         assertThat(transfer1.getSellerBic()).isEqualTo(seller1BankAccount.getBic());
         assertThat(transfer1.getSellerIban()).isEqualTo(seller1BankAccount.getIban());
         assertThat(transfer1.getSellerPostalAddressCountry()).isEqualTo("FR");
 
-        assertThat(transfer0.getBatch()).isEqualTo(paymentBatch);
-        assertThat(transfer0.getSellerName()).isEqualTo(seller2.getName());
-        assertThat(transfer0.getAmount()).isEqualTo(invoice2.getGrossAmount());
-        assertThat(transfer0.getEndToEndId()).isEqualTo("2017-07-14-0001-2");
-        assertThat(transfer0.getRemittanceInformation()).isEqualTo("DGD 11420 - 170522");
-        assertThat(transfer0.getSellerBankAccount()).isEqualTo(seller2BankAccount);
-        assertThat(transfer0.getSellerBic()).isEqualTo(seller2BankAccount.getBic());
-        assertThat(transfer0.getSellerIban()).isEqualTo(seller2BankAccount.getIban());
-        assertThat(transfer0.getSellerPostalAddressCountry()).isEqualTo("FR");
+        assertThat(transfer2.getBatch()).isEqualTo(paymentBatch);
+        assertThat(transfer2.getSellerName()).isEqualTo(seller2.getName());
+        assertThat(transfer2.getAmount()).isEqualTo(invoice2.getGrossAmount());
+        assertThat(transfer2.getEndToEndId()).isEqualTo("2017-07-14-0002-2");
+        assertThat(transfer2.getRemittanceInformation()).isEqualTo("DGD 11420 - 170522");
+        assertThat(transfer2.getSellerBankAccount()).isEqualTo(seller2BankAccount);
+        assertThat(transfer2.getSellerBic()).isEqualTo(seller2BankAccount.getBic());
+        assertThat(transfer2.getSellerIban()).isEqualTo(seller2BankAccount.getIban());
+        assertThat(transfer2.getSellerPostalAddressCountry()).isEqualTo("FR");
 
         // and also
         final CreditTransferTransactionInformation10 cdtTrf1 = transfer1.asXml();

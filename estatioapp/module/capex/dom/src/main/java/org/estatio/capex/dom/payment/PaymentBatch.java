@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -351,6 +352,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 Lists.newArrayList(getLines()).stream()
                         .sorted(Comparator.comparing(PaymentLine::getSequence))
                         .collect(groupingBy(PaymentLine::getCreditorBankAccount,
+                                () -> new TreeMap<BankAccount, List<PaymentLine>>(),
                                 toSortedList(Comparator.comparing(PaymentLine::getSequence))));
 
         for (Map.Entry<BankAccount, List<PaymentLine>> linesByBankAccount : lineBySeller.entrySet()) {
