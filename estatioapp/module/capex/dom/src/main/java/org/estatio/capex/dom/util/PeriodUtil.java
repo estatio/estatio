@@ -49,10 +49,14 @@ public class PeriodUtil {
     }
 
     public static boolean isValidPeriod(final String period){
-        if (period!=null && !yearFromPeriod(period).equals(new LocalDateInterval(null, null))){
+        if (period!=null && !period.equals("") && !yearFromPeriod(period).equals(new LocalDateInterval(null, null))){
             return true;
         }
         return false;
+    }
+
+    public static String reasonInvalidPeriod(final String period){
+        return isValidPeriod(period) ? null : "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)";
     }
 
 

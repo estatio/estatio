@@ -113,13 +113,26 @@ public class PeriodUtilTest {
 
         // then
         Assertions.assertThat(PeriodUtil.isValidPeriod(period)).isEqualTo(false);
+        Assertions.assertThat(PeriodUtil.reasonInvalidPeriod(period)).isEqualTo("Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)");
 
         // when
         period = "F2017M01";
 
         // then
         Assertions.assertThat(PeriodUtil.isValidPeriod(period)).isEqualTo(true);
+        Assertions.assertThat(PeriodUtil.reasonInvalidPeriod(period)).isNull();
+
+        // when
+        period = "";
+        // then
+        Assertions.assertThat(PeriodUtil.isValidPeriod(period)).isEqualTo(false);
+
+        // when
+        period = null;
+        // then
+        Assertions.assertThat(PeriodUtil.isValidPeriod(period)).isEqualTo(false);
 
     }
+
 
 }

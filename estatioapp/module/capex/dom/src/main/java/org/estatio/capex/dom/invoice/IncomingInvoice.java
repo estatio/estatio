@@ -1,12 +1,12 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -36,7 +36,6 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -249,9 +248,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 @Nullable final Property property,
                 @Nullable final Project project,
                 @Nullable final BudgetItem budgetItem) {
-            final BigInteger sequence = incomingInvoice.nextItemSequence();
-            incomingInvoiceItemRepository.upsert(
-                    sequence,
+            incomingInvoiceItemRepository.addItem(
                     incomingInvoice,
                     type,
                     charge,
@@ -261,12 +258,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                     grossAmount,
                     tax,
                     dueDate,
-                    PeriodUtil.yearFromPeriod(period).startDate(),
-                    PeriodUtil.yearFromPeriod(period).endDate(),
+                    period,
                     property,
                     project,
                     budgetItem);
-
             return incomingInvoice;
         }
 
@@ -328,10 +323,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final Property property,
                 final Project project,
                 final BudgetItem budgetItem){
-            if (period!=null && !period.equals("")) {
-                return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
-            }
-            return null;
+            if (period==null) return null; // period is optional
+            return PeriodUtil.reasonInvalidPeriod(period);
         }
 
         @Inject
@@ -355,7 +348,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         @MemberOrder(name = "items", sequence = "2")
         public IncomingInvoice act(
-                final IncomingInvoiceItem item,
+                final IncomingInvoiceItem itemToSplit,
                 final String newItemDescription,
                 @Digits(integer = 13, fraction = 2)
                 final BigDecimal newItemNetAmount,
@@ -375,29 +368,22 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final BudgetItem newItemBudgetItem,
                 final String newItemPeriod
         ) {
-            if (item.getNetAmount() != null) {
-                item.setNetAmount(item.getNetAmount().subtract(newItemNetAmount));
-            }
-            if (item.getVatAmount() != null && newItemVatAmount != null) {
-                item.setVatAmount(item.getVatAmount().subtract(newItemVatAmount));
-            }
-            if (item.getGrossAmount() != null) {
-                item.setGrossAmount(item.getGrossAmount().subtract(newItemGrossAmount));
-            }
-            factoryService.mixin(IncomingInvoice.addItem.class, incomingInvoice)
-                    .act(
-                            incomingInvoice.getType(),
-                            newItemCharge,
-                            newItemDescription,
-                            newItemNetAmount,
-                            newItemVatAmount,
-                            newItemGrossAmount,
-                            newItemtax,
-                            incomingInvoice.getDueDate(),
-                            newItemPeriod,
-                            newItemProperty,
-                            newItemProject,
-                            newItemBudgetItem);
+            itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
+            incomingInvoiceItemRepository.addItem(
+                    incomingInvoice,
+                    incomingInvoice.getType(),
+                    newItemCharge,
+                    newItemDescription,
+                    newItemNetAmount,
+                    newItemVatAmount,
+                    newItemGrossAmount,
+                    newItemtax,
+                    incomingInvoice.getDueDate(),
+                    newItemPeriod,
+                    newItemProperty,
+                    newItemProject,
+                    newItemBudgetItem
+                    );
             return incomingInvoice;
         }
 
@@ -405,7 +391,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             if (incomingInvoice.isImmutable()) {
                 return incomingInvoice.reasonDisabledDueToState();
             }
-            return incomingInvoice.getItems().size() < 1 ? "No items" : null;
+            return incomingInvoice.getItems().isEmpty() ? "No items" : null;
         }
 
         public IncomingInvoiceItem default0Act() {
@@ -416,6 +402,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getTax);
         }
 
+        public Charge default6Act() {
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getCharge);
+        }
+
         public Property default7Act() {
             return incomingInvoice.getProperty();
         }
@@ -424,16 +414,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getProject);
         }
 
+        public BudgetItem default9Act() {
+            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getBudgetItem);
+        }
+
         public String default10Act() {
             return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getPeriod);
         }
 
         public List<IncomingInvoiceItem> choices0Act() {
-            List<IncomingInvoiceItem> choiceList = new ArrayList<>();
-            for (InvoiceItem item : incomingInvoice.getItems()) {
-                choiceList.add((IncomingInvoiceItem) item);
-            }
-            return choiceList;
+            return incomingInvoice.getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
         }
 
         public List<Charge> choices6Act(){
@@ -468,14 +458,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 final Project newItemProject,
                 final BudgetItem newItemBudgetItem,
                 final String newItemPeriod){
-            if (newItemPeriod!=null && !newItemPeriod.equals("")) {
-                return PeriodUtil.isValidPeriod(newItemPeriod) ? null : "Not a valid period";
-            }
-            return null;
+            return PeriodUtil.reasonInvalidPeriod(newItemPeriod);
         }
 
         @Inject
-        FactoryService factoryService;
+        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
         @Inject
         BudgetItemChooser budgetItemChooser;
@@ -497,6 +484,52 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
                 .findFirst();
+    }
+
+    @Mixin(method = "act")
+    public static class mergeItems {
+
+        private final IncomingInvoice incomingInvoice;
+        public mergeItems(final IncomingInvoice incomingInvoice) {
+            this.incomingInvoice = incomingInvoice;
+        }
+
+        @MemberOrder(name = "items", sequence = "3")
+        public IncomingInvoice act(
+                final IncomingInvoiceItem item,
+                final IncomingInvoiceItem mergeInto){
+            incomingInvoiceItemRepository.mergeItems(item, mergeInto);
+            return incomingInvoice;
+        }
+
+        public String disableAct() {
+            if (incomingInvoice.isImmutable()) {
+                return incomingInvoice.reasonDisabledDueToState();
+            }
+            return incomingInvoice.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+        }
+
+        public IncomingInvoiceItem default0Act() {
+            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().last() : null;
+        }
+
+        public IncomingInvoiceItem default1Act() {
+            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().first() : null;
+        }
+
+        public List<IncomingInvoiceItem> choices0Act() {
+            return incomingInvoice.getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
+        }
+
+        public List<IncomingInvoiceItem> choices1Act(
+                final IncomingInvoiceItem item,
+                final IncomingInvoiceItem mergeInto) {
+            return incomingInvoice.getItems().stream().filter(x->!x.equals(item)).map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
+        }
+
+        @Inject
+        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
     }
 
 

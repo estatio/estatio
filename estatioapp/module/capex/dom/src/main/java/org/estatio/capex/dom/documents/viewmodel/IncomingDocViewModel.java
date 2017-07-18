@@ -294,9 +294,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     public String validatePeriod(final String period) {
         if (period==null) return null; // period is optional
-        return !PeriodUtil.isValidPeriod(period)
-                ? "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)"
-                : null;
+        return PeriodUtil.reasonInvalidPeriod(period);
     }
 
     protected LocalDate getStartDateFromPeriod() {

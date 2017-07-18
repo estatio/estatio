@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.invoice;
 
+import java.math.BigDecimal;
+
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Rule;
@@ -42,6 +45,54 @@ public class IncomingInvoiceItem_Test {
 
         // when
         item.removeItem();
+
+    }
+
+    @Test
+    public void subtractAmounts_works() throws Exception {
+
+        IncomingInvoiceItem incomingInvoiceItem = new IncomingInvoiceItem();
+
+        // given
+        BigDecimal amount = new BigDecimal("100.00");
+        incomingInvoiceItem.setNetAmount(amount);
+        incomingInvoiceItem.setVatAmount(null);
+        incomingInvoiceItem.setGrossAmount(amount);
+
+        // when
+        BigDecimal netToSubtract = new BigDecimal("50.50");
+        BigDecimal vatToSubtract = new BigDecimal("10.10");
+        BigDecimal grossToSubtract = null;
+        incomingInvoiceItem.subtractAmounts(netToSubtract, vatToSubtract, grossToSubtract);
+
+        // then
+        Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("49.50"));
+        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isNull();
+        Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
+
+    }
+
+    @Test
+    public void addAmounts_works() throws Exception {
+
+        IncomingInvoiceItem incomingInvoiceItem = new IncomingInvoiceItem();
+
+        // given
+        BigDecimal amount = new BigDecimal("100.00");
+        incomingInvoiceItem.setNetAmount(amount);
+        incomingInvoiceItem.setVatAmount(null);
+        incomingInvoiceItem.setGrossAmount(amount);
+
+        // when
+        BigDecimal netToAdd = new BigDecimal("50.50");
+        BigDecimal vatToAdd = new BigDecimal("10.10");
+        BigDecimal grossToAdd = null;
+        incomingInvoiceItem.addAmounts(netToAdd, vatToAdd, grossToAdd);
+
+        // then
+        Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("150.50"));
+        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isNull();
+        Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
 
     }
 

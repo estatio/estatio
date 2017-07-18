@@ -2,15 +2,19 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -111,6 +115,45 @@ public class IncomingInvoiceItemRepository_Test {
         assertThat(invoiceItem.getEndDate()).isEqualTo(endDate);
         assertThat(invoiceItem.getFixedAsset()).isEqualTo(property);
         assertThat(invoiceItem.getProject()).isEqualTo(project);
+
+    }
+
+    @Mock
+    RepositoryService mockRepositoryService;
+
+    @Mock
+    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+    @Test
+    public void mergeItems_works() throws Exception {
+
+        // given
+        IncomingInvoiceItemRepository incomingInvoiceItemRepository = new IncomingInvoiceItemRepository();
+        IncomingInvoiceItem sourceItem = new IncomingInvoiceItem();
+        sourceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+        sourceItem.repositoryService = mockRepositoryService;
+        sourceItem.setInvoice(mockInvoice);
+        IncomingInvoiceItem targetItem = new IncomingInvoiceItem();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(sourceItem);
+            will(returnValue(new ArrayList<>()));
+            oneOf(mockRepositoryService).removeAndFlush(sourceItem);
+            oneOf(mockInvoice).recalculateAmounts();
+        }});
+
+        // when
+        sourceItem.setNetAmount(new BigDecimal("10"));
+        targetItem.setNetAmount(new BigDecimal("10.10"));
+        incomingInvoiceItemRepository.mergeItems(sourceItem, targetItem);
+
+        // assert
+        /**
+        actually superfluous;
+        {@link IncomingInvoiceItem#addAmounts(BigDecimal, BigDecimal, BigDecimal)} separately tested
+         */
+        Assertions.assertThat(targetItem.getNetAmount()).isEqualTo(new BigDecimal("20.10"));
 
     }
     

@@ -16,6 +16,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -150,6 +151,51 @@ public class IncomingInvoiceItemRepository {
     }
 
     @Programmatic
+    public void addItem(
+            final IncomingInvoice incomingInvoice,
+            final IncomingInvoiceType type,
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final String period,
+            final Property property,
+            final Project project,
+            final BudgetItem budgetItem){
+        final BigInteger sequence = incomingInvoice.nextItemSequence();
+        upsert(
+            sequence,
+            incomingInvoice,
+            type,
+            charge,
+            description,
+            netAmount,
+            vatAmount,
+            grossAmount,
+            tax,
+            dueDate,
+            PeriodUtil.yearFromPeriod(period).startDate(),
+            PeriodUtil.yearFromPeriod(period).endDate(),
+            property,
+            project,
+            budgetItem);
+    }
+
+    @Programmatic
+    public void mergeItems(final IncomingInvoiceItem sourceItem, final IncomingInvoiceItem targetItem) {
+        if (sourceItem==null || targetItem==null) return;
+        if (sourceItem.equals(targetItem)) return;
+        BigDecimal netAmountToAdd = sourceItem.getNetAmount()!=null ? sourceItem.getNetAmount() : null;
+        BigDecimal vatAmountToAdd = sourceItem.getVatAmount()!=null ? sourceItem.getVatAmount() : null;
+        BigDecimal grossAmountToAdd = sourceItem.getGrossAmount()!=null ? sourceItem.getGrossAmount() : null;
+        targetItem.addAmounts(netAmountToAdd, vatAmountToAdd, grossAmountToAdd);
+        sourceItem.removeItem();
+    }
+
+    @Programmatic
     public List<IncomingInvoiceItem> findByProjectAndCharge(final Project project, final Charge charge) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
@@ -189,5 +235,6 @@ public class IncomingInvoiceItemRepository {
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
 
 }

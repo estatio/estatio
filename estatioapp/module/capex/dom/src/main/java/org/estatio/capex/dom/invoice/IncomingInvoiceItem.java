@@ -391,7 +391,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return "The invoice cannot be changed";
     }
 
-
     private boolean chargeIsImmutable(){
         if (this.isLinkedToOrderItem()){
             return true;
@@ -515,8 +514,34 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return buffer.length() == 0 ? null : buffer.toString();
     }
 
+    @Programmatic
+    public void subtractAmounts(final BigDecimal netAmountToSubtract, final BigDecimal vatAmountToSubtract, final BigDecimal grossAmountToSubtract) {
+        if (getNetAmount() != null && netAmountToSubtract != null) {
+            setNetAmount(getNetAmount().subtract(netAmountToSubtract));
+        }
+        if (getVatAmount() != null && vatAmountToSubtract != null) {
+            setVatAmount(getVatAmount().subtract(vatAmountToSubtract));
+        }
+        if (getGrossAmount() != null && grossAmountToSubtract != null) {
+            setGrossAmount(getGrossAmount().subtract(grossAmountToSubtract));
+        }
+    }
+
+    @Programmatic
+    public void addAmounts(final BigDecimal netAmountToAdd, final BigDecimal vatAmountToAdd, final BigDecimal grossAmountToAdd) {
+        if (getNetAmount() != null && netAmountToAdd != null) {
+            setNetAmount(getNetAmount().add(netAmountToAdd));
+        }
+        if (getVatAmount() != null && vatAmountToAdd != null) {
+            setVatAmount(getVatAmount().add(vatAmountToAdd));
+        }
+        if (getGrossAmount() != null && grossAmountToAdd != null) {
+            setGrossAmount(getGrossAmount().add(grossAmountToAdd));
+        }
+    }
+
     @Inject
-    private OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
     private ChargeRepository chargeRepository;

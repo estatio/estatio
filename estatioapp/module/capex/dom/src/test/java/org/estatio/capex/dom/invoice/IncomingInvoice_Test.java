@@ -11,12 +11,16 @@ import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.project.Project;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -100,29 +104,32 @@ public class IncomingInvoice_Test {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
     @Mock
-    IncomingInvoice.addItem mockAddItemMixin;
+    IncomingInvoiceItemRepository mockIncomingInvoiceItemRepository;
 
     @Test
     public void splitItem_mixin_works() throws Exception {
 
         // given
         IncomingInvoice invoice = new IncomingInvoice();
+        invoice.setType(IncomingInvoiceType.CAPEX);
         IncomingInvoice.splitItem mixin = new IncomingInvoice.splitItem(invoice);
-        mixin.factoryService = new FactoryService() {
-            @Override public <T> T instantiate(final Class<T> aClass) {
-                return null;
-            }
+        mixin.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
-            @Override public <T> T mixin(final Class<T> aClass, final Object o) {
-                return (T) mockAddItemMixin;
-            }
+        LocalDate dueDate = new LocalDate(2018,01,01);
+        invoice.setDueDate(dueDate);
 
-        };
+        String description = "some description";
+        Tax tax = new Tax();
+        Charge charge = new Charge();
+        Property property = new Property();
+        Project project = new Project();
+        BudgetItem budgetItem = new BudgetItem();
+        String period = "F2018";
 
-        IncomingInvoiceItem item = new IncomingInvoiceItem();
-        item.setNetAmount(new BigDecimal("200.00"));
-        item.setVatAmount(new BigDecimal("40.00"));
-        item.setGrossAmount(new BigDecimal("240.00"));
+        IncomingInvoiceItem itemToSplit = new IncomingInvoiceItem();
+        itemToSplit.setNetAmount(new BigDecimal("200.00"));
+        itemToSplit.setVatAmount(new BigDecimal("40.00"));
+        itemToSplit.setGrossAmount(new BigDecimal("240.00"));
 
         BigDecimal newItemNetAmount = new BigDecimal("50.00");
         BigDecimal newItemVatAmount = new BigDecimal("10");
@@ -130,116 +137,52 @@ public class IncomingInvoice_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockAddItemMixin).act(
-                    null,
-                    null,
-                    null,
+            oneOf(mockIncomingInvoiceItemRepository).addItem(
+                    invoice,
+                    IncomingInvoiceType.CAPEX,
+                    charge,
+                    description,
                     newItemNetAmount,
                     newItemVatAmount,
-                    newItemGrossAmount, null, null, null, null,null, null);
+                    newItemGrossAmount,
+                    tax,
+                    dueDate,
+                    period,
+                    property,
+                    project,
+                    budgetItem);
         }});
 
         // when
-        mixin.act(item, null, newItemNetAmount, newItemVatAmount, null, newItemGrossAmount,null, null, null, null, null);
+        mixin.act(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
 
         // then
-        Assertions.assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
-        Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("30.00"));
-        Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("180.00"));
+        Assertions.assertThat(itemToSplit.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
+        Assertions.assertThat(itemToSplit.getVatAmount()).isEqualTo(new BigDecimal("30.00"));
+        Assertions.assertThat(itemToSplit.getGrossAmount()).isEqualTo(new BigDecimal("180.00"));
 
     }
 
     @Test
-    public void splitItem_mixin_works_with_no_new_vat_value() throws Exception {
+    public void mergeItem_mixin_works() throws Exception {
 
         // given
         IncomingInvoice invoice = new IncomingInvoice();
-        IncomingInvoice.splitItem mixin = new IncomingInvoice.splitItem(invoice);
-        mixin.factoryService = new FactoryService() {
-            @Override public <T> T instantiate(final Class<T> aClass) {
-                return null;
-            }
+        IncomingInvoice.mergeItems mixin = new IncomingInvoice.mergeItems(invoice);
+        mixin.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
-            @Override public <T> T mixin(final Class<T> aClass, final Object o) {
-                return (T) mockAddItemMixin;
-            }
-
-        };
-
-        IncomingInvoiceItem item = new IncomingInvoiceItem();
-        item.setNetAmount(new BigDecimal("200.00"));
-        item.setVatAmount(new BigDecimal("40.00"));
-        item.setGrossAmount(new BigDecimal("240.00"));
-
-        BigDecimal newItemNetAmount = new BigDecimal("50.00");
-        BigDecimal newItemVatAmount = null;
-        BigDecimal newItemGrossAmount = new BigDecimal("60.00");
+        IncomingInvoiceItem sourceItem = new IncomingInvoiceItem();
+        IncomingInvoiceItem targetItem = new IncomingInvoiceItem();
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockAddItemMixin).act(
-                    null,
-                    null,
-                    null,
-                    newItemNetAmount,
-                    newItemVatAmount,
-                    newItemGrossAmount, null, null, null, null,null, null);
+            oneOf(mockIncomingInvoiceItemRepository).mergeItems(
+                    sourceItem, targetItem);
         }});
 
         // when
-        mixin.act(item, null, newItemNetAmount, newItemVatAmount, null, newItemGrossAmount,null, null, null, null, null);
-
-        // then
-        Assertions.assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
-        Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("40.00"));
-        Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("180.00"));
+        mixin.act(sourceItem, targetItem);
 
     }
 
-    @Test
-    public void splitItem_mixin_works_with_no_given_item_values() throws Exception {
-
-        // given
-        IncomingInvoice invoice = new IncomingInvoice();
-        IncomingInvoice.splitItem mixin = new IncomingInvoice.splitItem(invoice);
-        mixin.factoryService = new FactoryService() {
-            @Override public <T> T instantiate(final Class<T> aClass) {
-                return null;
-            }
-
-            @Override public <T> T mixin(final Class<T> aClass, final Object o) {
-                return (T) mockAddItemMixin;
-            }
-
-        };
-
-        IncomingInvoiceItem item = new IncomingInvoiceItem();
-        item.setNetAmount(null);
-        item.setVatAmount(null);
-        item.setGrossAmount(null);
-
-        BigDecimal newItemNetAmount = new BigDecimal("50.00");
-        BigDecimal newItemVatAmount = new BigDecimal("10.00");
-        BigDecimal newItemGrossAmount = new BigDecimal("60.00");
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockAddItemMixin).act(
-                    null,
-                    null,
-                    null,
-                    newItemNetAmount,
-                    newItemVatAmount,
-                    newItemGrossAmount, null, null, null, null,null, null);
-        }});
-
-        // when
-        mixin.act(item, null, newItemNetAmount, newItemVatAmount, null, newItemGrossAmount,null, null, null, null, null);
-
-        // then
-        Assertions.assertThat(item.getNetAmount()).isNull();
-        Assertions.assertThat(item.getVatAmount()).isNull();
-        Assertions.assertThat(item.getGrossAmount()).isNull();
-
-    }
 }
