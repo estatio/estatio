@@ -69,19 +69,13 @@ public class CreditTransfer  {
     String getSellerBic() {
         return getSellerBankAccount().getBic();
     }
-    /**
-     * TODO: only exposed as properties due to framework issue, see EST-1325
-     */
-    public String getSellerIban() {
+    String getSellerIban() {
         return getSellerBankAccount().getIban();
     }
 
     private Party seller;
 
-    /**
-     * TODO: only exposed as properties due to framework issue, see EST-1325
-     */
-    public String getSellerName() {
+    String getSellerName() {
         return getSeller().getName();
     }
 

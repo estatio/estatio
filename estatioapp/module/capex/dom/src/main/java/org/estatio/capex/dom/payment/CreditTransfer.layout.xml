@@ -47,9 +47,7 @@
             </bs3:tabGroup>
             <cpt:fieldSet name="Seller" id="seller">
                 <cpt:property id="seller"/>
-                <cpt:property id="sellerName" hidden="OBJECT_FORMS"/>
                 <cpt:property id="sellerBankAccount"/>
-                <cpt:property id="sellerIban" hidden="OBJECT_FORMS"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Amount" id="amount">
                 <cpt:property id="amount"/>

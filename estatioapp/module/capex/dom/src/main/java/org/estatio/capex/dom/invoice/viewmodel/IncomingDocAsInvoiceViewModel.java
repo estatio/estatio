@@ -518,20 +518,19 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(multiLine = 5)
     public String getNotification(){
-        if (possibleDoubleInvoice()!=null){
-            return possibleDoubleInvoice();
+        final String possibleDoubleInvoice = possibleDoubleInvoice();
+        if (possibleDoubleInvoice !=null){
+            return possibleDoubleInvoice;
         }
-        if (sameInvoiceNumber()!=null){
-            return sameInvoiceNumber();
+        final String sameInvoiceNumber = sameInvoiceNumber();
+        if (sameInvoiceNumber !=null){
+            return sameInvoiceNumber;
         }
         return null;
     }
 
     public boolean hideNotification(){
-        if (getNotification()!=null){
-            return false;
-        }
-        return true;
+        return getNotification() == null;
     }
 
     private String possibleDoubleInvoice(){
