@@ -492,7 +492,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
             return "Error: More than 1 linked order item found";
         }
-        return isImmutable() ? itemImmutableReason() : null;
+        return null; // EST-1507: invoices item can be attached to order items any time
     }
 
     @Programmatic
