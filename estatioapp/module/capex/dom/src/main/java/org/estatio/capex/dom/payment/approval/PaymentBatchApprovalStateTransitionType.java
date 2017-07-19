@@ -44,9 +44,9 @@ public enum PaymentBatchApprovalStateTransitionType
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
             AdvancePolicy.MANUAL),
-    APPROVE(
+    CONFIRM_AUTHORISATION(
             PaymentBatchApprovalState.COMPLETED,
-            PaymentBatchApprovalState.APPROVED,
+            PaymentBatchApprovalState.PAID,
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),

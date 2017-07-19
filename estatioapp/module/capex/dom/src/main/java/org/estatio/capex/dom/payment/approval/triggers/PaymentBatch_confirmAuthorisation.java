@@ -11,17 +11,17 @@ import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 
 @Mixin(method="act")
-public class PaymentBatch_approve extends PaymentBatch_triggerAbstract {
+public class PaymentBatch_confirmAuthorisation extends PaymentBatch_triggerAbstract {
 
     private final PaymentBatch paymentBatch;
 
-    public PaymentBatch_approve(PaymentBatch paymentBatch) {
-        super(paymentBatch, PaymentBatchApprovalStateTransitionType.APPROVE);
+    public PaymentBatch_confirmAuthorisation(PaymentBatch paymentBatch) {
+        super(paymentBatch, PaymentBatchApprovalStateTransitionType.CONFIRM_AUTHORISATION);
         this.paymentBatch = paymentBatch;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(cssClassFa = "fa-thumbs-o-up")
+    @ActionLayout(cssClassFa = "fa-check")
     public PaymentBatch act(
             @Nullable final String comment) {
         trigger(comment, null);

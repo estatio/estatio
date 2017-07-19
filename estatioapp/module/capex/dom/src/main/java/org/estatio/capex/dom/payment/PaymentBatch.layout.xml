@@ -93,7 +93,9 @@
                                         <cpt:property id="pendingApprovalTask" hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>
-                                            <cpt:action id="approve"/>
+                                            <cpt:action id="confirmAuthorisation">
+                                                <cpt:named>Confirm authorisation (in IBP)</cpt:named>
+                                            </cpt:action>
                                             <cpt:action id="discard"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
@@ -153,7 +155,7 @@
     <bs3:row>
         <bs3:col span="12">
             <bs3:tabGroup unreferencedCollections="true">
-                <bs3:tab name="Approval Tasks and State Transitions">
+                <bs3:tab name="Tasks and State Transitions">
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:collection id="approvalTasks" defaultView="table">

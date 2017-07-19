@@ -5,7 +5,7 @@ import org.estatio.capex.dom.state.State;
 public enum PaymentBatchApprovalState implements State<PaymentBatchApprovalState> {
     NEW,
     COMPLETED, // by the treasurer
-    APPROVED,
+    PAID,
     DISCARDED;
 
     public boolean isModifiable() {
