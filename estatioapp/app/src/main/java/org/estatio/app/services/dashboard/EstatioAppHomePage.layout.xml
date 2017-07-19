@@ -72,10 +72,16 @@
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByDirectDebit" paged="15">
                                 <cpt:named>Payable by Direct Debit</cpt:named>
+                                <cpt:action id="markAsPaidByDd">
+                                    <cpt:named>Mark as paid by DD</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByManualProcess" paged="15">
                                 <cpt:named>Payable by Manual Process</cpt:named>
                                 <cpt:action id="updateAsPayableByTransfer"/>
+                                <cpt:action id="markAsPaidByIbpManual">
+                                    <cpt:named>Mark as paid by IBP</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByOther" paged="15">
                                 <cpt:named>Payable by Other</cpt:named>
