@@ -315,7 +315,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         @Inject
-        OrderItemRepository orderItemRepository;
+        public OrderItemRepository orderItemRepository;
 
         @Inject
         BudgetItemChooser budgetItemChooser;

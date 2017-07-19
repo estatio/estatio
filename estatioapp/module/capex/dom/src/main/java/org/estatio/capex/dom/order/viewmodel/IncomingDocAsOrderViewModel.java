@@ -210,8 +210,8 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
             factoryService.mixin(Order.addItem.class, order).act(
                     getCharge(),
                     getDescription(),
-                    getVatAmount(),
                     getNetAmount(),
+                    getVatAmount(),
                     getGrossAmount(),
                     getTax(),
                     getPeriod(),
