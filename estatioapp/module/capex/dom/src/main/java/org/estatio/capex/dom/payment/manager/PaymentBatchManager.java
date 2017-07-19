@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -517,10 +518,25 @@ public class PaymentBatchManager {
                 command = CommandReification.DISABLED,
                 publishing = Publishing.DISABLED
         )
-        public PaymentBatchManager act(final List<IncomingInvoice> incomingInvoices) {
-            mixin().act(incomingInvoices);
+        public PaymentBatchManager act(
+                final List<IncomingInvoice> incomingInvoices,
+                @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected")
+                final boolean rejectAlso,
+                @ParameterLayout(describedAs = "If rejecting, then explain why so that the error can be fixed")
+                @Nullable
+                final String rejectionReason) {
+            mixin().act(incomingInvoices, rejectAlso, rejectionReason);
             return paymentBatchManager.update();
         }
+
+        public String validateAct(
+                final List<IncomingInvoice> incomingInvoices,
+                final boolean rejectAlso,
+                final String rejectionReason
+        ) {
+            return mixin().validateAct(incomingInvoices, rejectAlso, rejectionReason);
+        }
+
         public List<IncomingInvoice> choices0Act() {
             return mixin().choices0Act();
         }

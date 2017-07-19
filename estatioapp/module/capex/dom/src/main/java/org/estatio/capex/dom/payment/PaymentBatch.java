@@ -18,6 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -48,6 +49,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Publishing;
@@ -72,10 +74,12 @@ import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.task.Task;
@@ -313,13 +317,30 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 command = CommandReification.DISABLED,
                 publishing = Publishing.DISABLED
         )
-        public PaymentBatch act(final List<IncomingInvoice> incomingInvoices) {
+        public PaymentBatch act(
+                final List<IncomingInvoice> incomingInvoices,
+                @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected")
+                final boolean rejectAlso,
+                @ParameterLayout(describedAs = "If rejecting, then explain why so that the error can be fixed")
+                @Nullable
+                final String rejectionReason) {
             for (IncomingInvoice incomingInvoice : incomingInvoices) {
                 paymentBatch.removeLineFor(incomingInvoice);
+                if(rejectAlso) {
+                    stateTransitionService.trigger(
+                            incomingInvoice, IncomingInvoiceApprovalStateTransitionType.REJECT, null, rejectionReason);
+                }
             }
             return paymentBatch;
         }
 
+        public String validateAct(
+                final List<IncomingInvoice> incomingInvoices,
+                final boolean rejectAlso,
+                final String rejectionReason
+        ) {
+            return rejectAlso && rejectionReason == null ? "Provide a reason if rejecting" : null;
+        }
         public List<IncomingInvoice> choices0Act() {
             return Lists.newArrayList(paymentBatch.getLines()).stream()
                     .map(PaymentLine::getInvoice)
@@ -332,6 +353,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             }
             return choices0Act().isEmpty() ? "No invoices to remove" : null;
         }
+
+        @Inject
+        StateTransitionService stateTransitionService;
     }
 
 
