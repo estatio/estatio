@@ -48,6 +48,11 @@ public class BankAccount_detachIbanProof {
                 Collectors.toList());
     }
 
+    public DocumentAbstract default0Act() {
+        final List<DocumentAbstract> choices = choices0Act();
+        return choices.size() == 1 ? choices.get(0) : null;
+    }
+
     public String disableAct() {
         final List<Paperclip> ibanProofPaperclips = findIbanProofPaperclips();
         final int numProof = ibanProofPaperclips.size();
