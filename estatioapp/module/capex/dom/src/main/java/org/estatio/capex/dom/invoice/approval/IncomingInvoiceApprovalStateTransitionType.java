@@ -194,20 +194,43 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return bankAccountVerificationChecker.isBankAccountVerifiedFor(incomingInvoice) ||
                    incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
         }
-
     },
     PAY_BY_IBP(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.MANUAL) {
+        @Override public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getPaymentMethod() == PaymentMethod.BANK_TRANSFER;
+        }
+    },
+    PAY_BY_IBP_MANUAL(
+            IncomingInvoiceApprovalState.PAYABLE,
+            IncomingInvoiceApprovalState.PAID,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.AUTOMATIC) {
+        @Override public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getPaymentMethod() == PaymentMethod.MANUAL_PROCESS;
+        }
+    },
     PAY_BY_DD(
             IncomingInvoiceApprovalState.PAYABLE,
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC),
+            AdvancePolicy.AUTOMATIC) {
+        @Override public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.getPaymentMethod() == PaymentMethod.DIRECT_DEBIT;
+        }
+    },
     DISCARD(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.DISCARDED,
