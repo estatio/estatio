@@ -207,7 +207,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.AUTOMATIC),
     DISCARD(
             IncomingInvoiceApprovalState.NEW,
             IncomingInvoiceApprovalState.DISCARDED,
