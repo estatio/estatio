@@ -631,7 +631,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     //region > convertToXmlDocument
     Document convertToXmlDocument() {
 
-        final SortedSet<PaymentLine> paymentLines = getLines();
+        final List<CreditTransfer> transfers = getTransfers();
 
         Document document = new Document();
         CustomerCreditTransferInitiationV03 cstmrCdtTrfInitn = new CustomerCreditTransferInitiationV03();
@@ -641,7 +641,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         cstmrCdtTrfInitn.setGrpHdr(grpHdr);
         grpHdr.setMsgId(msgId());
         grpHdr.setCreDtTm(newDateTime(getCreatedOn()));
-        grpHdr.setNbOfTxs("" + paymentLines.size());
+        grpHdr.setNbOfTxs("" + transfers.size());
         grpHdr.setCtrlSum(ctrlSum());
         grpHdr.setInitgPty(newPartyIdentification32ForDebtorOwner());
 
@@ -661,7 +661,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         pmtInf.setDbtrAgt(agentFor(getDebtorBankAccount()));
 
         final List<CreditTransferTransactionInformation10> cdtTrfTxInfList = pmtInf.getCdtTrfTxInves();
-        cdtTrfTxInfList.addAll(getTransfers().stream().map(CreditTransfer::asXml).collect(Collectors.toList()));
+        cdtTrfTxInfList.addAll(transfers.stream().map(CreditTransfer::asXml).collect(Collectors.toList()));
 
         return document;
     }
