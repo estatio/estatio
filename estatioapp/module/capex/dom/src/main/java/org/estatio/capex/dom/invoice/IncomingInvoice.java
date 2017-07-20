@@ -587,13 +587,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editType(
-            final IncomingInvoiceType type){
+            final IncomingInvoiceType type,
+            final boolean changeOnItemsAsWell){
+        if (changeOnItemsAsWell){
+            getItems().stream().map(IncomingInvoiceItem.class::cast).forEach(x->x.setIncomingInvoiceType(type));
+        }
         setType(type);
         return this;
     }
 
     public IncomingInvoiceType default0EditType(){
         return getType();
+    }
+
+    public boolean default1EditType(){
+        return true;
     }
 
     /**

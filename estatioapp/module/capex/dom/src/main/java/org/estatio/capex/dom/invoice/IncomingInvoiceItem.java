@@ -173,11 +173,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return getIncomingInvoiceType();
     }
 
-    public String disableEditIncomingInvoiceType(){
-        return isImmutable() ? itemImmutableReason() : null;
-    }
-
-
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
@@ -286,9 +281,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditCharge(){
-        if (isImmutable()){
-            return itemImmutableReason();
-        }
         return chargeIsImmutable() ? "Charge is immutable because this item is linked to an order or budget" : null;
     }
 
@@ -306,9 +298,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditFixedAsset(){
-        if (isImmutable()){
-            return itemImmutableReason();
-        }
         return fixedAssetIsImmutable() ? "Fixed asset is immutable because this item is linked to an order, budget or project" : null;
     }
 
@@ -330,9 +319,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditProject(){
-        if (isImmutable()){
-            return itemImmutableReason();
-        }
         return projectIsImmutable() ? "Project is immutable because this item is linked to an order" : null;
     }
 
@@ -342,8 +328,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             @Nullable
             final BudgetItem budgetItem){
         setBudgetItem(budgetItem);
-        setCharge(budgetItem.getCharge());
-        setFixedAsset(budgetItem.getBudget().getProperty());
+        if (budgetItem!=null) setCharge(budgetItem.getCharge());
+        if (budgetItem!=null) setFixedAsset(budgetItem.getBudget().getProperty());
         return this;
     }
 
@@ -356,9 +342,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditBudgetItem(){
-        if (isImmutable()){
-            return itemImmutableReason();
-        }
         return budgetItemIsImmutable() ? "Budget item is immutable because this item is linked to an order or the invoice has not type service charges" : null;
     }
 
@@ -376,10 +359,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String validateEditPeriod(final String period){
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
-    }
-
-    public String disableEditPeriod(){
-        return isImmutable() ? itemImmutableReason() : null;
     }
 
     private boolean isImmutable(){
