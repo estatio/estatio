@@ -585,6 +585,18 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "false")
     private IncomingInvoiceType type;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editType(
+            @Nullable
+            final IncomingInvoiceType type){
+        setType(type);
+        return this;
+    }
+
+    public IncomingInvoiceType default0EditType(){
+        return getType();
+    }
+
     /**
      * This relates to the owning property, while the child items may either also relate to the property,
      * or could potentially relate to individual units within the property.
@@ -598,6 +610,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Property property;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editProperty(
+            @Nullable
+            final Property property,
+            final boolean changeOnItemsAsWell){
+        setProperty(property);
+        if (changeOnItemsAsWell){
+            getItems().stream().map(IncomingInvoiceItem.class::cast).forEach(x->x.setFixedAsset(property));
+        }
+        return this;
+    }
+
+    public Property default0EditProperty(){
+        return getProperty();
+    }
+
+    public boolean default1EditProperty(){
+        return true;
+    }
 
     @Getter @Setter
     @Column(allowsNull = "true", name = "bankAccountId")
@@ -659,11 +691,48 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editInvoiceNumber(
+            @Nullable
+            final String invoiceNumber){
+        setInvoiceNumber(invoiceNumber);
+        return this;
+    }
+
+    public String default0EditInvoiceNumber(){
+        return getInvoiceNumber();
+    }
+
+    public String disableEditInvoiceNumber(){
+        return reasonDisabledDueToState();
+    }
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice editBuyer(
+            @Nullable
+            final Party buyer){
+        setBuyer(buyer);
+        return this;
+    }
+
+    public Party default0EditBuyer(){
+        return getBuyer();
+    }
+
+    public String disableEditBuyer(){
+        return reasonDisabledDueToState();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editSeller(
             @Nullable
             final Party seller){
         setSeller(seller);
         return this;
+    }
+
+    public Party default0EditSeller(){
+        return getSeller();
     }
 
     public String disableEditSeller(){
@@ -681,6 +750,36 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             }
         }
         return false;
+    }
+
+    public IncomingInvoice changeDates(
+            @Nullable
+            final LocalDate dateReceived,
+            @Nullable
+            final LocalDate invoiceDate,
+            @Nullable
+            final LocalDate dueDate
+    ){
+        setDateReceived(dateReceived);
+        setInvoiceDate(invoiceDate);
+        setDueDate(dueDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeDates(){
+        return getDateReceived();
+    }
+
+    public LocalDate default1ChangeDates(){
+        return getInvoiceDate();
+    }
+
+    public LocalDate default2ChangeDates(){
+        return getDueDate();
+    }
+
+    public String disableChangeDates(){
+        return reasonDisabledDueToState();
     }
 
     @Getter @Setter
