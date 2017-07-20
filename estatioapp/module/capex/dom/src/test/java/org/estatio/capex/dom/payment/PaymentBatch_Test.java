@@ -15,6 +15,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
@@ -58,11 +59,11 @@ public class PaymentBatch_Test {
 
         // given
         final IncomingInvoice invoice1 =
-                newInvoice(new LocalDate(2017, 7, 7), seller1, seller1BankAccount, "361754.46", "AF3T2017");
+                newInvoice(new LocalDate(2017, 7, 7), seller1, seller1BankAccount, "EUR", "361754.46", "AF3T2017");
         final IncomingInvoice invoice2 =
-                newInvoice(new LocalDate(2017, 6, 30), seller2, seller2BankAccount, "15251.76", "DGD 11420 - 170522");
+                newInvoice(new LocalDate(2017, 6, 30), seller2, seller2BankAccount, "EUR", "15251.76", "DGD 11420 - 170522");
         final IncomingInvoice invoice3 =
-                newInvoice(new LocalDate(2017, 6, 5), seller1, seller1BankAccount, "-172805.79", "REDD2016VT");
+                newInvoice(new LocalDate(2017, 6, 5), seller1, seller1BankAccount, "EUR", "-172805.79", "REDD2016VT");
 
         paymentBatch.addLineIfRequired(invoice1); // sequence = 1
         paymentBatch.addLineIfRequired(invoice2); // sequence = 2
@@ -133,13 +134,17 @@ public class PaymentBatch_Test {
             final LocalDate invoiceDate,
             final Party seller,
             final BankAccount sellerBankAccount,
-            final String grossAmount, final String invoiceNumber) {
+            final String currencyRef, final String grossAmount,
+            final String invoiceNumber) {
         final IncomingInvoice invoice = new IncomingInvoice();
         invoice.setInvoiceDate(invoiceDate);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);
         invoice.setGrossAmount(new BigDecimal(grossAmount));
         invoice.setInvoiceNumber(invoiceNumber);
+        final Currency currency = new Currency();
+        currency.setReference(currencyRef);
+        invoice.setCurrency(currency);
         return invoice;
     }
 
