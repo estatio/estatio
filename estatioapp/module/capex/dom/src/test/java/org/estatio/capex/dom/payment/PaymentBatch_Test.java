@@ -2,6 +2,7 @@ package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.jmock.auto.Mock;
 import org.joda.time.DateTime;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
@@ -45,6 +47,19 @@ public class PaymentBatch_Test {
         paymentBatch.setCreatedOn(new DateTime(2017,7,14,15,50));
         paymentBatch.setApprovalState(PaymentBatchApprovalState.NEW);
         paymentBatch.serviceRegistry2 = mockServiceRegistry2;
+        paymentBatch.queryResultsCache = new QueryResultsCache() {
+            @Override public <T> T execute(
+                    final Callable<T> callable,
+                    final Class<?> callingClass,
+                    final String methodName,
+                    final Object... keys) {
+                try {
+                    return callable.call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
 
         this.seller1 = newOrganisation("ACME", "/FRA");
         this.seller2 = newOrganisation("YOUKEA", "/FRA");
