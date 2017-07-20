@@ -148,7 +148,6 @@
                                 <cpt:property id="paidBy"/>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Amounts" id="amounts">
-                                <cpt:property id="currency"/>
                                 <cpt:property id="totalNetAmount">
                                     <cpt:named>Net amount</cpt:named>
                                 </cpt:property>
@@ -158,6 +157,7 @@
                                 <cpt:property id="totalGrossAmount">
                                     <cpt:named>Gross amount</cpt:named>
                                 </cpt:property>
+                                <cpt:property id="currency"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

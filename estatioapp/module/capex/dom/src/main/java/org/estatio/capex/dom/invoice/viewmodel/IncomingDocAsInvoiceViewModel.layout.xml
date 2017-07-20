@@ -46,6 +46,7 @@
                                         <cpt:property id="invoiceDate" promptStyle="INLINE"/>
                                         <cpt:property id="dueDate" promptStyle="INLINE"/>
                                         <cpt:property id="paymentMethod" promptStyle="INLINE"/>
+                                        <cpt:property id="currency" promptStyle="INLINE"/>
                                         <cpt:property id="notCorrect" promptStyle="INLINE"/>
                                     </cpt:fieldSet>
                                     <cpt:fieldSet name="Invoice Item" id="invoiceItem" unreferencedProperties="false">

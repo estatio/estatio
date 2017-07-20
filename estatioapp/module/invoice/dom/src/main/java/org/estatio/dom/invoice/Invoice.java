@@ -308,9 +308,7 @@ public abstract class Invoice<T extends Invoice<T>>
     private InvoiceStatus status;
 
 
-    // REVIEW: invoice generation is not populating this field.
     @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
-    @Property(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Currency currency;
 

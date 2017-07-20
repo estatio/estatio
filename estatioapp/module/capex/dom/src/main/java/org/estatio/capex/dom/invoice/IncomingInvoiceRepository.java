@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -145,13 +146,16 @@ public class IncomingInvoiceRepository {
             final LocalDate dateReceived,
             final BankAccount bankAccount,
             final IncomingInvoiceApprovalState approvalStateIfAny) {
+        final Currency currency = currencyRepository.findCurrency("EUR");
         final IncomingInvoice invoice =
-                new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate, paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalStateIfAny);
-        invoice.setCurrency(currencyRepository.findCurrency("EUR"));
+                new IncomingInvoice(type, invoiceNumber, property, atPath, buyer, seller, invoiceDate, dueDate,
+                        paymentMethod, invoiceStatus, dateReceived, bankAccount, approvalStateIfAny);
+        invoice.setCurrency(currency);
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
         return invoice;
     }
+
 
     // Note: this method uses a first match on invoicenumber, seller and invoicedate which in practice can be assumed to be unique, but technically is not
     @Programmatic

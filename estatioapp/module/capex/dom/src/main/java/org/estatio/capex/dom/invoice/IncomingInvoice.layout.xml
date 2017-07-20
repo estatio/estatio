@@ -69,6 +69,7 @@
                                         <cpt:property id="netAmount" hidden="NOWHERE"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
+                                        <cpt:property id="currency"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="6">
@@ -219,7 +220,6 @@
                 <cpt:action id="remove" hidden="EVERYWHERE"/>
                 <cpt:property id="status" hidden="EVERYWHERE"/>
                 <cpt:property id="collectionNumber" hidden="EVERYWHERE"/>
-                <cpt:property id="currency" hidden="EVERYWHERE"/>
                 <cpt:property id="paidBy" hidden="EVERYWHERE"/>
                 <cpt:property id="relatesTo" hidden="EVERYWHERE"/>
                 <cpt:property id="sendTo" hidden="EVERYWHERE"/>

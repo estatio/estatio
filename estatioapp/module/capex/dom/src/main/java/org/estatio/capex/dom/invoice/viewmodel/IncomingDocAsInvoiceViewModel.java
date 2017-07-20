@@ -67,6 +67,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -92,6 +93,7 @@ import lombok.Setter;
                 "invoiceDate",
                 "dueDate",
                 "paymentMethod",
+                "currency",
                 "description",
                 "orderItem",
                 "property",
@@ -201,6 +203,11 @@ public class IncomingDocAsInvoiceViewModel
     }
     //endregion
 
+
+    @Property(editing = Editing.ENABLED)
+    private Currency currency;
+
+
     @Property(editing = Editing.ENABLED)
     private Boolean notCorrect;
 
@@ -293,8 +300,8 @@ public class IncomingDocAsInvoiceViewModel
                 @Nullable final LocalDate invoiceDate,
                 @Nullable final LocalDate dueDate,
                 @Nullable final Integer dueInNumberOfDaysFromNow,
-                @Nullable final PaymentMethod paymentMethod
-        ){
+                @Nullable final PaymentMethod paymentMethod,
+                final Currency currency){
             viewModel.setInvoiceNumber(invoiceNumber);
             viewModel.setBuyer(buyer);
             viewModel.setSeller(seller);
@@ -306,6 +313,8 @@ public class IncomingDocAsInvoiceViewModel
                 viewModel.setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
             }
             viewModel.setPaymentMethod(paymentMethod);
+            viewModel.setCurrency(currency);
+
             return viewModel;
         }
 
@@ -339,6 +348,9 @@ public class IncomingDocAsInvoiceViewModel
                     : viewModel.getPaymentMethod();
         }
 
+        public Currency default8Act() {
+            return viewModel.getCurrency();
+        }
         public String disableAct() {
             return viewModel.reasonNotEditableIfAny();
         }
@@ -366,6 +378,7 @@ public class IncomingDocAsInvoiceViewModel
         setPaymentMethod(incomingInvoice.getPaymentMethod());
         setDateReceived(incomingInvoice.getDateReceived());
         setBankAccount(incomingInvoice.getBankAccount());
+        setCurrency(incomingInvoice.getCurrency());
 
         final Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
         if(firstItemIfAny.isPresent()) {
@@ -410,6 +423,7 @@ public class IncomingDocAsInvoiceViewModel
         incomingInvoice.setInvoiceDate(getInvoiceDate());
         incomingInvoice.setDueDate(getDueDate());
         incomingInvoice.setPaymentMethod(getPaymentMethod());
+        incomingInvoice.setCurrency(getCurrency());
         incomingInvoice.setDateReceived(getDateReceived());
         incomingInvoice.setBankAccount(getBankAccount());
 
