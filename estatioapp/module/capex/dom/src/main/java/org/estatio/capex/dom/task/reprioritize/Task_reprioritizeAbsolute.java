@@ -32,4 +32,8 @@ public class Task_reprioritizeAbsolute extends Task_abstract {
         return task.getCreatedOn().toLocalDate();
     }
 
+    public String disableAct() {
+        return task.isCompleted() ? "Task has already been completed" : null;
+    }
+
 }

@@ -36,6 +36,10 @@ public class Task_reprioritizePushback extends Task_abstract {
         return Lists.newArrayList(1,2,3,4,7,14,21,28);
     }
 
+    public String disableAct() {
+        return task.isCompleted() ? "Task has already been completed" : null;
+    }
+
     @Inject
     ClockService clockService;
 

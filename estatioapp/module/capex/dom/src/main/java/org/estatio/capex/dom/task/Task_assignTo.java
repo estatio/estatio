@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
@@ -36,6 +35,10 @@ public class Task_assignTo {
 
     public Person default0Act() {
         return task.getPersonAssignedTo();
+    }
+
+    public String disableAct() {
+        return task.isCompleted() ? "Task has already been completed" : null;
     }
 
     @Inject

@@ -26,5 +26,8 @@ public class Task_updateDescription {
         return task.getDescription();
     }
 
+    public String disableAct() {
+        return task.isCompleted() ? "Task has already been completed" : null;
+    }
 
 }
