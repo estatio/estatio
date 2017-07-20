@@ -145,9 +145,7 @@ public class CreditTransfer  {
                 return Lists.newArrayList(
                         "endToEndId",
                         "seller",
-                        "sellerName",
                         "sellerBankAccount",
-                        "sellerIban",
                         "amount",
                         "remittanceInformation"
                 );
