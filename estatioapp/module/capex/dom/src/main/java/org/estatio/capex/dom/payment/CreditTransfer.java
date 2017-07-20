@@ -54,9 +54,10 @@ import lombok.Setter;
 public class CreditTransfer  {
 
     public String title() {
-        return String.format("%s: %s to %s",
-                getBatch().getDebtorBankAccount().getIban(),
+        return String.format("%s %s:  %s -> %s",
+                getCurrency().getReference(),
                 new DecimalFormat("0.00").format(getAmount()),
+                getBatch().getDebtorBankAccount().getIban(),
                 getSellerIban());
     }
 

@@ -69,7 +69,8 @@
                 </bs3:col>
                 <bs3:col span="6">
                     <cpt:fieldSet name="Details">
-                        <cpt:property id="numPayments"/>
+                        <cpt:property id="numTransfers"/>
+                        <cpt:property id="numInvoices"/>
                         <cpt:property id="requestedExecutionDate"/>
                     </cpt:fieldSet>
                 </bs3:col>

@@ -57,6 +57,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.linking.DeepLinkService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.value.Blob;
@@ -230,7 +231,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Property(notPersisted = true)
-    public int getNumPayments() {
+    public int getNumTransfers() {
+        return getTransfers().size();
+    }
+
+    @Property(notPersisted = true)
+    public int getNumInvoices() {
         return getLines().size();
     }
 
@@ -367,7 +373,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
 
     public List<CreditTransfer> getTransfers() {
+        return queryResultsCache.execute(this::doGetCreditTransfers, getClass(), "getTransfers", this);
+    }
 
+    private List<CreditTransfer> doGetCreditTransfers() {
         List<CreditTransfer> transfers = Lists.newArrayList();
 
         final AtomicInteger seq = new AtomicInteger(1);
@@ -757,7 +766,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
-
     @Inject
     MeService meService;
 
@@ -766,6 +774,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Inject
     TitleService titleService;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 
 }

@@ -6,7 +6,7 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="6">
+        <bs3:col span="4">
             <bs3:tabGroup>
                 <bs3:tab name="Credit Transfer">
                     <bs3:row>
@@ -38,24 +38,63 @@
                                 <cpt:action id="links" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="clearHints" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="rebuildMetaModel" position="PANEL_DROPDOWN"/>
-
                                 <cpt:property id="endToEndId"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-            <cpt:fieldSet name="Seller" id="seller">
-                <cpt:property id="seller"/>
-                <cpt:property id="sellerBankAccount"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Amount" id="amount">
-                <cpt:property id="currency"/>
-                <cpt:property id="amount"/>
-                <cpt:property id="remittanceInformation"/>
-            </cpt:fieldSet>
         </bs3:col>
-        <bs3:col span="6">
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="Seller">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Seller" id="seller">
+                                <cpt:property id="seller"/>
+                                <cpt:property id="sellerBankAccount"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy-to-make-first-tab-appear-x">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy-fieldset-x">
+                                <cpt:property id="dummy-property-x"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="Amount">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Amount" id="amount">
+                                <cpt:property id="currency"/>
+                                <cpt:property id="amount"/>
+                                <cpt:property id="remittanceInformation"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy-to-make-first-tab-appear-y">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="dummy-fieldset-y">
+                                <cpt:property id="dummy-property-y"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true">
             <bs3:tabGroup>
                 <bs3:tab name="Lines">
                     <bs3:row>
@@ -64,20 +103,7 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="dummy-to-make-first-tab-appear">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="dummy-fieldset">
-                                <cpt:property id="dummy-property"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
             </bs3:tabGroup>
-
         </bs3:col>
-    </bs3:row>
-    <bs3:row>
-        <bs3:col span="12" unreferencedCollections="true"/>
     </bs3:row>
 </bs3:grid>
