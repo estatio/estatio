@@ -43,6 +43,9 @@
                                     <cpt:action id="discardOrder">
                                         <cpt:named>Discard</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="recategorizeOrder">
+                                        <cpt:named>Recategorize</cpt:named>
+                                    </cpt:action>
 
                                     <!-- incoming invoice -->
                                     <cpt:action id="completeIncomingInvoice">
@@ -62,6 +65,9 @@
                                     </cpt:action>
                                     <cpt:action id="discardIncomingInvoice">
                                         <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="recategorizeIncomingInvoice">
+                                        <cpt:named>Recategorize</cpt:named>
                                     </cpt:action>
 
                                     <!-- bank account -->

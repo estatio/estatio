@@ -7,7 +7,7 @@ import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
-public abstract class Task_mixinOrderAbstract<M extends Order_triggerAbstract>
+public abstract class Task_mixinOrderAbstract<M>
         extends
         Task_mixinActAbstract<M, Order> {
 

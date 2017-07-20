@@ -155,7 +155,8 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         objectType = "incomingInvoice.IncomingInvoice",
         persistingLifecycleEvent = IncomingInvoice.ObjectPersistingEvent.class,
-        persistedLifecycleEvent = IncomingInvoice.ObjectPersistedEvent.class
+        persistedLifecycleEvent = IncomingInvoice.ObjectPersistedEvent.class,
+        removingLifecycleEvent = IncomingInvoice.ObjectRemovingEvent.class
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
@@ -163,11 +164,14 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
+    public static class ObjectPersistingEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <IncomingInvoice> {
+    }
     public static class ObjectPersistedEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistedEvent <IncomingInvoice> {
     }
-    public static class ObjectPersistingEvent
-            extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <IncomingInvoice> {
+    public static class ObjectRemovingEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent <IncomingInvoice> {
     }
 
     public IncomingInvoice() {

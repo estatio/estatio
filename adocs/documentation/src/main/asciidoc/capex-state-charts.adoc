@@ -16,9 +16,10 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
     state "DISCARDED" as idc_d
 
     [*] -right-> idc_new: INSTANTIATE
-    idc_new -down-> idc_c : CATEGORISE\n\n
-    idc_c -right-> idc_d : \n  DISCARD_ASSOCIATED \n(when associated invoice\nor order is discarded)
-    idc_new --> idc_d : \n  DISCARD\n (explicit)
+    idc_new -down-> idc_c : CATEGORISE
+    idc_c -up-> idc_new : \n\n\n RESET\n\n\n
+    idc_c -right-> idc_d : \n\n        DISCARD_ASSOCIATED \n       (when associated invoice\n     or order is discarded)
+    idc_new --> idc_d : \nDISCARD\n(explicit)
 }
 --
 

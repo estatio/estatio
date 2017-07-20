@@ -108,6 +108,7 @@
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="completeWithApproval"/>
                                             <cpt:action id="discard"/>
+                                            <cpt:action id="recategorize"/>
                                         </cpt:property>
                                         <cpt:property id="approvedBy"/>
                                         <cpt:property id="approvedOn"/>

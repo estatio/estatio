@@ -109,7 +109,8 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         objectType = "orders.Order",
         persistingLifecycleEvent = Order.ObjectPersistingEvent.class,
-        persistedLifecycleEvent = Order.ObjectPersistedEvent.class
+        persistedLifecycleEvent = Order.ObjectPersistedEvent.class,
+        removingLifecycleEvent = Order.ObjectRemovingEvent.class
 )
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
@@ -122,6 +123,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
     public static class ObjectPersistingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <Order> {
+    }
+    public static class ObjectRemovingEvent
+            extends org.apache.isis.applib.services.eventbus.ObjectRemovingEvent <Order> {
     }
 
     public Order() {

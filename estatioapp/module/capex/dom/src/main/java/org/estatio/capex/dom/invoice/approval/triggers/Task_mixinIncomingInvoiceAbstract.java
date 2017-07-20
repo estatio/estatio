@@ -1,18 +1,13 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
-public abstract class Task_mixinIncomingInvoiceAbstract<M extends IncomingInvoice_triggerAbstract>
+public abstract class Task_mixinIncomingInvoiceAbstract<M>
         extends
         Task_mixinActAbstract<M, IncomingInvoice> {
 

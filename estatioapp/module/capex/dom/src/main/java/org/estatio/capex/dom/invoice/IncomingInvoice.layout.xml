@@ -146,6 +146,7 @@
                                             </cpt:action>
                                             <cpt:action id="reject"/>
                                             <cpt:action id="discard"/>
+                                            <cpt:action id="recategorize"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

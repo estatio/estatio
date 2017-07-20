@@ -51,6 +51,12 @@ public enum IncomingDocumentCategorisationStateTransitionType
             NextTransitionSearchStrategy.none(),
             TaskAssignmentStrategy.none(),
             AdvancePolicy.MANUAL),
+    RESET(
+            IncomingDocumentCategorisationState.CATEGORISED,
+            IncomingDocumentCategorisationState.NEW,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
     DISCARD(
             IncomingDocumentCategorisationState.NEW,
             IncomingDocumentCategorisationState.DISCARDED,

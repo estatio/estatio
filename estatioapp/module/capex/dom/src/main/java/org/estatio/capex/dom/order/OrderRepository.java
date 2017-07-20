@@ -163,6 +163,11 @@ public class OrderRepository {
     }
 
     @Programmatic
+    public void delete(final Order order) {
+        repositoryService.removeAndFlush(order);
+    }
+
+    @Programmatic
     public List<Order> findBySellerParty(final Party party) {
         if (party instanceof Organisation) {
             return findBySeller((Organisation) party);
@@ -206,4 +211,7 @@ public class OrderRepository {
     @Inject ApplicationTenancyRepository applicationTenancyRepository;
 
     @Inject PartyRepository partyRepository;
+
+
+
 }

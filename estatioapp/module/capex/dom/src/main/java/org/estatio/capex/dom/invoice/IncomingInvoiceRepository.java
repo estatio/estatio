@@ -203,12 +203,16 @@ public class IncomingInvoiceRepository {
         invoice.setBankAccount(bankAccount);
     }
 
+    @Programmatic
+    public void delete(final IncomingInvoice incomingInvoice) {
+        repositoryService.removeAndFlush(incomingInvoice);
+    }
+
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
     @Inject
     CurrencyRepository currencyRepository;
-
 
 }
