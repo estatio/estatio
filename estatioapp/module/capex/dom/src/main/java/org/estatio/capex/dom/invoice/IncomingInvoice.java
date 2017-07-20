@@ -21,6 +21,8 @@ import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -590,7 +592,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final IncomingInvoiceType type,
             final boolean changeOnItemsAsWell){
         if (changeOnItemsAsWell){
-            getItems().stream().map(IncomingInvoiceItem.class::cast).forEach(x->x.setIncomingInvoiceType(type));
+            Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
+                    .stream()
+                    .map(IncomingInvoiceItem.class::cast)
+                    .forEach(x->x.setIncomingInvoiceType(type));
         }
         setType(type);
         return this;
