@@ -103,6 +103,11 @@ public class Currency
                 .toString();
     }
 
+    public String iconName() {
+        // from which the framework infers icon, eg Currency-EUR.png
+        return getReference().trim();
+    }
+
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."
