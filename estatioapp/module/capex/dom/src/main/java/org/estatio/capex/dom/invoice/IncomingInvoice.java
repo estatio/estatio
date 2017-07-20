@@ -587,7 +587,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editType(
-            @Nullable
             final IncomingInvoiceType type){
         setType(type);
         return this;
