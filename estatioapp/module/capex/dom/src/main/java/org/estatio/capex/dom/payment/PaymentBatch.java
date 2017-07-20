@@ -481,9 +481,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             return new Clob(documentName, "text/xml", xml);
         }
         public String disableAct() {
-            return paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW
-                    ? "Batch is not yet complete"
-                    : null;
+            if(paymentBatch.getLines().isEmpty()) {
+                return "No payment lines";
+            }
+            if (paymentBatch.getApprovalState() == PaymentBatchApprovalState.NEW) {
+                return "Batch is not yet complete";
+            }
+            return null;
         }
         public String default0Act() {
             return paymentBatch.fileNameWithSuffix("xml");
@@ -589,6 +593,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
         public String default0Act() {
             return paymentBatch.fileNameWithSuffix("pdf");
+        }
+
+        public String disableAct() {
+            if(paymentBatch.getLines().isEmpty()) {
+                return "No payment lines";
+            }
+            return null;
         }
 
         @Inject
