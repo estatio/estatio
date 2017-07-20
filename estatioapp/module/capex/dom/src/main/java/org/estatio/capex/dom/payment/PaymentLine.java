@@ -7,6 +7,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
@@ -21,6 +22,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 
@@ -108,6 +110,12 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     @Column(allowsNull = "false", name = "creditorBankAccountId")
     @Getter @Setter
     private BankAccount creditorBankAccount;
+
+
+    @NotPersistent
+    public Currency getCurrency() {
+        return getInvoice().getCurrency();
+    }
 
     /**
      * Document > PmtInf > CdtTrfTxInf > Amt > InstdAmt

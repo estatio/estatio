@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.Party;
 
@@ -36,6 +37,7 @@ import lombok.Setter;
         propOrder = {
                 "batch",
                 "endToEndId",
+                "currency",
                 "amount",
                 "sellerBankAccount",
                 "seller",
@@ -65,6 +67,9 @@ public class CreditTransfer  {
     private BigDecimal amount;
 
     private BankAccount sellerBankAccount;
+
+    private Currency currency;
+
 
     String getSellerBic() {
         return getSellerBankAccount().getBic();
@@ -109,7 +114,7 @@ public class CreditTransfer  {
         cdtTrfTxInf.setAmt(amt);
         ActiveOrHistoricCurrencyAndAmount instdAmt = new ActiveOrHistoricCurrencyAndAmount();
         amt.setInstdAmt(instdAmt);
-        instdAmt.setCcy("EUR");
+        instdAmt.setCcy(getCurrency().getReference().trim());
         instdAmt.setValue(getAmount());
 
         BankAccount creditorBankAccount = this.getSellerBankAccount();
@@ -146,6 +151,7 @@ public class CreditTransfer  {
                         "endToEndId",
                         "seller",
                         "sellerBankAccount",
+                        "currency",
                         "amount",
                         "remittanceInformation"
                 );

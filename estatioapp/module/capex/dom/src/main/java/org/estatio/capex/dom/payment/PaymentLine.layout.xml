@@ -70,9 +70,9 @@
                             <cpt:fieldSet name="Invoice" id="details">
                                 <cpt:property id="invoice"/>
                                 <cpt:property id="remittanceInformation" hidden="ALL_TABLES"/>
+                                <cpt:property id="currency"/>
                                 <cpt:property id="amount"/>
                             </cpt:fieldSet>
-
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

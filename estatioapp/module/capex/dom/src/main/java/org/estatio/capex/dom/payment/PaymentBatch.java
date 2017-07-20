@@ -398,6 +398,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             final BigDecimal amount = lines.stream()
                                             .map(PaymentLine::getAmount)
                                             .reduce(BigDecimal.ZERO, BigDecimal::add);
+            if(!lines.isEmpty()) {
+                // should always be non-empty, just playing safe...
+                final PaymentLine firstLine = lines.get(0);
+                creditTransfer.setCurrency(firstLine.getCurrency());
+            }
             creditTransfer.setAmount(amount);
 
             //  -PM-19229-12-2016-2-RO

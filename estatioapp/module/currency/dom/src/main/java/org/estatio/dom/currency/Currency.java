@@ -21,22 +21,24 @@ package org.estatio.dom.currency;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
-
-import org.estatio.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithNameUnique;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
+
+import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -85,6 +87,7 @@ import lombok.Setter;
         bounded = true,
         objectType = "org.estatio.dom.currency.Currency"
 )
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Currency
         extends UdoDomainObject2<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique, WithApplicationTenancyGlobal {

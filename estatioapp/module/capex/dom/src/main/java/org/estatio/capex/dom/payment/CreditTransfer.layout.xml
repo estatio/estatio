@@ -50,6 +50,7 @@
                 <cpt:property id="sellerBankAccount"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Amount" id="amount">
+                <cpt:property id="currency"/>
                 <cpt:property id="amount"/>
                 <cpt:property id="remittanceInformation"/>
             </cpt:fieldSet>
