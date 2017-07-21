@@ -53,8 +53,10 @@ public class IncomingInvoiceExport {
     private final String chargeName;
     @MemberOrder(sequence = "17")
     private final String vatCode;
+    @MemberOrder(sequence = "18")
+    private final String documentNumber;
 
-    public IncomingInvoiceExport(final IncomingInvoiceItem item){
+    public IncomingInvoiceExport(final IncomingInvoiceItem item, final String documentNumber){
         IncomingInvoice invoice = (IncomingInvoice) item.getInvoice();
 
 
@@ -82,6 +84,7 @@ public class IncomingInvoiceExport {
         this.netAmount = item.getNetAmount();
         this.vatAmount = item.getVatAmount();
         this.grossAmount = item.getGrossAmount();
+        this.documentNumber = documentNumber;
 
     }
 

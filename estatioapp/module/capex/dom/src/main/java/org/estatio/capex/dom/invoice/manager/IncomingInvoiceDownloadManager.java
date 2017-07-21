@@ -107,12 +107,18 @@ public class IncomingInvoiceDownloadManager {
     public Blob downloadToExcel(final String fileName) {
 
         final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
-                .map(x -> new IncomingInvoiceExport(x))
+                .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x)))
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(exportClass, "invoiceExport");
         WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
         return excelService.toExcel(worksheetContent, fileName);
+    }
+
+    private String documentNumberFor(final IncomingInvoiceItem invoiceItem) {
+        final IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
+        final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
+        return documentIfAny.map(DocumentAbstract::getName).orElse(null);
     }
 
     public String default0DownloadToExcel() {
