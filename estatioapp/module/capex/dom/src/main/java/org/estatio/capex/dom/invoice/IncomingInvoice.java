@@ -609,6 +609,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return true;
     }
 
+    public String disableEditType(){
+        return reasonDisabledDueToStateStrict();
+    }
+
     /**
      * This relates to the owning property, while the child items may either also relate to the property,
      * or could potentially relate to individual units within the property.
@@ -828,6 +832,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
     }
 
+    // TODO: added this method for the moment until EST-1508 is picked up
+    @Programmatic
+    public String reasonDisabledDueToStateStrict() {
+        final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
+        // guard for historic invoices (and invoice items)
+        if (approvalState1==null){
+            return "Cannot modify";
+        }
+        switch (approvalState1) {
+        case NEW:
+            return null;
+        default:
+            return "Cannot modify because invoice is in state of " + getApprovalState();
+        }
+    }
 
     @Programmatic
     public String reasonDisabledDueToState() {
