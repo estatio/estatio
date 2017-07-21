@@ -487,8 +487,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         if (getNetAmount()==null){
             buffer.append("net amount, ");
         }
+        if (getVatAmount()==null){
+            buffer.append("vat amount, ");
+        }
         if (getGrossAmount()==null){
             buffer.append("gross amount, ");
+        }
+        if (getCharge()==null){
+            buffer.append("charge, ");
         }
 
         return buffer.length() == 0 ? null : buffer.toString();
