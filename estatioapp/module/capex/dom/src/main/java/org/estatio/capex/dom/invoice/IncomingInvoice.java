@@ -758,17 +758,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         if (isImmutable()){
             return reasonDisabledDueToState();
         }
-        return sellerIsImmutable() ? "Seller is immutable because an item is linked to an order" : null;
+        return sellerIsImmutableReason();
     }
 
-    private boolean sellerIsImmutable(){
+    private String sellerIsImmutableReason(){
         for (InvoiceItem item : getItems()){
             IncomingInvoiceItem ii = (IncomingInvoiceItem) item;
             if (ii.isLinkedToOrderItem()){
-                return true;
+                return "Seller cannot be changed because an item is linked to an order";
             }
         }
-        return false;
+        return null;
     }
 
     public IncomingInvoice changeDates(
@@ -832,7 +832,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
     }
 
-    // TODO: added this method for the moment until EST-1508 is picked up
+    // TODO: added this method for the moment until EST-1508 is picked up - then to be reviewed
     @Programmatic
     public String reasonDisabledDueToStateStrict() {
         final IncomingInvoiceApprovalState approvalState1 = getApprovalState();

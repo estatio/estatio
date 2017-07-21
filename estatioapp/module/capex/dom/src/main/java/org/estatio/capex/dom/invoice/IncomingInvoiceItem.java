@@ -282,7 +282,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditCharge(){
-        return chargeIsImmutable() ? "Charge is immutable because this item is linked to an order or budget" : null;
+        return chargeIsImmutableReason();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -299,7 +299,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditFixedAsset(){
-        return fixedAssetIsImmutable() ? "Fixed asset is immutable because this item is linked to an order, budget or project" : null;
+        return fixedAssetIsImmutableReason();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -320,7 +320,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditProject(){
-        return projectIsImmutable() ? "Project is immutable because this item is linked to an order" : null;
+        return projectIsImmutableReason();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -343,7 +343,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditBudgetItem(){
-        return budgetItemIsImmutable() ? "Budget item is immutable because this item is linked to an order or the invoice has not type service charges" : null;
+        return budgetItemIsImmutableReason();
     }
 
     public IncomingInvoiceItem editPeriod(@Nullable final String period){
@@ -371,45 +371,45 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return "The invoice cannot be changed";
     }
 
-    private boolean chargeIsImmutable(){
+    private String chargeIsImmutableReason(){
         if (this.isLinkedToOrderItem()){
-            return true;
+            return "Charge cannot be changed because this item is linked to an order";
         }
         if (this.getBudgetItem()!=null){
-            return true;
+            return "Charge cannot be changed  because this item is linked to a budget";
         }
-        return false;
+        return null;
     }
 
-    private boolean fixedAssetIsImmutable(){
+    private String fixedAssetIsImmutableReason(){
         if (this.isLinkedToOrderItem()){
-            return true;
+            return "Fixed asset cannot be changed because this item is linked to an order";
         }
         if (this.getBudgetItem()!=null){
-            return true;
+            return "Fixed asset cannot be changed because this item is linked to a budget";
         }
         if (this.getProject()!=null){
-            return true;
+            return "Fixed asset cannot be changed because this item is linked to a project";
         }
-        return false;
+        return null;
     }
 
-    private boolean budgetItemIsImmutable(){
+    private String budgetItemIsImmutableReason(){
         IncomingInvoice invoice = (IncomingInvoice) this.getInvoice();
         if (invoice.getType()!=IncomingInvoiceType.SERVICE_CHARGES){
-            return true;
+            return "Budget item cannot be changed because the invoice has not type service charges";
         }
         if (this.isLinkedToOrderItem()){
-            return true;
+            return "Budget item cannot be changed because this invoice item is linked to an order";
         }
-        return false;
+        return null;
     }
 
-    private boolean projectIsImmutable(){
+    private String projectIsImmutableReason(){
         if (this.isLinkedToOrderItem()){
-            return true;
+            return "Project cannot be changed because this item is linked to an order";
         }
-        return false;
+        return null;
     }
 
     boolean isLinkedToOrderItem(){
