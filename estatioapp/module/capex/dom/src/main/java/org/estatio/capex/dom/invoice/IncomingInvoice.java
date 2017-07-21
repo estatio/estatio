@@ -630,7 +630,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final boolean changeOnItemsAsWell){
         setProperty(property);
         if (changeOnItemsAsWell){
-            getItems().stream().map(IncomingInvoiceItem.class::cast).forEach(x->x.setFixedAsset(property));
+            Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
+                    .stream()
+                    .map(IncomingInvoiceItem.class::cast)
+                    .forEach(x->x.setFixedAsset(property));
         }
         return this;
     }
