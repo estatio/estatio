@@ -122,6 +122,14 @@ public class OrderItemRepository {
     }
 
     @Programmatic
+    public void mergeItems(final OrderItem sourceItem, final OrderItem targetItem) {
+        if (sourceItem==null || targetItem==null) return;
+        if (sourceItem.equals(targetItem)) return;
+        targetItem.addAmounts(sourceItem.getNetAmount(), sourceItem.getVatAmount(), sourceItem.getGrossAmount());
+        sourceItem.removeItem();
+    }
+
+    @Programmatic
     public List<OrderItem> findByProjectAndCharge(final Project project, final Charge charge) {
         return repositoryService.allMatches(
                 new QueryDefault<>(

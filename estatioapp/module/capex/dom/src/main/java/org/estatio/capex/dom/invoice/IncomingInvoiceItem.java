@@ -43,6 +43,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.dom.utils.FinancialAmountUtil;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -495,28 +496,16 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Programmatic
     public void subtractAmounts(final BigDecimal netAmountToSubtract, final BigDecimal vatAmountToSubtract, final BigDecimal grossAmountToSubtract) {
-        if (getNetAmount() != null && netAmountToSubtract != null) {
-            setNetAmount(getNetAmount().subtract(netAmountToSubtract));
-        }
-        if (getVatAmount() != null && vatAmountToSubtract != null) {
-            setVatAmount(getVatAmount().subtract(vatAmountToSubtract));
-        }
-        if (getGrossAmount() != null && grossAmountToSubtract != null) {
-            setGrossAmount(getGrossAmount().subtract(grossAmountToSubtract));
-        }
+        setNetAmount(FinancialAmountUtil.subtractHandlingNulls(getNetAmount(), netAmountToSubtract));
+        setVatAmount(FinancialAmountUtil.subtractHandlingNulls(getVatAmount(), vatAmountToSubtract));
+        setGrossAmount(FinancialAmountUtil.subtractHandlingNulls(getGrossAmount(), grossAmountToSubtract));
     }
 
     @Programmatic
     public void addAmounts(final BigDecimal netAmountToAdd, final BigDecimal vatAmountToAdd, final BigDecimal grossAmountToAdd) {
-        if (getNetAmount() != null && netAmountToAdd != null) {
-            setNetAmount(getNetAmount().add(netAmountToAdd));
-        }
-        if (getVatAmount() != null && vatAmountToAdd != null) {
-            setVatAmount(getVatAmount().add(vatAmountToAdd));
-        }
-        if (getGrossAmount() != null && grossAmountToAdd != null) {
-            setGrossAmount(getGrossAmount().add(grossAmountToAdd));
-        }
+        setNetAmount(FinancialAmountUtil.addHandlingNulls(getNetAmount(), netAmountToAdd));
+        setVatAmount(FinancialAmountUtil.addHandlingNulls(getVatAmount(), vatAmountToAdd));
+        setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
     }
 
     @Inject

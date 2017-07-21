@@ -67,7 +67,7 @@ public class IncomingInvoiceItem_Test {
 
         // then
         Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("49.50"));
-        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isNull();
+        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isEqualTo(new BigDecimal("-10.10"));
         Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
 
     }
@@ -91,7 +91,7 @@ public class IncomingInvoiceItem_Test {
 
         // then
         Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("150.50"));
-        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isNull();
+        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isEqualTo(new BigDecimal("10.10"));
         Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
 
     }

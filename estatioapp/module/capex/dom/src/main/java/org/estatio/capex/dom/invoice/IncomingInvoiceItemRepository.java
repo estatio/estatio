@@ -188,10 +188,7 @@ public class IncomingInvoiceItemRepository {
     public void mergeItems(final IncomingInvoiceItem sourceItem, final IncomingInvoiceItem targetItem) {
         if (sourceItem==null || targetItem==null) return;
         if (sourceItem.equals(targetItem)) return;
-        BigDecimal netAmountToAdd = sourceItem.getNetAmount()!=null ? sourceItem.getNetAmount() : null;
-        BigDecimal vatAmountToAdd = sourceItem.getVatAmount()!=null ? sourceItem.getVatAmount() : null;
-        BigDecimal grossAmountToAdd = sourceItem.getGrossAmount()!=null ? sourceItem.getGrossAmount() : null;
-        targetItem.addAmounts(netAmountToAdd, vatAmountToAdd, grossAmountToAdd);
+        targetItem.addAmounts(sourceItem.getNetAmount(), sourceItem.getVatAmount(), sourceItem.getGrossAmount());
         sourceItem.removeItem();
     }
 

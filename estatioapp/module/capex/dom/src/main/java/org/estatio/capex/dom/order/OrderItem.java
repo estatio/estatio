@@ -59,6 +59,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.FinancialAmountUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -463,6 +464,20 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return buffer.length() == 0 ? null : buffer.toString();
     }
 
+    @Programmatic
+    public void subtractAmounts(final BigDecimal netAmountToSubtract, final BigDecimal vatAmountToSubtract, final BigDecimal grossAmountToSubtract) {
+        setNetAmount(FinancialAmountUtil.subtractHandlingNulls(getNetAmount(), netAmountToSubtract));
+        setVatAmount(FinancialAmountUtil.subtractHandlingNulls(getVatAmount(), vatAmountToSubtract));
+        setGrossAmount(FinancialAmountUtil.subtractHandlingNulls(getGrossAmount(), grossAmountToSubtract));
+    }
+
+    @Programmatic
+    public void addAmounts(final BigDecimal netAmountToAdd, final BigDecimal vatAmountToAdd, final BigDecimal grossAmountToAdd) {
+        setNetAmount(FinancialAmountUtil.addHandlingNulls(getNetAmount(), netAmountToAdd));
+        setVatAmount(FinancialAmountUtil.addHandlingNulls(getVatAmount(), vatAmountToAdd));
+        setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order removeItem(){
         Order order = getOrdr();
@@ -485,7 +500,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
-    private RepositoryService repositoryService;
+    RepositoryService repositoryService;
 
     @Inject
     private ChargeRepository chargeRepository;

@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -260,15 +261,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         public String default6Act(){
-            return ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
+            return order.ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(order.ofFirstItem(OrderItem::getStartDate), order.ofFirstItem(OrderItem::getEndDate))) : null;
         }
 
         public org.estatio.dom.asset.Property default7Act(){
-            return ofFirstItem(OrderItem::getProperty);
+            return order.ofFirstItem(OrderItem::getProperty);
         }
 
         public Project default8Act(){
-            return ofFirstItem(OrderItem::getProject);
+            return order.ofFirstItem(OrderItem::getProject);
         }
 
         public String validateAct(final Charge charge,
@@ -306,18 +307,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             return order.reasonDisabledDueToState();
         }
 
-        private <T> T ofFirstItem(final Function<OrderItem, T> f) {
-            final Optional<OrderItem> firstItemIfAny = firstItemIfAny();
-            return firstItemIfAny.map(f).orElse(null);
-        }
-
-        private Optional<OrderItem> firstItemIfAny() {
-            return  order.getItems().stream()
-                    .filter(OrderItem.class::isInstance)
-                    .map(OrderItem.class::cast)
-                    .findFirst();
-        }
-
         @Inject
         public OrderItemRepository orderItemRepository;
 
@@ -326,6 +315,212 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         @Inject
         ChargeRepository chargeRepository;
+
+    }
+
+    @Mixin(method="act")
+    public static class splitItem {
+
+        private final Order order;
+        public splitItem(final Order order) {
+            this.order = order;
+        }
+
+        @MemberOrder(name = "items", sequence = "2")
+        public Order act(
+                final OrderItem itemToSplit,
+                final String newItemDescription,
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemNetAmount,
+                @Nullable
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemVatAmount,
+                @Nullable
+                final Tax newItemtax,
+                @Digits(integer = 13, fraction = 2)
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                @Nullable
+                final org.estatio.dom.asset.Property newItemProperty,
+                @Nullable
+                final Project newItemProject,
+                @Nullable
+                final BudgetItem newItemBudgetItem,
+                @Nullable
+                final String newItemPeriod
+        ) {
+            itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
+            orderItemRepository.upsert(
+                    order,
+                    newItemCharge,
+                    newItemDescription,
+                    newItemNetAmount,
+                    newItemVatAmount,
+                    newItemGrossAmount,
+                    newItemtax,
+                    newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).startDate() : null,
+                    newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).endDate() : null,
+                    newItemProperty,
+                    newItemProject,
+                    newItemBudgetItem
+            );
+            return order;
+        }
+
+        public String disableAct() {
+            if (order.isImmutable()) {
+                return order.reasonDisabledDueToState();
+            }
+            return order.getItems().isEmpty() ? "No items" : null;
+        }
+
+        public OrderItem default0Act() {
+            return order.firstItemIfAny()!=null ? order.getItems().first() : null;
+        }
+
+        public Tax default4Act() {
+            return order.ofFirstItem(OrderItem::getTax);
+        }
+
+        public org.estatio.dom.asset.Property default7Act() {
+            return order.getProperty();
+        }
+
+        public Project default8Act() {
+            return order.ofFirstItem(OrderItem::getProject);
+        }
+
+        public BudgetItem default9Act() {
+            return order.ofFirstItem(OrderItem::getBudgetItem);
+        }
+
+        public String default10Act() {
+            return order.ofFirstItem(OrderItem::getPeriod);
+        }
+
+        public List<OrderItem> choices0Act() {
+            return order.getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
+        }
+
+        public List<Charge> choices6Act(
+                final OrderItem itemToSplit,
+                final String newItemDescription,
+                final BigDecimal newItemNetAmount,
+                final BigDecimal newItemVatAmount,
+                final Tax newItemtax,
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                final org.estatio.dom.asset.Property newItemProperty,
+                final Project newItemProject,
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod
+        ){
+            List<Charge> result = chargeRepository.allIncoming();
+            for (OrderItem item : order.getItems()) {
+                if (item.getCharge()!=null && result.contains(item.getCharge())) {
+                    result.remove(item.getCharge());
+                }
+            }
+            return result;
+        }
+
+        public List<BudgetItem> choices9Act(
+                final OrderItem itemToSplit,
+                final String newItemDescription,
+                final BigDecimal newItemNetAmount,
+                final BigDecimal newItemVatAmount,
+                final Tax newItemtax,
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                final org.estatio.dom.asset.Property newItemProperty,
+                final Project newItemProject,
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod) {
+
+            return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
+        }
+
+        public String validateAct(
+                final OrderItem itemToSplit,
+                final String newItemDescription,
+                final BigDecimal newItemNetAmount,
+                final BigDecimal newItemVatAmount,
+                final Tax newItemtax,
+                final BigDecimal newItemGrossAmount,
+                final Charge newItemCharge,
+                final org.estatio.dom.asset.Property newItemProperty,
+                final Project newItemProject,
+                final BudgetItem newItemBudgetItem,
+                final String newItemPeriod){
+            return newItemPeriod == null ? null : PeriodUtil.reasonInvalidPeriod(newItemPeriod);
+        }
+
+        @Inject
+        OrderItemRepository orderItemRepository;
+
+        @Inject
+        BudgetItemChooser budgetItemChooser;
+
+        @Inject
+        ChargeRepository chargeRepository;
+
+    }
+
+    @Programmatic
+    public <T> T ofFirstItem(final Function<OrderItem, T> f) {
+        final Optional<OrderItem> firstItemIfAny = firstItemIfAny();
+        return firstItemIfAny.map(f).orElse(null);
+    }
+
+    @Programmatic
+    public Optional<OrderItem> firstItemIfAny() {
+        return  getItems().stream()
+                .findFirst();
+    }
+
+    @Mixin(method = "act")
+    public static class mergeItems {
+
+        private final Order order;
+        public mergeItems(final Order order) {
+            this.order = order;
+        }
+
+        @MemberOrder(name = "items", sequence = "3")
+        public Order act(
+                final OrderItem item,
+                final OrderItem mergeInto){
+            orderItemRepository.mergeItems(item, mergeInto);
+            return order;
+        }
+
+        public String disableAct() {
+            if (order.isImmutable()) {
+                return order.reasonDisabledDueToState();
+            }
+            return order.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+        }
+
+        public OrderItem default0Act() {
+            return order.firstItemIfAny()!=null ? order.getItems().last() : null;
+        }
+
+        public OrderItem default1Act() {
+            return order.firstItemIfAny()!=null ? order.getItems().first() : null;
+        }
+
+        public List<OrderItem> choices0Act() {
+            return order.getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
+        }
+
+        public List<OrderItem> choices1Act(
+                final OrderItem item,
+                final OrderItem mergeInto) {
+            return order.getItems().stream().filter(x->!x.equals(item)).map(OrderItem.class::cast).collect(Collectors.toList());
+        }
+
+        @Inject
+        OrderItemRepository orderItemRepository;
 
     }
 

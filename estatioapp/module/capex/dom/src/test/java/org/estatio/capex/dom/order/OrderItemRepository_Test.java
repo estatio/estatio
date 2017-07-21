@@ -2,11 +2,14 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 
+import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.project.Project;
@@ -83,6 +86,38 @@ public class OrderItemRepository_Test {
         assertThat(orderItem.getProperty()).isEqualTo(property);
         assertThat(orderItem.getProject()).isEqualTo(project);
         assertThat(orderItem.getBudgetItem()).isEqualTo(budgetItem);
+    }
+
+    @Mock
+    RepositoryService mockRepositoryService;
+
+    @Test
+    public void mergeItems_works() throws Exception {
+
+        // given
+        OrderItemRepository orderItemRepository = new OrderItemRepository();
+        OrderItem sourceItem = new OrderItem();
+        sourceItem.repositoryService = mockRepositoryService;
+        sourceItem.setOrdr(mockOrder);
+        OrderItem targetItem = new OrderItem();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockRepositoryService).removeAndFlush(sourceItem);
+        }});
+
+        // when
+        sourceItem.setNetAmount(new BigDecimal("10"));
+        targetItem.setNetAmount(new BigDecimal("10.10"));
+        orderItemRepository.mergeItems(sourceItem, targetItem);
+
+        // assert
+        /**
+         actually superfluous;
+         {@link OrderItemItem#addAmounts(BigDecimal, BigDecimal, BigDecimal)} separately tested
+         */
+        Assertions.assertThat(targetItem.getNetAmount()).isEqualTo(new BigDecimal("20.10"));
+
     }
 
 }

@@ -2,11 +2,21 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
+import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.tax.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,6 +57,78 @@ public class Order_Test {
 
         // then
         assertThat(result).isNull();
+
+    }
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    OrderItemRepository mockOrderItemRepository;
+
+    @Test
+    public void splitItem_mixin_works() throws Exception {
+
+        // given
+        Order order = new Order();
+        Order.splitItem mixin = new Order.splitItem(order);
+        mixin.orderItemRepository = mockOrderItemRepository;
+
+        String description = "some description";
+        Tax tax = new Tax();
+        Charge charge = new Charge();
+        Property property = new Property();
+        Project project = new Project();
+        BudgetItem budgetItem = new BudgetItem();
+        String period = "F2018";
+
+        OrderItem itemToSplit = new OrderItem();
+
+        BigDecimal newItemNetAmount = new BigDecimal("50.00");
+        BigDecimal newItemVatAmount = new BigDecimal("10");
+        BigDecimal newItemGrossAmount = new BigDecimal("60.00");
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).upsert(
+                    order,
+                    charge,
+                    description,
+                    newItemNetAmount,
+                    newItemVatAmount,
+                    newItemGrossAmount,
+                    tax,
+                    PeriodUtil.yearFromPeriod(period).startDate(),
+                    PeriodUtil.yearFromPeriod(period).endDate(),
+                    property,
+                    project,
+                    budgetItem);
+        }});
+
+        // when
+        mixin.act(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
+
+    }
+
+    @Test
+    public void mergeItem_mixin_works() throws Exception {
+
+        // given
+        Order order = new Order();
+        Order.mergeItems mixin = new Order.mergeItems(order);
+        mixin.orderItemRepository = mockOrderItemRepository;
+
+        OrderItem sourceItem = new OrderItem();
+        OrderItem targetItem = new OrderItem();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemRepository).mergeItems(
+                    sourceItem, targetItem);
+        }});
+
+        // when
+        mixin.act(sourceItem, targetItem);
 
     }
 
