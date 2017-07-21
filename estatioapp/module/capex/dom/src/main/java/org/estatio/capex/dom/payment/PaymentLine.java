@@ -17,6 +17,8 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -51,7 +53,18 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.payment.PaymentLine "
                         + "WHERE invoice == :invoice "
-                        + "   && batch.approvalState == :approvalState ")
+                        + "   && batch.approvalState == :approvalState "),
+        @Query(
+                name = "findByInvoiceAndBatchApprovalState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.payment.PaymentLine "
+                        + "WHERE invoice == :invoice "
+                        + "   && batch.approvalState == :approvalState "),
+        @Query(
+                name = "findFromRequestedExecutionDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.payment.PaymentLine "
+                        + "WHERE batch.requestedExecutionDate >= :fromRequestedExecutionDate ")
 })
 @Uniques({
         @Unique(
@@ -91,6 +104,7 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
 
     @Column(allowsNull = "false", name = "batchId")
     @Getter @Setter
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private PaymentBatch batch;
 
     /**
@@ -101,14 +115,13 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     @Getter @Setter
     private int sequence;
 
-
-
     /**
      * Document > PmtInf > CdtTrfTxInf > CdtrAcct > Id > IBAN
      * Document > PmtInf > CdtTrfTxInf > CdtrAgt > FinInstnId > BIC
      */
     @Column(allowsNull = "false", name = "creditorBankAccountId")
     @Getter @Setter
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private BankAccount creditorBankAccount;
 
 
@@ -129,6 +142,7 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
      * Document > PmtInf > CdtTrfTxInf > Cdtr > Nm
      * Document > PmtInf > CdtTrfTxInf > Cdtr > PstlAdr > Ctry
      */
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     public Party getCreditor() {
         return getCreditorBankAccount().getOwner();
     }
@@ -148,10 +162,12 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
      */
     @Column(allowsNull = "false", name = "invoiceId")
     @Getter @Setter
+    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     private IncomingInvoice invoice;
 
 
     @Override
+    @PropertyLayout(hidden = Where.ALL_TABLES)
     public ApplicationTenancy getApplicationTenancy() {
         return invoice.getApplicationTenancy();
     }

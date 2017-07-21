@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -40,8 +42,15 @@ public class PaymentLineRepository {
                         "approvalState", approvalState));
     }
 
+    @Programmatic
+    public List<PaymentLine> findFromRequestedExecutionDate(final LocalDate fromDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        PaymentLine.class,
+                        "findFromRequestedExecutionDate",
+                        "fromRequestedExecutionDate", fromDate.toDateTimeAtStartOfDay()));
+    }
 
     @Inject
     RepositoryService repositoryService;
-
 }
