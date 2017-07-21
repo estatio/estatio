@@ -54,6 +54,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -345,6 +346,17 @@ public class FixedAssetRole
                 }
             };
         }
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public FixedAsset delete() {
+        FixedAsset fa = getAsset();
+        remove(this);
+        return fa;
+    }
+
+    public boolean hideDelete() {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
 }
