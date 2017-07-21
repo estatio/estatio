@@ -215,9 +215,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return getDescription();
     }
 
-    public String disableEditDescription(){
-        return isImmutable() ? itemImmutableReason() : null;
-    }
 
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
@@ -360,8 +357,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             @Nullable
             final BudgetItem budgetItem){
         setBudgetItem(budgetItem);
-        setCharge(budgetItem.getCharge());
-        setProperty(budgetItem.getBudget().getProperty());
+        if (budgetItem!=null) setCharge(budgetItem.getCharge());
+        if (budgetItem!=null) setProperty(budgetItem.getBudget().getProperty());
         return this;
     }
 
@@ -432,7 +429,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return getOrdr().isImmutable() || isLinkedToInvoiceItem();
     }
 
-    private boolean isLinkedToInvoiceItem(){
+    boolean isLinkedToInvoiceItem(){
         if (orderItemInvoiceItemLinkRepository.findByOrderItem(this).size()>0){
             return true;
         }

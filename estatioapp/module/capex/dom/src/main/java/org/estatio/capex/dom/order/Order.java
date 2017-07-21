@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -36,6 +37,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -189,13 +191,84 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Getter @Setter
     private org.estatio.dom.asset.Property property;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editProperty(
+            @Nullable
+            final org.estatio.dom.asset.Property property,
+            final boolean changeOnItemsAsWell){
+        setProperty(property);
+        if (changeOnItemsAsWell){
+            com.google.common.collect.Lists.newArrayList(getItems())  // eagerly load (DN 4.x collections do not support streaming)
+                    .stream()
+                    .map(OrderItem.class::cast)
+                    .forEach(x->x.setProperty(property));
+        }
+        return this;
+    }
+
+    public org.estatio.dom.asset.Property default0EditProperty(){
+        return getProperty();
+    }
+
+    public boolean default1EditProperty(){
+        return true;
+    }
+
+    public String disableEditProperty(){
+        if (isImmutable()){
+            return orderImmutableReason();
+        }
+        return propertyIsImmutableReason();
+    }
+
+    private String propertyIsImmutableReason(){
+        for (OrderItem item : getItems()){
+            if (item.isLinkedToInvoiceItem()){
+                return "Property cannot be changed because an item is linked to an invoice";
+            }
+        }
+        return null;
+    }
+
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String orderNumber;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editOrderNumber(
+            @Nullable
+            final String orderNumber){
+        setOrderNumber(orderNumber);
+        return this;
+    }
+
+    public String default0EditOrderNumber(){
+        return getOrderNumber();
+    }
+
+    public String disableEditOrderNumber(){
+        return orderImmutableReason();
+    }
+
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String sellerOrderReference;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editSellerOrderReference(
+            @Nullable
+            final String sellerOrderReference){
+        setSellerOrderReference(sellerOrderReference);
+        return this;
+    }
+
+    public String default0EditSellerOrderReference(){
+        return getSellerOrderReference();
+    }
+
+    public String disableEditSellerOrderReference(){
+        return orderImmutableReason();
+    }
 
     @Column(allowsNull = "true")
     @Getter @Setter
@@ -205,14 +278,81 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Getter @Setter
     private LocalDate orderDate;
 
+    public Order changeDates(
+            @Nullable
+            final LocalDate orderDate,
+            @Nullable
+            final LocalDate entryDate
+    ){
+        setOrderDate(orderDate);
+        setEntryDate(entryDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeDates(){
+        return getOrderDate();
+    }
+
+    public LocalDate default1ChangeDates(){
+        return getEntryDate();
+    }
+
+    public String disableChangeDates(){
+        return orderImmutableReason();
+    }
+
     @Column(allowsNull = "true", name = "sellerPartyId")
     @Getter @Setter
     private Party seller;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editSeller(
+            @Nullable
+            final Party seller){
+        setSeller(seller);
+        return this;
+    }
+
+    public Party default0EditSeller(){
+        return getSeller();
+    }
+
+    public String disableEditSeller(){
+        if (isImmutable()){
+            return orderImmutableReason();
+        }
+        return sellerIsImmutableReason();
+    }
+
+    private String sellerIsImmutableReason(){
+        for (OrderItem item : getItems()){
+            if (item.isLinkedToInvoiceItem()){
+                return "Seller cannot be changed because an item is linked to an invoice";
+            }
+        }
+        return null;
+    }
 
     @Column(allowsNull = "true", name = "buyerPartyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order editBuyer(
+            @Nullable
+            final Party buyer){
+        setBuyer(buyer);
+        return this;
+    }
+
+    public Party default0EditBuyer(){
+        return getBuyer();
+    }
+
+    public String disableEditBuyer(){
+        return orderImmutableReason();
+    }
 
     @Persistent(mappedBy = "ordr", dependentElement = "true")
     @Getter @Setter
@@ -304,7 +444,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
 
         public String disableAct() {
-            return order.reasonDisabledDueToState();
+            return order.orderImmutableReason();
         }
 
         @Inject
@@ -369,7 +509,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         public String disableAct() {
             if (order.isImmutable()) {
-                return order.reasonDisabledDueToState();
+                return order.orderImmutableReason();
             }
             return order.getItems().isEmpty() ? "No items" : null;
         }
@@ -496,7 +636,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
         public String disableAct() {
             if (order.isImmutable()) {
-                return order.reasonDisabledDueToState();
+                return order.orderImmutableReason();
             }
             return order.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
         }
@@ -625,6 +765,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Programmatic
     public boolean isImmutable(){
         return reasonDisabledDueToState()!=null;
+    }
+
+    private String orderImmutableReason(){
+        return reasonDisabledDueToState();
     }
 
     @Programmatic

@@ -15,12 +15,21 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" id="order">
-                                        <cpt:property id="orderNumber"/>
-                                        <cpt:property id="buyer"/>
-                                        <cpt:property id="seller"/>
-                                        <cpt:property id="sellerOrderReference"/>
-                                        <cpt:property id="property"/>
-                                        <cpt:property id="description"/>
+                                        <cpt:property id="orderNumber">
+                                            <cpt:action id="editOrderNumber" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="buyer">
+                                            <cpt:action id="editBuyer" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="seller">
+                                            <cpt:action id="editSeller" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="sellerOrderReference">
+                                            <cpt:action id="editSellerOrderReference" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
+                                        <cpt:property id="property">
+                                            <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
@@ -74,6 +83,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Dates">
+                                        <cpt:action id="changeDates" position="PANEL"/>
                                         <cpt:property id="orderDate"/>
                                         <cpt:property id="entryDate"/>
                                     </cpt:fieldSet>
