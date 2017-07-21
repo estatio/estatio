@@ -49,7 +49,15 @@
                         <bs3:col span="4">
                             <cpt:collection id="incomingInvoicesCompleted" paged="15">
                                 <cpt:named>Completed</cpt:named>
-                                <cpt:action id="approveInvoices"/>
+                                <cpt:action id="approveInvoices">
+                                    <cpt:named>Approve</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="approveInvoicesAsCorporateManager">
+                                    <cpt:named>Approve Corporate</cpt:named>
+                                </cpt:action>
+                                <cpt:action id="approveLocalInvoicesAsCountryDirector">
+                                    <cpt:named>Approve Local</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="4">

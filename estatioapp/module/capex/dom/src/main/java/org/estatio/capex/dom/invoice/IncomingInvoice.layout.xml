@@ -6,6 +6,9 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="sync" hidden="EVERYWHERE"/>
+                    <cpt:action id="verify" hidden="EVERYWHERE"/>
+                    <cpt:action id="links" hidden="EVERYWHERE"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -132,6 +135,8 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Current task">
+                                        <cpt:action id="previous" cssClassFa="step-backward"/>
+                                        <cpt:action id="next" cssClassFa="step-forward"/>
                                         <cpt:action id="checkApprovalState">
                                             <cpt:named>Check state</cpt:named>
                                         </cpt:action>
@@ -246,7 +251,6 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
-
         </bs3:col>
     </bs3:row>
 </bs3:grid>

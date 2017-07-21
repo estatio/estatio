@@ -22,13 +22,19 @@ public class IncomingInvoice_approveAsCorporateManager extends IncomingInvoice_t
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-o-up")
     public Object act(
-            @Nullable final String comment) {
+            @Nullable final String comment,
+            final boolean goToNext) {
+        final IncomingInvoice next =  nextInvoiceAfterPendingIfRequested(goToNext);
         trigger(comment, null);
-        return objectToReturn();
+        return objectToReturn(next);
     }
 
-    protected Object objectToReturn() {
-        return getDomainObject();
+    public boolean default1Act() {
+        return true;
+    }
+
+    protected Object objectToReturn(final IncomingInvoice domainObject) {
+        return domainObject;
     }
 
     public boolean hideAct() {

@@ -35,7 +35,7 @@ public abstract class Task_abstract {
     }
 
     protected Task nextTaskBefore(final Task task) {
-        return taskRepository.nextTaskBefore(task);
+        return taskRepository.previousTaskBefore(task);
     }
 
     protected Task nextTaskAfter(final Task task) {

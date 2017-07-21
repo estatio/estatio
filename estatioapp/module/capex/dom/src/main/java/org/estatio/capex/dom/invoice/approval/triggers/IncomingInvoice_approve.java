@@ -27,15 +27,20 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
     public Object act(
             final String role,
             @Nullable final Person personToAssignNextTo,
-            @Nullable final String comment) {
+            @Nullable final String comment,
+            final boolean goToNext) {
+        final IncomingInvoice next = nextInvoiceAfterPendingIfRequested(goToNext);
         trigger(personToAssignNextTo, comment, null);
-        return objectToReturn();
+        return objectToReturn(next);
     }
 
-    protected Object objectToReturn() {
-        return getDomainObject();
+    public boolean default3Act() {
+        return true;
     }
 
+    protected Object objectToReturn(final IncomingInvoice incomingInvoice) {
+        return incomingInvoice;
+    }
 
 
     public boolean hideAct() {

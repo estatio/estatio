@@ -31,7 +31,7 @@ public class Task_approveIncomingInvoice
             @Nullable final String comment,
             final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
-        Object mixinResult = mixin().act(role, personToAssignNextTo, comment);
+        Object mixinResult = mixin().act(role, personToAssignNextTo, comment, goToNext);
         return coalesce(nextTaskIfAny, mixinResult);
     }
 

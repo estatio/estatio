@@ -36,7 +36,7 @@ public class EstatioAppHomePage_approveInvoices {
             final String comment) {
 
         for (IncomingInvoice invoice : invoices) {
-            factoryService.mixin(IncomingInvoice_approve.class, invoice).act(null, null, comment);
+            factoryService.mixin(IncomingInvoice_approve.class, invoice).act(null, null, comment, false);
         }
 
         return homePage;

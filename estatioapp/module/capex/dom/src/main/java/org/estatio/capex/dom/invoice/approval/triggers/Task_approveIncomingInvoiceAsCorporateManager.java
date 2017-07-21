@@ -26,7 +26,7 @@ public class Task_approveIncomingInvoiceAsCorporateManager
             @Nullable final String comment,
             final boolean goToNext) {
         final Object nextTaskIfAny = nextTaskOrWarnIfRequired(goToNext);
-        Object mixinResult = mixin().act(comment);
+        Object mixinResult = mixin().act(comment, goToNext);
         return coalesce(nextTaskIfAny, mixinResult);
     }
 

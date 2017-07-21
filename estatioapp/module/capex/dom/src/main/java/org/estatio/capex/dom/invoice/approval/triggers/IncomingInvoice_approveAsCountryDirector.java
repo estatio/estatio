@@ -22,13 +22,19 @@ public class IncomingInvoice_approveAsCountryDirector extends IncomingInvoice_tr
     @Action()
     @ActionLayout(cssClassFa = "fa-thumbs-up")
     public Object act(
-            @Nullable final String comment) {
+            @Nullable final String comment,
+            final boolean goToNext) {
+        final IncomingInvoice next = nextInvoiceAfterPendingIfRequested(goToNext);
         trigger(comment, null);
-        return objectToReturn();
+        return objectToReturn(next);
     }
 
-    protected Object objectToReturn() {
-        return getDomainObject();
+    public boolean default1Act() {
+        return true;
+    }
+
+    protected Object objectToReturn(final IncomingInvoice domainObject) {
+        return domainObject;
     }
 
     public boolean hideAct() {

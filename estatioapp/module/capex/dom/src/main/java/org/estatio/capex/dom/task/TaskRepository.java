@@ -116,7 +116,7 @@ public class TaskRepository {
     }
 
     @Programmatic
-    public Task nextTaskBefore(final Task previousTask) {
+    public Task previousTaskBefore(final Task previousTask) {
 
         final Person previousAssignedTo = previousTask.getPersonAssignedTo();
         final LocalDateTime previousCreatedOn = previousTask.getCreatedOn();

@@ -14,17 +14,17 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.app.services.dashboard.EstatioAppHomePage;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveLocalAsCountryDirector;
 
 /**
  * For testing only
  */
 @Mixin(method = "act")
-public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
+public class EstatioAppHomePage_approveLocalInvoicesAsCountryDirector {
 
     private final EstatioAppHomePage homePage;
 
-    public EstatioAppHomePage_approveInvoicesAsCountryDirector(EstatioAppHomePage homePage) {
+    public EstatioAppHomePage_approveLocalInvoicesAsCountryDirector(EstatioAppHomePage homePage) {
         this.homePage = homePage;
     }
 
@@ -36,14 +36,14 @@ public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
             final String comment) {
 
         for (IncomingInvoice invoice : invoices) {
-            factoryService.mixin(IncomingInvoice_approveAsCountryDirector.class, invoice).act(comment, false);
+            factoryService.mixin(IncomingInvoice_approveLocalAsCountryDirector.class, invoice).act(comment, false);
         }
 
         return homePage;
     }
 
     public List<IncomingInvoice> choices0Act() {
-        return homePage.getIncomingInvoicesApproved();
+        return homePage.getIncomingInvoicesCompleted();
     }
     public List<IncomingInvoice> default0Act() {
         return choices0Act();
