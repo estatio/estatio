@@ -64,12 +64,10 @@ public class PaymentLineDownloadManager {
         return this;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    public Blob downloadToExcel() {
-        final Class<PaymentLineExportV1> exportClass = PaymentLineExportV1.class;
+    private final static Class<PaymentLineExportV1> exportClass = PaymentLineExportV1.class;
 
-        final String fileName = String.format("%s_%s",
-                exportClass.getSimpleName(), getFromRequestedExecutionDate().toString("yyyyMMdd"));
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob downloadToExcel(final String fileName) {
 
         final List<PaymentLineExportV1> exportV1s = getPayments()
                 .stream()
@@ -78,8 +76,15 @@ public class PaymentLineDownloadManager {
 
         WorksheetSpec spec = new WorksheetSpec(exportClass, "invoiceExport");
         WorksheetContent worksheetContent = new WorksheetContent(exportV1s, spec);
-        return excelService.toExcel(worksheetContent, fileName.concat(".xlsx"));
+        return excelService.toExcel(worksheetContent, fileName);
     }
+
+    public String default0DownloadToExcel() {
+        final String fileName = String.format("%s_%s",
+                exportClass.getSimpleName(), getFromRequestedExecutionDate().toString("yyyyMMdd"));
+        return fileName.concat(".xlsx");
+    }
+
 
     @javax.inject.Inject
     private PaymentLineRepository paymentLineRepository;
