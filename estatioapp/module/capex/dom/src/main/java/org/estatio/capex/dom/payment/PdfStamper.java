@@ -87,6 +87,32 @@ public class PdfStamper {
     }
 
     @Programmatic
+    public byte[] withStampOf(
+            byte[] docBytes,
+            final List<String> leftLineTexts,
+            final List<String> rightLineTexts,
+            final String hyperlink) throws IOException {
+
+        List<Line> leftLines = asLines(leftLineTexts);
+        List<Line> rightLines = asLines(rightLineTexts);
+
+        final PDDocument pdDoc = PDDocument.load(docBytes);
+        try {
+
+            if(hyperlink != null) {
+                leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
+            }
+            docBytes = stamp(pdDoc, leftLines, rightLines);
+            pdDoc.close();
+
+        } finally {
+            pdDoc.close();
+        }
+
+        return docBytes;
+    }
+
+    @Programmatic
     public byte[] firstPageWithStampOf(
             byte[] docBytes,
             final List<String> leftLineTexts,
@@ -105,7 +131,9 @@ public class PdfStamper {
             if (!splitDocs.isEmpty()) {
 
                 leftLines.add(new Line(String.format("# orig pgs : %d", splitDocs.size()), TEXT_COLOR, null));
-                leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
+                if(hyperlink != null) {
+                    leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
+                }
 
                 PDDocument docOfFirstPage = splitDocs.get(0);
                 docBytes = stamp(docOfFirstPage, leftLines, rightLines);

@@ -1,12 +1,15 @@
 package org.estatio.capex.dom.invoice.manager;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -24,6 +27,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
@@ -31,6 +35,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.payment.PdfStamper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -114,16 +119,39 @@ public class IncomingInvoiceDownloadManager {
         return defaultFileNameWithSuffix(".xlsx");
     }
 
+    static class DocumentStamper {
+        private final Document document;
+
+        DocumentStamper(final Document document) {
+            this.document = document;
+        }
+
+        byte[] stampUsing(final PdfStamper pdfStamper) {
+            try {
+                final List<String> leftLineTexts = Lists.newArrayList(document.getName());
+                final List<String> rightLineTexts = Collections.emptyList();
+                final String hyperlink = null;
+                
+                return pdfStamper.withStampOf(document.getBlobBytes(), leftLineTexts, rightLineTexts, hyperlink);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public Blob downloadToPdf(final String fileName) throws IOException {
 
-        // TODO: there's a risk this might blow up memory.  To fix this, need a new streaming API for pdfBoxService
+        // TODO: there's a risk this might blow up memory.  To fix this, would need a new streaming API for pdfBoxService
 
         final List<byte[]> pdfByteList = getInvoices().stream()
                 .map(incomingInvoice -> lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(x -> x.getBlob().getBytes())
+                .sorted(Comparator.comparing(DocumentAbstract::getName))
+                .map(DocumentStamper::new)
+                .map(stamper -> stamper.stampUsing(pdfStamper))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         final byte[][] pdfByteArrays = pdfByteList.toArray(new byte[0][0]);
@@ -151,6 +179,9 @@ public class IncomingInvoiceDownloadManager {
 
     @javax.inject.Inject
     private IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @javax.inject.Inject
+    private PdfStamper pdfStamper;
 
     @javax.inject.Inject
     private ExcelService excelService;
