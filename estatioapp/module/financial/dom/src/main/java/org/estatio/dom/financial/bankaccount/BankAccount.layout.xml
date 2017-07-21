@@ -23,7 +23,12 @@
                                 <cpt:property id="owner">
                                     <cpt:action id="changeOwner"/>
                                 </cpt:property>
-
+                                <cpt:property id="preferred">
+                                    <cpt:named>For ECP bank accounts, whether this account is preferred for paying incoming invoices</cpt:named>
+                                    <cpt:action id="togglePreferred">
+                                        <cpt:named>Toggle</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

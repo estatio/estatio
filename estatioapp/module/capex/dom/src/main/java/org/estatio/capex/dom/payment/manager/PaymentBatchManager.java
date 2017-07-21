@@ -193,10 +193,30 @@ public class PaymentBatchManager {
                 bankAccountsForBuyer.retainAll(bankAccountsForProperty);
             }
 
-            if (bankAccountsForBuyer.size() != 1) {
+            // original implementation ... see if we already have a unique bank account
+            int numBankAccounts = bankAccountsForBuyer.size();
+            switch (numBankAccounts) {
+            case 0:
+                return null;
+            case 1:
+                return bankAccountsForBuyer.get(0);
+            default:
+                // otherwise, non-unique, so fall through
+            }
+
+            // see if removing non-preferred helps
+            bankAccountsForBuyer.removeIf(x -> (x.getPreferred() == null || !x.getPreferred() ));
+
+            numBankAccounts = bankAccountsForBuyer.size();
+            switch (numBankAccounts) {
+            case 0:
+                return null;
+            case 1:
+                return bankAccountsForBuyer.get(0);
+            default:
+                // give up, still non-duplicate
                 return null;
             }
-            return bankAccountsForBuyer.get(0);
         }
 
 

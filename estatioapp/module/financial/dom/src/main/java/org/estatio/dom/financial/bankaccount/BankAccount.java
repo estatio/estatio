@@ -30,7 +30,10 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
@@ -128,6 +131,21 @@ public class BankAccount
     @Column(allowsNull = "true", length = AccountNumberType.Meta.MAX_LEN)
     @Getter @Setter
     private String bic;
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private Boolean preferred;
+
+    @MemberOrder(name = "preferred",sequence = "1")
+    public BankAccount togglePreferred() {
+        if(getPreferred() == null) {
+            setPreferred(true);
+        } else {
+            setPreferred(!getPreferred());
+        }
+        return this;
+    }
+
 
     public static class ChangeEvent extends ActionDomainEvent<BankAccount> {}
 
