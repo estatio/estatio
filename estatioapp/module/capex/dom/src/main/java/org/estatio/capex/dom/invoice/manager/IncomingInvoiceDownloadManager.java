@@ -1,6 +1,8 @@
 package org.estatio.capex.dom.invoice.manager;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -19,7 +21,9 @@ import org.apache.isis.applib.value.Blob;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
+import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
@@ -88,13 +92,11 @@ public class IncomingInvoiceDownloadManager {
         return this;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    public Blob downloadToExcel() {
-        final Class exportClass = IncomingInvoiceExport.class;
 
-        final String fileName = String.format("%s_%s-%s",
-                        exportClass.getSimpleName(), getFromInputDate().toString("yyyyMMdd"),
-                        exportClass.getSimpleName(), getToInputDate().toString("yyyyMMdd"));
+    private final static Class exportClass = IncomingInvoiceExport.class;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob downloadToExcel(final String fileName) {
 
         final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
                 .map(x -> new IncomingInvoiceExport(x))
@@ -102,21 +104,46 @@ public class IncomingInvoiceDownloadManager {
 
         WorksheetSpec spec = new WorksheetSpec(exportClass, "invoiceExport");
         WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
-        return excelService.toExcel(worksheetContent, fileName.concat(".xlsx"));
+        return excelService.toExcel(worksheetContent, fileName);
+    }
+
+    public String default0DownloadToExcel() {
+        return defaultFileNameWithSuffix(".xlsx");
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public Blob downloadToPdf() {
-        final String fileName = "export.xlsx";
+    public Blob downloadToPdf(final String fileName) throws IOException {
 
-        final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
-                .map(x -> new IncomingInvoiceExport(x))
+        // TODO: there's a risk this might blow up memory.  To fix this, need a new streaming API for pdfBoxService
+
+        final List<byte[]> pdfByteList = getInvoices().stream()
+                .map(incomingInvoice -> lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(x -> x.getBlob().getBytes())
                 .collect(Collectors.toList());
 
-        WorksheetSpec spec = new WorksheetSpec(IncomingInvoiceExport.class, "invoiceExport");
-        WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
-        return excelService.toExcel(worksheetContent, fileName);
+        final byte[][] pdfByteArrays = pdfByteList.toArray(new byte[0][0]);
+        final byte[] singlePdf = pdfBoxService.merge(pdfByteArrays);
+
+        return new Blob(fileName, "application/pdf", singlePdf);
     }
+
+    public String default0DownloadToPdf() {
+        return defaultFileNameWithSuffix(".pdf");
+    }
+
+
+    private String defaultFileNameWithSuffix(final String suffix) {
+        final String fileName = String.format("%s_%s-%s",
+                exportClass.getSimpleName(),
+                getFromInputDate().toString("yyyyMMdd"),
+                getToInputDate().toString("yyyyMMdd")
+        );
+
+        return fileName.concat(suffix);
+    }
+
 
 
     @javax.inject.Inject
@@ -124,5 +151,11 @@ public class IncomingInvoiceDownloadManager {
 
     @javax.inject.Inject
     private ExcelService excelService;
+
+    @javax.inject.Inject
+    private PdfBoxService pdfBoxService;
+
+    @javax.inject.Inject
+    private LookupAttachedPdfService lookupAttachedPdfService;
 
 }
