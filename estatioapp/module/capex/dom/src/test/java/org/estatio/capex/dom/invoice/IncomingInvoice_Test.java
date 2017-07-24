@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -187,4 +188,12 @@ public class IncomingInvoice_Test {
 
     }
 
+    @Ignore // WIP
+    @Test
+    public void reasonDisabledDueToState() {
+        IncomingInvoice invoice = new IncomingInvoice();
+
+        invoice.reasonDisabledDueToState(invoice);
+
+    }
 }

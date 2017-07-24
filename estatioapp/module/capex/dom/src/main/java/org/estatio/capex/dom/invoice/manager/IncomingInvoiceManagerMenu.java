@@ -13,14 +13,14 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "incomingInvoiceManager.IncomingInvoiceMenu"
+        objectType = "incomingInvoice.IncomingInvoiceManagerMenu"
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         named = "Invoices In",
         menuOrder = "200"
 )
-public class IncomingInvoiceMenu {
+public class IncomingInvoiceManagerMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public IncomingInvoiceDownloadManager downloadInvoices() {
