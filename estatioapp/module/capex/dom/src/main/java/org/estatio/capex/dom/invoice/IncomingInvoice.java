@@ -38,6 +38,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.metamodel.MetaModelService2;
+import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
@@ -272,7 +274,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
 
         public String disableAct() {
-            return incomingInvoice.reasonDisabledDueToState();
+            final Object viewContext = incomingInvoice;
+            return incomingInvoice.reasonDisabledDueToState(viewContext);
         }
 
         public IncomingInvoiceType default0Act() {
@@ -395,7 +398,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         public String disableAct() {
             if (incomingInvoice.isImmutable()) {
-                return incomingInvoice.reasonDisabledDueToState();
+                final Object viewContext = incomingInvoice;
+                return incomingInvoice.reasonDisabledDueToState(viewContext);
             }
             return incomingInvoice.getItems().isEmpty() ? "No items" : null;
         }
@@ -510,7 +514,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         public String disableAct() {
             if (incomingInvoice.isImmutable()) {
-                return incomingInvoice.reasonDisabledDueToState();
+                final Object viewContext = incomingInvoice;
+                return incomingInvoice.reasonDisabledDueToState(viewContext);
             }
             return incomingInvoice.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
         }
@@ -706,7 +711,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     @Override
     public boolean isImmutable() {
-        return reasonDisabledDueToState()!=null;
+        final Object viewContext = this;
+        return reasonDisabledDueToState(viewContext)!=null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -722,7 +728,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditInvoiceNumber(){
-        return reasonDisabledDueToState();
+        final Object viewContext = this;
+        return reasonDisabledDueToState(viewContext);
     }
 
 
@@ -739,7 +746,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditBuyer(){
-        return reasonDisabledDueToState();
+        final Object viewContext = this;
+        return reasonDisabledDueToState(viewContext);
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -756,7 +764,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public String disableEditSeller(){
         if (isImmutable()){
-            return reasonDisabledDueToState();
+            final Object viewContext = this;
+            return reasonDisabledDueToState(viewContext);
         }
         return sellerIsImmutableReason();
     }
@@ -798,7 +807,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableChangeDates(){
-        return reasonDisabledDueToState();
+        final Object viewContext = this;
+        return reasonDisabledDueToState(viewContext);
     }
 
     @Getter @Setter
@@ -849,7 +859,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public String reasonDisabledDueToState() {
+    public String reasonDisabledDueToState(final Object viewContext) {
         final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
         // guard for historic invoices (and invoice items)
         if (approvalState1==null){
@@ -858,11 +868,18 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         switch (approvalState1) {
         case NEW:
         case COMPLETED:
+            final MetaModelService2.Sort sort = metaModelService3.sortOf(viewContext.getClass());
+            if(sort == MetaModelService2.Sort.VIEW_MODEL) {
+                return "Cannot modify through view because invoice is in state of " + getApprovalState();
+            }
             return null;
         default:
             return "Cannot modify because invoice is in state of " + getApprovalState();
         }
     }
+
+    @Inject
+    MetaModelService3 metaModelService3;
 
     @Programmatic
     public String reasonIncomplete(){

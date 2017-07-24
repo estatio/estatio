@@ -231,7 +231,7 @@ public class InvoiceForLease
     }
 
     @Override
-    protected String reasonDisabledDueToState() {
+    protected String reasonDisabledDueToState(final Object viewContext) {
         return getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
     }
 

@@ -7,7 +7,7 @@ public class InvoiceForTesting extends Invoice<InvoiceForTesting> {
     }
 
     @Override
-    protected String reasonDisabledDueToState() {
+    protected String reasonDisabledDueToState(final Object viewContext) {
         return null;
     }
 }

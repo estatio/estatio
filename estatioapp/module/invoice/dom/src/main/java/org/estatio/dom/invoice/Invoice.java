@@ -342,15 +342,17 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
         public String disableExec() {
-            return invoice.reasonDisabledDueToState();
+            final Object viewContext = invoice;
+            return invoice.reasonDisabledDueToState(viewContext);
         }
     }
 
     /**
      * Mandatory hook
      * @return
+     * @param viewContext
      */
-    protected abstract String reasonDisabledDueToState();
+    protected abstract String reasonDisabledDueToState(final Object viewContext);
 
     @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")

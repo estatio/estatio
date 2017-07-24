@@ -505,7 +505,9 @@ public class IncomingDocAsInvoiceViewModel
         if(propertyInvalidReason != null) {
             return propertyInvalidReason;
         }
-        String reasonDisabledDueToState = incomingInvoice.reasonDisabledDueToState();
+        final Object viewContext = this;
+        String reasonDisabledDueToState =
+                incomingInvoice.reasonDisabledDueToState(viewContext);
         if(reasonDisabledDueToState != null) {
             return reasonDisabledDueToState;
         }
