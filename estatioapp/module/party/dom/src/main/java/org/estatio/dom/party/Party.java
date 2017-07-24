@@ -254,6 +254,16 @@ public abstract class Party
         partyRoleRepository.findOrCreate(this, iPartyRoleType);
     }
 
+    @Programmatic
+    public boolean hasPartyRoleType(final PartyRoleType partyRoleType){
+        for (PartyRole role : getRoles()){
+            if (role.getRoleType() == partyRoleType){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Inject
     PartyRoleRepository partyRoleRepository;
 

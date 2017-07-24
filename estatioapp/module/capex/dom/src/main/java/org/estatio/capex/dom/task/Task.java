@@ -20,11 +20,14 @@ import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDateTime;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
@@ -37,6 +40,7 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.role.PartyRoleType;
 
 import lombok.Getter;
@@ -214,7 +218,25 @@ public class Task implements Comparable<Task> {
         return stateTransition != null ? stateTransition.getDomainObject() : null;
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT, invokeOn = InvokeOn.COLLECTION_ONLY)
+    public Task assignTasksToMe() {
+        setPersonAssignedTo(personRepository.me());
+        return this;
+    }
 
+    public String disableAssignTasksToMe() {
+        return isCompleted() ? "Task has already been completed" : null;
+    }
+
+    public String validateAssignTasksToMe(){
+        if (personRepository.me()==null){
+            return "Your login is not linked to a person in Estatio";
+        }
+        if (!personRepository.me().hasPartyRoleType(getAssignedTo())){
+            return "You do not have a role with of role type found on the task";
+        }
+        return null;
+    }
 
     @Override
     public int compareTo(final Task other) {
@@ -230,5 +252,7 @@ public class Task implements Comparable<Task> {
     @Inject
     TitleService titleService;
 
+    @Inject
+    PersonRepository personRepository;
 
 }
