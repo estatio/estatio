@@ -74,7 +74,7 @@ public class IncomingInvoiceExport {
 
         this.invoiceDate = invoice.getInvoiceDate();
         this.sellerIban = invoice.getBankAccount().getIban();
-        this.invoiceStatus = invoice.getStatus().name();
+        this.invoiceStatus = invoice.getApprovalState().name();
 
         this.invoiceType = invoice.getType().name();
 
