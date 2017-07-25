@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Publishing;
@@ -34,6 +35,7 @@ public class CodaMappingManager {
     public static final String SHEET_NAME = "mapping";
 
     @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(name = "mappings", sequence = "1")
     public Blob downloadToExcel(final String fileName) {
 
         final List<CodaMappingImport> exports = getMappings().stream()
@@ -50,6 +52,7 @@ public class CodaMappingManager {
     }
 
     @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    @MemberOrder(name = "mappings", sequence = "2")
     public CodaMappingManager upload(
             @Parameter(fileAccept = ".xlsx")
             final Blob spreadsheet) {
@@ -66,7 +69,7 @@ public class CodaMappingManager {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(defaultView = "table")
-    List<CodaMapping> getMappings() {
+    public List<CodaMapping> getMappings() {
         return codaMappingRepository.all();
     }
 

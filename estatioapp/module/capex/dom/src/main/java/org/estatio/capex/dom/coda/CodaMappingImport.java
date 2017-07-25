@@ -25,43 +25,55 @@ import lombok.Setter;
 
 
 @ViewModel
-@Setter @Getter
 @NoArgsConstructor
 public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImport> {
 
+    @Getter @Setter
     private String documentType;
 
+    @Getter @Setter
     private String incomingInvoiceType;
 
+    @Getter @Setter
     private String transactionType;
 
+    @Getter @Setter
     private String atPath;
 
+    @Getter @Setter
     private String chargeReference;
 
+    @Getter @Setter
     private String chargeName;
 
+    @Getter @Setter
     private String projectType;
 
+    @Getter @Setter
     private String propertyOwnershipType;
 
+    @Getter @Setter
     private String period;
 
+    @Getter @Setter
     private String codaElementLevel;
 
+    @Getter @Setter
     private String codaElementCode;
 
+    @Getter @Setter
     private String codaElementName;
 
+    @Getter @Setter
     private String comment;
 
+    @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate startDate;
 
+    @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate endDate;
-
-    private String test;
 
     /**
      * To allow for usage within fixture scripts also.
@@ -137,11 +149,14 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
         return chargeName.toUpperCase();
     }
 
-    @Inject ChargeRepository chargeRepository;
+    @Inject
+    ChargeRepository chargeRepository;
 
-    @Inject CodaElementRepository codaElementRepository;
+    @Inject
+    CodaElementRepository codaElementRepository;
 
-    @Inject CodaMappingRepository codaMappingRepository;
+    @Inject
+    CodaMappingRepository codaMappingRepository;
 
 
 }
