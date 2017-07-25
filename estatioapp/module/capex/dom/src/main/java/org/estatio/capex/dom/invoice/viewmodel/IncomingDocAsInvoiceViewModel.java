@@ -574,9 +574,11 @@ public class IncomingDocAsInvoiceViewModel
                 }
             }
             if (similarNumberedInvoices.size()>0){
-                String message = "WARNING: Invoices with the same number of this seller are found with invoice date(s): ";
+                String message = "WARNING: Invoices with the same number of this seller are found ";
                 for (IncomingInvoice invoice : similarNumberedInvoices){
-                    message = message.concat(invoice.getInvoiceDate().toString()).concat("; ");
+                    if (invoice.getInvoiceDate()!=null) {
+                        message = message.concat("on date ").concat(invoice.getInvoiceDate().toString()).concat("; ");
+                    }
                 }
                 return message;
             }

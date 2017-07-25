@@ -29,42 +29,49 @@ public class IncomingInvoiceExport {
     @MemberOrder(sequence = "4")
     private final String sellerReference;
     @MemberOrder(sequence = "5")
-    private final LocalDate invoiceDate;
-    @MemberOrder(sequence = "6")
     private final String sellerIban ;
+    @MemberOrder(sequence = "6")
+    private final LocalDate invoiceDate;
     @MemberOrder(sequence = "7")
-    private final String invoiceStatus;
+    private final String invoiceNumber;
     @MemberOrder(sequence = "8")
-    private final BigDecimal netAmount;
+    private final String invoiceStatus;
     @MemberOrder(sequence = "9")
-    private final BigDecimal vatAmount;
+    private final BigDecimal netAmount;
     @MemberOrder(sequence = "10")
-    private final BigDecimal grossAmount;
+    private final BigDecimal vatAmount;
     @MemberOrder(sequence = "11")
-    private final String invoiceType;
+    private final BigDecimal grossAmount;
     @MemberOrder(sequence = "12")
-    private final String propertyReference;
+    private final String invoiceType;
     @MemberOrder(sequence = "13")
-    private final String propertyName;
+    private final String propertyReference;
     @MemberOrder(sequence = "14")
-    private final String projectReference;
+    private final String propertyName;
     @MemberOrder(sequence = "15")
-    private final String chargeReference;
+    private final String projectReference;
     @MemberOrder(sequence = "16")
-    private final String chargeName;
+    private final String chargeReference;
     @MemberOrder(sequence = "17")
-    private final String vatCode;
+    private final String chargeName;
     @MemberOrder(sequence = "18")
-    private final String codaElementCode;
+    private final String vatCode;
     @MemberOrder(sequence = "19")
-    private final String codaElementName;
+    private final String codaElementCode;
     @MemberOrder(sequence = "20")
+    private final String codaElementName;
+    @MemberOrder(sequence = "21")
     private final String documentNumber;
+    @MemberOrder(sequence = "22")
+    private final String comments;
+
 
     public IncomingInvoiceExport(
             final IncomingInvoiceItem item,
             final String documentNumber,
-            final CodaElement codaElement){
+            final CodaElement codaElement,
+            final String comments
+    ){
         IncomingInvoice invoice = (IncomingInvoice) item.getInvoice();
 
         this.buyerReference = invoice.getBuyer().getReference();
@@ -75,6 +82,7 @@ public class IncomingInvoiceExport {
         this.invoiceDate = invoice.getInvoiceDate();
         this.sellerIban = invoice.getBankAccount().getIban();
         this.invoiceStatus = invoice.getApprovalState().name();
+        this.invoiceNumber = invoice.getInvoiceNumber();
 
         this.invoiceType = invoice.getType().name();
 
@@ -95,6 +103,8 @@ public class IncomingInvoiceExport {
 
         this.codaElementCode = codaElement == null ? "" : codaElement.getCode();
         this.codaElementName = codaElement == null ? "": codaElement.getName();
+
+        this.comments = comments == null ? "" : comments;
     }
 
 }

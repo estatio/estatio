@@ -41,7 +41,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.payment.PdfStamper;
+import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 
@@ -133,7 +135,7 @@ public class IncomingInvoiceDownloadManager {
     public Blob downloadToExcel(final String fileName) {
 
         final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
-                .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x), codaElementFor(x)))
+                .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x), codaElementFor(x), commentsFor(x)))
                 .sorted(Comparator.comparing(x -> x.getDocumentNumber()))
                 .collect(Collectors.toList());
 
@@ -152,6 +154,22 @@ public class IncomingInvoiceDownloadManager {
         final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
         return documentIfAny.map(DocumentAbstract::getName).orElse(null);
     }
+
+    private String commentsFor(final IncomingInvoiceItem invoiceItem){
+        StringBuffer result = new StringBuffer();
+        final IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
+        List<IncomingInvoiceApprovalStateTransition> transitions = stateTransitionRepositoryGeneric.findByDomainObject(invoice, IncomingInvoiceApprovalStateTransition.class);
+        for (IncomingInvoiceApprovalStateTransition transition : transitions){
+            if (transition.getTask()!=null && transition.getTask().getComment() !=null){
+                result.append(transition.getTask().getComment());
+                result.append(" | ");
+            }
+        }
+        return result.toString();
+    }
+
+    @Inject
+    protected StateTransitionRepositoryGeneric stateTransitionRepositoryGeneric;
 
     public String default0DownloadToExcel() {
         return defaultFileNameWithSuffix(".xlsx");
@@ -235,5 +253,6 @@ public class IncomingInvoiceDownloadManager {
 
     @Inject
     private PropertyRepository propertyRepository;
+
 
 }
