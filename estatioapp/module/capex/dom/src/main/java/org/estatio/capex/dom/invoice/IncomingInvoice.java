@@ -868,6 +868,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
         switch (approvalState1) {
         case NEW:
+            return null;
         case COMPLETED:
             final MetaModelService2.Sort sort = metaModelService3.sortOf(viewContext.getClass());
             if(sort == MetaModelService2.Sort.VIEW_MODEL) {
