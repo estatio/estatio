@@ -21,16 +21,15 @@ package org.estatio.capex.dom.documents;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
@@ -38,6 +37,7 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.api.DocumentService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentRepository;
+import org.incode.module.document.dom.impl.docs.QDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
@@ -63,11 +63,9 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     private List<Document> doFindIncomingDocuments() {
         final List<Document> documents = findWithNoPaperclips();
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
+        return documents.stream()
                 .filter(document -> DocumentTypeData.docTypeDataFor(document).isIncoming())
-                .toList()
-        );
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -81,11 +79,9 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     private List<Document> doFindUnclassifiedIncomingOrders() {
         final List<Document> documents = findAttachedToExactlyOneFixedAssetOnly();
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
-                        .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_ORDER)
-                        .toList()
-        );
+        return documents.stream()
+                .filter(document -> DocumentTypeData.docTypeDataFor(document) == DocumentTypeData.INCOMING_ORDER)
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -99,41 +95,33 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     private List<Document> doFindUnclassifiedIncomingInvoices() {
         final List<Document> documents = findAttachedToExactlyOneFixedAssetOnly();
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
-                        .filter(document -> DocumentTypeData.docTypeDataFor(document)==DocumentTypeData.INCOMING_INVOICE)
-                        .toList()
-        );
+        return documents.stream()
+                .filter(document -> DocumentTypeData.docTypeDataFor(document) == DocumentTypeData.INCOMING_INVOICE)
+                .collect(Collectors.toList());
     }
 
     @Programmatic
     public List<Document> findAllIncomingDocumentsByName(final String name) {
-        final List<Document> documents = findAllIncomingDocuments();
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
-                .filter(document -> document.getName().equals(name))
-                .toList()
+        final QDocument q = QDocument.candidate();
+        return isisJdoSupport.executeQuery(Document.class,
+                q.name.eq(name)
         );
     }
 
     @Programmatic
     public List<Document> matchAllIncomingDocumentsByName(final String searchPhrase) {
-        final List<Document> documents = findAllIncomingDocuments();
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
-                        .filter(document -> document.getName().toLowerCase().contains(searchPhrase.toLowerCase()))
-                        .toList()
+        final QDocument q = QDocument.candidate();
+        return isisJdoSupport.executeQuery(Document.class,
+                q.name.toLowerCase().indexOf(searchPhrase.toLowerCase()).gt(-1)
         );
     }
 
     @Programmatic
     public List<Document> findAllIncomingDocuments() {
         final List<Document> documents = repositoryService.allInstances(Document.class);
-        return Lists.newArrayList(
-                FluentIterable.from(documents)
-                        .filter(document -> DocumentTypeData.docTypeDataFor(document).getNature()== DocumentTypeData.Nature.INCOMING)
-                        .toList()
-        );
+        return documents.stream()
+                .filter(document -> DocumentTypeData.docTypeDataFor(document).getNature() == DocumentTypeData.Nature.INCOMING)
+                .collect(Collectors.toList());
     }
 
     // TODO: tackle this (and the filtering on DocumentType?) at db level
@@ -194,5 +182,8 @@ public class IncomingDocumentRepository extends DocumentRepository {
 
     @Inject
     DocumentService documentService;
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
 
 }
