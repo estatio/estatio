@@ -43,6 +43,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PdfStamper;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,7 +62,7 @@ public class IncomingInvoiceDownloadManager {
     public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate, final org.estatio.dom.asset.Property property){
         this.fromInputDate = fromInputDate;
         this.toInputDate = toInputDate;
-        this.property = property;
+        this.propertyReference = property == null ? null : property.getReference();
     }
 
     @Getter @Setter
@@ -71,7 +72,11 @@ public class IncomingInvoiceDownloadManager {
     private LocalDate toInputDate;
 
     @Getter @Setter
-    private org.estatio.dom.asset.Property property;
+    private String propertyReference;
+
+    public Property getProperty(){
+        return getPropertyReference() == null ? null : propertyRepository.findPropertyByReference(getPropertyReference());
+    }
 
     public IncomingInvoiceDownloadManager changeParameters(
             final LocalDate fromInputDate,
@@ -80,7 +85,7 @@ public class IncomingInvoiceDownloadManager {
             final org.estatio.dom.asset.Property property){
         setFromInputDate(fromInputDate);
         setToInputDate(toInputDate);
-        setProperty(property);
+        setPropertyReference(property == null ? null : property.getReference());
         return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate, property);
     }
 
@@ -122,7 +127,6 @@ public class IncomingInvoiceDownloadManager {
         return this;
     }
 
-
     private final static Class exportClass = IncomingInvoiceExport.class;
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -130,6 +134,7 @@ public class IncomingInvoiceDownloadManager {
 
         final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
                 .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x), codaElementFor(x)))
+                .sorted(Comparator.comparing(x -> x.getDocumentNumber()))
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(exportClass, "invoiceExport");
@@ -196,11 +201,11 @@ public class IncomingInvoiceDownloadManager {
     public String default0DownloadToPdf() {
         return defaultFileNameWithSuffix(".pdf");
     }
-
-
+    
     private String defaultFileNameWithSuffix(final String suffix) {
-        final String fileName = String.format("%s_%s-%s",
+        final String fileName = String.format("%s_%s_%s-%s",
                 exportClass.getSimpleName(),
+                getPropertyReference() == null ? "" : getPropertyReference(),
                 getFromInputDate().toString("yyyyMMdd"),
                 getToInputDate().toString("yyyyMMdd")
         );
@@ -227,4 +232,8 @@ public class IncomingInvoiceDownloadManager {
 
     @Inject
     private CodaMappingRepository codaMappingRepository;
+
+    @Inject
+    private PropertyRepository propertyRepository;
+
 }
