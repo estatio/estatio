@@ -31,6 +31,8 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.capex.dom.coda.CodaElement;
+import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.payment.PaymentBatch;
@@ -119,6 +121,9 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
     }
 
     protected void deleteAllDirect() {
+
+        deleteFrom(CodaMapping.class);
+        deleteFrom(CodaElement.class);
 
         deleteFrom(BudgetCalculationResultLink.class);
         deleteFrom(BudgetCalculationResult.class);
