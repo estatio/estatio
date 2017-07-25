@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 
+import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.project.Project;
@@ -54,11 +55,17 @@ public class IncomingInvoiceExport {
     @MemberOrder(sequence = "17")
     private final String vatCode;
     @MemberOrder(sequence = "18")
+    private final String codaElementCode;
+    @MemberOrder(sequence = "19")
+    private final String codaElementName;
+    @MemberOrder(sequence = "20")
     private final String documentNumber;
 
-    public IncomingInvoiceExport(final IncomingInvoiceItem item, final String documentNumber){
+    public IncomingInvoiceExport(
+            final IncomingInvoiceItem item,
+            final String documentNumber,
+            final CodaElement codaElement){
         IncomingInvoice invoice = (IncomingInvoice) item.getInvoice();
-
 
         this.buyerReference = invoice.getBuyer().getReference();
         this.buyerName = invoice.getBuyer().getName();
@@ -78,14 +85,16 @@ public class IncomingInvoiceExport {
         final Project project = item.getProject();
         this.projectReference = project == null ? "" : project.getReference();
 
-        this.chargeReference = item.getCharge().getReference();
-        this.chargeName = item.getCharge().getName();
+        this.chargeReference = item.getCharge() == null ? "" : item.getCharge().getReference();
+        this.chargeName =  item.getCharge() == null ? "" : item.getCharge().getName();
         this.vatCode = item.getTax() == null ? "" : item.getTax().getReference();
         this.netAmount = item.getNetAmount();
-        this.vatAmount = item.getVatAmount();
+        this.vatAmount = item.getVatAmount() == null ? BigDecimal.ZERO : item.getVatAmount();
         this.grossAmount = item.getGrossAmount();
         this.documentNumber = documentNumber;
 
+        this.codaElementCode = codaElement == null ? "" : codaElement.getCode();
+        this.codaElementName = codaElement == null ? "": codaElement.getName();
     }
 
 }

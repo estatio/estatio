@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
@@ -30,12 +33,16 @@ import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
+import org.estatio.capex.dom.coda.CodaElement;
+import org.estatio.capex.dom.coda.CodaMapping;
+import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.payment.PdfStamper;
+import org.estatio.dom.asset.Property;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,9 +58,10 @@ public class IncomingInvoiceDownloadManager {
         return "Invoice Download";
     }
 
-    public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate){
+    public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate, final org.estatio.dom.asset.Property property){
         this.fromInputDate = fromInputDate;
         this.toInputDate = toInputDate;
+        this.property = property;
     }
 
     @Getter @Setter
@@ -62,28 +70,42 @@ public class IncomingInvoiceDownloadManager {
     @Getter @Setter
     private LocalDate toInputDate;
 
-    public IncomingInvoiceDownloadManager changeDates(final LocalDate fromInputDate, final LocalDate toInputDate){
+    @Getter @Setter
+    private org.estatio.dom.asset.Property property;
+
+    public IncomingInvoiceDownloadManager changeParameters(
+            final LocalDate fromInputDate,
+            final LocalDate toInputDate,
+            @Nullable
+            final org.estatio.dom.asset.Property property){
         setFromInputDate(fromInputDate);
         setToInputDate(toInputDate);
-        return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate);
+        setProperty(property);
+        return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate, property);
     }
 
-    public LocalDate default0ChangeDates() {
+    public LocalDate default0ChangeParameters() {
         return getFromInputDate();
     }
 
-    public LocalDate default1ChangeDates() {
+    public LocalDate default1ChangeParameters() {
         return getToInputDate();
+    }
+
+    public Property default2ChangeParameters() {
+        return getProperty();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(defaultView = "table")
     public List<IncomingInvoice> getInvoices() {
-        final Predicate<IncomingInvoice> incomingInvoicePredicate = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.NEW);
-        return incomingInvoiceRepository.findByDateReceivedBetween(getFromInputDate(), getToInputDate())
+        final Predicate<IncomingInvoice> excludeNew = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.NEW);
+        final Predicate<IncomingInvoice> excludeDiscarded = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.DISCARDED);
+        return incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(getProperty(), getFromInputDate(), getToInputDate())
                 .stream()
-                .filter(incomingInvoicePredicate)
+                .filter(excludeNew)
+                .filter(excludeDiscarded)
                 .collect(Collectors.toList());
     }
 
@@ -107,12 +129,17 @@ public class IncomingInvoiceDownloadManager {
     public Blob downloadToExcel(final String fileName) {
 
         final List<IncomingInvoiceExport> exports = getInvoiceItems().stream()
-                .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x)))
+                .map(x -> new IncomingInvoiceExport(x, documentNumberFor(x), codaElementFor(x)))
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(exportClass, "invoiceExport");
         WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
         return excelService.toExcel(worksheetContent, fileName);
+    }
+
+    private CodaElement codaElementFor(final IncomingInvoiceItem x) {
+        final List<CodaMapping> codaMappings = codaMappingRepository.findMatching(x.getIncomingInvoiceType(), x.getCharge());
+        return codaMappings.size() == 0 ? null : codaMappings.get(0).getCodaElement();
     }
 
     private String documentNumberFor(final IncomingInvoiceItem invoiceItem) {
@@ -198,4 +225,6 @@ public class IncomingInvoiceDownloadManager {
     @javax.inject.Inject
     private LookupAttachedPdfService lookupAttachedPdfService;
 
+    @Inject
+    private CodaMappingRepository codaMappingRepository;
 }

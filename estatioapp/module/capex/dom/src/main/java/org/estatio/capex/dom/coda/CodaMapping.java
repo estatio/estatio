@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.charge.Charge;
 
 import lombok.Getter;
@@ -27,11 +28,9 @@ import lombok.Setter;
                         + "WHERE "
                         + "atPath == :atPath && "
                         + "documentType == :documentType && "
+                        + "incomingInvoiceType == :incomingInvoiceType && "
                         + "codaTransactionType == :codaTransactionType && "
                         + "charge == :charge && "
-                        + "projectFilter == :projectFilter && "
-                        + "propertyFilter == :propertyFilter && "
-                        + "budgetFilter == :budgetFilter && "
                         + "propertyIsFullyOwned == :propertyIsFullyOwned && "
                         + "periodStartDate == :periodStartDate && "
                         + "periodEndDate == :periodEndDate && "
@@ -42,7 +41,7 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
-                name = "CodaMapping_Alllllllll_UNQ", members = { "atPath", "documentType", "codaTransactionType", "charge", "projectFilter", "propertyFilter", "budgetFilter", "propertyIsFullyOwned", "periodStartDate", "periodEndDate", "startDate", "endDate", "codaElement" }),
+                name = "CodaMapping_UNQ", members = { "atPath", "documentType", "incomingInvoiceType", "codaTransactionType", "charge", "propertyIsFullyOwned", "periodStartDate", "periodEndDate", "startDate", "endDate", "codaElement" }),
 })
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -56,19 +55,13 @@ public class CodaMapping {
     private DocumentType documentType;
 
     @Column(length = 50, allowsNull = "false")
+    private IncomingInvoiceType incomingInvoiceType;
+
+    @Column(length = 50, allowsNull = "false")
     private CodaTransactionType codaTransactionType;
 
     @Column(allowsNull = "false", name = "chargeId")
     private Charge charge;
-
-    @Column(length = 50, allowsNull = "false")
-    private CodaMappingFilter propertyFilter;
-
-    @Column(length = 50, allowsNull = "false")
-    private CodaMappingFilter projectFilter;
-
-    @Column(length = 50, allowsNull = "false")
-    private CodaMappingFilter budgetFilter;
 
     private boolean propertyIsFullyOwned;
 

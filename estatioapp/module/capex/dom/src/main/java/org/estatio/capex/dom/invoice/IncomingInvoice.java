@@ -127,10 +127,11 @@ import lombok.Setter;
                         + "WHERE dueDate >= :fromDate "
                         + "   && dueDate <= :toDate "),
         @Query(
-                name = "findByDateReceivedBetween", language = "JDOQL",
+                name = "findByPropertyAndDateReceivedBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE dateReceived >= :fromDate "
+                        + "WHERE property == :property "
+                        + "   && dateReceived >= :fromDate "
                         + "   && dateReceived <= :toDate "),
         @Query(
                 name = "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod", language = "JDOQL",

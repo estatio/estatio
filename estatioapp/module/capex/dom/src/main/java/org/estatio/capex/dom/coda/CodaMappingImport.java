@@ -13,20 +13,25 @@ import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @ViewModel
 @Setter @Getter
+@NoArgsConstructor
 public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImport> {
 
     private String documentType;
+
+    private String incomingInvoiceType;
 
     private String transactionType;
 
@@ -36,30 +41,19 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
 
     private String chargeName;
 
-    private String hasProperty;
-
-    private String hasProject;
-
     private String projectType;
 
-    private String hasBudget;
-
-    private String propertyIsFullyOwned;
+    private String propertyOwnershipType;
 
     private String period;
 
-    private String el5Code;
+    private String codaElementLevel;
 
-    private String el5Name;
+    private String codaElementCode;
+
+    private String codaElementName;
 
     private String comment;
-
-
-    @Column(allowsNull = "false", length = 12)
-    private CodaElementLevel codaElementLevel;
-
-    @Column(allowsNull = "false", length = 50, name = "codaElementId")
-    private CodaElement codaElement;
 
     @Column(allowsNull = "true")
     private LocalDate startDate;
@@ -67,6 +61,7 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     @Column(allowsNull = "true")
     private LocalDate endDate;
 
+    private String test;
 
     /**
      * To allow for usage within fixture scripts also.
@@ -80,48 +75,58 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     @Setter
     private ExcelFixture2 excelFixture2;
 
+    public CodaMappingImport(final CodaMapping codaMapping) {
+
+        this.documentType = codaMapping.getDocumentType().name();
+        this.incomingInvoiceType = codaMapping.getIncomingInvoiceType().name();
+        this.transactionType = codaMapping.getCodaTransactionType().name();
+        this.atPath = codaMapping.getAtPath();
+        this.chargeReference = codaMapping.getCharge().getReference();
+        this.chargeName = codaMapping.getCharge().getName();
+        this.propertyOwnershipType = codaMapping.isPropertyIsFullyOwned() ? "FULL" : "PARTIAL";
+        this.period = PeriodUtil.periodFromInterval(new LocalDateInterval(codaMapping.getStartDate(), codaMapping.getEndDate()));
+        this.codaElementLevel = codaMapping.getCodaElement().getLevel().name();
+        this.codaElementCode = codaMapping.getCodaElement().getCode();
+        this.codaElementName = codaMapping.getCodaElement().getName();
+        this.startDate = codaMapping.getStartDate();
+        this.endDate = codaMapping.getEndDate();
+    }
+
     @Override public void handleRow(final CodaMappingImport previousRow) {
 
-        atPath = atPath == null ? previousRow.atPath : atPath;
+        atPath = atPath == null && previousRow != null ? previousRow.atPath : atPath;
 
-        if (documentType != null && chargeName != null) {
-            DocumentType documentTypeEnum = DocumentType.valueOf(documentType);
+        if (codaElementName == null){
+            String.format("");
+        }
 
-            CodaElement codaElement = codaElementRepository.findOrCreate(CodaElementLevel.LEVEL_5, el5Code, el5Name);
+        if ((documentType != null || incomingInvoiceType != null) && chargeName != null) {
+            IncomingInvoiceType incomingInvoiceTypeEnum = IncomingInvoiceType.valueOf(incomingInvoiceType);
+            DocumentType documentTypeEnum = incomingInvoiceTypeEnum == null ? DocumentType.valueOf(documentType) : DocumentType.INVOICE_IN;
+            CodaElementLevel codaElementLevelEnum = CodaElementLevel.valueOf(codaElementLevel);
+            CodaElement codaElement = codaElementRepository.findOrCreate(codaElementLevelEnum, codaElementCode, codaElementName);
             Charge charge = chargeRepository.findOrCreate(atPath, chargeReference != null ? chargeReference : chargeNameToReference(chargeName), chargeName, "", Applicability.INCOMING);
 
             final LocalDateInterval interval = period == null ? new LocalDateInterval() : PeriodUtil.yearFromPeriod(period);
 
             final CodaTransactionType codaTransactionType = valueOfElseDefault(transactionType, CodaTransactionType.STAT);
 
-            final CodaMappingFilter hasProject = valueOfElseDefault(this.hasProject, CodaMappingFilter.AMBIGUOUS);
-            final CodaMappingFilter hasProperty = valueOfElseDefault(this.hasProperty, CodaMappingFilter.AMBIGUOUS);
-            final CodaMappingFilter hasBudget = valueOfElseDefault(this.hasBudget, CodaMappingFilter.AMBIGUOUS);
-
             codaMappingRepository.findOrCreate(
                     atPath,
                     documentTypeEnum,
+                    incomingInvoiceTypeEnum,
                     codaTransactionType,
                     charge,
-                    hasProject,
-                    hasProperty,
-                    hasBudget,
-                    asBoolean(propertyIsFullyOwned, true),
+                    propertyFullyOwned(propertyOwnershipType),
                     interval.startDate(),
                     interval.endDate(),
                     startDate,
-                    endDate,
-                    codaElement);
+                    endDate, codaElement);
         }
     }
 
-
-    private boolean asBoolean(final String stringValue, final boolean defaultValue) {
-        return stringValue == null ? defaultValue : parseBoolean2(stringValue);
-    }
-
-    private static boolean parseBoolean2(final String stringValue) {
-        return stringValue == "YES" ? true : false;
+    private static boolean propertyFullyOwned(final String propertyOwnershipType) {
+        return propertyOwnershipType != null && propertyOwnershipType.equals("PARTIAL") ? false : true;
     }
 
     private static <E extends Enum<E>> E valueOfElseDefault(final String stringValue, final E defaultValue) {

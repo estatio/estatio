@@ -57,11 +57,12 @@ public class IncomingInvoiceRepository {
 
 
     @Programmatic
-    public List<IncomingInvoice> findByDateReceivedBetween(final LocalDate fromDate, final LocalDate toDate) {
+    public List<IncomingInvoice> findByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
-                        "findByDateReceivedBetween",
+                        "findByPropertyAndDateReceivedBetween",
+                        "property", property,
                         "fromDate", fromDate,
                         "toDate", toDate));
     }

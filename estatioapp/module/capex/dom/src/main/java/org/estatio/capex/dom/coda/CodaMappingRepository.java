@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.charge.Charge;
 
@@ -32,11 +33,8 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
     public CodaMapping findOrCreate(
             String atPath,
             DocumentType documentType,
-            CodaTransactionType codaTransactionType,
+            final IncomingInvoiceType incomingInvoiceType, CodaTransactionType codaTransactionType,
             Charge charge,
-            CodaMappingFilter projectFilter,
-            CodaMappingFilter propertyFilter,
-            CodaMappingFilter budgetFilter,
             boolean propertyIsFullyOwned,
             LocalDate periodStartDate,
             LocalDate periodEndDate,
@@ -47,11 +45,9 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
         final CodaMapping codaMapping = findByAll(
                 atPath,
                 documentType,
+                incomingInvoiceType,
                 codaTransactionType,
                 charge,
-                projectFilter,
-                propertyFilter,
-                budgetFilter,
                 propertyIsFullyOwned,
                 periodStartDate,
                 periodEndDate,
@@ -63,43 +59,36 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
         return create(
                 atPath,
                 documentType,
+                incomingInvoiceType,
                 codaTransactionType,
                 charge,
-                projectFilter,
-                propertyFilter,
-                budgetFilter,
                 propertyIsFullyOwned,
                 periodStartDate,
                 periodEndDate,
                 startDate,
-                endDate,
-                codaElement);
+                endDate, codaElement);
     }
 
     @Programmatic
     public CodaMapping findByAll(
-            String atPath,
-            DocumentType documentType,
-            CodaTransactionType codaTransactionType,
-            Charge charge,
-            CodaMappingFilter projectFilter,
-            CodaMappingFilter propertyFilter,
-            CodaMappingFilter budgetFilter,
-            boolean propertyIsFullyOwned,
-            LocalDate periodStartDate,
-            LocalDate periodEndDate,
-            LocalDate startDate,
-            LocalDate endDate,
-            CodaElement codaElement
+            final String atPath,
+            final DocumentType documentType,
+            final IncomingInvoiceType incomingInvoiceType,
+            final CodaTransactionType codaTransactionType,
+            final Charge charge,
+            final boolean propertyIsFullyOwned,
+            final LocalDate periodStartDate,
+            final LocalDate periodEndDate,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final CodaElement codaElement
     ) {
         return uniqueMatch("findByAll",
                 "atPath", atPath,
                 "documentType", documentType,
+                "incomingInvoiceType", incomingInvoiceType,
                 "codaTransactionType", codaTransactionType,
                 "charge", charge,
-                "projectFilter", projectFilter,
-                "propertyFilter", propertyFilter,
-                "budgetFilter", budgetFilter,
                 "propertyIsFullyOwned", propertyIsFullyOwned,
                 "periodStartDate", periodStartDate,
                 "periodEndDate", periodEndDate,
@@ -109,28 +98,23 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
     }
 
     private CodaMapping create(
-            String atPath,
-            DocumentType documentType,
-            CodaTransactionType codaTransactionType,
-            Charge charge,
-            CodaMappingFilter projectFilter,
-            CodaMappingFilter propertyFilter,
-            CodaMappingFilter budgetFilter,
-            boolean propertyIsFullyOwned,
-            LocalDate periodStartDate,
-            LocalDate periodEndDate,
-            LocalDate startDate,
-            LocalDate endDate,
-            CodaElement codaElement
+            final String atPath,
+            final DocumentType documentType,
+            final IncomingInvoiceType incomingInvoiceType, CodaTransactionType codaTransactionType,
+            final Charge charge,
+            final boolean propertyIsFullyOwned,
+            final LocalDate periodStartDate,
+            final LocalDate periodEndDate,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final CodaElement codaElement
     ) {
         CodaMapping codaMapping = newTransientInstance();
         codaMapping.setAtPath(atPath);
         codaMapping.setDocumentType(documentType);
+        codaMapping.setIncomingInvoiceType(incomingInvoiceType);
         codaMapping.setCodaTransactionType(codaTransactionType);
-        codaMapping.setBudgetFilter(budgetFilter);
         codaMapping.setCharge(charge);
-        codaMapping.setProjectFilter(projectFilter);
-        codaMapping.setPropertyFilter(propertyFilter);
         codaMapping.setPropertyIsFullyOwned(propertyIsFullyOwned);
         codaMapping.setPeriodStartDate(periodStartDate);
         codaMapping.setPeriodEndDate(periodEndDate);
@@ -158,21 +142,20 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
     }
 
     public List<CodaMapping> findMatching(
-            final Charge charge,
-            final CodaMappingFilter budgetFilter,
-            final CodaMappingFilter projectFilter,
-            final CodaMappingFilter propertyFilter
+            final IncomingInvoiceType incomingInvoiceType,
+            final Charge charge
     ) {
         final QCodaMapping q = QCodaMapping.candidate();
         return isisJdoSupport.executeQuery(
                 CodaMapping.class,
                 q.charge.eq(charge)
-                        .and(q.projectFilter.eq(projectFilter).or(q.projectFilter.eq(CodaMappingFilter.AMBIGUOUS)))
-                        .and(q.budgetFilter.eq(budgetFilter).or(q.budgetFilter.eq(CodaMappingFilter.AMBIGUOUS)))
-                        .and(q.propertyFilter.eq(propertyFilter).or(q.propertyFilter.eq(CodaMappingFilter.AMBIGUOUS)))
+                        .and(q.incomingInvoiceType.eq(incomingInvoiceType))
         ).stream().collect(Collectors.toList());
     }
 
     @Inject IsisJdoSupport isisJdoSupport;
 
+    public List<CodaMapping> all() {
+        return allInstances();
+    }
 }

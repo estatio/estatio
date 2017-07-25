@@ -11,10 +11,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.coda.CodaMapping;
-import org.estatio.capex.dom.coda.CodaMappingFilter;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
-import org.estatio.dom.charge.Charge;
 
 @Mixin
 public class IncomingInvoiceViewModel_codaMappings {
@@ -28,13 +26,7 @@ public class IncomingInvoiceViewModel_codaMappings {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<CodaMapping> $$() {
-
-        final Charge charge = item.getCharge();
-        CodaMappingFilter budgetFilter = item.getBudgetItem() != null ? CodaMappingFilter.YES : CodaMappingFilter.NO;
-        CodaMappingFilter projectFilter = item.getProject() != null ? CodaMappingFilter.YES : CodaMappingFilter.NO;
-        CodaMappingFilter repositoryFilter = item.getProject() != null ? CodaMappingFilter.YES : CodaMappingFilter.NO;
-
-        return repository.findMatching(charge, budgetFilter, projectFilter, repositoryFilter);
+        return repository.findMatching(item.getIncomingInvoiceType(), item.getCharge());
     }
 
     @Inject CodaMappingRepository repository;

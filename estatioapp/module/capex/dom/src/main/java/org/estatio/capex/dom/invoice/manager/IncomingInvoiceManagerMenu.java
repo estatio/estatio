@@ -24,7 +24,7 @@ public class IncomingInvoiceManagerMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public IncomingInvoiceDownloadManager downloadInvoices() {
-        final IncomingInvoiceDownloadManager incomingInvoiceDownloadManager = new IncomingInvoiceDownloadManager(LocalDate.now().withDayOfMonth(1), LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1));
+        final IncomingInvoiceDownloadManager incomingInvoiceDownloadManager = new IncomingInvoiceDownloadManager(LocalDate.now().withDayOfMonth(1), LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1), null);
         serviceRegistry2.injectServicesInto(incomingInvoiceDownloadManager);
         return incomingInvoiceDownloadManager.init();
     }

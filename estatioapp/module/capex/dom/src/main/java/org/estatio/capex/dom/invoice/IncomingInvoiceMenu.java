@@ -20,6 +20,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.dom.asset.Property;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -89,15 +90,15 @@ public class IncomingInvoiceMenu {
 
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<IncomingInvoice> findInvoicesByDateReceivedBetween(final LocalDate fromDate, final LocalDate toDate) {
-        return incomingInvoiceRepository.findByDateReceivedBetween(fromDate, toDate);
+    public List<IncomingInvoice> findInvoicesByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
+        return incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(property, fromDate, toDate);
     }
 
-    public LocalDate default0FindInvoicesByDateReceivedBetween() {
+    public LocalDate default1FindInvoicesByPropertyAndDateReceivedBetween() {
         return clockService.now().minusMonths(3);
     }
 
-    public LocalDate default1FindInvoicesByDateReceivedBetween() {
+    public LocalDate default2FindInvoicesByPropertyAndDateReceivedBetween() {
         return clockService.now();
     }
 
