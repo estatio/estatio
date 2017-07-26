@@ -590,7 +590,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      * </p>
      */
     @Getter @Setter
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "true")
     private IncomingInvoiceType type;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
