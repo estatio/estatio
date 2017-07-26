@@ -73,11 +73,13 @@ public class IncomingInvoice_Test {
         String result = invoice.reasonIncomplete();
 
         // then
-        assertThat(result).isEqualTo("invoice number, buyer, seller, date received, due date, net amount, gross amount, (on item 1) start date, end date, net amount, vat amount, gross amount, charge required");
+        assertThat(result).isEqualTo("incoming invoice type, invoice number, buyer, seller, date received, due date, net amount, gross amount, (on item 1) incoming invoice type, start date, end date, net amount, vat amount, gross amount, charge required");
 
         // and when
+        invoice.setType(IncomingInvoiceType.CAPEX);
         invoice.setInvoiceNumber("123");
         invoice.setNetAmount(new BigDecimal("100"));
+        item1.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
         item1.setStartDate(new LocalDate());
         item1.setEndDate(new LocalDate());
         item1.setNetAmount(new BigDecimal("100"));

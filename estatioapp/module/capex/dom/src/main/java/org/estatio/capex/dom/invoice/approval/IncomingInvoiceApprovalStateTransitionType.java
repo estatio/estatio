@@ -76,7 +76,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (hasProperty) {
                     return FixedAssetRoleTypeEnum.PROPERTY_MANAGER;
                 }
-
+                // guard since EST-1508 type can be not set
+                if (incomingInvoice.getType()==null) return null;
                 switch (incomingInvoice.getType()) {
                 case CAPEX:
                 case PROPERTY_EXPENSES:
@@ -120,6 +121,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalStateTransition,
                     IncomingInvoiceApprovalStateTransitionType,
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                // guard since EST-1508 type can be not set
+                if (incomingInvoice.getType()==null) return null;
+
                 switch (incomingInvoice.getType()) {
                 case CAPEX:
                     return ProjectRoleTypeEnum.PROJECT_MANAGER;
@@ -146,6 +150,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            // guard since EST-1508 type can be not set
+            if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.LOCAL_EXPENSES;
         }
     },
@@ -159,6 +165,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
+            // guard since EST-1508 type can be not set
+            if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.CORPORATE_EXPENSES;
         }
     },

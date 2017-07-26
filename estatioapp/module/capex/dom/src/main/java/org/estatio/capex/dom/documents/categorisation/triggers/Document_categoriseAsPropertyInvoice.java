@@ -17,7 +17,6 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -49,7 +48,7 @@ public class Document_categoriseAsPropertyInvoice
         LocalDate dueDate = document.getCreatedAt().toLocalDate().plusDays(30);
 
         final IncomingInvoice incomingInvoice = incomingInvoiceRepository.create(
-                IncomingInvoiceType.PROPERTY_EXPENSES, // a reasonable default
+                null, // EST-1508: the users prefer no default
                 null, // invoiceNumber
                 property,
                 document.getAtPath(),

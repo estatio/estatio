@@ -381,7 +381,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
             incomingInvoiceItemRepository.addItem(
                     incomingInvoice,
-                    incomingInvoice.getType(),
+                    incomingInvoice.getType()!=null ? incomingInvoice.getType() : null,
                     newItemCharge,
                     newItemDescription,
                     newItemNetAmount,
@@ -886,6 +886,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public String reasonIncomplete(){
         StringBuffer buffer = new StringBuffer();
+        if (getType()==null){
+            buffer.append("incoming invoice type, ");
+        }
         if (getInvoiceNumber()==null){
             buffer.append("invoice number, ");
         }

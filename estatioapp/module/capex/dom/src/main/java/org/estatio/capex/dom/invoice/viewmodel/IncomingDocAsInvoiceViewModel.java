@@ -500,7 +500,9 @@ public class IncomingDocAsInvoiceViewModel
     @Override
     protected String reasonNotEditableIfAny() {
         IncomingInvoice incomingInvoice = getDomainObject();
-
+        if (getIncomingInvoiceType() == null){
+            return "Incoming invoice type is required";
+        }
         String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());
         if(propertyInvalidReason != null) {
             return propertyInvalidReason;

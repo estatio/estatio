@@ -396,7 +396,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     private String budgetItemIsImmutableReason(){
         IncomingInvoice invoice = (IncomingInvoice) this.getInvoice();
-        if (invoice.getType()!=IncomingInvoiceType.SERVICE_CHARGES){
+        if (invoice.getType()==null || invoice.getType()!=IncomingInvoiceType.SERVICE_CHARGES){
             return "Budget item cannot be changed because the invoice has not type service charges";
         }
         if (this.isLinkedToOrderItem()){
@@ -478,6 +478,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Programmatic
     public String reasonIncomplete(){
         StringBuffer buffer = new StringBuffer();
+        if (getIncomingInvoiceType()==null){
+            buffer.append("incoming invoice type, ");
+        }
         if (getStartDate()==null){
             buffer.append("start date, ");
         }
