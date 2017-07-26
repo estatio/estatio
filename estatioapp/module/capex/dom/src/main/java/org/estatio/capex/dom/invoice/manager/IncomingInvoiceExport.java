@@ -84,7 +84,7 @@ public class IncomingInvoiceExport {
         this.invoiceStatus = invoice.getApprovalState().name();
         this.invoiceNumber = invoice.getInvoiceNumber();
 
-        this.invoiceType = invoice.getType().name();
+        this.invoiceType = item.getIncomingInvoiceType().name(); // since the mapping is determined by the item type rather than the invoice type
 
         final Property property = invoice.getProperty();
         this.propertyReference = property == null ? "" :property.getReference();
