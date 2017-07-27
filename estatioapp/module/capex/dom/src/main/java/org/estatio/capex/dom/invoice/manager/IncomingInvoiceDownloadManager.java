@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
@@ -47,6 +48,7 @@ import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
@@ -68,10 +70,11 @@ public class IncomingInvoiceDownloadManager {
         return "Invoice Download";
     }
 
-    public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate, final org.estatio.dom.asset.Property property){
+    public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate, final org.estatio.dom.asset.Property property, final IncomingInvoiceType incomingInvoiceType){
         this.fromInputDate = fromInputDate;
         this.toInputDate = toInputDate;
         this.propertyReference = property == null ? null : property.getReference();
+        this.incomingInvoiceTypeName = incomingInvoiceType == null ? null : incomingInvoiceType.name();
     }
 
     @Getter @Setter
@@ -83,19 +86,30 @@ public class IncomingInvoiceDownloadManager {
     @Getter @Setter
     private String propertyReference;
 
+    @Getter @Setter
+    @PropertyLayout(named = "Incoming Invoice Type")
+    private String incomingInvoiceTypeName;
+
     public Property getProperty(){
         return getPropertyReference() == null ? null : propertyRepository.findPropertyByReference(getPropertyReference());
+    }
+
+    private IncomingInvoiceType getIncomingInvoiceType() {
+        return getIncomingInvoiceTypeName() == null ? null : IncomingInvoiceType.valueOf(getIncomingInvoiceTypeName());
     }
 
     public IncomingInvoiceDownloadManager changeParameters(
             final LocalDate fromInputDate,
             final LocalDate toInputDate,
             @Nullable
-            final org.estatio.dom.asset.Property property){
+            final org.estatio.dom.asset.Property property,
+            @Nullable
+            final IncomingInvoiceType incomingInvoiceType){
         setFromInputDate(fromInputDate);
         setToInputDate(toInputDate);
         setPropertyReference(property == null ? null : property.getReference());
-        return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate, property);
+        setIncomingInvoiceTypeName(incomingInvoiceType == null ? null : incomingInvoiceType.name());
+        return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate, property, incomingInvoiceType);
     }
 
     public LocalDate default0ChangeParameters() {
@@ -110,16 +124,22 @@ public class IncomingInvoiceDownloadManager {
         return getProperty();
     }
 
+    public IncomingInvoiceType default3ChangeParameters() {
+        return getIncomingInvoiceType();
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @CollectionLayout(defaultView = "table")
     public List<IncomingInvoice> getInvoices() {
         final Predicate<IncomingInvoice> excludeNew = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.NEW);
         final Predicate<IncomingInvoice> excludeDiscarded = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.DISCARDED);
+        final Predicate<IncomingInvoice> filterType = getIncomingInvoiceType()!= null ? x -> x.getType().equals(getIncomingInvoiceType()) : x->true;
         return incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(getProperty(), getFromInputDate(), getToInputDate())
                 .stream()
                 .filter(excludeNew)
                 .filter(excludeDiscarded)
+                .filter(filterType)
                 .collect(Collectors.toList());
     }
 
