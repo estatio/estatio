@@ -78,6 +78,9 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
+import org.estatio.capex.dom.pdfmanipulator.ExtractSpec;
+import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
+import org.estatio.capex.dom.pdfmanipulator.Stamp;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -585,15 +588,18 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                         rightLines.add(proof);
 
                         URI uri = deepLinkService.deepLinkFor(invoice);
+
+                        final Stamp stamp = new Stamp(leftLines, rightLines, uri.toString());
                         final byte[] firstPageInvoiceDocBytes =
-                                pdfStamper.firstPageWithStampOf(invoiceDocBytes, leftLines, rightLines, uri.toString());
+                                pdfManipulator.extractAndStamp(invoiceDocBytes, ExtractSpec.FIRST_PAGE_ONLY, stamp);
 
                         pdfBytes.add(firstPageInvoiceDocBytes);
 
                         if(attachProof) {
                             final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
                             final byte[] ibanProofBytes = ibanProofDoc.asBytes();
-                            final byte[] firstPageIbanProofDocBytes = pdfStamper.firstPageOf(ibanProofBytes);
+                            final byte[] firstPageIbanProofDocBytes =
+                                    pdfManipulator.extract(ibanProofBytes, ExtractSpec.FIRST_PAGE_ONLY);
                             pdfBytes.add(firstPageIbanProofDocBytes);
                         }
                     }
@@ -629,7 +635,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         DeepLinkService deepLinkService;
 
         @Inject
-        PdfStamper pdfStamper;
+        PdfManipulator pdfManipulator;
     }
 
     @Programmatic

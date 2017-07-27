@@ -1,11 +1,11 @@
-package org.estatio.capex.dom.payment;
+package org.estatio.capex.dom.pdfmanipulator;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -24,19 +24,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-@DomainService(nature = NatureOfService.DOMAIN)
-public class PdfStamper {
+import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 
-    static class Line {
-        private final String text;
-        private final Color color;
-        private final String hyperlink;
-        Line(final String text, final Color color, final String hyperlink) {
-            this.text = text;
-            this.color = color;
-            this.hyperlink = hyperlink;
-        }
-    }
+@DomainService(nature = NatureOfService.DOMAIN)
+public class PdfManipulator {
 
     private static final float X_MARGIN_LEFT = 50F;
     private static final float X_MARGIN_RIGHT = 290F;
@@ -48,127 +39,99 @@ public class PdfStamper {
 
     private static final float TEXT_LINE_HEIGHT = 14F;
     private static final int TEXT_X_PADDING = 4;
-    private static final Color TEXT_COLOR = Color.BLUE;
+    static final Color TEXT_COLOR = Color.BLUE;
     private static final PDFont TEXT_FONT = PDType1Font.COURIER;
     private static final int TEXT_FONT_SIZE = 10;
 
-    private static final Color HYPERLINK_COLOR = Color.MAGENTA;
+    static final Color HYPERLINK_COLOR = Color.MAGENTA;
 
     private static final float SCALE = 0.85f;
     private static final float SCALE_X = SCALE;
     private static final float SCALE_Y = SCALE;
 
     @Programmatic
-    public byte[] firstPageOf(final byte[] docBytes) throws IOException {
+    public byte[] stamp(
+            final byte[] docBytes,
+            final Stamp stamp) throws IOException {
+        return extractAndStamp(docBytes, ExtractSpec.ALL_PAGES, stamp);
+    }
+
+    @Programmatic
+    public byte[] extract(
+            final byte[] docBytes,
+            final ExtractSpec extractSpec) throws IOException {
+        return extractAndStamp(docBytes, extractSpec, null);
+    }
+
+    @Programmatic
+    public byte[] extractAndStamp(
+            final byte[] docBytes,
+            final ExtractSpec extractSpec,
+            final Stamp stamp) throws IOException {
+
+        List<byte[]> extractedPageDocBytes = Lists.newArrayList();
 
         final PDDocument pdDoc = PDDocument.load(docBytes);
+
         try {
 
             final Splitter splitter = new Splitter();
             final List<PDDocument> splitDocs = splitter.split(pdDoc);
 
-            if (splitDocs.isEmpty()) {
-                throw new IllegalArgumentException("Unable to split into multiple documents");
+            final int sizeOfDoc = splitDocs.size();
+            final Integer[] pageNums = extractSpec.pageNumbersFor(sizeOfDoc);
+
+            for (Integer pageNum : pageNums) {
+                final PDDocument docOfExtractedPage = splitDocs.get(pageNum);
+
+                if(stamp != null) {
+
+                    final List<Line> leftLines = stamp.getLeftLines();
+                    final List<Line> rightLines = stamp.getRightLines();
+
+                    leftLines.add(new Line(String.format("Page: %d/%d", (pageNum+1), sizeOfDoc), TEXT_COLOR, null));
+                    stamp.appendHyperlinkIfAnyTo(leftLines);
+
+                    extractedPageDocBytes.add(stamp(docOfExtractedPage, leftLines, rightLines));
+
+                } else {
+                    extractedPageDocBytes.add(asBytes(docOfExtractedPage));
+                }
+
             }
-
-            PDDocument docOfFirstPage = splitDocs.get(0);
-
-            final byte[] bytes = asBytes(docOfFirstPage);
 
             for (PDDocument splitDoc : splitDocs) {
                 splitDoc.close();
             }
 
-            return bytes;
-
-        } finally {
-            pdDoc.close();
-        }
-    }
-
-    @Programmatic
-    public byte[] withStampOf(
-            byte[] docBytes,
-            final List<String> leftLineTexts,
-            final List<String> rightLineTexts,
-            final String hyperlink) throws IOException {
-
-        List<Line> leftLines = asLines(leftLineTexts);
-        List<Line> rightLines = asLines(rightLineTexts);
-
-        final PDDocument pdDoc = PDDocument.load(docBytes);
-        try {
-
-            if(hyperlink != null) {
-                leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
-            }
-            docBytes = stamp(pdDoc, leftLines, rightLines);
-            pdDoc.close();
-
         } finally {
             pdDoc.close();
         }
 
-        return docBytes;
-    }
+        final byte[] mergedBytes = pdfBoxService.merge(extractedPageDocBytes.toArray(new byte[][] {}));
 
-    @Programmatic
-    public byte[] firstPageWithStampOf(
-            byte[] docBytes,
-            final List<String> leftLineTexts,
-            final List<String> rightLineTexts,
-            final String hyperlink) throws IOException {
-
-        List<Line> leftLines = asLines(leftLineTexts);
-        List<Line> rightLines = asLines(rightLineTexts);
-
-        final PDDocument pdDoc = PDDocument.load(docBytes);
-        try {
-
-            final Splitter splitter = new Splitter();
-            final List<PDDocument> splitDocs = splitter.split(pdDoc);
-
-            if (!splitDocs.isEmpty()) {
-
-                leftLines.add(new Line(String.format("# orig pgs : %d", splitDocs.size()), TEXT_COLOR, null));
-                if(hyperlink != null) {
-                    leftLines.add(new Line("Open in Estatio", HYPERLINK_COLOR, hyperlink));
-                }
-
-                PDDocument docOfFirstPage = splitDocs.get(0);
-                docBytes = stamp(docOfFirstPage, leftLines, rightLines);
-
-                for (PDDocument splitDoc : splitDocs) {
-                    splitDoc.close();
-                }
-            }
-
-        } finally {
-            pdDoc.close();
-        }
-
-        return docBytes;
+        return mergedBytes;
     }
 
     private static byte[] asBytes(final PDDocument doc) throws IOException {
-        final byte[] firstPageDocBytes;ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         doc.save(baos);
-        firstPageDocBytes = baos.toByteArray();
-        return firstPageDocBytes;
+
+        return baos.toByteArray();
     }
 
     private byte[] stamp(
-            final PDDocument docOfFirstPage,
+            final PDDocument onePageDoc,
             final List<Line> leftLines,
             final List<Line> rightLines) throws IOException {
 
-        final byte[] docBytes;
-        PDPage pdPage = docOfFirstPage.getPage(0);
+        PDPage pdPage = onePageDoc.getPage(0);
 
         final float pageHeight = pdPage.getMediaBox().getHeight();
 
         final PDPageContentStream prependStream =
-                new PDPageContentStream(docOfFirstPage, pdPage, PDPageContentStream.AppendMode.PREPEND, false);
+                new PDPageContentStream(onePageDoc, pdPage, PDPageContentStream.AppendMode.PREPEND, false);
         try {
             prependStream.transform(Matrix.getScaleInstance(SCALE_X, SCALE_Y));
             prependStream.transform(Matrix.getTranslateInstance(0f, pageHeight * (1 - SCALE_Y)));
@@ -177,7 +140,7 @@ public class PdfStamper {
         }
 
         final PDPageContentStream appendStream =
-                new PDPageContentStream(docOfFirstPage, pdPage, PDPageContentStream.AppendMode.APPEND, true, true);
+                new PDPageContentStream(onePageDoc, pdPage, PDPageContentStream.AppendMode.APPEND, true, true);
 
         try {
 
@@ -200,11 +163,9 @@ public class PdfStamper {
             appendStream.close();
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        docOfFirstPage.save(baos);
-        docBytes = baos.toByteArray();
-        return docBytes;
+        return asBytes(onePageDoc);
     }
+
 
     private void addBox(
             final float x, final float y, final float height,
@@ -267,10 +228,6 @@ public class PdfStamper {
         pdPage.getAnnotations().add(txtLink);
     }
 
-    private List<Line> asLines(final List<String> origLines) {
-        return origLines.stream().map(x -> new Line(x, TEXT_COLOR, null)).collect(Collectors.toCollection(
-                (Supplier<List<Line>>) Lists::newArrayList));
-    }
-
-
+    @Inject
+    PdfBoxService pdfBoxService;
 }
