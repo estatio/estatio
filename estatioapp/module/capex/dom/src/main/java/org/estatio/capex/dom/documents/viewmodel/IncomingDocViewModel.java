@@ -205,7 +205,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private Charge charge;
 
     @MemberOrder(name = "charge", sequence = "1")
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public T editCharge(@Nullable final Charge charge) {
         setCharge(charge);
         return (T) this;

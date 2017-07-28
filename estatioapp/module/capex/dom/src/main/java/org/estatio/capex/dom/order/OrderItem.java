@@ -180,7 +180,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private Charge charge;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editCharge(@Nullable final Charge charge) {
         setCharge(charge);
         return this;
@@ -203,7 +203,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private String description;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editDescription(
             @ParameterLayout(multiLine = InvoiceItem.DescriptionType.Meta.MULTI_LINE)
             final String description) {
@@ -305,7 +305,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private Property property;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editProperty(
             @Nullable
             final org.estatio.dom.asset.Property property){
@@ -326,7 +326,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private Project project;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editProject(
             @Nullable
             final Project project){
@@ -352,7 +352,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     private BudgetItem budgetItem;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editBudgetItem(
             @Nullable
             final BudgetItem budgetItem){

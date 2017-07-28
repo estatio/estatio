@@ -164,7 +164,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private IncomingInvoiceType incomingInvoiceType;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editIncomingInvoiceType(final IncomingInvoiceType incomingInvoiceType) {
         setIncomingInvoiceType(incomingInvoiceType);
         return this;
@@ -235,7 +235,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editDescription(
                                     @ParameterLayout(multiLine = DescriptionType.Meta.MULTI_LINE)
                                     final String description) {
@@ -252,7 +252,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editDueDate(final LocalDate dueDate){
         setDueDate(dueDate);
         return this;
@@ -267,7 +267,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editCharge(@Nullable final Charge charge) {
         setCharge(charge);
         return this;
@@ -286,7 +286,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editFixedAsset(
             @Nullable
             final org.estatio.dom.asset.Property property){
@@ -303,7 +303,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editProject(
             @Nullable
             final Project project){
@@ -324,7 +324,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editBudgetItem(
             @Nullable
             final BudgetItem budgetItem){

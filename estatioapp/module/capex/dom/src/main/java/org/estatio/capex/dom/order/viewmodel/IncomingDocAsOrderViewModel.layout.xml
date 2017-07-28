@@ -57,7 +57,7 @@
                                     <cpt:fieldSet name="Dimensions" unreferencedProperties="false">
                                         <cpt:action id="changeDimensions" position="PANEL"/>
                                         <cpt:property id="charge">
-                                            <cpt:action id="editCharge" promptStyle="INLINE_AS_IF_EDIT"/>
+                                            <cpt:action id="editCharge" promptStyle="INLINE"/>
                                         </cpt:property>
                                         <cpt:property id="fixedAsset" promptStyle="INLINE"/>
                                         <cpt:property id="project" promptStyle="INLINE"/>
