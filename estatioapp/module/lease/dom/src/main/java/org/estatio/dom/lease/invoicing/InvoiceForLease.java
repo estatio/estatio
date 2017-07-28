@@ -238,7 +238,7 @@ public class InvoiceForLease
 
 
     @Override
-    public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
+    protected String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
         return reasonDisabledDueToState(viewContext);
     }
 

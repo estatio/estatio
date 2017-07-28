@@ -574,11 +574,25 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 return "Require seller in order to list available bank accounts";
             }
 
+            final List<BankAccount> bankAccountsForSeller = choices0Act();
+            switch(bankAccountsForSeller.size()) {
+            case 0:
+                return "No bank accounts available for seller";
+            case 1:
+                return "No other bank accounts for seller";
+            default:
+                // continue
+            }
+
+            // if here then enabled
             return null;
         }
 
         public List<BankAccount> choices0Act(){
             return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getSeller());
+        }
+        public BankAccount default0Act(){
+            return incomingInvoice.getBankAccount();
         }
 
         /**
@@ -596,9 +610,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
         @Inject
         StateTransitionService stateTransitionService;
-
-        @Inject
-        PaymentLineRepository paymentLineRepository;
 
     }
 
