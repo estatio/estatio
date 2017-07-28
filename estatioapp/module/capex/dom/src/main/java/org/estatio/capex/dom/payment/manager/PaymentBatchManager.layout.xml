@@ -4,7 +4,7 @@
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
             <cpt:action id="autoCreateBatches" cssClassFa="angle-double-down"/>
-            <cpt:action id="clearHints2">
+            <cpt:action id="clearHints2" hidden="EVERYWHERE">
                 <cpt:named>Clear hints</cpt:named>
             </cpt:action>
         </bs3:col>
@@ -14,13 +14,15 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:collection id="payableInvoicesNotInAnyBatch" defaultView="table">
-                        <cpt:action id="addInvoice" cssClassFa="angle-down"/>
+                        <cpt:action id="addInvoiceToPayByBankAccount" cssClassFa="angle-down"/>
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="newBatches" defaultView="table" paged="15"/>
+                    <cpt:collection id="newBatches" defaultView="table" paged="15">
+                        <cpt:action id="reset"/>
+                    </cpt:collection>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

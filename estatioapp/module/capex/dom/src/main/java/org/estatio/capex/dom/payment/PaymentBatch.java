@@ -314,7 +314,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
 
-
     @Mixin(method="act")
     public static class removeInvoice {
         private final PaymentBatch paymentBatch;
@@ -360,11 +359,43 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             if(reason != null) {
                 return reason;
             }
-            return choices0Act().isEmpty() ? "No invoices to remove" : null;
+            return paymentBatch.getLines().isEmpty() ? "No invoices to remove" : null;
         }
 
         @Inject
         StateTransitionService stateTransitionService;
+    }
+
+    @Mixin(method="act")
+    public static class removeAll {
+        private final PaymentBatch paymentBatch;
+        public removeAll(final PaymentBatch paymentBatch) {
+            this.paymentBatch = paymentBatch;
+        }
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        @ActionLayout(cssClassFa = "fa-mail-reply", cssClass = "btn-warning")
+        public PaymentBatch act() {
+            paymentBatch.clearLines();
+            return paymentBatch;
+        }
+
+        public String disableAct() {
+            final String reason = paymentBatch.reasonDisabledDueToState();
+            if(reason != null) {
+                return reason;
+            }
+            return paymentBatch.getLines().isEmpty() ? "No invoices to remove" : null;
+        }
+    }
+
+
+    @Programmatic
+    public void clearLines() {
+        getLines().clear();
     }
 
 

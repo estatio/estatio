@@ -150,6 +150,12 @@ public class PaymentBatchManager {
 
     @Mixin(method="act")
     public static class autoCreateBatches {
+
+        public static enum Selection {
+            ALL_POSSIBLE,
+            HAND_PICK
+        }
+
         private final PaymentBatchManager paymentBatchManager;
         public autoCreateBatches(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
@@ -161,20 +167,64 @@ public class PaymentBatchManager {
                 publishing = Publishing.DISABLED
         )
         @ActionLayout(cssClassFa = "fa-plus")
-        public PaymentBatchManager act() {
-            for (final IncomingInvoice payableInvoice : paymentBatchManager.payableInvoicesNotInAnyBatch) {
-                if (payableInvoice.getBankAccount() == null || payableInvoice.getBankAccount().getBic() == null) {
-                    continue;
-                }
+        public PaymentBatchManager act(
+                final Selection selection,
+                @Nullable
+                final List<IncomingInvoice> payableInvoices) {
+
+            final List<IncomingInvoice> invoicesToPay;
+            if (selection == Selection.ALL_POSSIBLE) {
+                invoicesToPay = getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
+            } else /* if (selection == Selection.HAND_PICK) */ {
+                invoicesToPay = payableInvoices;
+            }
+
+            for (final IncomingInvoice payableInvoice : invoicesToPay) {
                 final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
                 if(uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
+                    // should be true, because those that don't pass this are filtered out in choicesXxx anyway.
                     PaymentBatch paymentBatch = paymentBatchRepository.findOrCreateNewByDebtorBankAccount(uniqueBankAccountIfAny);
                     paymentBatch.addLineIfRequired(payableInvoice);
                 }
             }
-
             paymentBatchManager.update();
             return paymentBatchManager;
+        }
+
+        public Selection default0Act() {
+            return Selection.ALL_POSSIBLE;
+        }
+
+        public List<IncomingInvoice> choices1Act(final Selection selection) {
+            List<IncomingInvoice> choices = Lists.newArrayList();
+
+            final List<IncomingInvoice> invoices = getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
+            for (final IncomingInvoice payableInvoice : invoices) {
+                final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
+                if(uniqueBankAccountIfAny != null && uniqueBankAccountIfAny.getBic() != null) {
+                    choices.add(payableInvoice);
+                }
+            }
+
+            return choices;
+        }
+
+        public String validateAct(
+                final Selection selection,
+                final List<IncomingInvoice> payableInvoices) {
+            if(selection == Selection.HAND_PICK && payableInvoices.isEmpty()) {
+                return "Select one or more invoices";
+            }
+            if(selection == Selection.ALL_POSSIBLE && !payableInvoices.isEmpty()) {
+                return "No need to select any invoices, all (possible) will be added";
+            }
+            return null;
+        }
+
+        private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
+            return paymentBatchManager.payableInvoicesNotInAnyBatch.stream()
+                    .filter(payableInvoice -> payableInvoice.getBankAccount() != null
+                            && payableInvoice.getBankAccount().getBic() != null).collect(Collectors.toList());
         }
 
         private BankAccount uniqueDebtorAccountToPay(final IncomingInvoice invoice) {
@@ -229,6 +279,41 @@ public class PaymentBatchManager {
         @Inject
         PaymentBatchRepository paymentBatchRepository;
     }
+
+    @Mixin(method="act")
+    public static class reset {
+
+        private final PaymentBatchManager paymentBatchManager;
+        public reset(final PaymentBatchManager paymentBatchManager) {
+            this.paymentBatchManager = paymentBatchManager;
+        }
+
+        @Action(
+                semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
+                command = CommandReification.DISABLED,
+                publishing = Publishing.DISABLED
+        )
+        @ActionLayout(cssClassFa = "mail-reply", cssClass = "btn-warning")
+        public PaymentBatchManager act() {
+
+            final List<PaymentBatch> newBatches = paymentBatchManager.getNewBatches();
+            for (PaymentBatch newBatch : newBatches) {
+                newBatch.clearLines();
+            }
+            return paymentBatchManager;
+        }
+
+        public String disableAct() {
+            final List<PaymentBatch> newBatches = paymentBatchManager.getNewBatches();
+            for (PaymentBatch newBatch : newBatches) {
+                if(!newBatch.getLines().isEmpty()) {
+                    return null;
+                }
+            }
+            return "No payment batches to reset";
+        }
+    }
+
 
     ///////////////////////
 
@@ -471,9 +556,9 @@ public class PaymentBatchManager {
     ///////////////////////
 
     @Mixin(method="act")
-    public static class addInvoice {
+    public static class addInvoiceToPayByBankAccount {
         private final PaymentBatchManager paymentBatchManager;
-        public addInvoice(final PaymentBatchManager paymentBatchManager) {
+        public addInvoiceToPayByBankAccount(final PaymentBatchManager paymentBatchManager) {
             this.paymentBatchManager = paymentBatchManager;
         }
 

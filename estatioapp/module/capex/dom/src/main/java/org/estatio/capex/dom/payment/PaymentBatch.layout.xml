@@ -137,6 +137,7 @@
                                 <cpt:action id="removeInvoice">
                                     <cpt:named>Remove line</cpt:named>
                                 </cpt:action>
+                                <cpt:action id="removeAll"/>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
