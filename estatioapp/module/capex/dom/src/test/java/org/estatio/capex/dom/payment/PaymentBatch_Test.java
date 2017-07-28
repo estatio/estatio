@@ -43,7 +43,11 @@ public class PaymentBatch_Test {
 
     @Before
     public void setUp() throws Exception {
-        paymentBatch = new PaymentBatch();
+        paymentBatch = new PaymentBatch() {
+            @Override public String getId() {
+                return "97834"; // say
+            }
+        };
         paymentBatch.setCreatedOn(new DateTime(2017,7,14,15,50));
         paymentBatch.setApprovalState(PaymentBatchApprovalState.NEW);
         paymentBatch.serviceRegistry2 = mockServiceRegistry2;
@@ -94,7 +98,7 @@ public class PaymentBatch_Test {
         assertThat(transfer1.getBatch()).isEqualTo(paymentBatch);
         assertThat(transfer1.getSellerName()).isEqualTo(seller1.getName());
         assertThat(transfer1.getAmount()).isEqualTo(invoice1.getGrossAmount().add(invoice3.getGrossAmount()));
-        assertThat(transfer1.getEndToEndId()).isEqualTo("2017-07-14-0001-1-3"); // the "1-3" suffix indicates payment lines with sequence 1 and 3 together
+        assertThat(transfer1.getEndToEndId()).isEqualTo("97834-1-3"); // the "1-3" suffix indicates payment lines with sequence 1 and 3 together
         assertThat(transfer1.getRemittanceInformation()).isEqualTo("AF3T2017;REDD2016VT");
         assertThat(transfer1.getSellerBankAccount()).isEqualTo(seller1BankAccount);
         assertThat(transfer1.getSellerBic()).isEqualTo(seller1BankAccount.getBic());
@@ -104,7 +108,7 @@ public class PaymentBatch_Test {
         assertThat(transfer2.getBatch()).isEqualTo(paymentBatch);
         assertThat(transfer2.getSellerName()).isEqualTo(seller2.getName());
         assertThat(transfer2.getAmount()).isEqualTo(invoice2.getGrossAmount());
-        assertThat(transfer2.getEndToEndId()).isEqualTo("2017-07-14-0002-2");
+        assertThat(transfer2.getEndToEndId()).isEqualTo("97834-2");
         assertThat(transfer2.getRemittanceInformation()).isEqualTo("DGD 11420 - 170522");
         assertThat(transfer2.getSellerBankAccount()).isEqualTo(seller2BankAccount);
         assertThat(transfer2.getSellerBic()).isEqualTo(seller2BankAccount.getBic());

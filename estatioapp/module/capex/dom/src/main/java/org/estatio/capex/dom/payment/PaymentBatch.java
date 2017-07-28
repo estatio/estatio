@@ -382,8 +382,6 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     private List<CreditTransfer> doGetCreditTransfers() {
         List<CreditTransfer> transfers = Lists.newArrayList();
 
-        final AtomicInteger seq = new AtomicInteger(1);
-
         final Map<BankAccount, List<PaymentLine>> lineBySeller =
                 Lists.newArrayList(getLines()).stream()
                         .sorted(Comparator.comparing(PaymentLine::getSequence))
@@ -399,8 +397,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             final List<PaymentLine> lines = linesByBankAccount.getValue();
 
             final String sequenceNums = extractAndJoin(lines, line -> ""+line.getSequence(), "-");
-            final String endToEndId = String.format("%s-%s-%s",
-                                            getCreatedOnYMD(), formattedSeq(seq), sequenceNums);
+            final String endToEndId = String.format("%s-%s", getId(), sequenceNums);
             creditTransfer.setEndToEndId(endToEndId);
 
             creditTransfer.setSellerBankAccount(bankAccount);
@@ -669,9 +666,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         PaymentInstructionInformation3 pmtInf = new PaymentInstructionInformation3();
         pmtInfList.add(pmtInf);
 
-        final AtomicInteger seq = new AtomicInteger(0);
-
-        pmtInf.setPmtInfId(pmtInfIdFor(seq));
+        pmtInf.setPmtInfId(getId());
         pmtInf.setPmtMtd(PaymentMethod3Code.TRF);
         pmtInf.setBtchBookg(false);
         pmtInf.setReqdExctnDt(newDateTime(getRequestedExecutionDate()));
