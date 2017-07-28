@@ -1,8 +1,6 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -33,7 +31,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -46,14 +43,18 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
+import org.estatio.capex.dom.payment.PaymentLine;
+import org.estatio.capex.dom.payment.PaymentLineRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
+import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.util.PeriodUtil;
@@ -546,39 +547,58 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
 
     @Mixin(method="act")
-    public static class changeBankAccount extends IncomingInvoice_triggerAbstract {
+    public static class changeBankAccount  {
 
         private final IncomingInvoice incomingInvoice;
 
         public changeBankAccount(final IncomingInvoice incomingInvoice) {
-            super(incomingInvoice, Arrays.asList(IncomingInvoiceApprovalState.NEW), null);
             this.incomingInvoice = incomingInvoice;
         }
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed= Contributed.AS_ACTION)
-        public IncomingInvoice act(
-                final BankAccount bankAccount,
-                @Nullable final String comment){
+        public IncomingInvoice act(final BankAccount bankAccount){
             incomingInvoice.setBankAccount(bankAccount);
-            trigger(comment, null);
             return  incomingInvoice;
         }
 
-        public boolean hideAct() {
-            return cannotTransition();
-        }
+        public String disableAct(){
 
-        public List<BankAccount> autoComplete0Act(@MinLength(3) final String searchString){
-            if (incomingInvoice.getSeller()!=null) {
-                return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getSeller());
-            } else {
-                // empty
-                return new ArrayList<>();
+            final Object viewContext = incomingInvoice;
+            final String reasonIfAny = incomingInvoice.reasonDisabledFinanceDetailsDueToState(viewContext);
+            if(reasonIfAny != null) {
+                return reasonIfAny;
             }
+
+            if (incomingInvoice.getSeller() == null) {
+                return "Require seller in order to list available bank accounts";
+            }
+
+            return null;
         }
 
-        @Inject BankAccountRepository bankAccountRepository;
+        public List<BankAccount> choices0Act(){
+            return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getSeller());
+        }
+
+        /**
+         * An alternative design would be to filter out all non-verified bank accounts in the choicesXxx, but that
+         * could be confusing to the end-user (wondering why some bank accounts of the seller aren't listed).
+         */
+        public String validate0Act(final BankAccount bankAccount){
+            final BankAccountVerificationState state = stateTransitionService
+                    .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
+            return state != BankAccountVerificationState.VERIFIED ? "Bank account must be verified" : null;
+        }
+
+        @Inject
+        BankAccountRepository bankAccountRepository;
+
+        @Inject
+        StateTransitionService stateTransitionService;
+
+        @Inject
+        PaymentLineRepository paymentLineRepository;
 
     }
 
@@ -859,6 +879,26 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
     }
 
+    @Override
+    @Programmatic
+    public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
+        final IncomingInvoiceApprovalState approvalState = getApprovalState();
+        switch (approvalState) {
+        case DISCARDED:
+            return "Invoice has been DISCARDED";
+        case PAYABLE:
+            final List<PaymentLine> paymentLines = paymentLineRepository.findByInvoice(this);
+            if(!paymentLines.isEmpty()) {
+                return "Invoice already in a payment batch";
+            }
+            break;
+        case PAID:
+            return "Invoice has been PAID";
+        }
+        return null;
+    }
+
+    @Override
     @Programmatic
     public String reasonDisabledDueToState(final Object viewContext) {
         final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
@@ -880,8 +920,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
     }
 
-    @Inject
-    MetaModelService3 metaModelService3;
 
     @Programmatic
     public String reasonIncomplete(){
@@ -944,6 +982,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Inject
+    PaymentLineRepository paymentLineRepository;
+
+    @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
+
+    @Inject
+    MetaModelService3 metaModelService3;
+
 
 }

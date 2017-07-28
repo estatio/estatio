@@ -236,6 +236,12 @@ public class InvoiceForLease
         return getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
     }
 
+
+    @Override
+    public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
+        return reasonDisabledDueToState(viewContext);
+    }
+
     @Mixin
     public static class _newItem {
 

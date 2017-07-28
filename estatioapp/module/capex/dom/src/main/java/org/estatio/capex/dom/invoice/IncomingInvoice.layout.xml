@@ -96,11 +96,11 @@
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Payment" id="details">
                                         <cpt:property id="bankAccount">
-                                            <cpt:action id="changeBankAccount" promptStyle="INLINE_AS_IF_EDIT"/>
+                                            <cpt:action id="changeBankAccount" promptStyle="INLINE"/>
                                             <cpt:action id="createBankAccount" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="paymentMethod">
-                                            <cpt:action id="changePaymentMethod" promptStyle="INLINE_AS_IF_EDIT"/>
+                                            <cpt:action id="changePaymentMethod" promptStyle="INLINE"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

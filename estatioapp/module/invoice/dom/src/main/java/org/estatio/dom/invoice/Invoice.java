@@ -329,10 +329,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
         @Action(semantics = SemanticsOf.IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
-        public Invoice exec(
-                final PaymentMethod paymentMethod,
-                @ParameterLayout(describedAs = "Not currently used")
-                final String reason) {
+        public Invoice exec(final PaymentMethod paymentMethod) {
             invoice.setPaymentMethod(paymentMethod);
             return invoice;
         }
@@ -343,7 +340,7 @@ public abstract class Invoice<T extends Invoice<T>>
 
         public String disableExec() {
             final Object viewContext = invoice;
-            return invoice.reasonDisabledDueToState(viewContext);
+            return invoice.reasonDisabledFinanceDetailsDueToState(viewContext);
         }
     }
 
@@ -353,6 +350,14 @@ public abstract class Invoice<T extends Invoice<T>>
      * @param viewContext
      */
     protected abstract String reasonDisabledDueToState(final Object viewContext);
+
+    /**
+     * Mandatory hook
+     * @return
+     * @param viewContext
+     */
+    protected abstract String reasonDisabledFinanceDetailsDueToState(final Object viewContext);
+
 
     @CollectionLayout(defaultView = "table")
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")

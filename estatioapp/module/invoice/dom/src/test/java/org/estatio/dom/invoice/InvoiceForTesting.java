@@ -10,4 +10,10 @@ public class InvoiceForTesting extends Invoice<InvoiceForTesting> {
     protected String reasonDisabledDueToState(final Object viewContext) {
         return null;
     }
+
+    @Override
+    public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
+        return null;
+    }
+
 }
