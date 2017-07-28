@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -597,8 +598,12 @@ public class InvoiceForLease
             return null;
         }
         // TODO: EST-xxxx to enforce the constraint that there can only be one "at any given time".
+        Predicate<FixedAssetFinancialAccount> bankaccountOwnerEqualsSeller = x->x.getFinancialAccount().getOwner().equals(getSeller());
         final Optional<FixedAssetFinancialAccount> fafrIfAny =
-                fixedAssetFinancialAccountRepository.findByFixedAsset(getFixedAsset()).stream().findFirst();
+                fixedAssetFinancialAccountRepository.findByFixedAsset(getFixedAsset())
+                        .stream()
+                        .filter(bankaccountOwnerEqualsSeller)
+                        .findFirst();
         return fafrIfAny.isPresent() ? fafrIfAny.get().getFinancialAccount() : null;
     }
 
