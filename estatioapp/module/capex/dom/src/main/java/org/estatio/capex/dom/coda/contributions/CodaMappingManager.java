@@ -25,7 +25,7 @@ import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingImport;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 
-@DomainObject(nature = Nature.VIEW_MODEL, objectType = "blblblblagadfglafgladfg")
+@DomainObject(nature = Nature.VIEW_MODEL, objectType = "org.estatio.capex.dom.coda.CodaMappingManager")
 public class CodaMappingManager {
 
     public String title() {

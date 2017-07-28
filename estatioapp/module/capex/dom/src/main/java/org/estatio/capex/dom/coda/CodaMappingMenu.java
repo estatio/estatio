@@ -6,7 +6,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.capex.dom.coda.contributions.CodaMappingManager;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "not_needed_here")
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "org.estatio.capex.dom.coda.CodaMappingMenu")
 @DomainServiceLayout(named = "Invoices In")
 public class CodaMappingMenu {
 
