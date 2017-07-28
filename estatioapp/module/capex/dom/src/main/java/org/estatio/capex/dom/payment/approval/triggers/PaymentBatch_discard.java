@@ -25,7 +25,10 @@ public class PaymentBatch_discard extends PaymentBatch_triggerAbstract {
     public PaymentBatch act(
             @Nullable final String comment) {
         trigger(comment, null);
-        return getDomainObject();
+
+        paymentBatch.clearLines();
+
+        return paymentBatch;
     }
 
     public boolean hideAct() {
