@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.xactn.TransactionService2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
@@ -101,10 +102,13 @@ public class IncomingInvoice_recategorize {
         public void on(IncomingInvoice.ObjectRemovingEvent event) {
             final IncomingInvoice incomingInvoice = event.getSource();
             paperclipRepository.deleteIfAttachedTo(incomingInvoice, PaperclipRepository.Policy.PAPERCLIPS_ONLY);
+            transactionService2.flushTransaction();
         }
 
         @Inject
         private PaperclipRepository paperclipRepository;
+        @Inject
+        private TransactionService2 transactionService2;
 
     }
 
