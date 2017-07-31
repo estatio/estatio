@@ -894,6 +894,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Programmatic
     public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
         final IncomingInvoiceApprovalState approvalState = getApprovalState();
+        if (approvalState==null){
+            return "Cannot modify";
+        }
         switch (approvalState) {
         case DISCARDED:
             return "Invoice has been DISCARDED";
