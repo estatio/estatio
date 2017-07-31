@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.invoice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +14,11 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
+
+import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
@@ -209,6 +215,27 @@ public class IncomingInvoiceRepository {
         repositoryService.removeAndFlush(incomingInvoice);
     }
 
+    @Programmatic
+    public List<IncomingInvoice> findIncomingInvoiceByDocumentName(final String name){
+        List <IncomingInvoice> result = new ArrayList<>();
+        for (Document doc : incomingDocumentRepository.matchAllIncomingDocumentsByName(name)){
+            for (Paperclip paperclip : paperclipRepository.findByDocument(doc)){
+                if (paperclip.getAttachedTo().getClass().isAssignableFrom(IncomingInvoice.class)){
+                    final IncomingInvoice attachedTo = (IncomingInvoice) paperclip.getAttachedTo();
+                    // check presence because there may be multiple scans attached to the same invoice
+                    if (!result.contains(attachedTo)) {
+                        result.add(attachedTo);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
+    @Inject
+    PaperclipRepository paperclipRepository;
     @Inject
     RepositoryService repositoryService;
     @Inject
