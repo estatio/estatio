@@ -600,6 +600,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
          * could be confusing to the end-user (wondering why some bank accounts of the seller aren't listed).
          */
         public String validate0Act(final BankAccount bankAccount){
+            // a mutable invoice does not need a verified bankaccount
+            if (!incomingInvoice.isImmutable()) return null;
+
             final BankAccountVerificationState state = stateTransitionService
                     .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
             return state != BankAccountVerificationState.VERIFIED ? "Bank account must be verified" : null;
