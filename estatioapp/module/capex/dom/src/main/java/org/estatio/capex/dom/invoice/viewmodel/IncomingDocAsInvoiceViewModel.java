@@ -343,9 +343,7 @@ public class IncomingDocAsInvoiceViewModel
         }
 
         public PaymentMethod default7Act(){
-            return viewModel.getPaymentMethod()==null
-                    ? PaymentMethod.MANUAL_PROCESS
-                    : viewModel.getPaymentMethod();
+            return viewModel.getPaymentMethod();
         }
 
         public Currency default8Act() {
