@@ -139,6 +139,12 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
+        @Override
+        public String reasonGuardNotSatisified(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            return incomingInvoice.reasonIncomplete();
+        }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.COMPLETED,
