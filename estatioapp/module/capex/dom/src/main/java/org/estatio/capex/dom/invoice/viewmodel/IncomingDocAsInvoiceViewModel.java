@@ -248,7 +248,7 @@ public class IncomingDocAsInvoiceViewModel
             }
             if (!hasSeller()){
                 setSeller(order.getSeller());
-                setBankAccount(getFirstBankAccountOfPartyOrNull(order.getSeller()));
+                setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(order.getSeller()));
             }
             if (!hasDescription()){
                 setDescription(orderItem.getDescription());
@@ -280,7 +280,7 @@ public class IncomingDocAsInvoiceViewModel
     @Override
     public void modifySeller(final Party seller){
         setSeller(seller);
-        setBankAccount(getFirstBankAccountOfPartyOrNull(seller));
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
     }
 
 
@@ -305,7 +305,7 @@ public class IncomingDocAsInvoiceViewModel
             viewModel.setInvoiceNumber(invoiceNumber);
             viewModel.setBuyer(buyer);
             viewModel.setSeller(seller);
-            viewModel.setBankAccount(viewModel.getFirstBankAccountOfPartyOrNull(seller));
+            viewModel.setBankAccount(viewModel.bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
             viewModel.setDateReceived(dateReceived);
             viewModel.setInvoiceDate(invoiceDate);
             viewModel.setDueDate(dueDate);
@@ -357,12 +357,6 @@ public class IncomingDocAsInvoiceViewModel
 
         @Inject
         ClockService clockService;
-    }
-
-
-    private BankAccount getFirstBankAccountOfPartyOrNull(final Party party){
-        return bankAccountRepository.findBankAccountsByOwner(party).size()>0 ?
-                bankAccountRepository.findBankAccountsByOwner(party).get(0) : null;
     }
 
     @Programmatic

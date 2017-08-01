@@ -787,6 +787,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             @Nullable
             final Party seller){
         setSeller(seller);
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
         return this;
     }
 
@@ -1033,6 +1034,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     MetaModelService3 metaModelService3;
+
+    @Inject
+    BankAccountRepository bankAccountRepository;
 
 
 }

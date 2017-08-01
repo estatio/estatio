@@ -95,6 +95,12 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
         return findByReferenceMatches(regex);
     }
 
+    @Programmatic
+    public BankAccount getFirstBankAccountOfPartyOrNull(final Party party){
+        return findBankAccountsByOwner(party).isEmpty() ?
+                null : findBankAccountsByOwner(party).get(0);
+    }
+
     @Inject
     private FinancialAccountRepository financialAccountRepository;
 }
