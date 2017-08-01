@@ -69,17 +69,16 @@ public class IncomingInvoice_Test {
         item1.setSequence(BigInteger.ONE);
         invoice.getItems().add(item1);
 
-        // when
+        // when neither conditions on invoice and items satisfied
         String result = invoice.reasonIncomplete();
-
         // then
         assertThat(result).isEqualTo("incoming invoice type, invoice number, buyer, seller, date received, due date, net amount, gross amount, (on item 1) incoming invoice type, start date, end date, net amount, vat amount, gross amount, charge required");
 
-        // and when
-        invoice.setType(IncomingInvoiceType.CAPEX);
+        // and when conditions on item satisfied
+        invoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
         invoice.setInvoiceNumber("123");
         invoice.setNetAmount(new BigDecimal("100"));
-        item1.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
+        item1.setIncomingInvoiceType(IncomingInvoiceType.LOCAL_EXPENSES);
         item1.setStartDate(new LocalDate());
         item1.setEndDate(new LocalDate());
         item1.setNetAmount(new BigDecimal("100"));
@@ -87,21 +86,117 @@ public class IncomingInvoice_Test {
         item1.setVatAmount(BigDecimal.ZERO);
         item1.setCharge(new Charge());
         result = invoice.reasonIncomplete();
-
         // then
-        assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount required");
+        assertThat(result).isEqualTo("buyer, seller, date received, due date, gross amount, property required");
 
-        // and when
+        // and when conditions for invoice satisfied
+        item1.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
         invoice.setBuyer(new Organisation());
         invoice.setSeller(new Organisation());
         invoice.setBankAccount(new BankAccount());
         invoice.setDateReceived(new LocalDate());
         invoice.setDueDate(new LocalDate());
         invoice.setGrossAmount(BigDecimal.ZERO);
+        invoice.setProperty(new Property());
         result = invoice.reasonIncomplete();
+        // then
+        assertThat(result).isEqualTo("(on item 1) project (capex), fixed asset required");
 
+        // and when all conditions satisfied
+        item1.setFixedAsset(new Property());
+        item1.setProject(new Project());
+        result = invoice.reasonIncomplete();
         // then
         assertThat(result).isNull();
+
+    }
+
+    @Test
+    public void validator_checkNotNull_works() throws Exception {
+
+        String result;
+
+        // given
+        IncomingInvoice.Validator validator = new IncomingInvoice.Validator();
+
+        // when condition satisfied
+        result = validator.checkNotNull(new Object(), "some property name").getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and when not conditions satisfied
+        result = validator.checkNotNull(null, "some property name").getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("some property name required");
+
+    }
+
+    @Test
+    public void validator_validateForIncomingInvoiceType_works() throws Exception {
+
+        String result;
+        IncomingInvoice.Validator validator;
+        IncomingInvoice invoice;
+
+        // given
+        validator = new IncomingInvoice.Validator();
+        invoice = new IncomingInvoice();
+        // when
+        invoice.setType(IncomingInvoiceType.CAPEX);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("property required");
+
+        // given
+        validator = new IncomingInvoice.Validator();
+        invoice = new IncomingInvoice();
+        // when
+        invoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("property required");
+
+        // given
+        validator = new IncomingInvoice.Validator();
+        invoice = new IncomingInvoice();
+        // when
+        invoice.setType(IncomingInvoiceType.SERVICE_CHARGES);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("property required");
+
+        // given
+        validator = new IncomingInvoice.Validator();
+        invoice = new IncomingInvoice();
+        // and when all conditions satisfied
+        invoice.setType(IncomingInvoiceType.LOCAL_EXPENSES);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and when all conditions satisfied
+        invoice.setType(IncomingInvoiceType.INTERCOMPANY);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and when all conditions satisfied
+        invoice.setType(IncomingInvoiceType.TANGIBLE_FIXED_ASSET);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and when all conditions satisfied
+        invoice.setType(IncomingInvoiceType.RE_INVOICING);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and when all conditions satisfied
+        invoice.setType(IncomingInvoiceType.CORPORATE_EXPENSES);
+        result = validator.validateForIncomingInvoiceType(invoice).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
 
     }
 

@@ -43,7 +43,6 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
-import org.estatio.dom.utils.FinancialAmountUtil;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -53,6 +52,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.FinancialAmountUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -477,30 +477,86 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Programmatic
     public String reasonIncomplete(){
-        StringBuffer buffer = new StringBuffer();
-        if (getIncomingInvoiceType()==null){
-            buffer.append("incoming invoice type, ");
-        }
-        if (getStartDate()==null){
-            buffer.append("start date, ");
-        }
-        if (getEndDate()==null){
-            buffer.append("end date, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getVatAmount()==null){
-            buffer.append("vat amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
-        }
-        if (getCharge()==null){
-            buffer.append("charge, ");
+        return new Validator()
+                    .checkNotNull(getIncomingInvoiceType(), "incoming invoice type")
+                    .checkNotNull(getStartDate(), "start date")
+                    .checkNotNull(getEndDate(), "end date")
+                    .checkNotNull(getNetAmount(), "net amount")
+                    .checkNotNull(getVatAmount(), "vat amount")
+                    .checkNotNull(getGrossAmount(), "gross amount")
+                    .checkNotNull(getCharge(), "charge")
+                    .validateForIncomingInvoiceType(this)
+                    .getResult();
+    }
+
+    static class Validator {
+
+        public Validator(){
+            this.result = null;
         }
 
-        return buffer.length() == 0 ? null : buffer.toString();
+        @Setter
+        String result;
+
+        String getResult(){
+            return result!=null ? result.concat(" required") : null;
+        }
+
+        Validator checkNotNull(Object mandatoryProperty, String propertyName){
+            if (mandatoryProperty == null){
+                setResult(result==null ? propertyName : result.concat(", ").concat(propertyName));
+            }
+            return this;
+        }
+
+        Validator validateForIncomingInvoiceType(IncomingInvoiceItem incomingInvoiceItem){
+            if (incomingInvoiceItem == null) return this;
+            if (incomingInvoiceItem.getIncomingInvoiceType() == null) return this;
+
+            String message;
+            switch (incomingInvoiceItem.getIncomingInvoiceType()){
+
+                case CAPEX:
+                    message = "project (capex)";
+                    if (incomingInvoiceItem.getProject()==null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    message = "fixed asset";
+                    if (incomingInvoiceItem.getFixedAsset()==null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                break;
+
+                case SERVICE_CHARGES:
+                    message = "budget item (service charges)";
+                    if (incomingInvoiceItem.getBudgetItem()==null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    message = "fixed asset";
+                    if (incomingInvoiceItem.getFixedAsset()==null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    message = "equal charge on budget item and invoice item";
+                    if (incomingInvoiceItem.getBudgetItem()!=null && incomingInvoiceItem.getCharge()!=null){
+                        if (!incomingInvoiceItem.getBudgetItem().getCharge().equals(incomingInvoiceItem.getCharge())){
+                            setResult(result==null ? message : result.concat(", ").concat(message));
+                        }
+                    }
+                break;
+
+                case PROPERTY_EXPENSES:
+                    message = "fixed asset";
+                    if (incomingInvoiceItem.getFixedAsset()==null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                break;
+
+                default:
+            }
+
+            return this;
+        }
+
     }
 
     @Programmatic

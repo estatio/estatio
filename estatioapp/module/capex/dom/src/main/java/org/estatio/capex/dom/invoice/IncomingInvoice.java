@@ -937,47 +937,77 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public String reasonIncomplete(){
-        StringBuffer buffer = new StringBuffer();
-        if (getType()==null){
-            buffer.append("incoming invoice type, ");
-        }
-        if (getInvoiceNumber()==null){
-            buffer.append("invoice number, ");
-        }
-        if (getBuyer()==null){
-            buffer.append("buyer, ");
-        }
-        if (getSeller()==null){
-            buffer.append("seller, ");
-        }
-        if (getDateReceived()==null){
-            buffer.append("date received, ");
-        }
-        if (getDueDate()==null){
-            buffer.append("due date, ");
-        }
-        if (getPaymentMethod()==null){
-            buffer.append("payment method, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
-        }
-        if (getBankAccount() == null) {
-            buffer.append("bank account, ");
-        }
 
-        if (reasonItemsIncomplete()!=null){
-            buffer.append(reasonItemsIncomplete());
-        }
+        String invoiceValidatorResult = new Validator()
+                .checkNotNull(getType(),"incoming invoice type")
+                .checkNotNull(getInvoiceNumber(), "invoice number")
+                .checkNotNull(getBuyer(), "buyer")
+                .checkNotNull(getSeller(), "seller")
+                .checkNotNull(getDateReceived(), "date received")
+                .checkNotNull(getDueDate(), "due date")
+                .checkNotNull(getPaymentMethod(), "payment method")
+                .checkNotNull(getNetAmount(), "net amount")
+                .checkNotNull(getGrossAmount(), "gross amount")
+                .checkNotNull(getBankAccount(), "bank account")
+                .validateForIncomingInvoiceType(this)
+                .getResult();
 
-        if (buffer.length()==0){
-            return null;
+        return mergeReasonItemsIncomplete(invoiceValidatorResult);
+
+    }
+
+    private String mergeReasonItemsIncomplete(final String validatorResult){
+        if (reasonItemsIncomplete()!=null) {
+            return validatorResult!=null ?
+                    validatorResult.replace(" required", ", ").concat(reasonItemsIncomplete())
+                    : reasonItemsIncomplete();
         } else {
-            return buffer.replace(buffer.length()-2, buffer.length(), " required").toString();
+            return validatorResult;
         }
+    }
+
+    static class Validator {
+
+        public Validator() {
+            this.result = null;
+        }
+
+        @Setter
+        String result;
+
+        String getResult() {
+            return result != null ? result.concat(" required") : null;
+        }
+
+        IncomingInvoice.Validator checkNotNull(Object mandatoryProperty, String propertyName) {
+            if (mandatoryProperty == null) {
+                setResult(result == null ? propertyName : result.concat(", ").concat(propertyName));
+            }
+            return this;
+        }
+
+        IncomingInvoice.Validator validateForIncomingInvoiceType(IncomingInvoice incomingInvoice){
+            if (incomingInvoice == null) return this;
+            if (incomingInvoice.getType() == null) return this;
+
+            String message;
+            switch (incomingInvoice.getType()){
+
+            case CAPEX:
+            case SERVICE_CHARGES:
+            case PROPERTY_EXPENSES:
+                message = "property";
+                if (incomingInvoice.getProperty()==null){
+                    setResult(result==null ? message : result.concat(", ").concat(message));
+                }
+                break;
+
+            default:
+            }
+
+            return this;
+        }
+
     }
 
     @Programmatic
