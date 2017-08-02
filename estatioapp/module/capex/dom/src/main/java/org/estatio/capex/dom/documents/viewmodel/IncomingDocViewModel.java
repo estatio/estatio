@@ -286,6 +286,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return budgetRepository.allBudgets();
     }
 
+    public String validateCreateNextBudget(final Budget previousBudget){
+        return previousBudget.validateCreateNextBudget();
+    }
+
     //region > period (prop)
 
     @Setter @Getter
