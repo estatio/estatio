@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -31,6 +32,7 @@ public class Lease_NewFixedOverride {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name="budgetOverrides", sequence = "2")
     public BudgetOverrideForFixed newFixedValue(
             final BigDecimal fixedValue,
             @Nullable

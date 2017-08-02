@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -32,6 +33,7 @@ public class Lease_NewCeilingOverride {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name="budgetOverrides", sequence = "3")
     public BudgetOverrideForMax newCeiling(
             final BigDecimal maxValue,
             @Nullable

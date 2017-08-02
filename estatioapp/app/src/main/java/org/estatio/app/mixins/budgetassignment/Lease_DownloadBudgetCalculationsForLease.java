@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
@@ -32,6 +33,7 @@ public class Lease_DownloadBudgetCalculationsForLease {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
+    @MemberOrder(name="budgetCalculationRuns", sequence = "1")
     public Blob downloadBudgetCalculationsForLease(Budget budget, BudgetCalculationType type) {
         final String fileName =  lease.getReference() + " - budget details" + ".xlsx";
         WorksheetSpec spec = new WorksheetSpec(DetailedCalculationResultViewmodel.class, "values for lease");
