@@ -55,7 +55,7 @@ public class Document_categoriseAsOtherInvoice
                 null, // invoiceNumber
                 null, // property
                 document.getAtPath(),
-                null, // buyer
+                buyerFinder.buyerDerivedFromDocumentName(document), // buyer
                 null, // seller
                 null, // invoiceDate
                 dueDate,

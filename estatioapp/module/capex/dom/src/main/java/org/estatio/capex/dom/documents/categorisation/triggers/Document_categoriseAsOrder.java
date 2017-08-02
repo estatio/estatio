@@ -50,7 +50,7 @@ public class Document_categoriseAsOrder
                 clockService.now(), // entryDate
                 null, // orderDate
                 null, // seller
-                null, // buyer
+                buyerFinder.buyerDerivedFromDocumentName(document), // buyer
                 document.getAtPath(),
                 null  // approval state... will cause state transition to be created automatically by subscriber
         );
