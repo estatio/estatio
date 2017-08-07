@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Mixin;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -27,6 +28,9 @@ public class SellerBankAccountCreator_createBankAccount {
     public String disableAct() {
         if (sellerBankAccountCreator.getSeller() == null) {
             return "There is no seller specified";
+        }
+        if (sellerBankAccountCreator.getApprovalState().equals(IncomingInvoiceApprovalState.PAID)){
+            return "Cannot create bankaccount for a paid invoice";
         }
         return null;
     }

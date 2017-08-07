@@ -58,6 +58,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.SellerBankAccountCreator;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -127,6 +128,11 @@ public class IncomingDocAsInvoiceViewModel
     public IncomingDocAsInvoiceViewModel(final IncomingInvoice incomingInvoice, final Document document) {
         super(document);
         this.domainObject = incomingInvoice;
+    }
+
+    @Programmatic
+    public IncomingInvoiceApprovalState getApprovalState(){
+        return getDomainObject()!=null ? getDomainObject().getApprovalState() : null;
     }
 
     @Property(editing = Editing.DISABLED)
