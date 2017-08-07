@@ -41,33 +41,29 @@ public class BuyerFinder {
     private Party partyDerivedFromBarcodeSerie(final String barcodeSerie){
         if (barcodeSerie==null) return null;
 
-        String partyReference = null;
-        switch (barcodeSerie){
-        case "301":
-            partyReference = "FR01";
+        String countryPrefix;
+        String firstChar = barcodeSerie.substring(0,1);
+        switch (firstChar){
+        case "1":
+            countryPrefix = "NL";
             break;
-        case "302":
-            partyReference = "FR02";
+        case "2":
+            countryPrefix = "IT";
             break;
-        case "303":
-            partyReference = "FR03";
+        case "3":
+            countryPrefix = "FR";
             break;
-        case "304":
-            partyReference = "FRCL10317";
+        case "4":
+            countryPrefix = "SE";
             break;
-        case "305":
-            partyReference = "FR05";
-            break;
-
-        // TODO: 306 serie no party reference found for SCI Winter in Estatio .. ()
-
-        case "307":
-            partyReference = "FR07";
+        case "5":
+            countryPrefix = "GB";
             break;
         default:
-            // nothing
+            return null;
         }
-        return partyReference!=null ? partyRepository.findPartyByReference(partyReference) : null;
+        String partyReference = countryPrefix.concat(barcodeSerie.substring(1,3));
+        return partyRepository.findPartyByReference(partyReference);
     }
 
     @Inject

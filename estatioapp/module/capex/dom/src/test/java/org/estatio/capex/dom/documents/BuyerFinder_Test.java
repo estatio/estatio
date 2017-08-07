@@ -30,14 +30,14 @@ public class BuyerFinder_Test {
         testWhenParamIsInvoice("301xxxxxxx.pdf", "FR01");
         testWhenParamIsInvoice("302xxxxxxx.pdf", "FR02");
         testWhenParamIsInvoice("303xxxxxxx.pdf", "FR03");
-        testWhenParamIsInvoice("304xxxxxxx.pdf", "FRCL10317");
+        testWhenParamIsInvoice("304xxxxxxx.pdf", "FR04");
         testWhenParamIsInvoice("305xxxxxxx.pdf", "FR05");
         testWhenParamIsInvoice("307xxxxxxx.pdf", "FR07");
 
         testWhenParamIsDocument("301xxxxxxx.pdf", "FR01");
         testWhenParamIsDocument("302xxxxxxx.pdf", "FR02");
         testWhenParamIsDocument("303xxxxxxx.pdf", "FR03");
-        testWhenParamIsDocument("304xxxxxxx.pdf", "FRCL10317");
+        testWhenParamIsDocument("304xxxxxxx.pdf", "FR04");
         testWhenParamIsDocument("305xxxxxxx.pdf", "FR05");
         testWhenParamIsDocument("307xxxxxxx.pdf", "FR07");
 

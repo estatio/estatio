@@ -50,6 +50,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.BuyerFinder;
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
@@ -528,19 +529,34 @@ public class IncomingDocAsInvoiceViewModel
     @Property(editing = Editing.DISABLED)
     @PropertyLayout(multiLine = 5)
     public String getNotification(){
-        final String possibleDoubleInvoice = possibleDoubleInvoice();
-        if (possibleDoubleInvoice !=null){
-            return possibleDoubleInvoice;
+        final StringBuilder result = new StringBuilder();
+
+        final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
+        if (noBuyerBarcodeMatch!=null){
+            result.append(noBuyerBarcodeMatch);
         }
-        final String sameInvoiceNumber = sameInvoiceNumber();
-        if (sameInvoiceNumber !=null){
-            return sameInvoiceNumber;
+
+        final String sameInvoiceNumberCheck = doubleInvoiceCheck();
+        if (sameInvoiceNumberCheck !=null){
+            result.append(sameInvoiceNumberCheck);
         }
-        return null;
+
+        return result.length()>0 ? result.toString() : null;
+
     }
 
     public boolean hideNotification(){
         return getNotification() == null;
+    }
+
+    private String doubleInvoiceCheck(){
+        if (possibleDoubleInvoice()!=null){
+            return possibleDoubleInvoice();
+        }
+        if (sameInvoiceNumber()!=null){
+            return sameInvoiceNumber();
+        }
+        return null;
     }
 
     private String possibleDoubleInvoice(){
@@ -575,6 +591,18 @@ public class IncomingDocAsInvoiceViewModel
                     }
                 }
                 return message;
+            }
+        }
+        return null;
+    }
+
+    private String buyerBarcodeMatchValidation(){
+        if (getBuyer()!=null && getDomainObject()!=null){
+            if (buyerFinder.buyerDerivedFromDocumentName(getDomainObject())==null){
+                return null; // covers all cases where no buyer could be derived from document name
+            }
+            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(getDomainObject()))){
+                return "Buyer does not match barcode (document name); ";
             }
         }
         return null;
@@ -627,5 +655,11 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     OrderItemService orderItemService;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    BuyerFinder buyerFinder;
     
 }
