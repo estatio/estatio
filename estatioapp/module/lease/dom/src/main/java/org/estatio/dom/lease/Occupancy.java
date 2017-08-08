@@ -238,7 +238,7 @@ public class Occupancy
     }
 
     public String disableRemove() {
-        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "You need administrator rights to remove an occupancy" : null;
+        return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need Superuser rights to remove an occupancy" : null;
     }
 
     // //////////////////////////////////////
