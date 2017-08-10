@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -25,6 +26,7 @@ public class ProjectItem_InvoicedAmount {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @Column(scale = 2)
     public BigDecimal invoicedAmount(){
         return sum(OrderItem::getNetAmountInvoiced);
     }
