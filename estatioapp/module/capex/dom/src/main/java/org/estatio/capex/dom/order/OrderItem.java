@@ -436,6 +436,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
         return orderItemInvoiceItemLinkRepository.findByOrderItem(this).stream()
+                .filter(i->!i.getInvoiceItem().isDiscarded())
                 .map(i->i.getInvoiceItem())
                 .map(x)
                 .filter(Objects::nonNull)

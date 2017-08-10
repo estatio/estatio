@@ -35,6 +35,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
@@ -571,6 +572,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setNetAmount(FinancialAmountUtil.addHandlingNulls(getNetAmount(), netAmountToAdd));
         setVatAmount(FinancialAmountUtil.addHandlingNulls(getVatAmount(), vatAmountToAdd));
         setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
+    }
+
+    @Programmatic
+    public boolean isDiscarded(){
+        IncomingInvoice invoice = (IncomingInvoice) getInvoice();
+        return invoice.getApprovalState()!=null ? invoice.getApprovalState()==IncomingInvoiceApprovalState.DISCARDED : false;
     }
 
     @Inject
