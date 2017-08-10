@@ -12,9 +12,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.dom.invoice.InvoiceItem;
 
 @Mixin
 public class Project_InvoicedAmount {
@@ -27,16 +27,16 @@ public class Project_InvoicedAmount {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public BigDecimal invoicedAmount(){
-        return sum(OrderItem::getNetAmountInvoiced);
+        return sum(InvoiceItem::getNetAmount);
     }
 
-    private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
-        return orderItemRepository.findByProject(project).stream()
+    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
+        return incomingInvoiceItemRepository.findByProject(project).stream()
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Inject
-    OrderItemRepository orderItemRepository;
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 }
