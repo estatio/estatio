@@ -48,6 +48,11 @@
                                 <ns2:property id="tax"/>
                                 <ns2:property id="grossAmount"/>
                             </ns2:fieldSet>
+                            <ns2:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
+                                <ns2:property id="netAmountInvoiced"/>
+                                <ns2:property id="vatAmountInvoiced"/>
+                                <ns2:property id="grossAmountInvoiced"/>
+                            </ns2:fieldSet>
                         </col>
                     </row>
                 </tab>

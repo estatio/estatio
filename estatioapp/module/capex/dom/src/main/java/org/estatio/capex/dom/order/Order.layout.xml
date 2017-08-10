@@ -70,11 +70,19 @@
                     <bs3:tabGroup>
                         <bs3:tab name="Amounts">
                             <bs3:row>
-                                <bs3:col span="12">
+                                <bs3:col span="6">
                                     <cpt:fieldSet name="Amounts">
                                         <cpt:property id="netAmount"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                                <bs3:col span="6">
+                                    <cpt:fieldSet name="Amounts Invoiced">
+                                        <cpt:property id="netAmountInvoiced"/>
+                                        <cpt:property id="vatAmountInvoiced"/>
+                                        <cpt:property id="grossAmountInvoiced"/>
+                                        <cpt:property id="invoiced"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

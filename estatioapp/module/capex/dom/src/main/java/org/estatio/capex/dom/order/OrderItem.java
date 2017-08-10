@@ -2,6 +2,8 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -45,7 +47,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
@@ -414,14 +415,31 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         if (getNetAmount()==null){
             return false;
         }
-        BigDecimal invoicedNetAmount = BigDecimal.ZERO;
-        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByOrderItem(this)){
-            if (link.getInvoiceItem().getNetAmount()!=null) {
-                invoicedNetAmount = invoicedNetAmount.add(link.getInvoiceItem().getNetAmount());
-            }
-        }
-        return invoicedNetAmount.abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
+        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
 
+    }
+
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    public BigDecimal getNetAmountInvoiced(){
+        return sum(InvoiceItem::getNetAmount);
+    }
+
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    public BigDecimal getVatAmountInvoiced(){
+        return sum(InvoiceItem::getVatAmount);
+    }
+
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    public BigDecimal getGrossAmountInvoiced(){
+        return sum(InvoiceItem::getGrossAmount);
+    }
+
+    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
+        return orderItemInvoiceItemLinkRepository.findByOrderItem(this).stream()
+                .map(i->i.getInvoiceItem())
+                .map(x)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Programmatic
