@@ -398,18 +398,6 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
-        // this works:
-        //return sumImperative(x);
-
-        // this also works:
-        return sumFunctionalUsingEagerStream(x);
-
-        // this doesn't work:
-        //return sumFunctionalUsingLazyStreamBROKEN(x);
-
-    }
-
-    private BigDecimal sumFunctionalUsingEagerStream(final Function<InvoiceItem, BigDecimal> x) {
         return Lists.newArrayList(getItems()).stream()
                 .map(x)
                 .filter(Objects::nonNull)
@@ -417,7 +405,7 @@ public abstract class Invoice<T extends Invoice<T>>
     }
 
     /**
-     * This does not enumerate correctly, it would seem.
+     * This does not enumerate correctly, it would seem. TODO: can be removed when DN issue solved?
      */
     private BigDecimal sumFunctionalUsingLazyStreamBROKEN(final Function<InvoiceItem, BigDecimal> x) {
         // as per http://www.datanucleus.org/servlet/jira/browse/NUCAPIJDO-77
@@ -426,19 +414,6 @@ public abstract class Invoice<T extends Invoice<T>>
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
-    private BigDecimal sumImperative(final Function<InvoiceItem, BigDecimal> x) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (final InvoiceItem item : getItems()) {
-            BigDecimal value = x.apply(item);
-            if(value != null) {
-                sum = sum.add(value);
-            }
-        }
-        return sum;
-    }
-
-
 
     @Programmatic
     public boolean isImmutable() {
