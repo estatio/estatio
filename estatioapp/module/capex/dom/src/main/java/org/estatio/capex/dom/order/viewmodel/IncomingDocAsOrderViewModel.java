@@ -207,7 +207,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
             orderItem.setProject(getProject());
             orderItem.setBudgetItem(getBudgetItem());
         } else {
-            factoryService.mixin(Order.addItem.class, order).act(
+            order.addItem(
                     getCharge(),
                     getDescription(),
                     getNetAmount(),

@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -358,252 +357,214 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Getter @Setter
     private SortedSet<OrderItem> items = new TreeSet<>();
 
-    @Mixin(method="act")
-    public static class addItem {
-        private final Order order;
-
-        public addItem(final Order order) {
-            this.order = order;
-        }
-
-        @MemberOrder(name="items", sequence = "1")
-        public Order act(
-                final Charge charge,
-                @Nullable final String description,
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal netAmount,
-                @Nullable
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal vatAmount,
-                @Nullable
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal grossAmount,
-                @Nullable final Tax tax,
-                @Nullable final String period,
-                @Nullable final org.estatio.dom.asset.Property property,
-                @Nullable final Project project,
-                @Nullable final BudgetItem budgetItem
-        ) {
-            orderItemRepository.upsert(
-                    order, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
-            // (we think there's) no need to add to the getItems(), because the item points back to this order.
-            return order;
-        }
-
-        public List<Charge> choices0Act(){
-            List<Charge> result = chargeRepository.allIncoming();
-            for (OrderItem item : order.getItems()) {
-                if (item.getCharge()!=null && result.contains(item.getCharge())) {
-                    result.remove(item.getCharge());
-                }
-            }
-            return result;
-        }
-
-        public String default6Act(){
-            return order.ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(order.ofFirstItem(OrderItem::getStartDate), order.ofFirstItem(OrderItem::getEndDate))) : null;
-        }
-
-        public org.estatio.dom.asset.Property default7Act(){
-            return order.ofFirstItem(OrderItem::getProperty);
-        }
-
-        public Project default8Act(){
-            return order.ofFirstItem(OrderItem::getProject);
-        }
-
-        public String validateAct(final Charge charge,
-                final String description,
-                final BigDecimal netAmount,
-                final BigDecimal vatAmount,
-                final BigDecimal grossAmount,
-                final Tax tax,
-                final String period,
-                final org.estatio.dom.asset.Property property,
-                final Project project,
-                final BudgetItem budgetItem){
-            if (period!=null && !period.equals("")) {
-                return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
-            }
-            return null;
-        }
-
-        public List<BudgetItem> choices9Act(
-                final Charge charge,
-                final String description,
-                final BigDecimal netAmount,
-                final BigDecimal vatAmount,
-                final BigDecimal grossAmount,
-                final Tax tax,
-                final String period,
-                final org.estatio.dom.asset.Property property,
-                final Project project,
-                final BudgetItem budgetItem) {
-
-            return budgetItemChooser.choicesBudgetItemFor(property, charge);
-        }
-
-        public String disableAct() {
-            return order.orderImmutableReason();
-        }
-
-        @Inject
-        public OrderItemRepository orderItemRepository;
-
-        @Inject
-        BudgetItemChooser budgetItemChooser;
-
-        @Inject
-        ChargeRepository chargeRepository;
-
+    @MemberOrder(name="items", sequence = "1")
+    public Order addItem(
+            final Charge charge,
+            @Nullable final String description,
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal netAmount,
+            @Nullable
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal vatAmount,
+            @Nullable
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal grossAmount,
+            @Nullable final Tax tax,
+            @Nullable final String period,
+            @Nullable final org.estatio.dom.asset.Property property,
+            @Nullable final Project project,
+            @Nullable final BudgetItem budgetItem
+    ) {
+        orderItemRepository.upsert(
+                this, charge, description, netAmount, vatAmount, grossAmount, tax, PeriodUtil.yearFromPeriod(period).startDate(), PeriodUtil.yearFromPeriod(period).endDate(), property, project, budgetItem);
+        // (we think there's) no need to add to the getItems(), because the item points back to this order.
+        return this;
     }
 
-    @Mixin(method="act")
-    public static class splitItem {
-
-        private final Order order;
-        public splitItem(final Order order) {
-            this.order = order;
-        }
-
-        @MemberOrder(name = "items", sequence = "2")
-        public Order act(
-                final OrderItem itemToSplit,
-                final String newItemDescription,
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemNetAmount,
-                @Nullable
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemVatAmount,
-                @Nullable
-                final Tax newItemtax,
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                @Nullable
-                final org.estatio.dom.asset.Property newItemProperty,
-                @Nullable
-                final Project newItemProject,
-                @Nullable
-                final BudgetItem newItemBudgetItem,
-                @Nullable
-                final String newItemPeriod
-        ) {
-            itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
-            orderItemRepository.upsert(
-                    order,
-                    newItemCharge,
-                    newItemDescription,
-                    newItemNetAmount,
-                    newItemVatAmount,
-                    newItemGrossAmount,
-                    newItemtax,
-                    newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).startDate() : null,
-                    newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).endDate() : null,
-                    newItemProperty,
-                    newItemProject,
-                    newItemBudgetItem
-            );
-            return order;
-        }
-
-        public String disableAct() {
-            if (order.isImmutable()) {
-                return order.orderImmutableReason();
+    public List<Charge> choices0AddItem(){
+        List<Charge> result = chargeRepository.allIncoming();
+        for (OrderItem item : getItems()) {
+            if (item.getCharge()!=null && result.contains(item.getCharge())) {
+                result.remove(item.getCharge());
             }
-            return order.getItems().isEmpty() ? "No items" : null;
         }
+        return result;
+    }
 
-        public OrderItem default0Act() {
-            return order.firstItemIfAny()!=null ? order.getItems().first() : null;
+    public String default6AddItem(){
+        return ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
+    }
+
+    public org.estatio.dom.asset.Property default7AddItem(){
+        return ofFirstItem(OrderItem::getProperty);
+    }
+
+    public Project default8AddItem(){
+        return ofFirstItem(OrderItem::getProject);
+    }
+
+    public String validateAddItem(final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final String period,
+            final org.estatio.dom.asset.Property property,
+            final Project project,
+            final BudgetItem budgetItem){
+        if (period!=null && !period.equals("")) {
+            return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
         }
+        return null;
+    }
 
-        public Tax default4Act() {
-            return order.ofFirstItem(OrderItem::getTax);
+    public List<BudgetItem> choices9AddItem(
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final String period,
+            final org.estatio.dom.asset.Property property,
+            final Project project,
+            final BudgetItem budgetItem) {
+
+        return budgetItemChooser.choicesBudgetItemFor(property, charge);
+    }
+
+    public String disableAddItem() {
+        return orderImmutableReason();
+    }
+
+    @MemberOrder(name = "items", sequence = "2")
+    public Order splitItem(
+            final OrderItem itemToSplit,
+            final String newItemDescription,
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemNetAmount,
+            @Nullable
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemVatAmount,
+            @Nullable
+            final Tax newItemtax,
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            @Nullable
+            final org.estatio.dom.asset.Property newItemProperty,
+            @Nullable
+            final Project newItemProject,
+            @Nullable
+            final BudgetItem newItemBudgetItem,
+            @Nullable
+            final String newItemPeriod
+    ) {
+        itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
+        orderItemRepository.upsert(
+                this,
+                newItemCharge,
+                newItemDescription,
+                newItemNetAmount,
+                newItemVatAmount,
+                newItemGrossAmount,
+                newItemtax,
+                newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).startDate() : null,
+                newItemPeriod != null ? PeriodUtil.yearFromPeriod(newItemPeriod).endDate() : null,
+                newItemProperty,
+                newItemProject,
+                newItemBudgetItem
+        );
+        return this;
+    }
+
+    public String disableSplitItem() {
+        if (isImmutable()) {
+            return orderImmutableReason();
         }
+        return getItems().isEmpty() ? "No items" : null;
+    }
 
-        public org.estatio.dom.asset.Property default7Act() {
-            return order.getProperty();
-        }
+    public OrderItem default0SplitItem() {
+        return firstItemIfAny()!=null ? getItems().first() : null;
+    }
 
-        public Project default8Act() {
-            return order.ofFirstItem(OrderItem::getProject);
-        }
+    public Tax default4SplitItem() {
+        return ofFirstItem(OrderItem::getTax);
+    }
 
-        public BudgetItem default9Act() {
-            return order.ofFirstItem(OrderItem::getBudgetItem);
-        }
+    public org.estatio.dom.asset.Property default7SplitItem() {
+        return getProperty();
+    }
 
-        public String default10Act() {
-            return order.ofFirstItem(OrderItem::getPeriod);
-        }
+    public Project default8SplitItem() {
+        return ofFirstItem(OrderItem::getProject);
+    }
 
-        public List<OrderItem> choices0Act() {
-            return order.getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
-        }
+    public BudgetItem default9SplitItem() {
+        return ofFirstItem(OrderItem::getBudgetItem);
+    }
 
-        public List<Charge> choices6Act(
-                final OrderItem itemToSplit,
-                final String newItemDescription,
-                final BigDecimal newItemNetAmount,
-                final BigDecimal newItemVatAmount,
-                final Tax newItemtax,
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                final org.estatio.dom.asset.Property newItemProperty,
-                final Project newItemProject,
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod
-        ){
-            List<Charge> result = chargeRepository.allIncoming();
-            for (OrderItem item : order.getItems()) {
-                if (item.getCharge()!=null && result.contains(item.getCharge())) {
-                    result.remove(item.getCharge());
-                }
+    public String default10SplitItem() {
+        return ofFirstItem(OrderItem::getPeriod);
+    }
+
+    public List<OrderItem> choices0SplitItem() {
+        return getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
+    }
+
+    public List<Charge> choices6SplitItem(
+            final OrderItem itemToSplit,
+            final String newItemDescription,
+            final BigDecimal newItemNetAmount,
+            final BigDecimal newItemVatAmount,
+            final Tax newItemtax,
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            final org.estatio.dom.asset.Property newItemProperty,
+            final Project newItemProject,
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod
+    ){
+        List<Charge> result = chargeRepository.allIncoming();
+        for (OrderItem item : getItems()) {
+            if (item.getCharge()!=null && result.contains(item.getCharge())) {
+                result.remove(item.getCharge());
             }
-            return result;
         }
+        return result;
+    }
 
-        public List<BudgetItem> choices9Act(
-                final OrderItem itemToSplit,
-                final String newItemDescription,
-                final BigDecimal newItemNetAmount,
-                final BigDecimal newItemVatAmount,
-                final Tax newItemtax,
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                final org.estatio.dom.asset.Property newItemProperty,
-                final Project newItemProject,
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod) {
+    public List<BudgetItem> choices9SplitItem(
+            final OrderItem itemToSplit,
+            final String newItemDescription,
+            final BigDecimal newItemNetAmount,
+            final BigDecimal newItemVatAmount,
+            final Tax newItemtax,
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            final org.estatio.dom.asset.Property newItemProperty,
+            final Project newItemProject,
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod) {
 
-            return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
-        }
+        return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
+    }
 
-        public String validateAct(
-                final OrderItem itemToSplit,
-                final String newItemDescription,
-                final BigDecimal newItemNetAmount,
-                final BigDecimal newItemVatAmount,
-                final Tax newItemtax,
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                final org.estatio.dom.asset.Property newItemProperty,
-                final Project newItemProject,
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod){
-            return newItemPeriod == null ? null : PeriodUtil.reasonInvalidPeriod(newItemPeriod);
-        }
-
-        @Inject
-        OrderItemRepository orderItemRepository;
-
-        @Inject
-        BudgetItemChooser budgetItemChooser;
-
-        @Inject
-        ChargeRepository chargeRepository;
-
+    public String validateSplitItem(
+            final OrderItem itemToSplit,
+            final String newItemDescription,
+            final BigDecimal newItemNetAmount,
+            final BigDecimal newItemVatAmount,
+            final Tax newItemtax,
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            final org.estatio.dom.asset.Property newItemProperty,
+            final Project newItemProject,
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod){
+        return newItemPeriod == null ? null : PeriodUtil.reasonInvalidPeriod(newItemPeriod);
     }
 
     @Programmatic
@@ -618,52 +579,38 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
                 .findFirst();
     }
 
-    @Mixin(method = "act")
-    public static class mergeItems {
-
-        private final Order order;
-        public mergeItems(final Order order) {
-            this.order = order;
-        }
-
-        @MemberOrder(name = "items", sequence = "3")
-        public Order act(
-                final OrderItem item,
-                final OrderItem mergeInto){
-            orderItemRepository.mergeItems(item, mergeInto);
-            return order;
-        }
-
-        public String disableAct() {
-            if (order.isImmutable()) {
-                return order.orderImmutableReason();
-            }
-            return order.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
-        }
-
-        public OrderItem default0Act() {
-            return order.firstItemIfAny()!=null ? order.getItems().last() : null;
-        }
-
-        public OrderItem default1Act() {
-            return order.firstItemIfAny()!=null ? order.getItems().first() : null;
-        }
-
-        public List<OrderItem> choices0Act() {
-            return order.getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
-        }
-
-        public List<OrderItem> choices1Act(
-                final OrderItem item,
-                final OrderItem mergeInto) {
-            return order.getItems().stream().filter(x->!x.equals(item)).map(OrderItem.class::cast).collect(Collectors.toList());
-        }
-
-        @Inject
-        OrderItemRepository orderItemRepository;
-
+    @MemberOrder(name = "items", sequence = "3")
+    public Order mergeItems(
+            final OrderItem item,
+            final OrderItem mergeInto){
+        orderItemRepository.mergeItems(item, mergeInto);
+        return this;
     }
 
+    public String disableMergeItems() {
+        if (isImmutable()) {
+            return orderImmutableReason();
+        }
+        return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+    }
+
+    public OrderItem default0MergeItems() {
+        return firstItemIfAny()!=null ? getItems().last() : null;
+    }
+
+    public OrderItem default1MergeItems() {
+        return firstItemIfAny()!=null ? getItems().first() : null;
+    }
+
+    public List<OrderItem> choices0MergeItems() {
+        return getItems().stream().map(OrderItem.class::cast).collect(Collectors.toList());
+    }
+
+    public List<OrderItem> choices1MergeItems(
+            final OrderItem item,
+            final OrderItem mergeInto) {
+        return getItems().stream().filter(x->!x.equals(item)).map(OrderItem.class::cast).collect(Collectors.toList());
+    }
 
     public boolean isInvoiced(){
         return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
@@ -834,5 +781,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
+
+    @Inject public
+    OrderItemRepository orderItemRepository;
+
+    @Inject
+    BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    ChargeRepository chargeRepository;
 
 }

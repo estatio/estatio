@@ -287,7 +287,7 @@ public class OrderInvoiceLine {
 
                 final Tax tax = taxRepository.findByReference(line.tax);
 
-                factoryService.mixin(Order.addItem.class, order).act(
+                order.addItem(
                         chargeObj, line.orderDescription,
                         line.netAmount, line.vatAmount, line.grossAmount,
                         tax, line.period, property, project, null);

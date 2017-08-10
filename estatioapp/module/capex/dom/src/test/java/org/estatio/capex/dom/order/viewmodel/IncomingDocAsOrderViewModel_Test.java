@@ -9,7 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.order.Order;
@@ -33,17 +32,7 @@ public class IncomingDocAsOrderViewModel_Test {
         IncomingDocAsOrderViewModel incomingDocAsOrderViewModel = new IncomingDocAsOrderViewModel();
         Order order = new Order();
         incomingDocAsOrderViewModel.clockService = mockClockService;
-        Order.addItem mixin = new Order.addItem(order);
-        incomingDocAsOrderViewModel.factoryService = new FactoryService() {
-            @Override public <T> T instantiate(final Class<T> aClass) {
-                return null;
-            }
-
-            @Override public <T> T mixin(final Class<T> aClass, final Object o) {
-                return (T) mixin;
-            }
-        };
-        mixin.orderItemRepository = mockOrderItemRepository;
+        order.orderItemRepository = mockOrderItemRepository;
 
         incomingDocAsOrderViewModel.setDomainObject(order);
 

@@ -71,8 +71,7 @@ public class Order_Test {
 
         // given
         Order order = new Order();
-        Order.splitItem mixin = new Order.splitItem(order);
-        mixin.orderItemRepository = mockOrderItemRepository;
+        order.orderItemRepository = mockOrderItemRepository;
 
         String description = "some description";
         Tax tax = new Tax();
@@ -106,7 +105,7 @@ public class Order_Test {
         }});
 
         // when
-        mixin.act(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
+        order.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
 
     }
 
@@ -115,8 +114,7 @@ public class Order_Test {
 
         // given
         Order order = new Order();
-        Order.mergeItems mixin = new Order.mergeItems(order);
-        mixin.orderItemRepository = mockOrderItemRepository;
+        order.orderItemRepository = mockOrderItemRepository;
 
         OrderItem sourceItem = new OrderItem();
         OrderItem targetItem = new OrderItem();
@@ -128,7 +126,7 @@ public class Order_Test {
         }});
 
         // when
-        mixin.act(sourceItem, targetItem);
+        order.mergeItems(sourceItem, targetItem);
 
     }
 
