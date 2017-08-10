@@ -4,7 +4,13 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
@@ -22,11 +28,8 @@ public class OrderItem_Test {
         // given
         OrderItem orderItem = new OrderItem();
         orderItem.setNetAmount(new BigDecimal("100.00"));
-        IncomingInvoice invoice = new IncomingInvoice();
         IncomingInvoiceItem item1 = new IncomingInvoiceItem();
         IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-        item1.setInvoice(invoice);
-        item2.setInvoice(invoice);
 
         // when
         item1.setNetAmount(new BigDecimal("50.00"));
@@ -62,9 +65,6 @@ public class OrderItem_Test {
         orderItem.setNetAmount(new BigDecimal("-100.00"));
         IncomingInvoiceItem item1 = new IncomingInvoiceItem();
         IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-        IncomingInvoice invoice = new IncomingInvoice();
-        item1.setInvoice(invoice);
-        item2.setInvoice(invoice);
 
         // when
         item1.setNetAmount(new BigDecimal("-50.00"));
@@ -99,9 +99,6 @@ public class OrderItem_Test {
         orderItem.setNetAmount(null); // explicit for this test
         IncomingInvoiceItem item1 = new IncomingInvoiceItem();
         IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-        IncomingInvoice invoice = new IncomingInvoice();
-        item1.setInvoice(invoice);
-        item2.setInvoice(invoice);
 
         // when
         orderItem.orderItemInvoiceItemLinkRepository = setupOrderItemInvoiceItemLinkRepository(item1, item2);
@@ -117,9 +114,6 @@ public class OrderItem_Test {
         orderItem.setNetAmount(new BigDecimal("100.00"));
         IncomingInvoiceItem item1 = new IncomingInvoiceItem();
         IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-        IncomingInvoice invoice = new IncomingInvoice();
-        item1.setInvoice(invoice);
-        item2.setInvoice(invoice);
 
         // when
         item1.setNetAmount(null); // explicit for this test
@@ -169,6 +163,48 @@ public class OrderItem_Test {
         };
 
         return orderItemInvoiceItemLinkRepository;
+    }
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+    @Test
+    public void getNetAmountInvoiced_works(){
+
+        // given
+        OrderItem orderItem = new OrderItem();
+        orderItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+        BigDecimal expectedTotalNetAmountOnItems = new BigDecimal("100.00");
+        BigDecimal netAmountOnItem1 = new BigDecimal("55.00");
+        BigDecimal netAmountOnItem2 = new BigDecimal("45.00");
+        BigDecimal netAmountOnItem3 = null;
+        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
+        item1.setNetAmount(netAmountOnItem1);
+        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        item2.setNetAmount(netAmountOnItem2);
+        IncomingInvoiceItem item3 = new IncomingInvoiceItem();
+        item3.setNetAmount(netAmountOnItem3);
+        OrderItemInvoiceItemLink link1 = new OrderItemInvoiceItemLink();
+        link1.setInvoiceItem(item1);
+        OrderItemInvoiceItemLink link2 = new OrderItemInvoiceItemLink();
+        link2.setInvoiceItem(item2);
+        OrderItemInvoiceItemLink link3 = new OrderItemInvoiceItemLink();
+        link3.setInvoiceItem(item3);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemInvoiceItemLinkRepository).findByOrderItem(orderItem);
+            will(returnValue(Arrays.asList(link1, link2, link3)));
+        }});
+
+        // when
+        BigDecimal netAmountInvoiced = orderItem.getNetAmountInvoiced();
+
+        // then
+        Assertions.assertThat(netAmountInvoiced).isEqualTo(expectedTotalNetAmountOnItems);
     }
 
 }

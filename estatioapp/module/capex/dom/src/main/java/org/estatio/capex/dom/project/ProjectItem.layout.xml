@@ -21,6 +21,8 @@
                             <ns2:fieldSet name="Amount" id="amount">
                                 <ns2:action id="amendAmount" position="PANEL"/>
                                 <ns2:property id="budgetedAmount"/>
+                                <ns2:property id="orderedAmount"/>
+                                <ns2:property id="invoicedAmount"/>
                                 <ns2:property id="tax"/>
                             </ns2:fieldSet>
                         </col>

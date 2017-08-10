@@ -19,8 +19,10 @@
 package org.estatio.capex.dom.project;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -36,6 +38,7 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -179,6 +182,18 @@ public class Project extends UdoDomainObject<Project> implements
 			final LocalDate endDate){
 		projectRoleRepository.create(this, party, type, startDate, endDate);
 		return this;
+	}
+
+	@Property(notPersisted = true)
+	public BigDecimal getBudgetedAmount(){
+		return sum(ProjectItem::getBudgetedAmount);
+	}
+
+	private BigDecimal sum(final Function<ProjectItem, BigDecimal> x) {
+		return Lists.newArrayList(getItems()).stream()
+				.map(x)
+				.filter(Objects::nonNull)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 	@Inject

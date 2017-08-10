@@ -20,6 +20,11 @@
                                 <ns2:property id="startDate"/>
                                 <ns2:property id="endDate"/>
                             </ns2:fieldSet>
+                            <ns2:fieldSet name="Amounts" id="amounts">
+                                <ns2:property id="budgetedAmount"/>
+                                <ns2:property id="orderedAmount"/>
+                                <ns2:property id="invoicedAmount"/>
+                            </ns2:fieldSet>
                         </col>
                     </row>
                 </tab>

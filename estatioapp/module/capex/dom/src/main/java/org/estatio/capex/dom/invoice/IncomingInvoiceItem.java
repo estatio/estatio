@@ -576,6 +576,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Programmatic
     public boolean isDiscarded(){
+        if (getInvoice() == null) return false; // done in order to ease junit testing
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
         return invoice.getApprovalState()!=null ? invoice.getApprovalState()==IncomingInvoiceApprovalState.DISCARDED : false;
     }
