@@ -41,7 +41,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition "
                         + "WHERE bankAccount == :domainObject "
-                        + "ORDER BY completedOn DESC "
+                        + "ORDER BY completedOn DESC, fromState NULLS FIRST "
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
