@@ -2,8 +2,11 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -194,6 +197,12 @@ public class OrderItemRepository {
     @Programmatic
     public List<OrderItem> listAll() {
         return repositoryService.allInstances(OrderItem.class);
+    }
+
+    @Programmatic
+    public List<OrderItem> orderItemsNotOnProjectItem(final Project project){
+        List<Charge> chargesOnProject = Lists.newArrayList(project.getItems()).stream().map(x->x.getCharge()).collect(Collectors.toList());
+        return findByProject(project).stream().filter(x->!chargesOnProject.contains(x.getCharge())).collect(Collectors.toList());
     }
 
     @Inject

@@ -1,6 +1,8 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -13,6 +15,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.project.Project;
+import org.estatio.capex.dom.project.ProjectItem;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -119,5 +122,40 @@ public class OrderItemRepository_Test {
         Assertions.assertThat(targetItem.getNetAmount()).isEqualTo(new BigDecimal("20.10"));
 
     }
+
+
+    @Test
+    public void orderItemsWithoutProjectItem_works() throws Exception {
+
+        // given
+        Project project = new Project();
+        ProjectItem item1 = new ProjectItem();
+        Charge chargeOnProjectItem = new Charge();
+        item1.setCharge(chargeOnProjectItem);
+        project.getItems().add(item1);
+        Charge chargeNOTOnProjectItem = new Charge();
+
+        OrderItem orderItemToBeFound = new OrderItem();
+        orderItemToBeFound.setCharge(chargeNOTOnProjectItem);
+        OrderItem orderItemNOTToBeFound = new OrderItem();
+        orderItemNOTToBeFound.setCharge(chargeOnProjectItem);
+
+        OrderItemRepository orderItemRepository = new OrderItemRepository(){
+            @Override
+            public List<OrderItem> findByProject(final Project project) {
+                return Arrays.asList(orderItemNOTToBeFound, orderItemToBeFound);
+            }
+        };
+
+        // when
+        List<OrderItem> result = orderItemRepository.orderItemsNotOnProjectItem(project);
+
+        // then
+        Assertions.assertThat(result.size()).isEqualTo(1);
+        Assertions.assertThat(result.get(0)).isEqualTo(orderItemToBeFound);
+        Assertions.assertThat(result.get(0).getCharge()).isEqualTo(chargeNOTOnProjectItem);
+
+    }
+
 
 }

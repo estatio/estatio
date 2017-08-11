@@ -3,8 +3,11 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -226,6 +229,14 @@ public class IncomingInvoiceItemRepository {
     @Programmatic
     public List<IncomingInvoiceItem> listAll() {
         return repositoryService.allInstances(IncomingInvoiceItem.class);
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> invoiceItemsNotOnProjectItem(final Project project){
+        List<Charge> chargesOnProject = Lists.newArrayList(project.getItems()).stream().map(x->x.getCharge()).collect(Collectors.toList());
+        return findByProject(project).stream()
+                .filter(x->!chargesOnProject.contains(x.getCharge()))
+                .collect(Collectors.toList());
     }
 
     @Inject

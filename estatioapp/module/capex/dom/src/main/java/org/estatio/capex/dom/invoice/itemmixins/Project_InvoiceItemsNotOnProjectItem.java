@@ -13,24 +13,24 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.project.ProjectItem;
+import org.estatio.capex.dom.project.Project;
 
 @Mixin
-public class ProjectItem_IncomingInvoiceItems {
+public class Project_InvoiceItemsNotOnProjectItem {
 
-    private final ProjectItem projectItem;
-    public ProjectItem_IncomingInvoiceItems(ProjectItem projectItem){
-        this.projectItem = projectItem;
+    private final Project project;
+    public Project_InvoiceItemsNotOnProjectItem(Project project){
+        this.project = project;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<IncomingInvoiceItem> invoiceItems() {
-        return incomingInvoiceItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge()).stream()
-                .filter(x->!x.isDiscarded())
+    public List<IncomingInvoiceItem> invoiceItemsNotOnProjectItem() {
+        return incomingInvoiceItemRepository.invoiceItemsNotOnProjectItem(project).stream()
+                .filter(i->!i.isDiscarded())
                 .collect(Collectors.toList());
     }
 
     @Inject
-    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 }

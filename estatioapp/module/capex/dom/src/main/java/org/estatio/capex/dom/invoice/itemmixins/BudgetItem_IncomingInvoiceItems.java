@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice.itemmixins;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -25,7 +26,9 @@ public class BudgetItem_IncomingInvoiceItems {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<IncomingInvoiceItem> invoiceItems() {
-        return incomingInvoiceItemRepository.findByBudgetItem(BudgetItem);
+        return incomingInvoiceItemRepository.findByBudgetItem(BudgetItem).stream()
+                .filter(i->!i.isDiscarded())
+                .collect(Collectors.toList());
     }
 
     @Inject

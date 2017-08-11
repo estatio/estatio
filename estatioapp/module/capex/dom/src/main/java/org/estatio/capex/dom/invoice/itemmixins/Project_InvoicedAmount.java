@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.order.itemmixins;
+package org.estatio.capex.dom.invoice.itemmixins;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -34,6 +34,7 @@ public class Project_InvoicedAmount {
 
     private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
         return incomingInvoiceItemRepository.findByProject(project).stream()
+                .filter(i->!i.isDiscarded())
                 .map(x)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

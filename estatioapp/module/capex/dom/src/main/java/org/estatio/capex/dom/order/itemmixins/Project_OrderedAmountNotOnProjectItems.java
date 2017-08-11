@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.order.itemmixins;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.inject.Inject;
@@ -14,26 +15,27 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.project.ProjectItem;
+import org.estatio.capex.dom.project.Project;
 
 @Mixin
-public class ProjectItem_InvoicedAmount {
+public class Project_OrderedAmountNotOnProjectItems {
 
-    private final ProjectItem projectItem;
-    public ProjectItem_InvoicedAmount(ProjectItem projectItem){
-        this.projectItem = projectItem;
+    private final Project project;
+    public Project_OrderedAmountNotOnProjectItems(Project project){
+        this.project = project;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     @Column(scale = 2)
-    public BigDecimal invoicedAmount(){
-        return sum(OrderItem::getNetAmountInvoiced);
+    public BigDecimal orderedAmountNotOnProjectItems(){
+        return sum(OrderItem::getNetAmount);
     }
 
     private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
-        return orderItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge()).stream()
+        return orderItemRepository.orderItemsNotOnProjectItem(project).stream()
                 .map(x)
+                .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

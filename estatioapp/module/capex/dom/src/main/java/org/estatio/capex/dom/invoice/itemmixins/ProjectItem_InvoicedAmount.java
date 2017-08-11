@@ -1,9 +1,10 @@
 package org.estatio.capex.dom.invoice.itemmixins;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.util.function.Function;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -16,21 +17,27 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.project.ProjectItem;
 
 @Mixin
-public class ProjectItem_IncomingInvoiceItems {
+public class ProjectItem_InvoicedAmount {
 
     private final ProjectItem projectItem;
-    public ProjectItem_IncomingInvoiceItems(ProjectItem projectItem){
+    public ProjectItem_InvoicedAmount(ProjectItem projectItem){
         this.projectItem = projectItem;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<IncomingInvoiceItem> invoiceItems() {
+    @Column(scale = 2)
+    public BigDecimal invoicedAmount(){
+        return sum(IncomingInvoiceItem::getNetAmount);
+    }
+
+    private BigDecimal sum(final Function<IncomingInvoiceItem, BigDecimal> x) {
         return incomingInvoiceItemRepository.findByProjectAndCharge(projectItem.getProject(), projectItem.getCharge()).stream()
-                .filter(x->!x.isDiscarded())
-                .collect(Collectors.toList());
+                .filter(i->!i.isDiscarded())
+                .map(x)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Inject
-    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 }
