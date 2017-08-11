@@ -98,25 +98,6 @@ public class BudgetCalculationRepository_Test {
 
     }
 
-    public static class FindByBudgetAndStatus extends BudgetCalculationRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            Budget budget = new Budget();
-            Status status = Status.ASSIGNED;
-            budgetCalculationRepository.findByBudgetAndStatus(budget, status);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByBudgetAndStatus");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("budget")).isEqualTo((Object) budget);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("status")).isEqualTo((Object) status);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
-
     public static class FindByPartitionItemAndCalculationType extends BudgetCalculationRepository_Test {
 
         @Test
@@ -132,24 +113,6 @@ public class BudgetCalculationRepository_Test {
             assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
             assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
             assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-
-    }
-
-    public static class FindByPartitionItem extends BudgetCalculationRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            PartitionItem partitionItem = new PartitionItem();
-            KeyItem keyItem = new KeyItem();
-            budgetCalculationRepository.findByPartitionItem(partitionItem);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByPartitionItem");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }

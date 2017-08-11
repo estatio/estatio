@@ -31,7 +31,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;
 
-public class PartitionItemsForBud extends PartitionItemAbstact {
+public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstact {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -39,11 +39,10 @@ public class PartitionItemsForBud extends PartitionItemAbstact {
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new KeyTablesForBud());
-        executionContext.executeChild(this, new PartitioningForBud());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
-        LocalDate startDate = new LocalDate(2015, 01, 01);
+        LocalDate startDate = BudgetForBud.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);
         Charge incomingCharge2 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_2);
@@ -55,13 +54,14 @@ public class PartitionItemsForBud extends PartitionItemAbstact {
         Charge invoiceCharge2 = chargeRepository.findByReference(ChargeRefData.NL_SERVICE_CHARGE2);
         KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_AREA);
         KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForBud.NAME_BY_COUNT);
-        Partitioning partitioning = budget.getPartitionings().first();
 
-        createPartitioningAndItem(partitioning, invoiceCharge1, keyTable1, budgetItem1, new BigDecimal(100), executionContext);
-        createPartitioningAndItem(partitioning, invoiceCharge1, keyTable1, budgetItem2, new BigDecimal(80), executionContext);
-        createPartitioningAndItem(partitioning, invoiceCharge1, keyTable2, budgetItem2, new BigDecimal(20), executionContext);
-        createPartitioningAndItem(partitioning, invoiceCharge2, keyTable1, budgetItem3, new BigDecimal(90), executionContext);
-        createPartitioningAndItem(partitioning, invoiceCharge1, keyTable2, budgetItem3, new BigDecimal(10), executionContext);
+        Partitioning partitioning = createPartitioning(budget, executionContext);
+
+        createPartitionItem(partitioning, invoiceCharge1, keyTable1, budgetItem1, new BigDecimal(100), executionContext);
+        createPartitionItem(partitioning, invoiceCharge1, keyTable1, budgetItem2, new BigDecimal(80), executionContext);
+        createPartitionItem(partitioning, invoiceCharge1, keyTable2, budgetItem2, new BigDecimal(20), executionContext);
+        createPartitionItem(partitioning, invoiceCharge2, keyTable1, budgetItem3, new BigDecimal(90), executionContext);
+        createPartitionItem(partitioning, invoiceCharge1, keyTable2, budgetItem3, new BigDecimal(10), executionContext);
     }
 
 }

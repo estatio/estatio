@@ -18,7 +18,6 @@
 package org.estatio.fixture.budget;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.joda.time.LocalDate;
 
@@ -32,7 +31,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 
-public class PartitionItemsForOxf extends PartitionItemAbstact {
+public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstact {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -41,23 +40,26 @@ public class PartitionItemsForOxf extends PartitionItemAbstact {
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new PropertyForOxfGb());
         executionContext.executeChild(this, new KeyTablesForOxf());
-        executionContext.executeChild(this, new PartitioningForOxf());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        LocalDate startDate = new LocalDate(2015, 01, 01);
+        LocalDate startDate = BudgetsForOxf.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
-        BudgetItem budgetItem1 = budget.getItems().first();
-        BudgetItem budgetItem2 = budget.getItems().last();
-        Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
-        final List<KeyTable> keyTables = keyTableRepository.findByBudget(budget);
-        KeyTable keyTable1 = keyTables.get(0);
-        KeyTable keyTable2 = keyTables.get(1);
-        Partitioning partitioning = budget.getPartitionings().first();
+        Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
+        Charge incomingCharge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);
+        BudgetItem budgetItem1 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge1);
+        BudgetItem budgetItem2 = budgetItemRepository.findByBudgetAndCharge(budget, incomingCharge2);
 
-        createPartitioningAndItem(partitioning, charge, keyTable1, budgetItem1, new BigDecimal(100), executionContext);
-        createPartitioningAndItem(partitioning, charge, keyTable1, budgetItem2, new BigDecimal(80), executionContext);
-        createPartitioningAndItem(partitioning, charge, keyTable2, budgetItem2, new BigDecimal(20), executionContext);
+        Charge charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+        KeyTable keyTable1 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_AREA);
+        KeyTable keyTable2 = keyTableRepository.findByBudgetAndName(budget, KeyTablesForOxf.NAME_BY_COUNT);
+
+
+        Partitioning partitioning = createPartitioning(budget, executionContext);
+
+        createPartitionItem(partitioning, charge, keyTable1, budgetItem1, new BigDecimal(100), executionContext);
+        createPartitionItem(partitioning, charge, keyTable1, budgetItem2, new BigDecimal(80), executionContext);
+        createPartitionItem(partitioning, charge, keyTable2, budgetItem2, new BigDecimal(20), executionContext);
     }
 
 }

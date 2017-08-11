@@ -91,23 +91,6 @@ public class PartitionItemRepository_Test {
 
     }
 
-    public static class FindByKeyTable extends PartitionItemRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            KeyTable keyTable = new KeyTable();
-            partitionItemRepository.findByKeyTable(keyTable);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(PartitionItem.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByKeyTable");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("keyTable")).isEqualTo((Object) keyTable);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-
-    }
-
     public static class FindUnique extends PartitionItemRepository_Test {
 
         @Test

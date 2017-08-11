@@ -88,17 +88,6 @@ import lombok.Setter;
                         "WHERE partitionItem == :partitionItem " +
                         "&& calculationType == :calculationType"),
         @Query(
-                name = "findByPartitionItem", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE partitionItem == :partitionItem"),
-        @Query(
-                name = "findByBudgetAndStatus", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +
-                        "WHERE budget == :budget && "
-                        + "status == :status"),
-        @Query(
                 name = "findByBudgetAndUnitAndInvoiceChargeAndType", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation " +

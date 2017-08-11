@@ -90,12 +90,6 @@ public class PartitionItemRepository extends UdoDomainRepositoryAndFactory<Parti
     }
 
     @Programmatic
-    public List<PartitionItem> findByKeyTable(final KeyTable keyTable) {
-        return allMatches("findByKeyTable", "keyTable", keyTable);
-    }
-
-
-    @Programmatic
     public PartitionItem findUnique(final Partitioning partitioning, final Charge charge, final BudgetItem budgetItem, final KeyTable keyTable) {
         return uniqueMatch("findUnique", "partitioning", partitioning, "charge", charge, "budgetItem", budgetItem, "keyTable", keyTable);
     }

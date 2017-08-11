@@ -19,7 +19,6 @@
 package org.estatio.dom.budgeting.budget;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -218,25 +217,12 @@ public class Budget extends UdoDomainObject2<Budget>
 
     private Budget copyCurrentTo(final Budget newBudget) {
         for (KeyTable keyTable : getKeyTables()){
-            keyTable.createCopyOn(newBudget);
+            keyTable.createCopyFor(newBudget);
         }
         for (BudgetItem item : getItems()){
-            item.createCopyOn(newBudget);
+            item.createCopyFor(newBudget);
         }
         return newBudget;
-    }
-
-    @Programmatic
-    public List<Charge> getInvoiceCharges() {
-        List<Charge> charges = new ArrayList<>();
-        for (BudgetItem budgetItem : getItems()) {
-            for (PartitionItem partitionItem : budgetItem.getPartitionItems()) {
-                if (!charges.contains(partitionItem.getCharge())) {
-                    charges.add(partitionItem.getCharge());
-                }
-            }
-        }
-        return charges;
     }
 
     @Action(semantics = SemanticsOf.SAFE)

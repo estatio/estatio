@@ -17,17 +17,12 @@
 
 package org.estatio.dom.budgeting.budget;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.partioning.PartitionItem;
-import org.estatio.dom.charge.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,106 +65,6 @@ public class Budget_Test {
                             + " [" + property.getReference() + "]"
                             + " > " + budget.getBudgetYear());
         }
-    }
-
-    public static class GetTargetChargesTest extends Budget_Test {
-
-        List<Charge> charges;
-
-        @Test
-        public void noCharges() {
-
-            // given
-            Budget budget = new Budget();
-            // when
-            charges = budget.getInvoiceCharges();
-
-            // then
-            assertThat(charges).hasSize(0);
-
-        }
-
-        @Test
-        public void withCharges() {
-
-            // given
-            Budget budget = new Budget();
-            budget.getItems().add(createItemFor(budget, "1"));
-            budget.getItems().add(createItemFor(budget, "2"));
-
-            // when
-            charges = budget.getInvoiceCharges();
-
-            // then
-            assertThat(charges).hasSize(2);
-            assertThat(charges.get(0).getReference()).isEqualTo("target1");
-
-        }
-
-        public void withDoubleCharges() {
-
-            // given
-            Budget budget = new Budget();
-            budget.getItems().add(createItemFor(budget, "0"));
-            budget.getItems().addAll(createTwoItemsWithSamePartitionItemFor(budget, "1", "2"));
-
-            // when
-            charges = budget.getInvoiceCharges();
-
-            // then
-            assertThat(budget.getItems()).hasSize(3);
-            assertThat(charges).hasSize(2);
-            assertThat(charges.get(0).getReference()).isEqualTo("target0");
-            assertThat(charges.get(1).getReference()).isEqualTo("target2");
-
-        }
-
-        private BudgetItem createItemFor(final Budget budget, final String uniqueString) {
-
-            PartitionItem partitionItem = new PartitionItem();
-            Charge targetCharge = new Charge();
-            targetCharge.setReference("target".concat(uniqueString));
-            partitionItem.setCharge(targetCharge);
-
-            BudgetItem newItem = new BudgetItem(){
-                @Override
-                public List<PartitionItem> getPartitionItems(){
-                    return Arrays.asList(partitionItem);
-                }
-            };
-            Charge charge = new Charge();
-            charge.setReference(uniqueString);
-            newItem.setCharge(charge);
-
-            partitionItem.setBudgetItem(newItem);
-
-            return newItem;
-        }
-
-        private List<BudgetItem> createTwoItemsWithSamePartitionItemFor(final Budget budget, final String str1, final String str2) {
-
-            BudgetItem newItem1 = new BudgetItem();
-            Charge charge1 = new Charge();
-            charge1.setReference(str1);
-            newItem1.setCharge(charge1);
-
-            BudgetItem newItem2 = new BudgetItem();
-            Charge charge2 = new Charge();
-            charge2.setReference(str2);
-            newItem2.setCharge(charge2);
-
-            PartitionItem partitionItem = new PartitionItem();
-            Charge targetCharge = new Charge();
-            targetCharge.setReference("target".concat(str1));
-            partitionItem.setCharge(targetCharge);
-            partitionItem.setBudgetItem(newItem1);
-
-            newItem1.getPartitionItems().add(partitionItem);
-            newItem2.getPartitionItems().add(partitionItem);
-
-            return Arrays.asList(newItem1, newItem2);
-        }
-
     }
 
 }

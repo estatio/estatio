@@ -343,11 +343,12 @@ public class KeyTable extends UdoDomainObject2<Budget> implements WithApplicatio
     }
 
     @Programmatic
-    public void createCopyOn(final Budget newBudget) {
-        KeyTable copiedTable = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod());
+    public KeyTable createCopyFor(final Budget newBudget) {
+        KeyTable newKeyTableCopy = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod());
         for (KeyItem item : getItems()){
-            copiedTable.newItem(item.getUnit(), item.getSourceValue(), item.getValue());
+            newKeyTableCopy.newItem(item.getUnit(), item.getSourceValue(), item.getValue());
         }
+        return newKeyTableCopy;
     }
 
     // //////////////////////////////////////

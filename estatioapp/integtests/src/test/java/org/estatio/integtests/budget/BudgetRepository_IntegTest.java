@@ -17,12 +17,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.charge.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.budget.PartitionItemsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
-import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +41,6 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
-                executionContext.executeChild(this, new PartitionItemsForOxf());
             }
         });
     }
@@ -138,26 +134,6 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
             //then
             assertThat(budgetNotToBeFound).isEqualTo(null);
         }
-    }
-
-    public static class GetTargetCharges extends BudgetRepository_IntegTest {
-
-        @Test
-        public void happyCase() throws Exception {
-
-            // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
-
-            // when
-            List<Charge> targetCharges = budget.getInvoiceCharges();
-
-            // then
-            assertThat(targetCharges.size()).isEqualTo(1);
-            assertThat(targetCharges.get(0).getReference()).isEqualTo(ChargeRefData.GB_SERVICE_CHARGE);
-
-        }
-
     }
 
     public static class NewBudgetValidationWorks extends BudgetRepository_IntegTest {

@@ -21,14 +21,11 @@ package org.estatio.dom.budgeting.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
@@ -95,16 +92,5 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         }
         return itemValue;
     }
-
-    public String validateUpdateOrCreateBudgetItemValue(final BigDecimal value, final BudgetItem budgetItem, final LocalDate date, final BudgetCalculationType type) {
-        if (findUnique(budgetItem, date, type) == null) {
-            return validateNewBudgetItemValue(budgetItem, value, date, type);
-        }
-        return null;
-    }
-
-    @Inject
-    private IsisJdoSupport isisJdoSupport;
-
 
 }

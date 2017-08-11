@@ -24,7 +24,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.budget.PartitionItemsForOxf;
+import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -54,7 +54,7 @@ public class PartitionItemRepository_IntegTest extends EstatioIntegrationTest {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PartitionItemsForOxf());
+                executionContext.executeChild(this, new PartitioningAndItemsForOxf());
             }
         });
     }
@@ -93,23 +93,6 @@ public class PartitionItemRepository_IntegTest extends EstatioIntegrationTest {
             BudgetItem budgetItem = budget.getItems().last();
             // when
             final List<PartitionItem> partitionItemList = partitionItemRepository.findByBudgetItem(budgetItem);
-            // then
-            assertThat(partitionItemList.size()).isEqualTo(2);
-
-        }
-
-    }
-
-    public static class FindByKeyTable extends PartitionItemRepository_IntegTest {
-
-        @Test
-        public void happyCase() throws Exception {
-            // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
-            KeyTable keyTable = keytablesRepository.findByBudget(budget).get(0);
-            // when
-            final List<PartitionItem> partitionItemList = partitionItemRepository.findByKeyTable(keyTable);
             // then
             assertThat(partitionItemList.size()).isEqualTo(2);
 

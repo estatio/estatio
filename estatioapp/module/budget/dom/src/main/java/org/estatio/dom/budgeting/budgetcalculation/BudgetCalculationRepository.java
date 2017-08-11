@@ -65,34 +65,12 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
                 "calculationType", calculationType);
     }
 
-    public List<BudgetCalculation> findByBudgetAndStatus(Budget budget, Status status) {
-        return allMatches("findByBudgetAndStatus", "budget", budget, "status", status);
-    }
-
     public List<BudgetCalculation> findByPartitionItemAndCalculationType(PartitionItem partitionItem, BudgetCalculationType calculationType) {
         return allMatches("findByPartitionItemAndCalculationType", "partitionItem", partitionItem, "calculationType", calculationType);
     }
 
-    public List<BudgetCalculation> findByPartitionItem(
-            final PartitionItem partitionItem
-    ){
-        return allMatches("findByPartitionItem", "partitionItem", partitionItem);
-    }
-
     public List<BudgetCalculation> allBudgetCalculations() {
         return allInstances();
-    }
-
-    public List<BudgetCalculation> findByBudgetAndCharge(final Budget budget, final Charge charge) {
-        List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItem budgetItem : budget.getItems()){
-            for (PartitionItem allocation : budgetItem.getPartitionItems()){
-                if (allocation.getCharge().equals(charge)) {
-                    result.addAll(findByPartitionItem(allocation));
-                }
-            }
-        }
-        return result;
     }
 
     public List<BudgetCalculation> findByBudget(final Budget budget) {
@@ -101,16 +79,6 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
             result.addAll(findByBudgetItemAndCalculationType(item, BudgetCalculationType.ACTUAL));
             result.addAll(findByBudgetItemAndCalculationType(item, BudgetCalculationType.BUDGETED));
-
-        }
-        return result;
-    }
-
-    public List<BudgetCalculation> findByBudgetAndCalculationType(final Budget budget, final BudgetCalculationType calculationType) {
-        List<BudgetCalculation> result = new ArrayList<>();
-        for (BudgetItem item : budget.getItems()){
-
-            result.addAll(findByBudgetItemAndCalculationType(item, calculationType));
 
         }
         return result;

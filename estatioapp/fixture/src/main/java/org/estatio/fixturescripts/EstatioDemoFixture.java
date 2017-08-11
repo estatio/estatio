@@ -31,7 +31,7 @@ import org.estatio.fixture.asset.PropertyForMnsFr;
 import org.estatio.fixture.asset.PropertyForVivFr;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
-import org.estatio.fixture.budget.PartitionItemsForOxf;
+import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
@@ -126,7 +126,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());
-        executionContext.executeChild(this, new PartitionItemsForOxf());
+        executionContext.executeChild(this, new PartitioningAndItemsForOxf());
         
         executionContext.executeChild(this, new PropertyForCARTEST());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());

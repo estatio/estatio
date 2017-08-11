@@ -91,24 +91,6 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
 
     }
 
-    public static class FindByPropertyAndChargeAndStartDate extends BudgetItemRepository_IntegTest {
-
-        @Test
-        public void happyCase() throws Exception {
-            // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
-            LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
-            // when
-            final BudgetItem item = budgetItemRepository.findByPropertyAndChargeAndStartDate(property, charge, startDate);
-            // then
-            assertThat(item.getBudget().getProperty()).isEqualTo(property);
-            assertThat(item.getBudget().getStartDate()).isEqualTo(startDate);
-            assertThat(item.getCharge()).isEqualTo(charge);
-        }
-
-    }
-
     public static class NewItem extends BudgetItemRepository_IntegTest {
 
 
@@ -125,13 +107,13 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_3);
             budgetedValue = new BigDecimal("1234.56");
 
-            assertThat(budgetItemRepository.findByBudget(budget).size()).isEqualTo(2);
+            assertThat(budget.getItems().size()).isEqualTo(2);
 
             // when
             budgetItem = wrap(budgetItemRepository).newBudgetItem(budget, budgetedValue, charge);
 
             // then
-            assertThat(budgetItemRepository.findByBudget(budget).size()).isEqualTo(3);
+            assertThat(budget.getItems().size()).isEqualTo(3);
             assertThat(budgetItem.getValues().size()).isEqualTo(1);
             assertThat(budgetItem.getValues().first().getValue()).isEqualTo(budgetedValue);
             assertThat(budgetItem.getValues().first().getType()).isEqualTo(BudgetCalculationType.BUDGETED);
@@ -144,8 +126,7 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void sadCase() {
-
-            BudgetItem budgetItem;
+            
             BigDecimal budgetedValue;
 
             // given
@@ -160,7 +141,7 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
             expectedException.expectMessage("Reason: There is already an item with this charge");
 
             // when
-            budgetItem = wrap(budgetItemRepository).newBudgetItem(budget, budgetedValue, charge);
+            wrap(budgetItemRepository).newBudgetItem(budget, budgetedValue, charge);
 
         }
 

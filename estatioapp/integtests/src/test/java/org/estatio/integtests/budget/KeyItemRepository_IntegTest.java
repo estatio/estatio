@@ -15,12 +15,13 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
+import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.keytable.KeyTableRepository;
+import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
-import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,7 @@ public class KeyItemRepository_IntegTest extends EstatioIntegrationTest {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new KeyTablesForOxf());
+                executionContext.executeChild(this, new BudgetsForOxf());
             }
         });
     }
@@ -59,9 +60,10 @@ public class KeyItemRepository_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             // given
             Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
+            Budget budget = budgetRepository.findByProperty(property).get(0);
+            KeyTable keyTable = budget.createKeyTable("table", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
+            keyTable.generateItems();
             Unit unit = unitRepository.findByProperty(property).get(0);
-            KeyTable keyTable = keyTableRepository.findByBudget(budget).get(0);
 
             // when
             final KeyItem item = keyItemRepository.findByKeyTableAndUnit(keyTable, unit);

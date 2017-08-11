@@ -21,8 +21,6 @@ package org.estatio.dom.budgeting.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -94,21 +92,11 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     // //////////////////////////////////////
 
     @Programmatic
-    public List<BudgetItem> findByBudget(final Budget budget) {
-        return allMatches("findByBudget", "budget", budget);
-    }
-
-    @Programmatic
     public BudgetItem findByBudgetAndCharge(
             final Budget budget,
             final Charge charge
     ){
         return uniqueMatch("findByBudgetAndCharge", "budget", budget, "charge", charge);
-    }
-
-    @Programmatic
-    public BudgetItem findByPropertyAndChargeAndStartDate(final Property property, final Charge charge, final LocalDate startDate) {
-        return uniqueMatch("findByPropertyAndChargeAndStartDate", "property", property, "charge", charge, "startDate", startDate);
     }
 
     @Programmatic

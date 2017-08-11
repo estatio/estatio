@@ -168,6 +168,24 @@ public class BudgetOverrideRepository_IntegTest extends EstatioIntegrationTest {
 
     }
 
+    @Test
+    public void findByLeaseAndInvoiceCharge(){
+
+        // given
+        Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        Charge invoiceCharge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
+        BigDecimal overrideValue = new BigDecimal("1234.56");
+        String reason = "Some reason";
+
+        // when
+        BudgetOverrideForFixed budgetOverrideForFixed = wrap(budgetOverrideRepository).newBudgetOverrideForFixed(overrideValue, leaseTopModel, null, null, invoiceCharge, null, null, reason);
+
+        // then
+        assertThat(budgetOverrideRepository.findByLeaseAndInvoiceCharge(leaseTopModel, invoiceCharge).size()).isEqualTo(1);
+        assertThat(budgetOverrideRepository.findByLeaseAndInvoiceCharge(leaseTopModel, invoiceCharge).get(0)).isEqualTo(budgetOverrideForFixed);
+
+    }
+
 
 
 
