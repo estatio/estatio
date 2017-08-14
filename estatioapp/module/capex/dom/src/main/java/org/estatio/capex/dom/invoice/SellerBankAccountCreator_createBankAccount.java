@@ -29,7 +29,7 @@ public class SellerBankAccountCreator_createBankAccount {
         if (sellerBankAccountCreator.getSeller() == null) {
             return "There is no seller specified";
         }
-        if (sellerBankAccountCreator.getApprovalState().equals(IncomingInvoiceApprovalState.PAID)){
+        if (sellerBankAccountCreator.getApprovalState()!=null && sellerBankAccountCreator.getApprovalState().equals(IncomingInvoiceApprovalState.PAID)){
             return "Cannot create bankaccount for a paid invoice";
         }
         return null;
