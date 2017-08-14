@@ -27,7 +27,6 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.charge.Charge;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 
@@ -37,8 +36,9 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        if (propertyRepository.findPropertyByReference(PropertyForOxfGb.REF)==null) {
+            executionContext.executeChild(this, new PropertyForOxfGb());
+        }
         executionContext.executeChild(this, new KeyTablesForOxf());
 
         // exec

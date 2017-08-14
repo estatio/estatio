@@ -28,7 +28,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeasesForBudNl;
 
@@ -40,8 +39,9 @@ public class BudgetOverridesForBud extends BudgetOverrideAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new LeasesForBudNl());
+        if (leaseRepository.findLeaseByReference(LeasesForBudNl.REF1)==null) {
+            executionContext.executeChild(this, new LeasesForBudNl());
+        }
 
         // exec
         Lease leaseForPoison = leaseRepository.findLeaseByReference(LeasesForBudNl.REF1);

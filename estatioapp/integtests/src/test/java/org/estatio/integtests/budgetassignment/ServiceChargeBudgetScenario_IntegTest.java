@@ -48,9 +48,10 @@ import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
+import org.estatio.fixture.budget.BudgetBaseLineFixture;
 import org.estatio.fixture.budget.BudgetForBud;
+import org.estatio.fixture.budget.BudgetOverridesForBud;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.lease.LeasesForBudNl;
@@ -106,7 +107,9 @@ ServiceChargeBudgetScenario_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
+                executionContext.executeChild(this, new BudgetBaseLineFixture());
+                executionContext.executeChild(this, new LeasesForBudNl());
+                executionContext.executeChild(this, new BudgetOverridesForBud());
                 executionContext.executeChild(this, new PartitioningAndItemsForBud());
             }
         });

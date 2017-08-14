@@ -21,9 +21,9 @@ import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
@@ -69,9 +69,11 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends EstatioInte
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+                // here EstatioBaselineFixture is chosen instead of BudgetBaseLineFixture because PropertyFixtures outside budget module are manipulated
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
+
             }
         });
         propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
