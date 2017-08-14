@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.auto.Mock;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -165,6 +166,40 @@ public class PaymentBatch_Test {
         currency.setReference(currencyRef);
         invoice.setCurrency(currency);
         return invoice;
+    }
+
+    @Test
+    public void getUpstreamCreditNoteFound_works() throws Exception {
+
+        // given
+        PaymentBatch paymentBatchWithCreditNote = new PaymentBatch();
+        PaymentBatch paymentBatchWithOutCreditNote = new PaymentBatch();
+        PaymentLine paymentLineWithCreditNoteFound = new PaymentLine(){
+            @Override
+            public boolean getUpstreamCreditNoteFound(){
+                return true;
+            }
+
+        };
+        PaymentLine paymentLineWithoutCreditNoteFound = new PaymentLine(){
+            @Override
+            public boolean getUpstreamCreditNoteFound(){
+                return false;
+            }
+
+        };
+        paymentBatchWithCreditNote.getLines().add(paymentLineWithCreditNoteFound);
+        paymentBatchWithCreditNote.getLines().add(paymentLineWithoutCreditNoteFound);
+
+        paymentBatchWithOutCreditNote.getLines().add(paymentLineWithoutCreditNoteFound);
+
+        // when, then
+        Assertions.assertThat(paymentBatchWithCreditNote.getUpstreamCreditNoteFound()).isTrue();
+        Assertions.assertThat(paymentBatchWithOutCreditNote.getUpstreamCreditNoteFound()).isFalse();
+
+
+
+
     }
 
 }

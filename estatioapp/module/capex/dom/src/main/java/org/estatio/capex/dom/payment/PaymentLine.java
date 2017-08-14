@@ -2,7 +2,11 @@ package org.estatio.capex.dom.payment;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -16,13 +20,19 @@ import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -171,5 +181,32 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
     public ApplicationTenancy getApplicationTenancy() {
         return invoice.getApplicationTenancy();
     }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public boolean getUpstreamCreditNoteFound(){
+        return !getUpstreamCreditNotesForCreditorBankAccount().isEmpty();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<IncomingInvoice> getUpstreamCreditNotesForCreditorBankAccount(){
+        List<IncomingInvoiceApprovalState> upstreamStates = Arrays.asList(
+                IncomingInvoiceApprovalState.COMPLETED,
+                IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
+        return incomingInvoiceRepository.findByBankAccount(getCreditorBankAccount())
+                .stream()
+                .filter(x->x.getApprovalState()!=null)
+                .filter(x->x.getNetAmount()!=null)
+                .filter(x->x.getNetAmount().compareTo(BigDecimal.ZERO)<0)
+                .filter(x->upstreamStates.contains(x.getApprovalState()))
+                .collect(Collectors.toList());
+    }
+
+    @Inject
+    IncomingInvoiceRepository incomingInvoiceRepository;
 
 }

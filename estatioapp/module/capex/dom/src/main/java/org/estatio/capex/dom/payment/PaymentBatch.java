@@ -313,6 +313,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .findFirst();
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public boolean getUpstreamCreditNoteFound(){
+        return Lists.newArrayList(getLines()).stream().filter(x->x.getUpstreamCreditNoteFound()).findAny().isPresent();
+    }
 
     @Mixin(method="act")
     public static class removeInvoice {

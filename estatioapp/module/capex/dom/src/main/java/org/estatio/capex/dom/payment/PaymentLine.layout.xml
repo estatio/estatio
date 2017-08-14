@@ -66,6 +66,7 @@
                             <cpt:fieldSet name="Creditor">
                                 <cpt:property id="creditor"/>
                                 <cpt:property id="creditorBankAccount"/>
+                                <cpt:property id="upstreamCreditNoteFound"/>
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Invoice" id="details">
                                 <cpt:property id="invoice"/>
