@@ -19,8 +19,8 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.budget.BudgetBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -50,11 +50,9 @@ public class BudgetCalculationRunRepository_IntegTest extends EstatioIntegration
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetBaseLineFixture());
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
-                if (leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF)==null) {
-                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                }
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
         propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);

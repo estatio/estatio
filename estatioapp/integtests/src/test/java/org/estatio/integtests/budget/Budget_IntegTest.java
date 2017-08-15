@@ -21,13 +21,14 @@ import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.budget.BudgetBaseLineFixture;
 import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
 import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
+import org.estatio.fixture.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,9 +46,10 @@ public class Budget_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new BudgetBaseLineFixture());
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PartitioningAndItemsForOxf());
                 executionContext.executeChild(this, new PartitioningAndItemsForBud());
+                executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
             }
         });
     }

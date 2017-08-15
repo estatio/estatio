@@ -25,8 +25,10 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.fixture.lease.LeasesForBudNl;
 
 public class BudgetForBud extends BudgetAbstact {
 
@@ -37,9 +39,10 @@ public class BudgetForBud extends BudgetAbstact {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (propertyRepository.findPropertyByReference(PropertyForBudNl.REF)==null){
-            executionContext.executeChild(this, new PropertyForBudNl());
-        }
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new LeasesForBudNl());
+        executionContext.executeChild(this, new BudgetOverridesForBud());
+
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
 

@@ -33,6 +33,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
 
@@ -45,9 +46,8 @@ public class BudgetsForOxf extends FixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if (propertyRepository.findPropertyByReference(PropertyForOxfGb.REF)==null) {
-            executionContext.executeChild(this, new PropertyForOxfGb());
-        }
+        executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
