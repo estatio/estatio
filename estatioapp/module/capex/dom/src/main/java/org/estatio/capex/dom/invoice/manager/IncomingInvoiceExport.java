@@ -11,7 +11,7 @@ import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -86,7 +86,7 @@ public class IncomingInvoiceExport {
 
         this.invoiceType = item.getIncomingInvoiceType()!=null ? item.getIncomingInvoiceType().name() : ""; // since the mapping is determined by the item type rather than the invoice type
 
-        final Property property = invoice.getProperty();
+        final FixedAsset property = item.getFixedAsset();
         this.propertyReference = property == null ? "" :property.getReference();
         this.propertyName = property == null ? "" :property.getName();
 
