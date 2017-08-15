@@ -19,6 +19,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -27,6 +28,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -84,6 +86,7 @@ import lombok.Setter;
 @DomainObject(
         objectType = "payment.PaymentLine"
 )
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class PaymentLine extends UdoDomainObject2<PaymentLine> {
 
     public PaymentLine() {
