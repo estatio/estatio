@@ -238,7 +238,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             IncomingInvoiceApprovalState.PAID,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.none(),
-            AdvancePolicy.AUTOMATIC) {
+            AdvancePolicy.MANUAL) {
         @Override public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
