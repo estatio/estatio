@@ -80,6 +80,7 @@
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByDirectDebit" paged="15">
                                 <cpt:named>Payable by Direct Debit</cpt:named>
+                                <cpt:action id="openDirectDebitManager"/>
                                 <cpt:action id="markAsPaidByDirectDebit">
                                     <cpt:named>Mark as paid by DD</cpt:named>
                                 </cpt:action>

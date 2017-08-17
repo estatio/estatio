@@ -43,6 +43,8 @@ import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.paydd.DirectDebitsMenu;
+import org.estatio.capex.dom.paydd.manager.DirectDebitsManager;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchMenu;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
@@ -252,6 +254,14 @@ public class EstatioAppHomePage {
 
     @Inject
     PaymentBatchMenu paymentBatchMenu;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa = "fa-check-square-o")
+    public DirectDebitsManager openDirectDebitManager() {
+        return directDebitsMenu.openDirectDebitManager();
+    }
+
+    @Inject DirectDebitsMenu directDebitsMenu;
 
     @Inject
     FactoryService factoryService;
