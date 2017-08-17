@@ -1,4 +1,4 @@
-package org.estatio.app.mixins.budgetassignment;
+package org.estatio.dom.budgetassignment.override.mixins;
 
 import java.util.List;
 
