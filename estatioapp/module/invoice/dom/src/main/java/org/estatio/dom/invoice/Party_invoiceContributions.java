@@ -7,31 +7,40 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.party.Party;
 
-@DomainService(
-        nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
-)
 public class Party_invoiceContributions {
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> invoicesFrom(final Party seller) {
-        return invoiceRepository.findBySeller(seller);
+    @Mixin(method="coll")
+    public static class Party_invoicesFrom {
+        private final Party seller;
+        public Party_invoicesFrom(final Party seller) { this.seller = seller; }
+
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        public List<Invoice> coll() {
+            return invoiceRepository.findBySeller(seller);
+        }
+        @Inject
+        InvoiceRepository invoiceRepository;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Invoice> invoicesTo(final Party buyer) {
-        return invoiceRepository.findByBuyer(buyer);
+    @Mixin(method="coll")
+    public static class Party_invoicesTo {
+        private final Party buyer;
+        public Party_invoicesTo(final Party buyer) { this.buyer = buyer; }
+
+        @Action(semantics = SemanticsOf.SAFE)
+        @ActionLayout(contributed=Contributed.AS_ASSOCIATION)
+        public List<Invoice> coll() {
+            return invoiceRepository.findByBuyer(buyer);
+        }
+        @Inject
+        InvoiceRepository invoiceRepository;
     }
 
-
-    @Inject
-    InvoiceRepository invoiceRepository;
 
 }
