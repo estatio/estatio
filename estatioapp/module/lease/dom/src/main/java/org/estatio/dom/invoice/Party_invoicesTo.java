@@ -1,6 +1,7 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -10,6 +11,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.party.Party;
 
 @Mixin(method="coll")
@@ -19,8 +21,12 @@ public class Party_invoicesTo {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
-    public List<Invoice> coll() {
-        return invoiceRepository.findByBuyer(buyer);
+    public List<InvoiceForLease> coll() {
+        return invoiceRepository.findByBuyer(buyer)
+                .stream()
+                .filter(InvoiceForLease.class::isInstance)
+                .map(InvoiceForLease.class::cast).collect(
+                Collectors.toList());
     }
     @Inject
     InvoiceRepository invoiceRepository;
