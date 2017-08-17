@@ -23,6 +23,9 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.lease.Lease;
 
+/**
+ * This cannot be inlined because Lease doesn't know about BudgetOverrideRepository.
+ */
 @Mixin
 public class Lease_NewCeilingOverride {
 

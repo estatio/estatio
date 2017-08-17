@@ -13,6 +13,9 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 
+/**
+ * TODO: inline this mixin.
+ */
 @Mixin(method = "act")
 public class Task_checkState {
 

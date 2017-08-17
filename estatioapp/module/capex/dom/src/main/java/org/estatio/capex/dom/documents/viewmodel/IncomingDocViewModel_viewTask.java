@@ -12,6 +12,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class IncomingDocViewModel_viewTask {
 

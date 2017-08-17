@@ -16,6 +16,9 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because IncomingInvoiceItem does not know about Coda.
+ */
 @Mixin
 public class IncomingInvoiceItem_createCodaMapping {
 

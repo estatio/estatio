@@ -6,6 +6,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+/**
+ * TODO: inline this mixin.
+ */
 @Mixin(method = "act")
 public class Task_updateDescription {
 

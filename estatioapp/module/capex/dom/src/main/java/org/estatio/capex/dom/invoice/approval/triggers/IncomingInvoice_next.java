@@ -7,6 +7,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 
+/**
+ * This mixin cannot (easily) be inlined because it inherits functionality from its superclass.
+ */
 @Mixin(method = "act")
 public class IncomingInvoice_next extends IncomingInvoice_triggerAbstract {
 

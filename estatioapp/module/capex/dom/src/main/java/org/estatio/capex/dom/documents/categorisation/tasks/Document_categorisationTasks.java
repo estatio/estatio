@@ -10,6 +10,10 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.dom.invoice.DocumentTypeData;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and
+ * does not know about its categorisation state.
+ */
 @Mixin(method = "coll")
 public class Document_categorisationTasks
         extends DomainObject_tasksAbstract<

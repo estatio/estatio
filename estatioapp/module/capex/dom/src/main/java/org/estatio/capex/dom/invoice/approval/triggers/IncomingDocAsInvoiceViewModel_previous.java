@@ -7,6 +7,10 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 
+/**
+ * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
+ * this follows a common pattern applicable for all domain objects that have an associated state transition machine.
+ */
 @Mixin(method = "act")
 public class IncomingDocAsInvoiceViewModel_previous extends IncomingInvoice_previous {
 

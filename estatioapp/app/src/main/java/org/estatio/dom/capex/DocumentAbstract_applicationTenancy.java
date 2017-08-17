@@ -17,10 +17,10 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 public class DocumentAbstract_applicationTenancy {
 
     private final DocumentAbstract documentAbstract;
-
     public DocumentAbstract_applicationTenancy(final DocumentAbstract documentAbstract) {
         this.documentAbstract = documentAbstract;
     }
+
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
@@ -28,7 +28,8 @@ public class DocumentAbstract_applicationTenancy {
         return applicationTenancyRepository.findByPath(documentAbstract.getAtPath());
     }
 
+
     @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
+    ApplicationTenancyRepository applicationTenancyRepository;
 
 }

@@ -22,6 +22,9 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know about incoming invoices or documents.
+ */
 @Mixin(method = "prop")
 public class BankAccount_ibanProof {
 

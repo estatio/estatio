@@ -33,6 +33,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin
 public class FinancialAccount_findTransaction {
 

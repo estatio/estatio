@@ -50,38 +50,31 @@ import lombok.Setter;
 )
 public class PaperclipForOrder extends Paperclip {
 
-    //region > invoice (property)
-    @Column(
-            allowsNull = "false",
-            name = "orderId"
-    )
+
+    @Column(allowsNull = "false", name = "orderId")
     @Getter @Setter
     private Order order;
-    //endregion
 
-    //region > attachedTo (hook, derived)
+
     @NotPersistent
     @Override
     public Object getAttachedTo() {
         return getOrder();
     }
-
     @Override
     protected void setAttachedTo(final Object object) {
         setOrder((Order) object);
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(Order.class, PaperclipForOrder.class);
         }
     }
-    //endregion
 
-    //region > mixins
+
 
     @Mixin
     public static class _documents extends T_documents<Order> {
@@ -90,6 +83,5 @@ public class PaperclipForOrder extends Paperclip {
         }
     }
 
-    //endregion
 
 }

@@ -19,6 +19,10 @@ import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and
+ * does not know about its orders
+ */
 @Mixin(method = "act")
 public class Document_categoriseAsOrder
         extends Document_triggerAbstract {

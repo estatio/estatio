@@ -17,6 +17,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.invoice.InvoiceItem;
 
+/**
+ * This cannot be inlined (must be a mixin) because Project does not know about incoming invoices.
+ */
 @Mixin
 public class Project_InvoicedAmountNotOnProjectItems {
 

@@ -17,6 +17,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.order.Order;
 
+/**
+ * REVIEW: this could be inlined as a mixin, however would result in: domain layer -> app layer  ??
+ */
 @Mixin(method = "act")
 public class Order_switchView {
 

@@ -23,6 +23,9 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
+/**
+ * TODO: REVIEW: this mixin could in theory be inlined, but inherits substantial functionality from superclass and maybe we want to keep invoices and documents decoupled?
+ */
 @Mixin(method = "act")
 public class InvoiceSummaryForPropertyDueDateStatus_downloadInvoiceDocs extends InvoiceSummaryForPropertyDueDateStatus_downloadAbstract<DocAndCommForInvoiceDoc>  {
 

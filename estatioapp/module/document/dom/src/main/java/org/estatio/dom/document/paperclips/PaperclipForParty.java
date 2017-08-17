@@ -52,38 +52,33 @@ import lombok.Setter;
 )
 public class PaperclipForParty extends Paperclip {
 
-    //region > party (property)
-    @Column(
-            allowsNull = "false",
-            name = "partyId"
-    )
+
+    @Column(allowsNull = "false", name = "partyId")
     @Getter @Setter
     private Party party;
-    //endregion
 
-    //region > attachedTo (hook, derived)
+
+
     @NotPersistent
     @Override
     public Object getAttachedTo() {
         return getParty();
     }
-
     @Override
     protected void setAttachedTo(final Object object) {
         setParty((Party) object);
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(Party.class, PaperclipForParty.class);
         }
     }
-    //endregion
 
-    //region > mixins
+
 
     @Mixin
     public static class _documents extends T_documents<Party> {
@@ -91,7 +86,5 @@ public class PaperclipForParty extends Paperclip {
             super(party);
         }
     }
-
-    //endregion
 
 }

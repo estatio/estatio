@@ -107,6 +107,9 @@ public class Person extends Party
     @Getter @Setter
     private String username;
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class updateUsername {
         private final Person person;

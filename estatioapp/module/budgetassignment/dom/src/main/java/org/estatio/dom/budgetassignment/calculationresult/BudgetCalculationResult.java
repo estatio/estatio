@@ -212,5 +212,6 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     @Inject
     private RepositoryService repositoryService;
 
+
 }
 

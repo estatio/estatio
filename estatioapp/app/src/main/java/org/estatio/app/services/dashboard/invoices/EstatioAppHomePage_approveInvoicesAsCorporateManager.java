@@ -18,6 +18,8 @@ import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAs
 
 /**
  * For testing only
+ *
+ * this could be inlined, but perhaps should not given that it is for testing/prototyping only?
  */
 @Mixin(method = "act")
 public class EstatioAppHomePage_approveInvoicesAsCorporateManager {

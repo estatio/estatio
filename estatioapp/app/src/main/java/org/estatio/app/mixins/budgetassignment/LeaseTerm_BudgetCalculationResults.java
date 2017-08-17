@@ -16,6 +16,9 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResul
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
+/**
+ * This cannot be inlined because Lease doesn't know about BudgetCalculationResultLinkRepository.
+ */
 @Mixin
 public class LeaseTerm_BudgetCalculationResults {
 

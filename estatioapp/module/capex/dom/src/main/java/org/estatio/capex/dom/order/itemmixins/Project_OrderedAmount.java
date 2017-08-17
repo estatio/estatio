@@ -17,6 +17,9 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.project.Project;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Project does not know about orders.
+ */
 @Mixin
 public class Project_OrderedAmount {
 

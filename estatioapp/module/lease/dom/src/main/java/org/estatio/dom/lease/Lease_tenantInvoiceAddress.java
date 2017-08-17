@@ -22,6 +22,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.communications.Agreement_currentCommunicationChannel;
 
+/**
+ * TODO: inline this mixin (although it has a superclass, this is the only subclass implementation so the superclass' functionality too can be inlined)
+ */
 @Mixin
 public class Lease_tenantInvoiceAddress extends Agreement_currentCommunicationChannel {
 

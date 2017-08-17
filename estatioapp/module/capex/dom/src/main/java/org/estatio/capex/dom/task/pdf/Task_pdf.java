@@ -18,6 +18,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.task.Task;
 
+/**
+ * Although this mixin could be inlined, probably want to keep separate because there's a chance that Task may move into its own module.
+ */
 @Mixin(method = "prop")
 public class Task_pdf {
     private final Task task;

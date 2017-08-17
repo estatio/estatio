@@ -11,6 +11,9 @@ import org.incode.module.base.dom.Titled;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * REVIEW: this could be inlined as a mixin (but domain layer -> app layer?)
+ */
 @Mixin(method="act")
 public class BankAccount_lookupBic {
 

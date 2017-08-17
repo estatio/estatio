@@ -55,6 +55,9 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
+/**
+ * TODO: REVIEW: this mixin could in theory be inlined, but it's a lot of functionality in its own right; and maybe we want to keep invoices and documents decoupled?
+ */
 @Mixin
 public class InvoiceForLease_attachSupportingDocument {
 

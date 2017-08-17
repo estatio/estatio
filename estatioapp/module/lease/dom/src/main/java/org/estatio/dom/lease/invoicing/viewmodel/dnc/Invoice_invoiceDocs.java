@@ -22,6 +22,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
+/**
+ * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
+ */
 @Mixin
 public class Invoice_invoiceDocs extends InvoiceForLease_collectionAbstract<DocAndCommForInvoiceDoc> {
 

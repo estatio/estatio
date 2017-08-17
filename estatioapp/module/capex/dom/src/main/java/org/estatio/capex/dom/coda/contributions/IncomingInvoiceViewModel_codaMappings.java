@@ -14,6 +14,9 @@ import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because IncomingInvoiceItem does not know about Coda.
+ */
 @Mixin
 public class IncomingInvoiceViewModel_codaMappings {
 

@@ -155,6 +155,10 @@ public class IncomingDocumentCategorisationStateTransition
 
 
     //region > _pdf (derived property)
+
+    /**
+     * TODO: inline
+     */
     @Mixin(method="prop")
     public static class _pdf {
         private final IncomingDocumentCategorisationStateTransition stateTransition;

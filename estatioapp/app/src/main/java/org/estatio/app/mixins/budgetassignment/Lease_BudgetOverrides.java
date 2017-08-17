@@ -14,6 +14,9 @@ import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.lease.Lease;
 
+/**
+ * This cannot be inlined because Lease doesn't know about BudgetOverrideRepository.
+ */
 @Mixin
 public class Lease_BudgetOverrides {
 

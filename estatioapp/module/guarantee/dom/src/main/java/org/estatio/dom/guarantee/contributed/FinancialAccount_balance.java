@@ -30,8 +30,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.financial.FinancialAccount;
 
+/**
+ * Cannot be inlined (needs to be a mixin) because FinancialAccount does not know about guarantees
+ */
 @Mixin(method = "exec")
 public class FinancialAccount_balance {
+
 
     private final FinancialAccount financialAccount;
 

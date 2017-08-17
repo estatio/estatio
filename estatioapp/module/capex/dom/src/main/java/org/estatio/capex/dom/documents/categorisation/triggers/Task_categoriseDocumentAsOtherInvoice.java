@@ -18,6 +18,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.
+ */
 @Mixin(method = "act")
 public class Task_categoriseDocumentAsOtherInvoice
         extends Task_mixinActAbstract<Document_categoriseAsOtherInvoice, Document> {

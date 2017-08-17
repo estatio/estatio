@@ -14,6 +14,9 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.party.Party;
 
+/**
+ * This cannot be inlined (must be a mixin) because Party does not know about Orders.
+ */
 @Mixin
 public class Party_orders {
 

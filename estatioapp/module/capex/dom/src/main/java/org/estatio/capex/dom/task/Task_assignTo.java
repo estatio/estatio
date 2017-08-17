@@ -13,6 +13,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
+/**
+ * TODO: inline this mixin.
+ */
 @Mixin(method = "act")
 public class Task_assignTo {
 

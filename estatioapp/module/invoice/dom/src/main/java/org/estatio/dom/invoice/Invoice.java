@@ -272,6 +272,9 @@ public abstract class Invoice<T extends Invoice<T>>
     @Inject protected
     InvoiceAttributeRepository invoiceAttributeRepository;
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "exec")
     public static class _changeDueDate {
 
@@ -318,6 +321,9 @@ public abstract class Invoice<T extends Invoice<T>>
     private PaymentMethod paymentMethod;
 
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "exec")
     public static class _changePaymentMethod {
 
@@ -425,6 +431,9 @@ public abstract class Invoice<T extends Invoice<T>>
     @Getter @Setter
     private BankMandate paidBy;
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "exec")
     public static class _remove {
 

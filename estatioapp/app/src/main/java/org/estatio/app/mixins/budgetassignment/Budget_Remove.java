@@ -31,6 +31,9 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.roles.EstatioRole;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
+ */
 @Mixin
 public class Budget_Remove {
 

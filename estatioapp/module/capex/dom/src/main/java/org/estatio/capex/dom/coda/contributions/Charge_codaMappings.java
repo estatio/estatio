@@ -14,6 +14,9 @@ import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.dom.charge.Charge;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Charge does not know about Coda.
+ */
 @Mixin
 public class Charge_codaMappings {
 

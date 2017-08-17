@@ -6,6 +6,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+/**
+ * TODO: inline this mixin (though note that it inherits functionality from superclass).
+ */
 @Mixin(method = "act")
 public class Task_next extends Task_abstract {
 

@@ -18,6 +18,9 @@ import org.apache.isis.applib.services.message.MessageService;
 
 import org.estatio.dom.invoice.InvoiceStatus;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class InvoiceSummaryForPropertyDueDateStatus_filter extends InvoiceSummaryForPropertyDueDateStatus_filterAbstract {
 

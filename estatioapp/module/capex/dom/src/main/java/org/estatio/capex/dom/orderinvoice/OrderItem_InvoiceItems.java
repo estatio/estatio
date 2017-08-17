@@ -14,6 +14,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin
 public class OrderItem_InvoiceItems {
 

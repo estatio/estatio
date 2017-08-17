@@ -242,6 +242,9 @@ public class InvoiceForLease
         return reasonDisabledDueToState(viewContext);
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin
     public static class _newItem {
 
@@ -334,6 +337,9 @@ public class InvoiceForLease
 
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin
     public static class _collect {
 
@@ -404,6 +410,9 @@ public class InvoiceForLease
 
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin
     public static class _approve {
 
@@ -439,6 +448,9 @@ public class InvoiceForLease
 
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin
     public static class _invoice {
         private final InvoiceForLease invoiceForLease;
@@ -529,6 +541,9 @@ public class InvoiceForLease
         TitleService titleService;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin
     public static class _saveAsHistoric {
         private final InvoiceForLease invoiceForLease;
@@ -619,6 +634,9 @@ public class InvoiceForLease
     @javax.inject.Inject
     NumeratorForCollectionRepository numeratorRepository;
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _overridePreliminaryLetterDescription extends _overrideAttributeAbstract {
         public _overridePreliminaryLetterDescription(final InvoiceForLease invoice) {
@@ -626,6 +644,9 @@ public class InvoiceForLease
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _resetPreliminaryLetterDescription extends _resetAttributeAbstract {
 
@@ -638,6 +659,9 @@ public class InvoiceForLease
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _overrideInvoiceDescription extends _overrideAttributeAbstract {
         public _overrideInvoiceDescription(final InvoiceForLease invoice) {
@@ -645,6 +669,9 @@ public class InvoiceForLease
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _resetInvoiceDescription extends _resetAttributeAbstract {
 
@@ -658,6 +685,9 @@ public class InvoiceForLease
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _changePreliminaryLetterComment extends _overrideAttributeAbstract {
         public _changePreliminaryLetterComment(final InvoiceForLease invoice) {
@@ -665,6 +695,9 @@ public class InvoiceForLease
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method = "act")
     public static class _changeInvoiceComment extends _overrideAttributeAbstract {
         public _changeInvoiceComment(final InvoiceForLease invoice) {

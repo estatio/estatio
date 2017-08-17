@@ -14,6 +14,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know about incoming invoices or documents.
+ */
 @Mixin(method="coll")
 public class BankAccount_incomingInvoices {
 

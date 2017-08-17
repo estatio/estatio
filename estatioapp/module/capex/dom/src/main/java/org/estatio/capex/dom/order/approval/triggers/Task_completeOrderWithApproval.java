@@ -15,6 +15,9 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
 
+/**
+ * This mixin cannot be inlined because Task does not know about its target domain object.
+ */
 @Mixin(method = "act")
 public class Task_completeOrderWithApproval
         extends Task_mixinOrderAbstract<Order_completeWithApproval> {

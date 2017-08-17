@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method="act")
 public class BankAccount_updateBic {
 

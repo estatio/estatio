@@ -290,7 +290,9 @@ public class IncomingDocAsInvoiceViewModel
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
     }
 
-
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class changeInvoiceDetails {
         private final IncomingDocAsInvoiceViewModel viewModel;
@@ -667,5 +669,5 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     BuyerFinder buyerFinder;
-    
+
 }

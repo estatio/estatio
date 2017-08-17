@@ -52,38 +52,31 @@ import lombok.Setter;
 )
 public class PaperclipForFixedAsset extends Paperclip {
 
-    //region > fixedAsset (property)
-    @Column(
-            allowsNull = "false",
-            name = "fixedAssetId"
-    )
+    @Column(allowsNull = "false", name = "fixedAssetId")
     @Getter @Setter
     private FixedAsset<?> fixedAsset;
-    //endregion
 
-    //region > attachedTo (hook, derived)
+
     @NotPersistent
     @Override
     public Object getAttachedTo() {
         return getFixedAsset();
     }
-
     @Override
     protected void setAttachedTo(final Object object) {
         setFixedAsset((FixedAsset<?>) object);
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(FixedAsset.class, PaperclipForFixedAsset.class);
         }
     }
-    //endregion
 
-    //region > mixins
+
 
     @Mixin
     public static class _documents extends T_documents<FixedAsset> {
@@ -92,6 +85,5 @@ public class PaperclipForFixedAsset extends Paperclip {
         }
     }
 
-    //endregion
 
 }

@@ -9,6 +9,9 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
 
+/**
+ * This interface cannot be inlined, because SellerBankAccountCreator is an interface.
+ */
 @Mixin(method = "act")
 public class SellerBankAccountCreator_createBankAccount {
     private final SellerBankAccountCreator sellerBankAccountCreator;

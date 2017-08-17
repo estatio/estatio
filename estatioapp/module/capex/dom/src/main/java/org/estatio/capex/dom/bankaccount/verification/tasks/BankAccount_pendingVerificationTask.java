@@ -8,6 +8,9 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.dobj.DomainObject_pendingTaskAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
+ */
 @Mixin(method="prop")
 public class BankAccount_pendingVerificationTask
         extends DomainObject_pendingTaskAbstract<

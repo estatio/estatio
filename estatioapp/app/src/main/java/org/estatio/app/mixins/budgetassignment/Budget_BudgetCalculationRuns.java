@@ -14,6 +14,9 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationRun
+ */
 @Mixin
 public class Budget_BudgetCalculationRuns {
 

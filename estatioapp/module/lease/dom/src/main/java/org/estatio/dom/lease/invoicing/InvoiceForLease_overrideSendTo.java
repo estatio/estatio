@@ -33,6 +33,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin
 public class InvoiceForLease_overrideSendTo {
 

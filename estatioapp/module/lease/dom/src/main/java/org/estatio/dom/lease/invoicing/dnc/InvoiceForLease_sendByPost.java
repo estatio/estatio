@@ -48,6 +48,8 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an print.
+ *
+ * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
 public class InvoiceForLease_sendByPost extends InvoiceForLease_sendAbstract {

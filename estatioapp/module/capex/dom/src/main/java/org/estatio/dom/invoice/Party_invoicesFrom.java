@@ -14,6 +14,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.dom.party.Party;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Party does not know about invoices.
+ */
 @Mixin(method="coll")
 public class Party_invoicesFrom {
     private final Party seller;

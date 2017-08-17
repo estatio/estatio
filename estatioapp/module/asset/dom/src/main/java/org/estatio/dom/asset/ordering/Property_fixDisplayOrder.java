@@ -27,6 +27,9 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.dom.asset.Property;
 
+/**
+ * TODO: REVIEW: do we want to inline these mixins too?  would imply domain layer -> app layer, so arguably not...?
+ */
 @Mixin
 public class Property_fixDisplayOrder {
 

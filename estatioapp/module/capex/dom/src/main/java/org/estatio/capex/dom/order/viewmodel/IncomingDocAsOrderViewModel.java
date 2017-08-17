@@ -94,7 +94,9 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     @Property(editing = Editing.ENABLED)
     private LocalDate orderDate;
 
-
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class changeOrderDetails {
         private final IncomingDocAsOrderViewModel viewModel;

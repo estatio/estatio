@@ -55,6 +55,8 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an email.
+ *
+ * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
 public class InvoiceForLease_sendByEmail extends InvoiceForLease_sendAbstract {

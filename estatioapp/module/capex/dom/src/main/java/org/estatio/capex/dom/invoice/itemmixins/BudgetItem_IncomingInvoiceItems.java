@@ -15,6 +15,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 
+/**
+ * This cannot be inlined (must be a mixin) because BudgetItem does not know about incoming invoices.
+ */
 @Mixin
 public class BudgetItem_IncomingInvoiceItems {
 

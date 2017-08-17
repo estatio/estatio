@@ -193,4 +193,5 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Inject
     PartyRepository partyRepository;
 
+
 }

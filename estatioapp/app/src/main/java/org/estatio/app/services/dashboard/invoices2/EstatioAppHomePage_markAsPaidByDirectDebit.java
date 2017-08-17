@@ -15,6 +15,9 @@ import org.estatio.app.services.dashboard.EstatioAppHomePage;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByDirectDebit;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class EstatioAppHomePage_markAsPaidByDirectDebit {
 

@@ -9,6 +9,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgeting.budget.Budget;
 
+/**
+ * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it
+ * may (like the other mixins that do calculations) will depend upon services that are not within Budget.
+ */
 @Mixin
 public class Budget_Reconcile {
 

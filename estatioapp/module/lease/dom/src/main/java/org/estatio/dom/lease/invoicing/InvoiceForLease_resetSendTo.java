@@ -11,6 +11,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.dom.lease.Lease;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class InvoiceForLease_resetSendTo {
 

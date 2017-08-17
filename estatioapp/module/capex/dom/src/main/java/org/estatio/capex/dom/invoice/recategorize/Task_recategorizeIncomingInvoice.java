@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.approval.triggers.Task_mixinIncomingInvoiceAbstract;
 import org.estatio.capex.dom.task.Task;
 
+/**
+ * This mixin cannot be inlined because Task does not know about its target domain object.
+ */
 @Mixin(method = "act")
 public class Task_recategorizeIncomingInvoice
         extends Task_mixinIncomingInvoiceAbstract<IncomingInvoice_recategorize> {

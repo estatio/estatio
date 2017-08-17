@@ -22,6 +22,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
+/**
+ * TODO: inline this mixin (including superclass functionality) ... too confusing/abstracted
+ */
 @Mixin
 public class Invoice_ForLease_preliminaryLetters extends InvoiceForLease_collectionAbstract<DocAndCommForPrelimLetter> {
 

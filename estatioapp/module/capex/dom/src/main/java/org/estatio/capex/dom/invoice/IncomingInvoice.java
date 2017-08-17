@@ -233,6 +233,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.toString();
     }
 
+    /**
+     * TODO: inline this mixin.
+     */
     @Mixin(method="act")
     public static class addItem {
         private final IncomingInvoice incomingInvoice;
@@ -349,6 +352,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
+    /**
+     * TODO: inline this mixin.
+     */
     @Mixin(method="act")
     public static class splitItem {
 
@@ -498,6 +504,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .findFirst();
     }
 
+    /**
+     * TODO: inline this mixin.
+     */
     @Mixin(method = "act")
     public static class mergeItems {
 
@@ -546,6 +555,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
+    /**
+     * TODO: inline this mixin.
+     */
     @Mixin(method="act")
     public static class changeBankAccount  {
 

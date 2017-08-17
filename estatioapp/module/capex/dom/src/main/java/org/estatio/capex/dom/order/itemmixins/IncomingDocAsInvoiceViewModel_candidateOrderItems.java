@@ -19,6 +19,9 @@ import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.party.Organisation;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin
 public class IncomingDocAsInvoiceViewModel_candidateOrderItems {
 

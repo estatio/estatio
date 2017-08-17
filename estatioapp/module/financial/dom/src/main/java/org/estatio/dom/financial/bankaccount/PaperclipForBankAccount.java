@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -50,46 +49,38 @@ import lombok.Setter;
 )
 public class PaperclipForBankAccount extends Paperclip {
 
-    //region > invoice (property)
-    @Column(
-            allowsNull = "false",
-            name = "bankAccountId"
-    )
+
+    @Column(allowsNull = "false", name = "bankAccountId")
     @Getter @Setter
     private BankAccount bankAccount;
-    //endregion
 
-    //region > attachedTo (hook, derived)
+
+
     @NotPersistent
     @Override
     public Object getAttachedTo() {
         return getBankAccount();
     }
-
     @Override
     protected void setAttachedTo(final Object object) {
         setBankAccount((BankAccount) object);
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends PaperclipRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(BankAccount.class, PaperclipForBankAccount.class);
         }
     }
-    //endregion
 
-    //region > mixins
 
-    @Mixin
+
     public static class _documents extends T_documents<BankAccount> {
         public _documents(final BankAccount bankAccount) {
             super(bankAccount);
         }
     }
-
-    //endregion
 
 }

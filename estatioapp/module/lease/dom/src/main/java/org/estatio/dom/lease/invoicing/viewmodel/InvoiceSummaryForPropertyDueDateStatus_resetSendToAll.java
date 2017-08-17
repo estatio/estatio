@@ -9,6 +9,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLease_resetSendTo;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class InvoiceSummaryForPropertyDueDateStatus_resetSendToAll {
 

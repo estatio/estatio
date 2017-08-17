@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.order.approval.triggers.Task_mixinOrderAbstract;
 import org.estatio.capex.dom.task.Task;
 
+/**
+ * This mixin cannot be inlined because Task does not know about its target domain object.
+ */
 @Mixin(method = "act")
 public class Task_recategorizeOrder
         extends Task_mixinOrderAbstract<Order_recategorize> {

@@ -245,6 +245,8 @@ public class OrderInvoiceLine {
     /**
      * Using a mixin so can continue to use lombok's @AllArgsConstructor
      * (else the additional injected services required confuse things)
+     *
+     * TODO: inline this mixin.
      */
     @Mixin(method="act")
     public static class _apply {

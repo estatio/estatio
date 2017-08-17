@@ -22,6 +22,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 
+/**
+ * TODO: inline this mixin (including superclass functionality) ... too confusing/abstracted
+ */
 @Mixin(method = "act")
 public class DocAndCommForPrelimLetter_downloadSelected extends DocAndCommAbstract_downloadSelected<DocAndCommForPrelimLetter> {
 

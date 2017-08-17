@@ -33,6 +33,9 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Unit does not know about occupancy.
+ */
 @Mixin
 public class Unit_occupiedBy {
 

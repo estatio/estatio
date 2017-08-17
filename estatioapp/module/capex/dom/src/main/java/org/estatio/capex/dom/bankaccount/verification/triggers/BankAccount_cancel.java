@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
+ */
 @Mixin(method = "act")
 public class BankAccount_cancel extends BankAccount_triggerAbstract {
 

@@ -22,6 +22,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 
+/**
+ * TODO: inline this mixin (including superclass functionality) ... too confusing/abstracted
+ */
 @Mixin
 public class DocAndCommForPrelimLetter_communicationState extends DocAndCommAbstract_communicationState<DocAndCommForPrelimLetter> {
 

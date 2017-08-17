@@ -32,6 +32,10 @@ public class DocumentPdfJsViewerSupport {
     private DocumentPdfJsViewerSupport(){}
 
     //region > _pdf (derived property)
+
+    /**
+     * TODO: move to a top-level mixin
+     */
     @Mixin(method="prop")
     public static class _pdf {
         private final Document document;

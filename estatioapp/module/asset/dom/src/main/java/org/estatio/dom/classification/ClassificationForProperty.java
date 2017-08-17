@@ -37,6 +37,9 @@ import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 
 import org.estatio.dom.asset.Property;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE,
         schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
@@ -47,29 +50,24 @@ import org.estatio.dom.asset.Property;
 )
 public class ClassificationForProperty extends Classification {
 
-    private Property property;
-
     @Column(allowsNull = "false", name = "propertyId")
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
-    public Property getProperty() {
-        return property;
-    }
+    @Getter @Setter
+    private Property property;
 
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
+
 
     @Override
     public Object getClassified() {
         return getProperty();
     }
-
     @Override
     protected void setClassified(final Object classified) {
         setProperty((Property) classified);
     }
 
-    //region > ApplicationTenancyService SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class ApplicationTenancyServiceForProperty implements ApplicationTenancyService {
         @Override
@@ -80,18 +78,17 @@ public class ClassificationForProperty extends Classification {
             return null;
         }
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends ClassificationRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(Property.class, ClassificationForProperty.class);
         }
     }
-    //endregion
 
-    //region > mixins
+
 
     @Mixin
     public static class _classifications extends T_classifications<Property> {
@@ -113,7 +110,5 @@ public class ClassificationForProperty extends Classification {
             super(classified);
         }
     }
-
-    //endregion
 
 }

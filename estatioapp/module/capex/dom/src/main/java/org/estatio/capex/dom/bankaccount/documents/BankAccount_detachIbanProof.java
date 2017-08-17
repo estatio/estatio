@@ -19,6 +19,9 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know about incoming invoices or documents.
+ */
 @Mixin(method="act")
 public class BankAccount_detachIbanProof {
 

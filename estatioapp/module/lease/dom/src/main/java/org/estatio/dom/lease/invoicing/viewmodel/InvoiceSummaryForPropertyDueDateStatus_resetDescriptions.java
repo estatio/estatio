@@ -14,6 +14,9 @@ import org.estatio.dom.invoice.InvoiceAttributeName;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "act")
 public class InvoiceSummaryForPropertyDueDateStatus_resetDescriptions {
 

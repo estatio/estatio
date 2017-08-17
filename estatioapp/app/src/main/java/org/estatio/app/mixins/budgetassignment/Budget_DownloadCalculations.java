@@ -17,6 +17,9 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRe
 import org.estatio.dom.budgetassignment.viewmodels.CalculationResultViewModel;
 import org.estatio.dom.budgeting.budget.Budget;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Budget doesn't know about CalculationResultViewModel
+ */
 @Mixin
 public class Budget_DownloadCalculations {
 

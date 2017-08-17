@@ -16,6 +16,9 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin
 public class InvoiceItem_OrderItems {
 

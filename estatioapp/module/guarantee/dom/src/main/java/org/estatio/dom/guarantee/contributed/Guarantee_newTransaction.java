@@ -30,6 +30,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.guarantee.Guarantee;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "exec")
 public class Guarantee_newTransaction {
 

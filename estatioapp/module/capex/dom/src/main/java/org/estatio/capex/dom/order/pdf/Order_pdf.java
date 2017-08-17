@@ -21,6 +21,9 @@ import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.order.Order;
 
+/**
+ * TODO: inline this mixin
+ */
 @Mixin(method = "prop")
 public class Order_pdf {
     private final Order order;

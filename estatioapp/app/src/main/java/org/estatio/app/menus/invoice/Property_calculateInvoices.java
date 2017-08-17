@@ -17,6 +17,9 @@ import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Property does not know about InvoiceServiceMenu
+ */
 @Mixin(method = "exec")
 public class Property_calculateInvoices {
 

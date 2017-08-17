@@ -14,6 +14,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.PaymentLineRepository;
 
+/**
+ * TODO: inline this mixin (unless payments is gonna be decoupled?)
+ */
 @Mixin
 public class IncomingInvoice_payments {
 

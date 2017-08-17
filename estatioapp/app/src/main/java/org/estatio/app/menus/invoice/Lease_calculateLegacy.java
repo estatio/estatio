@@ -13,6 +13,9 @@ import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Lease does not know about InvoiceServiceMenu
+ */
 @Mixin(method = "exec")
 public class Lease_calculateLegacy {
 

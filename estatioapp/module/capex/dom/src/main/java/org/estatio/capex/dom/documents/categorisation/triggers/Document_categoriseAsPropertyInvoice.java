@@ -21,6 +21,10 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.InvoiceStatus;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and
+ * does not know about its invoices
+ */
 @Mixin(method = "act")
 public class Document_categoriseAsPropertyInvoice
         extends Document_triggerAbstract {

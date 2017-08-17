@@ -38,6 +38,9 @@ import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 
 import org.estatio.dom.lease.Occupancy;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @javax.jdo.annotations.PersistenceCapable(
         identityType= IdentityType.DATASTORE,
         schema = "dbo" // Isis' ObjectSpecId inferred from @DomainObject#objectType
@@ -48,29 +51,24 @@ import org.estatio.dom.lease.Occupancy;
 )
 public class ClassificationForOccupancy extends Classification {
 
-    private Occupancy occupancy;
-
     @Column(allowsNull = "false", name = "occupancyId")
     @Property(editing = Editing.DISABLED)
-    public Occupancy getOccupancy() {
-        return occupancy;
-    }
+    @Getter @Setter
+    private Occupancy occupancy;
 
-    public void setOccupancy(final Occupancy occupancy) {
-        this.occupancy = occupancy;
-    }
+
 
     @Override
     public Object getClassified() {
         return getOccupancy();
     }
-
     @Override
     protected void setClassified(final Object classified) {
         setOccupancy((Occupancy) classified);
     }
 
-    //region > ApplicationTenancyService SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class ApplicationTenancyServiceForOccupancy implements ApplicationTenancyService {
         @Override
@@ -81,18 +79,16 @@ public class ClassificationForOccupancy extends Classification {
             return null;
         }
     }
-    //endregion
 
-    //region > SubtypeProvider SPI implementation
+
+
     @DomainService(nature = NatureOfService.DOMAIN)
     public static class SubtypeProvider extends ClassificationRepository.SubtypeProviderAbstract {
         public SubtypeProvider() {
             super(Occupancy.class, ClassificationForOccupancy.class);
         }
     }
-    //endregion
 
-    //region > mixins
 
     @Mixin
     public static class _classifications extends T_classifications<Occupancy> {
@@ -100,14 +96,12 @@ public class ClassificationForOccupancy extends Classification {
             super(classified);
         }
     }
-
     @Mixin
     public static class _classify extends T_classify<Occupancy> {
         public _classify(final Occupancy classified) {
             super(classified);
         }
     }
-
     @Mixin
     public static class _unclassify extends T_unclassify<Occupancy> {
         public _unclassify(final Occupancy classified) {
@@ -115,6 +109,5 @@ public class ClassificationForOccupancy extends Classification {
         }
     }
 
-    //endregion
 
 }

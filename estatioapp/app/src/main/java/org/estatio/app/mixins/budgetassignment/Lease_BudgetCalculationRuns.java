@@ -14,6 +14,9 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.lease.Lease;
 
+/**
+ * This cannot be inlined because Lease doesn't know about BudgetCalculationRunRepository.
+ */
 @Mixin
 public class Lease_BudgetCalculationRuns {
 

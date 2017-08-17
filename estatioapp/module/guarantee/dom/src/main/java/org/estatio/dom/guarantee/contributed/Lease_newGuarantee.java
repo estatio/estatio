@@ -19,6 +19,9 @@ import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 
+/**
+ * Cannot be inlined (needs to be a mixin) because Lease does not know about guarantees
+ */
 @Mixin
 public class Lease_newGuarantee {
 

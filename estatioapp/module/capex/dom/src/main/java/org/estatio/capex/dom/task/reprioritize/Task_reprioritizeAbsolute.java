@@ -12,6 +12,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_abstract;
 
+/**
+ * TODO: inline this mixin.
+ */
 @Mixin(method = "act")
 public class Task_reprioritizeAbsolute extends Task_abstract {
 

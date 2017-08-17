@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 
+/**
+ * TODO: inline this mixin.
+ */
 @Mixin(method = "act")
 public class Task_viewTransition {
 

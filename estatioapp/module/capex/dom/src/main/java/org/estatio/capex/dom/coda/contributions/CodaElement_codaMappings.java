@@ -14,6 +14,9 @@ import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 
+/**
+ * TODO: this could be inlined.
+ */
 @Mixin
 public class CodaElement_codaMappings {
 

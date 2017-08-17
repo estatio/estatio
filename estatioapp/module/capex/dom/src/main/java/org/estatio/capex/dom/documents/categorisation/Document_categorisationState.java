@@ -7,6 +7,10 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
 import org.estatio.dom.invoice.DocumentTypeData;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and
+ * does not know about its categorisation state.
+ */
 @Mixin(method="prop")
 public class Document_categorisationState
         extends DomainObject_currentStateAbstract<

@@ -14,6 +14,9 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BudgetItem does not know about orders.
+ */
 @Mixin
 public class BudgetItem_OrderItems {
 

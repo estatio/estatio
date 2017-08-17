@@ -36,6 +36,9 @@ import org.estatio.dom.lease.invoicing.InvoiceForLease;
 
 import static com.google.common.base.Predicates.not;
 
+/**
+ * TODO: REVIEW: this mixin could in theory be inlined, but it's a lot of functionality in its own right; and maybe we want to keep invoices and documents decoupled?
+ */
 @Mixin
 public class InvoiceForLease_prepare extends T_createAndAttachDocumentAndRender<InvoiceForLease> {
 

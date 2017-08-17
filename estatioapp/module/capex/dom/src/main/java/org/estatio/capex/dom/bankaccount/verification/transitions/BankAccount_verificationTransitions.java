@@ -10,6 +10,9 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.dobj.DomainObject_transitionsAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
+ */
 @Mixin(method = "coll")
 public class BankAccount_verificationTransitions
         extends DomainObject_transitionsAbstract<

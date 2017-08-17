@@ -148,6 +148,9 @@ public class PaymentBatchManager {
 
     ///////////////////////
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class autoCreateBatches {
 
@@ -280,6 +283,9 @@ public class PaymentBatchManager {
         PaymentBatchRepository paymentBatchRepository;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class reset {
 
@@ -317,6 +323,9 @@ public class PaymentBatchManager {
 
     ///////////////////////
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class nextBatch {
         private final PaymentBatchManager paymentBatchManager;
@@ -355,6 +364,9 @@ public class PaymentBatchManager {
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class previousBatch {
         private final PaymentBatchManager paymentBatchManager;
@@ -393,6 +405,9 @@ public class PaymentBatchManager {
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class selectBatch {
         private final PaymentBatchManager paymentBatchManager;
@@ -424,6 +439,9 @@ public class PaymentBatchManager {
         }
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class completeBatch {
         private final PaymentBatchManager paymentBatchManager;
@@ -488,6 +506,9 @@ public class PaymentBatchManager {
     ///////////////////////
 
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class downloadReviewPdf {
         private final PaymentBatchManager paymentBatchManager;
@@ -520,6 +541,9 @@ public class PaymentBatchManager {
         FactoryService factoryService;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class downloadPaymentFile {
         private final PaymentBatchManager paymentBatchManager;
@@ -555,6 +579,9 @@ public class PaymentBatchManager {
 
     ///////////////////////
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class addInvoiceToPayByBankAccount {
         private final PaymentBatchManager paymentBatchManager;
@@ -612,6 +639,9 @@ public class PaymentBatchManager {
         BankAccountRepository bankAccountRepository;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class removeInvoice {
         private final PaymentBatchManager paymentBatchManager;

@@ -5,6 +5,9 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine
+ */
 @Mixin(method="prop")
 public class BankAccount_verificationState
         extends DomainObject_currentStateAbstract<

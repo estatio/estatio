@@ -319,6 +319,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         return Lists.newArrayList(getLines()).stream().filter(x->x.getUpstreamCreditNoteFound()).findAny().isPresent();
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class removeInvoice {
         private final PaymentBatch paymentBatch;
@@ -371,6 +374,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         StateTransitionService stateTransitionService;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class removeAll {
         private final PaymentBatch paymentBatch;
@@ -517,6 +523,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 : "Cannot modify because payment batch is in state of " + currentState;
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class downloadPaymentFile {
         private final PaymentBatch paymentBatch;
@@ -549,6 +558,9 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     }
 
+    /**
+     * TODO: inline this mixin
+     */
     @Mixin(method="act")
     public static class downloadReviewPdf {
         private final PaymentBatch paymentBatch;
