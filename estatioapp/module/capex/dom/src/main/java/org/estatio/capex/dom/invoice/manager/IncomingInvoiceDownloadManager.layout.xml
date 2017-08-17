@@ -5,6 +5,10 @@
             <bs3:row>
                 <bs3:col span="12" unreferencedActions="true">
                     <cpt:domainObject/>
+                    <cpt:action id="changeParameters"/>
+                    <cpt:action id="downloadToExcel"/>
+                    <cpt:action id="downloadToPdfZipped"/>
+                    <cpt:action id="downloadToPdfSingle"/>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

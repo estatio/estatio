@@ -15,10 +15,9 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 //region > downloadToExcel (action)
 @Mixin(method="act")
-public class IncomingInvoiceDownloadManager_downloadToExcel {
-    private final IncomingInvoiceDownloadManager manager;
+public class IncomingInvoiceDownloadManager_downloadToExcel extends IncomingInvoiceDownloadManager_downloadAbstract {
     public IncomingInvoiceDownloadManager_downloadToExcel(final IncomingInvoiceDownloadManager manager) {
-        this.manager = manager;
+        super(manager);
     }
     @Action(semantics = SemanticsOf.SAFE)
     public Blob act(final String fileName) {
@@ -39,6 +38,11 @@ public class IncomingInvoiceDownloadManager_downloadToExcel {
 
     public String default0Act() {
         return manager.defaultFileNameWithSuffix(".xlsx");
+    }
+
+    @Override
+    public String disableAct() {
+        return super.disableAct();
     }
 
     @javax.inject.Inject
