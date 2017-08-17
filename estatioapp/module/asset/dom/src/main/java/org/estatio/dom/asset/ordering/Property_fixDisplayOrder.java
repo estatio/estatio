@@ -14,16 +14,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.mixins.asset;
+package org.estatio.dom.asset.ordering;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.dom.asset.Property;
 
@@ -43,10 +43,10 @@ public class Property_fixDisplayOrder {
     )
     @MemberOrder(name = "displayOrder", sequence = "1")
     public PropertyOrderingViewModel $$() {
-        return container.injectServicesInto(new PropertyOrderingViewModel(property));
+        return serviceRegistry2.injectServicesInto(new PropertyOrderingViewModel(property));
     }
 
     @Inject
-    DomainObjectContainer container;
+    ServiceRegistry2 serviceRegistry2;
 
 }

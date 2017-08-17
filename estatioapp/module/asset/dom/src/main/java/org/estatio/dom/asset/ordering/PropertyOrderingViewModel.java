@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.mixins.asset;
+package org.estatio.dom.asset.ordering;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +50,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        objectType = "org.estatio.app.mixins.asset.PropertyOrderingViewModel"
+        objectType = "org.estatio.dom.asset.ordering.PropertyOrderingViewModel"
 )
 @MemberGroupLayout(
         columnSpans = {6,0,0,6},
