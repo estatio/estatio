@@ -1,4 +1,4 @@
-package org.estatio.app.mixins.budgetassignment;
+package org.estatio.dom.budgetassignment.calculationresult.mixins;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;

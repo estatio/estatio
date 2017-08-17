@@ -1,4 +1,4 @@
-package org.estatio.app.mixins.budgetassignment;
+package org.estatio.dom.budgetassignment.calculationresult.mixins;
 
 import javax.inject.Inject;
 
