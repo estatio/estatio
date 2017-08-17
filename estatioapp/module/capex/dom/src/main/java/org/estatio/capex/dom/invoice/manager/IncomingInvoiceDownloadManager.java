@@ -233,33 +233,6 @@ public class IncomingInvoiceDownloadManager {
 
 
 
-    private List<File> filesFrom(final List<DocumentPreparer> preparers) {
-        return preparers.stream()
-                .map(preparer -> preparer.stampUsing(pdfManipulator).getTempFile())
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-
-
-
-    private List<DocumentPreparer> documentPreparersForInvoices() {
-        return documentPreparersForInvoices(Integer.MAX_VALUE, Integer.MAX_VALUE);
-    }
-
-    private List<DocumentPreparer> documentPreparersForInvoices(
-            Integer numFirstPages,
-            Integer numLastPages) {
-        return getInvoices().stream()
-                .map(incomingInvoice -> lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .sorted(Comparator.comparing(DocumentAbstract::getName))
-                .map(document -> new DocumentPreparer(document, numFirstPages, numLastPages))
-                .collect(Collectors.toList());
-    }
-
-
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(named = "Download all PDFs (zipped)")
@@ -285,6 +258,24 @@ public class IncomingInvoiceDownloadManager {
 
 
 
+
+    private List<DocumentPreparer> documentPreparersForInvoices() {
+        return documentPreparersForInvoices(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+
+    private List<DocumentPreparer> documentPreparersForInvoices(
+            Integer numFirstPages,
+            Integer numLastPages) {
+        return getInvoices().stream()
+                .map(incomingInvoice -> lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .sorted(Comparator.comparing(DocumentAbstract::getName))
+                .map(document -> new DocumentPreparer(document, numFirstPages, numLastPages))
+                .collect(Collectors.toList());
+    }
+
+
     private List<ZipService.FileAndName> fileAndNamesFrom(final List<DocumentPreparer> preparers) {
         return preparers.stream()
                 .map(preparer -> new ZipService.FileAndName(preparer.getDocumentName(), preparer.stampUsing(pdfManipulator).getTempFile()))
@@ -292,6 +283,13 @@ public class IncomingInvoiceDownloadManager {
                 .collect(Collectors.toList());
     }
 
+
+    private List<File> filesFrom(final List<DocumentPreparer> preparers) {
+        return preparers.stream()
+                .map(preparer -> preparer.stampUsing(pdfManipulator).getTempFile())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
 
 
