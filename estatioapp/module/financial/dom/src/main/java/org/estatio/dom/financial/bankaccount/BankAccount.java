@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.financial.bankaccount;
 
+import java.net.MalformedURLException;
+
 import javax.annotation.Nullable;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -131,6 +133,16 @@ public class BankAccount
     @Column(allowsNull = "true", length = AccountNumberType.Meta.MAX_LEN)
     @Getter @Setter
     private String bic;
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    public BankAccount updateBic(@Nullable String bic) throws MalformedURLException {
+        this.setBic(BankAccount.trimBic(bic));
+        return this;
+    }
+
+    public String default0UpdateBic() { return this.getBic(); }
 
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter

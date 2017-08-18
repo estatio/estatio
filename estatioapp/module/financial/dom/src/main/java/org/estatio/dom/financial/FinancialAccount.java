@@ -19,6 +19,7 @@
 package org.estatio.dom.financial;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,9 +38,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -191,6 +195,21 @@ public class FinancialAccount
             final String description,
             final BigDecimal amount) {
         financialAccountTransactionRepository.newTransaction(this, transactionDate, description, amount);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    public FinancialAccountTransaction findTransaction(
+            @ParameterLayout(named = "Transaction date")
+            final LocalDate transactionDate,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            @ParameterLayout(named = "Sequence")
+            final BigInteger sequence
+    ) {
+        if(sequence == null) {
+            return financialAccountTransactionRepository.findTransaction(this, transactionDate);
+        } else {
+            return financialAccountTransactionRepository.findTransaction(this, transactionDate, sequence);
+        }
     }
 
     // //////////////////////////////////////

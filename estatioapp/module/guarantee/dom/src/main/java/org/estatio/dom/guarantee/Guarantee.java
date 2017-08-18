@@ -19,6 +19,7 @@
 package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -30,6 +31,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -49,7 +52,9 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
+import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.guarantee.contributed.GuaranteeFinancialAccountTransactionService;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -246,9 +251,30 @@ public class Guarantee
         return !userIsAdmin;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(defaultView = "table")
+    public List<FinancialAccountTransaction> getTransactions() {
+        return guaranteeFinancialAccountTransactionService.transactions(this);
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Guarantee newTransaction(
+            final LocalDate transactionDate,
+            final String description,
+            final BigDecimal amount
+    ) {
+        return guaranteeFinancialAccountTransactionService.newTransaction(this, transactionDate, description, amount);
+    }
+
+    public boolean hideNewTransaction() {
+        return guaranteeFinancialAccountTransactionService.hideNewTransaction(this);
+    }
+
     @Inject
     FinancialAccountRepository financialAccountRepository;
 
-
+    @Inject
+    GuaranteeFinancialAccountTransactionService guaranteeFinancialAccountTransactionService;
 
 }

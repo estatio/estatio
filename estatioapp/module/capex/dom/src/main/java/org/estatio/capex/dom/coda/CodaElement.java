@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.coda;
 
+import java.util.List;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -7,7 +10,11 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +45,13 @@ public class CodaElement {
 
     @Getter @Setter @Column(allowsNull = "false", length = 80)
     private String name;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<CodaMapping> getCodaMappings() {
+        return codaMappingRepository.findByCodaElement(this);
+    }
+
+    @Inject CodaMappingRepository codaMappingRepository;
 
 }

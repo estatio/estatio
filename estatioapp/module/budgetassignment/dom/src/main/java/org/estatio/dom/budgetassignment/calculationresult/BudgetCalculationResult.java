@@ -36,6 +36,7 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.Occupancy;
 
 import lombok.Getter;
@@ -124,6 +125,14 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
         return results;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public List<LeaseTermForServiceCharge> getLeaseItems() {
+        return budgetCalculationResultLinkRepository.findByCalculationResult(this).stream()
+                .map(BudgetCalculationResultLink::getLeaseTermForServiceCharge)
+                .collect(Collectors.toList());
+    }
+
     @Programmatic
     public void calculate() throws IllegalArgumentException {
 
@@ -208,6 +217,9 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
 
     @Inject
     private BudgetCalculationRepository budgetCalculationRepository;
+
+    @Inject
+    private BudgetCalculationResultLinkRepository budgetCalculationResultLinkRepository;
 
     @Inject
     private RepositoryService repositoryService;

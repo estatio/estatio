@@ -290,80 +290,66 @@ public class IncomingDocAsInvoiceViewModel
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
     }
 
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method="act")
-    public static class changeInvoiceDetails {
-        private final IncomingDocAsInvoiceViewModel viewModel;
-        public changeInvoiceDetails(final IncomingDocAsInvoiceViewModel viewModel) {
-            this.viewModel = viewModel;
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingDocAsInvoiceViewModel changeInvoiceDetails(
+            final String invoiceNumber,
+            @Nullable final Party buyer,
+            @Nullable final Party seller,
+            final LocalDate dateReceived,
+            @Nullable final LocalDate invoiceDate,
+            @Nullable final LocalDate dueDate,
+            @Nullable final Integer dueInNumberOfDaysFromNow,
+            @Nullable final PaymentMethod paymentMethod,
+            final Currency currency){
+        setInvoiceNumber(invoiceNumber);
+        setBuyer(buyer);
+        setSeller(seller);
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
+        setDateReceived(dateReceived);
+        setInvoiceDate(invoiceDate);
+        setDueDate(dueDate);
+        if(dueInNumberOfDaysFromNow != null){
+            setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
         }
+        setPaymentMethod(paymentMethod);
+        setCurrency(currency);
 
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        public IncomingDocAsInvoiceViewModel act(
-                final String invoiceNumber,
-                @Nullable final Party buyer,
-                @Nullable final Party seller,
-                final LocalDate dateReceived,
-                @Nullable final LocalDate invoiceDate,
-                @Nullable final LocalDate dueDate,
-                @Nullable final Integer dueInNumberOfDaysFromNow,
-                @Nullable final PaymentMethod paymentMethod,
-                final Currency currency){
-            viewModel.setInvoiceNumber(invoiceNumber);
-            viewModel.setBuyer(buyer);
-            viewModel.setSeller(seller);
-            viewModel.setBankAccount(viewModel.bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
-            viewModel.setDateReceived(dateReceived);
-            viewModel.setInvoiceDate(invoiceDate);
-            viewModel.setDueDate(dueDate);
-            if (dueInNumberOfDaysFromNow!=null){
-                viewModel.setDueDate(clockService.now().plusDays(dueInNumberOfDaysFromNow));
-            }
-            viewModel.setPaymentMethod(paymentMethod);
-            viewModel.setCurrency(currency);
+        return this;
+    }
 
-            return viewModel;
-        }
+    public String default0ChangeInvoiceDetails(){
+        return getInvoiceNumber();
+    }
 
-        public String default0Act(){
-            return viewModel.getInvoiceNumber();
-        }
+    public Party default1ChangeInvoiceDetails(){
+        return getBuyer();
+    }
 
-        public Party default1Act(){
-            return viewModel.getBuyer();
-        }
+    public Party default2ChangeInvoiceDetails(){
+        return getSeller();
+    }
 
-        public Party default2Act(){
-            return viewModel.getSeller();
-        }
+    public LocalDate default3ChangeInvoiceDetails(){
+        return getDateReceived()==null ? dateReceivedDerivedFromDocument() : getDateReceived();
+    }
 
-        public LocalDate default3Act(){
-            return viewModel.getDateReceived()==null ? viewModel.dateReceivedDerivedFromDocument() : viewModel.getDateReceived();
-        }
+    public LocalDate default4ChangeInvoiceDetails(){
+        return getInvoiceDate();
+    }
 
-        public LocalDate default4Act(){
-            return viewModel.getInvoiceDate();
-        }
+    public LocalDate default5ChangeInvoiceDetails(){
+        return getDueDate();
+    }
 
-        public LocalDate default5Act(){
-            return viewModel.getDueDate();
-        }
+    public PaymentMethod default7ChangeInvoiceDetails(){
+        return getPaymentMethod();
+    }
 
-        public PaymentMethod default7Act(){
-            return viewModel.getPaymentMethod();
-        }
-
-        public Currency default8Act() {
-            return viewModel.getCurrency();
-        }
-        public String disableAct() {
-            return viewModel.reasonNotEditableIfAny();
-        }
-
-        @Inject
-        ClockService clockService;
+    public Currency default8ChangeInvoiceDetails() {
+        return getCurrency();
+    }
+    public String disableChangeInvoiceDetails() {
+        return reasonNotEditableIfAny();
     }
 
     @Programmatic
@@ -669,5 +655,8 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     BuyerFinder buyerFinder;
+
+    @Inject
+    ClockService clockService;
 
 }
