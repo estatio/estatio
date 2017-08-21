@@ -149,7 +149,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice);
 
             // and when rendered
-            runBackgroundCommands();
+            runBackgroundCommandsService.runBackgroundCommands();
 
             summary = findSummary(InvoiceStatus.INVOICED);
             invoiceDocViewModel = invoiceDocViewModelOf(summary);
@@ -205,7 +205,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(coverNote.getMimeType()).isEqualTo("text/html");
 
             // and when comm sent
-            runBackgroundCommands();
+            runBackgroundCommandsService.runBackgroundCommands();
 
             summary = findSummary(InvoiceStatus.INVOICED);
             invoiceDocViewModel = invoiceDocViewModelOf(summary);

@@ -20,7 +20,6 @@ package org.estatio.integtests;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -32,26 +31,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.services.xactn.TransactionService;
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
-import org.apache.isis.core.runtime.authentication.standard.SimpleSession;
 import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
 
-import org.isisaddons.module.command.dom.BackgroundCommandExecutionFromBackgroundCommandServiceJdo;
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
-import org.isisaddons.module.command.dom.CommandJdo;
-
-import org.incode.module.integtestsupport.dom.IncodeIntegrationTestAbstract;
 
 import org.estatio.app.EstatioAppManifest;
 import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Base class for integration tests.
  */
-public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstract {
+public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(EstatioIntegrationTest.class);
 
@@ -89,26 +82,8 @@ public abstract class EstatioIntegrationTest extends IncodeIntegrationTestAbstra
         new ScenarioExecutionForIntegration();
     }
 
-
-    protected void runBackgroundCommands() throws InterruptedException {
-
-        List<CommandJdo> commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
-        assertThat(commands).hasSize(1);
-
-        transactionService.nextTransaction();
-
-        BackgroundCommandExecutionFromBackgroundCommandServiceJdo backgroundExec =
-                new BackgroundCommandExecutionFromBackgroundCommandServiceJdo();
-        final SimpleSession session = new SimpleSession("scheduler_user", new String[] { "admin_role" });
-
-        final Thread thread = new Thread(() -> backgroundExec.execute(session, null));
-        thread.start();
-
-        thread.join(5000L);
-
-        commands = backgroundCommandRepository.findBackgroundCommandsNotYetStarted();
-        assertThat(commands).isEmpty();
-    }
+    @Inject
+    protected RunBackgroundCommandsService runBackgroundCommandsService;
 
     @Inject
     protected BackgroundCommandServiceJdoRepository backgroundCommandRepository;

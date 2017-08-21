@@ -130,7 +130,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(paperclips).extracting(x -> x.getAttachedTo()).contains(invoice);
 
             // and when rendered
-            runBackgroundCommands();
+            runBackgroundCommandsService.runBackgroundCommands();
 
             summary = findSummary();
             prelimLetterViewModel = prelimLetterViewModelOf(summary);
@@ -187,7 +187,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(coverNote.getMimeType()).isEqualTo("text/html");
 
             // and when comm sent
-            runBackgroundCommands();
+            runBackgroundCommandsService.runBackgroundCommands();
 
             summary = findSummary();
             prelimLetterViewModel = prelimLetterViewModelOf(summary);
