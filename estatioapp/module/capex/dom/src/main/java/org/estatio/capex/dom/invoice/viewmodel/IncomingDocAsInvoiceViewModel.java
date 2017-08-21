@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -145,7 +146,7 @@ public class IncomingDocAsInvoiceViewModel
     private IncomingInvoiceType incomingInvoiceType;
 
     //region > bankAccount (prop)
-    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @Property(editing = Editing.ENABLED)
     private BankAccount bankAccount;
 
     public void modifyBankAccount(final BankAccount bankAccount){
@@ -198,6 +199,7 @@ public class IncomingDocAsInvoiceViewModel
     }
     //endregion
 
+    @XmlElement(required = false) @Nullable
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     @Property(editing = Editing.ENABLED)
     private LocalDate dueDate;

@@ -1,5 +1,6 @@
 package org.estatio.capex.fixture.charge;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -19,16 +20,16 @@ public class IncomingChargeHandler implements FixtureAwareRowHandler<IncomingCha
     /**
      * Also used as the reference and as the description.
      */
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String name;
 
     /**
      * The name/reference of the parent.
      */
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String parent;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String atPath;
 
     /**
