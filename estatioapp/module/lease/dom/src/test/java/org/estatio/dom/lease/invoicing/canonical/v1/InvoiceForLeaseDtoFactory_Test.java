@@ -19,7 +19,7 @@ import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

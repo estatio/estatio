@@ -49,7 +49,7 @@ import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -200,22 +200,12 @@ public class Charge
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
-    // @Getter
-    @Setter
+    @Getter @Setter
     private String externalReference;
 
-    public String getExternalReference() {
-        return externalReference;
-    }
-
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
-    //@Getter
-    @Setter
+    @Getter @Setter
     private Tax tax;
-
-    public Tax getTax() {
-        return tax;
-    }
 
     @javax.jdo.annotations.Column(name = "groupId", allowsNull = "true")
     @Getter @Setter

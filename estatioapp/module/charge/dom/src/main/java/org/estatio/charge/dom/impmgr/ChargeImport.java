@@ -24,8 +24,8 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRepository;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -25,7 +25,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 public class Charge_Test {
 

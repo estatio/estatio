@@ -16,15 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.tax.dom;
 
 import java.math.BigDecimal;
+
+import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -45,10 +48,12 @@ public class TaxRateRepository extends UdoDomainRepositoryAndFactory<TaxRate> {
         TaxRate currentRate = tax.taxRateFor(startDate);
         TaxRate rate;
         if (currentRate == null || !startDate.equals(currentRate.getStartDate())) {
-            rate = newTransientInstance(TaxRate.class);
+            rate = repositoryService.instantiate(TaxRate.class);
             rate.setTax(tax);
             rate.setStartDate(startDate);
-            persist(rate);
+            if(repositoryService.isPersistent(tax)) {
+                repositoryService.persist(rate);
+            }
         } else {
             rate = currentRate;
         }
@@ -65,5 +70,8 @@ public class TaxRateRepository extends UdoDomainRepositoryAndFactory<TaxRate> {
     public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {
         return firstMatch("findByTaxAndDate", "tax", tax, "date", date);
     }
+
+    @Inject
+    RepositoryService repositoryService;
 
 }

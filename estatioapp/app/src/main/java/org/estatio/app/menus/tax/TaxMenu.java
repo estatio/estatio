@@ -40,8 +40,8 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRepository;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

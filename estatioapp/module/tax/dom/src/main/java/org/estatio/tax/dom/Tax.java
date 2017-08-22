@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.tax.dom;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
@@ -55,6 +55,8 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -76,7 +78,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.tax.Tax "
+                        + "FROM org.estatio.tax.dom.Tax "
                         + "WHERE reference == :reference")
 })
 @DomainObject(
@@ -84,6 +86,7 @@ import lombok.Setter;
         bounded = true,
         objectType = "org.estatio.dom.tax.Tax"
 )
+@EqualsAndHashCode(of = {"reference"}, callSuper = false)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Tax
         extends UdoDomainObject2<Tax>
@@ -92,6 +95,17 @@ public class Tax
 
     public Tax() {
         super("reference");
+    }
+
+    @Builder
+    public Tax(
+            final String applicationTenancyPath,
+            final String reference,
+            final String name) {
+        this();
+        this.applicationTenancyPath = applicationTenancyPath;
+        this.reference = reference;
+        this.name = name;
     }
 
     public String title() {
@@ -106,7 +120,6 @@ public class Tax
             allowsNull = "false",
             name = "atPath"
     )
-
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String applicationTenancyPath;
@@ -119,27 +132,23 @@ public class Tax
         return securityApplicationTenancyRepository.findByPathCached(getApplicationTenancyPath());
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = ReferenceType.Meta.MAX_LEN)
     @Property(regexPattern = ReferenceType.Meta.REGEX)
     @Getter @Setter
     private String reference;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = NameType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
     private String externalReference;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = DescriptionType.Meta.MAX_LEN)
     @Property(optionality = Optionality.OPTIONAL)
@@ -152,14 +161,12 @@ public class Tax
         return this;
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
     private SortedSet<TaxRate> rates = new TreeSet<>();
 
-    // //////////////////////////////////////
 
     public TaxRate newRate(
             final LocalDate startDate,
@@ -167,7 +174,6 @@ public class Tax
         return taxRateRepository.newRate(this, startDate, percentage);
     }
 
-    // //////////////////////////////////////
 
     @Programmatic
     public TaxRate taxRateFor(final LocalDate date) {
@@ -175,7 +181,6 @@ public class Tax
         return rate;
     }
 
-    // //////////////////////////////////////
 
     @Programmatic
     public BigDecimal percentageFor(final LocalDate date) {
@@ -186,14 +191,12 @@ public class Tax
         return rate.getPercentage();
     }
 
-    // //////////////////////////////////////
 
     @Programmatic
     public BigDecimal grossFromNet(final BigDecimal net, LocalDate date) {
         return net.add(percentageFor(date.minusDays(1)).multiply(net).divide(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    // //////////////////////////////////////
 
     @Inject
     public TaxRateRepository taxRateRepository;

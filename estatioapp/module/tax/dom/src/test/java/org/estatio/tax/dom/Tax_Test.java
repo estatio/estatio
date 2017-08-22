@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.tax.dom;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -37,6 +37,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.matchers.IsisMatchers;
 
 import static org.junit.Assert.assertEquals;

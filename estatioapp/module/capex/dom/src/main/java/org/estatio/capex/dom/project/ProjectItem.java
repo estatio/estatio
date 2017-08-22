@@ -56,7 +56,7 @@ import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;

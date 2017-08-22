@@ -31,8 +31,8 @@ import org.incode.module.country.dom.impl.State;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 import org.estatio.domlink.Link;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {

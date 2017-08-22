@@ -16,55 +16,40 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.tax;
+package org.estatio.tax.integtests;
 
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.incode.module.country.fixture.CountriesRefData;
-import org.estatio.fixture.tax.TaxVatStdForAllCountries;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
+import org.estatio.tax.fixture.data.Tax_data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TaxRepository_IntegTest extends EstatioIntegrationTest {
+public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
 
     @Inject
     TaxRepository taxRepository;
-
-    @Inject
-    CountryRepository countryRepository;
-
-    @Inject
-    EstatioApplicationTenancyRepositoryForCountry applicationTenancyRepository;
-
-    @Before
-    public void setup() {
-        runFixtureScript(new EstatioBaseLineFixture());
-    }
 
     public static class AllTaxes extends TaxRepository_IntegTest {
 
         @Test
         public void happyCase() throws Exception {
-            // Given
-            final int size = countryRepository.allCountries().size();
-            // When
+            // given
+            final int size = Tax_data.values().length;
+
+            // when
             final List<Tax> taxList = taxRepository.allTaxes();
-            // Then
+
+            // then
             assertThat(taxList.size()).isEqualTo(size);
         }
     }
@@ -73,10 +58,12 @@ public class TaxRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            // Given, When
-            final Tax tax = taxRepository.findByReference(TaxVatStdForAllCountries.NL_VATSTD);
-            // Then
-            assertThat(tax.getReference()).isEqualTo(TaxVatStdForAllCountries.NL_VATSTD);
+            // when
+            final Tax_data data = fakeDataService.enums().anyOf(Tax_data.class);
+
+            final Tax tax = taxRepository.findByReference(data.getReference());
+            // then
+            assertThat(tax.getReference()).isEqualTo(data.getReference());
         }
     }
 
@@ -84,14 +71,22 @@ public class TaxRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            // Given
-            final Country country = countryRepository.findCountry(CountriesRefData.ITA);
-            final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findOrCreateTenancyFor(country);
-            // When
+
+            // given
+            final Tax_data data = fakeDataService.enums().anyOf(Tax_data.class);
+            final Tax tax = data.findUsing(serviceRegistry);
+            final ApplicationTenancy applicationTenancy = tax.getApplicationTenancy();
+
+            // when
             final Collection<Tax> taxCollection = taxRepository.findByApplicationTenancy(applicationTenancy);
-            // Then
+
+            // then
             assertThat(taxCollection.size()).isEqualTo(1);
         }
     }
+
+    @Inject
+    FakeDataService fakeDataService;
+
 
 }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.tax.dom;
 
 import java.math.BigDecimal;
 
@@ -65,7 +65,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByTaxAndDate", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.tax.TaxRate "
+                        + "FROM org.estatio.tax.dom.TaxRate "
                         + "WHERE tax == :tax"
                         + "  && startDate <= :date"
                         + "  && (endDate == null || endDate >= :date)")

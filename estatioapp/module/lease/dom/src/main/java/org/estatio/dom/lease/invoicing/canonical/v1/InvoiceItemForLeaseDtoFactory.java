@@ -21,8 +21,8 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

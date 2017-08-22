@@ -1,9 +1,9 @@
 /*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
@@ -16,11 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.tax;
+package org.estatio.tax.fixture;
 
-// TODO: eventually this should move to org.estatio.tax, and be renamed to EstatioTaxModule (no "Dom" part)
-public final class EstatioTaxDomModule {
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-    private EstatioTaxDomModule(){}
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
+
+public class TaxModule_tearDown extends TeardownFixtureAbstract {
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        deleteFrom(TaxRate.class);
+        deleteFrom(Tax.class);
+    }
 
 }

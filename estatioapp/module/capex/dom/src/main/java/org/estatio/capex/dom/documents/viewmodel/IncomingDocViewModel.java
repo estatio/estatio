@@ -67,7 +67,7 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;

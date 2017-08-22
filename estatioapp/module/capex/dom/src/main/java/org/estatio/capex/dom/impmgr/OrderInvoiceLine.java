@@ -55,8 +55,8 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRepository;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

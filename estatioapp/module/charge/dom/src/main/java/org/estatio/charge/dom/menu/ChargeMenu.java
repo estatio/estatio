@@ -49,7 +49,7 @@ import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
