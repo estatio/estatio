@@ -36,7 +36,6 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.tax.dom.Tax;
 import org.estatio.tax.dom.TaxRepository;
-import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 
 public class ChargeRefData extends FixtureScript {
 
@@ -142,7 +141,7 @@ public class ChargeRefData extends FixtureScript {
             final String country2AlphaCode = countryTenancy.getPath().substring(1).toUpperCase();
             final String countryName = " (" + country2AlphaCode + ")";
 
-            final String taxReference = TaxVatStdForAllCountries.vatStdFor(country2AlphaCode);
+            final String taxReference = vatStdFor(country2AlphaCode);
 
             createCharge(chargeGroupRent, country2AlphaCode + CHARGE_SUFFIX_RENT,
                     "Rent" + countryName,
@@ -190,6 +189,10 @@ public class ChargeRefData extends FixtureScript {
                     "Marketing" + countryName,
                     taxReference, Applicability.IN_AND_OUT, executionContext);
         }
+    }
+
+    public static final String vatStdFor(final String country2AlphaCode) {
+        return country2AlphaCode.toUpperCase() + "-VATSTD";
     }
 
     private ChargeGroup createChargeGroup(

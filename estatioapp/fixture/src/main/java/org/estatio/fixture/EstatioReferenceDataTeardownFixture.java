@@ -23,26 +23,22 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.currency.Currency;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.State;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
 import org.estatio.domlink.Link;
+import org.estatio.tax.fixture.TaxModule_tearDown;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-        deleteAllIndex();
-    }
-
-    protected void deleteAllIndex() {
 
         deleteFrom(Currency.class);
 
@@ -52,8 +48,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
         deleteFrom(Charge.class);
         deleteFrom(ChargeGroup.class);
 
-        deleteFrom(TaxRate.class);
-        deleteFrom(Tax.class);
+        executionContext.executeChild(this, new TaxModule_tearDown());
 
         deleteFrom(IndexValue.class);
         deleteFrom(IndexBase.class);

@@ -21,7 +21,7 @@ package org.estatio.tax.fixture;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
-import org.estatio.tax.fixture.data.Country_data;
+import org.estatio.country.fixture.data.Country_data;
 
 public class TaxModule_setupPrereqs extends FixtureScript {
 

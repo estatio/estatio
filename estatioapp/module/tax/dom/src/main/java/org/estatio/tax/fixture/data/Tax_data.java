@@ -6,10 +6,13 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.country.fixture.data.Country_data;
 import org.estatio.dom.fixture.DemoData2;
 import org.estatio.dom.fixture.DemoData2PersistAbstract;
 import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 import static java.util.Arrays.asList;
 import lombok.AllArgsConstructor;
@@ -39,7 +42,7 @@ public enum Tax_data implements DemoData2<Tax_data, Tax> {
     }
 
     public String getReference() {
-        return countryData.getRef2() + "-" + referenceSuffix;
+        return countryData.getRef3() + "-" + referenceSuffix;
     }
 
     @Data
@@ -53,12 +56,25 @@ public enum Tax_data implements DemoData2<Tax_data, Tax> {
         final Tax tax = Tax.builder()
                 .applicationTenancyPath(countryData.getAtPath())
                 .reference(getReference())
-                .name("Value Added Tax (Standard, " + countryData.getRef2() + ")")
+                .name("Value Added Tax (Standard, " + countryData.getRef3() + ")")
                 .build();
         serviceRegistry2.injectServicesInto(tax);
         for (RateData rate : rates) {
-            tax.newRate(rate.date, rate.rateValue);
+            final TaxRate taxRate = tax.newRate(rate.date, rate.rateValue);
+            tax.getRates().add(taxRate);
         }
+        return tax;
+    }
+
+    @Override
+    public Tax upsertUsing(final ServiceRegistry2 serviceRegistry2) {
+        Tax tax = findUsing(serviceRegistry2);
+        if(tax != null) {
+            return tax;
+        }
+        final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
+        tax = asDomainObject(serviceRegistry2);
+        repositoryService.persist(tax);
         return tax;
     }
 

@@ -28,8 +28,8 @@ import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.index.IndexRefData;
-import org.estatio.fixture.tax.TaxVatStdForAllCountries;
 import org.estatio.lease.fixture.seed.DocFragmentDemoFixture;
+import org.estatio.tax.fixture.TaxModule_setup;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
@@ -43,7 +43,7 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, "currencies", new CurrenciesRefData());
         executionContext.executeChild(this, "countries", new CountriesRefData());
         executionContext.executeChild(this, "states", new StatesRefData());
-        executionContext.executeChild(this, "taxes", new TaxVatStdForAllCountries());
+        executionContext.executeChild(this, "taxes", new TaxModule_setup());
         executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
         executionContext.executeChild(this, "charges", new ChargeRefData());
         executionContext.executeChild(this, "incomingCharges", new IncomingChargeFixture());
