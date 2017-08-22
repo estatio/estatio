@@ -4,6 +4,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
 import org.estatio.dom.fixture.DemoData2;
 import org.estatio.dom.fixture.DemoData2PersistAbstract;
 

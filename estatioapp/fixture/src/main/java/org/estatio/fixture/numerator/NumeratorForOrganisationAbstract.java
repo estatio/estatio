@@ -9,8 +9,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
 
 public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
 

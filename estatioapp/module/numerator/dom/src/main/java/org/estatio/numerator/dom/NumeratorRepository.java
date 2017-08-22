@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.dom.impl;
+package org.estatio.numerator.dom;
 
 import java.math.BigInteger;
 import java.util.List;

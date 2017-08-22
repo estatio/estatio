@@ -104,7 +104,7 @@ import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.role.PartyRole;
-import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.Numerator;
 
 public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 

@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.tax.dom.Tax;
@@ -58,10 +57,12 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
 
         @Test
         public void happyCase() throws Exception {
-            // when
+            // given
             final Tax_data data = fakeDataService.enums().anyOf(Tax_data.class);
 
+            // when
             final Tax tax = taxRepository.findByReference(data.getReference());
+
             // then
             assertThat(tax.getReference()).isEqualTo(data.getReference());
         }
@@ -85,8 +86,6 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
         }
     }
 
-    @Inject
-    FakeDataService fakeDataService;
 
 
 }

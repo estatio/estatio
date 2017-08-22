@@ -15,8 +15,8 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.party.PartyConstants;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

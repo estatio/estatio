@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.dom.impl;
+package org.estatio.numerator.dom;
 
 import java.math.BigInteger;
 
@@ -78,7 +78,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByNameAndObjectTypeAndObjectIdentifierAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.numerator.dom.impl.Numerator "
+                        + "FROM org.estatio.numerator.dom.Numerator "
                         + "WHERE name == :name "
                         + "&& objectIdentifier == :objectIdentifier "
                         + "&& objectType == :objectType "
@@ -86,14 +86,14 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByNameAndObjectTypeAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.numerator.dom.impl.Numerator "
+                        + "FROM org.estatio.numerator.dom.Numerator "
                         + "WHERE name == :name "
                         + "&& objectType == :objectType "
                         + "&& :applicationTenancyPath.matches(applicationTenancyPath) "),
         @javax.jdo.annotations.Query(
                 name = "findByNameAndApplicationTenancyPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.numerator.dom.impl.Numerator "
+                        + "FROM org.estatio.numerator.dom.Numerator "
                         + "WHERE name == :name"
                         + "&& applicationTenancyPath == :applicationTenancyPath ")
 })

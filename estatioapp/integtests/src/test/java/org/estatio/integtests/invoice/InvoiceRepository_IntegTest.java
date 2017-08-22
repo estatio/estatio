@@ -72,8 +72,8 @@ import org.estatio.fixture.party.OrganisationForPoisonGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;

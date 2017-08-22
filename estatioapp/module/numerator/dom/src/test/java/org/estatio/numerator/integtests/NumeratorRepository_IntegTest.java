@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.integtests.impl;
+package org.estatio.numerator.integtests;
 
 import java.math.BigInteger;
 
@@ -25,36 +25,21 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
-import org.estatio.numerator.fixture.NumeratorModuleBaseLineFixture;
+import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
+import org.estatio.numerator.fixture.data.NumeratorExampleObject_data;
 import org.estatio.numerator.fixture.dom.NumeratorExampleObject;
-import org.estatio.numerator.integtests.NumeratorIntegrationTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class NumeratorRepository_IntegTest extends NumeratorIntegrationTestAbstract {
+public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstract {
 
-
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                final NumeratorModuleBaseLineFixture fs = new NumeratorModuleBaseLineFixture();
-                executionContext.executeChild(this, fs);
-                propertyOxf = fs.getFoo();
-                propertyKal = fs.getBar();
-            }
-        });
-    }
 
     @Inject
     NumeratorRepository numeratorRepository;
@@ -67,11 +52,13 @@ public class NumeratorRepository_IntegTest extends NumeratorIntegrationTestAbstr
     ApplicationTenancy applicationTenancyOxf;
     ApplicationTenancy applicationTenancyKal;
 
-
     @Before
     public void setUp() throws Exception {
-        applicationTenancyKal = applicationTenancyRepository.newTenancy("KAL (NLD)", "/NLD/KL/%", null);
-        applicationTenancyOxf = applicationTenancyRepository.newTenancy("OXF (GBR)", "/GBR/OXF/%", null);
+        applicationTenancyKal = ApplicationTenancy_data.NlKal.findUsing(serviceRegistry);
+        applicationTenancyOxf = ApplicationTenancy_data.GbOxf.findUsing(serviceRegistry);
+
+        propertyKal = NumeratorExampleObject_data.Kal.findUsing(serviceRegistry);
+        propertyOxf = NumeratorExampleObject_data.Oxf.findUsing(serviceRegistry);
     }
 
 

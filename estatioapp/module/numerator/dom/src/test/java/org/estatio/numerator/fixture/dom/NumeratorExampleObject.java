@@ -26,9 +26,12 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.util.ObjectContracts;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+// TODO: need to move this back to src/test/java
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE,
         schema = "simple",
@@ -39,37 +42,22 @@ import lombok.Setter;
          column="id")
 @javax.jdo.annotations.Queries({
 })
-@javax.jdo.annotations.Unique(name="NumeratorContextObject_name_UNQ", members = {"name"})
+@javax.jdo.annotations.Unique(name="NumeratorExampleObject_name_UNQ", members = {"name"})
 @DomainObject(
         objectType = "simple.NumeratorExampleObject",
         auditing = Auditing.ENABLED,
         publishing = Publishing.ENABLED
 )
+@EqualsAndHashCode(of = "name")
+@Builder
 public class NumeratorExampleObject implements Comparable<NumeratorExampleObject> {
 
 
-    public NumeratorExampleObject(final String name) {
-        setName(name);
-    }
-
-    public static class NameType {
-        private NameType() {
-        }
-
-        public static class Meta {
-            public static final int MAX_LEN = 40;
-            private Meta() {
-            }
-        }
-    }
-
-    @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
     @Getter @Setter
     @Title
     private String name;
 
-
-    //region > toString, compareTo
     @Override
     public String toString() {
         return ObjectContracts.toString(this, "name");
@@ -79,7 +67,5 @@ public class NumeratorExampleObject implements Comparable<NumeratorExampleObject
     public int compareTo(final NumeratorExampleObject other) {
         return ObjectContracts.compare(this, other, "name");
     }
-
-    //endregion
 
 }

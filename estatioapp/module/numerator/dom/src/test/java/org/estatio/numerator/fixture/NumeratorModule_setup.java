@@ -18,5 +18,17 @@
  */
 package org.estatio.numerator.fixture;
 
-public class NumeratorFixtureModule {}
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.numerator.fixture.data.NumeratorExampleObject_data;
+
+public class NumeratorModule_setup extends FixtureScript {
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        //TODO: REVIEW: is this needed?
+        //executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
+        executionContext.executeChild(this, new NumeratorExampleObject_data.PersistScript());
+    }
+
+}

@@ -1,4 +1,4 @@
-package org.estatio.tax.fixture.data;
+package org.estatio.apptenancy.fixture.data;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 

@@ -20,11 +20,10 @@ package org.estatio.numerator.fixture;
 
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
-import org.estatio.dom.security.SecurityModuleWithinEstatioTearDown;
-import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.Numerator;
 import org.estatio.numerator.fixture.dom.NumeratorExampleObject;
 
-public class NumeratorModuleTeardownFixture extends TeardownFixtureAbstract {
+public class NumeratorModule_tearDown extends TeardownFixtureAbstract {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -34,9 +33,6 @@ public class NumeratorModuleTeardownFixture extends TeardownFixtureAbstract {
     protected void deleteAllDirect() {
 
         deleteFrom(Numerator.class);
-
-        runFixtureScript(new SecurityModuleWithinEstatioTearDown());
-
         deleteFrom(NumeratorExampleObject.class);
     }
 

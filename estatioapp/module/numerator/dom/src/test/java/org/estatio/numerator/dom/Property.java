@@ -16,23 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.fixture;
+package org.estatio.numerator.dom;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
-import org.estatio.tax.fixture.data.Country_data;
-
-public class TaxModule_setupPrereqs extends FixtureScript {
-
-    static boolean beenRun = false;
-
-    @Override
-    protected void execute(final ExecutionContext executionContext) {
-        if(beenRun) return;
-        executionContext.executeChild(this, new ApplicationTenancy_data.PersistScript());
-        executionContext.executeChild(this, new Country_data.PersistScript());
-        beenRun = true;
-    }
-
+public class Property {
 }

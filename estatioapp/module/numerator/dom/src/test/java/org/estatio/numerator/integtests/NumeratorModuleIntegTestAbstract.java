@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.integtests;
+package org.estatio.numerator.integtests;
 
 import javax.inject.Inject;
 
@@ -31,42 +31,43 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.SecurityModule;
 
-import org.incode.module.country.dom.CountryModule;
+import org.estatio.numerator.EstatioNumeratorModule;
+import org.estatio.numerator.fixture.NumeratorModule_setup;
+import org.estatio.numerator.fixture.NumeratorModule_setupPrereqs;
+import org.estatio.numerator.fixture.NumeratorModule_tearDown;
 
-import org.estatio.tax.EstatioTaxModule;
-import org.estatio.tax.fixture.TaxModule_setup;
-import org.estatio.tax.fixture.TaxModule_setupPrereqs;
-import org.estatio.tax.fixture.TaxModule_tearDown;
+/**
+ * Base class for integration tests.
+ */
+public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 
-public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract2 {
-
-    public static class TaxAppManifest extends AppManifestAbstract {
+    public static class NumeratorAppManifest extends AppManifestAbstract {
 
         final static Builder BUILDER =
-                Builder.forModules(CountryModule.class, EstatioTaxModule.class , SecurityModule.class);
+                Builder.forModules(EstatioNumeratorModule.class, SecurityModule.class );
 
-        public TaxAppManifest() {
+        public NumeratorAppManifest() {
             super(BUILDER);
         }
     }
 
     @BeforeClass
     public static void initClass() {
-        bootstrapUsing(TaxAppManifest.BUILDER.withAdditionalModules(FakeDataModule.class));
+        bootstrapUsing(NumeratorAppManifest.BUILDER.withAdditionalModules(FakeDataModule.class));
     }
 
     @Before
     public void setup() {
-        runFixtureScript(new TaxModule_setupPrereqs());
-        runFixtureScript(new TaxModule_setup());
+        runFixtureScript(new NumeratorModule_setupPrereqs());
+        runFixtureScript(new NumeratorModule_setup());
     }
 
     @After
     public void tearDown() {
-        runFixtureScript(new TaxModule_tearDown());
+        runFixtureScript(new NumeratorModule_tearDown());
     }
 
     @Inject
     protected FakeDataService fakeDataService;
-
 }
+

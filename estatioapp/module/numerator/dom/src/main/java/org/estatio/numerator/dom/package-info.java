@@ -10,4 +10,4 @@
  * against properties, is used to generate invoice numbers.  For example, the property with reference <i>CAR</i> has 
  * invoices numbered <i>CAR-00001</i>, <i>CAR-00002</i> etc.
  */
-package org.estatio.numerator.dom.impl;
+package org.estatio.numerator.dom;

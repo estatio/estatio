@@ -16,7 +16,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.dom.impl;
+package org.estatio.numerator.fixture;
 
-public class Property {
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
+
+public class NumeratorModule_setupPrereqs extends FixtureScript {
+
+    static boolean beenRun = false;
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        if(beenRun) return;
+        executionContext.executeChild(this, new ApplicationTenancy_data.PersistScript());
+        beenRun = true;
+    }
+
 }
