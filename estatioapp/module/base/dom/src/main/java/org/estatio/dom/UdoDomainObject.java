@@ -25,7 +25,6 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -67,8 +66,8 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
         implements Comparable<T>, WithApplicationTenancy {
 
 
-    protected static ObjectContracts UDO_OBJECT_CONTRACTS =
-            new ObjectContracts()
+    protected static ObjectContracts2 UDO_OBJECT_CONTRACTS =
+            new ObjectContracts2()
                     .with(WithReferenceGetter.ToString.evaluator())
                     .with(WithCodeGetter.ToString.evaluator())
                     .with(WithNameGetter.ToString.evaluator())
@@ -135,7 +134,7 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     @Override
     public int compareTo(final T other) {
-        return ObjectContracts.compare(this, other, keyProperties);
+        return ObjectContracts2.compare(this, other, keyProperties);
     }
 
 }
