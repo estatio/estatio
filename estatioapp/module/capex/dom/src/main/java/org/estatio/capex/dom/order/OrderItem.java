@@ -78,6 +78,11 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
+                name = "findBySeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE ordr.seller == :seller "),
+        @Query(
                 name = "findByOrderAndCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "

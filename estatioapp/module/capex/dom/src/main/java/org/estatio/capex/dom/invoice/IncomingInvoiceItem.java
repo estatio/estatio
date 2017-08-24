@@ -19,13 +19,11 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -36,13 +34,12 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.coda.CodaMapping;
-import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderItemService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -56,6 +53,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.FinancialAmountUtil;
 
@@ -461,23 +459,29 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
                 : null;
     }
 
-    public List<OrderItem> autoComplete0UpdateOrCreateOrderItem(@MinLength(3) final String searchString){
+    public List<OrderItem> choices0UpdateOrCreateOrderItem(){
 
-       return orderItemService.searchOrderItem(
-               searchString,
-               getInvoice().getSeller(),
-               getCharge(),
-               getProject(),
-               (org.estatio.dom.asset.Property) getFixedAsset());
+        // the disable guard ensures this is non-null
+        final Party seller = getInvoice().getSeller();
+
+        return orderItemRepository.findBySeller(seller);
 
     }
 
     public String disableUpdateOrCreateOrderItem(){
+        if(getInvoice().getSeller() == null) {
+            return "Invoice's seller is required before items can be linked";
+        }
         // safeguard: there should at most be 1 linked order item
         if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
             return "Error: More than 1 linked order item found";
         }
         return null; // EST-1507: invoices item can be attached to order items any time
+    }
+
+    public String validateUpdateOrCreateOrderItem(final OrderItem orderItem) {
+
+        return orderItemService.validateOrderItem(orderItem, this);
     }
 
     @Programmatic
@@ -589,18 +593,21 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
-    private ChargeRepository chargeRepository;
+    ChargeRepository chargeRepository;
 
     @Inject
     RepositoryService repositoryService;
 
     @Inject
-    private ProjectRepository projectRepository;
+    ProjectRepository projectRepository;
 
     @Inject
-    private OrderItemService orderItemService;
+    OrderItemService orderItemService;
 
     @Inject
-    private BudgetItemChooser budgetItemChooser;
+    OrderItemRepository orderItemRepository;
+
+    @Inject
+    BudgetItemChooser budgetItemChooser;
 
 }

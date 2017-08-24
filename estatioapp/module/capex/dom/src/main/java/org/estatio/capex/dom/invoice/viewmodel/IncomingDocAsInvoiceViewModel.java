@@ -227,15 +227,22 @@ public class IncomingDocAsInvoiceViewModel
         autoFillIn();
     }
 
-    public List<OrderItem> autoCompleteOrderItem(@MinLength(3) final String searchString){
+    public List<OrderItem> choicesOrderItem(){
+        // the disable guard ensures this is non-null
+        final Party seller = getSeller();
+        return orderItemRepository.findBySeller(seller);
+    }
 
-        return orderItemService.searchOrderItem(
-                searchString,
-                getSeller(),
-                getCharge(),
-                getProject(),
-                getProperty());
+    public String disableOrderItem(){
+        final Party seller = getSeller();
+        if(seller == null) {
+            return "Invoice's seller is required before items can be linked";
+        }
+        return null; // EST-1507: invoices item can be attached to order items any time
+    }
 
+    public String validateOrderItem(final OrderItem orderItem) {
+        return orderItemService.validateOrderItem(orderItem, this);
     }
 
     private void autoFillIn(){

@@ -1,83 +1,63 @@
 package org.estatio.capex.dom.order;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.util.ReasonBuffer;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.project.Project;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.party.Party;
+import org.estatio.dom.invoice.InvoiceItem;
 
+/**
+ * Supports the selection of {@link OrderItem}s of an {@link InvoiceItem}.
+ */
 @DomainService(nature = NatureOfService.DOMAIN)
 public class OrderItemService {
 
-    public List<OrderItem> searchOrderItem(
-            final String searchString,
-            final Party seller,
+    @Programmatic
+    public String validateOrderItem(
+            final OrderItem orderItem,
+            final IncomingDocAsInvoiceViewModel viewModel) {
+
+        final Charge charge = viewModel.getCharge();
+        final Project project = viewModel.getProject();
+        final Property property = viewModel.getProperty();
+
+        return validateOrderItem(orderItem, charge, project, property);
+    }
+
+    @Programmatic
+    public String validateOrderItem(
+            final OrderItem orderItem,
+            final IncomingInvoiceItem invoiceItem) {
+
+        final Charge charge = invoiceItem.getCharge();
+        final Project project = invoiceItem.getProject();
+        final FixedAsset fixedAsset = invoiceItem.getFixedAsset();
+
+        return validateOrderItem(orderItem, charge, project, fixedAsset);
+    }
+
+    private String validateOrderItem(
+            final OrderItem orderItem,
             final Charge charge,
             final Project project,
-            final Property property){
-        List<OrderItem> result = new ArrayList<>();
-
-        for (Order order : orderRepository.matchByOrderNumber(searchString)){
-            for (OrderItem item : order.getItems()) {
-                if (!result.contains(item) && !item.isInvoiced()) {
-                    result.add(item);
-                }
-            }
-        }
-
-        for (OrderItem item : orderItemRepository.matchByDescription(searchString)) {
-            if (!result.contains(item) && !item.isInvoiced()) {
-                result.add(item);
-            }
-        }
-
-        for (Order order : orderRepository.matchBySellerReferenceOrName(searchString)){
-            for (OrderItem item : order.getItems()){
-                if (!result.contains(item) && !item.isInvoiced()) {
-                    result.add(item);
-                }
-            }
-        }
-
-        if (seller!=null){
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getOrdr().getSeller()!=null && x.getOrdr().getSeller().equals(seller))
-                            .toList()
-            );
-        }
-        if (charge!=null) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getCharge().equals(charge))
-                            .toList()
-            );
-        }
-        if (project!=null) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getProject()!=null && x.getProject().equals(project))
-                            .toList()
-            );
-        }
-        if (property!=null) {
-            result = Lists.newArrayList(
-                    FluentIterable.from(result)
-                            .filter(x->x.getProperty()!=null && x.getProperty().equals(property))
-                            .toList()
-            );
-        }
-        return result;
+            final FixedAsset fixedAsset) {
+        final ReasonBuffer buf = new ReasonBuffer();
+        buf.appendOnCondition(!Objects.equals(charge, orderItem.getCharge()), "charge is different");
+        buf.appendOnCondition(!Objects.equals(project, orderItem.getProject()), "project is different");
+        buf.appendOnCondition(!Objects.equals(fixedAsset, orderItem.getProperty()), "property is different");
+        final String reason = buf.getReason();
+        return reason != null ? "Cannot link to this item: " + reason : null;
     }
 
     @Inject

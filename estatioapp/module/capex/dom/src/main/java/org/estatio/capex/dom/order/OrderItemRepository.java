@@ -23,6 +23,7 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(
@@ -195,6 +196,16 @@ public class OrderItemRepository {
     }
 
     @Programmatic
+    public List<OrderItem> findBySeller(final Party seller) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findBySeller",
+                        "seller", seller
+                ));
+    }
+
+    @Programmatic
     public List<OrderItem> listAll() {
         return repositoryService.allInstances(OrderItem.class);
     }
@@ -209,6 +220,5 @@ public class OrderItemRepository {
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
-
 
 }
