@@ -468,33 +468,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return orderItemInvoiceItemLinkRepository.findByOrderItem(this);
     }
 
-
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TableColumnOrderServiceForLinks implements TableColumnOrderService {
-
-        @Override
-        public List<String> orderParented(
-                final Object parent,
-                final String collectionId,
-                final Class<?> collectionType,
-                final List<String> propertyIds) {
-            if(parent instanceof OrderItem && "invoiceItemLinks".equals(collectionId)) {
-                final List<String> ids = Lists.newArrayList(propertyIds);
-                ids.removeIf(x -> x.toLowerCase().contains("order"));
-                return ids;
-            }
-            return null;
-        }
-        @Override
-        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
-            return null;
-        }
-    }
-
-
-
-
-
     @PropertyLayout(hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountInvoiced(){
         return sum(InvoiceItem::getNetAmount);

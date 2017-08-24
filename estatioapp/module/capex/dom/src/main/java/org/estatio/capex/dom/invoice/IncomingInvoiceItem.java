@@ -538,31 +538,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return orderItemService.validateOrderItem(orderItem, this);
     }
 
-
-
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class TableColumnOrderServiceForLinks implements TableColumnOrderService {
-
-        @Override
-        public List<String> orderParented(
-                final Object parent,
-                final String collectionId,
-                final Class<?> collectionType,
-                final List<String> propertyIds) {
-            if(parent instanceof IncomingInvoiceItem && "orderItemLinks".equals(collectionId)) {
-                final List<String> ids = Lists.newArrayList(propertyIds);
-                ids.removeIf(x -> x.toLowerCase().contains("invoice"));
-                return ids;
-            }
-            return null;
-        }
-        @Override
-        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
-            return null;
-        }
-    }
-
-
     @Programmatic
     public String reasonIncomplete(){
         return new Validator()
