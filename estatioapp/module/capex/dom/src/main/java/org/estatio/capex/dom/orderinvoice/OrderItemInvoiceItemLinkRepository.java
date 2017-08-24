@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.orderinvoice;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -18,11 +19,13 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     public OrderItemInvoiceItemLink createOrderItemInvoiceItemLink(
             final OrderItem orderItem,
-            final IncomingInvoiceItem invoiceItem){
+            final IncomingInvoiceItem invoiceItem,
+            final BigDecimal netAmount){
 
         OrderItemInvoiceItemLink orderItemInvoiceItemLink = newTransientInstance(OrderItemInvoiceItemLink.class);
         orderItemInvoiceItemLink.setOrderItem(orderItem);
         orderItemInvoiceItemLink.setInvoiceItem(invoiceItem);
+        orderItemInvoiceItemLink.setNetAmount(netAmount);
 
         persist(orderItemInvoiceItemLink);
 
@@ -31,9 +34,10 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     public OrderItemInvoiceItemLink findOrCreateLink(
             final OrderItem orderItem,
-            final IncomingInvoiceItem invoiceItem) {
+            final IncomingInvoiceItem invoiceItem,
+            final BigDecimal netAmount) {
         return findUnique(orderItem, invoiceItem)  == null ?
-                createOrderItemInvoiceItemLink(orderItem, invoiceItem) :
+                createOrderItemInvoiceItemLink(orderItem, invoiceItem, netAmount) :
                 findUnique(orderItem, invoiceItem);
     }
 

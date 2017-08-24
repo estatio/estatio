@@ -487,7 +487,7 @@ public class IncomingDocAsInvoiceViewModel
             Charge chargeFromWrapper = getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
             IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
-            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink);
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink, invoiceItemToLink.getNetAmount());
         }
 
         return incomingInvoice;

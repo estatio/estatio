@@ -99,6 +99,10 @@ public class OrderItemInvoiceItemLink {
     }
 
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "false")
+    @Getter @Setter
+    private BigDecimal netAmount;
+
 
     // derived from the order item
     public Order getOrder() {

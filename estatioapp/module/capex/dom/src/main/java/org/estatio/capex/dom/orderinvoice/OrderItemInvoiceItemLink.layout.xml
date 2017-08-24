@@ -18,6 +18,15 @@
                                 <cpt:property id="charge" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Net Amounts" id="netAmounts">
+                                <cpt:property id="orderItemNetAmount"/>
+                                <cpt:property id="invoiceItemNetAmount"/>
+                                <cpt:property id="netAmount">
+                                    <cpt:named>Link net amount</cpt:named>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
                     </bs3:row>
                 </bs3:tab>
                 <bs3:tab name="Other">
@@ -38,6 +47,7 @@
                                 <cpt:action id="links" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="datanucleusId"/>
                                 <cpt:property id="id"/>
                                 <cpt:property id="datanucleusVersionLong"/>
                                 <cpt:property id="datanucleusVersionTimestamp"/>

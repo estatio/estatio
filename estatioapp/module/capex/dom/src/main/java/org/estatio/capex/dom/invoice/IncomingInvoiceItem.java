@@ -533,9 +533,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @MemberOrder(name = "orderItemLinks", sequence = "1")
     public IncomingInvoiceItem createOrderItemLink(
             @Nullable
-            final OrderItem orderItem){
+            final OrderItem orderItem,
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal netAmount){
         if (orderItem!=null){
-            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, this);
+            orderItemInvoiceItemLinkRepository
+                    .findOrCreateLink(orderItem, this, netAmount);
         }
         return this;
     }
@@ -565,9 +568,19 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return null; // EST-1507: invoices item can be attached to order items any time
     }
 
-    public String validateCreateOrderItemLink(final OrderItem orderItem) {
-
+    public String validate0CreateOrderItemLink(final OrderItem orderItem) {
         return orderItemService.validateOrderItem(orderItem, this);
+    }
+
+    public BigDecimal default1CreateOrderItemLink(){
+        return getNetAmount();
+    }
+
+    public String validate1CreateOrderItemLink(final BigDecimal netAmount) {
+        if(netAmount == null) return null; // shouldn't occur, I think.
+        if(netAmount.compareTo(BigDecimal.ZERO) < 0) return "Cannot be negative";
+        if(netAmount.compareTo(getNetAmount()) > 0) return "Cannot exceed invoice amount (" + getNetAmount() + ")";
+        return null;
     }
 
     @Programmatic
