@@ -40,7 +40,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     public OrderItemInvoiceItemLink findUnique(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem) {
-        return uniqueMatch("findUnique", "orderItem", orderItem, "invoiceItem", invoiceItem);
+        return firstMatch("findUnique", "orderItem", orderItem, "invoiceItem", invoiceItem);
     }
 
     public List<OrderItemInvoiceItemLink> findByOrderItem(

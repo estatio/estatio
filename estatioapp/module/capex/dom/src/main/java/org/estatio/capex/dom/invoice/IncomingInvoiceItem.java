@@ -3,6 +3,7 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -23,19 +24,17 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -495,34 +494,67 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItemLinks", sequence = "1")
-    public IncomingInvoiceItem updateOrCreateOrderItemLink(
+    public IncomingInvoiceItem removeOrderItemLink(
             @Nullable
             final OrderItem orderItem){
-        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
+        final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, this);
+        if(link != null) {
             link.remove();
         }
+        return this;
+    }
+    public String disableRemoveOrderItemLink() {
+        return choices0RemoveOrderItemLink().isEmpty()? "No order items" : null;
+    }
+
+    public OrderItem default0RemoveOrderItemLink() {
+        final List<OrderItem> orderItems = choices0RemoveOrderItemLink();
+        return orderItems.size() == 1 ? orderItems.get(0): null;
+    }
+
+    public List<OrderItem> choices0RemoveOrderItemLink() {
+        return queryResultsCache.execute(
+                this::doOrderItemsForLinks,
+                IncomingInvoiceItem.class, "orderItemsForLinks", this);
+    }
+
+
+    private List<OrderItem> doOrderItemsForLinks() {
+        return Lists.newArrayList(getOrderItemLinks())
+                .stream()
+                .map(OrderItemInvoiceItemLink::getOrderItem)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(name = "orderItemLinks", sequence = "1")
+    public IncomingInvoiceItem createOrderItemLink(
+            @Nullable
+            final OrderItem orderItem){
         if (orderItem!=null){
             orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, this);
         }
         return this;
     }
 
-    public OrderItem default0UpdateOrCreateOrderItemLink(){
+    public OrderItem default0CreateOrderItemLink(){
         return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size() > 0 ?
                 orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem()
                 : null;
     }
 
-    public List<OrderItem> choices0UpdateOrCreateOrderItemLink(){
+    public List<OrderItem> choices0CreateOrderItemLink(){
 
         // the disable guard ensures this is non-null
         final Party seller = getInvoice().getSeller();
 
         return orderItemRepository.findBySeller(seller);
-
     }
 
-    public String disableUpdateOrCreateOrderItemLink(){
+    public String disableCreateOrderItemLink(){
         if(getInvoice().getSeller() == null) {
             return "Invoice's seller is required before items can be linked";
         }
@@ -533,7 +565,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return null; // EST-1507: invoices item can be attached to order items any time
     }
 
-    public String validateUpdateOrCreateOrderItemLink(final OrderItem orderItem) {
+    public String validateCreateOrderItemLink(final OrderItem orderItem) {
 
         return orderItemService.validateOrderItem(orderItem, this);
     }
@@ -668,5 +700,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Inject
     BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 }
