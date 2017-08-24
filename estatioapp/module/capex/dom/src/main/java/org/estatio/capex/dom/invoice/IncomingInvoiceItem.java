@@ -417,7 +417,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             return "Charge cannot be changed because this item is linked to an order";
         }
         if (this.getBudgetItem()!=null){
-            return "Charge cannot be changed  because this item is linked to a budget";
+            return "Charge cannot be changed because this item is linked to a budget";
         }
         return null;
     }
@@ -492,42 +492,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "orderItemLinks", sequence = "1")
-    public IncomingInvoiceItem removeOrderItemLink(
-            @Nullable
-            final OrderItem orderItem){
-        final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, this);
-        if(link != null) {
-            link.remove();
-        }
-        return this;
-    }
-    public String disableRemoveOrderItemLink() {
-        return choices0RemoveOrderItemLink().isEmpty()? "No order items" : null;
-    }
-
-    public OrderItem default0RemoveOrderItemLink() {
-        final List<OrderItem> orderItems = choices0RemoveOrderItemLink();
-        return orderItems.size() == 1 ? orderItems.get(0): null;
-    }
-
-    public List<OrderItem> choices0RemoveOrderItemLink() {
-        return queryResultsCache.execute(
-                this::doOrderItemsForLinks,
-                IncomingInvoiceItem.class, "orderItemsForLinks", this);
-    }
-
-
-    private List<OrderItem> doOrderItemsForLinks() {
-        return Lists.newArrayList(getOrderItemLinks())
-                .stream()
-                .map(OrderItemInvoiceItemLink::getOrderItem)
-                .collect(Collectors.toList());
-    }
-
-
-
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItemLinks", sequence = "1")
@@ -582,6 +546,55 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         if(netAmount.compareTo(getNetAmount()) > 0) return "Cannot exceed invoice amount (" + getNetAmount() + ")";
         return null;
     }
+
+
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(name = "orderItemLinks", sequence = "1")
+    public IncomingInvoiceItem removeOrderItemLink(
+            @Nullable
+            final OrderItem orderItem){
+        final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, this);
+        if(link != null) {
+            link.remove();
+        }
+        return this;
+    }
+    public String disableRemoveOrderItemLink() {
+        return choices0RemoveOrderItemLink().isEmpty()? "No order items" : null;
+    }
+
+    public OrderItem default0RemoveOrderItemLink() {
+        final List<OrderItem> orderItems = choices0RemoveOrderItemLink();
+        return orderItems.size() == 1 ? orderItems.get(0): null;
+    }
+
+    public List<OrderItem> choices0RemoveOrderItemLink() {
+        return queryResultsCache.execute(
+                this::doOrderItemsForLinks,
+                IncomingInvoiceItem.class, "orderItemsForLinks", this);
+    }
+
+
+    private List<OrderItem> doOrderItemsForLinks() {
+        return Lists.newArrayList(getOrderItemLinks())
+                .stream()
+                .map(OrderItemInvoiceItemLink::getOrderItem)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     @Programmatic
     public String reasonIncomplete(){
