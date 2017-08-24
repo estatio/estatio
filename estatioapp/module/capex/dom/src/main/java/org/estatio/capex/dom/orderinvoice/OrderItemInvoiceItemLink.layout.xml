@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Dimensions" id="dimensions">
+                                <cpt:property id="project" hidden="ALL_TABLES"/>
+                                <cpt:property id="property" hidden="ALL_TABLES"/>
+                                <cpt:property id="budgetItem" hidden="ALL_TABLES"/>
+                                <cpt:property id="charge" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="links" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8">
+            <bs3:row>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Order Details" id="order">
+                        <cpt:property id="order"/>
+                        <cpt:property id="orderItem"/>
+                        <cpt:property id="orderItemDescription"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Invoice Details" id="invoice">
+                        <cpt:property id="invoice"/>
+                        <cpt:property id="invoiceItem"/>
+                        <cpt:property id="invoiceItemDescription"/>
+                        <cpt:property id="invoiceItemSequence"/>
+                        <cpt:property id="incomingInvoiceType"/>
+                        <cpt:property id="invoiceItemDueDate"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Order Dates" id="orderDates">
+                        <cpt:property id="orderItemStartDate"/>
+                        <cpt:property id="orderItemEndDate"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Invoice Dates" id="invoiceDates">
+                        <cpt:property id="invoiceItemStartDate"/>
+                        <cpt:property id="invoiceItemEndDate"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Order Amounts" id="orderAmounts">
+                        <cpt:property id="orderItemNetAmount"/>
+                        <cpt:property id="orderItemVatAmount"/>
+                        <cpt:property id="orderItemGrossAmount"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Invoice Amounts" id="invoiceAmounts">
+                        <cpt:property id="invoiceItemNetAmount"/>
+                        <cpt:property id="invoiceItemVatAmount"/>
+                        <cpt:property id="invoiceItemGrossAmount"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Order Tax" id="orderTax">
+                        <cpt:property id="orderItemTax"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+                <bs3:col span="6">
+                    <cpt:fieldSet name="Invoice Tax" id="invoiceTax">
+                        <cpt:property id="invoiceItemTax"/>
+                        <cpt:property id="invoiceItemTaxRate"/>
+                        <cpt:property id="invoiceItemVatPercentage"/>
+                    </cpt:fieldSet>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

@@ -2,7 +2,6 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -15,6 +14,8 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -22,9 +23,11 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -32,6 +35,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -484,18 +488,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
 
 
-    public List<OrderItem> getOrderItems() {
-        List<OrderItem> result = new ArrayList<>();
-        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
-            result.add(link.getOrderItem());
-        }
-        return result;
+    public List<OrderItemInvoiceItemLink> getOrderItemLinks() {
+        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
     }
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "orderItems", sequence = "1")
-    public IncomingInvoiceItem updateOrCreateOrderItem(
+    @MemberOrder(name = "orderItemLinks", sequence = "1")
+    public IncomingInvoiceItem updateOrCreateOrderItemLink(
             @Nullable
             final OrderItem orderItem){
         for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
@@ -507,13 +507,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return this;
     }
 
-    public OrderItem default0UpdateOrCreateOrderItem(){
+    public OrderItem default0UpdateOrCreateOrderItemLink(){
         return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size() > 0 ?
                 orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem()
                 : null;
     }
 
-    public List<OrderItem> choices0UpdateOrCreateOrderItem(){
+    public List<OrderItem> choices0UpdateOrCreateOrderItemLink(){
 
         // the disable guard ensures this is non-null
         final Party seller = getInvoice().getSeller();
@@ -522,7 +522,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     }
 
-    public String disableUpdateOrCreateOrderItem(){
+    public String disableUpdateOrCreateOrderItemLink(){
         if(getInvoice().getSeller() == null) {
             return "Invoice's seller is required before items can be linked";
         }
@@ -533,13 +533,34 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return null; // EST-1507: invoices item can be attached to order items any time
     }
 
-    public String validateUpdateOrCreateOrderItem(final OrderItem orderItem) {
+    public String validateUpdateOrCreateOrderItemLink(final OrderItem orderItem) {
 
         return orderItemService.validateOrderItem(orderItem, this);
     }
 
 
 
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TableColumnOrderServiceForLinks implements TableColumnOrderService {
+
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if(parent instanceof IncomingInvoiceItem && "orderItemLinks".equals(collectionId)) {
+                final List<String> ids = Lists.newArrayList(propertyIds);
+                ids.removeIf(x -> x.toLowerCase().contains("invoice"));
+                return ids;
+            }
+            return null;
+        }
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+    }
 
 
     @Programmatic

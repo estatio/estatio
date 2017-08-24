@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
@@ -68,6 +69,11 @@ import lombok.Setter;
         objectType = "org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink"
 )
 public class OrderItemInvoiceItemLink {
+
+
+    public String title() {
+        return titleService.titleOf(getOrderItem()) + " --- " + titleService.titleOf(getInvoiceItem());
+    }
 
     @Getter @Setter
     @Column(allowsNull = "false", name = "orderItemId")
@@ -187,4 +193,8 @@ public class OrderItemInvoiceItemLink {
 
     @Inject
     private RepositoryService repositoryService;
+
+    @Inject
+    TitleService titleService;
+
 }

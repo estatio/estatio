@@ -1,93 +1,105 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
-      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup>
-                <tab name="Order item">
-                    <row>
-                        <col span="4">
-                            <ns2:fieldSet name="Order item" id="orderItem">
-                                <ns2:property id="ordr"/>
-                                <ns2:property id="description">
-                                    <ns2:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="Dimensions" id="dimensions">
-                                <ns2:property id="charge">
-                                    <ns2:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="fixedAsset">
-                                    <ns2:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="project">
-                                    <ns2:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="budgetItem">
-                                    <ns2:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="startDate">
-                                    <ns2:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="endDate"/>
-                                <ns2:property id="type"/>
-                            </ns2:fieldSet>
-                        </col>
-                        <col span="4">
-                            <ns2:fieldSet name="Amounts" id="amounts">
-                                <ns2:action id="updateAmounts" position="PANEL"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="tax"/>
-                                <ns2:property id="grossAmount"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
-                                <ns2:property id="netAmountInvoiced"/>
-                                <ns2:property id="vatAmountInvoiced"/>
-                                <ns2:property id="grossAmountInvoiced"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Other">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Tenancy" id="general">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Other" unreferencedProperties="true"></ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-        <col span="6">
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup unreferencedCollections="true">
-                <tab name="_">
-                    <row>
-                        <col span="12"></col>
-                    </row>
-                </tab>
-            </tabGroup>
-
-        </col>
-    </row>
-</grid>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Order item">
+                    <bs3:row>
+                        <bs3:col span="4">
+                            <cpt:fieldSet name="Order item" id="orderItem">
+                                <cpt:property id="ordr"/>
+                                <cpt:property id="description">
+                                    <cpt:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:fieldSet name="Dimensions" id="dimensions">
+                                <cpt:property id="charge">
+                                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="fixedAsset">
+                                    <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="project">
+                                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="budgetItem">
+                                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="startDate">
+                                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="endDate"/>
+                                <cpt:property id="type"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                        <bs3:col span="4">
+                            <cpt:fieldSet name="Amounts" id="amounts">
+                                <cpt:action id="updateAmounts" position="PANEL"/>
+                                <cpt:property id="netAmount"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="tax"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
+                                <cpt:property id="netAmountInvoiced"/>
+                                <cpt:property id="vatAmountInvoiced"/>
+                                <cpt:property id="grossAmountInvoiced"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Tenancy" id="general">
+                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="6">
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Invoice Item Links">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="invoiceItemLinks"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row>
+                        <bs3:col span="12"></bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

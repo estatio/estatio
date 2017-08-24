@@ -1,7 +1,6 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -21,6 +20,8 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -28,8 +29,10 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -37,6 +40,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -46,7 +50,6 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
@@ -461,13 +464,36 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
 
 
-    public List<IncomingInvoiceItem> getInvoiceItems() {
-        List<IncomingInvoiceItem> result = new ArrayList<>();
-        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByOrderItem(this)){
-            result.add(link.getInvoiceItem());
-        }
-        return result;
+    public List<OrderItemInvoiceItemLink> getInvoiceItemLinks() {
+        return orderItemInvoiceItemLinkRepository.findByOrderItem(this);
     }
+
+
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TableColumnOrderServiceForLinks implements TableColumnOrderService {
+
+        @Override
+        public List<String> orderParented(
+                final Object parent,
+                final String collectionId,
+                final Class<?> collectionType,
+                final List<String> propertyIds) {
+            if(parent instanceof OrderItem && "invoiceItemLinks".equals(collectionId)) {
+                final List<String> ids = Lists.newArrayList(propertyIds);
+                ids.removeIf(x -> x.toLowerCase().contains("order"));
+                return ids;
+            }
+            return null;
+        }
+        @Override
+        public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+            return null;
+        }
+    }
+
+
+
+
 
     @PropertyLayout(hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountInvoiced(){
