@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -147,6 +148,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     }
 
+
     @Override
     @Programmatic
     public BigDecimal value() {
@@ -157,6 +159,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public FinancialItemType getType() {
         return FinancialItemType.INVOICED;
     }
+
+
+
 
     /**
      * Typically the same as the {@link IncomingInvoice#getType() type} defined by the {@link #getInvoice() parent}
@@ -177,6 +182,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return getIncomingInvoiceType();
     }
 
+
+
+
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
@@ -192,10 +200,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Property(hidden = Where.REFERENCES_PARENT)
     private BudgetItem budgetItem;
 
+
+
     @Programmatic
     public String getPeriod(){
         return PeriodUtil.periodFromInterval(getInterval());
     }
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoiceItem updateAmounts(
@@ -237,6 +249,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editDescription(
@@ -253,6 +269,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditDescription(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -288,6 +308,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return chargeIsImmutableReason();
     }
 
+
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editFixedAsset(
@@ -304,6 +328,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditFixedAsset(){
         return fixedAssetIsImmutableReason();
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -325,6 +353,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditProject(){
         return projectIsImmutableReason();
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -364,6 +396,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String validateEditPeriod(final String period){
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
+
+
+
 
     private boolean isImmutable(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
@@ -422,6 +457,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return false;
     }
 
+
+
+
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Invoice removeItem(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
@@ -438,6 +478,20 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
+
+
+
+    public List<OrderItem> getOrderItems() {
+        List<OrderItem> result = new ArrayList<>();
+        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
+            result.add(link.getOrderItem());
+        }
+        return result;
+    }
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItems", sequence = "1")
@@ -483,6 +537,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
         return orderItemService.validateOrderItem(orderItem, this);
     }
+
+
+
+
 
     @Programmatic
     public String reasonIncomplete(){
@@ -588,6 +646,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
         return invoice.getApprovalState()!=null ? invoice.getApprovalState()==IncomingInvoiceApprovalState.DISCARDED : false;
     }
+
+
+
+
+
 
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;

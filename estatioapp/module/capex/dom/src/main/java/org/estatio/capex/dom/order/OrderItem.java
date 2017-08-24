@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -45,8 +46,10 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
@@ -141,6 +144,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
                 .toString();
     }
 
+
+
     public OrderItem() {
         super("ordr,charge");
     }
@@ -173,6 +178,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.budgetItem = budgetItem;
     }
 
+
+
     /**
      * Renamed from 'order' to avoid reserve keyword issues.
      */
@@ -184,6 +191,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true", name = "chargeId")
     @Getter @Setter
     private Charge charge;
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -204,6 +213,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+
+
+
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String description;
@@ -222,6 +234,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
 
+
+
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal netAmount;
@@ -237,6 +251,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true", name = "taxId")
     @Getter @Setter
     private Tax tax;
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public OrderItem updateAmounts(
@@ -277,6 +294,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+
+
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate startDate;
@@ -284,6 +304,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate endDate;
+
+
+
 
     public OrderItem editPeriod(@Nullable final String period){
         if (PeriodUtil.isValidPeriod(period)){
@@ -304,6 +327,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditPeriod(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Column(allowsNull = "true", name = "propertyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
@@ -326,6 +352,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditProperty(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Column(allowsNull = "true", name = "projectId")
     @Getter @Setter
@@ -351,6 +380,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditProject(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Getter @Setter
     @Column(allowsNull = "true", name="budgetItemId")
@@ -379,6 +411,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditBudgetItem(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @PropertyLayout(
             named = "Application Level",
@@ -424,6 +459,16 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     }
 
+
+
+    public List<IncomingInvoiceItem> getInvoiceItems() {
+        List<IncomingInvoiceItem> result = new ArrayList<>();
+        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByOrderItem(this)){
+            result.add(link.getInvoiceItem());
+        }
+        return result;
+    }
+
     @PropertyLayout(hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountInvoiced(){
         return sum(InvoiceItem::getNetAmount);
@@ -459,6 +504,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         }
         return false;
     }
+
+
+
 
     @Programmatic
     public String reasonIncomplete(){
@@ -499,6 +547,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
     }
 
+
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order removeItem(){
         Order order = getOrdr();
@@ -516,6 +567,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         }
         return "The order cannot be changed";
     }
+
+
+
 
     @Inject
     public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
