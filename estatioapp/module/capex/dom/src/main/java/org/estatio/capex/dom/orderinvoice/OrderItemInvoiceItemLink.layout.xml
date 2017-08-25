@@ -3,6 +3,7 @@
     <bs3:row>
         <bs3:col span="12" unreferencedActions="true">
             <cpt:domainObject/>
+            <cpt:action id="remove"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -14,7 +15,6 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Link" id="link">
-                                        <cpt:action id="remove"/>
                                         <cpt:property id="orderItem"/>
                                         <cpt:property id="invoiceItem"/>
                                     </cpt:fieldSet>
