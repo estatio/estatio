@@ -23,10 +23,12 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -47,6 +49,7 @@ import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.capex.dom.orderinvoice.OrderItem_abstractMixinInvoiceItemLinks;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
@@ -468,21 +471,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         if (getNetAmount()==null){
             return false;
         }
-        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
+        final BigDecimal netAmountInvoiced =
+                orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
+        return netAmountInvoiced.abs().compareTo(getNetAmount().abs()) >= 0;
 
     }
-
-
-
-    public List<OrderItemInvoiceItemLink> getInvoiceItemLinks() {
-        return orderItemInvoiceItemLinkRepository.findByOrderItem(this);
-    }
-
-    @PropertyLayout(hidden = Where.NOWHERE)
-    public BigDecimal getNetAmountInvoiced(){
-        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
-    }
-
 
     @Programmatic
     private boolean isImmutable(){
@@ -490,10 +483,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     boolean isLinkedToInvoiceItem(){
-        if (orderItemInvoiceItemLinkRepository.findByOrderItem(this).size()>0){
-            return true;
-        }
-        return false;
+        return ! orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
     }
 
 
@@ -563,7 +553,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
 
     @Inject
-    public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
     RepositoryService repositoryService;
