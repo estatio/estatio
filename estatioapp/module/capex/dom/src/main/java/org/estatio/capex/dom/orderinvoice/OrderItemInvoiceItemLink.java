@@ -29,8 +29,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;
