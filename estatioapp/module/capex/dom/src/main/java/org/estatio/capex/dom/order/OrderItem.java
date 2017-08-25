@@ -480,7 +480,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @PropertyLayout(hidden = Where.NOWHERE)
     public BigDecimal getNetAmountInvoiced(){
-        return orderItemInvoiceItemLinkRepository.sumLinkNetAmountsByOrderItem(this);
+        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
     }
 
 

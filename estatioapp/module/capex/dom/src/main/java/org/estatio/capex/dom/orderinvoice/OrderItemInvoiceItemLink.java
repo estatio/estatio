@@ -107,7 +107,7 @@ public class OrderItemInvoiceItemLink {
 
     public String validateNetAmount(final BigDecimal proposedNetAmount) {
         if(proposedNetAmount == null) return null;
-        final BigDecimal netAmountLinked = repository.sumLinkNetAmountsByInvoiceItem(getInvoiceItem());
+        final BigDecimal netAmountLinked = repository.calculateNetAmountLinkedFromInvoiceItem(getInvoiceItem());
         final BigDecimal netAmountInvoice = invoiceItem.getNetAmount();
         final BigDecimal netAmountNotLinked = netAmountInvoice.subtract(netAmountLinked);
         final BigDecimal netAmountNotLinkedExcludingThis = netAmountNotLinked.add(getNetAmount());
