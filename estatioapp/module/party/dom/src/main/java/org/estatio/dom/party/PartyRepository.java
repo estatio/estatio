@@ -24,11 +24,9 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
@@ -119,7 +117,7 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
 
     // //////////////////////////////////////
 
-    @Action(hidden = Where.EVERYWHERE)
+    @Programmatic
     public List<Party> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findParties("*" + searchPhrase + "*")

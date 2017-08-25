@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -40,6 +41,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
@@ -73,7 +75,11 @@ import lombok.Setter;
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator("org.estatio.dom.party.Person")
-@DomainObject(editing = Editing.DISABLED)
+@DomainObject(
+        editing = Editing.DISABLED,
+        autoCompleteRepository = PersonRepository.class
+)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Person extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 

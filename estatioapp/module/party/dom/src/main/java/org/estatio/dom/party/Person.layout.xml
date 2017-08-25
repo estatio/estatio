@@ -1,125 +1,168 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-            <ns2:action id="newProgramRole"/>
-            <ns2:action id="newProjectRole"/>
-            <ns2:action id="links"/>
-            <ns2:action id="allBankMandates"/>
-        </col>
-    </row>
-    <row>
-        <col span="4">
-            <tabGroup>
-                <tab name="General">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Name" id="name">
-                                <ns2:action id="remove" position="PANEL"/>
-                                <ns2:action id="removeAndReplace" position="PANEL"/>
-                                <ns2:property id="name"/>
-                                <ns2:property id="firstName"/>
-                                <ns2:property id="initials"/>
-                                <ns2:property id="lastName"/>
-                                <ns2:property id="gender"/>
-                                <ns2:property id="reference">
-                                    <ns2:action id="change" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                            <ns2:fieldSet name="Security" id="security">
-                                <ns2:property id="username">
-                                    <ns2:action id="updateUsername" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Other">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Other" id="other" unreferencedProperties="true">
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                <ns2:property id="applicationTenancy"/>
-                                <ns2:property id="applicationTenancyPath"/>
-                                <ns2:property id="atPath"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-            <ns2:fieldSet name="Contributed" id="contributed">
-                <ns2:property id="phoneNumbers"/>
-                <ns2:property id="emailAddresses"/>
-            </ns2:fieldSet>
-        </col>
-        <col span="8">
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="newProgramRole"/>
+            <cpt:action id="newProjectRole"/>
+            <cpt:action id="links"/>
+            <cpt:action id="allBankMandates"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Name" id="name">
+                                <cpt:action id="delete" position="PANEL"/>
+                                <cpt:action id="remove" position="PANEL"/>
+                                <cpt:action id="removeAndReplace" position="PANEL"/>
+                                <cpt:property id="reference">
+                                    <cpt:action id="change" position="BELOW"/>
+                                </cpt:property>
+                                <cpt:property id="name"/>
+                                <cpt:property id="firstName"/>
+                                <cpt:property id="initials"/>
+                                <cpt:property id="lastName"/>
+                                <cpt:property id="gender"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Level" id="applicationLevel">
+                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="applicationTenancyPath"/>
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="sync" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="fix" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="versionSequence"/>
+                                <cpt:property id="datanucleusId"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="Security">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Security" id="security">
+                                <cpt:property id="username">
+                                    <cpt:action id="updateUsername" position="BELOW"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Contact">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Contact" id="contact">
+                                <cpt:property id="phoneNumbers"/>
+                                <cpt:property id="emailAddresses"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8">
+            <bs3:tabGroup>
+                <bs3:tab name="Communication Channels">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="communicationChannels"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Relationships">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="relationships" defaultView="table">
+                                <cpt:action id="newRelationship"/>
+                                <cpt:action id="newRelatedPerson"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Roles">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="roles" defaultView="table">
+                                <cpt:action id="addRole"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Previous Names">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="previousNames"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:collection id="currentTasks">
+                <cpt:action id="transferTasks"/>
+            </cpt:collection>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="0">
+            <!-- suppressed, only apply to organisations I think -->
+            <cpt:collection id="currentLeases"/>
+            <cpt:collection id="financialAccounts"/>
+            <cpt:collection id="invoicesFrom"/>
+            <cpt:collection id="invoicesTo"/>
+            <cpt:collection id="orders"/>
+        </bs3:col>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="Recent Communications">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="recentCommunications">
+                                <cpt:action id="findCommunications"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Documents">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="documents"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
 
-            <tabGroup>
-                <tab name="Communication Channels">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="communicationChannels"/>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Relationships">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="relationships" defaultView="table">
-                                <ns2:action id="newRelationship"/>
-                                <ns2:action id="newRelatedPerson"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Roles">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="roles" defaultView="table">
-                                <ns2:action id="addRole"/>
-                            </ns2:collection>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Previous Names">
-                    <row>
-                        <col span="12">
-                            <ns2:collection id="previousNames"/>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup  unreferencedCollections="true">
-            </tabGroup>
-        </col>
-    </row>
-
-</grid>
+</bs3:grid>

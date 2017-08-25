@@ -156,6 +156,15 @@ public class PersonRepository extends UdoDomainRepositoryAndFactory<Person> {
                 .collect(Collectors.toList());
     }
 
+    @Programmatic
+    public List<Person> autoComplete(final String searchPhrase) {
+        return partyRepository.autoComplete(searchPhrase)
+                .stream()
+                .filter(Person.class::isInstance)
+                .map(Person.class::cast).collect(
+                Collectors.toList());
+    }
+
 
     // //////////////////////////////////////
 
