@@ -145,7 +145,9 @@ public class OrderItem_Test {
         OrderItemInvoiceItemLink link2 = new OrderItemInvoiceItemLink();
 
         link1.setInvoiceItem(item1);
+        link1.setNetAmount(item1.getNetAmount());
         link2.setInvoiceItem(item2);
+        link2.setNetAmount(item2.getNetAmount());
 
         OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository = new OrderItemInvoiceItemLinkRepository(){
             @Override
