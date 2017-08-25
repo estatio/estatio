@@ -7,50 +7,20 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="12">
+        <bs3:col span="4">
             <bs3:tabGroup>
                 <bs3:tab name="Order item">
                     <bs3:row>
-                        <bs3:col span="4">
+                        <bs3:col span="12">
                             <cpt:fieldSet name="Order item" id="orderItem">
-                                <cpt:property id="ordr"/>
+                                <cpt:action id="remove"/>
+                                <cpt:property id="ordr">
+                                    <cpt:named>Order</cpt:named>
+                                </cpt:property>
+                                <cpt:property id="property"/>
                                 <cpt:property id="description">
                                     <cpt:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                        <bs3:col span="4">
-                            <cpt:fieldSet name="Dimensions" id="dimensions">
-                                <cpt:property id="charge">
-                                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="fixedAsset">
-                                    <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="project">
-                                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="budgetItem">
-                                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="startDate">
-                                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
-                                <cpt:property id="endDate"/>
-                                <cpt:property id="type"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                        <bs3:col span="4">
-                            <cpt:fieldSet name="Amounts" id="amounts">
-                                <cpt:action id="updateAmounts" position="PANEL"/>
-                                <cpt:property id="netAmount"/>
-                                <cpt:property id="vatAmount"/>
-                                <cpt:property id="tax"/>
-                                <cpt:property id="grossAmount"/>
-                            </cpt:fieldSet>
-                            <cpt:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
-                                <cpt:property id="netAmountInvoiced"/>
-                                <cpt:property id="overspent"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -58,23 +28,67 @@
                 <bs3:tab name="Other">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Application Tenancy" id="general">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application Level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Tenancy" id="appTenancy">
                                 <cpt:property id="applicationTenancy"/>
                                 <cpt:property id="atPath" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
                                 <cpt:property id="datanucleusVersionLong"/>
                                 <cpt:property id="datanucleusVersionTimestamp"/>
                             </cpt:fieldSet>
-                            <cpt:fieldSet name="Other" unreferencedProperties="true"></cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
-        <bs3:col span="6">
+        <bs3:col span="4">
+            <cpt:fieldSet name="Dimensions" id="dimensions">
+                <cpt:property id="charge">
+                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="fixedAsset">
+                    <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="project">
+                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="budgetItem">
+                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="startDate">
+                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="endDate"/>
+                <cpt:property id="type"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="4">
+            <cpt:fieldSet name="Amounts" id="amounts">
+                <cpt:action id="updateAmounts" position="PANEL"/>
+                <cpt:property id="netAmount"/>
+                <cpt:property id="vatAmount"/>
+                <cpt:property id="tax"/>
+                <cpt:property id="grossAmount"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
+                <cpt:property id="netAmountInvoiced"/>
+                <cpt:property id="overspent"/>
+            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>

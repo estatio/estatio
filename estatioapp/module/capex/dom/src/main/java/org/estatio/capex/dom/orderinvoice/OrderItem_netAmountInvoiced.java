@@ -2,6 +2,8 @@ package org.estatio.capex.dom.orderinvoice;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Digits;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
@@ -16,6 +18,7 @@ public class OrderItem_netAmountInvoiced extends OrderItem_abstractMixinInvoiceI
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
+    @Digits(integer = 13, fraction = 2)
     public BigDecimal prop() {
         return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(mixee);
     }

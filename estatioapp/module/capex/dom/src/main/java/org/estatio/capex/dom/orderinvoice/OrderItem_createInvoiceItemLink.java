@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.orderinvoice;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
@@ -45,7 +46,15 @@ public class OrderItem_createInvoiceItemLink extends OrderItem_abstractMixinInvo
         // exclude any invoice items already linked to this order
         invoiceItems.removeAll(orderItemInvoiceItemLinkRepository.findLinkedInvoiceItemsByOrderItem(mixee));
 
-
+        // exclude those where the net amount for the invoice item has already been linked to other order items
+        for (Iterator<IncomingInvoiceItem> iterator = invoiceItems.iterator(); iterator.hasNext(); ) {
+            final IncomingInvoiceItem invoiceItem = iterator.next();
+            final BigDecimal netAmountNotLinked =
+                    orderItemInvoiceItemLinkRepository.calculateNetAmountNotLinkedFromInvoiceItem(invoiceItem);
+            if(netAmountNotLinked.compareTo(BigDecimal.ZERO) <= 0) {
+                iterator.remove();
+            }
+        }
 
         return invoiceItems;
     }
@@ -58,11 +67,6 @@ public class OrderItem_createInvoiceItemLink extends OrderItem_abstractMixinInvo
     }
 
     public String validate0Act(final IncomingInvoiceItem invoiceItem) {
-
-        if(orderItemInvoiceItemLinkRepository.calculateNetAmountNotLinkedFromInvoiceItem(invoiceItem).compareTo(BigDecimal.ZERO) <= 0) {
-            return "The net amount for this invoice item has already been linked to other order items";
-        }
-
         return linkValidationService.validateOrderItem(mixee, invoiceItem);
     }
 

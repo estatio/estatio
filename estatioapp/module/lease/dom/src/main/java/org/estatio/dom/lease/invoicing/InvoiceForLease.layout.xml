@@ -5,12 +5,10 @@
             <cpt:domainObject/>
             <cpt:action id="approve"/>
             <cpt:action id="saveAsHistoric"/>
-            <cpt:action id="links"/>
             <cpt:action id="invoice"/>
             <cpt:action id="collect"/>
             <cpt:action id="attachSupportingDocument"/>
-            <cpt:action id="sync"/>
-            <cpt:action id="remove"/>
+            <cpt:action id="links"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -20,6 +18,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General" id="general">
+                                <cpt:action id="remove"/>
                                 <cpt:property id="seller"/>
                                 <cpt:property id="buyer"/>
                                 <cpt:property id="collectionNumber"/>
@@ -55,6 +54,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="sync"/>
                                 <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
                                 <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
