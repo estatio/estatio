@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
@@ -76,7 +77,7 @@ public class PaperclipForBankAccount extends Paperclip {
     }
 
 
-
+    @Mixin
     public static class _documents extends T_documents<BankAccount> {
         public _documents(final BankAccount bankAccount) {
             super(bankAccount);
