@@ -19,37 +19,34 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.coda.CodaMapping;
-import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemService;
+import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.base.valuetypes.PositiveAmountSpecification;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
@@ -90,6 +87,11 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
                         + "WHERE project == :project "),
+        @Query(
+                name = "findBySeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE invoice.seller == :seller "),
         @Query(
                 name = "findByBudgetItem", language = "JDOQL",
                 value = "SELECT "
@@ -149,6 +151,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     }
 
+
     @Override
     @Programmatic
     public BigDecimal value() {
@@ -159,6 +162,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public FinancialItemType getType() {
         return FinancialItemType.INVOICED;
     }
+
+
+
 
     /**
      * Typically the same as the {@link IncomingInvoice#getType() type} defined by the {@link #getInvoice() parent}
@@ -179,6 +185,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return getIncomingInvoiceType();
     }
 
+
+
+
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "true")
     @Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
@@ -194,19 +203,26 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Property(hidden = Where.REFERENCES_PARENT)
     private BudgetItem budgetItem;
 
+
+
     @Programmatic
     public String getPeriod(){
         return PeriodUtil.periodFromInterval(getInterval());
     }
 
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoiceItem updateAmounts(
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal netAmount,
             @Nullable
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal vatAmount,
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal grossAmount,
             @Nullable
             final Tax tax){
@@ -239,6 +255,31 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+    public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
+        if(proposedNetAmount == null) return null; // shouldn't occur, I think.
+        final BigDecimal netAmountLinked = orderItemInvoiceItemLinkRepository
+                .calculateNetAmountLinkedFromInvoiceItem(this);
+        if(proposedNetAmount.compareTo(netAmountLinked) < 0) {
+            return "Cannot be less than the amount already linked (" + netAmountLinked + ")";
+        }
+        return null;
+    }
+    public String validateUpdateAmounts(
+            final BigDecimal proposedNetAmount,
+            final BigDecimal proposedVatAmount,
+            final BigDecimal proposedGrossAmount,
+            final Tax tax) {
+        if(proposedNetAmount == null || proposedGrossAmount == null) return null; // shouldn't occur, I think.
+        if(proposedNetAmount.compareTo(proposedGrossAmount) > 0) {
+            return "Net amount cannot be greater than the gross amount";
+        }
+        return null;
+    }
+
+
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editDescription(
@@ -255,6 +296,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditDescription(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -290,6 +335,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return chargeIsImmutableReason();
     }
 
+
+
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editFixedAsset(
@@ -306,6 +355,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditFixedAsset(){
         return fixedAssetIsImmutableReason();
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -327,6 +380,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableEditProject(){
         return projectIsImmutableReason();
     }
+
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -367,6 +424,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
+
+
+
     private boolean isImmutable(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
         return invoice.isImmutable();
@@ -381,7 +441,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             return "Charge cannot be changed because this item is linked to an order";
         }
         if (this.getBudgetItem()!=null){
-            return "Charge cannot be changed  because this item is linked to a budget";
+            return "Charge cannot be changed because this item is linked to a budget";
         }
         return null;
     }
@@ -424,6 +484,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return false;
     }
 
+
+
+
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Invoice removeItem(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
@@ -439,45 +504,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "orderItems", sequence = "1")
-    public IncomingInvoiceItem updateOrCreateOrderItem(
-            @Nullable
-            final OrderItem orderItem){
-        for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
-            link.remove();
-        }
-        if (orderItem!=null){
-            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, this);
-        }
-        return this;
-    }
-
-    public OrderItem default0UpdateOrCreateOrderItem(){
-        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size() > 0 ?
-                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem()
-                : null;
-    }
-
-    public List<OrderItem> autoComplete0UpdateOrCreateOrderItem(@MinLength(3) final String searchString){
-
-       return orderItemService.searchOrderItem(
-               searchString,
-               getInvoice().getSeller(),
-               getCharge(),
-               getProject(),
-               (org.estatio.dom.asset.Property) getFixedAsset());
-
-    }
-
-    public String disableUpdateOrCreateOrderItem(){
-        // safeguard: there should at most be 1 linked order item
-        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
-            return "Error: More than 1 linked order item found";
-        }
-        return null; // EST-1507: invoices item can be attached to order items any time
     }
 
     @Programmatic
@@ -585,22 +611,30 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return invoice.getApprovalState()!=null ? invoice.getApprovalState()==IncomingInvoiceApprovalState.DISCARDED : false;
     }
 
+
+
+
+
+
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
-    private ChargeRepository chargeRepository;
+    ChargeRepository chargeRepository;
 
     @Inject
     RepositoryService repositoryService;
 
     @Inject
-    private ProjectRepository projectRepository;
+    ProjectRepository projectRepository;
 
     @Inject
-    private OrderItemService orderItemService;
+    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
-    private BudgetItemChooser budgetItemChooser;
+    BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 }

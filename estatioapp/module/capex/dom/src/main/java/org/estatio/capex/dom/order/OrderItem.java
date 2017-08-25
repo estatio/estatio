@@ -2,8 +2,6 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -78,6 +76,11 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
+                name = "findBySeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE ordr.seller == :seller "),
+        @Query(
                 name = "findByOrderAndCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "
@@ -128,13 +131,22 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public String title() {
-        return TitleBuilder.start()
+        final TitleBuilder titleBuilder = TitleBuilder.start()
                 .withName(getDescription().concat(" "))
                 .withName(getNetAmount())
                 .withName(" ")
-                .withName(getOrdr().getOrderNumber())
-                .toString();
+                .withName(getOrdr().getOrderNumber());
+        if(isOverspent()) {
+            titleBuilder.withName(" (overspent)");
+        }
+        return titleBuilder.toString();
     }
+
+    public String cssClass() {
+        return isOverspent() ? "overspent" : null;
+    }
+
+
 
     public OrderItem() {
         super("ordr,charge");
@@ -168,6 +180,22 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.budgetItem = budgetItem;
     }
 
+
+
+    public boolean isOverspent() {
+        final BigDecimal netAmount = coalesce(getNetAmount(), BigDecimal.ZERO);
+
+        final BigDecimal netAmountInvoiced =
+                orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
+
+        return netAmountInvoiced.compareTo(netAmount) > 0;
+    }
+
+    private static BigDecimal coalesce(final BigDecimal amount, final BigDecimal other) {
+        return amount != null ? amount : other;
+    }
+
+
     /**
      * Renamed from 'order' to avoid reserve keyword issues.
      */
@@ -179,6 +207,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true", name = "chargeId")
     @Getter @Setter
     private Charge charge;
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
@@ -199,6 +229,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+
+
+
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
     private String description;
@@ -217,6 +250,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
 
+
+
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal netAmount;
@@ -232,6 +267,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Column(allowsNull = "true", name = "taxId")
     @Getter @Setter
     private Tax tax;
+
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public OrderItem updateAmounts(
@@ -272,6 +310,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return isImmutable() ? itemImmutableReason() : null;
     }
 
+
+
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate startDate;
@@ -279,6 +320,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate endDate;
+
+
+
 
     public OrderItem editPeriod(@Nullable final String period){
         if (PeriodUtil.isValidPeriod(period)){
@@ -299,6 +343,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditPeriod(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Column(allowsNull = "true", name = "propertyId")
     @PropertyLayout(hidden = Where.ALL_TABLES)
@@ -321,6 +368,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditProperty(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Column(allowsNull = "true", name = "projectId")
     @Getter @Setter
@@ -346,6 +396,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditProject(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @Getter @Setter
     @Column(allowsNull = "true", name="budgetItemId")
@@ -374,6 +427,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     public String disableEditBudgetItem(){
         return isImmutable() ? itemImmutableReason() : null;
     }
+
+
+
 
     @PropertyLayout(
             named = "Application Level",
@@ -415,32 +471,10 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         if (getNetAmount()==null){
             return false;
         }
-        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
+        final BigDecimal netAmountInvoiced =
+                orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
+        return netAmountInvoiced.abs().compareTo(getNetAmount().abs()) >= 0;
 
-    }
-
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public BigDecimal getNetAmountInvoiced(){
-        return sum(InvoiceItem::getNetAmount);
-    }
-
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmountInvoiced(){
-        return sum(InvoiceItem::getVatAmount);
-    }
-
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public BigDecimal getGrossAmountInvoiced(){
-        return sum(InvoiceItem::getGrossAmount);
-    }
-
-    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
-        return orderItemInvoiceItemLinkRepository.findByOrderItem(this).stream()
-                .filter(i->!i.getInvoiceItem().isDiscarded())
-                .map(i->i.getInvoiceItem())
-                .map(x)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Programmatic
@@ -449,11 +483,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     boolean isLinkedToInvoiceItem(){
-        if (orderItemInvoiceItemLinkRepository.findByOrderItem(this).size()>0){
-            return true;
-        }
-        return false;
+        return ! orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
     }
+
+
+
 
     @Programmatic
     public String reasonIncomplete(){
@@ -494,6 +528,9 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         setGrossAmount(FinancialAmountUtil.addHandlingNulls(getGrossAmount(), grossAmountToAdd));
     }
 
+
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Order removeItem(){
         Order order = getOrdr();
@@ -512,8 +549,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return "The order cannot be changed";
     }
 
+
+
+
     @Inject
-    public OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
     RepositoryService repositoryService;

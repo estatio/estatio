@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -34,6 +33,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -61,7 +61,6 @@ import org.incode.module.base.dom.with.WithInterval;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
@@ -345,6 +344,8 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         return getInvoice().isImmutable() ? "Cannot change invoice" : null;
     }
 
+
+
     @Getter @Setter @Column(name = "taxRateId", allowsNull = "true")
     private TaxRate taxRate;
 
@@ -402,9 +403,6 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     public ApplicationTenancy getApplicationTenancy() {
         return getInvoice().getApplicationTenancy();
     }
-
-    @Inject
-    private ChargeRepository chargeRepository;
 
     @javax.inject.Inject
     RepositoryService repositoryService;

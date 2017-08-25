@@ -1,154 +1,167 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
-      xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-        </col>
-    </row>
-    <row>
-        <col span="4">
-            <tabGroup>
-                <tab name="Invoice item">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Invoice item" id="invoiceItem">
-                                <ns2:property id="invoice"/>
-                                <ns2:property id="incomingInvoiceType">
-                                    <ns2:action id="editIncomingInvoiceType" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="sequence"/>
-                                <ns2:property id="description">
-                                    <ns2:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="dueDate">
-                                    <ns2:action id="editDueDate" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Application level">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Application Tenancy" id="general">
-                                <ns2:property id="applicationTenancy" hidden="EVERYWHERE"/>
-                                <ns2:property id="atPath" hidden="ALL_TABLES"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-        <col span="4">
-            <tabGroup>
-                <tab name="Dimensions">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Dimensions" id="dimensions">
-                                <ns2:property id="charge">
-                                    <ns2:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="fixedAsset">
-                                    <ns2:action id="editFixedAsset" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="project">
-                                    <ns2:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="budgetItem">
-                                    <ns2:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="startDate">
-                                    <ns2:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
-                                </ns2:property>
-                                <ns2:property id="endDate"/>
-                                <ns2:property id="type"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="dummy_1">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet id="dummy_1">
-                                <ns2:property id="dummy_1"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-        <col span="4">
-            <tabGroup>
-                <tab name="Amounts">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Amounts" id="amounts">
-                                <ns2:action id="updateAmounts" position="PANEL"/>
-                                <ns2:property id="netAmount"/>
-                                <ns2:property id="tax">
-                                    <ns2:action id="changeTax" hidden="EVERYWHERE"/>
-                                </ns2:property>
-                                <ns2:property id="taxRate"/>
-                                <ns2:property id="vatPercentage"/>
-                                <ns2:property id="vatAmount"/>
-                                <ns2:property id="grossAmount"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-                <tab name="dummy_2">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet id="dummy_2">
-                                <ns2:property id="dummy_2"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-    <row>
-        <col span="0">
-            <ns2:fieldSet name="hidden" id="hidden">
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="Invoice item">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Invoice item" id="invoiceItem">
+                                <cpt:property id="invoice"/>
+                                <cpt:property id="incomingInvoiceType">
+                                    <cpt:action id="editIncomingInvoiceType" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="sequence"/>
+                                <cpt:property id="description">
+                                    <cpt:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="dueDate">
+                                    <cpt:action id="editDueDate" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Tenancy" id="general">
+                                <cpt:property id="applicationTenancy" hidden="EVERYWHERE"/>
+                                <cpt:property id="atPath" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="Dimensions">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Dimensions" id="dimensions">
+                                <cpt:property id="charge">
+                                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="fixedAsset">
+                                    <cpt:action id="editFixedAsset" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="project">
+                                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="budgetItem">
+                                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="startDate">
+                                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="endDate"/>
+                                <cpt:property id="type"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy_1">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet id="dummy_1">
+                                <cpt:property id="dummy_1"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="4">
+            <bs3:tabGroup>
+                <bs3:tab name="Amounts">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Amounts" id="amounts">
+                                <cpt:action id="updateAmounts" position="PANEL"/>
+                                <cpt:property id="netAmount"/>
+                                <cpt:property id="tax">
+                                    <cpt:action id="changeTax" hidden="EVERYWHERE"/>
+                                </cpt:property>
+                                <cpt:property id="taxRate"/>
+                                <cpt:property id="vatPercentage"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy_2">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet id="dummy_2">
+                                <cpt:property id="dummy_2"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="0">
+            <cpt:fieldSet name="hidden" id="hidden">
                 <!-- hides actions for demo purposes TODO: bring them to subclass-->
-                <ns2:action id="remove"/>
-                <ns2:action id="changeDescription"/>
-                <ns2:action id="changeEffectiveDates"/>
-                <ns2:action id="verify"/>
-            </ns2:fieldSet>
-        </col>
-        <col span="0">
-            <ns2:fieldSet name="Other" unreferencedProperties="true">
-                <ns2:property id="effectiveStartDate" hidden="EVERYWHERE"/>
-                <ns2:property id="effectiveEndDate" hidden="EVERYWHERE"/>
-                <ns2:property id="source" hidden="EVERYWHERE"/>
-                <ns2:property id="quantity" hidden="EVERYWHERE"/>
-            </ns2:fieldSet>
-        </col>
-    </row>
-    <row>
-        <col span="12">
-            <tabGroup unreferencedCollections="true">
-                <tab name="_">
-                    <row>
-                        <col span="12"></col>
-                    </row>
-                </tab>
-            </tabGroup>
-        </col>
-    </row>
-</grid>
+                <cpt:action id="remove"/>
+                <cpt:action id="changeDescription"/>
+                <cpt:action id="changeEffectiveDates"/>
+                <cpt:action id="verify"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="0">
+            <cpt:fieldSet name="Other" unreferencedProperties="true">
+                <cpt:property id="effectiveStartDate" hidden="EVERYWHERE"/>
+                <cpt:property id="effectiveEndDate" hidden="EVERYWHERE"/>
+                <cpt:property id="source" hidden="EVERYWHERE"/>
+                <cpt:property id="quantity" hidden="EVERYWHERE"/>
+            </cpt:fieldSet>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Order Item Links">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="orderItemLinks"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
+                <bs3:tab name="_">
+                    <bs3:row>
+                        <bs3:col span="12"></bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

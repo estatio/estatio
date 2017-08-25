@@ -32,6 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -63,7 +65,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.order.OrderItemService;
+import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -227,15 +229,22 @@ public class IncomingDocAsInvoiceViewModel
         autoFillIn();
     }
 
-    public List<OrderItem> autoCompleteOrderItem(@MinLength(3) final String searchString){
+    public List<OrderItem> choicesOrderItem(){
+        // the disable guard ensures this is non-null
+        final Party seller = getSeller();
+        return orderItemRepository.findBySeller(seller);
+    }
 
-        return orderItemService.searchOrderItem(
-                searchString,
-                getSeller(),
-                getCharge(),
-                getProject(),
-                getProperty());
+    public String disableOrderItem(){
+        final Party seller = getSeller();
+        if(seller == null) {
+            return "Invoice's seller is required before items can be linked";
+        }
+        return null; // EST-1507: invoices item can be attached to order items any time
+    }
 
+    public String validateOrderItem(final OrderItem orderItem) {
+        return linkValidationService.validateOrderItem(orderItem, this);
     }
 
     private void autoFillIn(){
@@ -439,6 +448,7 @@ public class IncomingDocAsInvoiceViewModel
         // upsert invoice item
         // this will also update the parent header's property with that from the first item
         Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
+        IncomingInvoiceItem firstItem;
 
         if(firstItemIfAny.isPresent()) {
             IncomingInvoiceItem item = firstItemIfAny.get();
@@ -453,8 +463,10 @@ public class IncomingDocAsInvoiceViewModel
             item.setFixedAsset(getProperty());
             item.setProject(getProject());
             item.setBudgetItem(getBudgetItem());
+
+            firstItem = item;
         } else {
-            incomingInvoiceItemRepository.create(
+            firstItem = incomingInvoiceItemRepository.create(
                     incomingInvoice.nextItemSequence(),
                     incomingInvoice,
                     incomingInvoiceType,
@@ -479,8 +491,13 @@ public class IncomingDocAsInvoiceViewModel
             Order order = getOrderItem().getOrdr();
             Charge chargeFromWrapper = getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
-            IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
-            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink);
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, firstItem, firstItem.getNetAmount());
+        } else {
+            // remove all (or the one and only) link.
+            final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(firstItem);
+            for (OrderItemInvoiceItemLink link : links) {
+                link.remove();
+            }
         }
 
         return incomingInvoice;
@@ -527,7 +544,7 @@ public class IncomingDocAsInvoiceViewModel
     private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
         SortedSet<InvoiceItem> items = getDomainObject().getItems();
         Optional<IncomingInvoiceItem> firstItemIfAny =
-                items.stream()
+                Lists.newArrayList(items).stream()
                         .filter(IncomingInvoiceItem.class::isInstance)
                         .map(IncomingInvoiceItem.class::cast)
                         .findFirst();
@@ -662,7 +679,7 @@ public class IncomingDocAsInvoiceViewModel
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    OrderItemService orderItemService;
+    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
     @XmlTransient

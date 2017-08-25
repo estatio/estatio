@@ -335,7 +335,7 @@ public class OrderInvoiceLine {
                 if (order!=null) {
                     OrderItem orderItem = order.getItems().first();
                     IncomingInvoiceItem invoiceItem = (IncomingInvoiceItem) invoice.getItems().first();
-                    orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, invoiceItem);
+                    orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItem, invoiceItem, invoiceItem.getNetAmount());
                 } else {
                     final String message = String.format("Matching order for invoice with number %s not found", line.getInvoiceNumber()) ;
                     messageService.warnUser(message);

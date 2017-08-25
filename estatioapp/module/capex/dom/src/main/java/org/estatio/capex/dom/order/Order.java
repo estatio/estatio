@@ -51,6 +51,7 @@ import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
@@ -613,8 +614,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean isInvoiced(){
-        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
-
+        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0;
     }
 
     @Property(notPersisted = true)
@@ -634,22 +634,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountInvoiced() {
-        return sum(OrderItem::getNetAmountInvoiced);
+        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrder(this);
     }
 
-    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmountInvoiced() {
-        return sum(OrderItem::getVatAmountInvoiced);
-    }
-
-    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
-    public BigDecimal getGrossAmountInvoiced() {
-        return sum(OrderItem::getGrossAmountInvoiced);
-    }
-
-    private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
+    private BigDecimal sum(final Function<OrderItem, BigDecimal> amountExtractor) {
         return Lists.newArrayList(getItems()).stream()
-                .map(x)
+                .map(amountExtractor)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -790,5 +780,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     ChargeRepository chargeRepository;
+
+    @Inject
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
 
 }
