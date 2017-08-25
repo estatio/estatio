@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -144,7 +142,6 @@ public class OrderItem_Test {
 
         // then
         assertThat(orderItem.isInvoiced()).isFalse();
-        assertThat(orderItem.getNetAmountInvoiced()).isEqualTo(new BigDecimal("55.00"));
     }
 
     private OrderItemInvoiceItemLinkRepository setupOrderItemInvoiceItemLinkRepository(final IncomingInvoiceItem item1, final IncomingInvoiceItem item2){
@@ -168,43 +165,32 @@ public class OrderItem_Test {
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
-    @Mock
-    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
 
     @Test
-    public void getNetAmountInvoiced_works(){
+    public void sum_works(){
 
         // given
-        OrderItem orderItem = new OrderItem();
-        orderItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
         BigDecimal expectedTotalNetAmountOnItems = new BigDecimal("100.00");
-        BigDecimal netAmountOnItem1 = new BigDecimal("55.00");
-        BigDecimal netAmountOnItem2 = new BigDecimal("45.00");
-        BigDecimal netAmountOnItem3 = null;
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-        item1.setNetAmount(netAmountOnItem1);
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-        item2.setNetAmount(netAmountOnItem2);
-        IncomingInvoiceItem item3 = new IncomingInvoiceItem();
-        item3.setNetAmount(netAmountOnItem3);
-        OrderItemInvoiceItemLink link1 = new OrderItemInvoiceItemLink();
-        link1.setInvoiceItem(item1);
-        OrderItemInvoiceItemLink link2 = new OrderItemInvoiceItemLink();
-        link2.setInvoiceItem(item2);
-        OrderItemInvoiceItemLink link3 = new OrderItemInvoiceItemLink();
-        link3.setInvoiceItem(item3);
 
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockOrderItemInvoiceItemLinkRepository).findByOrderItem(orderItem);
-            will(returnValue(Arrays.asList(link1, link2, link3)));
-        }});
+        OrderItemInvoiceItemLink link1 = createLink(new BigDecimal("55.00"));
+        OrderItemInvoiceItemLink link2 = createLink(new BigDecimal("45.00"));
+        OrderItemInvoiceItemLink link3 = createLink(null);
+
+        final List<OrderItemInvoiceItemLink> result = Arrays.asList(link1, link2, link3);
 
         // when
-        BigDecimal netAmountInvoiced = orderItem.getNetAmountInvoiced();
+        OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository = new OrderItemInvoiceItemLinkRepository();
+        final BigDecimal netAmountInvoiced = orderItemInvoiceItemLinkRepository.sum(result);
 
         // then
         Assertions.assertThat(netAmountInvoiced).isEqualTo(expectedTotalNetAmountOnItems);
+    }
+
+    private static OrderItemInvoiceItemLink createLink(final BigDecimal netAmount2) {
+        OrderItemInvoiceItemLink link = new OrderItemInvoiceItemLink();
+        link.setInvoiceItem(new IncomingInvoiceItem());
+        link.setNetAmount(netAmount2);
+        return link;
     }
 
 }

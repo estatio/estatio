@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
@@ -54,14 +56,22 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
         return firstMatch("findUnique", "orderItem", orderItem, "invoiceItem", invoiceItem);
     }
 
+    public List<OrderItemInvoiceItemLink> findByInvoice(final IncomingInvoice incomingInvoice) {
+        return allMatches("findByInvoice", "invoice", incomingInvoice);
+    }
+
+    public List<OrderItemInvoiceItemLink> findByOrder(final Order order) {
+        return allMatches("findByOrder", "order", order);
+    }
+
     public List<OrderItemInvoiceItemLink> findByOrderItem(
             final OrderItem orderItem) {
         return allMatches("findByOrderItem", "orderItem", orderItem);
     }
 
-    public List<OrderItem> findLinkedInvoiceItemsByOrderItem(final OrderItem orderItem) {
+    public List<IncomingInvoiceItem> findLinkedInvoiceItemsByOrderItem(final OrderItem orderItem) {
         return findByOrderItem(orderItem).stream()
-                .map(OrderItemInvoiceItemLink::getOrderItem)
+                .map(OrderItemInvoiceItemLink::getInvoiceItem)
                 .collect(Collectors.toList());
     }
 
@@ -83,6 +93,16 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
 
 
+    public BigDecimal calculateNetAmountLinkedToInvoice(final IncomingInvoice incomingInvoice) {
+        final List<OrderItemInvoiceItemLink> links = findByInvoice(incomingInvoice);
+        return sum(links);
+    }
+
+    public BigDecimal calculateNetAmountLinkedToOrder(final Order order) {
+        final List<OrderItemInvoiceItemLink> links = findByOrder(order);
+        return sum(links);
+    }
+
     public BigDecimal calculateNetAmountLinkedToOrderItem(final OrderItem orderItem) {
         final List<OrderItemInvoiceItemLink> links = findByOrderItem(orderItem);
         return sum(links);
@@ -98,7 +118,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
         return netAmount.subtract(netAmount);
     }
 
-    private BigDecimal sum(final List<OrderItemInvoiceItemLink> links) {
+    public BigDecimal sum(final List<OrderItemInvoiceItemLink> links) {
         return links.stream()
                 .filter(i->!i.getInvoiceItem().isDiscarded())
                 .map(OrderItemInvoiceItemLink::getNetAmount)
@@ -111,7 +131,6 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     void removeLink(final OrderItemInvoiceItemLink link) {
         remove(link);
     }
-
 
 }
 

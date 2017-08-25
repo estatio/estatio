@@ -49,6 +49,7 @@ import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.PaymentLineRepository;
 import org.estatio.capex.dom.project.Project;
@@ -739,6 +740,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     private BigDecimal grossAmount;
 
+
+    @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.ALL_TABLES)
+    public BigDecimal getNetAmountLinked() {
+        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToInvoice(this);
+    }
+
     @Programmatic
     public void recalculateAmounts(){
         BigDecimal netAmountTotal = BigDecimal.ZERO;
@@ -1052,6 +1059,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Inject
     BankAccountRepository bankAccountRepository;
+
+    @Inject
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
 
 }

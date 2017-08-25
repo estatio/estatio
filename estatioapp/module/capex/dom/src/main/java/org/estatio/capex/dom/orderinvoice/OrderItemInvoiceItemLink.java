@@ -54,10 +54,20 @@ import lombok.Setter;
                         "WHERE orderItem == :orderItem && "
                         + "invoiceItem == :invoiceItem"),
         @Query(
+                name = "findByOrder", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink " +
+                        "WHERE orderItem.ordr == :order"),
+        @Query(
                 name = "findByOrderItem", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink " +
                         "WHERE orderItem == :orderItem"),
+        @Query(
+                name = "findByInvoice", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink " +
+                        "WHERE invoiceItem.invoice == :invoice"),
         @Query(
                 name = "findByInvoiceItem", language = "JDOQL",
                 value = "SELECT " +
@@ -73,7 +83,7 @@ public class OrderItemInvoiceItemLink {
 
 
     public String title() {
-        return titleService.titleOf(getOrderItem()) + " --- " + titleService.titleOf(getInvoiceItem());
+        return titleService.titleOf(getOrderItem()) + " --[ " + getNetAmount() + " ]-- " + titleService.titleOf(getInvoiceItem());
     }
 
     @Getter @Setter

@@ -51,6 +51,7 @@ import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
@@ -633,7 +634,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountInvoiced() {
-        return sum(OrderItem::getNetAmountInvoiced);
+        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrder(this);
     }
 
     private BigDecimal sum(final Function<OrderItem, BigDecimal> amountExtractor) {
@@ -779,5 +780,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     ChargeRepository chargeRepository;
+
+    @Inject
+    OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
 
 }

@@ -38,8 +38,12 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
         // the disable guard ensures this is non-null
         final Party seller = mixee.getInvoice().getSeller();
 
+        // candidates
         final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
+
+        // exclude any invoice items already linked to this order
         orderItems.removeAll(orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee));
+
         return orderItems;
     }
     public String disableAct(){

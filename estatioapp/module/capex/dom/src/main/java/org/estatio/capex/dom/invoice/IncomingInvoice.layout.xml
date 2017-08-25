@@ -79,6 +79,7 @@
                                         <cpt:property id="netAmount" hidden="NOWHERE"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
+                                        <cpt:property id="netAmountLinked" hidden="ALL_TABLES"/>
                                         <cpt:property id="currency"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
