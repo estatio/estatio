@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -51,6 +52,7 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.base.valuetypes.PositiveAmountSpecification;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
@@ -215,11 +217,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoiceItem updateAmounts(
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal netAmount,
             @Nullable
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal vatAmount,
             @Digits(integer=13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal grossAmount,
             @Nullable
             final Tax tax){
@@ -250,6 +255,26 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableUpdateAmounts(){
         return isImmutable() ? itemImmutableReason() : null;
+    }
+
+    public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
+        if(proposedNetAmount == null) return null; // shouldn't occur, I think.
+        final BigDecimal netAmountLinked = getNetAmountLinked();
+        if(proposedNetAmount.compareTo(netAmountLinked) < 0) {
+            return "Cannot be less than the amount already linked (" + netAmountLinked + ")";
+        }
+        return null;
+    }
+    public String validateUpdateAmounts(
+            final BigDecimal proposedNetAmount,
+            final BigDecimal proposedVatAmount,
+            final BigDecimal proposedGrossAmount,
+            final Tax tax) {
+        if(proposedNetAmount == null || proposedGrossAmount == null) return null; // shouldn't occur, I think.
+        if(proposedNetAmount.compareTo(proposedGrossAmount) > 0) {
+            return "Net amount cannot be greater than the gross amount";
+        }
+        return null;
     }
 
 
@@ -491,26 +516,36 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
     }
 
+    private List<OrderItem> linkedItems() {
+        return getOrderItemLinks().stream()
+                .map(OrderItemInvoiceItemLink::getOrderItem)
+                .collect(Collectors.toList());
+    }
+
+    private BigDecimal getNetAmountLinked() {
+        return orderItemInvoiceItemLinkRepository.sumLinkNetAmountsByInvoiceItem(this);
+    }
+
+    private BigDecimal getNetAmountNotLinked() {
+        return getNetAmount().subtract(getNetAmountLinked());
+    }
+
+
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItemLinks", sequence = "1")
     public IncomingInvoiceItem createOrderItemLink(
-            @Nullable
             final OrderItem orderItem,
             @Digits(integer = 13, fraction = 2)
             final BigDecimal netAmount){
-        if (orderItem!=null){
-            orderItemInvoiceItemLinkRepository
-                    .findOrCreateLink(orderItem, this, netAmount);
-        }
+        orderItemInvoiceItemLinkRepository.createOrderItemInvoiceItemLink(orderItem, this, netAmount);
         return this;
     }
 
     public OrderItem default0CreateOrderItemLink(){
-        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size() > 0 ?
-                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem()
-                : null;
+        final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
+        return links.size() > 0 ? links.get(0).getOrderItem() : null;
     }
 
     public List<OrderItem> choices0CreateOrderItemLink(){
@@ -518,18 +553,20 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         // the disable guard ensures this is non-null
         final Party seller = getInvoice().getSeller();
 
-        return orderItemRepository.findBySeller(seller);
+        final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
+        orderItems.removeAll(linkedItems());
+        return orderItems;
     }
+
 
     public String disableCreateOrderItemLink(){
         if(getInvoice().getSeller() == null) {
             return "Invoice's seller is required before items can be linked";
         }
-        // safeguard: there should at most be 1 linked order item
-        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>1){
-            return "Error: More than 1 linked order item found";
+        if(getNetAmountLinked().compareTo(getNetAmount()) >= 0) {
+            return "The net amount for this invoice item has already been linked to other order items";
         }
-        return null; // EST-1507: invoices item can be attached to order items any time
+        return null;
     }
 
     public String validate0CreateOrderItemLink(final OrderItem orderItem) {
@@ -537,14 +574,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public BigDecimal default1CreateOrderItemLink(){
-        return getNetAmount();
+        return getNetAmountNotLinked();
     }
 
     public String validate1CreateOrderItemLink(final BigDecimal netAmount) {
-        if(netAmount == null) return null; // shouldn't occur, I think.
-        if(netAmount.compareTo(BigDecimal.ZERO) < 0) return "Cannot be negative";
-        if(netAmount.compareTo(getNetAmount()) > 0) return "Cannot exceed invoice amount (" + getNetAmount() + ")";
-        return null;
+        return validateLinkAmount(BigDecimal.ZERO, netAmount);
     }
 
 
@@ -553,6 +587,51 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(name = "orderItemLinks", sequence = "1")
+    public IncomingInvoiceItem updateOrderItemLink(
+            final OrderItem orderItem,
+            @Digits(integer = 13, fraction = 2)
+            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
+            final BigDecimal netAmount){
+        final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, this);
+        if(link != null) {
+            link.setNetAmount(netAmount);
+        }
+        return this;
+    }
+
+    public String disableUpdateOrderItemLink() {
+        return choices0UpdateOrderItemLink().isEmpty()? "No order items" : null;
+    }
+
+    public OrderItem default0UpdateOrderItemLink() {
+        final List<OrderItem> orderItems = choices0UpdateOrderItemLink();
+        return orderItems.size() == 1 ? orderItems.get(0): null;
+    }
+
+    public List<OrderItem> choices0UpdateOrderItemLink() {
+        return getLinkedOrderItems();
+    }
+
+    public BigDecimal default1UpdateOrderItemLink(){
+        final List<OrderItemInvoiceItemLink> orderItemLinks = getOrderItemLinks();
+        return orderItemLinks.size() == 1 ? orderItemLinks.get(0).getNetAmount(): null;
+    }
+
+    public String validate0UpdateOrderItemLink(final OrderItem orderItem) {
+        return orderItemService.validateOrderItem(orderItem, this);
+    }
+
+    public String validateUpdateOrderItemLink(final OrderItem orderItem, final BigDecimal proposedNetAmount) {
+        final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, this);
+        final BigDecimal currentNetAmount = link != null ? link.getNetAmount() : BigDecimal.ZERO; // should be there.
+        return validateLinkAmount(currentNetAmount, proposedNetAmount);
+    }
+
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @MemberOrder(name = "orderItemLinks", sequence = "3")
     public IncomingInvoiceItem removeOrderItemLink(
             @Nullable
             final OrderItem orderItem){
@@ -572,13 +651,16 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public List<OrderItem> choices0RemoveOrderItemLink() {
+        return getLinkedOrderItems();
+    }
+
+    private List<OrderItem> getLinkedOrderItems() {
         return queryResultsCache.execute(
-                this::doOrderItemsForLinks,
+                this::doGetLinkedOrderItems,
                 IncomingInvoiceItem.class, "orderItemsForLinks", this);
     }
 
-
-    private List<OrderItem> doOrderItemsForLinks() {
+    private List<OrderItem> doGetLinkedOrderItems() {
         return Lists.newArrayList(getOrderItemLinks())
                 .stream()
                 .map(OrderItemInvoiceItemLink::getOrderItem)
@@ -588,10 +670,19 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
 
 
-
-
-
-
+    private String validateLinkAmount(
+            final BigDecimal currentNetAmount,
+            final BigDecimal proposedNetAmount) {
+        if(proposedNetAmount == null) return null; // shouldn't occur, I think.
+        if(proposedNetAmount.compareTo(BigDecimal.ZERO) <= 0) return "Must be a positive amount";
+        final BigDecimal netAmountAvailableToLink = getNetAmountNotLinked();
+        final BigDecimal netAmountAvailableTakingCurrentIntoAccount =
+                netAmountAvailableToLink.add(currentNetAmount);
+        if(proposedNetAmount.compareTo(netAmountAvailableTakingCurrentIntoAccount) > 0) {
+            return "Cannot exceed remaining amount to be linked (" + netAmountAvailableTakingCurrentIntoAccount + ")";
+        }
+        return null;
+    }
 
 
 

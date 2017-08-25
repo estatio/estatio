@@ -50,8 +50,7 @@
                             </cpt:fieldSet>
                             <cpt:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
                                 <cpt:property id="netAmountInvoiced"/>
-                                <cpt:property id="vatAmountInvoiced"/>
-                                <cpt:property id="grossAmountInvoiced"/>
+                                <cpt:property id="overspent"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

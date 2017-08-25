@@ -2,8 +2,6 @@ package org.estatio.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -20,8 +18,6 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -29,10 +25,8 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
@@ -40,7 +34,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -139,12 +132,19 @@ import lombok.Setter;
 public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialItem {
 
     public String title() {
-        return TitleBuilder.start()
+        final TitleBuilder titleBuilder = TitleBuilder.start()
                 .withName(getDescription().concat(" "))
                 .withName(getNetAmount())
                 .withName(" ")
-                .withName(getOrdr().getOrderNumber())
-                .toString();
+                .withName(getOrdr().getOrderNumber());
+        if(isOverspent()) {
+            titleBuilder.withName(" (overspent)");
+        }
+        return titleBuilder.toString();
+    }
+
+    public String cssClass() {
+        return isOverspent() ? "overspent" : null;
     }
 
 
@@ -181,6 +181,16 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         this.budgetItem = budgetItem;
     }
 
+
+
+    public boolean isOverspent() {
+        if(getNetAmount() == null) return false;
+
+        final BigDecimal netAmountInvoiced = getNetAmountInvoiced();
+        if(netAmountInvoiced == null) return false;
+
+        return netAmountInvoiced.compareTo(getNetAmount()) > 0;
+    }
 
 
     /**
@@ -468,29 +478,11 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return orderItemInvoiceItemLinkRepository.findByOrderItem(this);
     }
 
-    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @PropertyLayout(hidden = Where.NOWHERE)
     public BigDecimal getNetAmountInvoiced(){
-        return sum(InvoiceItem::getNetAmount);
+        return orderItemInvoiceItemLinkRepository.sumLinkNetAmountsByOrderItem(this);
     }
 
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmountInvoiced(){
-        return sum(InvoiceItem::getVatAmount);
-    }
-
-    @PropertyLayout(hidden = Where.ALL_TABLES)
-    public BigDecimal getGrossAmountInvoiced(){
-        return sum(InvoiceItem::getGrossAmount);
-    }
-
-    private BigDecimal sum(final Function<InvoiceItem, BigDecimal> x) {
-        return orderItemInvoiceItemLinkRepository.findByOrderItem(this).stream()
-                .filter(i->!i.getInvoiceItem().isDiscarded())
-                .map(i->i.getInvoiceItem())
-                .map(x)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 
     @Programmatic
     private boolean isImmutable(){

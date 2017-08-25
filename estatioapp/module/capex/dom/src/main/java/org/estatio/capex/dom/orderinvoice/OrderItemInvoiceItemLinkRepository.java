@@ -2,6 +2,7 @@ package org.estatio.capex.dom.orderinvoice;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -59,6 +60,26 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     public List<OrderItemInvoiceItemLink> listAll(){
         return allInstances();
+    }
+
+
+
+    public BigDecimal sumLinkNetAmountsByOrderItem(final OrderItem orderItem) {
+        final List<OrderItemInvoiceItemLink> links = findByOrderItem(orderItem);
+        return sum(links);
+    }
+
+    public BigDecimal sumLinkNetAmountsByInvoiceItem(final IncomingInvoiceItem invoiceItem) {
+        final List<OrderItemInvoiceItemLink> links = findByInvoiceItem(invoiceItem);
+        return sum(links);
+    }
+
+    private BigDecimal sum(final List<OrderItemInvoiceItemLink> links) {
+        return links.stream()
+                .filter(i->!i.getInvoiceItem().isDiscarded())
+                .map(OrderItemInvoiceItemLink::getNetAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }

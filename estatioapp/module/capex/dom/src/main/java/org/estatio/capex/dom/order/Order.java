@@ -613,8 +613,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public boolean isInvoiced(){
-        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0 ? true : false;
-
+        return getNetAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0;
     }
 
     @Property(notPersisted = true)
@@ -637,19 +636,9 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return sum(OrderItem::getNetAmountInvoiced);
     }
 
-    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
-    public BigDecimal getVatAmountInvoiced() {
-        return sum(OrderItem::getVatAmountInvoiced);
-    }
-
-    @Property(notPersisted = true, hidden = Where.ALL_TABLES)
-    public BigDecimal getGrossAmountInvoiced() {
-        return sum(OrderItem::getGrossAmountInvoiced);
-    }
-
-    private BigDecimal sum(final Function<OrderItem, BigDecimal> x) {
+    private BigDecimal sum(final Function<OrderItem, BigDecimal> amountExtractor) {
         return Lists.newArrayList(getItems()).stream()
-                .map(x)
+                .map(amountExtractor)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

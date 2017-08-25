@@ -80,8 +80,6 @@
                                 <bs3:col span="6">
                                     <cpt:fieldSet name="Amounts Invoiced">
                                         <cpt:property id="netAmountInvoiced"/>
-                                        <cpt:property id="vatAmountInvoiced"/>
-                                        <cpt:property id="grossAmountInvoiced"/>
                                         <cpt:property id="invoiced"/>
                                     </cpt:fieldSet>
                                 </bs3:col>

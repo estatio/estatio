@@ -13,8 +13,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
@@ -188,9 +189,11 @@ public class OrderItemInvoiceItemLink {
 
 
 
-    @Programmatic
-    public void remove() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoiceItem remove() {
+        final IncomingInvoiceItem invoiceItem = getInvoiceItem();
         repositoryService.removeAndFlush(this);
+        return invoiceItem;
     }
 
 

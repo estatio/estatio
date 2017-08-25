@@ -32,6 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -446,6 +448,7 @@ public class IncomingDocAsInvoiceViewModel
         // upsert invoice item
         // this will also update the parent header's property with that from the first item
         Optional<IncomingInvoiceItem> firstItemIfAny = getFirstItemIfAny();
+        IncomingInvoiceItem firstItem;
 
         if(firstItemIfAny.isPresent()) {
             IncomingInvoiceItem item = firstItemIfAny.get();
@@ -460,8 +463,10 @@ public class IncomingDocAsInvoiceViewModel
             item.setFixedAsset(getProperty());
             item.setProject(getProject());
             item.setBudgetItem(getBudgetItem());
+
+            firstItem = item;
         } else {
-            incomingInvoiceItemRepository.create(
+            firstItem = incomingInvoiceItemRepository.create(
                     incomingInvoice.nextItemSequence(),
                     incomingInvoice,
                     incomingInvoiceType,
@@ -486,8 +491,13 @@ public class IncomingDocAsInvoiceViewModel
             Order order = getOrderItem().getOrdr();
             Charge chargeFromWrapper = getOrderItem().getCharge();
             OrderItem orderItemToLink = orderItemRepository.findByOrderAndCharge(order, chargeFromWrapper);
-            IncomingInvoiceItem invoiceItemToLink = (IncomingInvoiceItem) incomingInvoice.getItems().first();
-            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, invoiceItemToLink, invoiceItemToLink.getNetAmount());
+            orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, firstItem, firstItem.getNetAmount());
+        } else {
+            // remove all (or the one and only) link.
+            final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(firstItem);
+            for (OrderItemInvoiceItemLink link : links) {
+                link.remove();
+            }
         }
 
         return incomingInvoice;
@@ -534,7 +544,7 @@ public class IncomingDocAsInvoiceViewModel
     private Optional<IncomingInvoiceItem> getFirstItemIfAny() {
         SortedSet<InvoiceItem> items = getDomainObject().getItems();
         Optional<IncomingInvoiceItem> firstItemIfAny =
-                items.stream()
+                Lists.newArrayList(items).stream()
                         .filter(IncomingInvoiceItem.class::isInstance)
                         .map(IncomingInvoiceItem.class::cast)
                         .findFirst();
