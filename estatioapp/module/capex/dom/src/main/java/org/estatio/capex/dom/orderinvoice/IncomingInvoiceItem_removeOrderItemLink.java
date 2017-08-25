@@ -12,6 +12,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
 
+/**
+ * @see OrderItem_removeInvoiceItemLink
+ */
 @Mixin(method="act")
 public class IncomingInvoiceItem_removeOrderItemLink extends IncomingInvoiceItem_abstractMixinOrderItemLinks {
     public IncomingInvoiceItem_removeOrderItemLink(final IncomingInvoiceItem mixee) { super(mixee); }

@@ -15,6 +15,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.base.valuetypes.PositiveAmountSpecification;
 
+/**
+ * @see IncomingInvoiceItem_updateOrderItemLink
+ */
 @Mixin(method="act")
 public class OrderItem_updateInvoiceItemLink extends OrderItem_abstractMixinInvoiceItemLinks {
     public OrderItem_updateInvoiceItemLink(final OrderItem mixee) {

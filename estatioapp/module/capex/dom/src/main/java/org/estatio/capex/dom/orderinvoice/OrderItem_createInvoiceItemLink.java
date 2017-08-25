@@ -15,6 +15,9 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.party.Party;
 
+/**
+ * @see IncomingInvoiceItem_createOrderItemLink
+ */
 @Mixin(method="act")
 public class OrderItem_createInvoiceItemLink extends OrderItem_abstractMixinInvoiceItemLinks {
 

@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 
+/**
+ * @see OrderItem_invoiceItemLinks
+ */
 @Mixin(method="coll")
 public class IncomingInvoiceItem_orderItemLinks extends IncomingInvoiceItem_abstractMixinOrderItemLinks {
     public IncomingInvoiceItem_orderItemLinks(final IncomingInvoiceItem mixee) { super(mixee); }
