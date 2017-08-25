@@ -2,8 +2,6 @@ package org.estatio.capex.dom.order;
 
 import java.util.Objects;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -21,7 +19,7 @@ import org.estatio.dom.invoice.InvoiceItem;
  * Supports the selection of {@link OrderItem}s of an {@link InvoiceItem}.
  */
 @DomainService(nature = NatureOfService.DOMAIN)
-public class OrderItemService {
+public class OrderItemInvoiceItemLinkValidationService {
 
     @Programmatic
     public String validateOrderItem(
@@ -60,10 +58,5 @@ public class OrderItemService {
         return reason != null ? "Cannot link to this item: " + reason : null;
     }
 
-    @Inject
-    OrderRepository orderRepository;
-
-    @Inject
-    OrderItemRepository orderItemRepository;
 
 }

@@ -44,8 +44,8 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.order.OrderItemService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
@@ -539,7 +539,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final OrderItem orderItem,
             @Digits(integer = 13, fraction = 2)
             final BigDecimal netAmount){
-        orderItemInvoiceItemLinkRepository.createOrderItemInvoiceItemLink(orderItem, this, netAmount);
+        orderItemInvoiceItemLinkRepository.createLink(orderItem, this, netAmount);
         return this;
     }
 
@@ -570,7 +570,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String validate0CreateOrderItemLink(final OrderItem orderItem) {
-        return orderItemService.validateOrderItem(orderItem, this);
+        return linkValidationService.validateOrderItem(orderItem, this);
     }
 
     public BigDecimal default1CreateOrderItemLink(){
@@ -618,7 +618,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String validate0UpdateOrderItemLink(final OrderItem orderItem) {
-        return orderItemService.validateOrderItem(orderItem, this);
+        return linkValidationService.validateOrderItem(orderItem, this);
     }
 
     public String validateUpdateOrderItemLink(final OrderItem orderItem, final BigDecimal proposedNetAmount) {
@@ -810,7 +810,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     ProjectRepository projectRepository;
 
     @Inject
-    OrderItemService orderItemService;
+    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
     OrderItemRepository orderItemRepository;

@@ -65,7 +65,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.order.OrderItemService;
+import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -244,7 +244,7 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     public String validateOrderItem(final OrderItem orderItem) {
-        return orderItemService.validateOrderItem(orderItem, this);
+        return linkValidationService.validateOrderItem(orderItem, this);
     }
 
     private void autoFillIn(){
@@ -679,7 +679,7 @@ public class IncomingDocAsInvoiceViewModel
     @XmlTransient
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    OrderItemService orderItemService;
+    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
     @XmlTransient

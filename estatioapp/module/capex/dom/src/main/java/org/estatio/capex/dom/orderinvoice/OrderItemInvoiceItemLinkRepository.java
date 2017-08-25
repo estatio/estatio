@@ -18,7 +18,9 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
         super(OrderItemInvoiceItemLinkRepository.class, OrderItemInvoiceItemLink.class);
     }
 
-    public OrderItemInvoiceItemLink createOrderItemInvoiceItemLink(
+
+
+    public void createLink(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem,
             final BigDecimal netAmount){
@@ -30,16 +32,19 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
         persist(orderItemInvoiceItemLink);
 
-        return orderItemInvoiceItemLink;
     }
 
-    public OrderItemInvoiceItemLink findOrCreateLink(
+
+
+    public void findOrCreateLink(
             final OrderItem orderItem,
             final IncomingInvoiceItem invoiceItem,
             final BigDecimal netAmount) {
-        return findUnique(orderItem, invoiceItem)  == null ?
-                createOrderItemInvoiceItemLink(orderItem, invoiceItem, netAmount) :
-                findUnique(orderItem, invoiceItem);
+        if (findUnique(orderItem, invoiceItem) == null) {
+            createLink(orderItem, invoiceItem, netAmount);
+        } else {
+            findUnique(orderItem, invoiceItem);
+        }
     }
 
     public OrderItemInvoiceItemLink findUnique(
@@ -64,6 +69,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
 
 
+
     public BigDecimal sumLinkNetAmountsByOrderItem(final OrderItem orderItem) {
         final List<OrderItemInvoiceItemLink> links = findByOrderItem(orderItem);
         return sum(links);
@@ -80,6 +86,12 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
                 .map(OrderItemInvoiceItemLink::getNetAmount)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+
+    void removeLink(final OrderItemInvoiceItemLink link) {
+        remove(link);
     }
 
 }

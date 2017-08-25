@@ -15,9 +15,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
@@ -101,8 +101,20 @@ public class OrderItemInvoiceItemLink {
 
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "false")
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @Getter @Setter
     private BigDecimal netAmount;
+
+    public String validateNetAmount(final BigDecimal proposedNetAmount) {
+        if(proposedNetAmount == null) return null;
+        final BigDecimal netAmountLinked = repository.sumLinkNetAmountsByInvoiceItem(getInvoiceItem());
+        final BigDecimal netAmountInvoice = invoiceItem.getNetAmount();
+        final BigDecimal netAmountNotLinked = netAmountInvoice.subtract(netAmountLinked);
+        final BigDecimal netAmountNotLinkedExcludingThis = netAmountNotLinked.add(getNetAmount());
+        return proposedNetAmount.compareTo(netAmountNotLinkedExcludingThis) > 0
+                ? "Cannot exceed remaining amount to be linked (" + netAmountNotLinkedExcludingThis + ")"
+                : null;
+    }
 
 
     // derived from the order item
@@ -192,16 +204,17 @@ public class OrderItemInvoiceItemLink {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public IncomingInvoiceItem remove() {
         final IncomingInvoiceItem invoiceItem = getInvoiceItem();
-        repositoryService.removeAndFlush(this);
+        repository.removeLink(this);
         return invoiceItem;
     }
 
 
 
     @Inject
-    private RepositoryService repositoryService;
+    TitleService titleService;
 
     @Inject
-    TitleService titleService;
+    OrderItemInvoiceItemLinkRepository repository;
+
 
 }
