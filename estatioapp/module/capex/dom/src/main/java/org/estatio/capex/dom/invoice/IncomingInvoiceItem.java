@@ -19,7 +19,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -44,7 +43,6 @@ import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
-import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
@@ -58,7 +56,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.FinancialAmountUtil;
 
@@ -506,201 +503,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableRemoveItem(){
         return isImmutable() ? itemImmutableReason() : null;
     }
-
-
-
-
-
-    @Mixin(method="coll")
-    public static class orderItemLinks extends LinkMixinAbstract {
-        public orderItemLinks(final IncomingInvoiceItem mixee) { super(mixee); }
-        @Action(semantics = SemanticsOf.SAFE)
-        @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
-        public List<OrderItemInvoiceItemLink> coll() {
-            return orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee);
-        }
-    }
-
-
-    @Mixin(method="act")
-    abstract static class LinkMixinAbstract  {
-        final IncomingInvoiceItem mixee;
-        LinkMixinAbstract(final IncomingInvoiceItem mixee) {
-            this.mixee = mixee;
-        }
-
-        String validateLinkAmount(
-                final BigDecimal currentNetAmount,
-                final BigDecimal proposedNetAmount) {
-            if(proposedNetAmount == null) return null; // shouldn't occur, I think.
-            if(proposedNetAmount.compareTo(BigDecimal.ZERO) <= 0) return "Must be a positive amount";
-            final BigDecimal netAmountAvailableToLink =
-                    orderItemInvoiceItemLinkRepository.calculateNetAmountNotLinkedFromInvoiceItem(mixee);
-            final BigDecimal netAmountAvailableTakingCurrentIntoAccount =
-                    netAmountAvailableToLink.add(currentNetAmount);
-            if(proposedNetAmount.compareTo(netAmountAvailableTakingCurrentIntoAccount) > 0) {
-                return "Cannot exceed remaining amount to be linked (" + netAmountAvailableTakingCurrentIntoAccount + ")";
-            }
-            return null;
-        }
-
-        @Inject
-        OrderItemRepository orderItemRepository;
-
-        @Inject
-        OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
-
-        @Inject
-        OrderItemInvoiceItemLinkValidationService linkValidationService;
-
-    }
-
-
-
-
-    @Mixin(method="act")
-    public static class createOrderItemLink extends LinkMixinAbstract  {
-        public createOrderItemLink(final IncomingInvoiceItem mixee) { super(mixee); }
-        @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-        @MemberOrder(name = "orderItemLinks", sequence = "1")
-        public IncomingInvoiceItem act(
-                final OrderItem orderItem,
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal netAmount){
-            orderItemInvoiceItemLinkRepository.createLink(orderItem, mixee, netAmount);
-            return mixee;
-        }
-
-        public OrderItem default0Act(){
-            final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee);
-            return links.size() > 0 ? links.get(0).getOrderItem() : null;
-        }
-
-        public List<OrderItem> choices0Act(){
-
-            // the disable guard ensures this is non-null
-            final Party seller = mixee.getInvoice().getSeller();
-
-            final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
-            orderItems.removeAll(orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee));
-            return orderItems;
-        }
-        public String disableAct(){
-            if(mixee.getInvoice().getSeller() == null) {
-                return "Invoice's seller is required before items can be linked";
-            }
-            if(mixee.orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedFromInvoiceItem(mixee).compareTo(mixee.getNetAmount()) >= 0) {
-                return "The net amount for this invoice item has already been linked to other order items";
-            }
-            return null;
-        }
-
-        public String validate0Act(final OrderItem orderItem) {
-            return linkValidationService.validateOrderItem(orderItem, mixee);
-        }
-
-        public BigDecimal default1Act(){
-            final BigDecimal netAmountNotLinked =
-                    orderItemInvoiceItemLinkRepository.calculateNetAmountNotLinkedFromInvoiceItem(mixee);
-            return netAmountNotLinked;
-        }
-
-        public String validate1Act(final BigDecimal netAmount) {
-            return validateLinkAmount(BigDecimal.ZERO, netAmount);
-        }
-
-    }
-
-
-
-    @Mixin(method="act")
-    public static class updateOrderItemLink extends LinkMixinAbstract {
-        public updateOrderItemLink(final IncomingInvoiceItem mixee) {
-            super(mixee);
-        }
-        @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-        @MemberOrder(name = "orderItemLinks", sequence = "1")
-        public IncomingInvoiceItem act(
-                final OrderItem orderItem,
-                @Digits(integer = 13, fraction = 2)
-                @Parameter(mustSatisfy = PositiveAmountSpecification.class)
-                final BigDecimal netAmount){
-            final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, mixee);
-            if(link != null) {
-                link.setNetAmount(netAmount);
-            }
-            return mixee;
-        }
-
-        public String disableAct() {
-            return choices0Act().isEmpty()? "No order items" : null;
-        }
-
-        public OrderItem default0Act() {
-            final List<OrderItem> orderItems = choices0Act();
-            return orderItems.size() == 1 ? orderItems.get(0): null;
-        }
-
-        public List<OrderItem> choices0Act() {
-            return orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee);
-        }
-
-        public BigDecimal default1Act(){
-            final List<OrderItemInvoiceItemLink> orderItemLinks =
-                    orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee);
-            return orderItemLinks.size() == 1 ? orderItemLinks.get(0).getNetAmount(): null;
-        }
-
-        public String validate0Act(final OrderItem orderItem) {
-            return linkValidationService.validateOrderItem(orderItem, mixee);
-        }
-
-        public String validateAct(final OrderItem orderItem, final BigDecimal proposedNetAmount) {
-            final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, mixee);
-            final BigDecimal currentNetAmount = link != null ? link.getNetAmount() : BigDecimal.ZERO; // should be there.
-            return validateLinkAmount(currentNetAmount, proposedNetAmount);
-        }
-
-    }
-
-
-
-
-
-    @Mixin(method="act")
-    public static class removeOrderItemLink extends LinkMixinAbstract {
-        public removeOrderItemLink(final IncomingInvoiceItem mixee) { super(mixee); }
-
-        @Action(semantics = SemanticsOf.IDEMPOTENT)
-        @MemberOrder(name = "orderItemLinks", sequence = "3")
-        public IncomingInvoiceItem act(
-                @Nullable
-                final OrderItem orderItem){
-            final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(orderItem, mixee);
-            if(link != null) {
-                link.remove();
-            }
-            return mixee;
-        }
-        public String disableAct() {
-            return choices0Act().isEmpty()? "No order items" : null;
-        }
-
-        public OrderItem default0Act() {
-            final List<OrderItem> orderItems = choices0Act();
-            return orderItems.size() == 1 ? orderItems.get(0): null;
-        }
-
-        public List<OrderItem> choices0Act() {
-            return orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee);
-        }
-    }
-
-
-
-
-
-
 
     @Programmatic
     public String reasonIncomplete(){
