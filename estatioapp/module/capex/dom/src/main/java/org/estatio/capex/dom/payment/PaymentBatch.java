@@ -374,6 +374,13 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         StateTransitionService stateTransitionService;
     }
 
+    @Programmatic
+    public void remove(){
+        // Clean up transitions
+        approvalStateTransitionRepository.deleteFor(this);
+        remove(this);
+    }
+
     /**
      * TODO: inline this mixin
      */
@@ -826,6 +833,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Inject
     QueryResultsCache queryResultsCache;
+
+    @Inject
+    PaymentBatchApprovalStateTransition.Repository approvalStateTransitionRepository;
+
 
 
 }

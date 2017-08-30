@@ -22,6 +22,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -283,6 +284,15 @@ public class PaymentBatchManager {
         PaymentBatchRepository paymentBatchRepository;
     }
 
+    @MemberOrder(name = "newBatches", sequence = "1")
+    public PaymentBatchManager removeAll() {
+        for (PaymentBatch paymentBatch : getNewBatches()){
+            paymentBatch.clearLines();
+            paymentBatch.remove();
+        }
+        return new PaymentBatchManager();
+    }
+
     /**
      * TODO: inline this mixin
      */
@@ -306,7 +316,7 @@ public class PaymentBatchManager {
             for (PaymentBatch newBatch : newBatches) {
                 newBatch.clearLines();
             }
-            return paymentBatchManager;
+            return new PaymentBatchManager();
         }
 
         public String disableAct() {
