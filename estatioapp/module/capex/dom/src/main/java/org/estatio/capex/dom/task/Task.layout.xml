@@ -129,7 +129,7 @@
                 <cpt:property id="completed"/>
                 <cpt:property id="completedBy"/>
                 <cpt:property id="completedOn"/>
-                <cpt:property id="comment" hidden="ALL_TABLES"/>
+                <cpt:property id="comment"/>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
