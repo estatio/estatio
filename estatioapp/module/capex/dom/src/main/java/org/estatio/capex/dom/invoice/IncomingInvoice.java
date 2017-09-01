@@ -722,14 +722,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return true;
     }
 
+    /**
+     * Unlike pretty much every other property, changing the {@link #setBankAccount(BankAccount)} does _not_ cause the
+     * {@link #isApprovedFully() approvedFully} flag to be reset.
+     * Thus, if no other changes are made, then completing the invoice will send it straight through without requiring re-approval.
+     */
     @Getter @Setter
     @Column(allowsNull = "true", name = "bankAccountId")
     private BankAccount bankAccount;
-
-    @Override
-    public void setBankAccount(final BankAccount bankAccount) {
-        this.bankAccount = invalidateApprovalIfDiffer(this.bankAccount, bankAccount);
-    }
 
     @Getter @Setter
     @Column(allowsNull = "true")
