@@ -105,7 +105,7 @@ public interface StateTransitionType<
      * <p>
      *     This method is only intended to be called by {@link StateTransitionService}, which checks that the
      *     domain object is already in the specified fromState, and can otherwise be
-     *     {@link #isGuardSatisified(Object, ServiceRegistry2) applied}.
+     *     {@link #isGuardSatisfied(Object, ServiceRegistry2) applied}.
      * </p>
      */
     @Programmatic
@@ -137,7 +137,7 @@ public interface StateTransitionType<
 
     /**
      * Whether this domain object is in a state such that this transition could occur (subject to any additional
-     * {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guards} also being satisfied).
+     * {@link StateTransitionType#isGuardSatisfied(Object, ServiceRegistry2) guards} also being satisfied).
      */
     @Programmatic
     default <
@@ -180,7 +180,7 @@ public interface StateTransitionType<
      * Whether there is a &quot;road&quot; from the specified state using this transition to some other state.
      *
      * <p>
-     *     Note that the transition itself may also have a {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guard}
+     *     Note that the transition itself may also have a {@link StateTransitionType#isGuardSatisfied(Object, ServiceRegistry2) guard}
      *     so the &quot;road&quot; may not be immediately traversable if the guard isn't satisfied.
      * </p>
      */
@@ -202,9 +202,9 @@ public interface StateTransitionType<
      * Whether the provided domain object can make <i>this</i> transition at all, based on its (likely immutable) state.
      *
      * <p>
-     *     This is similar to {@link #isGuardSatisified(Object, ServiceRegistry2)}, but is used for initial routing
+     *     This is similar to {@link #isGuardSatisfied(Object, ServiceRegistry2)}, but is used for initial routing
      *     to set up a pending {@link StateTransition}.  That is, it is expected to be based on state of the domain
-     *     object that is unlikely to change over time.  In contrast, {@link #isGuardSatisified(Object, ServiceRegistry2)}
+     *     object that is unlikely to change over time.  In contrast, {@link #isGuardSatisfied(Object, ServiceRegistry2)}
      *     is continually evaluated to see if the transition can <i>yet</i> be made, and so is based on state that is
      *     mutable.
      * </p>
@@ -214,7 +214,7 @@ public interface StateTransitionType<
      *     next state to transition to depends upon the state of the domain object
      * </p>
      *
-     * @see #isGuardSatisified(Object, ServiceRegistry2)
+     * @see #isGuardSatisfied(Object, ServiceRegistry2)
      *
      * @param domainObject - being transitioned.
      * @param serviceRegistry2 -to lookup domain services etc
@@ -228,7 +228,7 @@ public interface StateTransitionType<
      * Derived from {@link #reasonGuardNotSatisified(Object, ServiceRegistry2)}; do not overrride.
      */
     @Programmatic
-    default boolean isGuardSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+    default boolean isGuardSatisfied(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
         return reasonGuardNotSatisified(domainObject, serviceRegistry2) == null;
     }
 
@@ -269,7 +269,7 @@ public interface StateTransitionType<
         }
 
 
-    }
+        }
 
 
 }

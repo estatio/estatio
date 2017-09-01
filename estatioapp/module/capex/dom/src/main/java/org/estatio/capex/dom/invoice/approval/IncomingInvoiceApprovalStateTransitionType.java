@@ -198,7 +198,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             TaskAssignmentStrategy.none(),
             AdvancePolicy.AUTOMATIC) {
         @Override
-        public boolean isGuardSatisified(
+        public boolean isGuardSatisfied(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
 

@@ -3,6 +3,7 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -54,6 +55,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.utils.FinancialAmountUtil;
 
 import lombok.Getter;
@@ -174,6 +176,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Column(allowsNull = "false")
     private IncomingInvoiceType incomingInvoiceType;
 
+    public void setIncomingInvoiceType(final IncomingInvoiceType incomingInvoiceType) {
+        this.incomingInvoiceType = invalidateApprovalIfDiffer(this.incomingInvoiceType, incomingInvoiceType);
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editIncomingInvoiceType(final IncomingInvoiceType incomingInvoiceType) {
@@ -193,17 +199,97 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Getter @Setter
     private FixedAsset fixedAsset;
 
+    public void setFixedAsset(final FixedAsset fixedAsset) {
+        this.fixedAsset = invalidateApprovalIfDiffer(this.fixedAsset, fixedAsset);
+    }
+
     @Getter @Setter
     @Column(allowsNull = "true", name="projectId")
     @Property(hidden = Where.REFERENCES_PARENT)
     private Project project;
+
+    public void setProject(final Project project) {
+        this.project = invalidateApprovalIfDiffer(this.project, project);
+    }
+
 
     @Getter @Setter
     @Column(allowsNull = "true", name="budgetItemId")
     @Property(hidden = Where.REFERENCES_PARENT)
     private BudgetItem budgetItem;
 
+    public void setBudgetItem(final BudgetItem budgetItem) {
+        this.budgetItem = invalidateApprovalIfDiffer(this.budgetItem, budgetItem);
+    }
 
+    @Override
+    public void setCharge(final Charge charge) {
+        super.setCharge(invalidateApprovalIfDiffer(getCharge(), charge));
+    }
+
+    @Override
+    public void setDescription(final String description) {
+        super.setDescription(invalidateApprovalIfDiffer(getDescription(), description));
+    }
+
+    @Override
+    public void setQuantity(final BigDecimal quantity) {
+        super.setQuantity(invalidateApprovalIfDiffer(getQuantity(), quantity));
+    }
+
+    @Override
+    public void setNetAmount(final BigDecimal netAmount) {
+        super.setNetAmount(invalidateApprovalIfDiffer(getNetAmount(), netAmount));
+    }
+
+    @Override
+    public void setVatAmount(final BigDecimal vatAmount) {
+        super.setVatAmount(invalidateApprovalIfDiffer(getVatAmount(), vatAmount));
+    }
+
+    @Override
+    public void setGrossAmount(final BigDecimal grossAmount) {
+        super.setGrossAmount(invalidateApprovalIfDiffer(getGrossAmount(), grossAmount));
+    }
+
+    @Override
+    public void setTax(final Tax tax) {
+        super.setTax(invalidateApprovalIfDiffer(getTax(), tax));
+    }
+
+    @Override
+    public void setDueDate(final LocalDate dueDate) {
+        super.setDueDate(invalidateApprovalIfDiffer(getDueDate(), dueDate));
+    }
+
+    @Override
+    public void setStartDate(final LocalDate startDate) {
+        super.setStartDate(invalidateApprovalIfDiffer(getStartDate(), startDate));
+    }
+
+    @Override
+    public void setEndDate(final LocalDate endDate) {
+        super.setEndDate(invalidateApprovalIfDiffer(getEndDate(), endDate));
+    }
+
+    @Override
+    public void setEffectiveStartDate(final LocalDate effectiveStartDate) {
+        super.setEffectiveStartDate(invalidateApprovalIfDiffer(getEffectiveStartDate(), effectiveStartDate));
+    }
+
+    @Override
+    public void setEffectiveEndDate(final LocalDate effectiveEndDate) {
+        super.setEffectiveEndDate(invalidateApprovalIfDiffer(getEffectiveEndDate(), effectiveEndDate));
+    }
+
+    @Override
+    public void setTaxRate(final TaxRate taxRate) {
+        super.setTaxRate(invalidateApprovalIfDiffer(getTaxRate(), taxRate));
+    }
+
+    private IncomingInvoice getIncomingInvoice() {
+        return (IncomingInvoice) getInvoice();
+    }
 
     @Programmatic
     public String getPeriod(){
@@ -518,6 +604,20 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
                     .checkNotNull(getCharge(), "charge")
                     .validateForIncomingInvoiceType(this)
                     .getResult();
+    }
+
+    /**
+     * has final modifier so cannot be mocked out.
+     */
+    final <T> T invalidateApprovalIfDiffer(final T previousValue, final T newValue) {
+        if (!Objects.equals(previousValue, newValue)) {
+            invalidateApproval();
+        }
+        return newValue;
+    }
+
+    void invalidateApproval() {
+        getIncomingInvoice().invalidateApproval();
     }
 
     static class Validator {

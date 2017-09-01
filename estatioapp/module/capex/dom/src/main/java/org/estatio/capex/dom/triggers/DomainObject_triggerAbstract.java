@@ -62,7 +62,7 @@ public abstract class DomainObject_triggerAbstract<
      *
      * <p>
      *     It's possible that the transition may not occur if there
-     *     is {@link StateTransitionType#isGuardSatisified(Object, ServiceRegistry2) guard} that is not yet satisfied
+     *     is {@link StateTransitionType#isGuardSatisfied(Object, ServiceRegistry2) guard} that is not yet satisfied
      *     for the particular domain object.
      * </p>
      *

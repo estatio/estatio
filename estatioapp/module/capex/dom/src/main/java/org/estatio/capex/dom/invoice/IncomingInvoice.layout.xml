@@ -147,6 +147,7 @@
                                                 <cpt:named>Show transitions</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
+                                        <cpt:property id="approvedFully"/>
                                         <cpt:property id="pendingApprovalTask">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>

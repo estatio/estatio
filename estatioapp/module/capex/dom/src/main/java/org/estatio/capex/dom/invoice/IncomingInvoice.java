@@ -2,6 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,6 +64,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.Invoice;
@@ -171,6 +173,15 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerBankAccountCreator, Stateful {
 
+    public static class ApprovalInvalidatedEvent extends java.util.EventObject {
+        public ApprovalInvalidatedEvent(final Object source) {
+            super(source);
+        }
+        public IncomingInvoice getIncomingInvoice(){
+            return (IncomingInvoice) getSource();
+        }
+    }
+
     public static class ObjectPersistingEvent
             extends org.apache.isis.applib.services.eventbus.ObjectPersistingEvent <IncomingInvoice> {
     }
@@ -276,6 +287,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                     property,
                     project,
                     budgetItem);
+
             return incomingInvoice;
         }
 
@@ -499,7 +511,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     public Optional<IncomingInvoiceItem> firstItemIfAny() {
-        return  getItems().stream()
+        return  Lists.newArrayList(getItems()).stream()
                 .filter(IncomingInvoiceItem.class::isInstance)
                 .map(IncomingInvoiceItem.class::cast)
                 .findFirst();
@@ -636,9 +648,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
      *     This can be overridden for each invoice item.
      * </p>
      */
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private IncomingInvoiceType type;
+    public void setType(final IncomingInvoiceType type) {
+        this.type = invalidateApprovalIfDiffer(this.type, type);
+    }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editType(
@@ -679,6 +695,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @org.apache.isis.applib.annotation.Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private Property property;
+    public void setProperty(final Property property) {
+        this.property = invalidateApprovalIfDiffer(this.property, property);
+    }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editProperty(
@@ -707,10 +726,20 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "true", name = "bankAccountId")
     private BankAccount bankAccount;
 
+    @Override
+    public void setBankAccount(final BankAccount bankAccount) {
+        this.bankAccount = invalidateApprovalIfDiffer(this.bankAccount, bankAccount);
+    }
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDate dateReceived;
 
+    public void setDateReceived(final LocalDate dateReceived) {
+        this.dateReceived = invalidateApprovalIfDiffer(this.dateReceived, dateReceived);
+    }
+
+    // TODO: does not seem to be used, raised EST-1599 to look into removing it.
     @Getter @Setter
     @Column(allowsNull = "true", name="invoiceId")
     private IncomingInvoice relatesTo;
@@ -722,11 +751,44 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return super.getStatus();
     }
 
+    @Override
+    public void setCurrency(final Currency currency) {
+        super.setCurrency(invalidateApprovalIfDiffer(getCurrency(), currency));
+    }
+
+    @Override
+    public void setBuyer(final Party buyer) {
+        super.setBuyer(invalidateApprovalIfDiffer(super.getBuyer(), buyer));
+    }
+
+    @Override
+    public void setSeller(final Party seller) {
+        super.setSeller(invalidateApprovalIfDiffer(getSeller(), seller));
+    }
+
+    @Override
+    public void setDueDate(final LocalDate dueDate) {
+        super.setDueDate(invalidateApprovalIfDiffer(getDueDate(), dueDate));
+    }
+
+    @Override
+    public void setInvoiceNumber(final String invoiceNumber) {
+        super.setInvoiceNumber(invalidateApprovalIfDiffer(getInvoiceNumber(), invoiceNumber));
+    }
+
+    @Override
+    public void setPaymentMethod(final PaymentMethod paymentMethod) {
+        super.setPaymentMethod(invalidateApprovalIfDiffer(getPaymentMethod(), paymentMethod));
+    }
+
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal netAmount;
+    public void setNetAmount(final BigDecimal netAmount) {
+        this.netAmount = invalidateApprovalIfDiffer(this.netAmount, netAmount);
+    }
 
     @org.apache.isis.applib.annotation.Property(hidden = Where.ALL_TABLES)
     @Digits(integer = 9, fraction = 2)
@@ -739,7 +801,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Getter @Setter
     private BigDecimal grossAmount;
-
+    public void setGrossAmount(final BigDecimal grossAmount) {
+        this.grossAmount = invalidateApprovalIfDiffer(this.grossAmount, grossAmount);
+    }
 
     @org.apache.isis.applib.annotation.Property(notPersisted = true, hidden = Where.ALL_TABLES)
     public BigDecimal getNetAmountLinked() {
@@ -869,6 +933,18 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
     private IncomingInvoiceApprovalState approvalState;
+
+
+    /**
+     * that is, has passed final approval step.
+     *
+     * Like {@link #getApprovalState()}, this field is populated as the result of transitioning.
+     * It can be reset back if any property changes such as to invalidate the approval, as per {@link #invalidateApprovalIfDiffer(Object, Object)}.
+     */
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private boolean approvedFully;
+
 
     @Override
     public <
@@ -1046,6 +1122,20 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             }
         }
         return buffer.length() == 0 ? null : buffer.toString();
+    }
+
+    /**
+     * has final modifier so cannot be mocked out.
+     */
+    final <T> T invalidateApprovalIfDiffer(T previousValue, T newValue) {
+        if (!Objects.equals(previousValue, newValue)) {
+            invalidateApproval();
+        }
+        return newValue;
+    }
+
+    protected void invalidateApproval() {
+        getEventBusService().post(new ApprovalInvalidatedEvent(this));
     }
 
     @Inject

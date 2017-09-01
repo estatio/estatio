@@ -442,7 +442,7 @@ public class StateTransitionService {
             }
         }
 
-        if(! pendingTransitionType.isGuardSatisified(domainObject, serviceRegistry2) ) {
+        if(! pendingTransitionType.isGuardSatisfied(domainObject, serviceRegistry2) ) {
             // cannot apply this state, while there is an available "road" to traverse, it is blocked
             // (there must be a guard prohibiting it for this particular domain object)
             return null;
