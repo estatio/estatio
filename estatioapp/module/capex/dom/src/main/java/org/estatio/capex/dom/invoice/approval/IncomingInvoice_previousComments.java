@@ -14,8 +14,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
 
 
 @Mixin(method="prop")
@@ -60,15 +58,13 @@ public class IncomingInvoice_previousComments {
     private StringBuilder summaryOf(final IncomingInvoiceApprovalStateTransition transition) {
         final StringBuilder buf = new StringBuilder();
 
-        final Task task = transition.getTask();
-        if(task != null) {
-            final String comment = task.getComment();
-            if(comment != null) {
-                buf.append(transition.getTransitionType()).append(": ").append(comment);
-                final Person assignee = task.getPersonAssignedTo();
-                if(assignee != null) {
-                    buf.append(" (").append(assignee.getReference()).append(")");
-                }
+        final String comment = transition.getComment();
+        final IncomingInvoiceApprovalStateTransitionType transitionType = transition.getTransitionType();
+        if(comment != null) {
+            buf.append(transitionType).append(": ").append(comment);
+            final String completedBy = transition.getCompletedBy();
+            if(completedBy != null) {
+                buf.append(" (").append(completedBy).append(")");
             }
         }
         return buf;

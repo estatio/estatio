@@ -21,6 +21,7 @@ public interface StateTransition<
     DO getDomainObject();
 
     Task getTask();
+    void setTask(Task task);
 
     S getFromState();
 
@@ -30,8 +31,14 @@ public interface StateTransition<
 
     LocalDateTime getCreatedOn();
 
+    String getCompletedBy();
+
     LocalDateTime getCompletedOn();
 
+    String getComment();
+
+
     @Programmatic
-    void completed();
+    void completed(final String comment);
+
 }

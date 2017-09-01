@@ -83,18 +83,33 @@ public abstract class StateTransitionAbstract<
     public abstract LocalDateTime getCompletedOn();
     public abstract void setCompletedOn(final LocalDateTime completedOn);
 
+    public abstract String getCompletedBy();
+    public abstract void setCompletedBy(final String completedBy);
+
+    public abstract String getComment();
+    public abstract void setComment(String comment);
+
     public abstract boolean isCompleted();
     public abstract void setCompleted(boolean completed);
 
     @Programmatic
     @Override
-    public void completed() {
-        setCompletedOn(clockService.nowAsLocalDateTime());
-        setCompleted(true);
-        if(getTask() != null) {
-            getTask().setCompletedOn(getCompletedOn());
-            getTask().setCompletedBy(meService.me().getName());
+    public void completed(final String comment) {
+        final LocalDateTime completedOn = clockService.nowAsLocalDateTime();
+        final String completedBy = meService.me().getName();
+
+        setCompletedBy(completedBy);
+        setCompletedOn(completedOn);
+        setComment(comment);
+
+        final Task task = getTask();
+        if(task != null) {
+            task.setCompletedBy(completedBy);
+            task.setCompletedOn(completedOn);
+            task.setComment(comment);
         }
+
+        setCompleted(true);
         setToState(getTransitionType().getToState());
     }
 
