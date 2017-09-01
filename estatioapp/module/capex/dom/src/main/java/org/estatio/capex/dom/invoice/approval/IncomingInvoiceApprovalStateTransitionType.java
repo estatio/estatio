@@ -107,13 +107,14 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             return incomingInvoice.reasonIncomplete();
         }
+
     },
     APPROVE(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
-            AdvancePolicy.MANUAL) {
+            AdvancePolicy.AUTOMATIC) {
         @Override
         public TaskAssignmentStrategy getTaskAssignmentStrategy() {
             return (TaskAssignmentStrategy<
@@ -145,13 +146,18 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             return incomingInvoice.reasonIncomplete();
         }
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
-            AdvancePolicy.MANUAL) {
+            AdvancePolicy.AUTOMATIC) {
         @Override
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
@@ -160,13 +166,18 @@ public enum IncomingInvoiceApprovalStateTransitionType
             if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.LOCAL_EXPENSES;
         }
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
     },
     APPROVE_AS_CORPORATE_MANAGER(
             IncomingInvoiceApprovalState.COMPLETED,
             IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.CORPORATE_MANAGER),
-            AdvancePolicy.MANUAL) {
+            AdvancePolicy.AUTOMATIC) {
         @Override
         public boolean isMatch(
                 final IncomingInvoice incomingInvoice,
@@ -175,13 +186,25 @@ public enum IncomingInvoiceApprovalStateTransitionType
             if (incomingInvoice.getType()==null) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.CORPORATE_EXPENSES;
         }
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
+
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
             IncomingInvoiceApprovalState.APPROVED,
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(PartyRoleTypeEnum.COUNTRY_DIRECTOR),
-            AdvancePolicy.MANUAL),
+            AdvancePolicy.AUTOMATIC) {
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
+    },
     CHECK_BANK_ACCOUNT(
             Lists.newArrayList(
                 IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,

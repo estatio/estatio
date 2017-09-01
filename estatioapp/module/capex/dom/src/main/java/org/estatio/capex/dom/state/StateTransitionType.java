@@ -225,11 +225,20 @@ public interface StateTransitionType<
     }
 
     /**
-     * Derived from {@link #reasonGuardNotSatisified(Object, ServiceRegistry2)}; do not overrride.
+     * Derived from {@link #reasonGuardNotSatisified(Object, ServiceRegistry2)}; in general should not be overridden.
      */
     @Programmatic
     default boolean isGuardSatisfied(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
         return reasonGuardNotSatisified(domainObject, serviceRegistry2) == null;
+    }
+
+    /**
+     * For an {@link #advancePolicyFor(Object, ServiceRegistry2) automatic} transition, an additional guard as to
+     * whether the transition may be performed.
+     */
+    @Programmatic
+    default boolean isAutoGuardSatisfied(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
+        return true;
     }
 
     @Programmatic
@@ -243,13 +252,12 @@ public interface StateTransitionType<
      *     next state to transition to depends upon the state of the domain object
      * </p>
      *
+     * Kind-a the same as our disableXxx() guards in the framework.
+     *
      * @see #isMatch(Object, ServiceRegistry2)
      *
      * @param domainObject - being transitioned.
      * @param serviceRegistry2 -to lookup domain services etc
-     */
-    /**
-     * Kind-a the same as our disableXxx() guards in the framework.
      */
     @Programmatic
     default String reasonGuardNotSatisified(final DO domainObject, final ServiceRegistry2 serviceRegistry2) {
