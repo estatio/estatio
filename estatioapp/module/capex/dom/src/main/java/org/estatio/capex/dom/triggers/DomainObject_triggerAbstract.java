@@ -57,6 +57,16 @@ public abstract class DomainObject_triggerAbstract<
     }
 
 
+    protected static <T> T coalesce(final T... candidates) {
+        for (T candidate : candidates) {
+            if(candidate != null) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+
     /**
      * Subclasses should call, to request that the state transition occur (or at least, be attempted).
      *

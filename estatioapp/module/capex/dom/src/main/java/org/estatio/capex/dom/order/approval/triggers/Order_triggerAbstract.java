@@ -105,14 +105,6 @@ public abstract class Order_triggerAbstract
         return previousTransition.getDomainObject();
     }
 
-    private static <T> T coalesce(final T... candidates) {
-        for (T candidate : candidates) {
-            if(candidate != null) {
-                return candidate;
-            }
-        }
-        return null;
-    }
 
 
 
