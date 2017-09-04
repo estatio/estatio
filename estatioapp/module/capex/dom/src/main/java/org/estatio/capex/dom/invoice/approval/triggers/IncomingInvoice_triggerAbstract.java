@@ -66,7 +66,7 @@ public abstract class IncomingInvoice_triggerAbstract
         if(nextTask == null) {
             return null;
         }
-        final IncomingInvoiceApprovalStateTransition nextTransition = stateTransitionRepository.findByTask(nextTask);
+        final IncomingInvoiceApprovalStateTransition nextTransition = findByTask(nextTask);
         if(nextTransition == null) {
             return null;
         }
@@ -99,15 +99,16 @@ public abstract class IncomingInvoice_triggerAbstract
         if(previousTask == null) {
             return null;
         }
-        final IncomingInvoiceApprovalStateTransition previousTransition = stateTransitionRepository.findByTask(previousTask);
+        final IncomingInvoiceApprovalStateTransition previousTransition = findByTask(previousTask);
         if(previousTransition == null) {
             return null;
         }
         return previousTransition.getDomainObject();
     }
 
-
-
+    protected IncomingInvoiceApprovalStateTransition findByTask(final Task previousTask) {
+        return stateTransitionRepository.findByTask(previousTask);
+    }
 
     @Inject
     QueryResultsCache queryResultsCache;

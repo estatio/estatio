@@ -65,13 +65,12 @@ public abstract class Order_triggerAbstract
         if(nextTask == null) {
             return null;
         }
-        final OrderApprovalStateTransition nextTransition = stateTransitionRepository.findByTask(nextTask);
+        final OrderApprovalStateTransition nextTransition = findByTask(nextTask);
         if(nextTransition == null) {
             return null;
         }
         return nextTransition.getDomainObject();
     }
-
 
     protected Order previousBeforePending() {
         return queryResultsCache.execute(
@@ -98,11 +97,15 @@ public abstract class Order_triggerAbstract
         if(previousTask == null) {
             return null;
         }
-        final OrderApprovalStateTransition previousTransition = stateTransitionRepository.findByTask(previousTask);
+        final OrderApprovalStateTransition previousTransition = findByTask(previousTask);
         if(previousTransition == null) {
             return null;
         }
         return previousTransition.getDomainObject();
+    }
+
+    protected OrderApprovalStateTransition findByTask(final Task nextTask) {
+        return stateTransitionRepository.findByTask(nextTask);
     }
 
 
