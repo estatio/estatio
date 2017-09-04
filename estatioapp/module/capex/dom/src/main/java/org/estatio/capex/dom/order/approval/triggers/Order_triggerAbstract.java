@@ -2,14 +2,16 @@ package org.estatio.capex.dom.order.approval.triggers;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
+import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 
 public abstract class Order_triggerAbstract
@@ -31,6 +33,14 @@ public abstract class Order_triggerAbstract
             final OrderApprovalStateTransitionType requiredTransitionType) {
         super(order, OrderApprovalStateTransition.class, requiredTransitionType.getFromStates(), requiredTransitionType);
     }
+
+    @Override
+    protected OrderApprovalStateTransition findByTask(final Task nextTask) {
+        return stateTransitionRepository.findByTask(nextTask);
+    }
+
+    @Inject
+    OrderApprovalStateTransition.Repository stateTransitionRepository;
 
 
 }

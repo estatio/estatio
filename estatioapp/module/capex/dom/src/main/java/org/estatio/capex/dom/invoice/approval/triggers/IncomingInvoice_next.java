@@ -22,12 +22,12 @@ public class IncomingInvoice_next extends IncomingInvoice_triggerAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     public Object act() {
-        final IncomingInvoice next = nextInvoiceAfterPending();
+        final IncomingInvoice next = nextAfterPending();
         return objectToReturn(next);
     }
 
     public String disableAct() {
-        return nextInvoiceAfterPending() == getDomainObject()
+        return nextAfterPending() == getDomainObject()
                 ? "Could not find next invoice; either this invoice has no pending task, or there are none after"
                 : null;
     }
