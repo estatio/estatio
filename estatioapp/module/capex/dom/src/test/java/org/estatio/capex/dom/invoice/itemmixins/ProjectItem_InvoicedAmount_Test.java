@@ -9,8 +9,10 @@ import org.jmock.auto.Mock;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.project.ProjectItem;
@@ -22,6 +24,9 @@ public class ProjectItem_InvoicedAmount_Test {
 
     @Mock
     IncomingInvoiceItemRepository mockIncomingInvoiceItemRepository;
+
+    @Mock
+    EventBusService mockEventBusService;
 
     @Test
     public void invoicedAmount_works() throws Exception {
@@ -37,8 +42,11 @@ public class ProjectItem_InvoicedAmount_Test {
         mixin.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
         IncomingInvoiceItem item1 = new IncomingInvoiceItem();
+        item1.setInvoice(newIncomingInvoice());
         item1.setNetAmount(netAmountOnItem1);
+
         IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        item2.setInvoice(newIncomingInvoice());
         item2.setNetAmount(netAmountOnItem2);
         IncomingInvoiceItem item3_discarded = new IncomingInvoiceItem(){
             @Override
@@ -46,6 +54,8 @@ public class ProjectItem_InvoicedAmount_Test {
                 return true;
             }
         };
+        item3_discarded.setInvoice(newIncomingInvoice());
+
         item3_discarded.setNetAmount(netAmountOnItem3_discarded);
 
         // expect
@@ -60,6 +70,17 @@ public class ProjectItem_InvoicedAmount_Test {
         // then
         Assertions.assertThat(orderedAmount).isEqualTo(expectedTotalInvoicedNetAmountOnItems);
 
+    }
+
+    private IncomingInvoice newIncomingInvoice() {
+        final IncomingInvoice incomingInvoice = new IncomingInvoice() {
+            @Override protected EventBusService getEventBusService() {
+                return mockEventBusService;
+            }
+        };
+        context.ignoring(mockEventBusService);
+
+        return incomingInvoice;
     }
 
 }

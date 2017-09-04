@@ -25,9 +25,15 @@ state "IncomingDocumentCategorisationStateTransitionType" as idc {
 
 == Incoming Invoice Approval
 
+The lightgreen states have an advancePolicy of "AUTOMATIC", meaning that the state transition will proceed directly through provided that any corresponding `autoGuard` is satisfied.
+
 [plantuml,incoming-invoice-approval-state-chart,png]
 --
 state "IncomingInvoiceApprovalStateTransitionType" as iia {
+
+    skinparam state {
+      BackgroundColor<<Automatic>> lightgreen
+    }
 
     state "NEW" as iia_new
 
@@ -36,16 +42,16 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     state "pending" as iia_pp {
         state "COMPLETED" as iia_completed
-        note right of iia_completed: mutable up to here, \nbut not after
 
-        state "APPROVED" as iia_a
+        state "APPROVED" as iia_a<<Automatic>>
 
         state "final approval" as iia_final {
-            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd
-            state "APPROVED_BY_ \n CORPORATE_MANAGER" as iia_abcm
+            state "APPROVED_BY_ \n COUNTRY_DIRECTOR" as iia_abcd<<Automatic>>
+            state "APPROVED_BY_ \n CORPORATE_MANAGER" as iia_abcm<<Automatic>>
         }
+        note left of iia_final: mutable only\nprior to\nthis state
 
-        state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac
+        state "PENDING_BANK_\nACCOUNT_CHECK" as iia_pbac<<Automatic>>
         state "PAYABLE" as iia_payable
     }
 
@@ -53,24 +59,24 @@ state "IncomingInvoiceApprovalStateTransitionType" as iia {
 
     [*] -right-> iia_new: INSTANTIATE
 
-    iia_new --> iia_completed : COMPLETE\n[hasProperty() | \n local | corporate ]
+    iia_new --> iia_completed : COMPLETE\nmatch: [hasProperty() |  local | corporate ] \nguard: [ reasonIncomplete() != null ]
     iia_new -right-> iia_discarded : DISCARD
 
-    iia_completed --> iia_a : APPROVE\n[capex | \nasset | services_charges ]
+    iia_completed --> iia_a : APPROVE   \nmatch: [capex | asset | services_charges ]       \nguard: [ reasonIncomplete() != null ]\nautoGuard: [ approvedFully ]
 
-    iia_completed --> iia_abcd : APPROVE_\nLOCAL_AS_\n COUNTRY_DIRECTOR\n[local]
-    iia_completed --> iia_abcm : APPROVE_\nAS_\n CORPORATE_MANAGER\n[corporate]
+    iia_completed -r-> iia_abcd : \n\n\nAPPROVE_LOCAL_AS_\nCOUNTRY_DIRECTOR\nmatch: [local]\nautoGuard: [ approvedFully ]
+    iia_completed --> iia_abcm : APPROVE_AS_\nCORPORATE_MANAGER       \nmatch: [corporate]\nautoGuard: [ approvedFully ]
 
-    iia_a --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR
+    iia_a --> iia_abcd : APPROVE_AS_\nCOUNTRY_DIRECTOR\nautoGuard: [ approvedFully ]
     
     iia_final --> iia_pbac : CHECK_BANK_ACCOUNT
 
-    iia_pp -up-> iia_new: \n  REJECT
+    iia_pp --> iia_new: \n  REJECT
 
-    iia_pbac --> iia_payable : CONFIRM_\n  BANK_ACCOUNT_\n  VERIFIED\n [bank account verified ||\n paymentMethod=\n"DIRECT_DEBIT" ]
-    iia_payable --> iia_paid: PAY_BY_IBP\n[paymentMethod = \n"BANK_TRANSFER"]
-    iia_payable --> iia_paid: PAY_BY_IBP_MANUAL\n[paymentMethod = \n"MANUAL_PROCESS"]
-    iia_payable --> iia_paid: PAY_BY_DD\n  [paymentMethod=\n"DIRECT_DEBIT"]
+    iia_pbac --> iia_payable : CONFIRM_BANK_ACCOUNT_VERIFIED\n guard: [bank account verified || paymentMethod="DIRECT_DEBIT" ]
+    iia_payable --> iia_paid: PAY_BY_IBP\nmatch: [paymentMethod = \n            "BANK_TRANSFER"]
+    iia_payable --> iia_paid: PAY_BY_IBP_MANUAL\nmatch: [paymentMethod = \n             "MANUAL_PROCESS"]
+    iia_payable --> iia_paid: PAY_BY_DD\n  match: [paymentMethod=\n            "DIRECT_DEBIT"]
 
 }
 --

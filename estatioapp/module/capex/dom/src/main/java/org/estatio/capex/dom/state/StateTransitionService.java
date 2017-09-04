@@ -442,17 +442,29 @@ public class StateTransitionService {
             }
         }
 
-        if(! pendingTransitionType.isGuardSatisified(domainObject, serviceRegistry2) ) {
+        if(! pendingTransitionType.isGuardSatisfied(domainObject, serviceRegistry2) ) {
             // cannot apply this state, while there is an available "road" to traverse, it is blocked
             // (there must be a guard prohibiting it for this particular domain object)
             return null;
         }
 
-        if(nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2).isManual() &&
-           requestedTransitionTypeIfAny == null) {
-            // do not proceed if this is an explicit transition and no explicit transition type provided.
-            return null;
+        final AdvancePolicy advancePolicy = nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2);
+        switch (advancePolicy) {
+        case MANUAL:
+            if(requestedTransitionTypeIfAny == null) {
+                // do not proceed if this is an explicit transition and no explicit transition type provided.
+                return null;
+            }
+            break;
+        case AUTOMATIC:
+            if(! pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2) ) {
+                // cannot transition automatically.
+                return null;
+            }
+            break;
         }
+
+
         return pendingTransitionIfAny;
     }
 

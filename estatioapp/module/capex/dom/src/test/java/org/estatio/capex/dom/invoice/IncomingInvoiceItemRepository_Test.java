@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,12 +34,30 @@ public class IncomingInvoiceItemRepository_Test {
 
     @Mock
     private IncomingInvoice mockInvoice;
+    @Mock
+    private IncomingInvoice stubInvoice2;
+
+    @Mock
+    RepositoryService mockRepositoryService;
+
+    @Mock
+    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
 
     @Mock
     private Charge mockCharge;
 
+    @Before
+    public void setUp() throws Exception {
+        context.checking(new Expectations() {{
+            ignoring(mockInvoice).invalidateApproval();
+            ignoring(stubInvoice2).invalidateApproval();
+        }});
+    }
+
     @Test
     public void upsert_works() throws Exception {
+
 
         // given
         IncomingInvoiceItemRepository incomingInvoiceItemRepository = new IncomingInvoiceItemRepository(){
@@ -118,12 +137,6 @@ public class IncomingInvoiceItemRepository_Test {
 
     }
 
-    @Mock
-    RepositoryService mockRepositoryService;
-
-    @Mock
-    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
-
     @Test
     public void mergeItems_works() throws Exception {
 
@@ -133,7 +146,9 @@ public class IncomingInvoiceItemRepository_Test {
         sourceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
         sourceItem.repositoryService = mockRepositoryService;
         sourceItem.setInvoice(mockInvoice);
+
         IncomingInvoiceItem targetItem = new IncomingInvoiceItem();
+        targetItem.setInvoice(stubInvoice2);
 
         // expect
         context.checking(new Expectations(){{

@@ -57,48 +57,50 @@ public class IncomingInvoiceItem_Test {
     @Test
     public void subtractAmounts_works() throws Exception {
 
-        IncomingInvoiceItem incomingInvoiceItem = new IncomingInvoiceItem();
+        IncomingInvoiceItem item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
 
         // given
         BigDecimal amount = new BigDecimal("100.00");
-        incomingInvoiceItem.setNetAmount(amount);
-        incomingInvoiceItem.setVatAmount(null);
-        incomingInvoiceItem.setGrossAmount(amount);
+        item.setNetAmount(amount);
+        item.setVatAmount(null);
+        item.setGrossAmount(amount);
 
         // when
         BigDecimal netToSubtract = new BigDecimal("50.50");
         BigDecimal vatToSubtract = new BigDecimal("10.10");
         BigDecimal grossToSubtract = null;
-        incomingInvoiceItem.subtractAmounts(netToSubtract, vatToSubtract, grossToSubtract);
+        item.subtractAmounts(netToSubtract, vatToSubtract, grossToSubtract);
 
         // then
-        Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("49.50"));
-        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isEqualTo(new BigDecimal("-10.10"));
-        Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
+        Assertions.assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("49.50"));
+        Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("-10.10"));
+        Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
 
     }
 
     @Test
     public void addAmounts_works() throws Exception {
 
-        IncomingInvoiceItem incomingInvoiceItem = new IncomingInvoiceItem();
+        IncomingInvoiceItem item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
 
         // given
         BigDecimal amount = new BigDecimal("100.00");
-        incomingInvoiceItem.setNetAmount(amount);
-        incomingInvoiceItem.setVatAmount(null);
-        incomingInvoiceItem.setGrossAmount(amount);
+        item.setNetAmount(amount);
+        item.setVatAmount(null);
+        item.setGrossAmount(amount);
 
         // when
         BigDecimal netToAdd = new BigDecimal("50.50");
         BigDecimal vatToAdd = new BigDecimal("10.10");
         BigDecimal grossToAdd = null;
-        incomingInvoiceItem.addAmounts(netToAdd, vatToAdd, grossToAdd);
+        item.addAmounts(netToAdd, vatToAdd, grossToAdd);
 
         // then
-        Assertions.assertThat(incomingInvoiceItem.getNetAmount()).isEqualTo(new BigDecimal("150.50"));
-        Assertions.assertThat(incomingInvoiceItem.getVatAmount()).isEqualTo(new BigDecimal("10.10"));
-        Assertions.assertThat(incomingInvoiceItem.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
+        Assertions.assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("150.50"));
+        Assertions.assertThat(item.getVatAmount()).isEqualTo(new BigDecimal("10.10"));
+        Assertions.assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("100.00"));
 
     }
 
@@ -107,6 +109,7 @@ public class IncomingInvoiceItem_Test {
 
         // given
         IncomingInvoiceItem item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
 
         // when, then
         Assertions.assertThat(item.reasonIncomplete()).isEqualTo("incoming invoice type, start date, end date, net amount, vat amount, gross amount, charge required");
@@ -164,6 +167,7 @@ public class IncomingInvoiceItem_Test {
         // given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
 
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
@@ -190,6 +194,7 @@ public class IncomingInvoiceItem_Test {
         // and given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.SERVICE_CHARGES);
         result = validator.validateForIncomingInvoiceType(item).getResult();
@@ -228,6 +233,7 @@ public class IncomingInvoiceItem_Test {
         // and given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.PROPERTY_EXPENSES);
         result = validator.validateForIncomingInvoiceType(item).getResult();
@@ -237,6 +243,7 @@ public class IncomingInvoiceItem_Test {
         // and given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
+        item.setInvoice(new IncomingInvoice());
         // when all conditions satisfied
         item.setIncomingInvoiceType(IncomingInvoiceType.LOCAL_EXPENSES);
         result = validator.validateForIncomingInvoiceType(item).getResult();

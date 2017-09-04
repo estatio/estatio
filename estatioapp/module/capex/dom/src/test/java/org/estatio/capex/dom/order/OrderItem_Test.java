@@ -4,7 +4,12 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jmock.auto.Mock;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
@@ -16,14 +21,34 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class OrderItem_Test {
 
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    EventBusService mockEventBusService;
+
+    private IncomingInvoiceItem newIncomingInvoiceItem() {
+        final IncomingInvoiceItem incomingInvoiceItem = new IncomingInvoiceItem();
+        final IncomingInvoice incomingInvoice = new IncomingInvoice() {
+            @Override protected EventBusService getEventBusService() {
+                return mockEventBusService;
+            }
+        };
+        context.ignoring(mockEventBusService);
+
+        incomingInvoiceItem.setInvoice(incomingInvoice);
+        return incomingInvoiceItem;
+    }
+
+
     @Test
     public void isInvoiced_works() throws Exception {
 
         // given
         OrderItem orderItem = new OrderItem();
         orderItem.setNetAmount(new BigDecimal("100.00"));
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item1 = newIncomingInvoiceItem();
+        IncomingInvoiceItem item2 = newIncomingInvoiceItem();
 
         // when
         item1.setNetAmount(new BigDecimal("50.00"));
@@ -57,8 +82,8 @@ public class OrderItem_Test {
         // given
         OrderItem orderItem = new OrderItem();
         orderItem.setNetAmount(new BigDecimal("-100.00"));
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item1 = newIncomingInvoiceItem();
+        IncomingInvoiceItem item2 = newIncomingInvoiceItem();
 
         // when
         item1.setNetAmount(new BigDecimal("-50.00"));
@@ -91,8 +116,8 @@ public class OrderItem_Test {
         // given
         OrderItem orderItem = new OrderItem();
         orderItem.setNetAmount(null); // explicit for this test
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item1 = newIncomingInvoiceItem();
+        IncomingInvoiceItem item2 = newIncomingInvoiceItem();
 
         // when
         orderItem.orderItemInvoiceItemLinkRepository = setupOrderItemInvoiceItemLinkRepository(item1, item2);
@@ -106,8 +131,8 @@ public class OrderItem_Test {
         // given
         OrderItem orderItem = new OrderItem();
         orderItem.setNetAmount(new BigDecimal("100.00"));
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item1 = newIncomingInvoiceItem();
+        IncomingInvoiceItem item2 = newIncomingInvoiceItem();
 
         // when
         item1.setNetAmount(null); // explicit for this test
@@ -125,10 +150,10 @@ public class OrderItem_Test {
         orderItem.setNetAmount(new BigDecimal("100.00"));
         IncomingInvoice discardedInvoice = new IncomingInvoice();
         discardedInvoice.setApprovalState(IncomingInvoiceApprovalState.DISCARDED);
-        IncomingInvoiceItem item1 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item1 = newIncomingInvoiceItem();
         item1.setInvoice(discardedInvoice);
         IncomingInvoice invoice = new IncomingInvoice();
-        IncomingInvoiceItem item2 = new IncomingInvoiceItem();
+        IncomingInvoiceItem item2 = newIncomingInvoiceItem();
         item2.setInvoice(invoice);
 
         // when

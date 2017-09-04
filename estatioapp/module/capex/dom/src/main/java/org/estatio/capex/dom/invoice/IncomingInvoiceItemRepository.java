@@ -65,6 +65,9 @@ public class IncomingInvoiceItemRepository {
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
         invoice.recalculateAmounts();
+
+        invoice.invalidateApproval();
+
         return invoiceItem;
     }
 
@@ -194,6 +197,7 @@ public class IncomingInvoiceItemRepository {
         if (sourceItem.equals(targetItem)) return;
         targetItem.addAmounts(sourceItem.getNetAmount(), sourceItem.getVatAmount(), sourceItem.getGrossAmount());
         sourceItem.removeItem();
+        targetItem.invalidateApproval();
     }
 
     @Programmatic
