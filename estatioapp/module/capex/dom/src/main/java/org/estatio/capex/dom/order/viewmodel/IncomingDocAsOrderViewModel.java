@@ -260,9 +260,9 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
             result.append(noBuyerBarcodeMatch);
         }
 
-        final String sameInvoiceNumberCheck = doubleInvoiceCheck();
-        if (sameInvoiceNumberCheck !=null){
-            result.append(sameInvoiceNumberCheck);
+        final String sameOrderNumberCheck = doubleOrderCheck();
+        if (sameOrderNumberCheck !=null){
+            result.append(sameOrderNumberCheck);
         }
 
         return result.length()>0 ? result.toString() : null;
@@ -273,9 +273,9 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return getNotification() == null;
     }
 
-    private String doubleInvoiceCheck(){
-        if (possibleDoubleInvoice()!=null){
-            return possibleDoubleInvoice();
+    private String doubleOrderCheck(){
+        if (possibleDoubleOrder()!=null){
+            return possibleDoubleOrder();
         }
         if (sameOrderNumber()!=null){
             return sameOrderNumber();
@@ -283,7 +283,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return null;
     }
 
-    private String possibleDoubleInvoice(){
+    private String possibleDoubleOrder(){
         if (getOrderNumber()==null || getSeller()==null || getOrderDate()==null){
             return null;
         }
