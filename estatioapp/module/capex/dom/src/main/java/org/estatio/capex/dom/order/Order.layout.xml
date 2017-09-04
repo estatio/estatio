@@ -111,6 +111,8 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Current task">
+                                        <cpt:action id="previous" cssClassFa="step-backward"/>
+                                        <cpt:action id="next" cssClassFa="step-forward"/>
                                         <cpt:action id="checkApprovalState">
                                             <cpt:named>Check state</cpt:named>
                                         </cpt:action>
