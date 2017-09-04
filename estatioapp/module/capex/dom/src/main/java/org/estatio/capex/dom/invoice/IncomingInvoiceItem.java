@@ -191,6 +191,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return getIncomingInvoiceType();
     }
 
+    public String disableEditIncomingInvoiceType(){
+        return getIncomingInvoice().reasonDisabledDueToStateStrict();
+    }
+
 
 
 

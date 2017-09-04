@@ -976,12 +976,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     // TODO: added this method for the moment until EST-1508 is picked up - then to be reviewed
     @Programmatic
     public String reasonDisabledDueToStateStrict() {
-        final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
+        final IncomingInvoiceApprovalState approvalState = getApprovalState();
         // guard for historic invoices (and invoice items)
-        if (approvalState1==null){
-            return "Cannot modify";
+        if (approvalState==null){
+            return "Cannot modify (invoice was migrated from spreadsheets)";
         }
-        switch (approvalState1) {
+        switch (approvalState) {
         case NEW:
             return null;
         default:
@@ -994,7 +994,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public String reasonDisabledFinanceDetailsDueToState(final Object viewContext) {
         final IncomingInvoiceApprovalState approvalState = getApprovalState();
         if (approvalState==null){
-            return "Cannot modify";
+            return "Cannot modify (invoice was migrated from spreadsheets)";
         }
         switch (approvalState) {
         case DISCARDED:

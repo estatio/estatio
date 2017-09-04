@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -442,5 +443,48 @@ public class IncomingInvoice_Test {
 
     }
 
+    public static class reasonDisabledDueToStateStrict_Test extends IncomingInvoice_Test {
+        @Test
+        public void when_migrated() {
+            // given
+            invoice.setApprovalState(null);
+
+            // when
+            final String reason = invoice.reasonDisabledDueToStateStrict();
+
+            // then
+            assertThat(reason).contains("Cannot modify", "migrated");
+        }
+        @Test
+        public void when_new() {
+            // given
+            invoice.setApprovalState(IncomingInvoiceApprovalState.NEW);
+
+            // when
+            final String reason = invoice.reasonDisabledDueToStateStrict();
+
+            // then
+            assertThat(reason).isNull();
+        }
+
+        @Test
+        public void when_anything_else() {
+
+            Arrays.stream(IncomingInvoiceApprovalState.values())
+                  .filter(state -> state != IncomingInvoiceApprovalState.NEW)
+                  .forEach(state -> {
+
+                // given
+                invoice.setApprovalState(state);
+
+                // when
+                final String reason = invoice.reasonDisabledDueToStateStrict();
+
+                // then
+                assertThat(reason).contains("Cannot modify").doesNotContain("migrated");
+            });
+        }
+
+    }
 
 }
