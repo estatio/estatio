@@ -106,6 +106,7 @@ public abstract class IncomingInvoice_triggerAbstract
         return previousTransition.getDomainObject();
     }
 
+    @Override
     protected IncomingInvoiceApprovalStateTransition findByTask(final Task previousTask) {
         return stateTransitionRepository.findByTask(previousTask);
     }

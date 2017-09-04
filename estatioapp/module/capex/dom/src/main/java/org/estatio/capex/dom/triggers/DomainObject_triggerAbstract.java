@@ -11,6 +11,7 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeService;
@@ -63,6 +64,10 @@ public abstract class DomainObject_triggerAbstract<
                 return candidate;
             }
         }
+        return null;
+    }
+
+    protected ST findByTask(final Task previousTask) {
         return null;
     }
 

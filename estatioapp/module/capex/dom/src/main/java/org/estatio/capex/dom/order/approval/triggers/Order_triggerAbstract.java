@@ -104,6 +104,7 @@ public abstract class Order_triggerAbstract
         return previousTransition.getDomainObject();
     }
 
+    @Override
     protected OrderApprovalStateTransition findByTask(final Task nextTask) {
         return stateTransitionRepository.findByTask(nextTask);
     }
