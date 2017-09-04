@@ -27,20 +27,6 @@
                         </col>
                     </row>
                 </tab>
-                <tab name="Registrations">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Registrations" id="registrations">
-                                <ns2:property id="vatCode"/>
-                                <ns2:property id="fiscalCode"/>
-                                <ns2:property id="chamberOfCommerceCode">
-                                    <ns2:action id="change" position="BELOW"/>
-                                </ns2:property>
-                            </ns2:fieldSet>
-
-                        </col>
-                    </row>
-                </tab>
                 <tab name="Application Level">
                     <row>
                         <col span="12">
@@ -68,10 +54,31 @@
                     </row>
                 </tab>
             </tabGroup>
-            <ns2:fieldSet name="Communication" id="communication">
-                <ns2:property id="emailAddresses"/>
-                <ns2:property id="phoneNumbers"/>
-            </ns2:fieldSet>
+            <tabGroup>
+                <tab name="Registrations">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Registrations" id="registrations">
+                                <ns2:property id="vatCode"/>
+                                <ns2:property id="fiscalCode"/>
+                                <ns2:property id="chamberOfCommerceCode">
+                                    <ns2:action id="change" position="BELOW"/>
+                                </ns2:property>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Communications">
+                    <row>
+                        <col span="12">
+                            <ns2:fieldSet name="Communication" id="communication">
+                                <ns2:property id="emailAddresses"/>
+                                <ns2:property id="phoneNumbers"/>
+                            </ns2:fieldSet>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
         </col>
         <col span="8">
             <tabGroup>
@@ -113,7 +120,7 @@
     </row>
     <row>
         <col span="12">
-            <tabGroup  unreferencedCollections="true">
+            <tabGroup  unreferencedCollections="false">
                 <tab name="Documents">
                     <row>
                         <col span="12">
@@ -130,7 +137,49 @@
                         </col>
                     </row>
                 </tab>
+                <tab name="Current Leases">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="currentLeases" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Invoices To">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoicesTo" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
             </tabGroup>
+        </col>
+        <col span="12">
+            <tabGroup  unreferencedCollections="false">
+                <tab name="Orders">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="orders"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Invoices From">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="invoicesFrom" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Financial Accounts">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="financialAccounts" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+            </tabGroup>
+        </col>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true"/>
         </col>
     </row>
 </grid>

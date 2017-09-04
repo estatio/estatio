@@ -107,8 +107,16 @@ public class BankAccountVerificationStateTransition
     private LocalDateTime completedOn;
 
     @Getter @Setter
+    @Column(allowsNull = "true")
+    private String completedBy;
+
+    @Getter @Setter
     @Column(allowsNull = "false")
     private boolean completed;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private String comment;
 
     @Programmatic
     @Override

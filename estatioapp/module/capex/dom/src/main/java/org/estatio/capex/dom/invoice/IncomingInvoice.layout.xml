@@ -163,6 +163,7 @@
                                             <cpt:action id="discard"/>
                                             <cpt:action id="recategorize"/>
                                         </cpt:property>
+                                        <cpt:property id="previousComments"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

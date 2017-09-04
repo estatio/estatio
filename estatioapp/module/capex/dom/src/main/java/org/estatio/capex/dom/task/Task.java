@@ -25,7 +25,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
@@ -163,14 +162,23 @@ public class Task implements Comparable<Task> {
     @Getter @Setter
     private LocalDateTime createdOn;
 
+    /**
+     * Copy of the {@link StateTransition#getCompletedOn()}  completedOn} property of the {@link StateTransition} that {@link StateTransition#getTask() refers} to this task.
+     */
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDateTime completedOn;
 
+    /**
+     * Copy of the {@link StateTransition#getCompletedBy()} () completedBy} property of the {@link StateTransition} that {@link StateTransition#getTask() refers} to this task.
+     */
     @Getter @Setter
     @Column(allowsNull = "true")
     private String completedBy;
 
+    /**
+     * Copy of the {@link StateTransition#getComment() comment} property of the {@link StateTransition} that {@link StateTransition#getTask() refers} to this task.
+     */
     @Column(allowsNull = "true")
     @Getter @Setter
     private String comment;
@@ -203,14 +211,6 @@ public class Task implements Comparable<Task> {
     }
 
 
-    @Programmatic
-    public void completed(final String comment) {
-
-        final String completedBy = userService.getUser().getName();
-
-        setCompletedBy(completedBy);
-        setComment(comment);
-    }
 
 
     private Object getObject() {

@@ -77,6 +77,10 @@ public class IncomingInvoice_recategorize {
         return null;
     }
 
+    public boolean hideAct() {
+        return incomingInvoice.getApprovalState() == IncomingInvoiceApprovalState.PAID;
+    }
+
     private Document lookupPdf() {
         final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
         return document.orElse(null);

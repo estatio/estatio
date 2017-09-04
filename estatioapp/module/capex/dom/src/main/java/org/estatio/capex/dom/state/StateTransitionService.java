@@ -278,11 +278,13 @@ public class StateTransitionService {
             final String nextTaskDescriptionIfAny) {
         final Class<ST> stateTransitionClass = transitionClassFor(requestedTransitionType);
         return pendingTransitionIfPossible(
-                domainObject, stateTransitionClass, requestedTransitionType, personToAssignNextToIfAny, nextTaskDescriptionIfAny);
+                domainObject, stateTransitionClass, requestedTransitionType, personToAssignNextToIfAny,
+                nextTaskDescriptionIfAny);
     }
 
 
     // ////////////////////////////////////
+
 
     private <
             DO,
@@ -519,16 +521,21 @@ public class StateTransitionService {
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONING);
         eventBusService.post(event);
 
+        final Task taskIfAny = transitionToComplete.getTask();
+        if(taskIfAny != null) {
+            if(transitionType.advancePolicyFor(domainObject, serviceRegistry2).isAutomatic()) {
+                transitionToComplete.setTask(null);
+                repositoryService.removeAndFlush(taskIfAny);
+                transitionToComplete.setTask(null);
+            }
+        }
+
         // transition
         final Class<ST> stateTransitionClass = transitionClassFor(transitionType);
         transitionType.applyTo(domainObject, stateTransitionClass, serviceRegistry2);
 
         // mark tasks as complete
-        transitionToComplete.completed();
-        final Task taskIfAny = transitionToComplete.getTask();
-        if(taskIfAny != null) {
-            taskIfAny.completed(comment);
-        }
+        transitionToComplete.completed(comment);
 
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(event);
