@@ -200,7 +200,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
      * </p>
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
-    @org.apache.isis.applib.annotation.Property(hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private org.estatio.dom.asset.Property property;
 
