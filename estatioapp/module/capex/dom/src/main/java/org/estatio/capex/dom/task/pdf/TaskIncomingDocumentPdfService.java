@@ -15,10 +15,12 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
@@ -52,6 +54,14 @@ public class TaskIncomingDocumentPdfService {
                 return null;
             }
             return document.getBlob();
+        }
+
+        if(stateTransition instanceof OrderApprovalStateTransition) {
+            final OrderApprovalStateTransition oast =
+                    (OrderApprovalStateTransition) stateTransition;
+            final Order order = oast.getOrdr();
+            final Optional<Document> documentIfAny = lookupAttachedPdfService.lookupOrderPdfFrom(order);
+            return documentIfAny.map(DocumentAbstract::getBlob).orElse(null);
         }
 
         if(stateTransition instanceof IncomingInvoiceApprovalStateTransition) {
