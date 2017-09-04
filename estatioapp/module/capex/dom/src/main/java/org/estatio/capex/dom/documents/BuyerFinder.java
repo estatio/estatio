@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
@@ -18,11 +19,23 @@ import org.estatio.dom.party.PartyRepository;
 public class BuyerFinder {
 
     @Programmatic
+    public Party buyerDerivedFromDocumentName(final Order order){
+        if (order==null) return null;
+
+        final Optional<Document> document = lookupAttachedPdfService.lookupOrderPdfFrom(order);
+        return buyerDerivedFrom(document);
+    }
+
+    @Programmatic
     public Party buyerDerivedFromDocumentName(final IncomingInvoice incomingInvoice){
         if (incomingInvoice==null) return null;
 
-        final StringBuffer buffer = new StringBuffer();
         final Optional<Document> document = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);
+        return buyerDerivedFrom(document);
+    }
+
+    private Party buyerDerivedFrom(final Optional<Document> document) {
+        final StringBuffer buffer = new StringBuffer();
         document.ifPresent(d->buffer.append(d.getName()));
         String barcodeSerie = buffer.length()>3 ? buffer.substring(0,3).toString() : null;
         return partyDerivedFromBarcodeSerie(barcodeSerie);

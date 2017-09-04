@@ -588,13 +588,15 @@ public class IncomingDocAsInvoiceViewModel
         if (getInvoiceNumber()==null || getSeller()==null || getInvoiceDate()==null){
             return null;
         }
-        if (getDomainObject()!=null){
-            IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
-            if (possibleDouble!=null && !possibleDouble.equals(domainObject)){
-                return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
-            }
+        if (getDomainObject() == null) {
+            return null;
         }
-        return null;
+        IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+        if (possibleDouble == null || possibleDouble.equals(domainObject)) {
+            return null;
+        }
+
+        return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
     }
 
     private String sameInvoiceNumber(){

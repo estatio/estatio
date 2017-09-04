@@ -91,6 +91,19 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE orderNumber.matches(:orderNumber) "),
         @Query(
+                name = "findByOrderNumberAndSeller", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE orderNumber == :orderNumber "
+                        + "   && seller == :seller "),
+        @Query(
+                name = "findByOrderNumberAndSellerAndOrderDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.Order "
+                        + "WHERE orderNumber == :orderNumber "
+                        + "   && seller == :seller "
+                        + "   && orderDate == :orderDate "),
+        @Query(
                 name = "findByOrderDateBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
