@@ -575,11 +575,13 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     private String doubleInvoiceCheck(){
-        if (possibleDoubleInvoice()!=null){
-            return possibleDoubleInvoice();
+        final String doubleInvoiceCheck = possibleDoubleInvoice();
+        if (doubleInvoiceCheck !=null){
+            return doubleInvoiceCheck;
         }
-        if (sameInvoiceNumber()!=null){
-            return sameInvoiceNumber();
+        final String sameNumberCheck = sameInvoiceNumber();
+        if (sameNumberCheck !=null){
+            return sameNumberCheck;
         }
         return null;
     }

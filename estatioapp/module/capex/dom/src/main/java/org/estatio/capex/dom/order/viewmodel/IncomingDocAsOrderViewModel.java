@@ -274,11 +274,13 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     }
 
     private String doubleOrderCheck(){
-        if (possibleDoubleOrder()!=null){
-            return possibleDoubleOrder();
+        final String doubleOrderCheck = possibleDoubleOrder();
+        if (doubleOrderCheck !=null){
+            return doubleOrderCheck;
         }
-        if (sameOrderNumber()!=null){
-            return sameOrderNumber();
+        final String sameNumberCheck = sameOrderNumber();
+        if (sameNumberCheck !=null){
+            return sameNumberCheck;
         }
         return null;
     }
