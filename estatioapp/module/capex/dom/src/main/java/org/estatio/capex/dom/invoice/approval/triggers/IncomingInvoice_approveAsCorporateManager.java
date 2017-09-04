@@ -28,7 +28,7 @@ public class IncomingInvoice_approveAsCorporateManager extends IncomingInvoice_t
     public Object act(
             @Nullable final String comment,
             final boolean goToNext) {
-        final IncomingInvoice next =  nextInvoiceAfterPendingIfRequested(goToNext);
+        final IncomingInvoice next =  nextAfterPendingIfRequested(goToNext);
         trigger(comment, null);
         return objectToReturn(next);
     }

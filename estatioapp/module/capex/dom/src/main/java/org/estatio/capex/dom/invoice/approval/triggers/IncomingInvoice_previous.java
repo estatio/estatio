@@ -22,12 +22,12 @@ public class IncomingInvoice_previous extends IncomingInvoice_triggerAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     public Object act() {
-        final IncomingInvoice previous = previousInvoiceBeforePending();
+        final IncomingInvoice previous = previousBeforePending();
         return objectToReturn(previous);
     }
 
     public String disableAct() {
-        return previousInvoiceBeforePending() == getDomainObject()
+        return previousBeforePending() == getDomainObject()
                 ? "Could not find previous invoice; either this invoice has no pending task, or there are none prior"
                 : null;
     }

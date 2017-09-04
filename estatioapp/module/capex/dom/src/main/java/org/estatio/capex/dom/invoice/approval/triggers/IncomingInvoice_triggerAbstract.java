@@ -36,24 +36,24 @@ public abstract class IncomingInvoice_triggerAbstract
         );
     }
 
-    protected IncomingInvoice nextInvoiceAfterPendingIfRequested(final boolean goToNext) {
-        final IncomingInvoice nextInvoice = goToNext ? nextInvoiceAfterPending() : null;
-        return coalesce(nextInvoice, getDomainObject());
+    protected IncomingInvoice nextAfterPendingIfRequested(final boolean goToNext) {
+        final IncomingInvoice nextObj = goToNext ? nextAfterPending() : null;
+        return coalesce(nextObj, getDomainObject());
     }
 
-    protected IncomingInvoice nextInvoiceAfterPending() {
+    protected IncomingInvoice nextAfterPending() {
         return queryResultsCache.execute(
-                this::doNextInvoiceAfterPending, getClass(), "nextInvoiceAfterPending", getDomainObject());
+                this::doNextAfterPending, getClass(), "nextAfterPending", getDomainObject());
     }
 
-    private IncomingInvoice doNextInvoiceAfterPending() {
+    private IncomingInvoice doNextAfterPending() {
         final IncomingInvoiceApprovalStateTransition pendingTransition = stateTransitionService
                 .pendingTransitionOf(getDomainObject(), IncomingInvoiceApprovalStateTransition.class);
-        final IncomingInvoice nextInvoice = nextInvoiceViaTask(pendingTransition);
+        final IncomingInvoice nextInvoice = nextViaTask(pendingTransition);
         return coalesce(nextInvoice, getDomainObject());
     }
 
-    private IncomingInvoice nextInvoiceViaTask(final IncomingInvoiceApprovalStateTransition transition) {
+    private IncomingInvoice nextViaTask(final IncomingInvoiceApprovalStateTransition transition) {
         if(transition == null) {
             return null;
         }
@@ -74,19 +74,19 @@ public abstract class IncomingInvoice_triggerAbstract
     }
 
 
-    protected IncomingInvoice previousInvoiceBeforePending() {
+    protected IncomingInvoice previousBeforePending() {
         return queryResultsCache.execute(
-                this::doPreviousBeforePending, getClass(), "previousInvoiceBeforePending", getDomainObject());
+                this::doPreviousBeforePending, getClass(), "previousBeforePending", getDomainObject());
     }
 
     private IncomingInvoice doPreviousBeforePending() {
         final IncomingInvoiceApprovalStateTransition pendingTransition = stateTransitionService
                 .pendingTransitionOf(getDomainObject(), IncomingInvoiceApprovalStateTransition.class);
-        final IncomingInvoice previousInvoice = previousInvoiceViaTask(pendingTransition);
+        final IncomingInvoice previousInvoice = previousViaTask(pendingTransition);
         return coalesce(previousInvoice, getDomainObject());
     }
 
-    private IncomingInvoice previousInvoiceViaTask(final IncomingInvoiceApprovalStateTransition transition) {
+    private IncomingInvoice previousViaTask(final IncomingInvoiceApprovalStateTransition transition) {
         if(transition == null) {
             return null;
         }

@@ -35,17 +35,17 @@ public abstract class Order_triggerAbstract
     }
 
 
-    protected Order nextOrderAfterPendingIfRequested(final boolean goToNext) {
-        final Order nextOrder = goToNext ? nextOrderAfterPending() : null;
+    protected Order nextAfterPendingIfRequested(final boolean goToNext) {
+        final Order nextOrder = goToNext ? nextAfterPending() : null;
         return coalesce(nextOrder, getDomainObject());
     }
 
-    protected Order nextOrderAfterPending() {
+    protected Order nextAfterPending() {
         return queryResultsCache.execute(
-                this::doNextOrderAfterPending, getClass(), "nextOrderAfterPending", getDomainObject());
+                this::doNextAfterPending, getClass(), "nextAfterPending", getDomainObject());
     }
 
-    private Order doNextOrderAfterPending() {
+    private Order doNextAfterPending() {
         final OrderApprovalStateTransition pendingTransition = stateTransitionService
                 .pendingTransitionOf(getDomainObject(), OrderApprovalStateTransition.class);
         final Order nextOrder = nextOrderViaTask(pendingTransition);
@@ -73,19 +73,19 @@ public abstract class Order_triggerAbstract
     }
 
 
-    protected Order previousOrderBeforePending() {
+    protected Order previousBeforePending() {
         return queryResultsCache.execute(
-                this::doPreviousBeforePending, getClass(), "previousOrderBeforePending", getDomainObject());
+                this::doPreviousBeforePending, getClass(), "previousBeforePending", getDomainObject());
     }
 
     private Order doPreviousBeforePending() {
         final OrderApprovalStateTransition pendingTransition = stateTransitionService
                 .pendingTransitionOf(getDomainObject(), OrderApprovalStateTransition.class);
-        final Order previousOrder = previousOrderViaTask(pendingTransition);
+        final Order previousOrder = previousViaTask(pendingTransition);
         return coalesce(previousOrder, getDomainObject());
     }
 
-    private Order previousOrderViaTask(final OrderApprovalStateTransition transition) {
+    private Order previousViaTask(final OrderApprovalStateTransition transition) {
         if(transition == null) {
             return null;
         }

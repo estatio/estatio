@@ -22,12 +22,12 @@ public class Order_next extends Order_triggerAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     public Object act() {
-        final Order next = nextOrderAfterPending();
+        final Order next = nextAfterPending();
         return objectToReturn(next);
     }
 
     public String disableAct() {
-        return nextOrderAfterPending() == getDomainObject()
+        return nextAfterPending() == getDomainObject()
                 ? "Could not find next order; either this order has no pending task, or there are none after"
                 : null;
     }

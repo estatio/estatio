@@ -33,7 +33,7 @@ public class IncomingInvoice_approve extends IncomingInvoice_triggerAbstract {
             @Nullable final Person personToAssignNextTo,
             @Nullable final String comment,
             final boolean goToNext) {
-        final IncomingInvoice next = nextInvoiceAfterPendingIfRequested(goToNext);
+        final IncomingInvoice next = nextAfterPendingIfRequested(goToNext);
         trigger(personToAssignNextTo, comment, null);
         return objectToReturn(next);
     }

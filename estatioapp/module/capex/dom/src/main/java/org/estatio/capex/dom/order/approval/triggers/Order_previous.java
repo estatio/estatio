@@ -22,12 +22,12 @@ public class Order_previous extends Order_triggerAbstract {
 
     @Action(semantics = SemanticsOf.SAFE)
     public Object act() {
-        final Order previous = previousOrderBeforePending();
+        final Order previous = previousBeforePending();
         return objectToReturn(previous);
     }
 
     public String disableAct() {
-        return previousOrderBeforePending() == getDomainObject()
+        return previousBeforePending() == getDomainObject()
                 ? "Could not find previous order; either this order has no pending task, or there are none prior"
                 : null;
     }
