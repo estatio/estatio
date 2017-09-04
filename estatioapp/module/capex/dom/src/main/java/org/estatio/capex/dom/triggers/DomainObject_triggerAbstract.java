@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.state.State;
@@ -12,6 +13,7 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeService;
@@ -55,6 +57,76 @@ public abstract class DomainObject_triggerAbstract<
 
     public DO getDomainObject() {
         return domainObject;
+    }
+
+    protected DO nextAfterPendingIfRequested(final boolean goToNext) {
+        final DO nextObj = goToNext ? nextAfterPending() : null;
+        return coalesce(nextObj, getDomainObject());
+    }
+
+    protected DO nextAfterPending() {
+        return queryResultsCache.execute(
+                this::doNextAfterPending, getClass(), "nextAfterPending", getDomainObject());
+    }
+
+    private DO doNextAfterPending() {
+        final ST pendingTransition = stateTransitionService
+                .pendingTransitionOf(getDomainObject(), stateTransitionClass);
+        final DO nextInvoice = nextViaTask(pendingTransition);
+        return coalesce(nextInvoice, getDomainObject());
+    }
+
+    private DO nextViaTask(final ST transition) {
+        if(transition == null) {
+            return null;
+        }
+        final Task task = transition.getTask();
+        if (task == null) {
+            return null;
+        }
+
+        final Task nextTask = taskRepository.nextTaskAfter(task);
+        if(nextTask == null) {
+            return null;
+        }
+        final ST nextTransition = findByTask(nextTask);
+        if(nextTransition == null) {
+            return null;
+        }
+        return nextTransition.getDomainObject();
+    }
+
+
+    protected DO previousBeforePending() {
+        return queryResultsCache.execute(
+                this::doPreviousBeforePending, getClass(), "previousBeforePending", getDomainObject());
+    }
+
+    private DO doPreviousBeforePending() {
+        final ST pendingTransition = stateTransitionService
+                .pendingTransitionOf(getDomainObject(), stateTransitionClass);
+        final DO previousInvoice = previousViaTask(pendingTransition);
+        return coalesce(previousInvoice, getDomainObject());
+    }
+
+    private DO previousViaTask(final ST transition) {
+        if(transition == null) {
+            return null;
+        }
+        final Task task = transition.getTask();
+        if (task == null) {
+            return null;
+        }
+
+        final Task previousTask = taskRepository.previousTaskBefore(task);
+        if(previousTask == null) {
+            return null;
+        }
+        final ST previousTransition = findByTask(previousTask);
+        if(previousTransition == null) {
+            return null;
+        }
+        return previousTransition.getDomainObject();
     }
 
 
@@ -162,6 +234,12 @@ public abstract class DomainObject_triggerAbstract<
             return st.getTransitionType().reasonGuardNotSatisified(domainObject, serviceRegistry2);
         }
     }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
+    @Inject
+    TaskRepository taskRepository;
 
     @Inject
     protected StateTransitionService stateTransitionService;
