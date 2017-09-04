@@ -575,11 +575,13 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     private String doubleInvoiceCheck(){
-        if (possibleDoubleInvoice()!=null){
-            return possibleDoubleInvoice();
+        final String doubleInvoiceCheck = possibleDoubleInvoice();
+        if (doubleInvoiceCheck !=null){
+            return doubleInvoiceCheck;
         }
-        if (sameInvoiceNumber()!=null){
-            return sameInvoiceNumber();
+        final String sameNumberCheck = sameInvoiceNumber();
+        if (sameNumberCheck !=null){
+            return sameNumberCheck;
         }
         return null;
     }
@@ -588,13 +590,15 @@ public class IncomingDocAsInvoiceViewModel
         if (getInvoiceNumber()==null || getSeller()==null || getInvoiceDate()==null){
             return null;
         }
-        if (getDomainObject()!=null){
-            IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
-            if (possibleDouble!=null && !possibleDouble.equals(domainObject)){
-                return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
-            }
+        if (getDomainObject() == null) {
+            return null;
         }
-        return null;
+        IncomingInvoice possibleDouble = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate(getInvoiceNumber(), getSeller(), getInvoiceDate());
+        if (possibleDouble == null || possibleDouble.equals(domainObject)) {
+            return null;
+        }
+
+        return "WARNING: There is already an invoice with the same number and invoice date for this seller. Please check.";
     }
 
     private String sameInvoiceNumber(){

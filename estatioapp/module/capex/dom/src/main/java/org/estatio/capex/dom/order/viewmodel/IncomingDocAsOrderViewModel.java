@@ -1,5 +1,7 @@
 package org.estatio.capex.dom.order.viewmodel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -28,9 +30,11 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.documents.BuyerFinder;
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
@@ -246,6 +250,92 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return getDomainObject().getItems().stream().findFirst();
     }
 
+    @Property(editing = Editing.DISABLED)
+    @PropertyLayout(multiLine = 5)
+    public String getNotification(){
+        final StringBuilder result = new StringBuilder();
+
+        final String noBuyerBarcodeMatch = buyerBarcodeMatchValidation();
+        if (noBuyerBarcodeMatch!=null){
+            result.append(noBuyerBarcodeMatch);
+        }
+
+        final String sameOrderNumberCheck = doubleOrderCheck();
+        if (sameOrderNumberCheck !=null){
+            result.append(sameOrderNumberCheck);
+        }
+
+        return result.length()>0 ? result.toString() : null;
+
+    }
+
+    public boolean hideNotification(){
+        return getNotification() == null;
+    }
+
+    private String doubleOrderCheck(){
+        final String doubleOrderCheck = possibleDoubleOrder();
+        if (doubleOrderCheck !=null){
+            return doubleOrderCheck;
+        }
+        final String sameNumberCheck = sameOrderNumber();
+        if (sameNumberCheck !=null){
+            return sameNumberCheck;
+        }
+        return null;
+    }
+
+    private String possibleDoubleOrder(){
+        if (getOrderNumber()==null || getSeller()==null || getOrderDate()==null){
+            return null;
+        }
+        if (getDomainObject() == null) {
+            return null;
+        }
+        Order possibleDouble = orderRepository.findByOrderNumberAndSellerAndOrderDate(getOrderNumber(), getSeller(), getOrderDate());
+        if (possibleDouble == null || possibleDouble.equals(domainObject)) {
+            return null;
+        }
+
+        return "WARNING: There is already an order with the same number and order date for this seller. Please check.";
+    }
+
+    private String sameOrderNumber(){
+        if (getOrderNumber()==null || getSeller()==null){
+            return null;
+        }
+        if (getDomainObject()!=null){
+            List<Order> similarNumberedOrders = new ArrayList<>();
+            for (Order order : orderRepository.findByOrderNumberAndSeller(getOrderNumber(), getSeller())) {
+                if (!order.equals(getDomainObject())) {
+                    similarNumberedOrders.add(order);
+                }
+            }
+            if (similarNumberedOrders.size()>0){
+                String message = "WARNING: Orders with the same number of this seller are found ";
+                for (Order order : similarNumberedOrders){
+                    if (order.getOrderDate()!=null) {
+                        message = message.concat("on date ").concat(order.getOrderDate().toString()).concat("; ");
+                    }
+                }
+                return message;
+            }
+        }
+        return null;
+    }
+
+    private String buyerBarcodeMatchValidation(){
+        if (getBuyer()!=null && getDomainObject()!=null){
+            if (buyerFinder.buyerDerivedFromDocumentName(getDomainObject())==null){
+                return null; // covers all cases where no buyer could be derived from document name
+            }
+            if (!getBuyer().equals(buyerFinder.buyerDerivedFromDocumentName(getDomainObject()))){
+                return "Buyer does not match barcode (document name); ";
+            }
+        }
+        return null;
+    }
+
     @Inject
     @XmlTransient
     @Getter(AccessLevel.NONE)
@@ -257,5 +347,17 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     FactoryService factoryService;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    OrderRepository orderRepository;
+
+    @Inject
+    @XmlTransient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    BuyerFinder buyerFinder;
 
 }
