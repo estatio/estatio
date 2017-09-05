@@ -249,6 +249,68 @@ public class IncomingInvoice_Test {
             Assertions.assertThat(result).isNull();
 
         }
+
+        @Test
+        public void validateForPaymentMethod() throws Exception {
+
+            String result;
+            IncomingInvoice.Validator validator;
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isEqualTo("bank account required");
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.BILLING_ACCOUNT);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isEqualTo("bank account required");
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.CASH);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isEqualTo("bank account required");
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.CHEQUE);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isEqualTo("bank account required");
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isNull();
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            // when
+            invoice.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
+            result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isNull();
+
+        }
     }
 
 

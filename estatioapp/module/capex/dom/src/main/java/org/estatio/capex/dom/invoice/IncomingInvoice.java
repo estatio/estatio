@@ -1047,7 +1047,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .checkNotNull(getPaymentMethod(), "payment method")
                 .checkNotNull(getNetAmount(), "net amount")
                 .checkNotNull(getGrossAmount(), "gross amount")
-                .checkNotNull(getBankAccount(), "bank account")
+                .validateForPaymentMethod(this)
                 .validateForIncomingInvoiceType(this)
                 .getResult();
 
@@ -1097,6 +1097,29 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             case PROPERTY_EXPENSES:
                 message = "property";
                 if (incomingInvoice.getProperty()==null){
+                    setResult(result==null ? message : result.concat(", ").concat(message));
+                }
+                break;
+
+            default:
+            }
+
+            return this;
+        }
+
+        IncomingInvoice.Validator validateForPaymentMethod(IncomingInvoice incomingInvoice){
+            if (incomingInvoice == null) return this;
+            if (incomingInvoice.getPaymentMethod() == null) return this;
+
+            String message;
+            switch (incomingInvoice.getPaymentMethod()){
+
+            case BILLING_ACCOUNT:
+            case BANK_TRANSFER:
+            case CASH:
+            case CHEQUE:
+                message = "bank account";
+                if (incomingInvoice.getBankAccount()==null){
                     setResult(result==null ? message : result.concat(", ").concat(message));
                 }
                 break;
