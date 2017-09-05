@@ -131,6 +131,11 @@
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
+                    <cpt:collection id="linkedOrderItems" defaultView="table"></cpt:collection>
+                </bs3:col>
+            </bs3:row>
+            <bs3:row>
+                <bs3:col span="12">
                     <bs3:tabGroup>
                         <bs3:tab name="Current task">
                             <bs3:row>
