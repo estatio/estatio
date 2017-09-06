@@ -146,7 +146,7 @@
                 <bs3:tab name="Order Item Links">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="orderItemLinks"/>
+                            <cpt:collection id="orderItemLinks" defaultView="table"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>

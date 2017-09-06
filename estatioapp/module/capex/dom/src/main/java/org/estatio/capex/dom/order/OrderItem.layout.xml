@@ -97,7 +97,7 @@
                 <bs3:tab name="Invoice Item Links">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="invoiceItemLinks"/>
+                            <cpt:collection id="invoiceItemLinks" defaultView="table"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
