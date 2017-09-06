@@ -473,12 +473,12 @@ public class StateTransitionService {
                 // cannot transition automatically.
                 return null;
             }
-        } else if (advancePolicy == AdvancePolicy.MANUAL) {// requestedTransitionTypeIfAny == null
+        } else {
+            // requestedTransitionTypeIfAny == null
 
             // do not proceed if this is an explicit transition and no explicit transition type provided.
             return null;
         }
-        return pendingTransitionIfAny;
     }
 
     /**
