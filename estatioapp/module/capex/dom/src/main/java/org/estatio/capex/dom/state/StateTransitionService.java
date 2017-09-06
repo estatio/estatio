@@ -463,18 +463,18 @@ public class StateTransitionService {
         final AdvancePolicy advancePolicy = nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2);
         switch (advancePolicy) {
         case MANUAL:
-            if (requestedTransitionTypeIfAny == null) {
+            if (requestedTransitionTypeIfAny != null) {
+                return pendingTransitionIfAny;
+            } else {
                 // do not proceed if this is an explicit transition and no explicit transition type provided.
                 return null;
-            } else {
-                return pendingTransitionIfAny;
             }
         case AUTOMATIC:
-            if (!pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2)) {
+            if (pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2)) {
+                return pendingTransitionIfAny;
+            } else {
                 // cannot transition automatically.
                 return null;
-            } else {
-                return pendingTransitionIfAny;
             }
         }
         return pendingTransitionIfAny;
