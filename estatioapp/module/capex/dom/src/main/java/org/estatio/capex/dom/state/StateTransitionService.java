@@ -466,10 +466,8 @@ public class StateTransitionService {
         }
 
         final AdvancePolicy advancePolicy = nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2);
-        if (advancePolicy == AdvancePolicy.AUTOMATIC) {
-            if (pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2)) {
-                return pendingTransitionIfAny;
-            }
+        if (advancePolicy.isAutomatic() && pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2)) {
+            return pendingTransitionIfAny;
         }
         return null;
     }
