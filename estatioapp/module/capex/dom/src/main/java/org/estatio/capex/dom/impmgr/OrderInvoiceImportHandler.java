@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -24,55 +25,55 @@ import lombok.Setter;
 
 public class OrderInvoiceImportHandler implements FixtureAwareRowHandler<OrderInvoiceImportHandler>, ExcelMetaDataEnabled {
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String excelSheetName;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private Integer excelRowNumber;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String status;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String orderNumber; // can be populated; called sellerOrderReference on OrderInvoiceLine
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String charge;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private LocalDate entryDate;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private LocalDate orderDate;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String seller;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String orderDescription;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal netAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal vatAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal grossAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String orderApprovedBy;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private LocalDate orderApprovedOn;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String projectReference;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String period;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String tax;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String invoiceNumber;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String invoiceType;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String invoiceDescription;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal invoiceNetAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal invoiceVatAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private BigDecimal invoiceGrossAmount;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String invoiceTax;
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String orderReference; // generated here; called order number on OrderInvoiceLine
 
     /**

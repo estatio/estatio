@@ -88,10 +88,21 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-base</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.incode.module.fixturesupport</groupId>
+            <artifactId>incode-module-fixturesupport-dom</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
             <artifactId>incode-module-unittestsupport-dom</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.incode.module.integtestsupport</groupId>
+            <artifactId>incode-module-integtestsupport-dom</artifactId>
             <scope>test</scope>
         </dependency>
 

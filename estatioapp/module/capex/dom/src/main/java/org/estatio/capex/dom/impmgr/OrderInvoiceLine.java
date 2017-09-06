@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -54,8 +55,8 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRepository;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -104,103 +105,103 @@ public class OrderInvoiceLine {
 
     public OrderInvoiceLine() {}
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "1")
     private String sheetName;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "2")
     private Integer rowNumber;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "3")
     private String status;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "4")
     private String charge;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "4")
     private String orderNumber;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "4")
     private String sellerOrderReference;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "5")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate entryDate;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "6")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate orderDate;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "7")
     private String seller;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "8")
     private String orderDescription;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "9")
     private BigDecimal netAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "10")
     private BigDecimal vatAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "11")
     private BigDecimal grossAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "12")
     private String orderApprovedBy;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "13")
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate orderApprovedOn;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "14")
     private String projectReference;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "15")
     private String period;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "16")
     private String tax;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "17")
     private String invoiceNumber;
@@ -208,35 +209,35 @@ public class OrderInvoiceLine {
     /**
      * Corresponding to {@link IncomingInvoiceType}.
      */
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "18")
     private String invoiceType;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "19")
     private String invoiceDescription;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "20")
     private BigDecimal invoiceNetAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @Column(scale = 2)
     @MemberOrder(sequence = "21")
     private BigDecimal invoiceVatAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "22")
     @Column(scale = 2)
     private BigDecimal invoiceGrossAmount;
 
-    @XmlElement(required = false)
+    @XmlElement(required = false) @Nullable
     @Getter @Setter
     @MemberOrder(sequence = "23")
     private String invoiceTax;

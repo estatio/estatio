@@ -2,6 +2,8 @@ package org.estatio.capex.dom.payment.export;
 
 import java.math.BigDecimal;
 
+import javax.annotation.Nullable;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -44,58 +46,58 @@ public class PaymentLineExportV1 {
     }
 
     // CP_INVOICES
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "1") @Nullable
     private String ReportingCode;
 
     // 201801
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "2") @Nullable
     private int yrperiod;
 
     // FR01EUR
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "3") @Nullable
     private String Element_1;
 
     // FR01BAING174
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "4") @Nullable
     private String Bank_Account_Code;
 
     // 10-Jul-17
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "5") @Nullable
     private LocalDate Date_Invoice;
 
     // 10-Jul-17
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "6") @Nullable
     private LocalDate DataPayment;
 
     // FETE SENSATION
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "7") @Nullable
     private String Supplier_Name;
 
     // RC-FETESENSAT
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "8") @Nullable
     private String Supplier_Name_2;
 
     // FRRCHA1
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "9") @Nullable
     private String Cost_Centre;
 
     // R-SDD0
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "10") @Nullable
     private String Description;
 
     // 27.592,73
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "11") @Nullable
     private BigDecimal Amount_Net;
 
     // 5.518,56
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "12") @Nullable
     private BigDecimal TVA;
 
     // 33.111,29
-    @MemberOrder(sequence = "13")
+    @MemberOrder(sequence = "13") @Nullable
     private BigDecimal Gross_Amount;
 
     // 26 Jun 2017
-    @MemberOrder(sequence = "14")
+    @MemberOrder(sequence = "14") @Nullable
     private LocalDate inpdate;
 }

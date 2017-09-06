@@ -20,8 +20,8 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
 
 import lombok.Getter;
 import lombok.Setter;

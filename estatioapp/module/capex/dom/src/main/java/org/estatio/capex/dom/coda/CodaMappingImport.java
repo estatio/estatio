@@ -1,5 +1,6 @@
 package org.estatio.capex.dom.coda;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
@@ -28,50 +29,50 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImport> {
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String documentType;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String incomingInvoiceType;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String transactionType;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String atPath;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String chargeReference;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String chargeName;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String projectType;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String propertyOwnershipType;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String period;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String codaElementLevel;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String codaElementCode;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String codaElementName;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     private String comment;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     @Column(allowsNull = "true")
     private LocalDate startDate;
 
-    @Getter @Setter
+    @Getter @Setter @Nullable
     @Column(allowsNull = "true")
     private LocalDate endDate;
 

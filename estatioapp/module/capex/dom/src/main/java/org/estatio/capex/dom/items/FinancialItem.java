@@ -7,7 +7,7 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 public interface FinancialItem {
 

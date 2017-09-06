@@ -64,10 +64,21 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>process-classes</id>
+                        <phase>process-classes</phase>
                         <goals>
                             <goal>enhance</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>process-test-classes</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <metadataDirectory>${project.build.testOutputDirectory}</metadataDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -30,8 +30,8 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.numerator.dom.impl.Numerator;
-import org.estatio.numerator.dom.impl.NumeratorRepository;
+import org.estatio.numerator.dom.Numerator;
+import org.estatio.numerator.dom.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class NumeratorForCollectionRepository extends UdoDomainService<NumeratorForCollectionRepository> {

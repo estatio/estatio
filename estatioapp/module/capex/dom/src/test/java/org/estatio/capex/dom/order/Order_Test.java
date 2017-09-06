@@ -16,7 +16,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Organisation;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

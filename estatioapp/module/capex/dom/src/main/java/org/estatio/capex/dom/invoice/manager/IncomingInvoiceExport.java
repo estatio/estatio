@@ -2,6 +2,8 @@ package org.estatio.capex.dom.invoice.manager;
 
 import java.math.BigDecimal;
 
+import javax.annotation.Nullable;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -20,49 +22,49 @@ import lombok.Setter;
 @Getter @Setter
 public class IncomingInvoiceExport {
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "1") @Nullable
     private final String buyerReference;
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "2") @Nullable
     private final String buyerName;
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "3") @Nullable
     private final String sellerName;
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "4") @Nullable
     private final String sellerReference;
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "5") @Nullable
     private final String sellerIban ;
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "6") @Nullable
     private final LocalDate invoiceDate;
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "7") @Nullable
     private final String invoiceNumber;
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "8") @Nullable
     private final String invoiceStatus;
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "9") @Nullable
     private final BigDecimal netAmount;
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "10") @Nullable
     private final BigDecimal vatAmount;
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "11") @Nullable
     private final BigDecimal grossAmount;
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "12") @Nullable
     private final String invoiceType;
-    @MemberOrder(sequence = "13")
+    @MemberOrder(sequence = "13") @Nullable
     private final String propertyReference;
-    @MemberOrder(sequence = "14")
+    @MemberOrder(sequence = "14") @Nullable
     private final String propertyName;
-    @MemberOrder(sequence = "15")
+    @MemberOrder(sequence = "15") @Nullable
     private final String projectReference;
-    @MemberOrder(sequence = "16")
+    @MemberOrder(sequence = "16") @Nullable
     private final String chargeReference;
-    @MemberOrder(sequence = "17")
+    @MemberOrder(sequence = "17") @Nullable
     private final String chargeName;
-    @MemberOrder(sequence = "18")
+    @MemberOrder(sequence = "18") @Nullable
     private final String vatCode;
-    @MemberOrder(sequence = "19")
+    @MemberOrder(sequence = "19") @Nullable
     private final String codaElementCode;
-    @MemberOrder(sequence = "20")
+    @MemberOrder(sequence = "20") @Nullable
     private final String codaElementName;
-    @MemberOrder(sequence = "21")
+    @MemberOrder(sequence = "21") @Nullable
     private final String documentNumber;
-    @MemberOrder(sequence = "22")
+    @MemberOrder(sequence = "22") @Nullable
     private final String comments;
 
 

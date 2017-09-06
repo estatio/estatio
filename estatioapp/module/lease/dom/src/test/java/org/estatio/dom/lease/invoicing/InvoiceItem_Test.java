@@ -45,8 +45,8 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseForTesting;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.anyOf;

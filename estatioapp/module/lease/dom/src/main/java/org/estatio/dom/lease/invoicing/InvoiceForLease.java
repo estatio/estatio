@@ -75,7 +75,7 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.roles.EstatioRole;
-import org.estatio.numerator.dom.impl.Numerator;
+import org.estatio.numerator.dom.Numerator;
 
 import lombok.Getter;
 import lombok.Setter;

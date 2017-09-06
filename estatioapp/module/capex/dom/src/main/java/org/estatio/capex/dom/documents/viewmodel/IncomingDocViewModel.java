@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.joda.time.DateTime;
@@ -18,11 +19,9 @@ import org.wicketstuff.pdfjs.Scale;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -45,7 +44,6 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
@@ -69,7 +67,7 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -129,7 +127,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
      *     Used in order to advance to next task after this has been classified.
      * </p>
      */
-    @Setter @Getter
+    @XmlElement(required = false)
+    @Setter @Getter @Nullable
     @org.apache.isis.applib.annotation.Property(hidden = Where.EVERYWHERE)
     private Task originatingTask;
 
@@ -199,10 +198,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return null;
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String description;
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
     private Charge charge;
@@ -217,6 +218,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Property property;
@@ -233,6 +235,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return result.size()>0 ? result : propertyRepository.allProperties();
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Project project;
@@ -241,6 +244,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         return getProperty()==null ? projectRepository.listAll() : projectRepository.findByFixedAsset(getProperty());
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BudgetItem budgetItem;
@@ -295,6 +299,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     //region > period (prop)
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
@@ -340,6 +345,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     //endregion
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal netAmount;
@@ -353,6 +359,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         determineAmounts();
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private BigDecimal vatAmount;
@@ -366,6 +373,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         determineAmounts();
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Tax tax;
@@ -375,6 +383,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         determineAmounts();
     }
 
+    @XmlElement(required = false) @Nullable
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @PropertyLayout(promptStyle = PromptStyle.INLINE)

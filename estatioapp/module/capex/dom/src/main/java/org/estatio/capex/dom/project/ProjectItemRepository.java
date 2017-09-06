@@ -14,7 +14,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.tax.Tax;
+import org.estatio.tax.dom.Tax;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
