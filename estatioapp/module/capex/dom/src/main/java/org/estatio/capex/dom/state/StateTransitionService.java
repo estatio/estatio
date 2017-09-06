@@ -193,7 +193,7 @@ public class StateTransitionService {
             S extends State<S>
     > ST trigger(
             final DO domainObject,
-            final STT requiredTransitionType,
+            final STT requiredTransitionType, // always non-null
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
         final Class<ST> stateTransitionClass = transitionClassFor(requiredTransitionType);
@@ -243,20 +243,29 @@ public class StateTransitionService {
     > ST trigger(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requestedTransitionTypeIfAny,
+            final STT requestedTransitionTypeIfAny, // null if checkState, if fix-up, if save view model
+                                                    // non-null if DomainObject_triggerAbstract, null
             final Person personToAssignNextToIfAny,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
 
         ST completedTransition = completeTransitionIfPossible(
-                                        domainObject, stateTransitionClass, requestedTransitionTypeIfAny,
-                                        null, currentTaskCommentIfAny, nextTaskDescriptionIfAny);
+                                        domainObject,
+                                        stateTransitionClass,
+                                        requestedTransitionTypeIfAny,
+                                        null,                           // personToAssignNextToIfAny
+                                        currentTaskCommentIfAny,
+                                        nextTaskDescriptionIfAny);
 
         boolean keepTransitioning = (completedTransition != null);
         while(keepTransitioning) {
             ST previousTransition = completedTransition;
             completedTransition = completeTransitionIfPossible(
-                                        domainObject, stateTransitionClass, null, personToAssignNextToIfAny, null,
+                                        domainObject,
+                                        stateTransitionClass,
+                                        null,                           // requestedTransitionTypeIfAny
+                                        personToAssignNextToIfAny,
+                                        null,
                                         nextTaskDescriptionIfAny);
             keepTransitioning = (completedTransition != null && previousTransition != completedTransition);
         }
@@ -273,13 +282,14 @@ public class StateTransitionService {
             S extends State<S>
     > ST triggerPending(
             final DO domainObject,
-            final STT requestedTransitionType,
-            final Person personToAssignNextToIfAny,
-            final String nextTaskDescriptionIfAny) {
+            final STT requestedTransitionType) {
         final Class<ST> stateTransitionClass = transitionClassFor(requestedTransitionType);
+
         return pendingTransitionIfPossible(
-                domainObject, stateTransitionClass, requestedTransitionType, personToAssignNextToIfAny,
-                nextTaskDescriptionIfAny);
+                domainObject, stateTransitionClass, requestedTransitionType,
+                null, // personToAssignNextToIfAny
+                null  // nextTaskDescriptionIfAny
+                );
     }
 
 
@@ -294,7 +304,7 @@ public class StateTransitionService {
     > ST completeTransitionIfPossible(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
-            final STT requestedTransitionTypeIfAny,
+            final STT requestedTransitionTypeIfAny, // if non-null, then explicit action by end-user
             final Person personToAssignNextToIfAny,
             final String comment,
             final String nextTaskDescriptionIfAny) {

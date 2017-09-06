@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -17,14 +15,6 @@ public abstract class IncomingInvoice_triggerAbstract
                                     IncomingInvoiceApprovalStateTransition,
                                     IncomingInvoiceApprovalStateTransitionType,
                                     IncomingInvoiceApprovalState> {
-
-    protected IncomingInvoice_triggerAbstract(
-            final IncomingInvoice incomingInvoice,
-            final List<IncomingInvoiceApprovalState> fromStates,
-            final IncomingInvoiceApprovalStateTransitionType requiredTransitionTypeIfAny) {
-        super(incomingInvoice, IncomingInvoiceApprovalStateTransition.class, fromStates, requiredTransitionTypeIfAny
-        );
-    }
 
     protected IncomingInvoice_triggerAbstract(
             final IncomingInvoice incomingInvoice,

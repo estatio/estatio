@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.payment.approval.triggers;
 
-import java.util.List;
-
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
@@ -14,13 +12,6 @@ abstract class PaymentBatch_triggerAbstract
         PaymentBatchApprovalStateTransition,
         PaymentBatchApprovalStateTransitionType,
         PaymentBatchApprovalState> {
-
-    PaymentBatch_triggerAbstract(
-            final PaymentBatch paymentBatch,
-            final List<PaymentBatchApprovalState> fromStates,
-            final PaymentBatchApprovalStateTransitionType requiredTransitionTypeIfAny) {
-        super(paymentBatch, PaymentBatchApprovalStateTransition.class, fromStates, requiredTransitionTypeIfAny);
-    }
 
     PaymentBatch_triggerAbstract(
             final PaymentBatch paymentBatch,

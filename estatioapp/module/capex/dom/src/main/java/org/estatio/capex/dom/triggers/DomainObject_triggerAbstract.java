@@ -31,17 +31,17 @@ public abstract class DomainObject_triggerAbstract<
     protected final DO domainObject;
     protected final Class<ST> stateTransitionClass;
     protected final List<S> fromStates;
-    protected final STT requiredTransitionTypeIfAny;
+    protected final STT requiredTransitionType;
 
     protected DomainObject_triggerAbstract(
             final DO domainObject,
             final Class<ST> stateTransitionClass,
             final List<S> fromStates,
-            final STT requiredTransitionTypeIfAny) {
+            final STT requiredTransitionType) {
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
         this.fromStates = fromStates;
-        this.requiredTransitionTypeIfAny = requiredTransitionTypeIfAny;
+        this.requiredTransitionType = requiredTransitionType;
     }
 
     protected DomainObject_triggerAbstract(
@@ -51,7 +51,7 @@ public abstract class DomainObject_triggerAbstract<
         this.domainObject = domainObject;
         this.stateTransitionClass = stateTransitionClass;
         this.fromStates = requiredTransitionType.getFromStates();
-        this.requiredTransitionTypeIfAny = requiredTransitionType;
+        this.requiredTransitionType = requiredTransitionType;
     }
 
 
@@ -158,7 +158,7 @@ public abstract class DomainObject_triggerAbstract<
     protected final ST trigger(
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny,
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionType,
                 currentTaskCommentIfAny, nextTaskDescriptionIfAny);
     }
 
@@ -166,12 +166,12 @@ public abstract class DomainObject_triggerAbstract<
             final Person personToAssignNextTo,
             final String currentTaskCommentIfAny,
             final String nextTaskDescriptionIfAny) {
-        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionTypeIfAny, personToAssignNextTo, currentTaskCommentIfAny,
+        return stateTransitionService.trigger(getDomainObject(), stateTransitionClass, requiredTransitionType, personToAssignNextTo, currentTaskCommentIfAny,
                 nextTaskDescriptionIfAny);
     }
 
     protected Person defaultPersonToAssignNextTo() {
-        if(requiredTransitionTypeIfAny == null) {
+        if(requiredTransitionType == null) {
             return null;
         }
         IPartyRoleType partyRoleType = peekPartyRoleType();
@@ -179,7 +179,7 @@ public abstract class DomainObject_triggerAbstract<
     }
 
     protected List<Person> choicesPersonToAssignNextTo() {
-        if(requiredTransitionTypeIfAny == null) {
+        if(requiredTransitionType == null) {
             return Collections.emptyList();
         }
         IPartyRoleType partyRoleType = peekPartyRoleType();
@@ -187,11 +187,11 @@ public abstract class DomainObject_triggerAbstract<
     }
 
     private <T extends Enum<T> & IPartyRoleType> T peekPartyRoleType() {
-        if(requiredTransitionTypeIfAny == null) {
+        if(requiredTransitionType == null) {
             return null;
         }
         IPartyRoleType iPartyRoleType = stateTransitionService
-                .peekTaskRoleAssignToAfter(domainObject, requiredTransitionTypeIfAny);
+                .peekTaskRoleAssignToAfter(domainObject, requiredTransitionType);
         return iPartyRoleType != null && Enum.class.isAssignableFrom(iPartyRoleType.getClass())
                 ? (T) iPartyRoleType
                 : null;
@@ -215,8 +215,8 @@ public abstract class DomainObject_triggerAbstract<
 
     private boolean canTransition() {
         final S currentState = stateTransitionService.currentStateOf(getDomainObject(), stateTransitionClass);
-        if(requiredTransitionTypeIfAny != null) {
-            return requiredTransitionTypeIfAny.canTransitionFromStateAndIsMatch(
+        if(requiredTransitionType != null) {
+            return requiredTransitionType.canTransitionFromStateAndIsMatch(
                                                         domainObject, currentState, serviceRegistry2);
         } else {
             return fromStates.contains(currentState);
@@ -224,8 +224,8 @@ public abstract class DomainObject_triggerAbstract<
     }
 
     protected String reasonGuardNotSatisified() {
-        if(requiredTransitionTypeIfAny != null) {
-            return requiredTransitionTypeIfAny.reasonGuardNotSatisified(domainObject, serviceRegistry2);
+        if(requiredTransitionType != null) {
+            return requiredTransitionType.reasonGuardNotSatisified(domainObject, serviceRegistry2);
         } else {
             ST st = stateTransitionService.pendingTransitionOf(domainObject, stateTransitionClass);
             if (st == null) {

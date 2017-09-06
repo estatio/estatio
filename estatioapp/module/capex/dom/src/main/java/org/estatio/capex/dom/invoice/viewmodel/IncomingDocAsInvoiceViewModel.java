@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -224,8 +225,9 @@ public class IncomingDocAsInvoiceViewModel
 
     //region > orderItem (prop)
 
-    @Property(editing = Editing.ENABLED)
+    @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     private OrderItem orderItem;
+
     public void modifyOrderItem(OrderItem orderItem) {
         setOrderItem(orderItem);
         autoFillIn();
@@ -234,7 +236,11 @@ public class IncomingDocAsInvoiceViewModel
     public List<OrderItem> choicesOrderItem(){
         // the disable guard ensures this is non-null
         final Party seller = getSeller();
-        return orderItemRepository.findBySeller(seller);
+        final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
+        if(getOrderItem() != null && !orderItems.contains(getOrderItem())) {
+            orderItems.add(getOrderItem());
+        }
+        return orderItems;
     }
 
     public String disableOrderItem(){
@@ -411,7 +417,11 @@ public class IncomingDocAsInvoiceViewModel
                     orderItemInvoiceItemLinkRepository.findByInvoiceItem(invoiceItem);
 
             final Optional<OrderItemInvoiceItemLink> linkIfAny = links.stream().findFirst();
-            linkIfAny.ifPresent(x -> setOrderItem(linkIfAny.get().getOrderItem()));
+            linkIfAny.ifPresent(link -> {
+                final OrderItem linkOrderItem = link.getOrderItem();
+
+                IncomingDocAsInvoiceViewModel.this.setOrderItem(linkOrderItem);
+            });
 
         } else {
 

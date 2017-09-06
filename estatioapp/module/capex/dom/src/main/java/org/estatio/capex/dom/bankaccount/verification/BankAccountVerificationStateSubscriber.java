@@ -104,7 +104,7 @@ public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {
 
         // create the required pending transition, if none already.
         stateTransitionService
-                .triggerPending(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT, null, null);
+                .triggerPending(bankAccount, BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT);
     }
 
     private void attachDocumentAsPossibleIbanProofIfNone(final IncomingInvoice incomingInvoice) {

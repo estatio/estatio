@@ -1,7 +1,5 @@
 package org.estatio.capex.dom.bankaccount.verification.triggers;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
@@ -19,14 +17,6 @@ abstract class BankAccount_triggerAbstract
                                     BankAccountVerificationStateTransition,
                                     BankAccountVerificationStateTransitionType,
                                     BankAccountVerificationState> {
-
-    BankAccount_triggerAbstract(
-            final BankAccount bankAccount,
-            final List<BankAccountVerificationState> fromStates,
-            final BankAccountVerificationStateTransitionType requiredTransitionTypeIfAny) {
-        super(bankAccount, BankAccountVerificationStateTransition.class, fromStates, requiredTransitionTypeIfAny
-        );
-    }
 
     BankAccount_triggerAbstract(
             final BankAccount bankAccount,
