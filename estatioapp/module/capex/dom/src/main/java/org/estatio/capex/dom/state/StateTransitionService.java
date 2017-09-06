@@ -460,15 +460,18 @@ public class StateTransitionService {
             return null;
         }
 
+        // if requestedTransitionTypeIfAny != null, then this is an explicit action, so automatic doesn't apply...
+        if (requestedTransitionTypeIfAny != null) {
+            return pendingTransitionIfAny;
+        }
+
         final AdvancePolicy advancePolicy = nextTransitionType.advancePolicyFor(domainObject, serviceRegistry2);
         switch (advancePolicy) {
         case MANUAL:
-            if (requestedTransitionTypeIfAny != null) {
-                return pendingTransitionIfAny;
-            } else {
-                // do not proceed if this is an explicit transition and no explicit transition type provided.
-                return null;
-            }
+            // requestedTransitionTypeIfAny == null
+
+            // do not proceed if this is an explicit transition and no explicit transition type provided.
+            return null;
         case AUTOMATIC:
             if (pendingTransitionType.isAutoGuardSatisfied(domainObject, serviceRegistry2)) {
                 return pendingTransitionIfAny;
