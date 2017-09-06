@@ -47,7 +47,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
             paymentBatch.removeLineFor(incomingInvoice);
         }
 
-        trigger(personToAssignNextTo, null, reason);
+        trigger(personToAssignNextTo, reason, reason);
         return objectToReturn();
     }
 
