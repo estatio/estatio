@@ -8,12 +8,10 @@ import javax.validation.constraints.Digits;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.dom.base.valuetypes.PositiveAmountSpecification;
 
 /**
  * @see IncomingInvoiceItem_updateOrderItemLink
@@ -29,7 +27,6 @@ public class OrderItem_updateInvoiceItemLink extends OrderItem_abstractMixinInvo
     public OrderItem act(
             final IncomingInvoiceItem invoiceItem,
             @Digits(integer = 13, fraction = 2)
-            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal netAmount){
         final OrderItemInvoiceItemLink link = orderItemInvoiceItemLinkRepository.findUnique(mixee, invoiceItem);
         if(link != null) {

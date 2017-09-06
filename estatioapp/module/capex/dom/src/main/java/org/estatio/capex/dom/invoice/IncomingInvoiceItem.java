@@ -305,14 +305,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoiceItem updateAmounts(
             @Digits(integer=13, fraction = 2)
-            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal netAmount,
             @Nullable
             @Digits(integer=13, fraction = 2)
-            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal vatAmount,
             @Digits(integer=13, fraction = 2)
-            @Parameter(mustSatisfy = PositiveAmountSpecification.class)
             final BigDecimal grossAmount,
             @Nullable
             final Tax tax){
