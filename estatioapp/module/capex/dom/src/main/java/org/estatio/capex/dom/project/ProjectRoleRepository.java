@@ -68,6 +68,12 @@ public class ProjectRoleRepository extends UdoDomainRepositoryAndFactory<Project
         return allMatches("findByProject", "project", project);
     }
 
+    @Programmatic
+    public List<ProjectRole> findByParty(final Party party) {
+        return allMatches("findByParty", "party", party);
+    }
+
+
     @Inject
     RepositoryService repositoryService;
 }

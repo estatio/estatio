@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -54,6 +53,7 @@ import org.estatio.dom.party.PersonRepository;
 )
 public class PersonMenu {
 
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Person newPerson(
@@ -66,12 +66,10 @@ public class PersonMenu {
         return personRepository.newPerson(reference, initials, firstName, lastName, gender, country);
     }
 
-    @Programmatic
     public List<Country> choices5NewPerson() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    @Programmatic
     public Country default5NewPerson() {
         return Dflt.of(choices5NewPerson());
     }
@@ -88,7 +86,14 @@ public class PersonMenu {
     }
 
 
-    // //////////////////////////////////////
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "2")
+    public Person findPerson(Person person) {
+        return person;
+    }
+
+
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "99")
@@ -96,7 +101,8 @@ public class PersonMenu {
         return personRepository.allPersons();
     }
 
-    // //////////////////////////////////////
+
+
 
     @Inject
     PersonRepository personRepository;
