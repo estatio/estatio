@@ -11,8 +11,11 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.dom.UdoDomainService;
 
-@DomainService(nature = NatureOfService.DOMAIN)
-@DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.TERTIARY)
+@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainServiceLayout(
+        menuBar = DomainServiceLayout.MenuBar.TERTIARY,
+        menuOrder = "10.1"
+)
 public class EstatioUserProfileService extends UdoDomainService<EstatioUserProfileService>
                 implements UserProfileService {
 
