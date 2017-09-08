@@ -1,0 +1,189 @@
+= Scenarios linking Orders and Invoices
+:toc: right
+:_basedir: ./
+
+
+These are some initial notes to drive out requirements for EST-1571 (fix seller) and EST-1602 (discard order).
+
+
+
+invoice type:
+- capex/service charge/property expense
+- local exp
+- corporate exp
+
+dimensions:
+- seller
+- charge
+- project
+- budget
+- period  (we discard this)
+
+
+reasons why items become immutable:
+* for Orders, sent to PWC
+* for Invoices, paid via IBP, or sent to PWC
+** simplifying assumption: immutable because paid via IBP
+
+
+
+== Order exists with none/some/all dimensions; we enter Capex Invoice + link
+
+given:
+
+* already have `Order` with some or all of these dimensions on it: seller, charge, project, budget item, (period)
+
+* categorise `Invoice`:
+
+** (a) enter order number, and it's valid
+*** given list of order item for that order
+
+** (b) enter seller
+*** given list of order items of all of the orders not completely invoiced of that seller
+
+* system then links the invoice item to that order item
+** copies over from `Order` to `Invoice` based on the type of the invoice:
+*** if invoice is capex,            copy over: seller, charge, project       (ignore budget item, period)
+*** if invoice is service charge,   copy over: seller, charge, budget item   (ignore budget item, period)
+*** if invoice is property expense, copy over: seller, charge   (ignore project, budget item, period)
+
+* no link is created, just enter seller and dimensions onto the invoice
+
+
+
+== What if link subsequently?
+
+* for an unlinked Invoice Item
+
+** if link, honour any and all dimensions that are specified on either side (ignoring period)
+
+** perhaps some mechanism to allow a candidate order item's dimensions to be copied over easily (as an overwrite)
+*** a UI improvement
+
+
+
+
+== What if some dimensions have been added to the Invoice already?
+
+* do we ignore them and just overwrite?
+
+* do we use them to constrain the list of candidate order items?
+
+
+
+== Once Order (Item) still mutable + Invoice Item mutable + parent Invoice mutable, but is linked
+
+
+* an improvement on this (defer for now):
+** allow the invoice's charge to be one of the children of the order's charge
+
+
+
+* on an order, change seller
+** cascade onto the parent Invoice(s) of all of the linked items, so long as all are still mutable
+
+* on an order item, change charge, project, budget item
+** cascade onto the items, so long as still mutable (as needed by the type of the invoice)
+
+
+* if change invoice?
+
+
+
+
+== Once Order (Item) still mutable + Invoice Item now immutable, but is linked
+
+* on the invoice, change the seller ... don't
+
+
+
+
+== Once Order (Item) now immutable + Invoice Item mutable, but is linked
+
+* on an order, change seller ... not allowed, because one of its items is immutable
+
+* however, need to "back it out"
+** on the old order, add a new -ve item(s) which backs out all of the order items that were on it
+** creating a new order with the new seller, that has the same set of order items (but is now mutable)
+
+** and then we link the mutable invoice item(s) to the new order item of the new order
+** then we copy over the seller to the invoice item
+
+* on an order item, change charge, project, budget item ... now allowed, as is immutable
+
+* however, back out that one item
+** add a new -ve item to back out this item
+** add a new +ve item that's modifiable
+** and, again, copy over the change to the invoice items linked to it
+
+
+== Once Order (Item) now immutable + Invoice Item now immutable, but is linked
+
+
+
+
+
+== what about many-to-many links?
+
+
+
+== if merge suppliers
+
+* need to cascade...
+
+
+
+
+Order (seller A)
+- OrderItem   100,000  CHARGE_1   PROJECT_2     reported_at=...   cancelled_at=...
+
+
+Order (seller B)
+- OrderItem   100,000  CHARGE_2   PROJECT_33    reported=N   << modifiable
+
+
+
+
+
+
+Invoice (seller X)  < when paid by IBP, immutable
+- item#1            < when paid by IBP, immutable
+
+
+Invoice (seller X)  < when reported to PWC, still "mutable", ie can do reversals
+- item#1            < when reported to PWC, immutable
+
+Invoice (seller X)
+- item#1            < when reported to PWC, immutable
+- item#2            -ve amt, to back it out
+
+Invoice (seller Y)
+- item#3            +ve amt, now mutable
+
+
+
+1. mis-enter the supplier on an order
+
+2. link an invoice to that order
+
+3. report this off to PWC, so this stuff is now immutable
+
+4. then notice the error.  we don't let them make the order modifiable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
