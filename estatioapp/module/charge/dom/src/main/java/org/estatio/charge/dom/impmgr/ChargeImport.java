@@ -137,8 +137,12 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             }
         }
 
-        charge.setExternalReference(externalReference);
-        charge.setSortOrder(sortOrder);
+        if (externalReference !=  null) {
+            charge.setExternalReference(externalReference);
+        }
+        if(sortOrder != null){
+            charge.setSortOrder(sortOrder);
+        }
 
         return Lists.newArrayList(charge);
     }
