@@ -1,29 +1,117 @@
-= Scenarios linking Orders and Invoices
+= Order/Invoice validation + immutability
 :toc: right
 :_basedir: ./
 
 
-These are some initial notes to drive out requirements for EST-1571 (fix seller) and EST-1602 (discard order).
+This discussion paper aims to clarify the rules to apply when linking orders and invoices.
+It also tackles how changes to either orders or invoices should be handled once they are have become immutable (due to accounting/reporting or treasury).
 
 
 
-invoice type:
-- capex/service charge/property expense
-- local exp
-- corporate exp
+== Business Problem
 
-dimensions:
-- seller
-- charge
-- project
-- budget
-- period  (we discard this)
+The original motivation included these two related issues:
+
+* (EST-1571) discover that the seller was incorrect on an Order; needs fixing
+* (EST-1602) realise that an order should be discarded (eg is a duplicate scan), but it has already been marked as completed/approved
+
+There are some related issues to do with making Estatio more user-friendly by defaulting information where possible.
 
 
-reasons why items become immutable:
+Thinking about how an Order or an Invoice can be modified takes us on to the additional constraints that need to be considered when an Order or an Invoice has become immutable.
+This then is the second "half" of this paper.
+
+
+
+
+== Terminology
+
+
+"Dimensions" are a means of characterising an order or an invoice.
+
+* defined at parent level, ie `Invoice` or the `Order`:
+
+** seller party (also called supplier)
+
+
+* defined at item level `InvoiceItem` or the `OrderItem` :
+
+** property
+** charge
+** project
+** budget
+** period
+
+
+Invoice type, determines the approval cycle; also determines which dimensions are mandatory/must be left blank.
+
+* capex/service charge/property expense
+** capex: project is required, budget is blank
+** service charge: project is blank, budget is required
+** property expense: neither is required
+* local expense
+* corporate expense
+
+
+
+
+== Reasons why data become immutable:
+
+
+In general, data becomes be treated as immutable once it has been reported/sync'd over to another system.
+
+Strictly speaking, we could distinguish between:
+
+* extra-ECP : ie to another system outside of ECP, eg IBP.
+
+* intra-ECP : ie to another system (eg CODA) that is nevertheless within ECP.
+
+Probably PWC could be thought of as an "internal" interaction.
+
+For extra-ECP interactions, there's little to discuss: any adjustments that have to be made once the information has been extracted from Estatio will have to be done as reversals/deltas.
+Credit notes are one "real-world" example of this.
+
+For intra-ECP interactions, we have more options, so should discuss them.
+Since the automated software that will do the interaction is under our control, we _do_ have the option to keep Estatio simple/naive, and move the complexity into the "glue".
+For example, rather than treating invoice items as immutable once reported (meaning that changes must be handled as reversals/deltas) we could if we wanted just post snapshots of the current state; ie always the "absolute" current view.
+This makes Estatio simpler to use and simpler to maintain.
+
+On the other hand, the downside is that there is "magic" within the glue: it would need to convert the snapshots of current state coming from Estation into reversals/deltas within CODA.
+There are two consequences of this:
+
+* from a business viewpoint, the information in Estatio vs CODA would look quite different, so would not facilitate conversations between Property Administration vs Accounting.
+
+* from a technical viewpoint, it would likely be easier to put the complexity into Estatio than to have it sitting in the glue.
+
+Therefore (as has been discussed anyway in meetings), although intra-ECP vs extra-ECP interactions are theoretically different, it makes the most sense to treat them the same.
+Thus, whenever data is extracted from Estatio, for whatever purpose, then that data becomes immutable.
+Any changes to it must then be done by reversing it out and reposting an amendment.
+
+
+
+
+The above analysis applies to items: Order items and Invoice Items, where the
+
+
+Links are never immutable; they are just
+For the (order) items
+
+
 * for Orders, sent to PWC
 * for Invoices, paid via IBP, or sent to PWC
 ** simplifying assumption: immutable because paid via IBP
+
+
+header info:
+
+
+
+== Rules for entering/modifying items
+
+This is prior to them becoming immutable
+
+
+
 
 
 
