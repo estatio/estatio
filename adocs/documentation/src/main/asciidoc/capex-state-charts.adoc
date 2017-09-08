@@ -90,7 +90,7 @@ state "OrderApprovalStateTransitionType" as oa {
     state "NEW" as oa_new
 
     state "APPROVED" as oa_approved
-    note right of oa_approved: immutable from this point on
+    note right of oa_approved: immutable at this point on
 
     state "DISCARDED" as oa_discarded
     note right of oa_discarded: associated document\nalso discarded
@@ -98,6 +98,7 @@ state "OrderApprovalStateTransitionType" as oa {
     [*] -right-> oa_new: INSTANTIATE
 
     oa_new -down-> oa_approved: COMPLETE_WITH_APPROVAL
+    oa_approved -up-> oa_new: FIX_ERROR
     oa_new -right-> oa_discarded : DISCARD
 
 }

@@ -57,8 +57,42 @@ Invoice type, determines the approval cycle; also determines which dimensions ar
 
 == Reasons why data become immutable:
 
+=== Internal ("soft")
 
-In general, data becomes be treated as immutable once it has been reported/sync'd over to another system.
+The first main reason why we treate data is immutable is that it has gone through an approval cycle.
+However, this is only a "soft" constraint, because we allow Invoices to be rejected, sent back to fix a data issue, and therefore to go round the loop.
+
+We also intend to do the same for Orders (though rather than "reject" an Order, the terminology is "fix error").
+Send an Order back to be fixed also means it can be discarded.
+
+
+[plantuml,order-approval-state-chart,png]
+--
+state "Order Approval" as oa {
+
+    state "NEW" as oa_new
+
+    state "APPROVED" as oa_approved
+    note right of oa_approved: immutable at this point on
+
+    state "DISCARDED" as oa_discarded
+    note right of oa_discarded: associated document\nalso discarded
+
+    [*] -right-> oa_new: INSTANTIATE
+
+    oa_new -down-> oa_approved: COMPLETE_WITH_APPROVAL
+    oa_approved -up-> oa_new: FIX_ERROR
+    oa_new -right-> oa_discarded : DISCARD
+
+}
+--
+
+
+
+=== External ("hard")
+
+The other reason why data becomes be treated as immutable is when it has been reported/sync'd over to another system/organisation external to estatio.
+
 
 Strictly speaking, we could distinguish between:
 
@@ -89,20 +123,14 @@ Any changes to it must then be done by reversing it out and reposting an amendme
 
 
 
+=== What actually is immutable?
 
-The above analysis applies to items: Order items and Invoice Items, where the
+The above analysis applies to items: Order items and Invoice Items
 
+The parent objects of these, Order and Invoice, are treated as immutable if there is at least one item that is immutable.
+For example, we cannot change the seller on an Order once one of its items has been reported to PWC.
 
-Links are never immutable; they are just
-For the (order) items
-
-
-* for Orders, sent to PWC
-* for Invoices, paid via IBP, or sent to PWC
-** simplifying assumption: immutable because paid via IBP
-
-
-header info:
+On the other hand, the links between Order items and Invoice items are _never_ treated as immutable; Estatio allows these to be adjusted at any time.
 
 
 
@@ -111,6 +139,9 @@ header info:
 This is prior to them becoming immutable
 
 
+
+
+********************************* UP TO HERE *********************************
 
 
 
@@ -157,6 +188,11 @@ given:
 
 * do we use them to constrain the list of candidate order items?
 
+
+
+
+
+== Handling Immutable datas
 
 
 == Once Order (Item) still mutable + Invoice Item mutable + parent Invoice mutable, but is linked
