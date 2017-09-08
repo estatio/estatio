@@ -17,6 +17,13 @@ public abstract class Document_triggerAbstract
                                             IncomingDocumentCategorisationStateTransitionType,
                                             IncomingDocumentCategorisationState> {
 
+    public static abstract class ActionDomainEvent<MIXIN> extends DomainObject_triggerAbstract.ActionDomainEvent<MIXIN> {
+        @Override
+        public Class<?> getStateTransitionClass() {
+            return IncomingDocumentCategorisationStateTransition.class;
+        }
+    }
+
     public Document_triggerAbstract(final Document document, IncomingDocumentCategorisationStateTransitionType transitionType) {
         super(document, IncomingDocumentCategorisationStateTransition.class, transitionType);
     }

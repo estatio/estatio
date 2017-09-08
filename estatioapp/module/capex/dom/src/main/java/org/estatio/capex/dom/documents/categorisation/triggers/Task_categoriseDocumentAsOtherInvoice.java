@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -16,14 +17,13 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.
  */
 @Mixin(method = "act")
 public class Task_categoriseDocumentAsOtherInvoice
-        extends Task_mixinActAbstract<Document_categoriseAsOtherInvoice, Document> {
+        extends Task_mixinDocumentAbstract<Document_categoriseAsOtherInvoice> {
 
     protected final Task task;
 
@@ -32,7 +32,13 @@ public class Task_categoriseDocumentAsOtherInvoice
         this.task = task;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends Task_mixinDocumentAbstract.ActionDomainEvent<Task_categoriseDocumentAsOtherInvoice> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
     public Object act(
             final IncomingInvoiceType incomingInvoiceType,
@@ -67,13 +73,5 @@ public class Task_categoriseDocumentAsOtherInvoice
         return mixin().disableAct();
     }
 
-    @Override
-    protected Document doGetDomainObjectIfAny() {
-        final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);
-        return transition != null ? transition.getDocument() : null;
-    }
-
-    @Inject
-    IncomingDocumentCategorisationStateTransition.Repository repository;
 
 }

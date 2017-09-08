@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 
@@ -23,7 +24,13 @@ public class Task_approveIncomingInvoiceAsCorporateManager
         this.task = task;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends Task_mixinIncomingInvoiceAbstract.ActionDomainEvent<Task_approveIncomingInvoiceAsCorporateManager> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "fa-thumbs-up")
     public  Object act(
             @Nullable final String comment,

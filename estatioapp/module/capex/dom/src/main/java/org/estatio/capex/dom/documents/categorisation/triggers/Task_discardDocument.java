@@ -13,14 +13,13 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinActAbstract;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.
  */
 @Mixin(method = "act")
 public class Task_discardDocument
-        extends Task_mixinActAbstract<Document_discard, Document> {
+        extends Task_mixinDocumentAbstract<Document_discard> {
 
     protected final Task task;
 
@@ -29,7 +28,13 @@ public class Task_discardDocument
         this.task = task;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public static class ActionDomainEvent
+            extends Task_mixinDocumentAbstract.ActionDomainEvent<Task_discardDocument> { }
+
+    @Action(
+            domainEvent = Task_categoriseDocumentAsOrder.ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "trash-o")
     public Object act(
             @Nullable final String comment,
@@ -53,14 +58,5 @@ public class Task_discardDocument
         }
         return  mixin().disableAct();
     }
-
-    @Override
-    protected Document doGetDomainObjectIfAny() {
-        final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);
-        return transition != null ? transition.getDocument() : null;
-    }
-
-    @Inject
-    IncomingDocumentCategorisationStateTransition.Repository repository;
 
 }

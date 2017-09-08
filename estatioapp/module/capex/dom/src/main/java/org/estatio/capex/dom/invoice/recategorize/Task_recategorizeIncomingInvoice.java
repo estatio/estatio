@@ -24,7 +24,13 @@ public class Task_recategorizeIncomingInvoice
         this.task = task;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public static class ActionDomainEvent
+            extends Task_mixinIncomingInvoiceAbstract.ActionDomainEvent<Task_recategorizeIncomingInvoice> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
     @ActionLayout(cssClassFa = "mail-reply", cssClass = "btn-danger")
     public Object act(
             @Nullable final String comment,

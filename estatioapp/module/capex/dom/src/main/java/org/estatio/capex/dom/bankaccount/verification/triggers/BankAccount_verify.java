@@ -13,7 +13,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -31,11 +30,11 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
         this.bankAccount = bankAccount;
     }
 
-    public static class DomainEvent extends EstatioCapexDomModule.ActionDomainEvent<BankAccount_verify> {}
+    public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_verify> {}
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = DomainEvent.class
+            domainEvent = ActionDomainEvent.class
     )
     @MemberOrder(sequence = "9")
     public BankAccount act(@Nullable final String comment) {

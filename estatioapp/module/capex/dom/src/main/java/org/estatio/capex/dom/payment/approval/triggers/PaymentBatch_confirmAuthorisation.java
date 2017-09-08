@@ -30,7 +30,12 @@ public class PaymentBatch_confirmAuthorisation extends PaymentBatch_triggerAbstr
         this.paymentBatch = paymentBatch;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public static class ActionDomainEvent extends PaymentBatch_triggerAbstract.ActionDomainEvent<PaymentBatch_confirmAuthorisation> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-check")
     public PaymentBatch act(
             @Nullable final String comment) {

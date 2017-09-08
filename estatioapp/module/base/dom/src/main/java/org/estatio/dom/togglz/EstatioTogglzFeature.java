@@ -8,7 +8,10 @@ public enum EstatioTogglzFeature implements org.togglz.core.Feature {
 
     @Label("whether invoice calculation should use multi-select of LeaseItemType (rather than InvoiceCalculationSelection)")
     @EnabledByDefault
-    invoiceCalculationMultiSelect;
+    invoiceCalculationMultiSelect,
+
+    @Label("whether 'approve by proxy' is enabled (meaning that the task need not be assigned to current user)")
+    ApproveByProxy;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

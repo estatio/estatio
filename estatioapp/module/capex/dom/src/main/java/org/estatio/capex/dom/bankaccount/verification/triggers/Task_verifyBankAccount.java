@@ -9,8 +9,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.capex.dom.order.approval.triggers.Task_mixinOrderAbstract;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -30,13 +30,17 @@ public class Task_verifyBankAccount
         this.task = task;
     }
 
-    public static class DomainEvent
-            extends EstatioCapexDomModule.ActionDomainEvent<Task_verifyBankAccount> {
+    public static class ActionDomainEvent
+            extends Task_mixinOrderAbstract.ActionDomainEvent<Task_verifyBankAccount> {
+        public Class<?> getStateTransitionClass() {
+            return BankAccountVerificationStateTransition.class;
+        }
     }
 
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            domainEvent = DomainEvent.class)
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object act(
             @Nullable final String comment,

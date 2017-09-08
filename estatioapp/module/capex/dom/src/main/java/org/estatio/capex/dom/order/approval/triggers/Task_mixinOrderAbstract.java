@@ -11,6 +11,13 @@ public abstract class Task_mixinOrderAbstract<M>
         extends
         Task_mixinActAbstract<M, Order> {
 
+    public static abstract class ActionDomainEvent<MIXIN>
+            extends Task_mixinActAbstract.ActionDomainEvent<MIXIN> {
+        public Class<?> getStateTransitionClass() {
+            return OrderApprovalStateTransition.class;
+        }
+    }
+
     protected final Task task;
 
     public Task_mixinOrderAbstract(final Task task, final Class<M> mixinClass) {

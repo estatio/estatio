@@ -24,7 +24,12 @@ public class PaymentBatch_discard extends PaymentBatch_triggerAbstract {
         this.paymentBatch = paymentBatch;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public static class ActionDomainEvent extends PaymentBatch_triggerAbstract.ActionDomainEvent<PaymentBatch_discard> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "trash-o")
     public PaymentBatch act(
             @Nullable final String comment) {
