@@ -177,16 +177,17 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Categorisation Tasks and State Transitions">
+                <bs3:tab name="Categorisation State Transitions">
                     <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="categorisationTasks" defaultView="table">
-                                <cpt:named>Tasks</cpt:named>
-                            </cpt:collection>
-                        </bs3:col>
                         <bs3:col span="12">
                             <cpt:collection id="categorisationTransitions" defaultView="table">
                                 <cpt:named>Transitions</cpt:named>
+                            </cpt:collection>
+                        </bs3:col>
+                        <bs3:col span="0">
+                            <!-- hidden -->
+                            <cpt:collection id="categorisationTasks" defaultView="table">
+                                <cpt:named>Tasks</cpt:named>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
