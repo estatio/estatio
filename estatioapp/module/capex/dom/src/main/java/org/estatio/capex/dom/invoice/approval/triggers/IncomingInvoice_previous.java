@@ -20,7 +20,13 @@ public class IncomingInvoice_previous extends IncomingInvoice_triggerAbstract {
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_previous> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.SAFE
+    )
     public Object act() {
         final IncomingInvoice previous = previousBeforePending();
         return objectToReturn(previous);

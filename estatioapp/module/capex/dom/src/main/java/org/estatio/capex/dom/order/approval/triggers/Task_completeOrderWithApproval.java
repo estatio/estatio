@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
@@ -29,7 +30,13 @@ public class Task_completeOrderWithApproval
         this.task = task;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends Task_mixinOrderAbstract.ActionDomainEvent<Task_completeOrderWithApproval> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Object act(
             Person approvedBy,

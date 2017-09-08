@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import org.assertj.core.util.Strings;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
+import org.estatio.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
@@ -11,9 +13,14 @@ import org.estatio.dom.party.PersonRepository;
  * Base class for mixins on {@link Task} that delegate to a corresponding mixin on some domain object which will
  * result in a {@link Task} being completed.
  */
-public abstract class Task_mixinActAbstract<M, DO> extends Task_mixinAbstract<M,DO> {
+public abstract class Task_mixinActAbstract<MIXIN, DO> extends Task_mixinAbstract<MIXIN,DO> {
 
-    public Task_mixinActAbstract(final Task task, final Class<M> mixinClass) {
+    public static abstract class ActionDomainEvent<MIXIN>
+            extends EstatioCapexDomModule.ActionDomainEvent<MIXIN>
+            implements EnforceTaskAssignmentPolicySubscriber.WithStateTransitionClass {
+    }
+
+    public Task_mixinActAbstract(final Task task, final Class<MIXIN> mixinClass) {
         super(task, mixinClass);
     }
 

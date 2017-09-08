@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
@@ -25,7 +26,13 @@ public class Task_completeIncomingInvoice
         this.task = task;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends Task_mixinIncomingInvoiceAbstract.ActionDomainEvent<Task_completeIncomingInvoice> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Object act(
             final String role,

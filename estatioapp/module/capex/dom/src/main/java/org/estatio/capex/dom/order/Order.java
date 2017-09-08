@@ -663,6 +663,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             allowsNull = "false"
     )
     @Property(hidden = Where.EVERYWHERE)
+    @PropertyLayout(named = "Application Level Path")
     @Getter @Setter
     private String atPath;
 

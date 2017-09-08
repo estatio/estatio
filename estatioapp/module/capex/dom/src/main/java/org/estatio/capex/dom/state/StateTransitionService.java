@@ -690,13 +690,26 @@ public class StateTransitionService {
         throw new IllegalArgumentException("No implementations of StateTransitionServiceSupport found for " + transitionType);
     }
 
-    // REVIEW: we could cache the result, perhaps (it's idempotent)
-    private <
+    // REVIEW: we could cache the result permanently rather than on query, (it's idempotent)
+    public <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
             S extends State<S>
-            > Class<ST> transitionClassFor(final STT requiredTransitionType) {
+            > Class<ST> transitionClassFor(final StateTransitionType<?,?,?,?> requiredTransitionType) {
+        return
+                queryResultsCache.execute(
+                        () -> doTransitionClassFor(requiredTransitionType),
+                        StateTransitionService.class,
+                        "transitionClassFor", requiredTransitionType);
+    }
+
+    private  <
+            DO,
+            ST extends StateTransition<DO, ST, STT, S>,
+            STT extends StateTransitionType<DO, ST, STT, S>,
+            S extends State<S>
+            > Class<ST> doTransitionClassFor(final StateTransitionType<?,?,?,?> requiredTransitionType) {
         for (StateTransitionServiceSupport supportService : supportServices) {
             Class<ST> transitionClass = supportService.transitionClassFor(requiredTransitionType);
             if(transitionClass != null) {
@@ -705,7 +718,6 @@ public class StateTransitionService {
         }
         return null;
     }
-
 
     @Inject
     List<StateTransitionServiceSupport> supportServices;

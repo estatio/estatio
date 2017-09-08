@@ -28,7 +28,12 @@ public class PaymentBatch_complete extends PaymentBatch_triggerAbstract {
         this.paymentBatch = paymentBatch;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public static class ActionDomainEvent extends PaymentBatch_triggerAbstract.ActionDomainEvent<PaymentBatch_complete> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public PaymentBatch act(
             final DateTime requestedExecutionDate,

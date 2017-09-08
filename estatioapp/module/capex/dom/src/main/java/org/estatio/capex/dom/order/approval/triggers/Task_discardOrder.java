@@ -23,7 +23,13 @@ public class Task_discardOrder
         this.task = task;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public static class ActionDomainEvent
+            extends Task_mixinOrderAbstract.ActionDomainEvent<Task_discardOrder> { }
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
     @ActionLayout(cssClassFa = "trash-o")
     public Object act(
             @Nullable final String comment,

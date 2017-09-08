@@ -23,8 +23,11 @@ public class BankAccount_cancel extends BankAccount_triggerAbstract {
         this.bankAccount = bankAccount;
     }
 
+    public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_cancel> {}
+
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT
+        domainEvent = ActionDomainEvent.class,
+        semantics = SemanticsOf.IDEMPOTENT
     )
     @MemberOrder(sequence = "9")
     @Override public BankAccount act(@Nullable final String comment) {

@@ -315,6 +315,10 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.isisaddons.module.servletapi</groupId>
+            <artifactId>isis-module-servletapi-dom</artifactId>
+        </dependency>
 
         <!-- requires FixedAssetForTesting -->
         <dependency>

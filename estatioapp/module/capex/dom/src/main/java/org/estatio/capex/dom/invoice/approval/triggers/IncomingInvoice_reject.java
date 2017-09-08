@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
@@ -32,7 +33,13 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_reject> {}
+
+    @Action(
+            domainEvent = IncomingInvoice_next.ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-thumbs-o-down", cssClass = "btn-warning")
     public Object act(
             final String role,

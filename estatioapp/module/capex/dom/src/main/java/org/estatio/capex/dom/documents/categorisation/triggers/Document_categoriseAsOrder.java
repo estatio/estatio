@@ -34,7 +34,11 @@ public class Document_categoriseAsOrder
         this.document = document;
     }
 
+    public static class ActionDomainEvent
+            extends Document_triggerAbstract.ActionDomainEvent<Document_categoriseAsOrder> {}
+
     @Action(
+            domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.IDEMPOTENT
     )
     @ActionLayout(cssClassFa = "folder-open-o")

@@ -77,6 +77,7 @@ language governing permissions and limitations under the License.
         <isis-module-poly.version>1.14.0</isis-module-poly.version>
         <isis-module-security.version>1.14.0</isis-module-security.version>
         <isis-module-sessionlogger.version>1.14.0</isis-module-sessionlogger.version>
+        <isis-module-servletapi.version>1.14.0</isis-module-servletapi.version>
         <isis-module-settings.version>1.14.0</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.14.0</isis-module-stringinterpolator.version>
         <isis-module-togglz.version>1.14.0</isis-module-togglz.version>
@@ -173,6 +174,11 @@ language governing permissions and limitations under the License.
                 <groupId>org.isisaddons.module.sessionlogger</groupId>
                 <artifactId>isis-module-sessionlogger-dom</artifactId>
                 <version>${isis-module-sessionlogger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.servletapi</groupId>
+                <artifactId>isis-module-servletapi-dom</artifactId>
+                <version>${isis-module-servletapi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.isisaddons.module.poly</groupId>

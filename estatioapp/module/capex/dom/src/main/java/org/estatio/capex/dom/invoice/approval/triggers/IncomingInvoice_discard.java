@@ -32,7 +32,13 @@ public class IncomingInvoice_discard extends IncomingInvoice_triggerAbstract {
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_discard> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
     @ActionLayout(cssClassFa = "trash-o")
     public IncomingInvoice act(@Nullable final String comment) {
         Optional<Document> documentIfAny = lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice);

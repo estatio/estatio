@@ -23,6 +23,7 @@ import javax.jdo.JDOHelper;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
@@ -99,6 +100,8 @@ public abstract class UdoDomainObject<T extends UdoDomainObject<T>>
 
     // //////////////////////////////////////
 
+
+    @PropertyLayout(named = "Application Level Path")
     @Override
     public String getAtPath() {
         final ApplicationTenancy applicationTenancy = getApplicationTenancy();

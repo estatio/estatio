@@ -59,7 +59,6 @@ public class PartyMenu {
         return partyRepository.allParties();
     }
 
-    // //////////////////////////////////////
 
     @Inject
     PartyRepository partyRepository;

@@ -13,6 +13,13 @@ abstract class PaymentBatch_triggerAbstract
         PaymentBatchApprovalStateTransitionType,
         PaymentBatchApprovalState> {
 
+    public static abstract class ActionDomainEvent<MIXIN> extends DomainObject_triggerAbstract.ActionDomainEvent<MIXIN> {
+        @Override
+        public Class<?> getStateTransitionClass() {
+            return PaymentBatchApprovalStateTransition.class;
+        }
+    }
+
     PaymentBatch_triggerAbstract(
             final PaymentBatch paymentBatch,
             final PaymentBatchApprovalStateTransitionType requiredTransitionType) {

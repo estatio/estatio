@@ -126,6 +126,7 @@ public class Project extends UdoDomainObject<Project> implements
 	@Column(allowsNull = "false", length = AtPathType.Meta.MAX_LEN)
 	@Getter @Setter
 	@Property(hidden = Where.EVERYWHERE)
+	@PropertyLayout(named = "Application Level Path")
 	private String atPath;
 
 	@PropertyLayout(

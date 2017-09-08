@@ -1,8 +1,12 @@
 package org.estatio.capex.dom.invoice.approval.triggers;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
@@ -20,6 +24,20 @@ public class IncomingDocAsInvoiceViewModel_approveAsCountryDirector
     public IncomingDocAsInvoiceViewModel_approveAsCountryDirector(final IncomingDocAsInvoiceViewModel viewModel) {
         super(viewModel.getDomainObject());
         this.viewModel = viewModel;
+    }
+
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingDocAsInvoiceViewModel_approveAsCountryDirector> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    @ActionLayout(cssClassFa = "fa-thumbs-up")
+    public Object act(
+            @Nullable final String comment,
+            final boolean goToNext) {
+        return super.act(comment, goToNext);
     }
 
     protected Object objectToReturn(final IncomingInvoice incomingInvoice) {

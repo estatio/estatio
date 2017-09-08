@@ -20,7 +20,12 @@ public class Order_next extends Order_triggerAbstract {
         this.order = order;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
+    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_next> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.SAFE
+    )
     public Object act() {
         final Order next = nextAfterPending();
         return objectToReturn(next);

@@ -7,13 +7,13 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.dom.asset.Property;
 
 /**
@@ -21,7 +21,7 @@ import org.estatio.dom.asset.Property;
  */
 @Mixin(method = "act")
 public class Task_categoriseDocumentAsPropertyInvoice
-        extends Task_mixinActAbstract<Document_categoriseAsPropertyInvoice, Document> {
+        extends Task_mixinDocumentAbstract<Document_categoriseAsPropertyInvoice> {
 
     protected final Task task;
 
@@ -30,7 +30,13 @@ public class Task_categoriseDocumentAsPropertyInvoice
         this.task = task;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends Task_mixinDocumentAbstract.ActionDomainEvent<Task_categoriseDocumentAsPropertyInvoice> { }
+
+    @Action(
+            domainEvent = Task_categoriseDocumentAsOrder.ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(contributed = Contributed.AS_ACTION, cssClassFa = "folder-open-o")
     public Object act(
             final Property property,
@@ -60,14 +66,5 @@ public class Task_categoriseDocumentAsPropertyInvoice
         }
         return mixin().disableAct();
     }
-
-    @Override
-    protected Document doGetDomainObjectIfAny() {
-        final IncomingDocumentCategorisationStateTransition transition = repository.findByTask(this.task);
-        return transition != null ? transition.getDocument() : null;
-    }
-
-    @Inject
-    IncomingDocumentCategorisationStateTransition.Repository repository;
 
 }

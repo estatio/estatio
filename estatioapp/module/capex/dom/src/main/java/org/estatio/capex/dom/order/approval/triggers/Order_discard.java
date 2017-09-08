@@ -33,7 +33,12 @@ public class Order_discard extends
         this.order = order;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_discard> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
+    )
     @ActionLayout(cssClassFa = "trash-o")
     public Order act(@Nullable final String comment) {
 

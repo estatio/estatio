@@ -27,7 +27,10 @@ public class Document_discard
         this.document = document;
     }
 
+    public static class ActionDomainEvent extends Document_triggerAbstract.ActionDomainEvent<Document_discard> {}
+
     @Action(
+            domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE
     )
     @ActionLayout(cssClassFa = "trash-o")

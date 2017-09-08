@@ -16,6 +16,13 @@ public abstract class Order_triggerAbstract
                         OrderApprovalStateTransitionType,
                         OrderApprovalState> {
 
+    public static abstract  class ActionDomainEvent<MIXIN> extends DomainObject_triggerAbstract.ActionDomainEvent<MIXIN> {
+        @Override
+        public Class<?> getStateTransitionClass() {
+            return OrderApprovalStateTransition.class;
+        }
+    }
+
     Order_triggerAbstract(
             final Order order,
             final OrderApprovalStateTransitionType requiredTransitionType) {

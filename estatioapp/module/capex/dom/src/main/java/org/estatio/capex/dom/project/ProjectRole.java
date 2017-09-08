@@ -62,6 +62,11 @@ import lombok.Setter;
 				value = "SELECT " +
 						"FROM org.estatio.capex.dom.project.ProjectRole "
 						+ "WHERE project == :project "),
+		@javax.jdo.annotations.Query(
+				name = "findByParty", language = "JDOQL",
+				value = "SELECT " +
+						"FROM org.estatio.capex.dom.project.ProjectRole "
+						+ "WHERE party == :party "),
 })
 @DomainObject(
 		editing = Editing.DISABLED,

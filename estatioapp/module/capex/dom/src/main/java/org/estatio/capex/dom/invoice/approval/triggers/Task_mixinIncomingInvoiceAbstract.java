@@ -11,6 +11,13 @@ public abstract class Task_mixinIncomingInvoiceAbstract<M>
         extends
         Task_mixinActAbstract<M, IncomingInvoice> {
 
+    public static abstract class ActionDomainEvent<MIXIN>
+            extends Task_mixinActAbstract.ActionDomainEvent<MIXIN> {
+        public Class<?> getStateTransitionClass() {
+            return IncomingInvoiceApprovalStateTransition.class;
+        }
+    }
+
     protected final Task task;
 
     public Task_mixinIncomingInvoiceAbstract(final Task task, final Class<M> mixinClass) {

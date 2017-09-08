@@ -16,6 +16,13 @@ public abstract class IncomingInvoice_triggerAbstract
                                     IncomingInvoiceApprovalStateTransitionType,
                                     IncomingInvoiceApprovalState> {
 
+    public static abstract class ActionDomainEvent<MIXIN> extends DomainObject_triggerAbstract.ActionDomainEvent<MIXIN> {
+        @Override
+        public Class<?> getStateTransitionClass() {
+            return IncomingInvoiceApprovalStateTransition.class;
+        }
+    }
+
     protected IncomingInvoice_triggerAbstract(
             final IncomingInvoice incomingInvoice,
             final IncomingInvoiceApprovalStateTransitionType requiredTransitionType) {

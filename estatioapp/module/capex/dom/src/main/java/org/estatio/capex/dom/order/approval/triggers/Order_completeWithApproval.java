@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.capex.dom.order.Order;
@@ -34,7 +35,12 @@ public class Order_completeWithApproval extends
         this.order = order;
     }
 
-    @Action()
+    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_completeWithApproval> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public Order act(
             Person approvedBy,

@@ -2,7 +2,9 @@ package org.estatio.capex.dom.invoice.approval.triggers;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
@@ -19,6 +21,17 @@ public class IncomingDocAsInvoiceViewModel_next extends IncomingInvoice_next {
     public IncomingDocAsInvoiceViewModel_next(final IncomingDocAsInvoiceViewModel viewModel) {
         super(viewModel.getDomainObject());
         this.viewModel = viewModel;
+    }
+
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingDocAsInvoiceViewModel_next> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.SAFE
+    )
+    public Object act() {
+        return super.act();
     }
 
     @Override

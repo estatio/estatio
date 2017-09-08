@@ -8,12 +8,14 @@ import javax.inject.Inject;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
+import org.estatio.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeService;
@@ -32,6 +34,12 @@ public abstract class DomainObject_triggerAbstract<
     protected final Class<ST> stateTransitionClass;
     protected final List<S> fromStates;
     protected final STT requiredTransitionType;
+
+    public static abstract class ActionDomainEvent<MIXIN>
+            extends EstatioCapexDomModule.ActionDomainEvent<MIXIN>
+            implements EnforceTaskAssignmentPolicySubscriber.WithStateTransitionClass {
+
+    }
 
     protected DomainObject_triggerAbstract(
             final DO domainObject,

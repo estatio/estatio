@@ -39,7 +39,11 @@ public class Document_categoriseAsOtherInvoice
         this.document = document;
     }
 
+    public static class ActionDomainEvent
+            extends Document_triggerAbstract.ActionDomainEvent<Document_categoriseAsOtherInvoice> {}
+
     @Action(
+            domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.IDEMPOTENT
     )
     @ActionLayout(cssClassFa = "folder-open-o")

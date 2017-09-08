@@ -98,6 +98,7 @@ class EstatioAppDefn  {
 
     static Class<?>[] addonModules() {
         return new Class<?>[] { org.isisaddons.module.excel.ExcelModule.class,
+                org.isisaddons.module.servletapi.ServletApiModule.class,
                 org.isisaddons.module.poly.PolyModule.class,
                 org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
                 // don't include the settings module, instead we use EstatioSettingsDomModule

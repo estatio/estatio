@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
@@ -26,7 +27,13 @@ public class IncomingInvoice_complete extends IncomingInvoice_triggerAbstract {
         this.incomingInvoice = incomingInvoice;
     }
 
-    @Action()
+    public static class ActionDomainEvent
+            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingInvoice_complete> {}
+
+    @Action(
+            domainEvent = ActionDomainEvent.class,
+            semantics = SemanticsOf.IDEMPOTENT
+    )
     @ActionLayout(cssClassFa = "fa-flag-checkered")
     public IncomingInvoice act(
             final String role,

@@ -10,7 +10,7 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="4">
+        <bs3:col span="3">
             <bs3:tabGroup>
                 <bs3:tab name="General">
                     <bs3:row>
@@ -77,14 +77,6 @@
                                 <cpt:property id="username">
                                     <cpt:action id="updateUsername" position="BELOW"/>
                                 </cpt:property>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Contact">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Contact" id="contact">
                                 <cpt:property id="phoneNumbers"/>
                                 <cpt:property id="emailAddresses"/>
                             </cpt:fieldSet>
@@ -93,42 +85,58 @@
                 </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
-        <bs3:col span="8">
-            <bs3:tabGroup>
-                <bs3:tab name="Communication Channels">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="communicationChannels"/>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Relationships">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="relationships" defaultView="table">
-                                <cpt:action id="newRelationship"/>
-                                <cpt:action id="newRelatedPerson"/>
-                            </cpt:collection>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Roles">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="roles" defaultView="table">
-                                <cpt:action id="addRole"/>
-                            </cpt:collection>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Previous Names">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="previousNames"/>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
+        <bs3:col span="9">
+            <bs3:row>
+                <bs3:col span="6">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Communication Channels">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="communicationChannels"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Relationships">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="relationships" defaultView="table">
+                                        <cpt:action id="newRelationship"/>
+                                        <cpt:action id="newRelatedPerson"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+                <bs3:col span="6">
+                    <bs3:tabGroup>
+                        <bs3:tab name="(Country-level) Roles">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="roles" defaultView="table">
+                                        <cpt:named>(Country-level) Roles</cpt:named>
+                                        <cpt:action id="addRole"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Fixed Asset Roles">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="fixedAssetRoles" defaultView="table"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Project Roles">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="projectRoles" defaultView="table"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
             <cpt:collection id="currentTasks">
                 <cpt:action id="transferTasks"/>
             </cpt:collection>
@@ -144,7 +152,7 @@
             <cpt:collection id="orders"/>
         </bs3:col>
         <bs3:col span="12">
-            <bs3:tabGroup unreferencedCollections="true">
+            <bs3:tabGroup>
                 <bs3:tab name="Recent Communications">
                     <bs3:row>
                         <bs3:col span="12">
@@ -161,6 +169,10 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true">
             </bs3:tabGroup>
         </bs3:col>
     </bs3:row>
