@@ -19,8 +19,10 @@
 package org.estatio.app.menus.admin;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.LocalDate;
 
@@ -32,10 +34,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.isisaddons.module.settings.dom.ApplicationSetting;
-
+import org.estatio.app.services.user.HttpSessionProvider;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
 import org.estatio.domsettings.ApplicationSettingForEstatio;
@@ -48,15 +50,13 @@ import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
 )
 public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
 
+
     public AdministrationMenu() {
         super(AdministrationMenu.class);
     }
 
 
-    //region > updateEpochDate (action)
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public void updateEpochDate(
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -68,31 +68,40 @@ public class AdministrationMenu extends UdoDomainService<AdministrationMenu> {
     public LocalDate default0UpdateEpochDate() {
         return settingsService.fetchEpochDate();
     }
-    //endregion
 
 
-    //region > listAllSettings (action)
 
-    @Action(
-            semantics = SemanticsOf.SAFE,
-            typeOf = ApplicationSettingForEstatio.class
-    )
+
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<ApplicationSetting> listAllSettings() {
-        return applicationSettingsService.listAll();
+    public List<ApplicationSettingForEstatio> listAllSettings() {
+        return applicationSettingsService.listAll()
+                    .stream()
+                .filter(ApplicationSettingForEstatio.class::isInstance)
+                .map(ApplicationSettingForEstatio.class::cast)
+                .collect(Collectors.toList());
     }
-    //endregion
 
 
 
-    //region > injected dependencies
+    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @MemberOrder(sequence = "3")
+    public Integer httpSessionTimeout() {
+        return httpSessionProvider.getHttpSession().map(HttpSession::getMaxInactiveInterval).orElse(null);
+    }
+
+
+
+
 
     @Inject
-    private LeaseInvoicingSettingsService settingsService;
+    HttpSessionProvider httpSessionProvider;
+
+    @Inject
+    LeaseInvoicingSettingsService settingsService;
 
     @Inject
     ApplicationSettingsServiceForEstatio applicationSettingsService;
 
-    //endregion
 
-        }
+}

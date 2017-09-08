@@ -64,8 +64,9 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.15.0.20170907-1100</isis.version>
+        <isis.version>1.15.0.20170908-1513</isis.version>
         <!--
+        <isis.version>1.15.0.20170907-1100</isis.version>
         <isis.version>1.16.0-SNAPSHOT</isis.version>
         -->
 
@@ -834,5 +835,15 @@ language governing permissions and limitations under the License.
         <module>estatioapp/webapp</module>
     </modules>
 
+    <repositories>
+        <!-- staging (originally added to be able to test the RC of Wicket 7.8.1) -->
+        <repository>
+            <id>Apache Staging Repository</id>
+            <url>https://repository.apache.org/content/groups/staging/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
