@@ -94,9 +94,11 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
             return Optional.empty();
         }
 
-
-
         final ST pendingTransition = stateTransitionService.pendingTransitionOf(domainObject, stateTransitionClass);
+
+        if (pendingTransition == null){
+            return Optional.empty();
+        }
 
         final Task task = pendingTransition.getTask();
         if(task == null) {
@@ -112,8 +114,6 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
 
         return Optional.of(String.format("Task assigned to %s", taskAssignedTo.getReference()));
     }
-
-
 
     @Inject
     MetaModelService3 metaModelService3;
