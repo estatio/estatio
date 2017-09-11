@@ -464,6 +464,7 @@ public class IncomingDocAsInvoiceViewModel
 
         if(firstItemIfAny.isPresent()) {
             IncomingInvoiceItem item = firstItemIfAny.get();
+            item.setIncomingInvoiceType(getIncomingInvoiceType());
             item.setCharge(getCharge());
             item.setDescription(getDescription());
             item.setNetAmount(getNetAmount());
