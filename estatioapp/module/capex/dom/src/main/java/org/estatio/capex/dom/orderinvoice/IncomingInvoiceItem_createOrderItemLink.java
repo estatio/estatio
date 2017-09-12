@@ -61,7 +61,7 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
     }
 
     public String validate0Act(final OrderItem orderItem) {
-        return linkValidationService.validateOrderItem(orderItem, mixee);
+        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee).isEmpty() ? null : linkValidationService.validateOrderItem(orderItem, mixee);
     }
 
     public BigDecimal default1Act(){

@@ -340,6 +340,8 @@ public class IncomingInvoiceItem_Test {
         orderItem.setCharge(charge);
         Project project = new Project();
         orderItem.setProject(project);
+        Property property = new Property();
+        orderItem.setProperty(property);
 
         OrderItemInvoiceItemLink link = new OrderItemInvoiceItemLink();
         link.setOrderItem(orderItem);
@@ -356,6 +358,7 @@ public class IncomingInvoiceItem_Test {
         // then
         Assertions.assertThat(invoiceItem.getCharge()).isEqualTo(charge);
         Assertions.assertThat(invoiceItem.getProject()).isEqualTo(project);
+        Assertions.assertThat(invoiceItem.getFixedAsset()).isEqualTo(property);
 
     }
 

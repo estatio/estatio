@@ -8,10 +8,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.util.ReasonBuffer;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceItem;
 
@@ -20,18 +18,6 @@ import org.estatio.dom.invoice.InvoiceItem;
  */
 @DomainService(nature = NatureOfService.DOMAIN)
 public class OrderItemInvoiceItemLinkValidationService {
-
-    @Programmatic
-    public String validateOrderItem(
-            final OrderItem orderItem,
-            final IncomingDocAsInvoiceViewModel viewModel) {
-
-        final Charge charge = viewModel.getCharge();
-        final Project project = viewModel.getProject();
-        final Property property = viewModel.getProperty();
-
-        return validateOrderItem(orderItem, charge, project, property);
-    }
 
     @Programmatic
     public String validateOrderItem(

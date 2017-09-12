@@ -715,12 +715,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Programmatic
     public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny(){
         if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()==1) {
-            OrderItem linkerOrderItem = orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem();
-            if (linkerOrderItem.getCharge() != null) {
-                setCharge(linkerOrderItem.getCharge());
+            OrderItem linkedOrderItem = orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem();
+            if (linkedOrderItem.getCharge() != null) {
+                setCharge(linkedOrderItem.getCharge());
             }
-            if (linkerOrderItem.getProject() != null) {
-                setProject(linkerOrderItem.getProject());
+            if (linkedOrderItem.getProject() != null) {
+                setProject(linkedOrderItem.getProject());
+            }
+            if (linkedOrderItem.getProperty() != null) {
+                setFixedAsset(linkedOrderItem.getProperty());
             }
         }
     }

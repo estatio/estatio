@@ -251,10 +251,6 @@ public class IncomingDocAsInvoiceViewModel
         return null; // EST-1507: invoices item can be attached to order items any time
     }
 
-    public String validateOrderItem(final OrderItem orderItem) {
-        return linkValidationService.validateOrderItem(orderItem, this);
-    }
-
     private void autoFillIn(){
         if (hasOrderItem()){
             Order order = orderRepository.findByOrderNumber(getOrderItem().getOrdr().getOrderNumber());
@@ -283,7 +279,7 @@ public class IncomingDocAsInvoiceViewModel
             if (orderItem.getProject()!=null){
                 setProject(orderItem.getProject());
             }
-            if (!hasProperty()){
+            if (orderItem.getProperty()!=null){
                 setProperty(orderItem.getProperty());
             }
             if (!hasBudgetItem()){
