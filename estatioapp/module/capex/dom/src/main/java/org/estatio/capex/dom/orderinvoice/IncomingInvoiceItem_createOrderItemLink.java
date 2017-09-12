@@ -54,7 +54,7 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
         if(mixee.getInvoice().getSeller() == null) {
             return "Invoice's seller is required before items can be linked";
         }
-        if(orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedFromInvoiceItem(mixee).compareTo(mixee.getNetAmount()) >= 0) {
+        if(mixee.getNetAmount()!=null && orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedFromInvoiceItem(mixee).compareTo(mixee.getNetAmount()) >= 0) {
             return "The net amount for this invoice item has already been linked to other order items";
         }
         return null;
