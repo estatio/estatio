@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -12,6 +13,9 @@ import org.junit.Test;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
@@ -273,6 +277,85 @@ public class IncomingInvoiceItem_Test {
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isNull();
+
+    }
+
+    @Mock
+    OrderItemInvoiceItemLinkRepository mockOrderItemInvoiceItemLinkRepository;
+
+    @Test
+    public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny_no_item_works() throws Exception {
+
+        // given
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+        invoiceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+        }});
+
+        // when
+        invoiceItem.copyChargeAndProjectFromSingleLinkedOrderItemIfAny();
+
+    }
+
+    @Test
+    public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny_two_items_works() throws Exception {
+
+        // given
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+        invoiceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+        OrderItemInvoiceItemLink link1 = new OrderItemInvoiceItemLink();
+        OrderItemInvoiceItemLink link2 = new OrderItemInvoiceItemLink();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+            will(returnValue(Arrays.asList(link1, link2)));
+        }});
+
+        // when
+        invoiceItem.copyChargeAndProjectFromSingleLinkedOrderItemIfAny();
+
+        // then
+        Assertions.assertThat(invoiceItem.getCharge()).isNull();
+        Assertions.assertThat(invoiceItem.getProject()).isNull();
+
+    }
+
+
+    @Test
+    public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny_one_item_works() throws Exception {
+
+        // given
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(){
+            @Override
+            void invalidateApproval(){}
+        };
+        invoiceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+        OrderItem orderItem = new OrderItem();
+        Charge charge = new Charge();
+        orderItem.setCharge(charge);
+        Project project = new Project();
+        orderItem.setProject(project);
+
+        OrderItemInvoiceItemLink link = new OrderItemInvoiceItemLink();
+        link.setOrderItem(orderItem);
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+            will(returnValue(Arrays.asList(link)));
+        }});
+
+        // when
+        invoiceItem.copyChargeAndProjectFromSingleLinkedOrderItemIfAny();
+
+        // then
+        Assertions.assertThat(invoiceItem.getCharge()).isEqualTo(charge);
+        Assertions.assertThat(invoiceItem.getProject()).isEqualTo(project);
 
     }
 

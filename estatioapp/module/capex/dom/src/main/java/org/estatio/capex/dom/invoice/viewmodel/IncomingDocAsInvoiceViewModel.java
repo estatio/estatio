@@ -277,10 +277,10 @@ public class IncomingDocAsInvoiceViewModel
             if (!hasDescription()){
                 setDescription(orderItem.getDescription());
             }
-            if (!hasCharge()){
+            if (orderItem.getCharge()!=null){
                 setCharge(orderItem.getCharge());
             }
-            if (!hasProject()){
+            if (orderItem.getProject()!=null){
                 setProject(orderItem.getProject());
             }
             if (!hasProperty()){

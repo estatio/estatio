@@ -28,6 +28,7 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
             @Digits(integer = 13, fraction = 2)
             final BigDecimal netAmount){
         orderItemInvoiceItemLinkRepository.createLink(orderItem, mixee, netAmount);
+        mixee.copyChargeAndProjectFromSingleLinkedOrderItemIfAny();
         return mixee;
     }
 

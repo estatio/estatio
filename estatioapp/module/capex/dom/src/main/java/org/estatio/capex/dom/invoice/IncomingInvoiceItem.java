@@ -39,6 +39,7 @@ import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -711,7 +712,18 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
 
-
+    @Programmatic
+    public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny(){
+        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()==1) {
+            OrderItem linkerOrderItem = orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem();
+            if (linkerOrderItem.getCharge() != null) {
+                setCharge(linkerOrderItem.getCharge());
+            }
+            if (linkerOrderItem.getProject() != null) {
+                setProject(linkerOrderItem.getProject());
+            }
+        }
+    }
 
 
 
