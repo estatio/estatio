@@ -82,7 +82,7 @@ public class IncomingInvoiceExport {
         this.sellerName = invoice.getSeller().getName();
 
         this.invoiceDate = invoice.getInvoiceDate();
-        this.sellerIban = invoice.getBankAccount().getIban();
+        this.sellerIban = invoice.getBankAccount()!=null ? invoice.getBankAccount().getIban() : null; // since on manual invoices and credit notes bank account is optional
         this.invoiceStatus = invoice.getApprovalState().name();
         this.invoiceNumber = invoice.getInvoiceNumber();
 
