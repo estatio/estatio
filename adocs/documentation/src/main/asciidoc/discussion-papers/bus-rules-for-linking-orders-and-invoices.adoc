@@ -1,0 +1,153 @@
+[[bus-rules-for-linking-orders-and-invoices]]
+= Business Rules for linking Orders and Invoices
+:toc: right
+:_basedir: ./
+
+
+This discussion paper aims to clarify the rules to apply when linking __Order__s and __Invoice__s (or, more precisely, their corresponding __Order Item__s and __Invoice Item__s).
+It also tackles how changes to either __Order__s or __Invoice__s should be handled once they are have become immutable (due to accounting/reporting or treasury).
+
+
+
+== Business Problem
+
+The original motivation included these two related issues:
+
+* (EST-1571) discover that the seller was incorrect on an _Order_; needs fixing
+* (EST-1602) realise that an _Order_ should be discarded (eg is a duplicate scan), but it has already been marked as completed/approved
+
+This led into two sorts of discussions:
+
+* how to make Estatio more user-friendly by defaulting information where possible when linking __Order__s and __Invoice__s together
+
+* a deeper discussion about what additional constraints there are on whether an _Order_ or an _Invoice_ and its child items has become immutable.
+
+This paper tackles the *first* of these issues.
+
+
+
+
+== Terminology
+
+"Dimensions" are a means of characterising an _Order_ or an _Invoice_.
+
+* defined at parent level, ie _Invoice_ or the _Order_:
+
+** seller party (also called supplier)
+
+
+* defined at item level _Invoice Item_ or the _Order Item_ :
+
+** property
+** charge
+** project
+** budget
+** period
+
+
+The invoice __type__ determines the approval cycle; it also determines which dimensions are mandatory/must be left blank.
+
+* capex/service charge/property expense : have a two-stage approval cycle
+** capex: project is required, budget is blank
+** service charge: project is blank, budget is required
+** property expense: neither is required
+* local expense : single-stage approval cycle
+* corporate expense : a (different) single-stage approval cycle
+
+
+
+== Input/validation Rules
+
+=== Categorising New Invoice + Linking Immediately
+
+given:
+
+* already have _Order_ with some or all of these dimensions on it: seller, charge, project, budget item, (period)
+
+* and categorising a "new" _Invoice_ (still modifiable):
+
+** (a) enter order number, and it's valid
+*** given list of __Order Item__s for that _Order_
+
+** (b) enter seller
+*** given list of __Order Item__s of all of the __Order__s (not completely invoiced) of that seller
+
+when:
+
+* select item and save
+
+then
+
+* Estatio creates a link the _Invoice Item_ to that _Order Item_
+* copies over info from _Order_ to _Invoice_ based on the type of the _Invoice_:
+
+** specifically, the seller
+
+* copies over info from _Order Item_ to _Invoice Item_ based on the type of the _Invoice_:
+** if invoice is *capex*
+*** copies over charge, project
+*** ignores budget item, period
+** if invoice is *service charge*
+*** copies over: charge, budget item
+*** ignores budget item, period
+** if invoice is *property expense*
+*** copies over: charge
+*** ignores project, budget item, period
+
+
+
+[NOTE]
+====
+QN: What if some dimensions have been added to the _InvoiceItem_ already?
+
+* do we ignore them and just overwrite?
+
+* or, do not allow it to be overwritten, and instead use it to constrain the list of candidate __Order item__s?
+
+** if this last, then if enter just an _Order Item_ and it's incompatible with data already entered on the _Invoice Item_, then what?
+====
+
+
+=== Linking Invoice Items "afterwards"
+
+given:
+
+* __Invoice Item__ to be linked that currently has no links, but has dimensions entered onto it
+
+* then:
+
+
+[NOTE]
+====
+QN:
+
+do we use those dimensions as a way of excluding those __Order Item__s that do not meet those dimensions?
+
+or, do we just ignore any dimensions already entered on the _Invoice Item_, and show all (not completed invoiced) __Order Item__s; and overwrite dimensions from _Order Item_ onto _Invoice Item_?
+
+or, do we show all (not completed invoiced) __Order Item__s but not allow an __Order Item__ to be selected that has mismatched dimensions? [This is what we currently do]
+
+or, perhaps a half-way house?  show candidate items, including those that mismatch on the dimensions, but allow those selected to be copied if requested (eg an "overwrite" flag or flags)
+====
+
+
+
+
+=== Linking Invoice Items "afterwards", unmodifiable Invoice
+
+given:
+
+* __Invoice Item__ to be linked that currently is linked to another __Order Item__, and want to link to further __Order Item__(s)
+
++
+eg, if the invoice had to be paid to the suppliers before orders for the invoice existed (so this is a post-payment fixing up the accruals of costs)
+
++
+[NOTE]
+====
+QNs
+
+My guess is that the selected __Order Item__ must have compatible dimensions with the __Invoice Item__'s dimensions, because those dimensions are fixed by the existing link to some other __Order Item__?
+
+====
+
