@@ -234,21 +234,12 @@ public class IncomingDocAsInvoiceViewModel
     }
 
     public List<OrderItem> choicesOrderItem(){
-        // the disable guard ensures this is non-null
         final Party seller = getSeller();
         final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
         if(getOrderItem() != null && !orderItems.contains(getOrderItem())) {
             orderItems.add(getOrderItem());
         }
         return orderItems;
-    }
-
-    public String disableOrderItem(){
-        final Party seller = getSeller();
-        if(seller == null) {
-            return "Invoice's seller is required before items can be linked";
-        }
-        return null; // EST-1507: invoices item can be attached to order items any time
     }
 
     private void autoFillIn(){
