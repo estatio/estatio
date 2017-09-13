@@ -169,10 +169,19 @@
                         </col>
                     </row>
                 </tab>
+            </tabGroup>
+            <tabGroup  unreferencedCollections="false">
                 <tab name="Financial Accounts">
                     <row>
                         <col span="12">
                             <ns2:collection id="financialAccounts" defaultView="table"/>
+                        </col>
+                    </row>
+                </tab>
+                <tab name="Bank Mandates">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="bankMandates" defaultView="table"/>
                         </col>
                     </row>
                 </tab>
