@@ -41,6 +41,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.charge.dom.impmgr.ChargeImportManager;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
@@ -112,10 +113,14 @@ public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
         return allCountryTenancies();
     }
 
-    // //////////////////////////////////////
-
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
+    public List<Charge> findCharge(String search) {
+        return chargeRepository.matchOnReferenceOrName(StringUtils.wildcardToCaseInsensitiveRegex(search));
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3")
     public List<Charge> allCharges() {
         return chargeRepository.listAll();
     }
