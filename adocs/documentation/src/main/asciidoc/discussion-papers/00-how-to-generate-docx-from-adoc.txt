@@ -1,0 +1,23 @@
+prereqs
+
+- install graphviz
+- set $GRAPHVIZ_DOT
+  - eg C:\ProgramData\chocolatey\lib\graphviz.portable\tools\release\bin\dot.exe on my Windows PC
+- install AsciidocFX
+
+- install pandoc
+
+
+
+load the .adoc in AsciidocFX
+
+save as DocBook (xml) file
+
+pandoc -s -t docbook xxx.adoc -o xxx.docx
+
+eg: 
+
+pandoc -s -t docbook \
+       bus-rules-for-linking-orders-and-invoices.adoc \
+       -o bus-rules-for-linking-orders-and-invoices.docx
+

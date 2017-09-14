@@ -3,7 +3,7 @@
 <article xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
 <info>
 <title>Business Rules for linking Orders and Invoices</title>
-<date>2017-09-13</date>
+<date>2017-09-14</date>
 </info>
 <simpara>This discussion paper aims to clarify the rules to apply when linking <emphasis>Order</emphasis>s and <emphasis>Invoice</emphasis>s (or, more precisely, their corresponding <emphasis>Order Item</emphasis>s and <emphasis>Invoice Item</emphasis>s).
 It also tackles how changes to either <emphasis>Order</emphasis>s or <emphasis>Invoice</emphasis>s should be handled once they are have become immutable (due to accounting/reporting or treasury).</simpara>
@@ -143,7 +143,7 @@ It also tackles how changes to either <emphasis>Order</emphasis>s or <emphasis>I
 <simpara>if invoice is <emphasis role="strong">capex</emphasis></simpara>
 <itemizedlist>
 <listitem>
-<simpara>copies over charge, project</simpara>
+<simpara>copies over charge, project (and property? - at the moment it does when using the viewmodel …​)</simpara>
 </listitem>
 <listitem>
 <simpara>ignores budget item, period</simpara>
@@ -154,7 +154,7 @@ It also tackles how changes to either <emphasis>Order</emphasis>s or <emphasis>I
 <simpara>if invoice is <emphasis role="strong">service charge</emphasis></simpara>
 <itemizedlist>
 <listitem>
-<simpara>copies over: charge, budget item</simpara>
+<simpara>copies over: charge, budget item (and property? - at the moment it does when using the viewmodel …​)</simpara>
 </listitem>
 <listitem>
 <simpara>ignores budget item, period</simpara>
@@ -165,7 +165,7 @@ It also tackles how changes to either <emphasis>Order</emphasis>s or <emphasis>I
 <simpara>if invoice is <emphasis role="strong">property expense</emphasis></simpara>
 <itemizedlist>
 <listitem>
-<simpara>copies over: charge</simpara>
+<simpara>copies over: charge (and property? - at the moment it does when using the viewmodel …​)</simpara>
 </listitem>
 <listitem>
 <simpara>ignores project, budget item, period</simpara>
