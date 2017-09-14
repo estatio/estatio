@@ -85,13 +85,13 @@ then
 
 * copies over info from _Order Item_ to _Invoice Item_ based on the type of the _Invoice_:
 ** if invoice is *capex*
-*** copies over charge, project
+*** copies over charge, project (and property? - at the moment it does when using the viewmodel ...)
 *** ignores budget item, period
 ** if invoice is *service charge*
-*** copies over: charge, budget item
+*** copies over: charge, budget item (and property? - at the moment it does when using the viewmodel ...)
 *** ignores budget item, period
 ** if invoice is *property expense*
-*** copies over: charge
+*** copies over: charge (and property? - at the moment it does when using the viewmodel ...)
 *** ignores project, budget item, period
 
 
