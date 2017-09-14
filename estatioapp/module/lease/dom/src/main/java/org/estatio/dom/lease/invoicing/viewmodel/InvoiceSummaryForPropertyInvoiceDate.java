@@ -73,6 +73,7 @@ import lombok.Setter;
                                 "    ON ii.\"invoiceId\" = i.\"id\" " +
                                 "  INNER JOIN \"dbo\".\"Party\" p " +
                                 "    ON p.\"id\" = i.\"sellerPartyId\" " +
+                                "WHERE i.\"discriminator\" = 'org.estatio.dom.invoice.Invoice' " +
                                 "GROUP BY " +
                                 "  i.\"atPath\", " +
                                 "  p.\"reference\", " +

@@ -77,6 +77,7 @@ import lombok.Setter;
                                 "    ON ii.\"invoiceId\" = i.\"id\" " +
                                 "WHERE " +
                                 "   NOT i.\"runId\" IS NULL " +
+                                "   AND i.\"discriminator\" = 'org.estatio.dom.invoice.Invoice' " +
                                 "GROUP BY " +
                                 "   i.\"runId\", i.\"atPath\"")
         })
