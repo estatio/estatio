@@ -18,15 +18,21 @@
  */
 package org.estatio.dom.party.role;
 
+import java.util.List;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -101,5 +107,15 @@ public class PartyRoleType
         return securityApplicationTenancyRepository.findByPathCached(
                 ApplicationTenancyConstants.GLOBAL_PATH);
     }
+
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(defaultView = "table")
+    public List<PartyRole> parties() {
+        return partyRoleRepository.findByRoleType(this);
+    }
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
 
 }

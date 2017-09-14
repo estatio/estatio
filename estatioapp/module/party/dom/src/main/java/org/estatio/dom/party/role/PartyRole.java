@@ -120,4 +120,5 @@ public class PartyRole
     public ApplicationTenancy getApplicationTenancy() {
         return getParty().getApplicationTenancy();
     }
+
 }
