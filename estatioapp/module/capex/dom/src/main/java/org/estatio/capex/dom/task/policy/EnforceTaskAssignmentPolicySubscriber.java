@@ -88,13 +88,15 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
             S extends State<S>
             > Optional<String> applyPolicy(
             final Class<ST> stateTransitionClass,
-            final DO domainObject) {
+            final DO entityOrViewModel) {
 
         if(EstatioTogglzFeature.ApproveByProxy.isActive()) {
             return Optional.empty();
         }
 
-        final ST pendingTransition = stateTransitionService.pendingTransitionOf(domainObject, stateTransitionClass);
+        final DO entity = unwrapIfRequired(entityOrViewModel);
+
+        final ST pendingTransition = stateTransitionService.pendingTransitionOf(entity, stateTransitionClass);
 
         if (pendingTransition == null){
             return Optional.empty();
@@ -113,6 +115,17 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
         }
 
         return Optional.of(String.format("Task assigned to %s", taskAssignedTo.getReference()));
+    }
+
+    private <DO> DO unwrapIfRequired(final DO entityOrViewModel) {
+        final DO entity;
+        if(entityOrViewModel instanceof ViewModelWrapper) {
+            final ViewModelWrapper entityOrViewModel1 = (ViewModelWrapper) entityOrViewModel;
+            entity = (DO)entityOrViewModel1.getDomainObject();
+        } else {
+            entity = entityOrViewModel;
+        }
+        return entity;
     }
 
     @Inject

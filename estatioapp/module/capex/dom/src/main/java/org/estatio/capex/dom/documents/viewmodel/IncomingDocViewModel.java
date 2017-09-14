@@ -47,6 +47,7 @@ import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
+import org.estatio.capex.dom.task.policy.ViewModelWrapper;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.OwnershipType;
 import org.estatio.dom.asset.Property;
@@ -74,7 +75,7 @@ import lombok.Setter;
 
 @XmlTransient // abstract class so do not map
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvider {
+public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvider, ViewModelWrapper<T> {
 
 
     public IncomingDocViewModel() {}
