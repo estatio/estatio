@@ -202,7 +202,7 @@ public class LeaseTermsForDeposit_IntegTest extends EstatioIntegrationTest {
             LocalDate dueDate = new LocalDate(2011, 01,01);
 
             // when
-            getFixtureClock().setDate(2011, 4, 1);
+            setFixtureClockDate(2011, 4, 1);
             LocalDate fixtureDate = clockService.now();
             wrap(leaseForMedia).verifyUntil(fixtureDate.plusDays(1));
 

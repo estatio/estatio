@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -67,6 +68,9 @@ public class Organisation_IntegTest extends EstatioIntegrationTest {
     @Inject
     OrganisationRepository organisationRepository;
 
+    @Inject
+    ClockService clockService;
+
     Organisation organisation;
 
     public static class ChangeName extends Organisation_IntegTest {
@@ -90,7 +94,7 @@ public class Organisation_IntegTest extends EstatioIntegrationTest {
             assertThat(previousNames).isEmpty();
 
             // when
-            wrap(organisation).changeName("New name", new LocalDate(2012, 1, 1));
+            wrap(organisation).changeName("New name", clockService.now().minusDays(1));
             previousNames = organisation.getPreviousNames();
 
             // then
@@ -104,7 +108,7 @@ public class Organisation_IntegTest extends EstatioIntegrationTest {
             exception.expectMessage("You can not select a future end date");
 
             // when
-            wrap(organisation).changeName("New name", new LocalDate(2050, 1, 1));
+            wrap(organisation).changeName("New name", clockService.now().plusDays(1));
         }
 
         @Test

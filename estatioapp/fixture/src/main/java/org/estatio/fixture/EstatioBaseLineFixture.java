@@ -20,6 +20,8 @@ package org.estatio.fixture;
 
 import java.util.List;
 
+import org.apache.isis.applib.clock.Clock;
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.incode.module.integtestsupport.dom.ClockFixture;
@@ -27,6 +29,7 @@ import org.incode.module.integtestsupport.dom.ClockFixture;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
 import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
+import org.estatio.integtests.capex.TickingFixtureClock;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}
@@ -52,8 +55,22 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
+
+        final Clock instance = Clock.getInstance();
+
+        if(instance instanceof TickingFixtureClock) {
+            TickingFixtureClock.reinstateExisting();
+            executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
+            TickingFixtureClock.replaceExisting();
+        }
+
+        if(instance instanceof FixtureClock) {
+            executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
+        }
+
+
         teardown(executionContext);
+
         if (isRefDataPresent()) {
             return;
         }

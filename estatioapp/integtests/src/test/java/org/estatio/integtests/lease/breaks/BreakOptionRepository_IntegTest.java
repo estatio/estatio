@@ -96,10 +96,13 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
         @Inject
         EstatioFakeDataService fakeDataService;
 
+        LocalDate clockBefore;
+
         @Before
         public void setup() {
-            getFixtureClock().clear();
-            getFixtureClock().setDate(2014, 7, 1);
+            clockBefore = clockService.now();
+
+            setFixtureClockDate(2014, 7, 1);
 
             fs = new LeaseBuilder() {{
                 setStartDate(VT.ld(2014, 4, 1));
@@ -116,7 +119,7 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void tearDown() {
-            getFixtureClock().reset();
+            setFixtureClockDate(clockBefore);
         }
 
         @Test
@@ -126,8 +129,10 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
             Lease lease = fs.getLease();
             Assertions.assertThat(lease.getBreakOptions()).isEmpty();
 
+            LocalDate currentDate = clockService.now();
+
             // when
-            final LocalDate breakDate = VT.ld(2014, 11, 1); // 4 months from now
+            final LocalDate breakDate = currentDate.plusMonths(4);
             final String notificationPeriodStr = "3m";
             final BreakType breakType = BreakType.ROLLING;
             final BreakExerciseType breakExerciseType = fakeDataService.collections().anEnum(BreakExerciseType.class);
@@ -142,7 +147,7 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
 
             Assertions.assertThat(breakOption.getLease()).isEqualTo(lease);
 
-            Assertions.assertThat(breakOption.getBreakDate()).isEqualTo(VT.ld(2014, 11, 1));
+            Assertions.assertThat(breakOption.getBreakDate()).isEqualTo(breakDate);
             Assertions.assertThat(breakOption.getNotificationPeriod()).isEqualTo("3m");
             Assertions.assertThat(breakOption.getType()).isEqualTo(BreakType.ROLLING);
             Assertions.assertThat(breakOption).isInstanceOf(RollingBreakOption.class);
@@ -150,8 +155,15 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
             Assertions.assertThat(breakOption.getExerciseType()).isEqualTo(breakExerciseType);
             Assertions.assertThat(breakOption.getDescription()).isEqualTo(description);
 
-            Assertions.assertThat(breakOption.getExerciseDate()).isEqualTo(VT.ld(2014, 8, 1)); // 3 months before break date
-            Assertions.assertThat(breakOption.getCurrentBreakDate()).isEqualTo(breakDate);
+            Assertions.assertThat(breakOption.getExerciseDate()).isEqualTo(breakDate.minusMonths(3));
+
+            // and given, meaning that...
+            currentDate = clockService.now();
+            LocalDate exerciseDate = breakOption.getExerciseDate();
+            Assertions.assertThat(currentDate).isLessThan(exerciseDate);
+
+            // then also
+            Assertions.assertThat(breakOption.getCurrentBreakDate()).isEqualTo(exerciseDate.plusMonths(2));
 
             Assertions.assertThat(breakOption.getCalendarEvents()).hasSize(1);
 
@@ -164,6 +176,18 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
 
             final Set<String> calendarNames = breakOption.getCalendarNames();
             Assertions.assertThat(calendarNames).containsExactly("Rolling break exercise");
+
+            // and when
+            final LocalDate exerciseDatePlus1 = breakOption.getExerciseDate().plusMonths(1);
+            setFixtureClockDate(exerciseDatePlus1);
+
+            // meaning that...
+            currentDate = clockService.now();
+            exerciseDate = breakOption.getExerciseDate();
+            Assertions.assertThat(currentDate).isGreaterThan(exerciseDate);
+
+            // then
+            Assertions.assertThat(breakOption.getCurrentBreakDate()).isEqualTo(currentDate.plusMonths(2));
 
         }
     }

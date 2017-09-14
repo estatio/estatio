@@ -237,7 +237,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
 
             assertThat(paperclip.getRoleName()).isEqualTo(PaperclipRoleNames.SUPPORTING_DOCUMENT);
             assertThat(paperclip.getDocumentCreatedAt()).isEqualTo(document.getCreatedAt());
-            assertThat(paperclip.getDocumentDate()).isEqualTo(document.getCreatedAt());
+            assertThat(paperclip.getDocumentDate()).isBetween(document.getCreatedAt().minusMillis(100), document.getCreatedAt().plusMillis(100));
         }
 
         @Ignore // TODO

@@ -26,10 +26,13 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
+import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.isis.applib.clock.Clock;
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
@@ -39,6 +42,7 @@ import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnl
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 
 import org.estatio.app.EstatioAppManifest;
+import org.estatio.integtests.capex.TickingFixtureClock;
 import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
 
 /**
@@ -80,6 +84,55 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
 
         // instantiating will install onto ThreadLocal
         new ScenarioExecutionForIntegration();
+    }
+
+    /**
+     * To use instead of {@link #getFixtureClock()}'s {@link FixtureClock#setDate(int, int, int)} ()}.
+     */
+    protected void setFixtureClockDate(final LocalDate date) {
+        setFixtureClockDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+    }
+
+    /**
+     * To use instead of {@link #getFixtureClock()}'s {@link FixtureClock#setDate(int, int, int)} ()}.
+     */
+    protected void setFixtureClockDate(final int year, final int month, final int day) {
+        final Clock instance = Clock.getInstance();
+
+        if(instance instanceof TickingFixtureClock) {
+            TickingFixtureClock.reinstateExisting();
+            getFixtureClock().setDate(year, month, day);
+            TickingFixtureClock.replaceExisting();
+        }
+
+        if(instance instanceof FixtureClock) {
+            getFixtureClock().setDate(year, month, day);
+        }
+    }
+
+    /**
+     * To use instead of {@link #getFixtureClock()}'s {@link FixtureClock#reset()}.
+     */
+    protected void resetFixtureClockDate() {
+        final Clock instance = Clock.getInstance();
+        if(instance instanceof TickingFixtureClock) {
+            TickingFixtureClock.reinstateExisting();
+            getFixtureClock().reset();
+            TickingFixtureClock.replaceExisting();
+        }
+
+        if(instance instanceof FixtureClock) {
+            getFixtureClock().reset();
+        }
+    }
+
+    /**
+     * @deprecated - use {@link #setFixtureClockDate(int, int, int)} instead (which is aware of {@link TickingFixtureClock}).
+     */
+    @Override
+    @Deprecated
+    protected FixtureClock getFixtureClock() {
+        return super.getFixtureClock();
     }
 
     @Inject

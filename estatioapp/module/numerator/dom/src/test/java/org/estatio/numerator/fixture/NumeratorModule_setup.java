@@ -20,8 +20,6 @@ package org.estatio.numerator.fixture;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.ClockFixture;
-
 import org.estatio.numerator.fixture.data.NumeratorExampleObject_data;
 
 public class NumeratorModule_setup extends FixtureScript {
