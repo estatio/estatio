@@ -451,6 +451,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return orderImmutableReason();
     }
 
+    public boolean hideAddItem() {
+        return getItems().isEmpty();
+    }
+
     @MemberOrder(name = "items", sequence = "2")
     public Order splitItem(
             final OrderItem itemToSplit,
@@ -492,11 +496,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public String disableSplitItem() {
-        if (isImmutable()) {
-            return orderImmutableReason();
-        }
-        return getItems().isEmpty() ? "No items" : null;
+    public boolean hideSplitItem(){
+        return getItems().isEmpty();
     }
 
     public OrderItem default0SplitItem() {
@@ -605,6 +606,10 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             return orderImmutableReason();
         }
         return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+    }
+
+    public boolean hideMergeItems(){
+        return getItems().isEmpty();
     }
 
     public OrderItem default0MergeItems() {
