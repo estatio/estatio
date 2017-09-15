@@ -741,33 +741,52 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return reasonDisabledDueToState();
     }
 
+
     @Programmatic
     public String reasonIncomplete(){
-        StringBuffer buffer = new StringBuffer();
-        if (getOrderNumber()==null){
-            buffer.append("order number, ");
+
+        String orderValidatorResult = new Validator()
+                .checkNotNull(getOrderNumber(),"order number")
+                .checkNotNull(getBuyer(), "buyer")
+                .checkNotNull(getSeller(), "seller")
+                .checkNotNull(getNetAmount(), "net amount")
+                .checkNotNull(getGrossAmount(), "gross amount")
+                .getResult();
+
+        return mergeReasonItemsIncomplete(orderValidatorResult);
+
+    }
+
+    private String mergeReasonItemsIncomplete(final String validatorResult){
+        if (reasonItemsIncomplete()!=null) {
+            return validatorResult!=null ?
+                    validatorResult.replace(" required", ", ").concat(reasonItemsIncomplete())
+                    : reasonItemsIncomplete();
+        } else {
+            return validatorResult;
         }
-        if (getBuyer()==null){
-            buffer.append("buyer, ");
-        }
-        if (getSeller()==null){
-            buffer.append("seller, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
+    }
+
+    static class Validator {
+
+        public Validator() {
+            this.result = null;
         }
 
-        if (reasonItemsIncomplete()!=null){
-            buffer.append(reasonItemsIncomplete());
+        @Setter
+        String result;
+
+        String getResult() {
+            return result != null ? result.concat(" required") : null;
         }
 
-        final int buflen = buffer.length();
-        return buflen != 0
-                ? buffer.replace(buflen - 2, buflen, " required").toString()
-                : null;
+        Validator checkNotNull(Object mandatoryProperty, String propertyName) {
+            if (mandatoryProperty == null) {
+                setResult(result == null ? propertyName : result.concat(", ").concat(propertyName));
+            }
+            return this;
+        }
+
     }
 
     @Programmatic

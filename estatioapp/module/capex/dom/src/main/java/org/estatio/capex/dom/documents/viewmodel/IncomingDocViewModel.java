@@ -300,7 +300,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     //region > period (prop)
 
-    @XmlElement(required = false) @Nullable
+    @XmlElement(required = true)
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private String period;
@@ -405,79 +405,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     // ////////////////////////////////////
 
-    public IncomingDocViewModel changeDimensions(
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Charge charge,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Property property,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final Project project,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final BudgetItem budgetItem,
-            @Parameter(optionality = Optionality.OPTIONAL)
-            final String period
-    ){
-        setCharge(charge);
-        setProperty(property);
-        setProject(project);
-        setBudgetItem(budgetItem);
-        setPeriod(period);
-        derivePeriodFromBudgetItem();
-        deriveChargeFromBudgetItem();
-        return this;
-    }
-
-    public Charge default0ChangeDimensions(){
-        return getCharge();
-    }
-
-    public Property default1ChangeDimensions(){
-        return getProperty();
-    }
-
-    public Project default2ChangeDimensions(){
-        return getProject();
-    }
-
-    public BudgetItem default3ChangeDimensions(){
-        return getBudgetItem();
-    }
-
-    public String default4ChangeDimensions(){
-        return getPeriod();
-    }
-
-    public List<Charge> autoComplete0ChangeDimensions(@MinLength(3) final String search) {
-        return autoComplete0EditCharge(search);
-    }
-
-    public List<Property> choices1ChangeDimensions() {
-        return choicesProperty();
-    }
-
-    public List<Project> choices2ChangeDimensions() {
-        return choicesProject();
-    }
-
-    public List<BudgetItem> choices3ChangeDimensions() {
-        return choicesBudgetItem();
-    }
-
-    public String validateChangeDimensions(
-            final Charge charge,
-            final Property property,
-            final Project project,
-            final BudgetItem budgetItem,
-            final String period
-    ) {
-        return validatePeriod(period);
-    }
-
-    public String disableChangeDimensions() {
-        return reasonNotEditableIfAny();
-    }
-
-    // ////////////////////////////////////
 
     public IncomingDocViewModel changeItemDetails(
             final String description,
@@ -554,13 +481,13 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         }
     }
 
-    void derivePeriodFromBudgetItem(){
+    protected void derivePeriodFromBudgetItem(){
         if (hasBudgetItem() && !hasPeriod()){
             setPeriod(String.valueOf(getBudgetItem().getBudget().getBudgetYear()));
         }
     }
 
-    void deriveChargeFromBudgetItem(){
+    protected void deriveChargeFromBudgetItem(){
         if (hasBudgetItem() && !hasCharge()){
             setCharge(getBudgetItem().getCharge());
         }

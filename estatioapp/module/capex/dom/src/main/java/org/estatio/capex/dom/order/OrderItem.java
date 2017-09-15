@@ -57,8 +57,8 @@ import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.tax.dom.Tax;
 import org.estatio.dom.utils.FinancialAmountUtil;
+import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -491,27 +491,54 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     @Programmatic
     public String reasonIncomplete(){
-        StringBuffer buffer = new StringBuffer();
-        if (getDescription()==null){
-            buffer.append("description, ");
-        }
-        if (getCharge()==null){
-            buffer.append("charge, ");
-        }
-        if (getStartDate()==null){
-            buffer.append("start date, ");
-        }
-        if (getEndDate()==null){
-            buffer.append("end date, ");
-        }
-        if (getNetAmount()==null){
-            buffer.append("net amount, ");
-        }
-        if (getGrossAmount()==null){
-            buffer.append("gross amount, ");
+        return new Validator()
+                .checkNotNull(getDescription(), "description")
+                .checkNotNull(getCharge(), "charge")
+                .checkNotNull(getStartDate(), "start date")
+                .checkNotNull(getEndDate(), "end date")
+                .checkNotNull(getNetAmount(), "net amount")
+                .checkNotNull(getGrossAmount(), "gross amount")
+                .validateConsistentDimensions(this)
+                .getResult();
+    }
+
+    static class Validator {
+
+        public Validator(){
+            this.result = null;
         }
 
-        return buffer.length() == 0 ? null : buffer.toString();
+        @Setter
+        String result;
+
+        String getResult(){
+            return result!=null ? result.concat(" required") : null;
+        }
+
+        Validator checkNotNull(Object mandatoryProperty, String propertyName){
+            if (mandatoryProperty == null){
+                setResult(result==null ? propertyName : result.concat(", ").concat(propertyName));
+            }
+            return this;
+        }
+
+        Validator validateConsistentDimensions(OrderItem orderItem) {
+            String message;
+            if (orderItem.getProject()!=null && orderItem.getBudgetItem()!=null){
+                message = "either project or budget item - not both";
+                setResult(result==null ? message : result.concat(", ").concat(message));
+            }
+            if (orderItem.getProject()!=null && orderItem.getProperty()==null){
+                message = "when project filled in then property";
+                setResult(result==null ? message : result.concat(", ").concat(message));
+            }
+            if (orderItem.getBudgetItem()!=null && orderItem.getProperty()==null){
+                message = "when budget item filled in then property";
+                setResult(result==null ? message : result.concat(", ").concat(message));
+            }
+            return this;
+        }
+
     }
 
     @Programmatic

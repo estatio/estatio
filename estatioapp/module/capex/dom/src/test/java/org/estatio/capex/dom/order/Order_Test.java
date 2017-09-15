@@ -57,6 +57,87 @@ public class Order_Test {
 
         // then
         assertThat(result).isNull();
+        
+    }
+
+    @Test
+    public void minimalRequiredDataToComplete_consitent_dimensions_for_property_project() throws Exception {
+
+        // given
+        Order order = new Order();
+        OrderItem item1 = new OrderItem();
+        order.getItems().add(item1);
+        order.setOrderNumber("123");
+        order.setBuyer(new Organisation());
+        order.setSeller(new Organisation());
+        item1.setNetAmount(new BigDecimal("100"));
+        item1.setDescription("blah");
+        item1.setGrossAmount(BigDecimal.ZERO);
+        item1.setCharge(new Charge());
+        item1.setStartDate(new LocalDate());
+        item1.setEndDate(new LocalDate());
+
+        // when
+        item1.setProject(new Project());
+        String result = order.reasonIncomplete();
+
+        // then
+        assertThat(result).isEqualTo("(on item) when project filled in then property required");
+
+    }
+
+
+    @Test
+    public void minimalRequiredDataToComplete_consitent_dimensions_for_property_budgetItem() throws Exception {
+
+        // given
+        Order order = new Order();
+        OrderItem item1 = new OrderItem();
+        order.getItems().add(item1);
+        order.setOrderNumber("123");
+        order.setBuyer(new Organisation());
+        order.setSeller(new Organisation());
+        item1.setNetAmount(new BigDecimal("100"));
+        item1.setDescription("blah");
+        item1.setGrossAmount(BigDecimal.ZERO);
+        item1.setCharge(new Charge());
+        item1.setStartDate(new LocalDate());
+        item1.setEndDate(new LocalDate());
+
+        // when
+        item1.setBudgetItem(new BudgetItem());
+        String result = order.reasonIncomplete();
+
+        // then
+        assertThat(result).isEqualTo("(on item) when budget item filled in then property required");
+
+    }
+
+    @Test
+    public void minimalRequiredDataToComplete_consitent_dimensions_for_project_budgetItem() throws Exception {
+
+        // given
+        Order order = new Order();
+        OrderItem item1 = new OrderItem();
+        order.getItems().add(item1);
+        order.setOrderNumber("123");
+        order.setBuyer(new Organisation());
+        order.setSeller(new Organisation());
+        item1.setNetAmount(new BigDecimal("100"));
+        item1.setDescription("blah");
+        item1.setGrossAmount(BigDecimal.ZERO);
+        item1.setCharge(new Charge());
+        item1.setStartDate(new LocalDate());
+        item1.setEndDate(new LocalDate());
+        item1.setProperty(new Property());
+
+        // when
+        item1.setBudgetItem(new BudgetItem());
+        item1.setProject(new Project());
+        String result = order.reasonIncomplete();
+
+        // then
+        assertThat(result).isEqualTo("(on item) either project or budget item - not both required");
 
     }
 

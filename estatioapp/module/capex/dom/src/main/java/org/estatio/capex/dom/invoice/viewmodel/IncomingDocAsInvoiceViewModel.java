@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -66,12 +67,14 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
+import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
@@ -635,6 +638,78 @@ public class IncomingDocAsInvoiceViewModel
             }
         }
         return null;
+    }
+
+    public IncomingDocAsInvoiceViewModel changeDimensions(
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Charge charge,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final org.estatio.dom.asset.Property property,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final Project project,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final BudgetItem budgetItem,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String period
+    ){
+        setCharge(charge);
+        setProperty(property);
+        setProject(project);
+        setBudgetItem(budgetItem);
+        setPeriod(period);
+        derivePeriodFromBudgetItem();
+        deriveChargeFromBudgetItem();
+        return this;
+    }
+
+    public Charge default0ChangeDimensions(){
+        return getCharge();
+    }
+
+    public org.estatio.dom.asset.Property default1ChangeDimensions(){
+        return getProperty();
+    }
+
+    public Project default2ChangeDimensions(){
+        return getProject();
+    }
+
+    public BudgetItem default3ChangeDimensions(){
+        return getBudgetItem();
+    }
+
+    public String default4ChangeDimensions(){
+        return getPeriod();
+    }
+
+    public List<Charge> autoComplete0ChangeDimensions(@MinLength(3) final String search) {
+        return autoComplete0EditCharge(search);
+    }
+
+    public List<org.estatio.dom.asset.Property> choices1ChangeDimensions() {
+        return choicesProperty();
+    }
+
+    public List<Project> choices2ChangeDimensions() {
+        return choicesProject();
+    }
+
+    public List<BudgetItem> choices3ChangeDimensions() {
+        return choicesBudgetItem();
+    }
+
+    public String validateChangeDimensions(
+            final Charge charge,
+            final org.estatio.dom.asset.Property property,
+            final Project project,
+            final BudgetItem budgetItem,
+            final String period
+    ) {
+        return validatePeriod(period);
+    }
+
+    public String disableChangeDimensions() {
+        return reasonNotEditableIfAny();
     }
 
     @Inject
