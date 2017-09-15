@@ -25,6 +25,7 @@
                                         </cpt:property>
                                         <cpt:property id="seller">
                                             <cpt:action id="editSeller" promptStyle="INLINE" position="RIGHT"/>
+                                            <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="sellerOrderReference">
                                             <cpt:action id="editSellerOrderReference" promptStyle="INLINE" position="RIGHT"/>

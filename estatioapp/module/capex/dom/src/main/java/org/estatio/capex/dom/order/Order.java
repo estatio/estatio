@@ -33,6 +33,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -43,7 +45,9 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
@@ -62,6 +66,10 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.tax.dom.Tax;
 
@@ -330,6 +338,44 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public String disableEditSeller(){
+        if (isImmutable()){
+            return orderImmutableReason();
+        }
+        return sellerIsImmutableReason();
+    }
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    public Order createSeller(
+            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
+            final boolean useNumeratorForReference,
+            final String name,
+            final Country country,
+            @Parameter(optionality = Optionality.OPTIONAL)
+            final String ibanNumber) {
+        Organisation organisation = organisationRepository
+                .newOrganisation(reference, useNumeratorForReference, name, country);
+        setSeller(organisation);
+        if (ibanNumber != null) {
+            bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
+        }
+        return this;
+    }
+
+    public String validateCreateSeller(
+            final String reference,
+            final boolean useNumeratorForReference,
+            final String name,
+            final Country country,
+            final String ibanNumber){
+        if (ibanNumber != null && !IBANValidator.valid(ibanNumber)){
+            return String.format("%s is not a valid iban number", ibanNumber);
+        }
+        return null;
+    }
+
+    public String disableCreateSeller(){
         if (isImmutable()){
             return orderImmutableReason();
         }
@@ -862,6 +908,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
+
+    @Inject
+    BankAccountRepository bankAccountRepository;
+
+    @Inject
+    OrganisationRepository organisationRepository;
 
 
 }
