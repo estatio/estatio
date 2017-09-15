@@ -724,6 +724,48 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         }
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Order changeOrderDetails(
+            final String orderNumber,
+            final Party buyer,
+            final Party seller,
+            @Nullable
+            final String sellerOrderReference,
+            @Nullable
+            final LocalDate orderDate
+    ){
+        setOrderNumber(orderNumber);
+        setBuyer(buyer);
+        setSeller(seller);
+        setSellerOrderReference(sellerOrderReference);
+        setOrderDate(orderDate);
+        return this;
+    }
+
+    public String default0ChangeOrderDetails(){
+        return getOrderNumber();
+    }
+
+    public Party default1ChangeOrderDetails(){
+        return getBuyer();
+    }
+
+    public Party default2ChangeOrderDetails(){
+        return getSeller();
+    }
+
+    public String default3ChangeOrderDetails(){
+        return getSellerOrderReference();
+    }
+
+    public LocalDate default4ChangeOrderDetails(){
+        return getOrderDate();
+    }
+
+    public String disableChangeOrderDetails() {
+        return reasonDisabledDueToState();
+    }
+
     @Programmatic
     public String reasonDisabledDueToState() {
         OrderApprovalState currentState = getApprovalState();

@@ -15,6 +15,7 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Order" id="order">
+                                        <cpt:action id="changeOrderDetails" position="PANEL"/>
                                         <cpt:property id="orderNumber">
                                             <cpt:action id="editOrderNumber" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
