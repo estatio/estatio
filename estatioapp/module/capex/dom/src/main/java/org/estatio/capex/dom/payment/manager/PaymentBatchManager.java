@@ -6,17 +6,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.assertj.core.util.Lists;
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
@@ -62,35 +59,41 @@ public class PaymentBatchManager {
         return "Payment Batch Manager";
     }
 
+
     @Getter @Setter
     private int selectedBatchIdx;
+
 
     public PaymentBatch getSelectedBatch(){
         final List<PaymentBatch> newBatches = getNewBatches();
         return newBatches.size() == 0 ? null : newBatches.get(getSelectedBatchIdx());
     }
 
+
     public List<PaymentLine> getSelectedBatchPaymentLines(){
         return getSelectedBatch().getLines().stream().collect(Collectors.toList());
     }
 
-    private void selectBatch(final PaymentBatch selected) {
-        setSelectedBatchIdx(getNewBatches().indexOf(selected));
-    }
 
     public List<PaymentBatch> getNewBatches() {
         return paymentBatchRepository.findNewBatches();
     }
 
+
     public List<PaymentBatch> getCompletedBatches() {
         return paymentBatchRepository.findCompletedBatches();
     }
+
 
     public List<IncomingInvoice> getPayableInvoicesNotInAnyBatch() {
         return incomingInvoiceRepository.findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod(
                 IncomingInvoiceApprovalState.PAYABLE,
                 PaymentMethod.BANK_TRANSFER);
     }
+
+
+
+
 
     public static enum Selection {
         ALL_POSSIBLE,
@@ -102,17 +105,14 @@ public class PaymentBatchManager {
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "fa-plus")
     public PaymentBatchManager autoCreateBatches(
             final Selection selection,
             @Nullable final List<IncomingInvoice> payableInvoices) {
 
-        final List<IncomingInvoice> invoicesToPay;
-        if (selection == Selection.ALL_POSSIBLE) {
-            invoicesToPay = getPayableInvoicesNotInAnyBatchWithBankAccountAndBic();
-        } else /* if (selection == Selection.HAND_PICK) */ {
-            invoicesToPay = payableInvoices;
-        }
+        final List<IncomingInvoice> invoicesToPay =
+                selection == Selection.ALL_POSSIBLE
+                        ? getPayableInvoicesNotInAnyBatchWithBankAccountAndBic()
+                        : payableInvoices; // ie, HAND_PICK (as provided as parameter)
 
         for (final IncomingInvoice payableInvoice : invoicesToPay) {
             final BankAccount uniqueBankAccountIfAny = uniqueDebtorAccountToPay(payableInvoice);
@@ -122,12 +122,11 @@ public class PaymentBatchManager {
                 paymentBatch.addLineIfRequired(payableInvoice);
             }
         }
-        for (PaymentBatch paymentBatch : getNewBatches()) {
+        for (final PaymentBatch paymentBatch : getNewBatches()) {
             paymentBatch.removeNegativeTransfers();
         }
 
         return this;
-
     }
 
     public Selection default0AutoCreateBatches() {
@@ -162,12 +161,12 @@ public class PaymentBatchManager {
 
     private List<IncomingInvoice> getPayableInvoicesNotInAnyBatchWithBankAccountAndBic() {
         return getPayableInvoicesNotInAnyBatch().stream()
-                .filter(payableInvoice -> payableInvoice.getBankAccount() != null
-                        && payableInvoice.getBankAccount().getBic() != null).collect(Collectors.toList());
+                .filter(pi -> pi.getBankAccount() != null && pi.getBankAccount().getBic() != null)
+                .collect(Collectors.toList());
     }
 
     private BankAccount uniqueDebtorAccountToPay(final IncomingInvoice invoice) {
-        Party buyer = invoice.getBuyer();
+        final Party buyer = invoice.getBuyer();
         List<BankAccount> bankAccountsForBuyer = bankAccountRepository.findBankAccountsByOwner(buyer);
 
         final Property propertyIfAny = invoice.getProperty();
@@ -208,11 +207,9 @@ public class PaymentBatchManager {
         }
     }
 
-    @Inject
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
-    @Inject
-    BankAccountRepository bankAccountRepository;
+
+
 
     @MemberOrder(name = "newBatches", sequence = "1")
     public PaymentBatchManager removeAll() {
@@ -223,35 +220,25 @@ public class PaymentBatchManager {
         return new PaymentBatchManager();
     }
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class reset {
 
-    private final PaymentBatchManager paymentBatchManager;
 
-    public reset(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "mail-reply", cssClass = "btn-warning")
-    public PaymentBatchManager act() {
+    public PaymentBatchManager reset() {
 
-        final List<PaymentBatch> newBatches = paymentBatchManager.getNewBatches();
+        final List<PaymentBatch> newBatches = this.getNewBatches();
         for (PaymentBatch newBatch : newBatches) {
             newBatch.clearLines();
         }
         return new PaymentBatchManager();
     }
 
-    public String disableAct() {
-        final List<PaymentBatch> newBatches = paymentBatchManager.getNewBatches();
+    public String disableReset() {
+        final List<PaymentBatch> newBatches = this.getNewBatches();
         for (PaymentBatch newBatch : newBatches) {
             if (!newBatch.getLines().isEmpty()) {
                 return null;
@@ -259,86 +246,65 @@ public static class reset {
         }
         return "No payment batches to reset";
     }
-}
 
-///////////////////////
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class nextBatch {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public nextBatch(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
+
 
     @Action(
             semantics = SemanticsOf.SAFE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "fa-step-forward")
-    public PaymentBatchManager act() {
-        int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+    public PaymentBatchManager nextBatch() {
+        int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int nextBatchIdx = ++selectedBatchIdx;
-            if (nextBatchIdx < paymentBatchManager.getNewBatches().size()) {
-                paymentBatchManager.selectBatch(paymentBatchManager.getNewBatches().get(nextBatchIdx));
+            if (nextBatchIdx < this.getNewBatches().size()) {
+                this.selectBatch(this.getNewBatches().get(nextBatchIdx));
             }
         }
-        return paymentBatchManager;
+        return this;
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getNewBatches().isEmpty()) {
+    public String disableNextBatch() {
+        if (this.getNewBatches().isEmpty()) {
             return "No batches";
         }
-        int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+        int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int nextBatchIdx = ++selectedBatchIdx;
-            if (nextBatchIdx >= paymentBatchManager.getNewBatches().size()) {
+            if (nextBatchIdx >= this.getNewBatches().size()) {
                 return "No more batches";
             }
         }
         return null;
     }
-}
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class previousBatch {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public previousBatch(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
+
 
     @Action(
             semantics = SemanticsOf.SAFE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "fa-step-backward")
-    public PaymentBatchManager act() {
-        int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+    public PaymentBatchManager previousBatch() {
+        int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int previousBatchIdx = --selectedBatchIdx;
             if (previousBatchIdx >= 0) {
-                paymentBatchManager.selectBatch(paymentBatchManager.getNewBatches().get(previousBatchIdx));
+                this.selectBatch(this.getNewBatches().get(previousBatchIdx));
             }
         }
-        return paymentBatchManager;
+        return this;
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getNewBatches().isEmpty()) {
+    public String disablePreviousBatch() {
+        if (this.getNewBatches().isEmpty()) {
             return "No batches";
         }
-        int selectedBatchIdx = paymentBatchManager.getSelectedBatchIdx();
+        int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
             int previousBatchIdx = --selectedBatchIdx;
             if (previousBatchIdx < 0) {
@@ -347,59 +313,40 @@ public static class previousBatch {
         }
         return null;
     }
-}
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class selectBatch {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public selectBatch(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
+
 
     @Action(
             semantics = SemanticsOf.SAFE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "fa-hand-o-right")
-    public PaymentBatchManager act(final PaymentBatch paymentBatch) {
-        paymentBatchManager.selectBatch(paymentBatch);
-        return paymentBatchManager;
+    public PaymentBatchManager selectBatch(final PaymentBatch paymentBatch) {
+        setSelectedBatchIdx(getNewBatches().indexOf(paymentBatch));
+        return this;
     }
 
-    public List<PaymentBatch> choices0Act() {
-        return paymentBatchManager.getNewBatches();
+    public List<PaymentBatch> choices0SelectBatch() {
+        return this.getNewBatches();
     }
 
-    public PaymentBatch default0Act() {
-        return paymentBatchManager.getSelectedBatch();
+    public PaymentBatch default0SelectBatch() {
+        return this.getSelectedBatch();
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getNewBatches().isEmpty()) {
+    public String disableSelectBatch() {
+        if (this.getNewBatches().isEmpty()) {
             return "No new batches";
         }
         return null;
     }
-}
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class completeBatch {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public completeBatch(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
 
-    private PaymentBatch_complete mixin() {
-        return factoryService.mixin(PaymentBatch_complete.class, paymentBatchManager.getSelectedBatch());
+
+    private PaymentBatch_complete PaymentBatch_complete() {
+        return factoryService.mixin(PaymentBatch_complete.class, this.getSelectedBatch());
     }
 
     @Action(
@@ -407,12 +354,11 @@ public static class completeBatch {
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    @ActionLayout(cssClassFa = "fa-flag-checkered")
-    public PaymentBatchManager act(
+    public PaymentBatchManager completeBatch(
             final DateTime requestedExecutionDate,
             @Nullable final String comment) {
         // use the wrapper factory to generate events
-        wrapperFactory.wrap(mixin()).act(requestedExecutionDate, comment);
+        wrapperFactory.wrap(PaymentBatch_complete()).act(requestedExecutionDate, comment);
 
         // rather than return this manager, create a new one (force page reload)
         final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
@@ -421,132 +367,88 @@ public static class completeBatch {
 
     }
 
-    public DateTime default0Act() {
-        return mixin().default0Act();
+    public DateTime default0CompleteBatch() {
+        return PaymentBatch_complete().default0Act();
     }
 
-    public String validate0Act(DateTime proposed) {
-        return mixin().validate0Act(proposed);
+    public String validate0CompleteBatch(DateTime proposed) {
+        return PaymentBatch_complete().validate0Act(proposed);
     }
 
-    public boolean hideAct() {
-        return paymentBatchManager.getSelectedBatch() == null || mixin().hideAct();
+    public boolean hideCompleteBatch() {
+        return this.getSelectedBatch() == null || PaymentBatch_complete().hideAct();
     }
 
     public String disableAct() {
-        if (paymentBatchManager.getSelectedBatch() == null) {
+        if (this.getSelectedBatch() == null) {
             return "No batch selected";
         }
-        return mixin().disableAct();
+        return PaymentBatch_complete().disableAct();
     }
 
-    @Inject
-    WrapperFactory wrapperFactory;
 
-    @Inject
-    FactoryService factoryService;
 
-    @Inject
-    ServiceRegistry2 serviceRegistry2;
-}
-
-///////////////////////
-
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class downloadReviewPdf {
-    private final PaymentBatchManager paymentBatchManager;
-
-    public downloadReviewPdf(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
 
     @Action(
             semantics = SemanticsOf.SAFE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    public Blob act(
+    public Blob downloadReviewPdf(
             final PaymentBatch paymentBatch,
             @Nullable final String documentName) throws IOException {
         final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("pdf");
         return factoryService.mixin(PaymentBatch.downloadReviewPdf.class, paymentBatch).act(documentNameToUse);
     }
 
-    public List<PaymentBatch> choices0Act() {
-        return paymentBatchManager.getCompletedBatches();
+    public List<PaymentBatch> choices0DownloadReviewPdf() {
+        return this.getCompletedBatches();
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getCompletedBatches().isEmpty()) {
+    public String disableDownloadReviewPdf() {
+        if (this.getCompletedBatches().isEmpty()) {
             return "No completed batches";
         }
         return null;
     }
 
-    @Inject
-    FactoryService factoryService;
-}
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class downloadPaymentFile {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public downloadPaymentFile(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
+
 
     @Action(
             semantics = SemanticsOf.SAFE,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    public Clob act(
+    public Clob downloadPaymentFile(
             final PaymentBatch paymentBatch,
             @Nullable final String documentName) {
         final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("xml");
         return factoryService.mixin(PaymentBatch.downloadPaymentFile.class, paymentBatch).act(documentNameToUse);
     }
 
-    public List<PaymentBatch> choices0Act() {
-        return paymentBatchManager.getCompletedBatches();
+    public List<PaymentBatch> choices0DownloadPaymentFile() {
+        return this.getCompletedBatches();
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getCompletedBatches().isEmpty()) {
+    public String disableDownloadPaymentFile() {
+        if (this.getCompletedBatches().isEmpty()) {
             return "No completed batches";
         }
         return null;
     }
 
-    @Inject
-    FactoryService factoryService;
-}
 
-///////////////////////
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class addInvoiceToPayByBankAccount {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public addInvoiceToPayByBankAccount(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager act(
+    public PaymentBatchManager addInvoiceToPayByBankAccount(
             final IncomingInvoice incomingInvoice,
             final BankAccount debtorBankAccount) {
 
@@ -556,18 +458,18 @@ public static class addInvoiceToPayByBankAccount {
         return new PaymentBatchManager();
     }
 
-    public List<IncomingInvoice> choices0Act() {
-        return paymentBatchManager.getPayableInvoicesNotInAnyBatch();
+    public List<IncomingInvoice> choices0AddInvoiceToPayByBankAccount() {
+        return this.getPayableInvoicesNotInAnyBatch();
     }
 
-    public List<BankAccount> choices1Act(final IncomingInvoice incomingInvoice) {
+    public List<BankAccount> choices1AddInvoiceToPayByBankAccount(final IncomingInvoice incomingInvoice) {
         if (incomingInvoice == null) {
             return Lists.newArrayList();
         }
         return bankAccountRepository.findBankAccountsByOwner(incomingInvoice.getBuyer());
     }
 
-    public String validateAct(
+    public String validateAddInvoiceToPayByBankAccount(
             final IncomingInvoice incomingInvoice,
             final BankAccount debtorBankAccount) {
         if (incomingInvoice.getBankAccount() == null) {
@@ -585,77 +487,79 @@ public static class addInvoiceToPayByBankAccount {
         return null;
     }
 
-    @Inject
-    PaymentBatchRepository paymentBatchRepository;
-    @Inject
-    BankAccountRepository bankAccountRepository;
-}
 
-/**
- * TODO: inline this mixin
- */
-@Mixin(method = "act")
-public static class removeInvoice {
-    private final PaymentBatchManager paymentBatchManager;
 
-    public removeInvoice(final PaymentBatchManager paymentBatchManager) {
-        this.paymentBatchManager = paymentBatchManager;
-    }
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             command = CommandReification.DISABLED,
             publishing = Publishing.DISABLED
     )
-    public PaymentBatchManager act(
+    public PaymentBatchManager removeInvoice(
             final List<IncomingInvoice> incomingInvoices,
-            @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected") final boolean rejectAlso,
+            @ParameterLayout(describedAs = "Whether the removed invoices should also be rejected")
+            final boolean rejectAlso,
             @ParameterLayout(describedAs = "If rejecting, then explain why so that the error can be fixed")
             @Nullable final String rejectionReason) {
-        mixin().act(incomingInvoices, rejectAlso, rejectionReason);
+        PaymentBatch_removeInvoice().act(incomingInvoices, rejectAlso, rejectionReason);
         return new PaymentBatchManager();
     }
 
-    public String validateAct(
+    public String validateRemoveInvoice(
             final List<IncomingInvoice> incomingInvoices,
             final boolean rejectAlso,
             final String rejectionReason
     ) {
-        return mixin().validateAct(incomingInvoices, rejectAlso, rejectionReason);
+        return PaymentBatch_removeInvoice().validateAct(incomingInvoices, rejectAlso, rejectionReason);
     }
 
-    public List<IncomingInvoice> choices0Act() {
-        return mixin().choices0Act();
+    public List<IncomingInvoice> choices0RemoveInvoice() {
+        return PaymentBatch_removeInvoice().choices0Act();
     }
 
-    public String disableAct() {
-        if (paymentBatchManager.getSelectedBatch() == null) {
+    public String disableRemoveInvoice() {
+        if (this.getSelectedBatch() == null) {
             return "No batch selected";
         }
-        return mixin().disableAct();
+        return PaymentBatch_removeInvoice().disableAct();
     }
 
-    private PaymentBatch.removeInvoice mixin() {
-        return factoryService.mixin(PaymentBatch.removeInvoice.class, paymentBatchManager.getSelectedBatch());
+    private PaymentBatch.removeInvoice PaymentBatch_removeInvoice() {
+        return factoryService.mixin(PaymentBatch.removeInvoice.class, this.getSelectedBatch());
     }
 
-    @Inject
-    FactoryService factoryService;
 
-}
 
-    ///////////////////////
+
 
     @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     PaymentBatchRepository paymentBatchRepository;
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    BankAccountRepository bankAccountRepository;
+
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    WrapperFactory wrapperFactory;
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    FactoryService factoryService;
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    ServiceRegistry2 serviceRegistry2;
 
 }
