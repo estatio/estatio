@@ -23,7 +23,8 @@ import org.incode.module.base.dom.utils.StringUtils;
 
 public enum BreakOptionEventType implements Titled {
 
-    BREAK_DATE, 
+    BREAK_DATE,
+    PROLONGATION_DATE,
     NOTIFICATION_DATE, 
     CONFIRMATION_DATE,
     NOTIFICATION_REMINDER_DATE;

@@ -21,10 +21,13 @@ package org.estatio.dom.lease.breaks;
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.StringUtils;
 
+import org.estatio.dom.lease.breaks.prolongation.ProlongationOption;
+
 public enum BreakType implements Titled {
 
     FIXED(FixedBreakOption.class, BreakOptionEventType.BREAK_DATE),
-    ROLLING(RollingBreakOption.class, BreakOptionEventType.BREAK_DATE);
+    ROLLING(RollingBreakOption.class, BreakOptionEventType.BREAK_DATE),
+    PROLONGATION(ProlongationOption.class, BreakOptionEventType.PROLONGATION_DATE);
 
     private Class<? extends BreakOption> cls;
 

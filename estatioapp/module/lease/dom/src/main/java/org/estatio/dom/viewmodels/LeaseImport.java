@@ -11,17 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
@@ -31,6 +28,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
+import org.estatio.dom.lease.breaks.prolongation.ProlongationOptionRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 
@@ -78,6 +76,18 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
     @Getter @Setter
     private String externalReference;
 
+    @Getter @Setter
+    private String prolongationPeriod;
+
+    @Getter @Setter
+    private String notificationPeriod;
+
+    @Getter @Setter
+    private String comments;
+
+    @Getter @Setter
+    private String previousLeaseReference;
+
     static int counter = 0;
 
 //    @Override
@@ -110,10 +120,20 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
         }
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
-
         lease.setExternalReference(externalReference);
+        lease.setComments(getComments());
 
-        container.flush();
+        if (getProlongationPeriod() != null && getNotificationPeriod() != null) {
+            prolongationOptionRepository.newProlongationOption(lease, getProlongationPeriod(), getNotificationPeriod(), null);
+        }
+
+        if (getPreviousLeaseReference() != null){
+            Lease previous = leaseRepository.findLeaseByReference(getPreviousLeaseReference());
+            lease.setPrevious(previous);
+            previous.setNext(lease); //Huh? Two sided
+        }
+
+//        container.flush();
         return Lists.newArrayList(lease);
 
     }
@@ -142,7 +162,6 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
         return property;
     }
 
-    //region > injected services
     @Inject
     LeaseRepository leaseRepository;
 
@@ -155,14 +174,14 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
     @Inject
     PropertyRepository propertyRepository;
 
-    @Inject
-    private DomainObjectContainer container;
+    @Inject ProlongationOptionRepository prolongationOptionRepository;
 
-    @Inject
-    private ApplicationTenancyRepository applicationTenancyRepository;
 
-    @Inject
-    WrapperFactory wrapperFactory;
-    //endregion
+//    @Inject
+//    private DomainObjectContainer container;
+
+//    @Inject
+//    WrapperFactory wrapperFactory;
+
 
 }
