@@ -13,7 +13,7 @@ import org.estatio.capex.dom.coda.contributions.CodaMappingManager;
 @DomainServiceLayout(
         named = "Payments",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "70.8"
+        menuOrder = "70.6"
 )
 public class CodaMappingMenu {
 

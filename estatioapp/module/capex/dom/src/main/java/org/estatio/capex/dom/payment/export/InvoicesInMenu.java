@@ -18,7 +18,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         named = "Payments",
-        menuOrder = "70.2"
+        menuOrder = "70.8"
 )
 public class InvoicesInMenu {
 

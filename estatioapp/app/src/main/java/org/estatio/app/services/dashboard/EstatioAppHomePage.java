@@ -257,8 +257,8 @@ public class EstatioAppHomePage {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-check-square-o")
-    public DirectDebitsManager openDirectDebitManager() {
-        return directDebitsMenu.openDirectDebitManager();
+    public DirectDebitsManager directDebitManager() {
+        return directDebitsMenu.directDebitManager();
     }
 
     @Inject DirectDebitsMenu directDebitsMenu;

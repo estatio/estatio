@@ -3,20 +3,19 @@
     <bs3:row>
         <bs3:col span="0" unreferencedActions="true">
             <cpt:action id="recentChanges"/>
-            <cpt:action id="downloadLayoutXml"/>
-            <cpt:action id="links"/>
         </bs3:col>
-        <bs3:col span="12" unreferencedActions="true">
+        <bs3:col span="12" unreferencedActions="false">
             <cpt:domainObject>
                 <cpt:named>Dashboard</cpt:named>
             </cpt:domainObject>
-            <cpt:action id="clearHints2">
-                <cpt:named>Clear hints</cpt:named>
-            </cpt:action>
+            <cpt:action id="impersonate"/>
+            <cpt:action id="stopImpersonating"/>
+            <cpt:action id="clearHints"/>
+            <cpt:action id="downloadLayoutXml"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="0">
+        <bs3:col span="12">
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true"/>
         </bs3:col>
         <bs3:col span="12">
@@ -80,7 +79,7 @@
                             </cpt:collection>
                             <cpt:collection id="incomingInvoicesPayableByDirectDebit" paged="15">
                                 <cpt:named>Payable by Direct Debit</cpt:named>
-                                <cpt:action id="openDirectDebitManager"/>
+                                <cpt:action id="directDebitManager"/>
                                 <cpt:action id="markAsPaidByDirectDebit">
                                     <cpt:named>Mark as paid by DD</cpt:named>
                                 </cpt:action>
