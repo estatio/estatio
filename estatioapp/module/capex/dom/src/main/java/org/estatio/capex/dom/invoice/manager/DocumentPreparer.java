@@ -4,16 +4,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collections;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.pdfmanipulator.ExtractSpec;
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
 import org.estatio.capex.dom.pdfmanipulator.Stamp;
+import org.estatio.capex.dom.task.Task;
+import org.estatio.dom.party.Person;
 
 /**
  * Wraps a document and is able (using a provided {@link PdfManipulator} object) to extract a selection of pages
@@ -21,28 +25,59 @@ import org.estatio.capex.dom.pdfmanipulator.Stamp;
  */
 class DocumentPreparer {
 
+    private final IncomingInvoice incomingInvoice;
+
+    private final IncomingInvoiceApprovalStateTransition transitionIfAny;
+
     private final Document document;
     private final int numFirstPages;
     private final int numLastPages;
 
     File tempFile;
 
-    DocumentPreparer(final Document document, final int numFirstPages, final int numLastPages) {
+    DocumentPreparer(
+            final IncomingInvoice incomingInvoice,
+            final IncomingInvoiceApprovalStateTransition transitionIfAny,
+            final Document document,
+            final int numFirstPages,
+            final int numLastPages) {
+        this.incomingInvoice = incomingInvoice;
+        this.transitionIfAny = transitionIfAny;
         this.document = document;
         this.numFirstPages = numFirstPages;
         this.numLastPages = numLastPages;
     }
 
     String getDocumentName() {
-        return document.getName();
+        return document != null ? document.getName() : null;
     }
 
     DocumentPreparer stampUsing(final PdfManipulator pdfManipulator) {
         try {
             final String documentName = document.getName();
 
-            final List<String> leftLineTexts = Lists.newArrayList(documentName);
-            final List<String> rightLineTexts = Collections.emptyList();
+            final List<String> leftLineTexts = Lists.newArrayList();
+
+            leftLineTexts.add(documentName);
+            if(transitionIfAny != null) {
+                Task task = transitionIfAny.getTask();
+                if (task != null) {
+                    Person personAssignedTo = task.getPersonAssignedTo();
+                    if (personAssignedTo != null) {
+                        leftLineTexts.add(String.format(
+                                "approved by: %s %s",
+                                personAssignedTo.getFirstName(), personAssignedTo.getLastName()));
+                    }
+                }
+                leftLineTexts.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
+            } else {
+                leftLineTexts.add("not yet approved");
+            }
+
+            final List<String> rightLineTexts = Lists.newArrayList();
+            rightLineTexts.add(String.format("net Amt       : %s", new DecimalFormat("0.00").format(incomingInvoice.getNetAmount())));
+            rightLineTexts.add(String.format("gross Amt     : %s", new DecimalFormat("0.00").format(incomingInvoice.getGrossAmount())));
+
             final String hyperlink = null;
 
             byte[] bytes = pdfManipulator.extractAndStamp(document.getBlobBytes(),
@@ -75,4 +110,5 @@ class DocumentPreparer {
             }
         }
     }
+
 }

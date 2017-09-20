@@ -266,12 +266,26 @@ public class IncomingInvoiceDownloadManager {
     private List<DocumentPreparer> documentPreparersForInvoices(
             Integer numFirstPages,
             Integer numLastPages) {
+
         return getInvoices().stream()
-                .map(incomingInvoice -> lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(incomingInvoice))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .sorted(Comparator.comparing(DocumentAbstract::getName))
-                .map(document -> new DocumentPreparer(document, numFirstPages, numLastPages))
+                .map(invoice -> {
+                    final Document document =
+                            lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice).orElse(null);
+
+                    IncomingInvoiceApprovalStateTransition approvalTransitionIfAny =
+                            stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+
+                    if(approvalTransitionIfAny == null) {
+                        approvalTransitionIfAny =
+                                stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                        IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER);
+                    }
+                    return new DocumentPreparer(invoice, approvalTransitionIfAny,
+                            document, numFirstPages, numLastPages);
+                })
+                .filter(dp -> dp.getDocumentName() != null)
+                .sorted(Comparator.comparing(DocumentPreparer::getDocumentName))
                 .collect(Collectors.toList());
     }
 
@@ -345,6 +359,9 @@ public class IncomingInvoiceDownloadManager {
 
     @Inject
     StateTransitionRepositoryGeneric stateTransitionRepositoryGeneric;
+
+    @Inject
+    IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
 
     @javax.inject.Inject
