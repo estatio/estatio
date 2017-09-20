@@ -313,6 +313,20 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .findFirst();
     }
 
+    @Programmatic
+    public void removeNegativeTransfers() {
+
+        final List<PaymentLine> paymentLines = getTransfers()
+                .stream()
+                .filter(x -> x.getAmount().compareTo(BigDecimal.ZERO) <= 0)
+                .map(d -> d.getLines())
+                .flatMap(y -> y.stream())
+                .collect(Collectors.toList());
+        for (PaymentLine paymentLine : paymentLines){
+            paymentLine.remove();
+        }
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public boolean getUpstreamCreditNoteFound(){

@@ -41,7 +41,7 @@ public class PaymentBatchMenu {
     public PaymentBatchManager preparePaymentBatches() {
         final PaymentBatchManager paymentBatchManager = new PaymentBatchManager();
         serviceRegistry2.injectServicesInto(paymentBatchManager);
-        return paymentBatchManager.init();
+        return new PaymentBatchManager();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
