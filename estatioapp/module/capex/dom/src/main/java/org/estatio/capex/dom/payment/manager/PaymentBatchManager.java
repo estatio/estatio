@@ -1,6 +1,9 @@
 package org.estatio.capex.dom.payment.manager;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,14 +22,17 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.capex.dom.payment.CreditTransfer;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
@@ -42,36 +48,59 @@ import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(
         objectType = "org.estatio.capex.dom.payment.PaymentBatchManager"
         ,nature = Nature.VIEW_MODEL
 )
-@NoArgsConstructor
 public class PaymentBatchManager {
 
-    public PaymentBatchManager(final int selectedBatchIdx) {
+    public PaymentBatchManager() {
+        this(null);
+    }
+
+    public PaymentBatchManager(final Integer selectedBatchIdx) {
         this.selectedBatchIdx = selectedBatchIdx;
     }
+
     public String title() {
         return "Payment Batch Manager";
     }
 
 
     @Getter @Setter
-    private int selectedBatchIdx;
+    private Integer selectedBatchIdx;
 
 
-    public PaymentBatch getSelectedBatch(){
+    public PaymentBatch getSelectedBatch() {
+        final Integer selectedBatchIdx = getSelectedBatchIdx();
+        if(selectedBatchIdx == null) {
+            return null;
+        }
         final List<PaymentBatch> newBatches = getNewBatches();
-        return newBatches.size() == 0 ? null : newBatches.get(getSelectedBatchIdx());
+        if (newBatches.size() == 0) {
+            return null;
+        }
+
+        return newBatches.get(selectedBatchIdx);
     }
 
 
+    public List<CreditTransfer> getSelectedBatchTransfers(){
+        final PaymentBatch selectedBatch = getSelectedBatch();
+        if (selectedBatch == null) {
+            return Collections.emptyList();
+        }
+        return Lists.newArrayList(selectedBatch.getTransfers());
+    }
+
     public List<PaymentLine> getSelectedBatchPaymentLines(){
-        return getSelectedBatch().getLines().stream().collect(Collectors.toList());
+        final PaymentBatch selectedBatch = getSelectedBatch();
+        if (selectedBatch == null) {
+            return Collections.emptyList();
+        }
+        return Lists.newArrayList(selectedBatch.getLines());
     }
 
 
@@ -90,8 +119,6 @@ public class PaymentBatchManager {
                 IncomingInvoiceApprovalState.PAYABLE,
                 PaymentMethod.BANK_TRANSFER);
     }
-
-
 
 
 
@@ -122,11 +149,42 @@ public class PaymentBatchManager {
                 paymentBatch.addLineIfRequired(payableInvoice);
             }
         }
-        for (final PaymentBatch paymentBatch : getNewBatches()) {
-            paymentBatch.removeNegativeTransfers();
+
+        final List<PaymentBatch> newBatches = getNewBatches();
+        for (final PaymentBatch paymentBatch : newBatches) {
+            removeNegativeTransfers(paymentBatch);
         }
 
-        return this;
+        return new PaymentBatchManager(newBatches.isEmpty()? null: 0);
+    }
+
+    /**
+     * Removes (deletes) all {@link PaymentLine line}s that correspond to a transfer which is a net negative.
+     */
+    private void removeNegativeTransfers(PaymentBatch paymentBatch) {
+
+        final List<PaymentLine> paymentLines = paymentBatch.getTransfers()
+                .stream()
+                .filter(x -> x.getAmount().compareTo(BigDecimal.ZERO) <= 0)
+                .map(CreditTransfer::getLines)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        // seems to be necessary to flush everything through both before and after, presumably to deal with the
+        // dependent collection (else get DN error about having added a deleted object to the batch's lines collection)
+        flushTransaction();
+
+        // this is sufficient, because PaymentBatch#lines is a dependent collection
+        for (PaymentLine paymentLine : paymentLines){
+            paymentBatch.getLines().remove(paymentLine);
+        }
+
+        // see discussion above.
+        flushTransaction();
+
+        if(paymentBatch.getLines().isEmpty()) {
+            paymentBatch.remove();
+        }
     }
 
     public Selection default0AutoCreateBatches() {
@@ -261,15 +319,15 @@ public class PaymentBatchManager {
         if (selectedBatchIdx >= 0) {
             int nextBatchIdx = ++selectedBatchIdx;
             if (nextBatchIdx < this.getNewBatches().size()) {
-                this.selectBatch(this.getNewBatches().get(nextBatchIdx));
+                return new PaymentBatchManager(nextBatchIdx);
             }
         }
         return this;
     }
 
     public String disableNextBatch() {
-        if (this.getNewBatches().isEmpty()) {
-            return "No batches";
+        if(this.getSelectedBatchIdx() == null) {
+            return "No batch selected";
         }
         int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
@@ -294,7 +352,7 @@ public class PaymentBatchManager {
         if (selectedBatchIdx >= 0) {
             int previousBatchIdx = --selectedBatchIdx;
             if (previousBatchIdx >= 0) {
-                this.selectBatch(this.getNewBatches().get(previousBatchIdx));
+                return new PaymentBatchManager(previousBatchIdx);
             }
         }
         return this;
@@ -303,6 +361,9 @@ public class PaymentBatchManager {
     public String disablePreviousBatch() {
         if (this.getNewBatches().isEmpty()) {
             return "No batches";
+        }
+        if(this.getSelectedBatchIdx() == null) {
+            return "No batch selected";
         }
         int selectedBatchIdx = this.getSelectedBatchIdx();
         if (selectedBatchIdx >= 0) {
@@ -323,8 +384,8 @@ public class PaymentBatchManager {
             publishing = Publishing.DISABLED
     )
     public PaymentBatchManager selectBatch(final PaymentBatch paymentBatch) {
-        setSelectedBatchIdx(getNewBatches().indexOf(paymentBatch));
-        return this;
+        final int selectedBatchIdx = getNewBatches().indexOf(paymentBatch);
+        return new PaymentBatchManager(selectedBatchIdx);
     }
 
     public List<PaymentBatch> choices0SelectBatch() {
@@ -345,9 +406,6 @@ public class PaymentBatchManager {
 
 
 
-    private PaymentBatch_complete PaymentBatch_complete() {
-        return factoryService.mixin(PaymentBatch_complete.class, this.getSelectedBatch());
-    }
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
@@ -379,7 +437,7 @@ public class PaymentBatchManager {
         return this.getSelectedBatch() == null || PaymentBatch_complete().hideAct();
     }
 
-    public String disableAct() {
+    public String disableCompleteBatch() {
         if (this.getSelectedBatch() == null) {
             return "No batch selected";
         }
@@ -525,13 +583,26 @@ public class PaymentBatchManager {
         return PaymentBatch_removeInvoice().disableAct();
     }
 
+
+
+
+
     private PaymentBatch.removeInvoice PaymentBatch_removeInvoice() {
         return factoryService.mixin(PaymentBatch.removeInvoice.class, this.getSelectedBatch());
+    }
+
+    private PaymentBatch_complete PaymentBatch_complete() {
+        return factoryService.mixin(PaymentBatch_complete.class, this.getSelectedBatch());
     }
 
 
 
 
+
+    private void flushTransaction() {
+        transactionService.flushTransaction();
+        isisJdoSupport.getJdoPersistenceManager().flush();
+    }
 
     @Inject
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
@@ -549,6 +620,13 @@ public class PaymentBatchManager {
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     BankAccountRepository bankAccountRepository;
 
+
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    TransactionService transactionService;
+    @Inject
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
+    IsisJdoSupport isisJdoSupport;
 
     @Inject
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
