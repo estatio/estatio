@@ -45,23 +45,15 @@ import org.estatio.dom.party.Party;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(
-        // WORKAROUND: using fqcn as objectType because Isis' invalidation of cache in prototyping mode causing NPEs in some situations
         objectType = "org.estatio.capex.dom.payment.PaymentBatchManager"
         ,nature = Nature.VIEW_MODEL
 )
-//@XmlRootElement(name = "paymentBatchManager")
-//@XmlType(
-//        propOrder = {
-//        }
-//)
-//@XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 public class PaymentBatchManager {
-
-    public PaymentBatchManager() {
-    }
 
     public PaymentBatchManager(final int selectedBatchIdx) {
         this.selectedBatchIdx = selectedBatchIdx;
