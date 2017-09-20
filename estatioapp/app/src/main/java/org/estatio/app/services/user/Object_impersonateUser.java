@@ -9,16 +9,19 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.isisaddons.module.security.dom.role.ApplicationRole;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.estatio.dom.party.Person;
+
 @Mixin(method = "act")
-public class Object_impersonate {
+public class Object_impersonateUser {
 
     private final Object object;
 
-    public Object_impersonate(final Object object) {
+    public Object_impersonateUser(final Object object) {
         this.object = object;
     }
 
@@ -37,11 +40,16 @@ public class Object_impersonate {
     }
 
     public boolean hideAct() {
-        return estatioImpersonateMenu.hideImpersonate();
+        return estatioImpersonateMenu.hideImpersonate() || objectIsImpersonatablePerson();
     }
 
+    private boolean objectIsImpersonatablePerson() {
+        return object instanceof Person && !factoryService.mixin(Person_startImpersonating.class, object).hideAct();
+    }
 
     @Inject
     EstatioImpersonateMenu estatioImpersonateMenu;
+
+    @Inject FactoryService factoryService;
 
 }

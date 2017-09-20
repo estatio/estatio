@@ -39,6 +39,8 @@ public interface StateTransition<
 
 
     @Programmatic
-    void completed(final String comment);
+    void completed(
+            final String comment,
+            final NatureOfTransition natureOfTransition);
 
 }

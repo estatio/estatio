@@ -94,17 +94,23 @@ public abstract class StateTransitionAbstract<
 
     @Programmatic
     @Override
-    public void completed(final String comment) {
+    public void completed(
+            final String comment,
+            final NatureOfTransition natureOfTransition) {
         final LocalDateTime completedOn = clockService.nowAsLocalDateTime();
         final String completedBy = meService.me().getName();
 
-        setCompletedBy(completedBy);
+        if(natureOfTransition == NatureOfTransition.EXPLICIT) {
+            setCompletedBy(completedBy);
+        }
         setCompletedOn(completedOn);
         setComment(comment);
 
         final Task task = getTask();
         if(task != null) {
-            task.setCompletedBy(completedBy);
+            if(natureOfTransition == NatureOfTransition.EXPLICIT) {
+                task.setCompletedBy(completedBy);
+            }
             task.setCompletedOn(completedOn);
             task.setComment(comment);
         }

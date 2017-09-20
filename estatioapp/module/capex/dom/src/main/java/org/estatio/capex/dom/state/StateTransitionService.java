@@ -308,6 +308,7 @@ public class StateTransitionService {
             final Person personToAssignNextToIfAny,
             final String comment,
             final String nextTaskDescriptionIfAny) {
+
         final ST pendingTransitionIfAny =
                 pendingTransitionIfPossible(domainObject, stateTransitionClass,
                     requestedTransitionTypeIfAny, personToAssignNextToIfAny,
@@ -318,10 +319,15 @@ public class StateTransitionService {
         //
         // guard satisfied, so go ahead and complete this pending transition
         //
+        final boolean isExplicitAction = requestedTransitionTypeIfAny != null;
+        final NatureOfTransition natureOfTransition =
+                NatureOfTransition.fromIntent(isExplicitAction);
         final ST completedTransition = completeTransition(
-                                            domainObject, pendingTransitionIfAny, comment);
+                                            domainObject, pendingTransitionIfAny, comment,
+                natureOfTransition);
         return completedTransition;
     }
+
     private <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
@@ -512,7 +518,8 @@ public class StateTransitionService {
     > ST completeTransition(
             final DO domainObject,
             final ST transitionToComplete,
-            final String comment) {
+            final String comment,
+            final NatureOfTransition natureOfTransition) {
 
         final STT transitionType = transitionToComplete.getTransitionType();
 
@@ -537,7 +544,7 @@ public class StateTransitionService {
         transitionType.applyTo(domainObject, stateTransitionClass, serviceRegistry2);
 
         // mark tasks as complete
-        transitionToComplete.completed(comment);
+        transitionToComplete.completed(comment, natureOfTransition);
 
         event.setPhase(StateTransitionEvent.Phase.TRANSITIONED);
         eventBusService.post(event);
