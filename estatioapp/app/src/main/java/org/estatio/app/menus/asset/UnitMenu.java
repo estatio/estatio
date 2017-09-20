@@ -39,7 +39,7 @@ import org.estatio.dom.asset.UnitRepository;
         nature = NatureOfService.VIEW_MENU_ONLY
 )
 @DomainServiceLayout(
-        named = "Fixed Assets",
+        named = "Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.2"
 )

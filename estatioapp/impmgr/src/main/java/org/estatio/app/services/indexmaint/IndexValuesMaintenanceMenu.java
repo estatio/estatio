@@ -50,7 +50,7 @@ import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
 @DomainServiceLayout(
         named="Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "60.1"
+        menuOrder = "900.1"
 )
 public class IndexValuesMaintenanceMenu extends UdoDomainService<IndexValuesMaintenanceMenu> {
 

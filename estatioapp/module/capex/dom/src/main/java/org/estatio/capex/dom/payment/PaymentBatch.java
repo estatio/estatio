@@ -60,6 +60,7 @@ import org.apache.isis.applib.services.linking.DeepLinkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -313,6 +314,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 .findFirst();
     }
 
+
+    @Inject
+    TransactionService transactionService;
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public boolean getUpstreamCreditNoteFound(){
@@ -435,7 +440,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                 Lists.newArrayList(getLines()).stream()
                         .sorted(Comparator.comparing(PaymentLine::getSequence))
                         .collect(groupingBy(PaymentLine::getCreditorBankAccount,
-                                () -> new TreeMap<BankAccount, List<PaymentLine>>(),
+                                TreeMap::new,
                                 toSortedList(Comparator.comparing(PaymentLine::getSequence))));
 
         for (Map.Entry<BankAccount, List<PaymentLine>> linesByBankAccount : lineBySeller.entrySet()) {

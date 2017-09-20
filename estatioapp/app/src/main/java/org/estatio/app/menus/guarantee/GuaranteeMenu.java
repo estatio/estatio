@@ -52,7 +52,7 @@ import org.estatio.dom.lease.Lease;
 @DomainServiceLayout(
         named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "75"
+        menuOrder = "30.4"
 )
 public class GuaranteeMenu extends UdoDomainService<Guarantee> {
 

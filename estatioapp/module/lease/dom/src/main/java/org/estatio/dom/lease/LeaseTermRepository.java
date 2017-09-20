@@ -29,6 +29,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -43,7 +44,12 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.roles.EstatioRole;
 
-@DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
+@DomainService(repositoryFor = LeaseTerm.class)
+@DomainServiceLayout(
+        named = "Leases",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "40.2"
+)
 public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm> {
 
     public LeaseTermRepository() {
@@ -109,7 +115,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
 
     @Deprecated
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(name = "Leases", sequence = "20")
+    @MemberOrder(sequence = "20")
     public List<LeaseTerm> allLeaseTermsToBeApproved(final LocalDate date) {
         return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
     }
@@ -138,7 +144,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     }
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
-    @MemberOrder(name = "Leases", sequence = "99")
+    @MemberOrder(sequence = "99")
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances();
     }
@@ -198,7 +204,7 @@ public class LeaseTermRepository extends UdoDomainRepositoryAndFactory<LeaseTerm
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(name = "Leases", sequence = "30")
+    @MemberOrder(sequence = "30")
     public List<LeaseTerm> findTermsWithInvalidInterval() {
         List<LeaseTerm> lts = allLeaseTerms();
         List<LeaseTerm> returnList = new ArrayList<>();

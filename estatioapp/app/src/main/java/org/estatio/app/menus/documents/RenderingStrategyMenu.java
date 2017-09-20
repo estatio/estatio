@@ -50,7 +50,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.12")
+        menuOrder = "900.12")
 public class RenderingStrategyMenu extends UdoDomainService<RenderingStrategyMenu> {
 
     public RenderingStrategyMenu() {

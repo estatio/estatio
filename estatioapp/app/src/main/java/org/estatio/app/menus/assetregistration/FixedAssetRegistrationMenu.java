@@ -38,7 +38,7 @@ import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
         nature = NatureOfService.VIEW_MENU_ONLY
 )
 @DomainServiceLayout(
-        named = "Fixed Assets",
+        named = "Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.3"
 )
@@ -51,10 +51,6 @@ public class FixedAssetRegistrationMenu extends UdoDomainService<FixedAssetRegis
     @Action(
             semantics = SemanticsOf.SAFE,
             restrictTo = RestrictTo.PROTOTYPING
-    )
-    @MemberOrder(
-            name = "Fixed Assets",
-            sequence = "99"
     )
     public List<FixedAssetRegistration> allRegistrations() {
         return fixedAssetRegistrationRepository.allRegistrations();

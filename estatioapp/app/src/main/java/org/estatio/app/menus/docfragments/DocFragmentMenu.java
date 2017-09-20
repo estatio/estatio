@@ -50,8 +50,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
         repositoryFor = DocFragment.class
 )
 @DomainServiceLayout(
-        named = "Other",
-        menuOrder = "99"
+        named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "900.99"
 )
 public class DocFragmentMenu {
 

@@ -33,16 +33,17 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.PropertyType;
-import org.incode.module.country.dom.impl.Country;
 
 @DomainService(repositoryFor = Property.class)
 @DomainServiceLayout(
-        named = "Fixed Assets",
+        named = "Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         menuOrder = "10.1")
 public class PropertyMenu extends UdoDomainRepositoryAndFactory<Property> {

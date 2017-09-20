@@ -22,7 +22,7 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:collection id="newBatches" defaultView="table" paged="15">
-                        <cpt:action id="reset"/>
+                        <cpt:action id="reset" cssClassFa="mail-reply" cssClass="btn-warning"/>
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>
@@ -30,25 +30,43 @@
                 <bs3:col span="3">
                     <cpt:fieldSet id="Selected">
                         <cpt:property id="selectedBatch" labelPosition="TOP">
-                            <cpt:action id="selectBatch">
+                            <cpt:action id="selectBatch" cssClassFa = "fa-hand-o-right">
                                 <cpt:named>Select</cpt:named>
                             </cpt:action>
-                            <cpt:action id="previousBatch">
+                            <cpt:action id="previousBatch" cssClassFa = "fa-step-backward">
                                 <cpt:named>Previous</cpt:named>
                             </cpt:action>
-                            <cpt:action id="nextBatch">
+                            <cpt:action id="nextBatch" cssClassFa = "fa-step-forward">
                                 <cpt:named>Next</cpt:named>
                             </cpt:action>
-                            <cpt:action id="completeBatch">
+                            <cpt:action id="completeBatch" cssClassFa = "fa-flag-checkered">
                                 <cpt:named>Complete</cpt:named>
                             </cpt:action>
                         </cpt:property>
+                        <cpt:property id="selectedBatchIdx" hidden="EVERYWHERE"/>
                     </cpt:fieldSet>
                 </bs3:col>
                 <bs3:col span="9">
-                    <cpt:collection id="selectedBatchPaymentLines" defaultView="table">
-                        <cpt:action id="removeInvoice" cssClassFa="angle-up" cssClass="no-color-thanks"/>
-                    </cpt:collection>
+                    <bs3:tabGroup>
+                        <bs3:tab name="Transfers">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="selectedBatchTransfers" defaultView="table">
+                                        <cpt:action id="removeInvoice" cssClassFa="angle-up" cssClass="no-color-thanks"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Lines">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="selectedBatchPaymentLines" defaultView="table">
+                                        <cpt:action id="removeInvoice" cssClassFa="angle-up" cssClass="no-color-thanks"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

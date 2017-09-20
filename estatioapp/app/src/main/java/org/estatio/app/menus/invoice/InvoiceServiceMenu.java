@@ -34,7 +34,8 @@ import org.estatio.dom.togglz.EstatioTogglzFeature;
 @DomainServiceLayout(
         named = "Invoices Out",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "50.5")
+        menuOrder = "50.2"
+)
 public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
 
     public InvoiceServiceMenu() {
@@ -110,7 +111,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
      */
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(named = "Calculate Invoices For Property")
-    @MemberOrder(name = "Invoices Out", sequence = "1")
+    @MemberOrder(sequence = "1")
     public Object calculateInvoicesForProperty(
             final Property property,
             final InvoiceRunType runType,
@@ -231,7 +232,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
     // //////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    @MemberOrder(name = "Invoices Out", sequence = "99")
+    @MemberOrder(sequence = "99")
     public Object calculateRetroInvoices(
             final ApplicationTenancy applicationTenancy,
             final List<LeaseItemType> leaseItemTypes,

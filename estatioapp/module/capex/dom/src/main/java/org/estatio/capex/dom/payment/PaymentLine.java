@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -209,7 +210,11 @@ public class PaymentLine extends UdoDomainObject2<PaymentLine> {
                 .collect(Collectors.toList());
     }
 
+    @Programmatic
+    public void remove() {
+        remove(this);
+    }
+
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
-
 }

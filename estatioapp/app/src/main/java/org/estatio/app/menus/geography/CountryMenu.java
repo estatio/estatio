@@ -44,7 +44,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.5")
+        menuOrder = "900.5")
 public class CountryMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

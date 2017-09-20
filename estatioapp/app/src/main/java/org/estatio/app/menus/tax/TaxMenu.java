@@ -47,7 +47,7 @@ import org.estatio.tax.dom.TaxRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.7")
+        menuOrder = "900.7")
 public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
 
     public TaxMenu() {

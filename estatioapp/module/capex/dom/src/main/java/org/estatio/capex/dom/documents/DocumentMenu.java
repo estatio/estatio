@@ -53,9 +53,9 @@ import org.estatio.dom.invoice.DocumentTypeData;
         objectType = "incodeDocuments.DocumentMenu"
 )
 @DomainServiceLayout(
-        named = "Documents",
+        named = "Tasks & Docs",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "77.1")
+        menuOrder = "75.1")
 public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     public DocumentMenu() {
@@ -65,7 +65,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
-    public List<Document> find(
+    public List<Document> findDocuments(
             final LocalDate startDate,
             @Parameter(optionality = Optionality.OPTIONAL)
             final LocalDate endDate
@@ -73,7 +73,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         return documentRepository.findBetween(startDate, endDate);
     }
 
-    public LocalDate default0Find() {
+    public LocalDate default0FindDocuments() {
         // one week ago.
         return clockService.now().plusDays(-7);
     }
@@ -81,9 +81,11 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<Document> matchIncomingByName(@MinLength(3) final String nameOrBarcode){
+    public List<Document> matchIncomingDocumentsByName(@MinLength(3) final String nameOrBarcode){
         return incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode);
     }
+
+
 
 
     public static class UploadDomainEvent extends ActionDomainEvent<DocumentMenu> {}
@@ -100,6 +102,8 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         }
         return incomingDocumentRepository.upsertAndArchive(type, atPath, name, blob);
     }
+
+
 
     @Inject
     MeService meService;
