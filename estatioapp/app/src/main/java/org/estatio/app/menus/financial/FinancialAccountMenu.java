@@ -42,7 +42,8 @@ import org.estatio.dom.party.Party;
 @DomainServiceLayout(
         named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "30.1")
+        menuOrder = "30.1"
+)
 public class FinancialAccountMenu {
 
     public String iconName() {

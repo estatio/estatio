@@ -59,7 +59,7 @@ import org.estatio.tax.dom.Tax;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.3")
+        menuOrder = "900.3")
 public class ChargeMenu extends UdoDomainRepositoryAndFactory<Charge> {
 
     public ChargeMenu() {

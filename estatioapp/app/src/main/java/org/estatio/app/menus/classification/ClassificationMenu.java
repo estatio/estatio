@@ -35,7 +35,7 @@ import org.incode.module.classification.dom.impl.category.CategoryRepository;
         objectType = "org.estatio.app.menus.classification.ClassificationMenu"
 )
 @DomainServiceLayout(
-        named = "Other"
+        named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "900.1"
 )
 public class ClassificationMenu {
 

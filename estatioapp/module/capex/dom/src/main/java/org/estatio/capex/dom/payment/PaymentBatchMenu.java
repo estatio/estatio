@@ -28,8 +28,8 @@ import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 )
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Invoices In",
-        menuOrder = "300"
+        named = "Payments",
+        menuOrder = "70.1"
 )
 public class PaymentBatchMenu {
 

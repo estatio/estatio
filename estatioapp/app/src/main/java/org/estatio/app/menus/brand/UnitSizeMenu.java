@@ -33,7 +33,7 @@ import org.estatio.dom.lease.tags.UnitSize;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.10"
+        menuOrder = "900.10"
 )
 public class UnitSizeMenu extends UdoDomainRepositoryAndFactory<UnitSize> {
 

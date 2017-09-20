@@ -43,7 +43,7 @@ import org.estatio.dom.charge.ChargeGroupRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.2")
+        menuOrder = "900.2")
 public class ChargeGroupMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

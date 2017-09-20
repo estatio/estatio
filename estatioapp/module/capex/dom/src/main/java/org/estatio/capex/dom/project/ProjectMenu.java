@@ -45,9 +45,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
         objectType = "org.estatio.capex.dom.project.ProjectMenu"
 )
 @DomainServiceLayout(
-        menuOrder = "35",
+        named = "Projects",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Projects"
+        menuOrder = "55.1"
 )
 public class ProjectMenu {
 

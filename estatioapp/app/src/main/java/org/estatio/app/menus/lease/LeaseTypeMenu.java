@@ -45,7 +45,7 @@ import org.estatio.dom.lease.LeaseTypeRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.1")
+        menuOrder = "900.1")
 public class LeaseTypeMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

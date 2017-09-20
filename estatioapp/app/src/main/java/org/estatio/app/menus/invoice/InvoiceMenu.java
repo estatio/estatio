@@ -63,7 +63,7 @@ import org.estatio.dom.party.Party;
 @DomainServiceLayout(
         named = "Invoices Out",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "50.4")
+        menuOrder = "50.1")
 public class InvoiceMenu extends UdoDomainRepositoryAndFactory<Invoice> {
 
     public InvoiceMenu() {

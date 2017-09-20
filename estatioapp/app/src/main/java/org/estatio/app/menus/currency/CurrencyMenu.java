@@ -45,7 +45,7 @@ import org.estatio.dom.currency.CurrencyRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.4")
+        menuOrder = "900.4")
 public class CurrencyMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

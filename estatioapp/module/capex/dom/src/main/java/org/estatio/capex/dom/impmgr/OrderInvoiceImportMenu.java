@@ -36,8 +36,9 @@ import org.apache.isis.applib.value.Blob;
         objectType = "orders.OrderInvoiceImportMenu"
 )
 @DomainServiceLayout(
+        named = "Projects",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        named = "Projects"
+        menuOrder = "55.2"
 )
 public class OrderInvoiceImportMenu {
 

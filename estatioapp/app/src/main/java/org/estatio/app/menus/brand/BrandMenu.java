@@ -49,7 +49,7 @@ import org.estatio.dom.lease.tags.BrandRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.9"
+        menuOrder = "900.9"
 )
 public class BrandMenu extends UdoDomainRepositoryAndFactory<Brand> {
 

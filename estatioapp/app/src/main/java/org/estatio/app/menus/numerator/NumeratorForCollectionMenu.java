@@ -40,7 +40,7 @@ import org.estatio.numerator.dom.Numerator;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.15")
+        menuOrder = "900.15")
 public class NumeratorForCollectionMenu extends UdoDomainService<NumeratorForCollectionMenu> {
 
     public NumeratorForCollectionMenu() {

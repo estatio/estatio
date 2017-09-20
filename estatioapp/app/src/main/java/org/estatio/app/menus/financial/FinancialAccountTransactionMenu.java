@@ -39,8 +39,9 @@ import org.estatio.dom.financial.FinancialAccountTransactionRepository;
         objectType = "org.estatio.app.menus.financial.FinancialAccountTransactionMenu"
 )
 @DomainServiceLayout(
-        menuOrder = "30",
-        named = "Finance"
+        named = "Finance",
+        menuBar = DomainServiceLayout.MenuBar.PRIMARY,
+        menuOrder = "30.3"
 )
 public class FinancialAccountTransactionMenu {
 

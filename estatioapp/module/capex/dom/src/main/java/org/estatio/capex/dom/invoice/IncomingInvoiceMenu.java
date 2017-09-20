@@ -39,7 +39,7 @@ import lombok.Setter;
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
         named = "Invoices In",
-        menuOrder = "200"
+        menuOrder = "65.2"
 )
 public class IncomingInvoiceMenu {
 

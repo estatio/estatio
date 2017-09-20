@@ -22,7 +22,7 @@ import org.estatio.domlink.LinkRepository;
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "80.17"
+        menuOrder = "900.17"
 )
 public class LinkMenu {
 
