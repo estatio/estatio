@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
@@ -34,10 +35,15 @@ import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.isisaddons.module.security.dom.tenancy.HasAtPath;
+
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.role.PartyRoleType;
@@ -100,7 +106,7 @@ import lombok.Setter;
 @DomainObject(objectType = "task.Task")
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, WithApplicationTenancy {
 
     public Task(
             final PartyRoleType assignedTo,
@@ -183,6 +189,34 @@ public class Task implements Comparable<Task> {
     @Getter @Setter
     private String comment;
 
+
+
+    @Property(hidden = Where.ALL_TABLES)
+    @PropertyLayout(
+            named = "Application Level",
+            describedAs = "Determines those users for whom this object is available to view and/or modify."
+    )
+    public ApplicationTenancy getApplicationTenancy() {
+        final String atPath = getAtPath();
+        return atPath != null
+                ? securityApplicationTenancyRepository.findByPathCached(atPath)
+                : null;
+    }
+
+    @PropertyLayout(named = "Path")
+    @Override
+    public String getAtPath() {
+        final Object domainObject = getObject();
+        if(domainObject instanceof HasAtPath) {
+            final HasAtPath hasAtPath = (HasAtPath) domainObject;
+            return hasAtPath.getAtPath();
+        }
+        return null;
+    }
+
+
+
+
     /**
      * Convenience method to (naively) convert a list of {@link StateTransition}s to their corresponding {@link Task}.
      */
@@ -255,4 +289,6 @@ public class Task implements Comparable<Task> {
     @Inject
     PersonRepository personRepository;
 
+    @Inject
+    private ApplicationTenancyRepository securityApplicationTenancyRepository;
 }
