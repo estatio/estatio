@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.party.Party;
@@ -78,6 +79,17 @@ public class PartyRoleRepository extends UdoDomainRepositoryAndFactory<PartyRole
         return partyRole != null ? partyRole : createPartyRole(party, roleType);
     }
 
+    @Programmatic
+    public String validateThat(final Party party, final IPartyRoleType roleType) {
+        if(party == null) {
+            return null;
+        }
+        final PartyRole roleIfAny = findByPartyAndRoleType(party, roleType);
+        if (roleIfAny != null) {
+            return null;
+        }
+        return String.format("Party does not have %s role", roleType.getTitle());
+    }
 
     private PartyRole createPartyRole(
             final Party party,
