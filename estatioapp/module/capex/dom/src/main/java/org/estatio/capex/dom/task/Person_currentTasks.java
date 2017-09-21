@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -23,6 +24,7 @@ public class Person_currentTasks {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @CollectionLayout(defaultView = "table")
     public List<Task> coll() {
         return taskRepository.findIncompleteByPersonAssignedTo(person);
     }
