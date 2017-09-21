@@ -20,11 +20,11 @@ package org.estatio.dom.asset.role;
 
 import java.util.SortedSet;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
-import com.google.common.base.Function;
 
 import org.joda.time.LocalDate;
 
@@ -39,15 +39,15 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalContiguous;
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalContiguous;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
@@ -121,16 +121,28 @@ public class FixedAssetRole
             new WithIntervalContiguous.Helper<>(this);
 
     public String title() {
-        return TitleBuilder.start()
-                .withName(getType())
-                .withTupleElement(getAsset())
-                .withTupleElement(getParty())
-                .toString();
+        final TitleBuffer buf = new TitleBuffer()
+                .append(titleService.titleOf(getParty()))
+                .append(titleService.titleOf(getType()))
+                .append("for")
+                .append(titleService.titleOf(getAsset()));
+        return buf.toString();
     }
+
+
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party");
     }
+
+    public FixedAssetRole(FixedAsset asset, Party party, FixedAssetRoleTypeEnum type) {
+        this();
+        this.asset = asset;
+        this.party = party;
+        this.type = type;
+    }
+
+
 
     @PropertyLayout(
             named = "Application Level",
@@ -165,39 +177,33 @@ public class FixedAssetRole
     @Getter @Setter
     private LocalDate endDate;
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            @Nullable final LocalDate startDate,
+            @Nullable final LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
-
     public String disableChangeDates() {
         return null;
     }
-
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
-
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-
     @Override
-    public String validateChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
         return helper.validateChangeDates(startDate, endDate);
     }
 
-    // //////////////////////////////////////
 
     @Override
     @Programmatic
@@ -211,8 +217,10 @@ public class FixedAssetRole
         return getInterval();
     }
 
-    // //////////////////////////////////////
 
+
+
+    @Property()
     public boolean isCurrent() {
         return isActiveOn(getClockService().now());
     }
@@ -221,7 +229,7 @@ public class FixedAssetRole
         return getInterval().contains(localDate);
     }
 
-    // //////////////////////////////////////
+
 
     @Property(hidden = Where.ALL_TABLES, editing = Editing.DISABLED, optionality = Optionality.OPTIONAL)
     @Override
@@ -235,13 +243,16 @@ public class FixedAssetRole
         return helper.getSuccessor(getAsset().getRoles(), getType().matchingRole());
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+    @CollectionLayout(defaultView = "table")
     @Override
     public SortedSet<FixedAssetRole> getTimeline() {
         return helper.getTimeline(getAsset().getRoles(), getType().matchingRole());
     }
 
-    // //////////////////////////////////////
+
+
+
+
 
     static final class SiblingFactory implements WithIntervalContiguous.Factory<FixedAssetRole> {
         private final FixedAssetRole far;
@@ -319,39 +330,7 @@ public class FixedAssetRole
         return null;
     }
 
-    // //////////////////////////////////////
 
-    public final static class Functions {
-
-        private Functions() {
-        }
-
-        /**
-         * A {@link Function} that obtains the role's
-         * {@link FixedAssetRole#getParty() party} attribute.
-         */
-        public static <T extends Party> Function<FixedAssetRole, T> partyOf() {
-            return new Function<FixedAssetRole, T>() {
-                @SuppressWarnings("unchecked")
-                public T apply(final FixedAssetRole fixedAssetRole) {
-                    return (T) (fixedAssetRole != null ? fixedAssetRole.getParty() : null);
-                }
-            };
-        }
-
-        /**
-         * A {@link Function} that obtains the role's
-         * {@link FixedAssetRole#getAsset() asset} attribute.
-         */
-        public static <T extends FixedAsset> Function<FixedAssetRole, T> assetOf() {
-            return new Function<FixedAssetRole, T>() {
-                @SuppressWarnings("unchecked")
-                public T apply(final FixedAssetRole fixedAssetRole) {
-                    return (T) (fixedAssetRole != null ? fixedAssetRole.getAsset() : null);
-                }
-            };
-        }
-    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public FixedAsset delete() {
@@ -364,4 +343,8 @@ public class FixedAssetRole
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
+
+
+    @Inject
+    TitleService titleService;
 }
