@@ -20,9 +20,13 @@ package org.estatio.dom.party;
 
 import java.util.TreeSet;
 
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -31,6 +35,9 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Organisation_Test {
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -42,6 +49,21 @@ public class Organisation_Test {
         }
     }
 
+    public static class Title extends Organisation_Test {
+
+        @Mock
+        Organisation mockOrganisation;
+
+        @Test
+        public void happy_case() throws Exception {
+            final OrganisationPreviousName opn = new OrganisationPreviousName(mockOrganisation,
+                    "Acme Corp.", new LocalDate(2007, 6, 5));
+
+            assertThat(opn.title()).isEqualTo("Acme Corp. until 05-Jun-2007");
+        }
+
+    }
+
     public static class OrganisationPreviousNameCompareTo extends Organisation_Test {
 
         private OrganisationPreviousName firstOrganisationPreviousName;
@@ -50,11 +72,8 @@ public class Organisation_Test {
 
         @Before
         public void setUp() throws Exception {
-            firstOrganisationPreviousName = new OrganisationPreviousName();
-            secondOrganisationPreviousName = new OrganisationPreviousName();
-
-            firstOrganisationPreviousName.setName("Alpha");
-            secondOrganisationPreviousName.setName("Beta");
+            firstOrganisationPreviousName = new OrganisationPreviousName(null, "Alpha", null);
+            secondOrganisationPreviousName = new OrganisationPreviousName(null, "Beta", null);
         }
 
         @Test

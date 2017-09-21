@@ -31,17 +31,19 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.ComparisonChain;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.base.dom.types.NameType;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,42 +65,38 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.dom.party.OrganisationPreviousName"
 )
+@AllArgsConstructor
+@Getter @Setter
 public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
 
     public String title() {
-        return TitleBuilder.start()
-                .withName(getName())
-                .withTupleElement(getEndDate())
-                .toString();
+        return new TitleBuffer()
+                    .append(getName())
+                    .append("until")
+                    .append(getEndDate().toString("dd-MMM-yyyy"))
+                    .toString();
     }
 
     @Column(allowsNull = "false", name = "organisationId")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
-    @Getter @Setter
     private Organisation organisation;
 
-    // //////////////////////////////////////
 
     @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
-    @Getter @Setter
     private String name;
 
-    // //////////////////////////////////////
 
     @Column(allowsNull = "false")
     @Persistent
-    @Getter @Setter
     private LocalDate endDate;
+
 
     @Override
     public int compareTo(final OrganisationPreviousName o) {
-        final int compare = this.getEndDate().compareTo(o.getEndDate());
-
-        if (compare == 0) {
-            final int nameCompare = this.getName().compareTo(o.getName());
-            return nameCompare;
-        } else {
-            return compare;
-        }
+        return ComparisonChain.start()
+                .compare(getEndDate(), o.getEndDate())
+                .compare(getName(), o.getName())
+                .result();
     }
+
 }
