@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.task;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -17,13 +18,14 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.dom.party.role.PartyRole;
+import org.estatio.dom.party.role.PartyRoleRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(
@@ -38,35 +40,39 @@ import lombok.Setter;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class TransferTaskManager {
 
 
-    public TransferTaskManager(final Person person1, final Person person2) {
-        this.person1 = person1;
-        this.person2 = person2;
-    }
-
-
     public String title() {
-        return "Transfer tasks";//titleService.titleOf(person1) + "  ~  " + titleService.titleOf(person2);
+        return "Transfer tasks";
     }
-
-
 
 
     @Property(editing = Editing.ENABLED)
-    @Getter @Setter
+    @Getter @Setter @lombok.NonNull
     Person person1;
     public String validatePerson1(Person proposedPerson) {
         return validatePersons(proposedPerson, this.person2);
     }
 
     @Property(editing = Editing.ENABLED)
-    @Getter @Setter
+    @Getter @Setter @lombok.NonNull
     Person person2;
     public String validatePerson2(Person proposedPerson) {
         return validatePersons(proposedPerson, this.person1);
     }
+
+    public enum Mode {
+        SAME_ROLES,
+        ANY_ROLES
+    }
+
+
+    @Property(editing = Editing.ENABLED)
+    @Getter @Setter @lombok.NonNull
+    private Mode mode;
+
 
 
     private String validatePersons(final Person proposedPerson, final Person otherPerson) {
@@ -81,8 +87,16 @@ public class TransferTaskManager {
         return taskRepository.findIncompleteByPersonAssignedTo(person1);
     }
 
+    public List<PartyRole> getRoles1() {
+        return partyRoleRepository.findByParty(person1);
+    }
+
     public List<Task> getTasks2() {
         return taskRepository.findIncompleteByPersonAssignedTo(person2);
+    }
+
+    public List<PartyRole> getRoles2() {
+        return partyRoleRepository.findByParty(person2);
     }
 
 
@@ -98,7 +112,7 @@ public class TransferTaskManager {
     }
 
     public List<Task> choices0PushTo() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person1);
+        return findTasks(this.person1, this.person2);
     }
 
     public List<Task> default0PushTo() {
@@ -106,9 +120,9 @@ public class TransferTaskManager {
     }
 
     public String disablePushTo() {
-        return choices0PushTo().isEmpty()  ? "No tasks to assign" : null;
+        final List<Task> choices = choices0PushTo();
+        return disableIfNone(choices);
     }
-
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -123,7 +137,7 @@ public class TransferTaskManager {
     }
 
     public List<Task> choices0PullFrom() {
-        return taskRepository.findIncompleteByPersonAssignedTo(person2);
+        return findTasks(this.person2, this.person1);
     }
 
     public List<Task> default0PullFrom() {
@@ -131,10 +145,30 @@ public class TransferTaskManager {
     }
 
     public String disablePullFrom() {
-        return choices0PullFrom().isEmpty()  ? "No tasks to assign" : null;
+        return disableIfNone(choices0PullFrom());
     }
 
 
+
+    private List<Task> findTasks(final Person from, final Person to) {
+        return taskRepository.findIncompleteByPersonAssignedTo(from).stream()
+                .filter(task -> checkRole(task, to))
+                .collect(Collectors.toList());
+    }
+
+    private boolean checkRole(final Task task, final Person otherPerson) {
+        return mode == Mode.ANY_ROLES || otherPerson.hasPartyRoleType(task.getAssignedTo());
+    }
+
+    private String disableIfNone(final List<Task> choices) {
+        if (!choices.isEmpty()) {
+            return null;
+        }
+        return mode == Mode.SAME_ROLES
+                ? "No tasks (for same roles) to assign"
+                : "No tasks to assign";
+
+    }
 
 
     public TransferTaskManager switchSides() {
@@ -148,15 +182,11 @@ public class TransferTaskManager {
 
     @XmlTransient
     @Inject
-    PersonRepository personRepository;
+    PartyRoleRepository partyRoleRepository;
 
     @XmlTransient
     @Inject
     TaskRepository taskRepository;
-
-    @XmlTransient
-    @Inject
-    TitleService titleService;
 
 
 }

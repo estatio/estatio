@@ -23,7 +23,7 @@ public class Person_transferTasks {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public TransferTaskManager act(final Person transferToOrFrom) {
-        final TransferTaskManager taskManager = new TransferTaskManager(mixee, transferToOrFrom);
+        final TransferTaskManager taskManager = new TransferTaskManager(mixee, transferToOrFrom, TransferTaskManager.Mode.SAME_ROLES);
         return serviceRegistry2.injectServicesInto(taskManager);
     }
 
