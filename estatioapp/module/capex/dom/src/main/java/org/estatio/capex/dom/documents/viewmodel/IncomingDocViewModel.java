@@ -65,9 +65,12 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
@@ -159,6 +162,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Party buyer;
+    public List<Party> autoCompleteBuyer(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+    public String validateBuyer(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -167,6 +176,14 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     public void modifySeller(final Party seller){
         setSeller(seller);
     }
+    public List<Party> autoCompleteSeller(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+    public String validateSeller(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+
+
 
     @Action(
             semantics = SemanticsOf.IDEMPOTENT
@@ -589,6 +606,13 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Inject
     BudgetItemChooser budgetItemChooser;
 
+    @XmlTransient
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @XmlTransient
+    @Inject
+    PartyRepository partyRepository;
 
 
 }

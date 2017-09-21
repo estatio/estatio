@@ -19,6 +19,7 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -123,6 +124,18 @@ public class PartyRepository extends UdoDomainRepositoryAndFactory<Party> {
                 ? findParties("*" + searchPhrase + "*")
                 : Lists.<Party>newArrayList();
     }
+
+    @Programmatic
+    public List<Party> autoCompleteWithRole(final String searchPhrase, final IPartyRoleType roleType) {
+        final PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(roleType);
+        return autoComplete(searchPhrase)
+                .stream()
+                .filter(party -> party.hasPartyRoleType(partyRoleType))
+                .collect(Collectors.toList());
+    }
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     // //////////////////////////////////////
 

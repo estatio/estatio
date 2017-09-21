@@ -20,6 +20,7 @@ package org.estatio.app.menus.lease;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -34,8 +35,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
@@ -57,10 +58,13 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.PartyRoleRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -85,10 +89,10 @@ public class LeaseMenu {
             final String name,
             final LeaseType leaseType,
             final LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Duration in a text format. Example 6y5m2d") String duration,
-            final @Parameter(optionality = Optionality.OPTIONAL) @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) Party landlord,
-            final @Parameter(optionality = Optionality.OPTIONAL) Party tenant
+            final @Nullable @ParameterLayout(describedAs = "Duration in a text format. Example 6y5m2d") String duration,
+            final @Nullable @ParameterLayout(describedAs = "Can be omitted when duration is filled in") LocalDate endDate,
+            final @Nullable Party landlord,
+            final @Nullable Party tenant
     ) {
         final ApplicationTenancy applicationTenancy = property.getApplicationTenancy();
         return leaseRepository.newLease(applicationTenancy, reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
@@ -114,6 +118,25 @@ public class LeaseMenu {
         }
         return result;
     }
+
+    public List<Party> autoComplete7NewLease(@MinLength(3) String searchPhrase) {
+        return partyRepository.autoCompleteWithRole(searchPhrase, LeaseRoleTypeEnum.LANDLORD);
+    }
+    public String validate7NewLease(Party landlord) {
+        return partyRoleRepository.validateThat(landlord, LeaseRoleTypeEnum.LANDLORD);
+    }
+    public List<Party> autoComplete8NewLease(@MinLength(3) String searchPhrase) {
+        return partyRepository.autoCompleteWithRole(searchPhrase, LeaseRoleTypeEnum.TENANT);
+    }
+    public String validate8NewLease(Party tenant) {
+        return partyRoleRepository.validateThat(tenant, LeaseRoleTypeEnum.TENANT);
+    }
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
     public String validateNewLease(
             final Property property,

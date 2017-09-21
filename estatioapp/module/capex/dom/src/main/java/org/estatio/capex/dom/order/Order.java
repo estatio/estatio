@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -68,9 +68,12 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
@@ -333,6 +336,14 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
+    public List<Party> autoComplete0EditSeller(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+
+    public String validate0EditSeller(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+
     public Party default0EditSeller(){
         return getSeller();
     }
@@ -348,11 +359,13 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             semantics = SemanticsOf.IDEMPOTENT
     )
     public Order createSeller(
-            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
+            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
+            @Nullable
+            final String reference,
             final boolean useNumeratorForReference,
             final String name,
             final Country country,
-            @Parameter(optionality = Optionality.OPTIONAL)
+            @Nullable
             final String ibanNumber) {
         Organisation organisation = organisationRepository
                 .newOrganisation(reference, useNumeratorForReference, name, country);
@@ -360,6 +373,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
         }
+        partyRoleRepository.findOrCreate(organisation, Constants.InvoiceRoleTypeEnum.SELLER);
         return this;
     }
 
@@ -403,6 +417,15 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         setBuyer(buyer);
         return this;
     }
+
+    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+
+    public String validate0EditBuyer(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+
 
     public Party default0EditBuyer(){
         return getBuyer();
@@ -793,6 +816,22 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
+    public List<Party> autoComplete1ChangeOrderDetails(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+
+    public String validate1ChangeOrderDetails(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+
+    public List<Party> autoComplete2ChangeOrderDetails(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+
+    public String validate2ChangeOrderDetails(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+
     public String default0ChangeOrderDetails(){
         return getOrderNumber();
     }
@@ -914,6 +953,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Inject
     OrganisationRepository organisationRepository;
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
 
 }
