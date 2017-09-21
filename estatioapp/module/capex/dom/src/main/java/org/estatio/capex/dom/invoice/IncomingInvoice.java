@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -67,11 +68,14 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
@@ -858,16 +862,23 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setBuyer(buyer);
         return this;
     }
-
+    public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
+    public String validate0EditBuyer(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+    }
     public Party default0EditBuyer(){
         return getBuyer();
     }
-
     public String disableEditBuyer(){
         final Object viewContext = this;
         return reasonDisabledDueToState(viewContext);
     }
 
+    
+    
+    
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoice editSeller(
             @Nullable
@@ -876,11 +887,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
         return this;
     }
-
+    public List<Party> autoComplete0EditSeller(@MinLength(3) final String searchPhrase){
+        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
+    public String validate0EditSeller(final Party party){
+        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    }
     public Party default0EditSeller(){
         return getSeller();
     }
-
     public String disableEditSeller(){
         if (isImmutable()){
             final Object viewContext = this;
@@ -888,6 +903,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         }
         return sellerIsImmutableReason();
     }
+
+
 
     private String sellerIsImmutableReason(){
         for (InvoiceItem item : getItems()){
@@ -1176,5 +1193,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
 }
