@@ -18,21 +18,17 @@
  */
 package org.estatio.dom.party.role;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -42,6 +38,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Person;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -109,11 +107,18 @@ public class PartyRoleType
     }
 
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @CollectionLayout(defaultView = "table")
-    public List<PartyRole> parties() {
-        return partyRoleRepository.findByRoleType(this);
+    @MemberOrder(name = "personsWithRoleType", sequence = "1")
+    public PartyRoleType addRole(final Person person){
+        partyRoleRepository.findOrCreate(person, this);
+        return this;
     }
+
+    @MemberOrder(name = "organisationsWithRoleType", sequence = "1")
+    public PartyRoleType addRole(final Organisation organisation){
+        partyRoleRepository.findOrCreate(organisation, this);
+        return this;
+    }
+
 
     @Inject
     PartyRoleRepository partyRoleRepository;

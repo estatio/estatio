@@ -267,7 +267,8 @@ public abstract class Party
     @Inject
     PartyRoleRepository partyRoleRepository;
 
-    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     public static class NameType {
 

@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.task;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -33,7 +34,10 @@ public class Task_assignTo {
     }
 
     public List<Person> choices0Act() {
-        return personRepository.findWithUsername();
+        final List<Person> personsInEstatio = personRepository.findWithUsername();
+        return personsInEstatio.stream()
+                .filter(person -> person.hasPartyRoleType(task.getAssignedTo()))
+                .collect(Collectors.toList());
     }
 
     public Person default0Act() {

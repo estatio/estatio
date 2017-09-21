@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.party.role;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -27,16 +28,19 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
-
 import org.estatio.dom.UdoDomainObject2;
+import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Person;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -92,10 +96,7 @@ public class PartyRole
     }
 
     public String title() {
-        return TitleBuilder.start()
-                .withTupleElement(getParty())
-                .withTupleElement(getRoleType())
-                .toString();
+        return titleService.titleOf(getParty()) + " has role " + titleService.titleOf(getRoleType());
     }
 
     @Column(allowsNull = "false", name = "partyId")
@@ -115,10 +116,33 @@ public class PartyRole
         return party;
     }
 
+    @MemberOrder(name = "organisationsWithRoleType", sequence = "1")
+    public PartyRole addRole(final Organisation organisation){
+        partyRoleRepository.findOrCreate(organisation, this.getRoleType());
+        return this;
+    }
+
+    @MemberOrder(name = "personsWithRoleType", sequence = "1")
+    public PartyRole addRole(final Person person){
+        partyRoleRepository.findOrCreate(person, this.getRoleType());
+        return this;
+    }
+
+
+
     @Override
+    @Property
     @PropertyLayout(hidden = Where.ALL_TABLES)
     public ApplicationTenancy getApplicationTenancy() {
         return getParty().getApplicationTenancy();
     }
+
+
+    @Inject
+    TitleService titleService;
+
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
 
 }

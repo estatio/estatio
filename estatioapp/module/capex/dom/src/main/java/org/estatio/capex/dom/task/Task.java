@@ -2,6 +2,7 @@ package org.estatio.capex.dom.task;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -15,7 +16,6 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDateTime;
@@ -30,9 +30,11 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
+import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -152,7 +154,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
      * this {@link Task}.
      *
      * <p>
-     *     The value held is the {@link org.apache.isis.applib.services.metamodel.MetaModelService3#toObjectType(Class) object type} of the corresponding {@link StateTransition}.
+     *     The value held is the {@link MetaModelService3#toObjectType(Class) object type} of the corresponding {@link StateTransition}.
      * </p>
      */
     @Property(hidden = Where.EVERYWHERE)
@@ -239,8 +241,10 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
             S extends State<S>
     > List<Task> from(final List<ST> transitions) {
         return Lists.newArrayList(
-                FluentIterable.from(transitions).transform(StateTransition::getTask)
-                        .filter(Objects::nonNull).toList()
+                transitions.stream()
+                        .map(StateTransition::getTask)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -263,10 +267,11 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     }
 
     public String validateAssignTasksToMe(){
-        if (personRepository.me()==null){
+        final Person meAsPerson = personRepository.me();
+        if (meAsPerson ==null){
             return "Your login is not linked to a person in Estatio";
         }
-        if (!personRepository.me().hasPartyRoleType(getAssignedTo())){
+        if (!meAsPerson.hasPartyRoleType(getAssignedTo())){
             return "You do not have a role with of role type found on the task";
         }
         return null;
@@ -274,7 +279,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
 
     @Override
     public int compareTo(final Task other) {
-        return org.apache.isis.applib.util.ObjectContracts.compare(this, other, "createdOn,transitionObjectType,description,comment");
+        return ObjectContracts.compare(this, other, "createdOn,transitionObjectType,description,comment");
     }
 
     @Inject
