@@ -18,6 +18,7 @@
  */
 package org.estatio.capex.dom.project;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -37,10 +38,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject;
@@ -75,11 +77,13 @@ import lombok.Setter;
 public class ProjectRole extends UdoDomainObject<ProjectRole>  {
 
 	public String title() {
-		return TitleBuilder.start()
-				.withName(getType())
-				.withTupleElement(getProject())
-				.withTupleElement(getParty())
-				.toString();
+
+		final TitleBuffer buf = new TitleBuffer()
+				.append(titleService.titleOf(getParty()))
+				.append(titleService.titleOf(getType()))
+				.append("for")
+				.append(titleService.titleOf(getProject()));
+		return buf.toString();
 	}
 
 	public ProjectRole() {
@@ -153,5 +157,9 @@ public class ProjectRole extends UdoDomainObject<ProjectRole>  {
 	public ApplicationTenancy getApplicationTenancy() {
 		return getProject().getApplicationTenancy();
 	}
+
+
+	@Inject
+	TitleService titleService;
 
 }
