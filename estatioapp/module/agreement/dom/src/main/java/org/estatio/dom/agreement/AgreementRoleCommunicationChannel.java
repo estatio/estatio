@@ -21,6 +21,7 @@ package org.estatio.dom.agreement;
 import java.util.List;
 import java.util.SortedSet;
 
+import javax.annotation.Nullable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -43,15 +44,15 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.with.WithIntervalContiguous;
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+import org.incode.module.base.dom.with.WithIntervalContiguous;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 
@@ -111,17 +112,18 @@ public class AgreementRoleCommunicationChannel
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =
             new WithIntervalContiguous.Helper<>(this);
 
-    // //////////////////////////////////////
+
 
     public AgreementRoleCommunicationChannel() {
         super("role, startDate desc nullsLast, type, communicationChannel");
     }
 
     public String title() {
-        return TitleBuilder.start()
-                .withName(getType())
-                .withTupleElement(getRole())
-                .withTupleElement(getCommunicationChannel())
+        return new TitleBuffer()
+                .append(titleService.titleOf(getType()))
+                .append(":")
+                .append(titleService.titleOf(getRole()))
+                .append(titleService.titleOf(getCommunicationChannel()))
                 .toString();
     }
 
@@ -133,21 +135,22 @@ public class AgreementRoleCommunicationChannel
         return getRole().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
+
+
     @javax.jdo.annotations.Column(name = "agreementRoleId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
     @Getter @Setter
     private AgreementRole role;
-
     public void modifyRole(final AgreementRole role) {
+        // TODO: REVIEW: is this needed?
         AgreementRole currentRole = getRole();
         if (role == null || role.equals(currentRole)) {
             return;
         }
         setRole(role);
     }
-
     public void clearRole() {
+        // TODO: REVIEW: is this needed?
         AgreementRole currentRole = getRole();
         if (currentRole == null) {
             return;
@@ -155,14 +158,12 @@ public class AgreementRoleCommunicationChannel
         setRole(null);
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Getter @Setter
     private AgreementRoleCommunicationChannelType type;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
@@ -170,7 +171,6 @@ public class AgreementRoleCommunicationChannel
     @Getter @Setter
     private CommunicationChannel communicationChannel;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     @Property(optionality = Optionality.OPTIONAL)
@@ -182,7 +182,8 @@ public class AgreementRoleCommunicationChannel
     @Getter @Setter
     private LocalDate endDate;
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public AgreementRole remove() {
@@ -190,39 +191,33 @@ public class AgreementRoleCommunicationChannel
         return getRole();
     }
 
-    // //////////////////////////////////////
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @Override
     public AgreementRoleCommunicationChannel changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            @Nullable final LocalDate startDate,
+            @Nullable final LocalDate endDate) {
         helper.changeDates(startDate, endDate);
         return this;
     }
-
     public String disableChangeDates() {
         return null;
     }
-
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
-
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-
     @Override
-    public String validateChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
         return helper.validateChangeDates(startDate, endDate);
     }
 
-    // //////////////////////////////////////
+
 
     @Override
     @Programmatic
@@ -236,8 +231,9 @@ public class AgreementRoleCommunicationChannel
         return getInterval().overlap(getRole().getEffectiveInterval());
     }
 
-    // //////////////////////////////////////
 
+
+    @Property()
     public boolean isCurrent() {
         return isActiveOn(getClockService().now());
     }
@@ -246,7 +242,8 @@ public class AgreementRoleCommunicationChannel
         return getEffectiveInterval().contains(localDate);
     }
 
-    // //////////////////////////////////////
+
+
 
     @Property(optionality = Optionality.OPTIONAL, hidden = Where.ALL_TABLES)
     @Override
@@ -255,6 +252,7 @@ public class AgreementRoleCommunicationChannel
                 getType().matchingCommunicationChannel());
     }
 
+
     @Property(hidden = Where.ALL_TABLES, optionality = Optionality.OPTIONAL)
     @Override
     public AgreementRoleCommunicationChannel getSuccessor() {
@@ -262,14 +260,16 @@ public class AgreementRoleCommunicationChannel
                 getType().matchingCommunicationChannel());
     }
 
-    @CollectionLayout(render = RenderType.EAGERLY)
+
+    @CollectionLayout(defaultView = "table")
     @Override
     public SortedSet<AgreementRoleCommunicationChannel> getTimeline() {
         return helper.getTimeline(getRole().getCommunicationChannels(),
                 getType().matchingCommunicationChannel());
     }
 
-    // //////////////////////////////////////
+
+
 
     static final class SiblingFactory implements
             WithIntervalContiguous.Factory<AgreementRoleCommunicationChannel> {
@@ -384,29 +384,31 @@ public class AgreementRoleCommunicationChannel
         return null;
     }
 
-    // //////////////////////////////////////
+
 
     private SortedSet<CommunicationChannel> communicationChannelsForRolesParty() {
-        return communicationChannelContributions
-                .communicationChannels(getRole().getParty());
+        return communicationChannelContributions.communicationChannels(getRole().getParty());
     }
 
-    // //////////////////////////////////////
+
 
     @ActionLayout(describedAs = "Change Communication Channel Type")
     public AgreementRoleCommunicationChannel changeType(
-            final @Parameter(optionality = Optionality.OPTIONAL) AgreementRoleCommunicationChannelType type) {
+            @Nullable final AgreementRoleCommunicationChannelType type) {
         setType(type);
         return this;
     }
-
     public AgreementRoleCommunicationChannelType default0ChangeType() {
         return getType();
     }
 
-    // //////////////////////////////////////
+
 
     @javax.inject.Inject
-    private CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
+    CommunicationChannelOwner_newChannelContributions communicationChannelContributions;
+
+    @javax.inject.Inject
+    TitleService titleService;
+
 
 }
