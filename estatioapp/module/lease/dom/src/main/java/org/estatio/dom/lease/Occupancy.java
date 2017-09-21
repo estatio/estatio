@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -33,17 +34,17 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.country.dom.impl.Country;
@@ -63,7 +64,9 @@ import org.estatio.dom.lease.tags.UnitSizeRepository;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -133,11 +136,11 @@ public class Occupancy
     public static class RemoveEvent extends ActionDomainEvent<Occupancy> {}
 
     public String title() {
-        return TitleBuilder.start()
-                .withName(getBrand())
-                .withTupleElement(getLease())
-                .withTupleElement(getUnit())
-                .withName(getStartDate())
+        return new TitleBuffer()
+                .append(titleService.titleOf(getBrand()))
+                .append(titleService.titleOf(getLease()))
+                .append(titleService.titleOf(getUnit()))
+                .append(getStartDate().toString("dd-MMM-yyyy"))
                 .toString();
     }
 
@@ -151,33 +154,31 @@ public class Occupancy
         return getUnit().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Lease lease;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     @Getter @Setter
     private Unit unit;
 
-    // //////////////////////////////////////
 
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate startDate;
 
+
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", optionality = Optionality.OPTIONAL)
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate endDate;
 
-    // //////////////////////////////////////
+
 
     private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<>(this);
 
@@ -188,47 +189,39 @@ public class Occupancy
     @Override
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Occupancy changeDates(
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate startDate,
-            final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
+            @Nullable final LocalDate startDate,
+            @Nullable final LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
     }
-
     public String disableChangeDates() {
         return null;
     }
-
     @Override
     public LocalDate default0ChangeDates() {
         return getChangeDates().default0ChangeDates();
     }
-
     @Override
     public LocalDate default1ChangeDates() {
         return getChangeDates().default1ChangeDates();
     }
-
     @Override
-    public String validateChangeDates(
-            final LocalDate startDate,
-            final LocalDate endDate) {
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate) {
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
-    // //////////////////////////////////////
+
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public Occupancy terminate(
-            final LocalDate endDate) {
+    public Occupancy terminate(final LocalDate endDate) {
         setEndDate(endDate);
         return this;
     }
-
     public String validateTerminate(
             final LocalDate endDate) {
         return getEffectiveInterval().contains(endDate) ? null : "End date is not in range";
     }
 
-    // //////////////////////////////////////
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, domainEvent = Occupancy.RemoveEvent.class)
     public Object remove() {
@@ -236,12 +229,12 @@ public class Occupancy
         remove(this);
         return lease;
     }
-
     public String disableRemove() {
         return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need Superuser rights to remove an occupancy" : null;
     }
 
-    // //////////////////////////////////////
+
+
 
     @Override
     @Programmatic
@@ -255,7 +248,8 @@ public class Occupancy
         return getInterval().overlap(this.getLease().getEffectiveInterval());
     }
 
-    // //////////////////////////////////////
+
+
 
     public boolean isCurrent() {
         return isActiveOn(getClockService().now());
@@ -265,78 +259,72 @@ public class Occupancy
         return getInterval().contains(localDate);
     }
 
-    // //////////////////////////////////////
+
 
     @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     @Getter @Setter
     private UnitSize unitSize;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     @Getter @Setter
     private Sector sector;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "activityId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     @Getter @Setter
     private Activity activity;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "brandId", allowsNull = "true")
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action")
     @Getter @Setter
     private Brand brand;
 
-    // //////////////////////////////////////
+
+
+
 
     @ActionLayout(describedAs = "Change unit size, sector, activity and/or brand")
     public Occupancy changeClassification(
-            final @Parameter(optionality = Optionality.OPTIONAL) UnitSize unitSize,
-            final @Parameter(optionality = Optionality.OPTIONAL) Sector sector,
-            final @Parameter(optionality = Optionality.OPTIONAL) Activity activity,
-            final @Parameter(optionality = Optionality.OPTIONAL) Brand brand) {
+            @Nullable final UnitSize unitSize,
+            @Nullable final Sector sector,
+            @Nullable final Activity activity,
+            @Nullable final Brand brand) {
         setUnitSize(unitSize);
         setSector(sector);
         setActivity(activity);
         setBrand(brand);
         return this;
     }
-
     public UnitSize default0ChangeClassification() {
         return getUnitSize();
     }
-
     public Sector default1ChangeClassification() {
         return getSector();
     }
-
     public Activity default2ChangeClassification() {
         return getActivity();
     }
-
     public Brand default3ChangeClassification() {
         return getBrand();
     }
-
-    public List<Activity> choices2ChangeClassification(
-            final UnitSize unitSize,
-            final Sector sector) {
+    public List<Activity> choices2ChangeClassification(final UnitSize unitSize, final Sector sector) {
         return activityRepository.findBySector(sector);
     }
 
-    // //////////////////////////////////////
+
+
+
 
     @Programmatic
     public Occupancy setBrandName(
             final String name,
-            @Parameter(optionality = Optionality.OPTIONAL) final BrandCoverage brandCoverage,
-            @Parameter(optionality = Optionality.OPTIONAL) final Country countryOfOrigin) {
+            @Nullable final BrandCoverage brandCoverage,
+            @Nullable final Country countryOfOrigin) {
         setBrand(brandRepository.findOrCreate(getApplicationTenancy(), name, brandCoverage, countryOfOrigin));
         return this;
     }
@@ -359,49 +347,29 @@ public class Occupancy
         return this;
     }
 
-    // //////////////////////////////////////
 
+
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
+    @Getter @Setter
     private OccupancyReportingType reportTurnover;
 
+
     @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
-    public OccupancyReportingType getReportTurnover() {
-        return reportTurnover;
-    }
-
-    public void setReportTurnover(final OccupancyReportingType reportTurnover) {
-        this.reportTurnover = reportTurnover;
-    }
-
-    // //////////////////////////////////////
-
+    @Getter @Setter
     private OccupancyReportingType reportRent;
 
+
+
+
     @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
-    public OccupancyReportingType getReportRent() {
-        return reportRent;
-    }
-
-    public void setReportRent(final OccupancyReportingType reportRent) {
-        this.reportRent = reportRent;
-    }
-
-    // //////////////////////////////////////
-
+    @Getter @Setter
     private OccupancyReportingType reportOCR;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
-    @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
-    public OccupancyReportingType getReportOCR() {
-        return reportOCR;
-    }
 
-    public void setReportOCR(final OccupancyReportingType reportOCR) {
-        this.reportOCR = reportOCR;
-    }
-
-    // //////////////////////////////////////
 
     public Occupancy changeReportingOptions(
             final OccupancyReportingType reportTurnover,
@@ -413,35 +381,27 @@ public class Occupancy
         return this;
     }
 
-    // //////////////////////////////////////
 
-    // //////////////////////////////////////
 
+
+    @RequiredArgsConstructor
     public enum OccupancyReportingType {
+
         NO("Don't report"),
         YES("Report"),
         SEPARATE("Report but exclude from main calculations");
 
         private final String title;
-
-        private OccupancyReportingType(final String title) {
-            this.title = title;
-        }
-
         public String title() {
             return title;
         }
 
+        @UtilityClass
         public static class Meta {
-
             public final static int MAX_LEN = 30;
-
-            private Meta() {
-            }
-
         }
-
     }
+
 
     public void verify() {
         Lease lease = getLease();
@@ -457,14 +417,17 @@ public class Occupancy
 
 
     @Inject
-    private BrandRepository brandRepository;
+    TitleService titleService;
 
     @Inject
-    private SectorRepository sectorRepository;
+    BrandRepository brandRepository;
 
     @Inject
-    private ActivityRepository activityRepository;
+    SectorRepository sectorRepository;
 
     @Inject
-    private UnitSizeRepository unitSizeRepository;
+    ActivityRepository activityRepository;
+
+    @Inject
+    UnitSizeRepository unitSizeRepository;
 }
