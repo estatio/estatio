@@ -18,11 +18,10 @@
  */
 package org.estatio.dom.assetfinancial;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
-
-import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -31,15 +30,14 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.financial.FinancialAccount;
 
 import lombok.Getter;
@@ -80,9 +78,11 @@ public class FixedAssetFinancialAccount
         extends UdoDomainObject2<FixedAssetFinancialAccount>
         implements WithApplicationTenancyProperty {
 
+
     public FixedAssetFinancialAccount() {
         super("fixedAsset,financialAccount");
     }
+
 
     public FixedAssetFinancialAccount(FixedAsset fixedAsset, FinancialAccount financialAccount) {
         super("fixedAsset,financialAccount");
@@ -90,14 +90,15 @@ public class FixedAssetFinancialAccount
         setFixedAsset(fixedAsset);
     }
 
+
     public String title() {
-        return TitleBuilder.start()
-                .withTupleElement(getFixedAsset())
-                .withTupleElement(getFinancialAccount())
-                .toString();
+        final TitleBuffer buf = new TitleBuffer()
+                .append(titleService.titleOf(getFixedAsset()))
+                .append(titleService.titleOf(getFinancialAccount()));
+        return buf.toString();
+
     }
 
-    // //////////////////////////////////////
 
     @PropertyLayout(
             named = "Application Level",
@@ -107,7 +108,6 @@ public class FixedAssetFinancialAccount
         return getFixedAsset().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
     @MemberOrder(sequence = "1")
@@ -116,7 +116,6 @@ public class FixedAssetFinancialAccount
     @Getter @Setter
     private FixedAsset fixedAsset;
 
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "financialAccountId", allowsNull = "false")
     @MemberOrder(sequence = "1")
@@ -125,42 +124,14 @@ public class FixedAssetFinancialAccount
     @Getter @Setter
     private FinancialAccount financialAccount;
 
-    // //////////////////////////////////////
-
-    public final static class Functions {
-
-        private Functions() {
-        }
-
-        /**
-         * A {@link com.google.common.base.Function} that obtains the {@link FixedAssetFinancialAccount#getFinancialAccount() account}.
-         */
-        public static <T extends FinancialAccount> Function<FixedAssetFinancialAccount, T> financialAccountOf() {
-            return new Function<FixedAssetFinancialAccount, T>() {
-                @SuppressWarnings("unchecked")
-                public T apply(final FixedAssetFinancialAccount fixedAssetFinancialAccount) {
-                    return (T) (fixedAssetFinancialAccount != null ? fixedAssetFinancialAccount.getFinancialAccount() : null);
-                }
-            };
-        }
-
-        /**
-         * A {@link Function} that obtains the {@link FixedAssetRole#getAsset() asset}..
-         */
-        public static <T extends FixedAsset> Function<FixedAssetRole, T> assetOf() {
-            return new Function<FixedAssetRole, T>() {
-                @SuppressWarnings("unchecked")
-                public T apply(final FixedAssetRole fixedAssetRole) {
-                    return (T) (fixedAssetRole != null ? fixedAssetRole.getAsset() : null);
-                }
-            };
-        }
-    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void remove() {
         getContainer().remove(this);
         getContainer().flush();
     }
+
+    @Inject
+    TitleService titleService;
 
 }
