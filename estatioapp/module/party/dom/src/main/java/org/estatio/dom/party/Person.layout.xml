@@ -39,7 +39,7 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="Application level">
+                <bs3:tab name="Application Level">
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Application Level" id="applicationLevel">
@@ -77,6 +77,7 @@
                                 <cpt:property id="username">
                                     <cpt:action id="updateUsername" position="BELOW"/>
                                 </cpt:property>
+                                <!-- these are hidden in object form -->
                                 <cpt:property id="phoneNumbers"/>
                                 <cpt:property id="emailAddresses"/>
                             </cpt:fieldSet>
