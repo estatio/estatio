@@ -43,8 +43,9 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.incode.module.base.dom.types.NameType;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @PersistenceCapable(
@@ -65,9 +66,11 @@ import lombok.Setter;
 @DomainObject(
         objectType = "org.estatio.dom.party.OrganisationPreviousName"
 )
-@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter @Setter
 public class OrganisationPreviousName implements Comparable<OrganisationPreviousName> {
+
 
     public String title() {
         return new TitleBuffer()
@@ -78,16 +81,19 @@ public class OrganisationPreviousName implements Comparable<OrganisationPrevious
     }
 
     @Column(allowsNull = "false", name = "organisationId")
+    @lombok.NonNull
     @Property(hidden = Where.REFERENCES_PARENT, editing = Editing.DISABLED)
     private Organisation organisation;
 
 
     @Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
+    @lombok.NonNull
     private String name;
 
 
     @Column(allowsNull = "false")
     @Persistent
+    @lombok.NonNull
     private LocalDate endDate;
 
 

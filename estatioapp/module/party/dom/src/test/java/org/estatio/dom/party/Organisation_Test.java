@@ -66,14 +66,17 @@ public class Organisation_Test {
 
     public static class OrganisationPreviousNameCompareTo extends Organisation_Test {
 
+        @Mock
+        Organisation mockOrganisation;
+
         private OrganisationPreviousName firstOrganisationPreviousName;
 
         private OrganisationPreviousName secondOrganisationPreviousName;
 
         @Before
         public void setUp() throws Exception {
-            firstOrganisationPreviousName = new OrganisationPreviousName(null, "Alpha", null);
-            secondOrganisationPreviousName = new OrganisationPreviousName(null, "Beta", null);
+            firstOrganisationPreviousName = new OrganisationPreviousName(mockOrganisation, "Alpha", LocalDate.now());
+            secondOrganisationPreviousName = new OrganisationPreviousName(mockOrganisation, "Beta", LocalDate.now());
         }
 
         @Test
