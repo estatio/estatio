@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.lease.LeaseRoleTypeEnum;
@@ -62,7 +63,8 @@ public class PartyRoleTypeRepository_IntegTest extends EstatioIntegrationTest {
                             ProjectRoleTypeEnum.values().length +
                             PartyRoleTypeEnum.values().length +
                             PartyRelationshipTypeEnum.values().length +
-                            LeaseRoleTypeEnum.values().length
+                            LeaseRoleTypeEnum.values().length +
+                            IncomingInvoiceRoleTypeEnum.values().length
             );
         }
     }
