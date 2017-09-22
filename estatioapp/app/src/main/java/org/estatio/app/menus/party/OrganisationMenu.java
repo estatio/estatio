@@ -23,6 +23,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -39,12 +41,16 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.PartyConstants;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.dom.party.role.PartyRoleRepository;
 import org.estatio.numerator.dom.NumeratorRepository;
 
 @DomainService(
@@ -61,15 +67,33 @@ public class OrganisationMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
-            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
+            @Parameter(
+                    regexPattern = ReferenceType.Meta.REGEX,
+                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION,
+                    optionality = Optionality.OPTIONAL
+            )
+            final String reference,
             final boolean useNumereratorForReference,
             final String name,
-            final Country country) {
-        return organisationRepository.newOrganisation(reference, useNumereratorForReference, name, country);
+            final Country country,
+            final List<IPartyRoleType> partyRoleTypes) {
+        final Organisation organisation = organisationRepository
+                .newOrganisation(reference, useNumereratorForReference, name, country);
+        for (IPartyRoleType partyRoleType : partyRoleTypes) {
+            partyRoleRepository.findOrCreate(organisation, partyRoleType);
+        }
+        return organisation;
     }
 
     public List<Country> choices3NewOrganisation() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
+    }
+
+    public List<IPartyRoleType> choices4NewOrganisation() {
+        List<IPartyRoleType> choices = Lists.newArrayList();
+        choices.add(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        choices.add(LeaseRoleTypeEnum.TENANT);
+        return choices;
     }
 
     public Country default3NewOrganisation() {
@@ -119,5 +143,9 @@ public class OrganisationMenu {
 
     @Inject
     PartyRepository partyRepository;
+
+    @Inject
+    PartyRoleRepository partyRoleRepository;
+
 
 }
