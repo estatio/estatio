@@ -28,6 +28,7 @@ import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -35,6 +36,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -53,6 +55,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -68,7 +71,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -275,6 +277,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
+    @PropertyLayout(named = "Supplier order ref.")
     private String sellerOrderReference;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -325,23 +328,29 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Column(allowsNull = "true", name = "sellerPartyId")
+    @PropertyLayout(named = "Supplier")
     @Getter @Setter
     private Party seller;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit Supplier")
     public Order editSeller(
             @Nullable
-            final Party seller){
-        setSeller(seller);
+            final Party supplier,
+            final boolean createRoleIfRequired){
+        setSeller(supplier);
+        if(supplier != null && createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
         return this;
     }
 
-    public List<Party> autoComplete0EditSeller(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
-    }
-
-    public String validate0EditSeller(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+        if(party != null && !createRoleIfRequired) {
+            // requires that the supplier already has this role
+            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        return null;
     }
 
     public Party default0EditSeller(){
@@ -373,7 +382,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
         }
-        partyRoleRepository.findOrCreate(organisation, Constants.InvoiceRoleTypeEnum.SELLER);
+        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         return this;
     }
 
@@ -406,11 +415,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Column(allowsNull = "true", name = "buyerPartyId")
-    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "ECP (as buyer)", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit ECP (as buyer)")
     public Order editBuyer(
             @Nullable
             final Party buyer){
@@ -419,11 +429,11 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public String validate0EditBuyer(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
 
@@ -801,35 +811,36 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order changeOrderDetails(
             final String orderNumber,
-            final Party buyer,
-            final Party seller,
+            @ParameterLayout(named = "ECP (as buyer)")
+            final Party ecpAsBuyer,
+            final Party supplier,
             @Nullable
             final String sellerOrderReference,
             @Nullable
             final LocalDate orderDate
     ){
         setOrderNumber(orderNumber);
-        setBuyer(buyer);
-        setSeller(seller);
+        setBuyer(ecpAsBuyer);
+        setSeller(supplier);
         setSellerOrderReference(sellerOrderReference);
         setOrderDate(orderDate);
         return this;
     }
 
     public List<Party> autoComplete1ChangeOrderDetails(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public String validate1ChangeOrderDetails(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public List<Party> autoComplete2ChangeOrderDetails(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     public String validate2ChangeOrderDetails(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     public String default0ChangeOrderDetails(){

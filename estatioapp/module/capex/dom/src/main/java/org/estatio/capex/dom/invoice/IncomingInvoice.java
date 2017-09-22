@@ -68,7 +68,6 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -760,9 +759,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super.setCurrency(invalidateApprovalIfDiffer(getCurrency(), currency));
     }
 
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
+    @Override
+    public Party getBuyer() {
+        return super.getBuyer();
+    }
+
     @Override
     public void setBuyer(final Party buyer) {
         super.setBuyer(invalidateApprovalIfDiffer(super.getBuyer(), buyer));
+    }
+
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
+    @Override
+    public Party getSeller() {
+        return super.getSeller();
     }
 
     @Override
@@ -856,6 +867,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit ECP (as buyer)")
     public IncomingInvoice editBuyer(
             @Nullable
             final Party buyer){
@@ -863,10 +875,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
     public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
     public String validate0EditBuyer(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
     public Party default0EditBuyer(){
         return getBuyer();
@@ -880,18 +892,24 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     
     
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(
             @Nullable
-            final Party seller){
-        setSeller(seller);
-        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
+            final Party supplier,
+            final boolean createRoleIfRequired){
+        setSeller(supplier);
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(supplier));
+        if(supplier != null && createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
         return this;
     }
-    public List<Party> autoComplete0EditSeller(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
-    }
-    public String validate0EditSeller(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+        if(party != null && !createRoleIfRequired) {
+            // requires that the supplier already has this role
+            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        return null;
     }
     public Party default0EditSeller(){
         return getSeller();

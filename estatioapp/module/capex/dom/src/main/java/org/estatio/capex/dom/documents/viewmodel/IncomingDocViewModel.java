@@ -44,6 +44,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
@@ -65,7 +66,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -161,33 +161,45 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
     private Party buyer;
     public List<Party> autoCompleteBuyer(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
     public String validateBuyer(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     @Setter @Getter
-    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
     private Party seller;
     // use of modify so can be overridden on IncomingInvoiceViewmodel
-    public void modifySeller(final Party seller){
-        setSeller(seller);
+
+    @ActionLayout(named = "Edit Supplier")
+    public IncomingDocViewModel editSeller(final Party supplier, final boolean createRoleIfRequired) {
+        setSeller(supplier);
+        if(createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        onEditSeller(supplier);
+        return this;
     }
-    public List<Party> autoCompleteSeller(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+
+    protected void onEditSeller(final Party seller){
     }
-    public String validateSeller(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+        if(!createRoleIfRequired) {
+            // requires that the supplier already has this role
+            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        return null;
     }
 
 
 
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Create Supplier")
     public IncomingDocViewModel createSeller(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumeratorForReference,

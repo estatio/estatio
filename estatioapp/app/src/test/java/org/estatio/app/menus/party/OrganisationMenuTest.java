@@ -1,5 +1,7 @@
 package org.estatio.app.menus.party;
 
+import java.util.Collections;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -96,7 +98,7 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country);
+            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
 
             // then
             assertThat(reason).isEqualTo("No numerator found");
@@ -116,7 +118,7 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country);
+            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
 
             // then
             assertThat(reason).isNull();
@@ -134,7 +136,7 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country);
+            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
 
             // then
             assertThat(reason).isEqualTo("some validation message");
