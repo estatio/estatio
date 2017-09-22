@@ -161,6 +161,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
     private Party buyer;
     public List<Party> autoCompleteBuyer(@MinLength(3) final String searchPhrase){
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
@@ -171,6 +172,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Setter @Getter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
     private Party seller;
     // use of modify so can be overridden on IncomingInvoiceViewmodel
     public void modifySeller(final Party seller){

@@ -759,9 +759,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super.setCurrency(invalidateApprovalIfDiffer(getCurrency(), currency));
     }
 
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
+    @Override
+    public Party getBuyer() {
+        return super.getBuyer();
+    }
+
     @Override
     public void setBuyer(final Party buyer) {
         super.setBuyer(invalidateApprovalIfDiffer(super.getBuyer(), buyer));
+    }
+
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
+    @Override
+    public Party getSeller() {
+        return super.getSeller();
     }
 
     @Override

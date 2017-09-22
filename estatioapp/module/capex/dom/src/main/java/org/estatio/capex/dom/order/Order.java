@@ -325,6 +325,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Column(allowsNull = "true", name = "sellerPartyId")
+    @PropertyLayout(named = "Supplier")
     @Getter @Setter
     private Party seller;
 
@@ -402,7 +403,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     @Column(allowsNull = "true", name = "buyerPartyId")
-    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @PropertyLayout(named = "ECP (as buyer)", hidden = Where.ALL_TABLES)
     @Getter @Setter
     private Party buyer;
 
