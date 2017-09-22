@@ -171,15 +171,28 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     @Setter @Getter
-    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @org.apache.isis.applib.annotation.Property(editing = Editing.DISABLED)
     @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
     private Party seller;
     // use of modify so can be overridden on IncomingInvoiceViewmodel
-    public void modifySeller(final Party seller){
+
+    public IncomingDocViewModel editSeller(final Party seller, final boolean createRoleIfRequired) {
         setSeller(seller);
+        if(createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        onEditSeller(seller);
+        return this;
     }
-    public String validateSeller(final Party party){
-        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+
+    protected void onEditSeller(final Party seller){
+    }
+    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+        if(!createRoleIfRequired) {
+            // requires that the supplier already has this role
+            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        return null;
     }
 
 

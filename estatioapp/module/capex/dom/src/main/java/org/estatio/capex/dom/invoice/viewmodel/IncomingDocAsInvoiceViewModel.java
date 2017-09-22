@@ -292,8 +292,7 @@ public class IncomingDocAsInvoiceViewModel
     //endregion
 
     @Override
-    public void modifySeller(final Party seller){
-        setSeller(seller);
+    protected void onEditSeller(final Party seller){
         setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
     }
 
