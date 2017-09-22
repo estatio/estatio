@@ -332,13 +332,21 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editSeller(
             @Nullable
-            final Party seller){
+            final Party seller,
+            final boolean createRoleIfRequired){
         setSeller(seller);
+        if(seller != null && createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
         return this;
     }
 
-    public String validate0EditSeller(final Party party){
-        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+    public String validateEditSeller(final Party party, final boolean createRoleIfRequired){
+        if(party != null && !createRoleIfRequired) {
+            // requires that the supplier already has this role
+            return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        }
+        return null;
     }
 
     public Party default0EditSeller(){
