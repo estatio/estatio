@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.UdoDomainService;
@@ -75,9 +76,10 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.FixEvent ev) {
-        Party sourceParty = (Party) ev.getSource();
+        Party sourceParty = ev.getSource();
         if (orderRepository.findBySellerParty(sourceParty).size() > 0) {
-            sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER); ;
+            sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
+            sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
     }
 

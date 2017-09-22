@@ -53,6 +53,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -68,7 +69,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -336,12 +336,8 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public List<Party> autoComplete0EditSeller(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
-    }
-
     public String validate0EditSeller(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     public Party default0EditSeller(){
@@ -373,7 +369,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
         }
-        partyRoleRepository.findOrCreate(organisation, Constants.InvoiceRoleTypeEnum.SELLER);
+        partyRoleRepository.findOrCreate(organisation, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         return this;
     }
 
@@ -419,11 +415,11 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<Party> autoComplete0EditBuyer(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public String validate0EditBuyer(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
 
@@ -817,19 +813,19 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public List<Party> autoComplete1ChangeOrderDetails(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public String validate1ChangeOrderDetails(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     public List<Party> autoComplete2ChangeOrderDetails(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     public String validate2ChangeOrderDetails(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
     public String default0ChangeOrderDetails(){

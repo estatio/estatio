@@ -44,6 +44,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.task.Task;
@@ -65,7 +66,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
@@ -163,10 +163,10 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     private Party buyer;
     public List<Party> autoCompleteBuyer(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
     public String validateBuyer(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.BUYER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
     @Setter @Getter
@@ -176,11 +176,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     public void modifySeller(final Party seller){
         setSeller(seller);
     }
-    public List<Party> autoCompleteSeller(@MinLength(3) final String searchPhrase){
-        return partyRepository.autoCompleteWithRole(searchPhrase, Constants.InvoiceRoleTypeEnum.SELLER);
-    }
     public String validateSeller(final Party party){
-        return partyRoleRepository.validateThat(party, Constants.InvoiceRoleTypeEnum.SELLER);
+        return partyRoleRepository.validateThat(party, IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
 
