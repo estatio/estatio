@@ -336,11 +336,11 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @ActionLayout(named = "Edit Supplier")
     public Order editSeller(
             @Nullable
-            final Party seller,
+            final Party supplier,
             final boolean createRoleIfRequired){
-        setSeller(seller);
-        if(seller != null && createRoleIfRequired) {
-            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        setSeller(supplier);
+        if(supplier != null && createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return this;
     }

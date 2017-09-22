@@ -42,6 +42,7 @@
                                         <cpt:property id="orderNumber" promptStyle="INLINE"/>
                                         <cpt:property id="buyer" promptStyle="INLINE"/>
                                         <cpt:property id="seller" promptStyle="INLINE">
+                                            <cpt:action id="editSeller" promptStyle="INLINE_AS_IF_EDIT" position="RIGHT"/>
                                             <cpt:action id="createSeller" promptStyle="INLINE" position="RIGHT"/>
                                         </cpt:property>
                                         <cpt:property id="sellerOrderReference" promptStyle="INLINE"/>

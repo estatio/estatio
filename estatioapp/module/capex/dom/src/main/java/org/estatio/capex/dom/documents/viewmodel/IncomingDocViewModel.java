@@ -177,12 +177,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     // use of modify so can be overridden on IncomingInvoiceViewmodel
 
     @ActionLayout(named = "Edit Supplier")
-    public IncomingDocViewModel editSeller(final Party seller, final boolean createRoleIfRequired) {
-        setSeller(seller);
+    public IncomingDocViewModel editSeller(final Party supplier, final boolean createRoleIfRequired) {
+        setSeller(supplier);
         if(createRoleIfRequired) {
-            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
-        onEditSeller(seller);
+        onEditSeller(supplier);
         return this;
     }
 

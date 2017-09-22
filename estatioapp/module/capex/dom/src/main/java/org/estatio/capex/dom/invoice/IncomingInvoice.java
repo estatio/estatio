@@ -770,7 +770,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         super.setBuyer(invalidateApprovalIfDiffer(super.getBuyer(), buyer));
     }
 
-    @org.apache.isis.applib.annotation.PropertyLayout(named = "ECP (as buyer)")
+    @org.apache.isis.applib.annotation.PropertyLayout(named = "Supplier")
     @Override
     public Party getSeller() {
         return super.getSeller();
@@ -895,12 +895,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(
             @Nullable
-            final Party seller,
+            final Party supplier,
             final boolean createRoleIfRequired){
-        setSeller(seller);
-        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(seller));
-        if(seller != null && createRoleIfRequired) {
-            partyRoleRepository.findOrCreate(seller, IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        setSeller(supplier);
+        setBankAccount(bankAccountRepository.getFirstBankAccountOfPartyOrNull(supplier));
+        if(supplier != null && createRoleIfRequired) {
+            partyRoleRepository.findOrCreate(supplier, IncomingInvoiceRoleTypeEnum.SUPPLIER);
         }
         return this;
     }
