@@ -867,6 +867,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit ECP (as buyer)")
     public IncomingInvoice editBuyer(
             @Nullable
             final Party buyer){
@@ -891,6 +892,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     
     
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit Supplier")
     public IncomingInvoice editSeller(
             @Nullable
             final Party seller,

@@ -98,6 +98,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     private String orderNumber;
 
     @Property(editing = Editing.ENABLED)
+    @PropertyLayout(named = "Supplier order ref.")
     private String sellerOrderReference;
 
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
@@ -119,14 +120,14 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
                 final Party buyer,
                 final Party seller,
                 @Nullable
-                final String sellerOrderReference,
+                final String supplierOrderReference,
                 @Nullable
                 final LocalDate orderDate
         ){
             viewModel.setOrderNumber(orderNumber);
             viewModel.setBuyer(buyer);
             viewModel.setSeller(seller);
-            viewModel.setSellerOrderReference(sellerOrderReference);
+            viewModel.setSellerOrderReference(supplierOrderReference);
             viewModel.setOrderDate(orderDate);
             return viewModel;
         }

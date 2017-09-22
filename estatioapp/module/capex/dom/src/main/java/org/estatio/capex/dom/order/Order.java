@@ -28,6 +28,7 @@ import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -35,6 +36,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -275,6 +277,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
 
     @Column(allowsNull = "true", length = 255)
     @Getter @Setter
+    @PropertyLayout(named = "Supplier order ref.")
     private String sellerOrderReference;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -330,6 +333,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     private Party seller;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit Supplier")
     public Order editSeller(
             @Nullable
             final Party seller,
@@ -416,6 +420,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     private Party buyer;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Edit ECP (as buyer)")
     public Order editBuyer(
             @Nullable
             final Party buyer){
@@ -806,16 +811,17 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order changeOrderDetails(
             final String orderNumber,
-            final Party buyer,
-            final Party seller,
+            @ParameterLayout(named = "ECP (as buyer)")
+            final Party ecpAsBuyer,
+            final Party supplier,
             @Nullable
             final String sellerOrderReference,
             @Nullable
             final LocalDate orderDate
     ){
         setOrderNumber(orderNumber);
-        setBuyer(buyer);
-        setSeller(seller);
+        setBuyer(ecpAsBuyer);
+        setSeller(supplier);
         setSellerOrderReference(sellerOrderReference);
         setOrderDate(orderDate);
         return this;

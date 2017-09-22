@@ -176,6 +176,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private Party seller;
     // use of modify so can be overridden on IncomingInvoiceViewmodel
 
+    @ActionLayout(named = "Edit Supplier")
     public IncomingDocViewModel editSeller(final Party seller, final boolean createRoleIfRequired) {
         setSeller(seller);
         if(createRoleIfRequired) {
@@ -197,9 +198,8 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
 
 
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(named = "Create Supplier")
     public IncomingDocViewModel createSeller(
             final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
             final boolean useNumeratorForReference,
