@@ -48,8 +48,7 @@ public class TaskRepository {
     /**
      * Incomplete and assigned explicitly to me
      */
-    @Programmatic
-    public List<Task> findIncompleteForMeOnly() {
+    private List<Task> findIncompleteForMeOnly() {
         final Person meAsPerson = meAsPerson();
         if(meAsPerson == null) {
             return Lists.newArrayList();
@@ -170,8 +169,9 @@ public class TaskRepository {
                         "personAssignedTo", personAssignedTo));
     }
 
-    @Programmatic
-    public List<Task> findIncompleteForAndCreatedOnBefore(final Person personAssignedTo, final LocalDateTime createdOn) {
+    private List<Task> findIncompleteForAndCreatedOnBefore(
+            final Person personAssignedTo,
+            final LocalDateTime createdOn) {
         return queryResultsCache.execute(
                 () -> doFindIncompleteForAndCreatedOnBefore(personAssignedTo, createdOn),
                 getClass(),
@@ -191,8 +191,9 @@ public class TaskRepository {
         return tasks;
     }
 
-    @Programmatic
-    public List<Task> findIncompleteForAndCreatedOnAfter(final Person personAssignedTo, final LocalDateTime createdOn) {
+    private List<Task> findIncompleteForAndCreatedOnAfter(
+            final Person personAssignedTo,
+            final LocalDateTime createdOn) {
         return queryResultsCache.execute(
                 () -> doFindIncompleteForAndCreatedOnAfter(personAssignedTo, createdOn),
                 getClass(),
