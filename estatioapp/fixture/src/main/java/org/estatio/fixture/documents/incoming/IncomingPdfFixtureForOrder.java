@@ -9,17 +9,18 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
-public class IncomingPdfFixture extends IncomingPdfAbstract {
+public class IncomingPdfFixtureForOrder extends IncomingPdfAbstract {
 
     @Getter @Setter
     private String runAs;
+
+    public static String resourceName = "fakeOrder2.pdf";
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
         List<String> resourceNames = Lists.newArrayList(
-            "fakeOrder1.pdf",
-            "fakeInvoice1.pdf"
+                resourceName
         );
 
         uploadDocuments(resourceNames, getRunAs());

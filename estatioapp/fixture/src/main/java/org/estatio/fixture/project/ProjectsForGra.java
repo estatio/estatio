@@ -18,10 +18,6 @@
  */
 package org.estatio.fixture.project;
 
-import org.estatio.fixture.party.OrganisationForMediaXNl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
-import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
-
 import static org.incode.module.base.integtests.VT.ld;
 
 public class ProjectsForGra extends ProjectAbstract {
@@ -30,11 +26,6 @@ public class ProjectsForGra extends ProjectAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForMediaXNl());
-        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-        executionContext.executeChild(this, new PersonForJohnDoeNl());
 
         // exec
         createProject(

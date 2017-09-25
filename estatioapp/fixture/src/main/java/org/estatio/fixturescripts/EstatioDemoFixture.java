@@ -18,7 +18,6 @@
  */
 package org.estatio.fixturescripts;
 
-import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
@@ -42,6 +41,7 @@ import org.estatio.fixture.financial.BankAccountForMediaXGb;
 import org.estatio.fixture.financial.BankAccountForMiracleGb;
 import org.estatio.fixture.financial.BankAccountForPretGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
+import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
@@ -52,6 +52,7 @@ import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
+import org.estatio.fixture.order.OrderFixture;
 import org.estatio.fixture.party.PersonForBrunoJeremieFr;
 import org.estatio.fixture.party.PersonForDylanClaytonGb;
 import org.estatio.fixture.party.PersonForEmmaFarmerGb;
@@ -67,6 +68,7 @@ import org.estatio.fixture.party.PersonForRosaireEvrardFr;
 import org.estatio.fixture.party.PersonForThibaultJosueFr;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
+import org.estatio.integtests.capex.TickingFixtureClock;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -80,6 +82,11 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+        TickingFixtureClock.replaceExisting();
+        doExecute(executionContext);
+    }
+
+    private void doExecute(final ExecutionContext executionContext) {
         executionContext.executeChild(this, new EstatioBaseLineFixture());
         executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
         executionContext.executeChild(this, new BankAccountForAcmeNl());
@@ -127,7 +134,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningAndItemsForOxf());
-        
+
         executionContext.executeChild(this, new PropertyForCARTEST());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
@@ -137,8 +144,10 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-fr"));
 
-        final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
-        fixtureClock.reset();
+        executionContext.executeChild(this, new OrderFixture());
+
+        executionContext.executeChild(this, new IncomingInvoiceFixture());
 
     }
+
 }

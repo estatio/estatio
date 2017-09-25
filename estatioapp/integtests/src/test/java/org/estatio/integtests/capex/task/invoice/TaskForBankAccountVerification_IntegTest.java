@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +51,6 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.capex.TickingFixtureClock;
 import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -198,17 +196,6 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             wrap(mixin(BankAccount_attachPdfAsIbanProof.class, bankAccount)).act(blob);
 
             assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(NOT_VERIFIED);
-        }
-
-
-        @Before
-        public void setupClock() {
-            TickingFixtureClock.replaceExisting();
-        }
-
-        @After
-        public void teardownClock() {
-            TickingFixtureClock.reinstateExisting();
         }
 
         @Test

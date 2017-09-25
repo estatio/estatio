@@ -30,6 +30,7 @@ import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 
 import org.estatio.app.EstatioAppManifest2;
+import org.estatio.integtests.capex.TickingFixtureClock;
 import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
 
 /**
@@ -46,6 +47,8 @@ public abstract class EstatioIntegrationTest2 extends IntegrationTestAbstract2 {
         bootstrapUsing(EstatioAppManifest2.BUILDER
                 .withAdditionalServices(EstatioIntegTestFakeServicesModule.class)
         );
+
+        TickingFixtureClock.replaceExisting();
 
     }
 

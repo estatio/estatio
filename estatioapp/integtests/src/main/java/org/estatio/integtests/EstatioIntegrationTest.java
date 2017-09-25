@@ -82,6 +82,8 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
             IsisSystemForTest.set(isft);
         }
 
+        TickingFixtureClock.replaceExisting();
+
         // instantiating will install onto ThreadLocal
         new ScenarioExecutionForIntegration();
     }
