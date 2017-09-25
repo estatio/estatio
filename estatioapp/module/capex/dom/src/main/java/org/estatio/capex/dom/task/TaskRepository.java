@@ -1,10 +1,13 @@
 package org.estatio.capex.dom.task;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDateTime;
@@ -18,6 +21,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
+import org.estatio.dom.party.role.PartyRole;
+import org.estatio.dom.party.role.PartyRoleType;
 
 /***
  * There is no "create" method here because tasks are only ever created in the context of state transitions.
@@ -46,6 +51,32 @@ public class TaskRepository {
         final Person meAsPerson = personRepository.me();
         return findIncompleteByPersonAssignedTo(meAsPerson);
     }
+
+    @Programmatic
+    public List<Task> findIncompleteForMyRoles() {
+        final Person meAsPerson = personRepository.me();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+        final List<PartyRoleType> myRoleTypes =
+                Lists.newArrayList(meAsPerson.getRoles()).stream()
+                        .map(PartyRole::getRoleType)
+                        .collect(Collectors.toList());
+
+        // TODO: client-side filtering, could be improved
+        final List<Task> tasks = Lists.newArrayList(findIncompleteForOthers());
+        for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext(); ) {
+            final Task task = iterator.next();
+            final PartyRoleType roleAssignedTo = task.getAssignedTo();
+            if(!myRoleTypes.contains(roleAssignedTo)) {
+                iterator.remove();
+            }
+        }
+
+        return tasks;
+    }
+
+
 
     @Programmatic
     public List<Task> findIncompleteForOthers() {

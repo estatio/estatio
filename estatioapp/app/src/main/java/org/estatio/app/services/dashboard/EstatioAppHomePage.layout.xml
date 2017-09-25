@@ -30,8 +30,14 @@
                             </cpt:collection>
                         </bs3:col>
                         <bs3:col span="6">
-                            <cpt:collection id="tasksForOthers" paged="15" defaultView="hide">
-                                <cpt:action id="checkStateOfTasksForOthers">
+                            <cpt:collection id="tasksForMyRolesNotMine" paged="15" defaultView="hide">
+                                <cpt:action id="transferTasks"/>
+                                <cpt:action id="checkStateOfTasksForMyRolesNotMine">
+                                    <cpt:named>Check State</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                            <cpt:collection id="tasksForOthersNotMyRoles" paged="15" defaultView="hide">
+                                <cpt:action id="checkStateOfTasksForOthersNotMyRoles">
                                     <cpt:named>Check State</cpt:named>
                                 </cpt:action>
                             </cpt:collection>
