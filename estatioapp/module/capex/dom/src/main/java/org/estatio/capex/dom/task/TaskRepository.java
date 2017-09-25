@@ -1,6 +1,5 @@
 package org.estatio.capex.dom.task;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,37 +45,76 @@ public class TaskRepository {
                         "findIncomplete"));
     }
 
+    /**
+     * Incomplete and assigned explicitly to me
+     */
     @Programmatic
-    public List<Task> findIncompleteForMe() {
+    public List<Task> findIncompleteForMeOnly() {
         final Person meAsPerson = personRepository.me();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
         return findIncompleteByPersonAssignedTo(meAsPerson);
     }
 
+    /**
+     * Incomplete, assigned explicitly to me, AND ALSO any tasks not assigned to anyone but for which
+     * I have the (party) roles to perform them (so should be part of "my tasks")
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMe() {
+        final Person meAsPerson = personRepository.me();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+
+        final List<Task> tasks = findIncompleteForMeOnly();
+        final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassigned();
+        tasks.addAll(myRolesTasksUnassigned);
+
+        return tasks;
+    }
+
+    /**
+     * Those tasks which are assigned to no-one, but for which I have the (party) roles to perform.
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMyRolesAndUnassigned() {
+        final Person meAsPerson = personRepository.me();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+        final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
+
+        final List<Task> tasksForNoone = findIncompleteByPersonAssignedTo(null);
+        return tasksForNoone.stream()
+                .filter(task -> myRoleTypes.contains(task.getAssignedTo()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Those tasks that ARE assigned explicitly, but to someone else, for which I have the (party)
+     * roles to perform (ie "my colleague's tasks")
+     */
     @Programmatic
     public List<Task> findIncompleteForMyRoles() {
         final Person meAsPerson = personRepository.me();
         if(meAsPerson == null) {
             return Lists.newArrayList();
         }
-        final List<PartyRoleType> myRoleTypes =
-                Lists.newArrayList(meAsPerson.getRoles()).stream()
-                        .map(PartyRole::getRoleType)
-                        .collect(Collectors.toList());
+        final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
 
-        // TODO: client-side filtering, could be improved
-        final List<Task> tasks = Lists.newArrayList(findIncompleteForOthers());
-        for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext(); ) {
-            final Task task = iterator.next();
-            final PartyRoleType roleAssignedTo = task.getAssignedTo();
-            if(!myRoleTypes.contains(roleAssignedTo)) {
-                iterator.remove();
-            }
-        }
-
-        return tasks;
+        final List<Task> tasksForOthersOrNoone = findIncompleteForOthers();
+        return tasksForOthersOrNoone.stream()
+                                    .filter(task -> myRoleTypes.contains(task.getAssignedTo()))
+                                    .collect(Collectors.toList());
     }
 
-
+    private List<PartyRoleType> partyRoleTypesFor(final Person person) {
+        return Lists.newArrayList(person.getRoles()).stream()
+                .map(PartyRole::getRoleType)
+                .collect(Collectors.toList());
+    }
 
     @Programmatic
     public List<Task> findIncompleteForOthers() {

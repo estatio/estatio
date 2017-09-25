@@ -454,7 +454,7 @@ public class StateTransitionService {
             final Person personAssignedToIfAny = taskIfAny.getPersonAssignedTo();
             if(personAssignedToIfAny == null) {
                 if(iRoleShouldBeAssignedTo != null) {
-                    Person person = partyRoleTypeService.firstMemberOf(iRoleShouldBeAssignedTo, domainObject);
+                    Person person = partyRoleTypeService.onlyMemberOfElseNone(iRoleShouldBeAssignedTo, domainObject);
                     taskIfAny.setPersonAssignedTo(person);
                 }
             }

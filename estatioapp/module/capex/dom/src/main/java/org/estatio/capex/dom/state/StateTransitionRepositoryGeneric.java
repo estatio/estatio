@@ -145,7 +145,7 @@ public class StateTransitionRepositoryGeneric {
 
         final Person assignToIfAny = personToAssignToIfAny != null
                                         ? personToAssignToIfAny
-                                        : partyRoleTypeService.firstMemberOf(iRoleAssignTo, domainObject);
+                                        : partyRoleTypeService.onlyMemberOfElseNone(iRoleAssignTo, domainObject);
 
         final PartyRoleType roleAssignTo =
                 iRoleAssignTo.findOrCreateUsing(partyRoleTypeRepository);

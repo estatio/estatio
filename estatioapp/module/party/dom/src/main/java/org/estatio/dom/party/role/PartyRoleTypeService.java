@@ -47,6 +47,15 @@ public class PartyRoleTypeService {
         return persons != null && !persons.isEmpty() ? persons.get(0) : null;
     }
 
+    /**
+     * If there is only one {@link #membersOf(IPartyRoleType, Object)}, then returned; otherwise null.
+     */
+    @Programmatic
+    public Person onlyMemberOfElseNone(final IPartyRoleType partyRoleType, final Object domainObject) {
+        final List<Person> persons = membersOf(partyRoleType, domainObject);
+        return persons != null && !persons.isEmpty() ? persons.get(0) : null;
+    }
+
     @Programmatic
     public PartyRole createRole(final Party party, final IPartyRoleType iPartyRoleType) {
         final PartyRoleType partyRoleType = iPartyRoleType.findUsing(partyRoleTypeRepository);

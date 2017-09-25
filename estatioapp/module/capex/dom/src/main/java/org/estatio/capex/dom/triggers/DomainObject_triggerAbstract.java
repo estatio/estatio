@@ -183,7 +183,7 @@ public abstract class DomainObject_triggerAbstract<
             return null;
         }
         IPartyRoleType partyRoleType = peekPartyRoleType();
-        return partyRoleTypeService.firstMemberOf(partyRoleType, domainObject);
+        return partyRoleTypeService.onlyMemberOfElseNone(partyRoleType, domainObject);
     }
 
     protected List<Person> choicesPersonToAssignNextTo() {
