@@ -30,7 +30,6 @@ import org.assertj.core.util.Lists;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Nature;
@@ -105,6 +104,28 @@ public class EstatioAppHomePage {
     }
 
 
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public EstatioAppHomePage assignTasksToMe(final List<Task> unassignedTasks) {
+        for (Task unassignedTask : unassignedTasks) {
+            unassignedTask.setPersonAssignedTo(personRepository.me());
+        }
+
+        return this;
+    }
+    public List<Task> choices0AssignTasksToMe() {
+        return taskRepository.findIncompleteForMyRolesAndUnassigned();
+    }
+    public String disableAssignTasksToMe() {
+        if(personRepository.me() == null) {
+            return "No Person set up for current user";
+        }
+        return choices0AssignTasksToMe().isEmpty() ? "No tasks to assign" : null;
+    }
+
+
+
     ////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
@@ -137,7 +158,6 @@ public class EstatioAppHomePage {
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
     public TransferTaskManager transferTasks(final Person transferToOrFrom) {
         final Person meAsPerson = personRepository.me();
         final TransferTaskManager taskManager = new TransferTaskManager(meAsPerson, transferToOrFrom, TransferTaskManager.Mode.SAME_ROLES);
@@ -147,12 +167,6 @@ public class EstatioAppHomePage {
         final Person meAsPerson = personRepository.me();
         return meAsPerson == null ? "No Person set up for current user" : null;
     }
-
-    @Inject
-    PersonRepository personRepository;
-
-    @Inject
-    ServiceRegistry2 serviceRegistry2;
 
 
     ////////////////////////////////////////////////
@@ -342,5 +356,12 @@ public class EstatioAppHomePage {
 
     @Inject
     ClockService clockService;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
+
 
 }

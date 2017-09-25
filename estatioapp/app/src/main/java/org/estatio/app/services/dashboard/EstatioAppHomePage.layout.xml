@@ -24,6 +24,7 @@
                     <bs3:row>
                         <bs3:col span="6">
                             <cpt:collection id="tasksForMe" paged="15">
+                                <cpt:action id="assignTasksToMe"/>
                                 <cpt:action id="checkStateOfTasksForMe">
                                     <cpt:named>Check State</cpt:named>
                                 </cpt:action>
