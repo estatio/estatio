@@ -27,10 +27,18 @@ public interface StateTransitionRepository<
     @Programmatic
     ST findByTask(final Task task);
 
+    /**
+     * Returns the most recently completed transition to the specified state for the given domain object.
+     *
+     * @param domainObject - whose transitions are being queried
+     * @param toState - the state that the domain object transitioned to
+     * @param natureOfTransition - if {@link NatureOfTransition#EXPLICIT} then {@link StateTransitionAbstract#getCompletedBy()} must be non-null.
+     */
     @Programmatic
     ST findByDomainObjectAndToState(
             final DO domainObject,
-            final S toState);
+            final S toState,
+            final NatureOfTransition natureOfTransition);
 
         /**
          * Creates the transition with corresponding {@link Task}.

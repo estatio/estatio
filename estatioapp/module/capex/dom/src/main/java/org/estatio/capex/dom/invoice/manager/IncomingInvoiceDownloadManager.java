@@ -45,6 +45,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
+import org.estatio.capex.dom.state.NatureOfTransition;
 import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
@@ -272,15 +273,34 @@ public class IncomingInvoiceDownloadManager {
                     final Document document =
                             lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice).orElse(null);
 
-                    IncomingInvoiceApprovalStateTransition approvalTransitionIfAny =
-                            stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+                    IncomingInvoiceApprovalStateTransition approvalTransitionIfAny = null;
 
-                    if(approvalTransitionIfAny == null) {
-                        approvalTransitionIfAny =
-                                stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                        IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER);
+                    final IncomingInvoiceApprovalState approvalState = invoice.getApprovalState();
+                    switch (approvalState) {
+                    case NEW:
+                    case COMPLETED:
+                    case DISCARDED:
+                    case APPROVED:
+                        // these states all imply that the invoice hasn't yet been approved
+                        // (or it might have once been approved, but since been rejected and not yet re-completed).
+                        break;
+                    case APPROVED_BY_COUNTRY_DIRECTOR:
+                    case APPROVED_BY_CORPORATE_MANAGER:
+                    case PENDING_BANK_ACCOUNT_CHECK:
+                    case PAYABLE:
+                    case PAID:
+                        // all of these states imply that the invoice has been approved.
+                        approvalTransitionIfAny = stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                                NatureOfTransition.EXPLICIT);
+                        if(approvalTransitionIfAny == null) {
+                            approvalTransitionIfAny = stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
+                                NatureOfTransition.EXPLICIT);
+                        }
+                        break;
                     }
+
                     return new DocumentPreparer(invoice, approvalTransitionIfAny,
                             document, numFirstPages, numLastPages);
                 })

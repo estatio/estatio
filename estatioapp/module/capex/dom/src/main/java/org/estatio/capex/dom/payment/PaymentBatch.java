@@ -82,6 +82,7 @@ import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitio
 import org.estatio.capex.dom.pdfmanipulator.ExtractSpec;
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
 import org.estatio.capex.dom.pdfmanipulator.Stamp;
+import org.estatio.capex.dom.state.NatureOfTransition;
 import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
@@ -607,7 +608,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
                         IncomingInvoiceApprovalStateTransition transitionIfAny =
                                 stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                        IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR);
+                                        IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                                        NatureOfTransition.EXPLICIT);
 
                         List<String> leftLines = Lists.newArrayList();
                         leftLines.add("xfer id: " + transfer.getEndToEndId() + " / " + line.getSequence());

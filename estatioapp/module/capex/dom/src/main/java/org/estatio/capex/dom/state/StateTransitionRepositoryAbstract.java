@@ -75,12 +75,19 @@ public abstract class StateTransitionRepositoryAbstract<
     @Programmatic
     public ST findByDomainObjectAndToState(
             final DO domainObject,
-            final S toState) {
+            final S toState,
+            final NatureOfTransition natureOfTransition) {
 
         final List<ST> transitions = stateTransitionRepositoryGeneric.findByDomainObject(domainObject, stateTransitionClass);
         final List<ST> completedTransitions =
                 transitions.stream()
                         .filter(x -> x.getToState() == toState)
+
+                        // if nature of transition is required to be explicit, then this in turn implies that
+                        // completedBy will have been populated.
+                        .filter(x-> natureOfTransition != NatureOfTransition.EXPLICIT ||
+                                    x.getCompletedBy() != null)
+
                         .sorted(completedOn().reversed())
                         .collect(Collectors.toList());
 

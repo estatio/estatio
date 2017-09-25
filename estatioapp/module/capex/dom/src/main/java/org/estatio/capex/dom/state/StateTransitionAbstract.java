@@ -98,7 +98,7 @@ public abstract class StateTransitionAbstract<
             final String comment,
             final NatureOfTransition natureOfTransition) {
         final LocalDateTime completedOn = clockService.nowAsLocalDateTime();
-        final String completedBy = meService.me().getName();
+        final String completedBy = meService.me().getUsername();
 
         if(natureOfTransition == NatureOfTransition.EXPLICIT) {
             setCompletedBy(completedBy);

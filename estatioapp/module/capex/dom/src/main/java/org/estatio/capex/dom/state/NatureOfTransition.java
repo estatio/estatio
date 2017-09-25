@@ -1,6 +1,6 @@
 package org.estatio.capex.dom.state;
 
-enum NatureOfTransition {
+public enum NatureOfTransition {
     EXPLICIT,
     AUTOMATIC;
 
