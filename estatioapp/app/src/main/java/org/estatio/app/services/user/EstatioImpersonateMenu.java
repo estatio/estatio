@@ -40,6 +40,10 @@ public class EstatioImpersonateMenu {
             @Nullable
             final List<ApplicationRole> applicationRoleList) {
 
+        if(estatioUserService.isImpersonating()) {
+            stopImpersonating();
+        }
+
         final List<String> roleNames = asRoleNames(applicationRoleList);
 
         estatioUserService.setUser(applicationUser.getUsername(), roleNames);
@@ -61,9 +65,8 @@ public class EstatioImpersonateMenu {
     }
 
     public boolean hideImpersonate() {
-        return !estatioUserService.isAvailable() || estatioUserService.isImpersonating();
+        return !estatioUserService.isAvailable();
     }
-
 
 
 
