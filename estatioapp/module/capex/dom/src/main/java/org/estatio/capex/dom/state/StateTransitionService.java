@@ -445,7 +445,7 @@ public class StateTransitionService {
                     .getAssignTo(domainObject, serviceRegistry2);
 
             // always overwrite the role
-            final PartyRoleType roleShouldBeAssignedTo = partyRoleTypeRepository.findOrCreate(roleAssignedTo);
+            final PartyRoleType roleShouldBeAssignedTo = partyRoleTypeRepository.findOrCreate(iRoleShouldBeAssignedTo);
             if(roleAssignedTo != roleShouldBeAssignedTo) {
                 taskIfAny.setAssignedTo(roleShouldBeAssignedTo);
             }
