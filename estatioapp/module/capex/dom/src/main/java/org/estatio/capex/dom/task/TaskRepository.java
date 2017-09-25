@@ -50,7 +50,7 @@ public class TaskRepository {
      */
     @Programmatic
     public List<Task> findIncompleteForMeOnly() {
-        final Person meAsPerson = personRepository.me();
+        final Person meAsPerson = meAsPerson();
         if(meAsPerson == null) {
             return Lists.newArrayList();
         }
@@ -63,7 +63,7 @@ public class TaskRepository {
      */
     @Programmatic
     public List<Task> findIncompleteForMe() {
-        final Person meAsPerson = personRepository.me();
+        final Person meAsPerson = meAsPerson();
         if(meAsPerson == null) {
             return Lists.newArrayList();
         }
@@ -80,16 +80,28 @@ public class TaskRepository {
      */
     @Programmatic
     public List<Task> findIncompleteForMyRolesAndUnassigned() {
-        final Person meAsPerson = personRepository.me();
+        final Person meAsPerson = meAsPerson();
         if(meAsPerson == null) {
             return Lists.newArrayList();
         }
         final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
 
-        final List<Task> tasksForNoone = findIncompleteByPersonAssignedTo(null);
-        return tasksForNoone.stream()
-                .filter(task -> myRoleTypes.contains(task.getAssignedTo()))
-                .collect(Collectors.toList());
+        return findIncompleteByUnassignedForRoles(myRoleTypes);
+    }
+
+    private List<Task> findIncompleteByUnassignedForRoles(final List<PartyRoleType> roleTypes) {
+        return queryResultsCache.execute(() -> doFindIncompleteByUnassignedForRoles(roleTypes),
+                getClass(),
+                "findIncompleteByUnassignedForRoles",
+                roleTypes);
+    }
+
+    private List<Task> doFindIncompleteByUnassignedForRoles(final List<PartyRoleType> roleTypes) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByUnassignedForRoles",
+                        "roleTypes", roleTypes));
     }
 
     /**
@@ -98,36 +110,52 @@ public class TaskRepository {
      */
     @Programmatic
     public List<Task> findIncompleteForMyRoles() {
-        final Person meAsPerson = personRepository.me();
+        final Person meAsPerson = meAsPerson();
         if(meAsPerson == null) {
             return Lists.newArrayList();
         }
         final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
 
-        final List<Task> tasksForOthersOrNoone = findIncompleteForOthers();
-        return tasksForOthersOrNoone.stream()
-                                    .filter(task -> myRoleTypes.contains(task.getAssignedTo()))
-                                    .collect(Collectors.toList());
+        return findIncompleteByNotPersonAssignedToForRoles(meAsPerson, myRoleTypes);
     }
 
-    private List<PartyRoleType> partyRoleTypesFor(final Person person) {
-        return Lists.newArrayList(person.getRoles()).stream()
-                .map(PartyRole::getRoleType)
-                .collect(Collectors.toList());
+    private List<Task> findIncompleteByNotPersonAssignedToForRoles(
+            final Person person, final List<PartyRoleType> roleTypes) {
+        return queryResultsCache.execute(() -> doFindIncompleteByNotPersonAssignedToForRoles(person, roleTypes),
+                getClass(),
+                "findIncompleteByNotPersonAssignedToForRoles",
+                person, roleTypes);
+    }
+
+    private List<Task> doFindIncompleteByNotPersonAssignedToForRoles(
+            final Person person, final List<PartyRoleType> roleTypes) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByNotPersonAssignedToForRoles",
+                        "personAssignedTo", person,
+                        "roleTypes", roleTypes));
     }
 
     @Programmatic
     public List<Task> findIncompleteForOthers() {
-        final Person meAsPerson = personRepository.me();
+        return queryResultsCache.execute(this::doFindIncompleteForOthers,
+                getClass(),
+                "findIncompleteForOthers");
+    }
+
+    private List<Task> doFindIncompleteForOthers() {
+        final Person meAsPerson = meAsPerson();
+        final List<PartyRoleType> roleTypes = partyRoleTypesFor(meAsPerson);
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Task.class,
-                        "findIncompleteByNotPersonAssignedTo",
-                        "personAssignedTo", meAsPerson));
+                        "findIncompleteByNotPersonAssignedToNotForRoles",
+                        "personAssignedTo", meAsPerson,
+                        "roleTypes", roleTypes));
     }
 
-    @Programmatic
-    public List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
+    List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
         return queryResultsCache.execute(
                 () -> doFindIncompleteByPersonAssignedTo(personAssignedTo),
                 getClass(),
@@ -211,6 +239,28 @@ public class TaskRepository {
 
         return firstTaskIfAny.orElse(previousTask);
     }
+
+    private Person meAsPerson() {
+        return queryResultsCache.execute(this::doMeAsPerson, getClass(), "meAsPerson");
+    }
+
+    private Person doMeAsPerson() {
+        return personRepository.me();
+    }
+
+    private List<PartyRoleType> partyRoleTypesFor(final Person person) {
+        return queryResultsCache.execute(() -> doPartyRoleTypesFor(person), getClass(), "partyRoleTypesFor", person);
+    }
+
+    private List<PartyRoleType> doPartyRoleTypesFor(final Person person) {
+        if(person == null) {
+            return Lists.newArrayList();
+        }
+        return Lists.newArrayList(person.getRoles()).stream()
+                .map(PartyRole::getRoleType)
+                .collect(Collectors.toList());
+    }
+
 
     @Inject
     RepositoryService repositoryService;
