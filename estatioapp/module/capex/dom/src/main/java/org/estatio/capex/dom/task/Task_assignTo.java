@@ -3,6 +3,7 @@ package org.estatio.capex.dom.task;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -28,7 +29,7 @@ public class Task_assignTo {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Task act(final Person person) {
+    public Task act(@Nullable final Person person) {
         task.setPersonAssignedTo(person);
         return task;
     }
