@@ -88,7 +88,6 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
-import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
@@ -614,15 +613,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                         List<String> leftLines = Lists.newArrayList();
                         leftLines.add("xfer id: " + transfer.getEndToEndId() + " / " + line.getSequence());
                         if(transitionIfAny != null) {
-                            Task task = transitionIfAny.getTask();
-                            if (task != null) {
-                                Person personAssignedTo = task.getPersonAssignedTo();
-                                if (personAssignedTo != null) {
-                                    leftLines.add(String.format(
-                                            "approved by: %s %s",
-                                            personAssignedTo.getFirstName(), personAssignedTo.getLastName()));
-                                }
-                            }
+                            final String completedBy = transitionIfAny.getCompletedBy();
+                            leftLines.add(String.format(
+                                    "approved by: %s",
+                                    completedBy != null ? completedBy : "(unknown)"));
                             leftLines.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
                         }
 
