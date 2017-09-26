@@ -139,10 +139,11 @@ public class PersonBuilder extends PersonAbstract {
                 throw new IllegalArgumentException("Could not find any user with username: " + securityUserAccountCloneFrom);
             }
 
-            applicationUserRepository.newLocalUserBasedOn(
+            ApplicationUser user = applicationUserRepository.newLocalUserBasedOn(
                     securityUsername,
                     new Password("pass"), new Password("pass"),
                     userToCloneFrom, true, null);
+            user.setAtPath(getAtPath());
             person.setUsername(securityUsername);
         }
     }
