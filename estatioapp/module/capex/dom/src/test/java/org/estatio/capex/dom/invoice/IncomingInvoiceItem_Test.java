@@ -168,16 +168,18 @@ public class IncomingInvoiceItem_Test {
         IncomingInvoiceItem.Validator validator;
         IncomingInvoiceItem item;
 
+        ////// CAPEX //////
         // given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
         item.setInvoice(new IncomingInvoice());
+        item.setBudgetItem(new BudgetItem());
 
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isEqualTo("project (capex), fixed asset required");
+        Assertions.assertThat(result).isEqualTo("project (capex), fixed asset, removal of budget item (only applicable for service charges) required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
@@ -185,7 +187,7 @@ public class IncomingInvoiceItem_Test {
         item.setFixedAsset(new Property());
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isEqualTo("project (capex) required");
+        Assertions.assertThat(result).isEqualTo("project (capex), removal of budget item (only applicable for service charges) required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
@@ -193,17 +195,27 @@ public class IncomingInvoiceItem_Test {
         item.setProject(new Project());
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when all conditions satisfied
+        item.setBudgetItem(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
         Assertions.assertThat(result).isNull();
 
+        ////// SERVICE_CHARGES //////
         // and given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
         item.setInvoice(new IncomingInvoice());
+        item.setProject(new Project());
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.SERVICE_CHARGES);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isEqualTo("budget item (service charges), fixed asset required");
+        Assertions.assertThat(result).isEqualTo("budget item (service charges), fixed asset, removal of project (only applicable for capex) required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
@@ -211,7 +223,7 @@ public class IncomingInvoiceItem_Test {
         item.setFixedAsset(new Property());
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isEqualTo("budget item (service charges) required");
+        Assertions.assertThat(result).isEqualTo("budget item (service charges), removal of project (only applicable for capex) required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
@@ -224,60 +236,185 @@ public class IncomingInvoiceItem_Test {
         item.setCharge(chargeForInvoiceItem);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isEqualTo("equal charge on budget item and invoice item required");
+        Assertions.assertThat(result).isEqualTo("equal charge on budget item and invoice item, removal of project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setCharge(chargeForBudgetItem);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of project (only applicable for capex) required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
         // when all conditions satisfied
-        item.setCharge(chargeForBudgetItem);
+        item.setProject(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isNull();
 
+        ////// PROPERTY_EXPENSES //////
         // and given
         validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
         item.setInvoice(new IncomingInvoice());
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
         // when
         item.setIncomingInvoiceType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("fixed asset, removal of budget item (only applicable for service charges), remove project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("fixed asset, removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setBudgetItem(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isEqualTo("fixed asset required");
 
         // and given
         validator = new IncomingInvoiceItem.Validator();
+        item.setFixedAsset(new Property());
+        // when all conditions satisfied
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        ////// DEFAULT //////
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
         item = new IncomingInvoiceItem();
         item.setInvoice(new IncomingInvoice());
-        // when all conditions satisfied
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
+        // when
         item.setIncomingInvoiceType(IncomingInvoiceType.LOCAL_EXPENSES);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
-        Assertions.assertThat(result).isNull();
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges), removal of project (only applicable for capex) required");
 
-        // and when all conditions satisfied
-        item.setIncomingInvoiceType(IncomingInvoiceType.INTERCOMPANY);
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
         // when all conditions satisfied
+        item.setBudgetItem(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
         Assertions.assertThat(result).isNull();
 
-        // and when all conditions satisfied
+        // and given
+        item.setIncomingInvoiceType(IncomingInvoiceType.INTERCOMPANY);
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // when
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges), removal of project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when all conditions satisfied
+        item.setBudgetItem(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isNull();
+
+        // and given
         item.setIncomingInvoiceType(IncomingInvoiceType.TANGIBLE_FIXED_ASSET);
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges), removal of project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when all conditions satisfied
+        item.setBudgetItem(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isNull();
 
-        // and when all conditions satisfied
+        // and given
         item.setIncomingInvoiceType(IncomingInvoiceType.RE_INVOICING);
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges), removal of project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when all conditions satisfied
+        item.setBudgetItem(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isNull();
 
-        // and when all conditions satisfied
+        // and given
         item.setIncomingInvoiceType(IncomingInvoiceType.CORPORATE_EXPENSES);
+        item.setProject(new Project());
+        item.setBudgetItem(new BudgetItem());
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges), removal of project (only applicable for capex) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when
+        item.setProject(null);
+        result = validator.validateForIncomingInvoiceType(item).getResult();
+        // then
+        Assertions.assertThat(result).isEqualTo("removal of budget item (only applicable for service charges) required");
+
+        // and given
+        validator = new IncomingInvoiceItem.Validator();
+        // when all conditions satisfied
+        item.setBudgetItem(null);
         result = validator.validateForIncomingInvoiceType(item).getResult();
         // then
         Assertions.assertThat(result).isNull();
-
     }
 
     @Mock

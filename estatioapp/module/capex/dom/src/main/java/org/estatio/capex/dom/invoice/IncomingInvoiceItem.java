@@ -656,6 +656,10 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
                     if (incomingInvoiceItem.getFixedAsset()==null){
                         setResult(result==null ? message : result.concat(", ").concat(message));
                     }
+                    message = "removal of budget item (only applicable for service charges)";
+                    if (incomingInvoiceItem.getBudgetItem()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
                 break;
 
                 case SERVICE_CHARGES:
@@ -673,16 +677,36 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
                             setResult(result==null ? message : result.concat(", ").concat(message));
                         }
                     }
-                break;
+                    message = "removal of project (only applicable for capex)";
+                    if (incomingInvoiceItem.getProject()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    break;
 
                 case PROPERTY_EXPENSES:
                     message = "fixed asset";
                     if (incomingInvoiceItem.getFixedAsset()==null){
                         setResult(result==null ? message : result.concat(", ").concat(message));
                     }
-                break;
+                    message = "removal of budget item (only applicable for service charges)";
+                    if (incomingInvoiceItem.getBudgetItem()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    message = "remove project (only applicable for capex)";
+                    if (incomingInvoiceItem.getProject()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    break;
 
                 default:
+                    message = "removal of budget item (only applicable for service charges)";
+                    if (incomingInvoiceItem.getBudgetItem()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
+                    message = "removal of project (only applicable for capex)";
+                    if (incomingInvoiceItem.getProject()!=null){
+                        setResult(result==null ? message : result.concat(", ").concat(message));
+                    }
             }
 
             return this;
