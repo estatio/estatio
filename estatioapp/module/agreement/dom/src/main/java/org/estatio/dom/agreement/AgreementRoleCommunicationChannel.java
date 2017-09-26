@@ -239,7 +239,7 @@ public class AgreementRoleCommunicationChannel
     }
 
     private boolean isActiveOn(final LocalDate localDate) {
-        return getEffectiveInterval().contains(localDate);
+        return getEffectiveInterval()!=null ? getEffectiveInterval().contains(localDate) : false;
     }
 
 
