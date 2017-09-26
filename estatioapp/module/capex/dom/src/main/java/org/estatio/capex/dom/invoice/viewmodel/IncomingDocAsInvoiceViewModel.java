@@ -704,12 +704,28 @@ public class IncomingDocAsInvoiceViewModel
             final BudgetItem budgetItem,
             final String period
     ) {
+        if (project!=null && getIncomingInvoiceType()!= IncomingInvoiceType.CAPEX){
+            return "Project applies only to type CAPEX";
+        }
+        if (budgetItem!=null && getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES){
+            return "Budget item applies only to type SERVICE_CHARGES";
+        }
         return validatePeriod(period);
     }
 
     public String disableChangeDimensions() {
         return reasonNotEditableIfAny();
     }
+
+    public boolean hideProject(){
+        return getIncomingInvoiceType()!= IncomingInvoiceType.CAPEX;
+    }
+
+    public boolean hideBudgetItem(){
+        return getIncomingInvoiceType()!= IncomingInvoiceType.SERVICE_CHARGES;
+    }
+
+
 
     @Inject
     @XmlTransient
