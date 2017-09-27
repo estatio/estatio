@@ -76,6 +76,7 @@
                             <bs3:row>
                                 <bs3:col span="6">
                                     <cpt:fieldSet name="Amounts">
+                                        <cpt:action id="changeAmounts" position="PANEL" />
                                         <cpt:property id="netAmount" hidden="NOWHERE"/>
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>

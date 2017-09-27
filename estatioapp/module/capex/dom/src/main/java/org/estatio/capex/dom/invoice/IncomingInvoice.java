@@ -825,6 +825,28 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToInvoice(this);
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public IncomingInvoice changeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount){
+        setNetAmount(netAmount);
+        setGrossAmount(grossAmount);
+        return this;
+    }
+
+    public BigDecimal default0ChangeAmounts(){
+        return getNetAmount();
+    }
+
+    public BigDecimal default1ChangeAmounts(){
+        return getGrossAmount();
+    }
+
+    public String validateChangeAmounts(final BigDecimal netAmount, final BigDecimal grossAmount){
+        if (grossAmount.compareTo(netAmount) < 0){
+            return "Gross amount cannot be lower than net amount";
+        }
+        return null;
+    }
+
     @Programmatic
     public void recalculateAmounts(){
         BigDecimal netAmountTotal = BigDecimal.ZERO;
@@ -1084,6 +1106,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .checkNotNull(getGrossAmount(), "gross amount")
                 .validateForPaymentMethod(this)
                 .validateForIncomingInvoiceType(this)
+                .validateForAmounts(this)
                 .getResult();
 
         return mergeReasonItemsIncomplete(invoiceValidatorResult);
@@ -1162,6 +1185,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             default:
             }
 
+            return this;
+        }
+
+        IncomingInvoice.Validator validateForAmounts(IncomingInvoice incomingInvoice){
+            if (incomingInvoice.getNetAmount()==null || incomingInvoice.getGrossAmount()==null){
+                // only validate when amounts are set on the invoice
+                return this;
+            }
+            String message;
+            if (!incomingInvoice.getTotalNetAmount().setScale(2).equals(incomingInvoice.getNetAmount().setScale(2))
+                    || !incomingInvoice.getTotalGrossAmount().setScale(2).equals(incomingInvoice.getGrossAmount().setScale(2))
+                    || !incomingInvoice.getTotalVatAmount().setScale(2).equals(incomingInvoice.getVatAmount().setScale(2))){
+                message = "total amount on items equal to amount on the invoice";
+                setResult(result==null ? message : result.concat(", ").concat(message));
+            }
             return this;
         }
 

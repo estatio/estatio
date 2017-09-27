@@ -145,12 +145,14 @@ public class IncomingInvoice_Test {
             invoice.setProperty(new Property());
             result = invoice.reasonIncomplete();
             // then
-            assertThat(result).isEqualTo("(on item 1) project (capex), fixed asset required");
+            assertThat(result).isEqualTo("total amount on items equal to amount on the invoice, (on item 1) project (capex), fixed asset required");
 
 
             // and when all conditions satisfied
             item1.setFixedAsset(new Property());
             item1.setProject(new Project());
+            invoice.setGrossAmount(new BigDecimal("100"));
+            invoice.setNetAmount(new BigDecimal("100"));
             result = invoice.reasonIncomplete();
             // then
             assertThat(result).isNull();
@@ -307,6 +309,53 @@ public class IncomingInvoice_Test {
             // when
             invoice.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
             result = validator.validateForPaymentMethod(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isNull();
+
+        }
+
+        @Test
+        public void validateForAmounts() throws Exception {
+
+            String result;
+            IncomingInvoice.Validator validator;
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            invoice.setNetAmount(new BigDecimal("100.00"));
+            invoice.setGrossAmount(new BigDecimal("100.00"));
+
+            // when
+            result = validator.validateForAmounts(invoice).getResult();
+
+            // then
+            Assertions.assertThat(result).isEqualTo("total amount on items equal to amount on the invoice required");
+
+            // and given
+            invoice.setGrossAmount(BigDecimal.ZERO);
+            invoice.setNetAmount(BigDecimal.ZERO);
+            // when
+            validator = new IncomingInvoice.Validator();
+            result = validator.validateForAmounts(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isNull();
+
+            // and given
+            invoice.setNetAmount(new BigDecimal("100.00"));
+            invoice.setGrossAmount(new BigDecimal("100.00"));
+            IncomingInvoiceItem item = new IncomingInvoiceItem(){
+                @Override
+                void invalidateApproval() {
+                    // nothing
+                }
+            };
+            item.setNetAmount(new BigDecimal("100.00"));
+            item.setGrossAmount(new BigDecimal("100.00"));
+            invoice.getItems().add(item);
+            // when
+            validator = new IncomingInvoice.Validator();
+            result = validator.validateForAmounts(invoice).getResult();
             // then
             Assertions.assertThat(result).isNull();
 
@@ -545,6 +594,19 @@ public class IncomingInvoice_Test {
                 // then
                 assertThat(reason).contains("Cannot modify").doesNotContain("migrated");
             });
+        }
+
+    }
+
+    public static class ChangeAmounts extends IncomingInvoice_Test {
+
+        @Test
+        public void validateChangeAmounts_works() throws Exception {
+
+            // given, when, then
+            assertThat(invoice.validateChangeAmounts(new BigDecimal("10.00"), new BigDecimal("9.99"))).isEqualTo("Gross amount cannot be lower than net amount");
+            assertThat(invoice.validateChangeAmounts(new BigDecimal("10.00"), new BigDecimal("10.00"))).isNull();
+
         }
 
     }
