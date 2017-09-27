@@ -25,7 +25,7 @@ public class AgreementRoleCommunicationChannel_Test {
     @Test
     public void isCurrent_works_with_expired_lease() throws Exception {
 
-        now = LocalDate.now();
+        now = new LocalDate(2017,9,26);
 
         // given
         AgreementRoleCommunicationChannel channel = new AgreementRoleCommunicationChannel();
