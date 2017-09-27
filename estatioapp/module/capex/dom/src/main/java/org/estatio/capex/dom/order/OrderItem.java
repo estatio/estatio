@@ -132,10 +132,22 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
 
     public String title() {
         final TitleBuilder titleBuilder = TitleBuilder.start()
-                .withName(getDescription().concat(" "))
-                .withName(getNetAmount())
-                .withName(" ")
-                .withName(getOrdr().getOrderNumber());
+                .withName(getDescription());
+        if (getNetAmount()!=null) {
+            titleBuilder
+                .withName(" outstanding ")
+                .withName(netAmountOutstanding())
+                .withName(" of: ")
+                .withName(getNetAmount());
+        }
+        if (getCharge()!=null){
+            titleBuilder
+            .withName(" ")
+            .withName(getCharge().getReference());
+        }
+        titleBuilder
+            .withName(" order: ")
+            .withName(getOrdr().getOrderNumber());
         if(isOverspent()) {
             titleBuilder.withName(" (overspent)");
         }
@@ -471,10 +483,18 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         if (getNetAmount()==null){
             return false;
         }
-        final BigDecimal netAmountInvoiced =
-                orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
-        return netAmountInvoiced.abs().compareTo(getNetAmount().abs()) >= 0;
+        return netAmountInvoiced().abs().compareTo(getNetAmount().abs()) >= 0;
 
+    }
+
+    @Programmatic
+    public BigDecimal netAmountOutstanding(){
+        return getNetAmount()!=null ? getNetAmount().subtract(netAmountInvoiced()) : BigDecimal.ZERO;
+    }
+
+    @Programmatic
+    BigDecimal netAmountInvoiced() {
+        return orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedToOrderItem(this);
     }
 
     @Programmatic
@@ -485,8 +505,6 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     boolean isLinkedToInvoiceItem(){
         return ! orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
     }
-
-
 
 
     @Programmatic

@@ -185,5 +185,33 @@ public class OrderItem_Test {
         return orderItemInvoiceItemLinkRepository;
     }
 
+    @Test
+    public void netAmountOutstanding_works_when_netAmount_is_null() throws Exception {
+
+        // given
+        OrderItem item = new OrderItem();
+
+        // when, then
+        assertThat(item.netAmountOutstanding()).isEqualTo(BigDecimal.ZERO);
+
+    }
+
+    @Test
+    public void netAmountOutstanding_works_with_netAmount_negative() throws Exception {
+
+        // given
+        OrderItem item = new OrderItem() {
+            @Override
+            BigDecimal netAmountInvoiced() {
+                return new BigDecimal("-10.00");
+            }
+        };
+        item.setNetAmount(new BigDecimal("-100.00"));
+
+        // when, then
+        assertThat(item.netAmountOutstanding()).isEqualTo(new BigDecimal("-90.00"));
+
+    }
+
 
 }
