@@ -94,13 +94,6 @@ public class IncomingInvoiceItemRepository_Test {
         assertThat(invoiceItem.getFixedAsset()).isNull();
         assertThat(invoiceItem.getProject()).isNull();
 
-        // expect
-        context.checking(new Expectations(){
-            {
-                oneOf(mockInvoice).recalculateAmounts();
-            }
-        });
-
         // when
         incomingInvoiceItemRepository.upsert(
                 sequence,
@@ -155,7 +148,6 @@ public class IncomingInvoiceItemRepository_Test {
             oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(sourceItem);
             will(returnValue(new ArrayList<>()));
             oneOf(mockRepositoryService).removeAndFlush(sourceItem);
-            oneOf(mockInvoice).recalculateAmounts();
         }});
 
         // when

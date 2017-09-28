@@ -27,9 +27,6 @@ public class IncomingInvoiceItem_Test {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
     @Mock
-    IncomingInvoice mockInvoice;
-
-    @Mock
     RepositoryService mockRepositoryService;
 
     @Test
@@ -42,14 +39,12 @@ public class IncomingInvoiceItem_Test {
                 return false;
             }
         };
-        item.setInvoice(mockInvoice);
         item.repositoryService = mockRepositoryService;
 
         // expect
         context.checking(new Expectations(){
             {
                 oneOf(mockRepositoryService).removeAndFlush(item);
-                oneOf(mockInvoice).recalculateAmounts();
             }
         });
 

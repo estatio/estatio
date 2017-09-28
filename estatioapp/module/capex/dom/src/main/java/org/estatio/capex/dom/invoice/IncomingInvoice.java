@@ -848,22 +848,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     @Programmatic
-    public void recalculateAmounts(){
-        BigDecimal netAmountTotal = BigDecimal.ZERO;
-        BigDecimal grossAmountTotal = BigDecimal.ZERO;
-        for (InvoiceItem item : getItems()){
-            if (item.getNetAmount()!=null) {
-                netAmountTotal = netAmountTotal.add(item.getNetAmount());
-            }
-            if (item.getGrossAmount()!=null) {
-                grossAmountTotal = grossAmountTotal.add(item.getGrossAmount());
-            }
-        }
-        setNetAmount(netAmountTotal);
-        setGrossAmount(grossAmountTotal);
-    }
-
-    @Programmatic
     @Override
     public boolean isImmutable() {
         final Object viewContext = this;

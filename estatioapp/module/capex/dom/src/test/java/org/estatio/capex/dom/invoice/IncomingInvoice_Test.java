@@ -59,45 +59,6 @@ public class IncomingInvoice_Test {
         }});
     }
 
-    public static class recalculateAmounts_Test extends IncomingInvoice_Test {
-
-        @Test
-        public void happy_case() throws Exception {
-
-            // given
-            IncomingInvoiceItem item1 = new IncomingInvoiceItem();
-            item1.setInvoice(new IncomingInvoice());
-
-            IncomingInvoiceItem item2 = new IncomingInvoiceItem();
-            item2.setInvoice(new IncomingInvoice());
-
-            IncomingInvoiceItem item3 = new IncomingInvoiceItem();
-            item3.setInvoice(new IncomingInvoice());
-
-            IncomingInvoiceItem item4 = new IncomingInvoiceItem();
-            item4.setInvoice(new IncomingInvoice());
-
-            item1.setNetAmount(new BigDecimal("100.00"));
-            item1.setGrossAmount(new BigDecimal("120.00"));
-            item2.setNetAmount(new BigDecimal("50.00"));
-            item2.setGrossAmount(new BigDecimal("55.00"));
-            item3.setNetAmount(null); // explicit for test
-            item3.setGrossAmount(new BigDecimal("-1.00"));
-            item4.setNetAmount(new BigDecimal("-1.00"));
-            item4.setGrossAmount(null); // explicit for test
-            invoice.getItems().addAll(Arrays.asList(item1, item2, item3, item4));
-
-            // when
-            invoice.recalculateAmounts();
-
-            // then
-            Assertions.assertThat(invoice.getNetAmount()).isEqualTo(new BigDecimal("149.00"));
-            Assertions.assertThat(invoice.getGrossAmount()).isEqualTo(new BigDecimal("174.00"));
-
-        }
-    }
-
-
     public static class reasonIncomplete_Test extends IncomingInvoice_Test {
 
         @Test

@@ -317,7 +317,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setGrossAmount(grossAmount);
         setTax(tax);
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        invoice.recalculateAmounts();
         return this;
     }
 
@@ -584,7 +583,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             }
         }
         repositoryService.removeAndFlush(this);
-        invoice.recalculateAmounts();
         return invoice;
     }
 
