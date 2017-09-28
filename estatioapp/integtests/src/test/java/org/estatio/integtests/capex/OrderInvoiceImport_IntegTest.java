@@ -151,6 +151,12 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
             assertThat(links.get(2).getOrderItem()).isEqualTo(orderItem2);
             assertThat(links.get(2).getInvoiceItem()).isEqualTo(invoiceItem3);
 
+            // check amounts on Invoice filled in (EST-1663)
+            IncomingInvoice invoice1 = (IncomingInvoice) invoiceItem1.getInvoice();
+            assertThat(invoice1.getNetAmount()).isEqualTo(invoiceItem1.getNetAmount());
+            assertThat(invoice1.getGrossAmount()).isEqualTo(invoiceItem1.getGrossAmount());
+            assertThat(invoice1.getVatAmount()).isEqualTo(invoiceItem1.getVatAmount());
+
             Project project = projects.get(0);
             assertThat(project.getItems().size()).isEqualTo(2);
 

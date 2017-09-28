@@ -69,7 +69,9 @@ public class IncomingInvoiceFixture extends FixtureScript {
         fakeInvoice.setInvoiceNumber("65432");
         fakeInvoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
         fakeInvoice.setInvoiceDate(new LocalDate(2014,5,13));
-        mixin(IncomingInvoice.addItem.class,fakeInvoice).act(
+        fakeInvoice.setNetAmount(new BigDecimal("300.00"));
+        fakeInvoice.setGrossAmount(new BigDecimal("363.00"));
+        fakeInvoice.addItem(
                 IncomingInvoiceType.CAPEX,
                 chargeRepository.findByReference("WORKS"),
                 "works done",
@@ -87,7 +89,7 @@ public class IncomingInvoiceFixture extends FixtureScript {
         OrderItem orderItemToLink = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0).getItems().first();
         mixin(IncomingInvoiceItem_createOrderItemLink.class, invoiceItemToLink).act(orderItemToLink, new BigDecimal("200.00"));
 
-        mixin(IncomingInvoice.addItem.class,fakeInvoice).act(
+        fakeInvoice.addItem(
                 IncomingInvoiceType.PROPERTY_EXPENSES,
                 chargeRepository.findByReference("OTHER"),
                 "some expenses",

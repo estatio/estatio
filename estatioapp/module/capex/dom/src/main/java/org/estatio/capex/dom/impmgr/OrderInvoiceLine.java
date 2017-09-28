@@ -322,11 +322,14 @@ public class OrderInvoiceLine {
                 final Tax invoiceTax = taxRepository.findByReference(line.getInvoiceTax());
 
 
-                factoryService.mixin(IncomingInvoice.addItem.class, invoiceObj).act(
+                invoiceObj.addItem(
                         invoiceObj.getType(), chargeObj, line.getInvoiceDescription(),
                         line.getInvoiceNetAmount(), line.getInvoiceVatAmount(), line.getInvoiceGrossAmount(),
                         invoiceTax,
                         dueDate, line.period, property, project, null);
+                // now that order amounts are not updated when adding an Item (EST-1663) we have to do it here
+                invoiceObj.setNetAmount(invoiceObj.getNetAmount()==null ? line.getInvoiceNetAmount() : invoiceObj.getNetAmount().add(line.getInvoiceNetAmount()));
+                invoiceObj.setGrossAmount(invoiceObj.getGrossAmount()==null ? line.getInvoiceGrossAmount() : invoiceObj.getGrossAmount().add(line.getInvoiceGrossAmount()));
 
             }
 

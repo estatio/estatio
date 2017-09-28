@@ -248,263 +248,229 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buf.toString();
     }
 
-    /**
-     * TODO: inline this mixin.
-     */
-    @Mixin(method="act")
-    public static class addItem {
-        private final IncomingInvoice incomingInvoice;
-        public addItem(final IncomingInvoice incomingInvoice) {
-            this.incomingInvoice = incomingInvoice;
-        }
 
-        @MemberOrder(name="items", sequence = "1")
-        public IncomingInvoice act(
-                final IncomingInvoiceType type,
-                final Charge charge,
-                final String description,
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal netAmount,
-                @Nullable
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal vatAmount,
-                @Digits(integer=13, fraction = 2)
-                final BigDecimal grossAmount,
-                @Nullable final Tax tax,
-                @Nullable final LocalDate dueDate,
-                @Nullable final String period,
-                @Nullable final Property property,
-                @Nullable final Project project,
-                @Nullable final BudgetItem budgetItem) {
-            incomingInvoiceItemRepository.addItem(
-                    incomingInvoice,
-                    type,
-                    charge,
-                    description,
-                    netAmount,
-                    vatAmount,
-                    grossAmount,
-                    tax,
-                    dueDate,
-                    period,
-                    property,
-                    project,
-                    budgetItem);
+    @MemberOrder(name="items", sequence = "1")
+    public IncomingInvoice addItem(
+            final IncomingInvoiceType type,
+            final Charge charge,
+            final String description,
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal netAmount,
+            @Nullable
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal vatAmount,
+            @Digits(integer=13, fraction = 2)
+            final BigDecimal grossAmount,
+            @Nullable final Tax tax,
+            @Nullable final LocalDate dueDate,
+            @Nullable final String period,
+            @Nullable final Property property,
+            @Nullable final Project project,
+            @Nullable final BudgetItem budgetItem) {
+        incomingInvoiceItemRepository.addItem(
+                this,
+                type,
+                charge,
+                description,
+                netAmount,
+                vatAmount,
+                grossAmount,
+                tax,
+                dueDate,
+                period,
+                property,
+                project,
+                budgetItem);
 
-            return incomingInvoice;
-        }
-
-        public String disableAct() {
-            final Object viewContext = incomingInvoice;
-            return incomingInvoice.reasonDisabledDueToState(viewContext);
-        }
-
-        public IncomingInvoiceType default0Act() {
-            return incomingInvoice.getType();
-        }
-
-        public LocalDate default7Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getDueDate);
-        }
-
-        public String default8Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(incomingInvoice.ofFirstItem(IncomingInvoiceItem::getStartDate), incomingInvoice.ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
-        }
-
-        public Property default9Act() {
-            return incomingInvoice.getProperty();
-        }
-
-        public Project default10Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getProject);
-        }
-
-        public List<Charge> choices1Act(){
-            return chargeRepository.allIncoming();
-        }
-
-        public List<BudgetItem> choices11Act(
-                final IncomingInvoiceType type,
-                final Charge charge,
-                final String description,
-                final BigDecimal netAmount,
-                final BigDecimal vatAmount,
-                final BigDecimal grossAmount,
-                final Tax tax,
-                final LocalDate dueDate,
-                final String period,
-                final Property property,
-                final Project project,
-                final BudgetItem budgetItem) {
-
-            return budgetItemChooser.choicesBudgetItemFor(property, charge);
-        }
-
-        public String validateAct(
-                final IncomingInvoiceType type,
-                final Charge charge,
-                final String description,
-                final BigDecimal netAmount,
-                final BigDecimal vatAmount,
-                final BigDecimal grossAmount,
-                final Tax tax,
-                final LocalDate dueDate,
-                final String period,
-                final Property property,
-                final Project project,
-                final BudgetItem budgetItem){
-            if (period==null) return null; // period is optional
-            return PeriodUtil.reasonInvalidPeriod(period);
-        }
-
-        @Inject
-        BudgetItemChooser budgetItemChooser;
-
-        @Inject
-        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
-        
-        @Inject
-        ChargeRepository chargeRepository;
-
+        return this;
     }
 
-    /**
-     * TODO: inline this mixin.
-     */
-    @Mixin(method="act")
-    public static class splitItem {
-
-        private final IncomingInvoice incomingInvoice;
-        public splitItem(final IncomingInvoice incomingInvoice) {
-            this.incomingInvoice = incomingInvoice;
-        }
-
-        @MemberOrder(name = "items", sequence = "2")
-        public IncomingInvoice act(
-                final IncomingInvoiceItem itemToSplit,
-                final String newItemDescription,
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemNetAmount,
-                @Nullable
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemVatAmount,
-                @Nullable
-                final Tax newItemtax,
-                @Digits(integer = 13, fraction = 2)
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                @Nullable
-                final Property newItemProperty,
-                @Nullable
-                final Project newItemProject,
-                @Nullable
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod
-        ) {
-            itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
-            incomingInvoiceItemRepository.addItem(
-                    incomingInvoice,
-                    incomingInvoice.getType()!=null ? incomingInvoice.getType() : null,
-                    newItemCharge,
-                    newItemDescription,
-                    newItemNetAmount,
-                    newItemVatAmount,
-                    newItemGrossAmount,
-                    newItemtax,
-                    incomingInvoice.getDueDate(),
-                    newItemPeriod,
-                    newItemProperty,
-                    newItemProject,
-                    newItemBudgetItem
-                    );
-            return incomingInvoice;
-        }
-
-        public String disableAct() {
-            if (incomingInvoice.isImmutable()) {
-                final Object viewContext = incomingInvoice;
-                return incomingInvoice.reasonDisabledDueToState(viewContext);
-            }
-            return incomingInvoice.getItems().isEmpty() ? "No items" : null;
-        }
-
-        public IncomingInvoiceItem default0Act() {
-            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().first() : null;
-        }
-
-        public Tax default4Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getTax);
-        }
-
-        public Charge default6Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getCharge);
-        }
-
-        public Property default7Act() {
-            return incomingInvoice.getProperty();
-        }
-
-        public Project default8Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getProject);
-        }
-
-        public BudgetItem default9Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getBudgetItem);
-        }
-
-        public String default10Act() {
-            return incomingInvoice.ofFirstItem(IncomingInvoiceItem::getPeriod);
-        }
-
-        public List<IncomingInvoiceItem> choices0Act() {
-            return incomingInvoice.getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
-        }
-
-        public List<Charge> choices6Act(){
-            return chargeRepository.allIncoming();
-        }
-
-        public List<BudgetItem> choices9Act(
-                final IncomingInvoiceItem item,
-                final String newItemDescription,
-                final BigDecimal newItemNetAmount,
-                final BigDecimal newItemVatAmount,
-                final Tax newItemtax,
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                final Property newItemProperty,
-                final Project newItemProject,
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod) {
-
-            return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
-        }
-
-        public String validateAct(
-                final IncomingInvoiceItem item,
-                final String newItemDescription,
-                final BigDecimal newItemNetAmount,
-                final BigDecimal newItemVatAmount,
-                final Tax newItemtax,
-                final BigDecimal newItemGrossAmount,
-                final Charge newItemCharge,
-                final Property newItemProperty,
-                final Project newItemProject,
-                final BudgetItem newItemBudgetItem,
-                final String newItemPeriod){
-            return PeriodUtil.reasonInvalidPeriod(newItemPeriod);
-        }
-
-        @Inject
-        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
-
-        @Inject
-        BudgetItemChooser budgetItemChooser;
-
-        @Inject
-        ChargeRepository chargeRepository;
-
+    public String disableAddItem() {
+        return reasonDisabledDueToState(this);
     }
+
+    public IncomingInvoiceType default0AddItem() {
+        return getType();
+    }
+
+    public LocalDate default7AddItem() {
+        return ofFirstItem(IncomingInvoiceItem::getDueDate);
+    }
+
+    public String default8AddItem() {
+        return ofFirstItem(IncomingInvoiceItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(IncomingInvoiceItem::getStartDate), ofFirstItem(IncomingInvoiceItem::getEndDate))) : null;
+    }
+
+    public Property default9AddItem() {
+        return getProperty();
+    }
+
+    public Project default10AddItem() {
+        return ofFirstItem(IncomingInvoiceItem::getProject);
+    }
+
+    public List<Charge> choices1AddItem(){
+        return chargeRepository.allIncoming();
+    }
+
+    public List<BudgetItem> choices11AddItem(
+            final IncomingInvoiceType type,
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final String period,
+            final Property property,
+            final Project project,
+            final BudgetItem budgetItem) {
+
+        return budgetItemChooser.choicesBudgetItemFor(property, charge);
+    }
+
+    public String validateAddItem(
+            final IncomingInvoiceType type,
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final String period,
+            final Property property,
+            final Project project,
+            final BudgetItem budgetItem){
+        if (period==null) return null; // period is optional
+        return PeriodUtil.reasonInvalidPeriod(period);
+    }
+
+    @Inject
+    BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
+
+    @MemberOrder(name = "items", sequence = "2")
+    public IncomingInvoice splitItem(
+            final IncomingInvoiceItem itemToSplit,
+            final String newItemDescription,
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemNetAmount,
+            @Nullable
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemVatAmount,
+            @Nullable
+            final Tax newItemtax,
+            @Digits(integer = 13, fraction = 2)
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            @Nullable
+            final Property newItemProperty,
+            @Nullable
+            final Project newItemProject,
+            @Nullable
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod
+    ) {
+        itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
+        incomingInvoiceItemRepository.addItem(
+                this,
+                getType()!=null ? getType() : null,
+                newItemCharge,
+                newItemDescription,
+                newItemNetAmount,
+                newItemVatAmount,
+                newItemGrossAmount,
+                newItemtax,
+                getDueDate(),
+                newItemPeriod,
+                newItemProperty,
+                newItemProject,
+                newItemBudgetItem
+                );
+        return this;
+    }
+
+    public String disableSplitItem() {
+        if (isImmutable()) {
+            return reasonDisabledDueToState(this);
+        }
+        return getItems().isEmpty() ? "No items" : null;
+    }
+
+    public IncomingInvoiceItem default0SplitItem() {
+        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().first() : null;
+    }
+
+    public Tax default4SplitItem() {
+        return ofFirstItem(IncomingInvoiceItem::getTax);
+    }
+
+    public Charge default6SplitItem() {
+        return ofFirstItem(IncomingInvoiceItem::getCharge);
+    }
+
+    public Property default7SplitItem() {
+        return getProperty();
+    }
+
+    public Project default8SplitItem() {
+        return ofFirstItem(IncomingInvoiceItem::getProject);
+    }
+
+    public BudgetItem default9SplitItem() {
+        return ofFirstItem(IncomingInvoiceItem::getBudgetItem);
+    }
+
+    public String default10SplitItem() {
+        return ofFirstItem(IncomingInvoiceItem::getPeriod);
+    }
+
+    public List<IncomingInvoiceItem> choices0SplitItem() {
+        return getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
+    }
+
+    public List<Charge> choices6SplitItem(){
+        return chargeRepository.allIncoming();
+    }
+
+    public List<BudgetItem> choices9SplitItem(
+            final IncomingInvoiceItem item,
+            final String newItemDescription,
+            final BigDecimal newItemNetAmount,
+            final BigDecimal newItemVatAmount,
+            final Tax newItemtax,
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            final Property newItemProperty,
+            final Project newItemProject,
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod) {
+
+        return budgetItemChooser.choicesBudgetItemFor(newItemProperty, newItemCharge);
+    }
+
+    public String validateSplitItem(
+            final IncomingInvoiceItem item,
+            final String newItemDescription,
+            final BigDecimal newItemNetAmount,
+            final BigDecimal newItemVatAmount,
+            final Tax newItemtax,
+            final BigDecimal newItemGrossAmount,
+            final Charge newItemCharge,
+            final Property newItemProperty,
+            final Project newItemProject,
+            final BudgetItem newItemBudgetItem,
+            final String newItemPeriod){
+        return PeriodUtil.reasonInvalidPeriod(newItemPeriod);
+    }
+
 
     @Programmatic
     public <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
@@ -520,54 +486,39 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .findFirst();
     }
 
-    /**
-     * TODO: inline this mixin.
-     */
-    @Mixin(method = "act")
-    public static class mergeItems {
 
-        private final IncomingInvoice incomingInvoice;
-        public mergeItems(final IncomingInvoice incomingInvoice) {
-            this.incomingInvoice = incomingInvoice;
+
+    @MemberOrder(name = "items", sequence = "3")
+    public IncomingInvoice mergeItems(
+            final IncomingInvoiceItem item,
+            final IncomingInvoiceItem mergeInto){
+        incomingInvoiceItemRepository.mergeItems(item, mergeInto);
+        return this;
+    }
+
+    public String disableMergeItems() {
+        if (isImmutable()) {
+            return reasonDisabledDueToState(this);
         }
+        return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+    }
 
-        @MemberOrder(name = "items", sequence = "3")
-        public IncomingInvoice act(
-                final IncomingInvoiceItem item,
-                final IncomingInvoiceItem mergeInto){
-            incomingInvoiceItemRepository.mergeItems(item, mergeInto);
-            return incomingInvoice;
-        }
+    public IncomingInvoiceItem default0MergeItems() {
+        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().last() : null;
+    }
 
-        public String disableAct() {
-            if (incomingInvoice.isImmutable()) {
-                final Object viewContext = incomingInvoice;
-                return incomingInvoice.reasonDisabledDueToState(viewContext);
-            }
-            return incomingInvoice.getItems().size() < 2 ? "Merge needs 2 or more items" : null;
-        }
+    public IncomingInvoiceItem default1MergeItems() {
+        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().first() : null;
+    }
 
-        public IncomingInvoiceItem default0Act() {
-            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().last() : null;
-        }
+    public List<IncomingInvoiceItem> choices0MergeItems() {
+        return getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
+    }
 
-        public IncomingInvoiceItem default1Act() {
-            return incomingInvoice.firstItemIfAny()!=null ? (IncomingInvoiceItem) incomingInvoice.getItems().first() : null;
-        }
-
-        public List<IncomingInvoiceItem> choices0Act() {
-            return incomingInvoice.getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
-        }
-
-        public List<IncomingInvoiceItem> choices1Act(
-                final IncomingInvoiceItem item,
-                final IncomingInvoiceItem mergeInto) {
-            return incomingInvoice.getItems().stream().filter(x->!x.equals(item)).map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
-        }
-
-        @Inject
-        IncomingInvoiceItemRepository incomingInvoiceItemRepository;
-
+    public List<IncomingInvoiceItem> choices1MergeItems(
+            final IncomingInvoiceItem item,
+            final IncomingInvoiceItem mergeInto) {
+        return getItems().stream().filter(x->!x.equals(item)).map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
     }
 
 

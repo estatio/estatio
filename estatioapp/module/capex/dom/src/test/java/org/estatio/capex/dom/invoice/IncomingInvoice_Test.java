@@ -333,8 +333,7 @@ public class IncomingInvoice_Test {
 
             // given
             invoice.setType(IncomingInvoiceType.CAPEX);
-            IncomingInvoice.splitItem mixin = new IncomingInvoice.splitItem(invoice);
-            mixin.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
+            invoice.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
             LocalDate dueDate = new LocalDate(2018,01,01);
             invoice.setDueDate(dueDate);
@@ -377,7 +376,7 @@ public class IncomingInvoice_Test {
             }});
 
             // when
-            mixin.act(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
+            invoice.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
 
             // then
             Assertions.assertThat(itemToSplit.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
@@ -395,8 +394,7 @@ public class IncomingInvoice_Test {
         public void happy_case() throws Exception {
 
             // given
-            IncomingInvoice.mergeItems mixin = new IncomingInvoice.mergeItems(invoice);
-            mixin.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
+            invoice.incomingInvoiceItemRepository = mockIncomingInvoiceItemRepository;
 
             IncomingInvoiceItem sourceItem = new IncomingInvoiceItem();
             IncomingInvoiceItem targetItem = new IncomingInvoiceItem();
@@ -408,7 +406,7 @@ public class IncomingInvoice_Test {
             }});
 
             // when
-            mixin.act(sourceItem, targetItem);
+            invoice.mergeItems(sourceItem, targetItem);
 
         }
     }

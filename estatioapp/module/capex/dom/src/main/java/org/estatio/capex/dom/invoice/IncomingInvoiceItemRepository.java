@@ -151,8 +151,6 @@ public class IncomingInvoiceItemRepository {
         invoiceItem.setFixedAsset(property);
         invoiceItem.setProject(project);
         invoiceItem.setBudgetItem(budgetItem);
-
-        IncomingInvoice invoice = (IncomingInvoice) invoiceItem.getInvoice();
     }
 
     @Programmatic

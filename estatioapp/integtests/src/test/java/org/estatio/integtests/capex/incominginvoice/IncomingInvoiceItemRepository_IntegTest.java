@@ -116,12 +116,12 @@ public class IncomingInvoiceItemRepository_IntegTest extends EstatioIntegrationT
         description = "some description";
         tax = taxRepository.findByReference("FRF");
 
-        mixin(IncomingInvoice.addItem.class, invoice).act(
+        invoice.addItem(
                 invoice.getType(), charge, description,
                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
                 tax, dueDate, null,  null, null, null);
 
-        mixin(IncomingInvoice.addItem.class, invoice).act(
+        invoice.addItem(
                 invoice.getType(), charge, description,
                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
                 tax, dueDate, null,  null, null, null);
