@@ -570,4 +570,88 @@ public class IncomingInvoice_Test {
 
     }
 
+    public static class AmountAreCovered extends IncomingInvoice_Test {
+
+        @Test
+        public void amountsAreCovered_test() throws Exception {
+
+            // given
+            assertThat(invoice.getNetAmount()).isNull();
+            assertThat(invoice.getGrossAmount()).isNull();
+            assertThat(invoice.amountsCoveredByAmountsItems()).isFalse();
+
+            // when
+            invoice.setNetAmount(new BigDecimal("10.00"));
+            // then
+            assertThat(invoice.amountsCoveredByAmountsItems()).isFalse();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isNull();
+            // and when
+            IncomingInvoiceItem item = new IncomingInvoiceItem(){
+                @Override
+                void invalidateApproval() {
+                    // nothing
+                }
+            };
+            item.setNetAmount(new BigDecimal("9.99"));
+            invoice.getItems().add(item);
+
+            // then
+            assertThat(invoice.amountsCoveredByAmountsItems()).isFalse();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isNull();
+            // and when
+            item.setNetAmount(new BigDecimal("10.00"));
+            // then
+            assertThat(invoice.amountsCoveredByAmountsItems()).isTrue();
+
+            // and when
+            invoice.setGrossAmount(new BigDecimal("12.00"));
+            // then still
+            assertThat(invoice.amountsCoveredByAmountsItems()).isTrue();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isEqualTo("12.00");
+            assertThat(item.getGrossAmount()).isNull();
+            // and when
+            item.setNetAmount(new BigDecimal("9.99"));
+            // then
+            assertThat(invoice.amountsCoveredByAmountsItems()).isFalse();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isEqualTo("12.00");
+            assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("9.99"));
+            // and when
+            item.setGrossAmount(new BigDecimal("11.99"));
+            // then still
+            assertThat(invoice.amountsCoveredByAmountsItems()).isFalse();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isEqualTo("12.00");
+            assertThat(item.getNetAmount()).isEqualTo(new BigDecimal("9.99"));
+            // and when
+            item.setGrossAmount(new BigDecimal("12.00"));
+            // then
+            assertThat(invoice.amountsCoveredByAmountsItems()).isTrue();
+
+            // and given
+            assertThat(invoice.getNetAmount()).isEqualTo("10.00");
+            assertThat(invoice.getGrossAmount()).isEqualTo("12.00");
+            assertThat(item.getGrossAmount()).isEqualTo(new BigDecimal("12.00"));
+            // and when
+            item.setNetAmount(new BigDecimal("10.00"));
+            // then still
+            assertThat(invoice.amountsCoveredByAmountsItems()).isTrue();
+
+        }
+
+    }
+
 }

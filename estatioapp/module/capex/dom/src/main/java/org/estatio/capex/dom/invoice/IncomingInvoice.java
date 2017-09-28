@@ -286,6 +286,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableAddItem() {
+        if (amountsCoveredByAmountsItems()) {
+            return "Invoice amounts are covered";
+        }
         return reasonDisabledDueToState(this);
     }
 
@@ -345,6 +348,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final BudgetItem budgetItem){
         if (period==null) return null; // period is optional
         return PeriodUtil.reasonInvalidPeriod(period);
+    }
+
+    boolean amountsCoveredByAmountsItems(){
+        if ((getNetAmount()!=null && getTotalNetAmount().compareTo(getNetAmount()) >= 0)
+                || (getGrossAmount() !=null && getTotalGrossAmount().compareTo(getGrossAmount()) >= 0)
+                ){
+            return true;
+        }
+
+        return false;
+
     }
 
     @Inject
