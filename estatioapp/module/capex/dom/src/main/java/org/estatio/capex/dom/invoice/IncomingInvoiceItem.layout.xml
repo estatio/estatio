@@ -21,9 +21,6 @@
                                 <cpt:property id="description">
                                     <cpt:action id="editDescription" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>
-                                <cpt:property id="dueDate">
-                                    <cpt:action id="editDueDate" promptStyle="INLINE" position="RIGHT"/>
-                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -51,6 +48,12 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <cpt:fieldSet name="Dates" id="dates">
+                <cpt:property id="dueDate">
+                    <cpt:action id="editDueDate" promptStyle="INLINE" position="RIGHT"/>
+                </cpt:property>
+                <cpt:property id="reportedDate"/>
+            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="4">
             <bs3:tabGroup>
@@ -74,7 +77,7 @@
                                     <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
                                 </cpt:property>
                                 <cpt:property id="endDate"/>
-                                <cpt:property id="type"/>
+                                <cpt:property id="type" hidden="OBJECT_FORMS"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -92,28 +95,30 @@
         </bs3:col>
         <bs3:col span="4">
             <bs3:tabGroup>
-                <bs3:tab name="Amounts">
+                <bs3:tab name="Details">
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Amounts" id="amounts">
                                 <cpt:action id="updateAmounts" position="PANEL"/>
                                 <cpt:property id="netAmount"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Tax" id="tax">
                                 <cpt:property id="tax">
                                     <cpt:action id="changeTax" hidden="EVERYWHERE"/>
                                 </cpt:property>
-                                <cpt:property id="taxRate"/>
                                 <cpt:property id="vatPercentage"/>
-                                <cpt:property id="vatAmount"/>
-                                <cpt:property id="grossAmount"/>
+                                <cpt:property id="taxRate"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
-                <bs3:tab name="dummy_2">
+                <bs3:tab name="Reversals">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet id="dummy_2">
-                                <cpt:property id="dummy_2"/>
+                            <cpt:fieldSet name="Reversals" id="reversals">
+                                <cpt:property id="reversalOf"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
