@@ -202,7 +202,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     public String disableChangeTax() {
         if (getInvoice().isImmutable()){
-            return "Invoice is immutable";
+            return "Invoice can't be changed";
         }
         if(getSource() == null){
             return  "Cannot change tax on a generated invoice item";
@@ -218,10 +218,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     private String description;
 
     public String disableDescription() {
-        if (getInvoice().isImmutable()) {
-            return "Invoice can't be changed";
-        }
-        return null;
+        return getInvoice().isImmutable() ? "Invoice can't be changed" : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -340,7 +337,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableRemove(){
-        return getInvoice().isImmutable() ? "Cannot change invoice" : null;
+        return getInvoice().isImmutable() ? "Invoice can't be changed" : null;
     }
 
 
