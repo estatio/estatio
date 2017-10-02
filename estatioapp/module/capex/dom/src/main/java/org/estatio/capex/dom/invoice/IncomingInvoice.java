@@ -424,7 +424,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public IncomingInvoiceItem default0SplitItem() {
-        return firstItemIfAny()!=null ? (IncomingInvoiceItem) getItems().first() : null;
+        final List<IncomingInvoiceItem> items = choices0SplitItem();
+        return items.isEmpty() ? null : items.get(0);
     }
 
     public Tax default4SplitItem() {
