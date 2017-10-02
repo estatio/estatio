@@ -417,10 +417,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableSplitItem() {
-        if (isImmutableDueToState()) {
-            return reasonDisabledDueToState(this);
-        }
-        return getItems().isEmpty() ? "No items" : null;
+
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot spli items because");
+        reasonDisabledDueToApprovalStateIfAny(this, buf);
+        buf.append(() -> choices0SplitItem().isEmpty(), "there are no items");
+        return buf.getReason();
     }
 
     public IncomingInvoiceItem default0SplitItem() {
@@ -428,12 +429,16 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return items.isEmpty() ? null : items.get(0);
     }
 
+    private Optional<IncomingInvoiceItem> optional0SplitItem() {
+        return Optional.ofNullable(default0SplitItem());
+    }
+
     public Tax default4SplitItem() {
-        return ofFirstItem(IncomingInvoiceItem::getTax);
+        return optional0SplitItem().map(IncomingInvoiceItem::getTax).orElse(null);
     }
 
     public Charge default6SplitItem() {
-        return ofFirstItem(IncomingInvoiceItem::getCharge);
+        return optional0SplitItem().map(IncomingInvoiceItem::getCharge).orElse(null);
     }
 
     public Property default7SplitItem() {
@@ -441,20 +446,21 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public Project default8SplitItem() {
-        return ofFirstItem(IncomingInvoiceItem::getProject);
+        return optional0SplitItem().map(IncomingInvoiceItem::getProject).orElse(null);
     }
 
     public BudgetItem default9SplitItem() {
-        return ofFirstItem(IncomingInvoiceItem::getBudgetItem);
+        return optional0SplitItem().map(IncomingInvoiceItem::getBudgetItem).orElse(null);
     }
 
     public String default10SplitItem() {
-        return ofFirstItem(IncomingInvoiceItem::getPeriod);
+        return optional0SplitItem().map(IncomingInvoiceItem::getPeriod).orElse(null);
     }
 
     public List<IncomingInvoiceItem> choices0SplitItem() {
         return Lists.newArrayList(getItems()).stream()
                 .map(IncomingInvoiceItem.class::cast)
+                .filter(IncomingInvoiceItem::neitherReversalNorReported)
                 .collect(Collectors.toList());
     }
 
