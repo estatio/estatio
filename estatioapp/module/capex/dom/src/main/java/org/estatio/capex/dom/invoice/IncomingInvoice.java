@@ -18,6 +18,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
+import javax.ws.rs.HEAD;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
@@ -511,8 +512,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableMergeItems() {
-        if (isImmutableDueToState()) {
-            return reasonDisabledDueToState(this);
+        final Object viewContext1 = this;
+        if (this.reasonDisabledDueToState(viewContext1) != null) {
+            final Object viewContext = this;
+            return this.reasonDisabledDueToState(viewContext);
         }
         return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
     }
@@ -886,7 +889,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
     public String disableEditSeller(){
-        if (isImmutableDueToState()){
+        final Object viewContext1 = this;
+        if (reasonDisabledDueToState(viewContext1) != null){
             final Object viewContext = this;
             return reasonDisabledDueToState(viewContext);
         }
@@ -1025,7 +1029,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         if (approvalState==null){
             return "Cannot modify (migrated invoice, state is unknown but assumed to be approved)";
         }
-        
+
         switch (approvalState) {
         case NEW:
             return null;

@@ -357,7 +357,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableUpdateAmounts(){
-        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
+        final Object viewContext = getIncomingInvoice();
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -399,7 +400,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDescription(){
-        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
+        final Object viewContext = getIncomingInvoice();
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
     }
 
 
@@ -418,7 +420,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDueDate(){
-        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
+        final Object viewContext = getIncomingInvoice();
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -632,7 +635,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
+        final Object viewContext = getIncomingInvoice();
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
     }
 
     @Programmatic
