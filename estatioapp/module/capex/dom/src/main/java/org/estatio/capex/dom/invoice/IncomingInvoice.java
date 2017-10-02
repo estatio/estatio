@@ -452,7 +452,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public List<IncomingInvoiceItem> choices0SplitItem() {
-        return getItems().stream().map(IncomingInvoiceItem.class::cast).collect(Collectors.toList());
+        return Lists.newArrayList(getItems()).stream()
+                .map(IncomingInvoiceItem.class::cast)
+                .collect(Collectors.toList());
     }
 
     public List<Charge> choices6SplitItem(){
