@@ -357,7 +357,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableUpdateAmounts(){
-        return isImmutableDueToState() ? itemImmutableReason() : null;
+        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -399,7 +399,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDescription(){
-        return isImmutableDueToState() ? itemImmutableReason() : null;
+        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
 
@@ -418,7 +418,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDueDate(){
-        return isImmutableDueToState() ? itemImmutableReason() : null;
+        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -529,13 +529,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
-
-
-
-    private boolean isImmutableDueToState(){
-        return getIncomingInvoice().isImmutableDueToState();
-    }
-
     private String itemImmutableReason(){
         return "The invoice can't be changed";
     }
@@ -543,7 +536,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private String chargeIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
-        // so we don't check #isImmutableDueToState()
+        // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
                 ReasonBuffer2.prefix("Charge cannot be changed because invoice item");
@@ -560,7 +553,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private String fixedAssetIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
-        // so we don't check #isImmutableDueToState()
+        // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
                 ReasonBuffer2.prefix("Fixed asset cannot be changed because invoice item");
@@ -578,7 +571,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private String budgetItemIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
-        // so we don't check #isImmutableDueToState()
+        // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
                 ReasonBuffer2.prefix("Budget item cannot be changed because invoice item");
@@ -602,7 +595,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private String projectIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
-        // so we don't check #isImmutableDueToState()
+        // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
                 ReasonBuffer2.prefix("Project cannot be changed because invoice item");
@@ -639,7 +632,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return isImmutableDueToState() ? itemImmutableReason() : null;
+        return getIncomingInvoice().isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     @Programmatic
