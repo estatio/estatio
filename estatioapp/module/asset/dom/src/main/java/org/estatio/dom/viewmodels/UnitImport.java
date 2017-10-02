@@ -109,10 +109,9 @@ public class UnitImport implements ExcelFixtureRowHandler, Importable {
 
     static int counter = 0;
 
-//    @Override public List<Class> importAfter() {
-//        return Lists.newArrayList(PropertyImport.class, CountryImport.class);
-//    }
-
+    //    @Override public List<Class> importAfter() {
+    //        return Lists.newArrayList(PropertyImport.class, CountryImport.class);
+    //    }
 
     @Programmatic
     @Override
@@ -129,55 +128,46 @@ public class UnitImport implements ExcelFixtureRowHandler, Importable {
     @Override
     public List<Object> importData(final Object previousRow) {
 
-        try {
-            final Property property = propertyRepository.findPropertyByReference(propertyReference);
-            Unit unit = unitRepository.findUnitByReference(reference);
-            if (unit == null) {
-                unit = property.newUnit(reference, name, UnitType.BOUTIQUE);
-            }
-            // set attributes
-            unit.setName(name);
-            unit.setType(UnitType.valueOf(type));
-            unit.changeDates(startDate, endDate);
-            unit.setArea(area);
-            unit.setSalesArea(salesArea);
-            unit.setStorageArea(storageArea);
-            unit.setMezzanineArea(mezzanineArea);
-            unit.setDehorsArea(dehorsArea);
-            unit.setExternalReference(externalReference);
-            if (communicationChannelRepository.findByOwnerAndType(unit, CommunicationChannelType.POSTAL_ADDRESS).size() == 0) {
-                communicationChannelRepository.newPostal(
-                        unit,
-                        CommunicationChannelType.POSTAL_ADDRESS,
-                        address1,
-                        address2,
-                        address3,
-                        postalCode,
-                        city,
-                        stateRepository.findState(stateCode),
-                        countryRepository.findCountry(countryCode)
-                );
-            }
-            if (ownerReference != null) {
-                Party party = partyRepository.findPartyByReference(ownerReference);
-                if (party == null) {
-                    throw new IllegalArgumentException(String.format("Party with ownerReference %s not found", getOwnerReference()));
-                }
-                // create property owner of not found one already
-                FixedAssetRole propertyOwnerRole = fixedAssetRoleRepository.findRole(unitRepository.findUnitByReference(reference), FixedAssetRoleTypeEnum.PROPERTY_OWNER);
-                if (propertyOwnerRole == null) {
-                    unit.createRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, null, null);
-                }
-            }
-            return Lists.newArrayList();
-
-        } catch (Exception e) {
-
-            LOG.error("Error importing record " + counter + " - " + e);
-
-            return Lists.newArrayList();
-
+        final Property property = propertyRepository.findPropertyByReference(propertyReference);
+        Unit unit = unitRepository.findUnitByReference(reference);
+        if (unit == null) {
+            unit = property.newUnit(reference, name, UnitType.BOUTIQUE);
         }
+        // set attributes
+        unit.setName(name);
+        unit.setType(UnitType.valueOf(type));
+        unit.changeDates(startDate, endDate);
+        unit.setArea(area);
+        unit.setSalesArea(salesArea);
+        unit.setStorageArea(storageArea);
+        unit.setMezzanineArea(mezzanineArea);
+        unit.setDehorsArea(dehorsArea);
+        unit.setExternalReference(externalReference);
+        if (communicationChannelRepository.findByOwnerAndType(unit, CommunicationChannelType.POSTAL_ADDRESS).size() == 0) {
+            communicationChannelRepository.newPostal(
+                    unit,
+                    CommunicationChannelType.POSTAL_ADDRESS,
+                    address1,
+                    address2,
+                    address3,
+                    postalCode,
+                    city,
+                    stateRepository.findState(stateCode),
+                    countryRepository.findCountry(countryCode)
+            );
+        }
+        if (ownerReference != null) {
+            Party party = partyRepository.findPartyByReference(ownerReference);
+            if (party == null) {
+                throw new IllegalArgumentException(String.format("Party with ownerReference %s not found", getOwnerReference()));
+            }
+            // create property owner of not found one already
+            FixedAssetRole propertyOwnerRole = fixedAssetRoleRepository.findRole(unitRepository.findUnitByReference(reference), FixedAssetRoleTypeEnum.PROPERTY_OWNER);
+            if (propertyOwnerRole == null) {
+                unit.createRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, null, null);
+            }
+        }
+        return Lists.newArrayList();
     }
 
     //region > injected services

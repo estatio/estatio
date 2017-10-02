@@ -46,56 +46,9 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnoverRentImport"
 )
-public class LeaseTermForTurnoverRentImport implements ExcelFixtureRowHandler, Importable {
+public class LeaseTermForTurnoverRentImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
 
     private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForTurnoverRentImport.class);
-
-    // leaseItem fields
-    @Getter @Setter
-    private String leaseReference;
-
-    @Getter @Setter
-    private String itemTypeName;
-
-    @Getter @Setter
-    private BigInteger itemSequence;
-
-    @Getter @Setter
-    private LocalDate itemStartDate;
-
-    @Getter @Setter
-    private LocalDate itemNextDueDate;
-
-    @Getter @Setter
-    private String itemChargeReference;
-
-    @Getter @Setter
-    private LocalDate itemEpochDate;
-
-    @Getter @Setter
-    private String itemInvoicingFrequency;
-
-    @Getter @Setter
-    private String itemPaymentMethod;
-
-    @Getter @Setter
-    private String itemStatus;
-
-    @Getter @Setter
-    private String leaseItemAtPath;
-
-    // generic term fields
-    @Getter @Setter
-    private BigInteger sequence;
-
-    @Getter @Setter
-    private LocalDate startDate;
-
-    @Getter @Setter
-    private LocalDate endDate;
-
-    @Getter @Setter
-    private String status;
 
     // turnover rent term fields
     @Getter @Setter
@@ -141,52 +94,51 @@ public class LeaseTermForTurnoverRentImport implements ExcelFixtureRowHandler, I
     public List<Object> importData(Object previousRow) {
 
         //find or create leaseItem
-        final Lease lease = fetchLease(leaseReference);
+        final Lease lease = fetchLease(getLeaseReference());
 
         final ApplicationTenancy leaseItemApplicationTenancy =
                 ObjectUtils.firstNonNull(
-                        securityApplicationTenancyRepository.findByPath(leaseItemAtPath),
+                        securityApplicationTenancyRepository.findByPath(getLeaseItemAtPath()),
                         lease.getApplicationTenancy());
 
-        final Charge charge = fetchCharge(itemChargeReference);
+        final Charge charge = fetchCharge(getItemChargeReference());
 
-        final LeaseItemType itemType = fetchLeaseItemType(itemTypeName);
-        LeaseItem item = lease.findItem(itemType, itemStartDate, itemSequence);
+        final LeaseItemType itemType = fetchLeaseItemType(getItemTypeName());
+        LeaseItem item = lease.findItem(itemType, getItemStartDate(), getItemSequence());
         if (item == null) {
-            item = lease.newItem(itemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(itemInvoicingFrequency), PaymentMethod.valueOf(itemPaymentMethod), itemStartDate);
-            item.setSequence(itemSequence);
+            item = lease.newItem(itemType, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.valueOf(getItemInvoicingFrequency()), PaymentMethod.valueOf(getItemPaymentMethod()), getItemStartDate());
+            item.setSequence(getItemSequence());
         }
-        item.setEpochDate(itemEpochDate);
-        item.setNextDueDate(itemNextDueDate);
-        final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(itemStatus, LeaseItemStatus.ACTIVE);
+        item.setEpochDate(getItemEpochDate());
+        item.setNextDueDate(getItemNextDueDate());
+        final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(getItemStatus(), LeaseItemStatus.ACTIVE);
         item.setStatus(leaseItemStatus);
 
         // Find rent item and create source link
         final LeaseItemType sourceItemType = LeaseItemType.valueOf(sourceItemTypeName);
         LeaseItem rentItem = item.getLease().findItem(sourceItemType, sourceItemStartDate, sourceItemSequence);
-        if(rentItem == null) {
-            throw new IllegalArgumentException(String.format("No Item foud %s %s %s", getLeaseReference(), getSourceItemTypeName(), getSourceItemStartDate()));
+        if(rentItem != null) {
+            item.findOrCreateSourceItem(rentItem);
         }
-        item.findOrCreateSourceItem(rentItem);
 
         //create term
-        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTermWithSequence(sequence);
+        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTermWithSequence(getSequence());
         if (term == null) {
-            if (startDate == null) {
+            if (getStartDate() == null) {
                 throw new IllegalArgumentException("startDate cannot be empty");
             }
-            if (sequence.equals(BigInteger.ONE)) {
-                term = (LeaseTermForTurnoverRent) item.newTerm(startDate, endDate);
+            if (getSequence().equals(BigInteger.ONE)) {
+                term = (LeaseTermForTurnoverRent) item.newTerm(getStartDate(), getEndDate());
             } else {
-                final LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
+                final LeaseTerm previousTerm = item.findTermWithSequence(getSequence().subtract(BigInteger.ONE));
                 if (previousTerm == null) {
                     throw new IllegalArgumentException("Previous term not found");
                 }
-                term = (LeaseTermForTurnoverRent) previousTerm.createNext(startDate, endDate);
+                term = (LeaseTermForTurnoverRent) previousTerm.createNext(getStartDate(), getEndDate());
             }
-            term.setSequence(sequence);
+            term.setSequence(getSequence());
         }
-        term.setStatus(LeaseTermStatus.valueOf(status));
+        term.setStatus(LeaseTermStatus.valueOf(getStatus()));
 
         //set turnover rent term values
         term.setTurnoverRentRule(turnoverRentRule);

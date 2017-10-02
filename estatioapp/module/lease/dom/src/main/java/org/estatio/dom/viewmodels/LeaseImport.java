@@ -127,10 +127,15 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
             prolongationOptionRepository.newProlongationOption(lease, getProlongationPeriod(), getNotificationPeriod(), null);
         }
 
-        if (getPreviousLeaseReference() != null){
+        if (getPreviousLeaseReference() != null) {
             Lease previous = leaseRepository.findLeaseByReference(getPreviousLeaseReference());
-            lease.setPrevious(previous);
-            previous.setNext(lease); //Huh? Two sided
+            if (previous == null) {
+                //oops, not found?
+                System.out.println(String.format("On lease [%s] the previous lease [%s] was not found", getReference(), getPreviousLeaseReference()));
+            } else {
+                lease.setPrevious(previous);
+                previous.setNext(lease); //Huh? Two sided
+            }
         }
 
 //        container.flush();

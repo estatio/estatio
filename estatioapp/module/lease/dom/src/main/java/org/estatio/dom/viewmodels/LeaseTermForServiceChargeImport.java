@@ -174,7 +174,7 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
             } else {
                 final LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
                 if (previousTerm == null) {
-                    throw new IllegalArgumentException("Previous term not found");
+                    throw new IllegalArgumentException(String.format("Previous term not found %s", lease.getReference()));
                 }
                 term = (LeaseTermForServiceCharge) previousTerm.createNext(startDate, endDate);
             }
