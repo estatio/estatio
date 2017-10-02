@@ -581,10 +581,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     boolean isLinkedToOrderItem(){
-        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>0){
-            return true;
-        }
-        return false;
+        final List<OrderItemInvoiceItemLink> numberOfLinks =
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
+        return numberOfLinks.size() > 0;
     }
 
 
