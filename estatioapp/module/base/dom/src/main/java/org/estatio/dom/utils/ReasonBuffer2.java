@@ -1,5 +1,10 @@
 package org.estatio.dom.utils;
 
+import java.util.List;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.util.ReasonBuffer;
 
 /**
@@ -9,7 +14,7 @@ public class ReasonBuffer2 {
 
     private final String prefixIfAny;
 
-    private final StringBuffer reasonBuffer = new StringBuffer();
+    private final List<String> reasons = Lists.newArrayList();
 
     public static ReasonBuffer2 create() {
         return prefix(null);
@@ -29,10 +34,7 @@ public class ReasonBuffer2 {
      */
     public void append(final String reason) {
         if (reason != null) {
-            if (reasonBuffer.length() > 0) {
-                reasonBuffer.append("; ");
-            }
-            reasonBuffer.append(reason);
+            reasons.add(reason);
         }
     }
 
@@ -51,11 +53,23 @@ public class ReasonBuffer2 {
      * none.
      */
     public String getReason() {
-        if (reasonBuffer.length() == 0)
+        if (reasons.isEmpty()) {
             return null;
+        }
 
-        final String prefix = prefixIfAny != null ? prefixIfAny + ": " : "";
-        return prefix + reasonBuffer.toString();
+        final StringBuilder buf = new StringBuilder();
+        if(prefixIfAny != null) {
+            buf.append(prefixIfAny);
+            if(reasons.size() != 1) {
+                buf.append(":");
+            }
+            buf.append(" ");
+        }
+
+
+        Joiner.on("; ").appendTo(buf, reasons);
+
+        return buf.toString();
     }
 
 }
