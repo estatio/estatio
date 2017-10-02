@@ -532,7 +532,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
-    private String chargeIsImmutableReason(){
+    String chargeIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
         // so we don't check IncomingInvoice#isImmutableDueToState()
@@ -543,13 +543,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
         buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
 
-        buf.appendOnCondition(this.isLinkedToOrderItem(), "item is linked to an order");
+        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
         buf.appendOnCondition(this.getBudgetItem()!=null, "is linked to a budget" );
 
         return buf.getReason();
     }
 
-    private String fixedAssetIsImmutableReason(){
+    String fixedAssetIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
         // so we don't check IncomingInvoice#isImmutableDueToState()
@@ -567,7 +567,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return buf.getReason();
     }
 
-    private String budgetItemIsImmutableReason(){
+    String budgetItemIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
         // so we don't check IncomingInvoice#isImmutableDueToState()
@@ -591,7 +591,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return incomingInvoiceType != null && incomingInvoiceType == serviceCharges;
     }
 
-    private String projectIsImmutableReason(){
+    String projectIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
         // so we don't check IncomingInvoice#isImmutableDueToState()
