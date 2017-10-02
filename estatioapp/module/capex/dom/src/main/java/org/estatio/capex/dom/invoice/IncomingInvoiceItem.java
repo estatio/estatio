@@ -365,8 +365,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     public String disableUpdateAmounts(){
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot update amounts because");
 
-        final Object viewContext = getIncomingInvoice();
-        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
 
         return buf.getReason();
     }
@@ -413,8 +412,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit description because");
 
-        final Object viewContext = getIncomingInvoice();
-        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
 
         return buf.getReason();
     }
