@@ -201,7 +201,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeTax() {
-        if (getInvoice().isImmutable()){
+        if (getInvoice().isImmutableDueToState()){
             return "Invoice can't be changed";
         }
         if(getSource() == null){
@@ -218,7 +218,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     private String description;
 
     public String disableDescription() {
-        return getInvoice().isImmutable() ? "Invoice can't be changed" : null;
+        return getInvoice().isImmutableDueToState() ? "Invoice can't be changed" : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -287,7 +287,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeEffectiveDates() {
-        return getInvoice().isImmutable() ? "Invoice cannot be changed" : null;
+        return getInvoice().isImmutableDueToState() ? "Invoice cannot be changed" : null;
     }
 
     // //////////////////////////////////////
@@ -330,14 +330,14 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice remove() {
-        if (!getInvoice().isImmutable()) {
+        if (!getInvoice().isImmutableDueToState()) {
             repositoryService.remove(this);
         }
         return getInvoice();
     }
 
     public String disableRemove(){
-        return getInvoice().isImmutable() ? "Invoice can't be changed" : null;
+        return getInvoice().isImmutableDueToState() ? "Invoice can't be changed" : null;
     }
 
 

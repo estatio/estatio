@@ -356,7 +356,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableUpdateAmounts(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -398,7 +398,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDescription(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
 
@@ -417,7 +417,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDueDate(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -531,8 +531,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
 
 
-    private boolean isImmutable(){
-        return getIncomingInvoice().isImmutable();
+    private boolean isImmutableDueToState(){
+        return getIncomingInvoice().isImmutableDueToState();
     }
 
     private String itemImmutableReason(){
@@ -604,7 +604,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return getInvoice().isImmutable() ? "The invoice can't be changed" : null;
+        return getInvoice().isImmutableDueToState() ? "The invoice can't be changed" : null;
     }
 
     @Programmatic

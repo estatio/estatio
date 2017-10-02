@@ -412,7 +412,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableSplitItem() {
-        if (isImmutable()) {
+        if (isImmutableDueToState()) {
             return reasonDisabledDueToState(this);
         }
         return getItems().isEmpty() ? "No items" : null;
@@ -511,7 +511,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableMergeItems() {
-        if (isImmutable()) {
+        if (isImmutableDueToState()) {
             return reasonDisabledDueToState(this);
         }
         return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
@@ -594,7 +594,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
          */
         public String validate0Act(final BankAccount bankAccount){
             // a mutable invoice does not need a verified bankaccount
-            if (!incomingInvoice.isImmutable()) return null;
+            if (!incomingInvoice.isImmutableDueToState()) return null;
 
             final BankAccountVerificationState state = stateTransitionService
                     .currentStateOf(bankAccount, BankAccountVerificationStateTransition.class);
@@ -814,7 +814,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Programmatic
     @Override
-    public boolean isImmutable() {
+    public boolean isImmutableDueToState() {
         final Object viewContext = this;
         return reasonDisabledDueToState(viewContext)!=null;
     }
@@ -886,7 +886,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
     public String disableEditSeller(){
-        if (isImmutable()){
+        if (isImmutableDueToState()){
             final Object viewContext = this;
             return reasonDisabledDueToState(viewContext);
         }
