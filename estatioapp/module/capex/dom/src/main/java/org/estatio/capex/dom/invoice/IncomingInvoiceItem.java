@@ -532,12 +532,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
 
     private boolean isImmutable(){
-        IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        return invoice.isImmutable();
+        return getIncomingInvoice().isImmutable();
     }
 
     private String itemImmutableReason(){
-        return "The invoice cannot be changed";
+        return "The invoice can't be changed";
     }
 
     private String chargeIsImmutableReason(){
@@ -606,7 +605,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return getInvoice().isImmutable() ? "The invoice can't be changed" : null;
     }
 
     @Programmatic
