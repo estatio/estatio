@@ -61,6 +61,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.roles.EstatioRole;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.TaxRate;
 import org.estatio.tax.dom.Tax;
 
@@ -224,6 +225,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
+
         setDescription(description);
         return this;
     }
@@ -233,6 +235,9 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeDescription() {
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
         return disableDescription();
     }
 
@@ -273,6 +278,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     public InvoiceItem changeEffectiveDates(
             final LocalDate effectiveStartDate,
             final LocalDate effectiveEndDate) {
+
         setEffectiveStartDate(effectiveStartDate);
         setEffectiveEndDate(effectiveEndDate);
         return this;
@@ -287,6 +293,9 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeEffectiveDates() {
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
         return getInvoice().isImmutableDueToState() ? "Invoice cannot be changed" : null;
     }
 
@@ -337,6 +346,11 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableRemove(){
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
+        //
+        // nb: in fact, IncomingInvoiceItem actually has its own (equivalent?) removeItem, so probably should be amalgamated.
         return getInvoice().isImmutableDueToState() ? "Invoice can't be changed" : null;
     }
 
