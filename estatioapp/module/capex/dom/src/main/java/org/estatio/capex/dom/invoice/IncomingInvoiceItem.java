@@ -363,8 +363,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableUpdateAmounts(){
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot update amounts because");
+
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
+        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -406,8 +410,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDescription(){
+
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit description because");
+
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
+        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
 
@@ -426,8 +435,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDueDate(){
-        final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
+        final ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot edit due date because");
+        return appendReasonIfReversalOrReportedOrApprovalState(buf).getReason();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -644,13 +653,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableRemoveItem(){
         final ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot remove item because");
+        return appendReasonIfReversalOrReportedOrApprovalState(buf).getReason();
+    }
 
+    private ReasonBuffer2 appendReasonIfReversalOrReportedOrApprovalState(final ReasonBuffer2 buf) {
         appendReasonIfReversalOrReported(buf);
 
         final Object viewContext = getIncomingInvoice();
         getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
-
-        return buf.getReason();
+        return buf;
     }
 
     @Programmatic

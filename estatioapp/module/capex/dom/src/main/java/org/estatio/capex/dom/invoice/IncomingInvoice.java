@@ -18,7 +18,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
-import javax.ws.rs.HEAD;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.Lists;
@@ -287,11 +286,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+
     public String disableAddItem() {
-        if (amountsCoveredByAmountsItems()) {
-            return "Invoice amounts are covered";
-        }
-        return reasonDisabledDueToState(this);
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot add item because");
+
+        buf.append(amountsCoveredByAmountsItems(), "invoice amounts are covered");
+        final Object viewContext = this;
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
     public IncomingInvoiceType default0AddItem() {
@@ -513,13 +516,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableMergeItems() {
-        final Object viewContext1 = this;
-        final String reasonDisabledIfAny = this.reasonDisabledDueToState(viewContext1);
-        if (reasonDisabledIfAny != null) {
-            final Object viewContext = this;
-            return this.reasonDisabledDueToState(viewContext);
-        }
-        return getItems().size() < 2 ? "Merge needs 2 or more items" : null;
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot merge items because");
+
+        final Object viewContext = this;
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        buf.append(() -> getItems().size() < 2, "merging needs 2 or more items");
+        return buf.getReason();
     }
 
     public IncomingInvoiceItem default0MergeItems() {
@@ -837,8 +840,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableEditInvoiceNumber(){
+
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit invoice number because");
+
         final Object viewContext = this;
-        return reasonDisabledDueToState(viewContext);
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
 
@@ -860,8 +868,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getBuyer();
     }
     public String disableEditBuyer(){
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit buyer because");
+
         final Object viewContext = this;
-        return reasonDisabledDueToState(viewContext);
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
     
@@ -891,12 +903,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
     public String disableEditSeller(){
+
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit seller because");
+
         final Object viewContext = this;
-        final String reasonDisabledIfAny = reasonDisabledDueToState(viewContext);
-        if (reasonDisabledIfAny != null){
-            return reasonDisabledIfAny;
-        }
-        return sellerIsImmutableReason();
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+        buf.append(this::sellerIsImmutableReason);
+
+        return buf.getReason();
     }
 
 
@@ -905,7 +919,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         for (InvoiceItem item : getItems()){
             IncomingInvoiceItem ii = (IncomingInvoiceItem) item;
             if (ii.isLinkedToOrderItem()){
-                return "Seller cannot be changed because an item is linked to an order";
+                return "an item is linked to an order";
             }
         }
         return null;
@@ -938,8 +952,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableChangeDates(){
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot change dates because");
+
         final Object viewContext = this;
-        return reasonDisabledDueToState(viewContext);
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
     @Getter @Setter
