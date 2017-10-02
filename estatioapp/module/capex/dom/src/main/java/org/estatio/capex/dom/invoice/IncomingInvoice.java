@@ -76,6 +76,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
@@ -1025,28 +1026,39 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Override
     @Programmatic
     public String reasonDisabledDueToState(final Object viewContext) {
-        final IncomingInvoiceApprovalState approvalState = getApprovalState();
-        // guard for historic invoices (and invoice items)
-        if (approvalState==null){
-            return "Cannot modify (migrated invoice, state is unknown but assumed to be approved)";
+        final String reasonDisabledDueToApprovalStateIfAny = reasonDisabledDueToApprovalStateIfAny(viewContext);
+        if(reasonDisabledDueToApprovalStateIfAny != null) {
+            return reasonDisabledDueToApprovalStateIfAny;
         }
 
-        switch (approvalState) {
-        case NEW:
-            return null;
-        case COMPLETED:
-            // CAN still modify once completed, but only through "expert" view (ie entity)
-            final MetaModelService2.Sort sort = metaModelService3.sortOf(viewContext.getClass());
-            if(sort == MetaModelService2.Sort.VIEW_MODEL) {
-                return "Cannot modify through view because invoice is in state of " + getApprovalState();
-            }
-            return null;
-        default:
-            // once here then approved (or discarded); no change allowed...
-            return "Cannot modify because invoice is in state of " + getApprovalState();
-        }
+        return null;
     }
 
+    String reasonDisabledDueToApprovalStateIfAny(final Object viewContext) {
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot modify invoice because");
+
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
+    }
+
+    void reasonDisabledDueToApprovalStateIfAny(final Object viewContext, final ReasonBuffer2 buf) {
+        final IncomingInvoiceApprovalState approvalState = getApprovalState();
+
+        buf.append(
+                approvalState==null,
+            "invoice state is unknown (was migrated so assumed to be approved)");
+
+        buf.append(
+                approvalState == IncomingInvoiceApprovalState.COMPLETED &&
+                metaModelService3.sortOf(viewContext.getClass()) == MetaModelService2.Sort.VIEW_MODEL,
+            "modification through view not allowed once invoice is " + approvalState);
+
+        buf.append(
+                approvalState != IncomingInvoiceApprovalState.NEW &&
+                approvalState != IncomingInvoiceApprovalState.COMPLETED,
+            "invoice is in state of " + getApprovalState());
+    }
 
     @Programmatic
     public String reasonIncomplete(){

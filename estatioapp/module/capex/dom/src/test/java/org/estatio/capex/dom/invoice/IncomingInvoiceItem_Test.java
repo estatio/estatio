@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -574,7 +576,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.chargeIsImmutableReason();
 
-            assertThat(s).isEqualTo("Charge cannot be changed because invoice item is linked to a budget");
+            assertThat(s).isEqualTo("Charge cannot be changed because item is linked to a budget");
         }
 
         @Test
@@ -586,7 +588,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.chargeIsImmutableReason();
 
-            assertThat(s).isEqualTo("Charge cannot be changed because invoice item is linked to an order");
+            assertThat(s).isEqualTo("Charge cannot be changed because item is linked to an order");
         }
 
         @Test
@@ -601,7 +603,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.chargeIsImmutableReason();
 
-            assertThat(s).isEqualTo("Charge cannot be changed because invoice item is a reversal of another item");
+            assertThat(s).isEqualTo("Charge cannot be changed because item is a reversal");
         }
 
         @Test
@@ -616,7 +618,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.chargeIsImmutableReason();
 
-            assertThat(s).isEqualTo("Charge cannot be changed because invoice item has already been reported");
+            assertThat(s).isEqualTo("Charge cannot be changed because item has been reported");
         }
 
 
@@ -677,7 +679,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.budgetItemIsImmutableReason();
 
-            assertThat(s).isEqualTo("Budget item cannot be changed because invoice item parent invoice is not for service charges");
+            assertThat(s).isEqualTo("Budget item cannot be changed because parent invoice is not for service charges");
         }
 
         @Test
@@ -689,7 +691,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.budgetItemIsImmutableReason();
 
-            assertThat(s).isEqualTo("Budget item cannot be changed because invoice item is linked to an order");
+            assertThat(s).isEqualTo("Budget item cannot be changed because item is linked to an order");
         }
 
         @Test
@@ -704,7 +706,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.budgetItemIsImmutableReason();
 
-            assertThat(s).isEqualTo("Budget item cannot be changed because invoice item is a reversal of another item");
+            assertThat(s).isEqualTo("Budget item cannot be changed because item is a reversal");
         }
 
         @Test
@@ -719,7 +721,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.budgetItemIsImmutableReason();
 
-            assertThat(s).isEqualTo("Budget item cannot be changed because invoice item has already been reported");
+            assertThat(s).isEqualTo("Budget item cannot be changed because item has been reported");
         }
 
 
@@ -768,7 +770,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.projectIsImmutableReason();
 
-            assertThat(s).isEqualTo("Project cannot be changed because invoice item is linked to an order");
+            assertThat(s).isEqualTo("Project cannot be changed because item is linked to an order");
         }
 
         @Test
@@ -783,7 +785,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.projectIsImmutableReason();
 
-            assertThat(s).isEqualTo("Project cannot be changed because invoice item is a reversal of another item");
+            assertThat(s).isEqualTo("Project cannot be changed because item is a reversal");
         }
 
         @Test
@@ -798,7 +800,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.projectIsImmutableReason();
 
-            assertThat(s).isEqualTo("Project cannot be changed because invoice item has already been reported");
+            assertThat(s).isEqualTo("Project cannot be changed because item has been reported");
         }
 
 
@@ -850,7 +852,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.fixedAssetIsImmutableReason();
 
-            assertThat(s).isEqualTo("Fixed asset cannot be changed because invoice item is linked to a budget");
+            assertThat(s).isEqualTo("Fixed asset cannot be changed because item is linked to a budget");
         }
 
         @Test
@@ -865,7 +867,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.fixedAssetIsImmutableReason();
 
-            assertThat(s).isEqualTo("Fixed asset cannot be changed because invoice item is linked to a project");
+            assertThat(s).isEqualTo("Fixed asset cannot be changed because item is linked to a project");
         }
 
 
@@ -878,7 +880,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.fixedAssetIsImmutableReason();
 
-            assertThat(s).isEqualTo("Fixed asset cannot be changed because invoice item is linked to an order");
+            assertThat(s).isEqualTo("Fixed asset cannot be changed because item is linked to an order");
         }
 
         @Test
@@ -893,7 +895,7 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.fixedAssetIsImmutableReason();
 
-            assertThat(s).isEqualTo("Fixed asset cannot be changed because invoice item is a reversal of another item");
+            assertThat(s).isEqualTo("Fixed asset cannot be changed because item is a reversal");
         }
 
         @Test
@@ -908,10 +910,110 @@ public class IncomingInvoiceItem_Test {
             // when
             final String s = item.fixedAssetIsImmutableReason();
 
-            assertThat(s).isEqualTo("Fixed asset cannot be changed because invoice item has already been reported");
+            assertThat(s).isEqualTo("Fixed asset cannot be changed because item has been reported");
         }
 
+    }
+
+    public static class DisableRemoveItem_Test extends IncomingInvoiceItem_Test {
+
+        IncomingInvoiceItem item;
+        IncomingInvoiceItem otherItem;
+        IncomingInvoice incomingInvoice;
+        IncomingInvoiceApprovalState state;
+
+        @Before
+        public void setUp() throws Exception {
+            incomingInvoice = new IncomingInvoice() {
+                @Override public IncomingInvoiceApprovalState getApprovalState() {
+                    return state;
+                }
+            };
+            item = new IncomingInvoiceItem(){
+                @Override
+                void invalidateApproval(){}
+            };
+            item.setInvoice(incomingInvoice);
+
+            item.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+            otherItem = new IncomingInvoiceItem();
+        }
+
+        @Test
+        public void when_new() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.NEW;
+
+            // when
+            final String reason = item.disableRemoveItem();
+
+            // then
+            Assertions.assertThat(reason).isNull();
+        }
+
+        @Test
+        public void when_new_and_reported() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.NEW;
+            item.setReportedDate(LocalDate.now());
+
+            // when
+            final String reason = item.disableRemoveItem();
+
+            // then
+            Assertions.assertThat(reason).isEqualTo("Cannot remove item because item has been reported");
+        }
+
+        @Test
+        public void when_new_and_reversal() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.NEW;
+            item.setReversalOf(otherItem);
+
+            // when
+            final String reason = item.disableRemoveItem();
+
+            // then
+            Assertions.assertThat(reason).isEqualTo("Cannot remove item because item is a reversal");
+        }
+
+        @Test
+        public void when_approved() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.APPROVED;
+
+            // when
+            final String reason = item.disableRemoveItem();
+
+            // then
+            Assertions.assertThat(reason).isEqualTo("Cannot remove item because invoice is in state of APPROVED");
+        }
+
+        @Test
+        public void when_mix_of_reasons_for_both_parent_invoice_and_item() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.APPROVED;
+            item.setReportedDate(LocalDate.now());
+            item.setReversalOf(otherItem);
+
+            // when
+            final String reason = item.disableRemoveItem();
+
+            // then
+            Assertions.assertThat(reason).isEqualTo(
+                    "Cannot remove item because: "
+                            + "item is a reversal; "
+                            + "item has been reported; "
+                            + "invoice is in state of APPROVED");
+        }
 
     }
+
 
 }

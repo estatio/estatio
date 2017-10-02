@@ -321,6 +321,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private IncomingInvoiceItem reversalOf;
 
 
+    private void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
+        buf.append(getReversalOf() != null, "item is a reversal");
+        buf.append(getReportedDate() != null, "item has been reported");
+    }
+
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public IncomingInvoiceItem updateAmounts(
             @Digits(integer=13, fraction = 2)
@@ -538,13 +544,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
-                ReasonBuffer2.prefix("Charge cannot be changed because invoice item");
+                ReasonBuffer2.forAll("Charge cannot be changed because");
 
-        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
-        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
-
-        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
-        buf.appendOnCondition(this.getBudgetItem()!=null, "is linked to a budget" );
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
+        appendReasonIfLinkedToABudget(buf);
 
         return buf.getReason();
     }
@@ -555,14 +559,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
-                ReasonBuffer2.prefix("Fixed asset cannot be changed because invoice item");
+                ReasonBuffer2.forAll("Fixed asset cannot be changed because");
 
-        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
-        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
-
-        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
-        buf.appendOnCondition(this.getBudgetItem()!=null, "is linked to a budget");
-        buf.appendOnCondition(this.getProject()!=null, "is linked to a project");
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
+        appendReasonIfLinkedToABudget(buf);
+        appendReasonIfLinkedToAProject(buf);
 
         return buf.getReason();
     }
@@ -573,15 +575,28 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         // so we don't check IncomingInvoice#isImmutableDueToState()
 
         final ReasonBuffer2 buf =
-                ReasonBuffer2.prefix("Budget item cannot be changed because invoice item");
+                ReasonBuffer2.forAll("Budget item cannot be changed because");
 
-        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
-        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
+        appendReasonIfReversalOrReported(buf);
 
-        buf.appendOnCondition(
+        buf.append(
                 !hasType(IncomingInvoiceType.SERVICE_CHARGES),
                 "parent invoice is not for service charges");
-        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
+        appendReasonIfLinkedToAnOrder(buf);
+
+        return buf.getReason();
+    }
+
+    String projectIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Project cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
 
         return buf.getReason();
     }
@@ -591,20 +606,17 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return incomingInvoiceType != null && incomingInvoiceType == serviceCharges;
     }
 
-    String projectIsImmutableReason(){
 
-        // nb: dimensions *are* allowed to change irrespective of state,
-        // so we don't check IncomingInvoice#isImmutableDueToState()
+    private void appendReasonIfLinkedToAProject(final ReasonBuffer2 buf) {
+        buf.append(this.getProject() != null, "item is linked to a project");
+    }
 
-        final ReasonBuffer2 buf =
-                ReasonBuffer2.prefix("Project cannot be changed because invoice item");
+    private void appendReasonIfLinkedToABudget(final ReasonBuffer2 buf) {
+        buf.append(this.getBudgetItem() != null, "item is linked to a budget");
+    }
 
-        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
-        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
-
-        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
-
-        return buf.getReason();
+    private void appendReasonIfLinkedToAnOrder(final ReasonBuffer2 buf) {
+        buf.append(this.isLinkedToOrderItem(), "item is linked to an order");
     }
 
     boolean isLinkedToOrderItem(){
@@ -631,8 +643,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
+        final ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot remove item because");
+
+        appendReasonIfReversalOrReported(buf);
+
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
+        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        return buf.getReason();
     }
 
     @Programmatic
