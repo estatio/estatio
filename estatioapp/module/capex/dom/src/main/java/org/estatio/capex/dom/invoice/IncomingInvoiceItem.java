@@ -321,10 +321,17 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private IncomingInvoiceItem reversalOf;
 
 
-    private void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
-        buf.append(getReversalOf() != null, "item is a reversal");
-        buf.append(getReportedDate() != null, "item has been reported");
+    void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
+        buf.append(() -> getReversalOf() != null, "item is a reversal");
+        buf.append(() -> getReportedDate() != null, "item has been reported");
     }
+
+    boolean neitherReversalNorReported() {
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        appendReasonIfReversalOrReported(buf);
+        return buf.getReason() == null;
+    }
+
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)

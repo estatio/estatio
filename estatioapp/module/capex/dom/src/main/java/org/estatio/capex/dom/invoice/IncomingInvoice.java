@@ -536,13 +536,15 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public List<IncomingInvoiceItem> choices0MergeItems() {
         return Lists.newArrayList(getItems()).stream()
                 .map(IncomingInvoiceItem.class::cast)
+                .filter(IncomingInvoiceItem::neitherReversalNorReported)
                 .collect(Collectors.toList());
     }
 
     public List<IncomingInvoiceItem> choices1MergeItems(final IncomingInvoiceItem item) {
         return Lists.newArrayList(getItems()).stream()
-                .filter(x->!x.equals(item))
                 .map(IncomingInvoiceItem.class::cast)
+                .filter(IncomingInvoiceItem::neitherReversalNorReported)
+                .filter(x->!x.equals(item))
                 .collect(Collectors.toList());
     }
 
