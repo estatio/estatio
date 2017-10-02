@@ -358,7 +358,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableUpdateAmounts(){
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -401,7 +401,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableEditDescription(){
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
     }
 
 
@@ -421,7 +421,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableEditDueDate(){
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -532,10 +532,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
-    private String itemImmutableReason(){
-        return "The invoice can't be changed";
-    }
-
     private String chargeIsImmutableReason(){
 
         // nb: dimensions *are* allowed to change irrespective of state,
@@ -636,7 +632,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public String disableRemoveItem(){
         final Object viewContext = getIncomingInvoice();
-        return getIncomingInvoice().reasonDisabledDueToState(viewContext) != null ? itemImmutableReason() : null;
+        return getIncomingInvoice().reasonDisabledDueToState(viewContext);
     }
 
     @Programmatic
