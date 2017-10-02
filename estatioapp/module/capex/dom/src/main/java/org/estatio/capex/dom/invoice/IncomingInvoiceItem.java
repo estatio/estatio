@@ -54,6 +54,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.Tax;
 import org.estatio.tax.dom.TaxRate;
 
@@ -540,44 +541,78 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     private String chargeIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Charge cannot be changed because this item is linked to an order";
-        }
-        if (this.getBudgetItem()!=null){
-            return "Charge cannot be changed because this item is linked to a budget";
-        }
-        return null;
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check #isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.prefix("Charge cannot be changed because invoice item");
+
+        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
+        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
+
+        buf.appendOnCondition(this.isLinkedToOrderItem(), "item is linked to an order");
+        buf.appendOnCondition(this.getBudgetItem()!=null, "is linked to a budget" );
+
+        return buf.getReason();
     }
 
     private String fixedAssetIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Fixed asset cannot be changed because this item is linked to an order";
-        }
-        if (this.getBudgetItem()!=null){
-            return "Fixed asset cannot be changed because this item is linked to a budget";
-        }
-        if (this.getProject()!=null){
-            return "Fixed asset cannot be changed because this item is linked to a project";
-        }
-        return null;
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check #isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.prefix("Fixed asset cannot be changed because invoice item");
+
+        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
+        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
+
+        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
+        buf.appendOnCondition(this.getBudgetItem()!=null, "is linked to a budget");
+        buf.appendOnCondition(this.getProject()!=null, "is linked to a project");
+
+        return buf.getReason();
     }
 
     private String budgetItemIsImmutableReason(){
-        IncomingInvoice invoice = (IncomingInvoice) this.getInvoice();
-        if (invoice.getType()==null || invoice.getType()!=IncomingInvoiceType.SERVICE_CHARGES){
-            return "Budget item cannot be changed because the invoice has not type service charges";
-        }
-        if (this.isLinkedToOrderItem()){
-            return "Budget item cannot be changed because this invoice item is linked to an order";
-        }
-        return null;
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check #isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.prefix("Budget item cannot be changed because invoice item");
+
+        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
+        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
+
+        buf.appendOnCondition(
+                !hasType(IncomingInvoiceType.SERVICE_CHARGES),
+                "parent invoice is not for service charges");
+        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
+
+        return buf.getReason();
+    }
+
+    private boolean hasType(final IncomingInvoiceType serviceCharges) {
+        final IncomingInvoiceType incomingInvoiceType = this.getIncomingInvoice().getType();
+        return incomingInvoiceType != null && incomingInvoiceType == serviceCharges;
     }
 
     private String projectIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Project cannot be changed because this item is linked to an order";
-        }
-        return null;
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check #isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.prefix("Project cannot be changed because invoice item");
+
+        buf.appendOnCondition(this.getReportedDate() != null, "has already been reported");
+        buf.appendOnCondition(this.getReversalOf() != null, "is a reversal of another item");
+
+        buf.appendOnCondition(this.isLinkedToOrderItem(), "is linked to an order");
+
+        return buf.getReason();
     }
 
     boolean isLinkedToOrderItem(){
