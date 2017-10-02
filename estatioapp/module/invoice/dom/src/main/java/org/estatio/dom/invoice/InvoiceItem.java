@@ -202,13 +202,10 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeTax() {
-        if (getInvoice().isImmutableDueToState()){
-            return "Invoice can't be changed";
-        }
-        if(getSource() == null){
-            return  "Cannot change tax on a generated invoice item";
-        }
-        return null;
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle("Can't change tax because");
+        buf.append(() -> getInvoice().isImmutableDueToState(), "Invoice can't be changed");
+        buf.append(() -> getSource() == null, "Cannot change tax on a generated invoice item");
+        return buf.getReason();
     }
 
     // //////////////////////////////////////
