@@ -299,6 +299,25 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.periodFromInterval(getInterval());
     }
 
+    /**
+     * The date that this line item was reported to external auditors, thereby should be treated as immutable.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate reportedDate;
+
+    /**
+     * Whether this item is a reversal of a previous invoice item, meaning that it should be treated as immutable.
+     *
+     * Note that reversals are only required on items that have become immutable, typically by virtue of having been
+     * {@link #getReportedDate() reported} to external auditors.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true", name = "reversalOfInvoiceItemId")
+    @Property
+    @Getter @Setter
+    private IncomingInvoiceItem reversalOf;
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
