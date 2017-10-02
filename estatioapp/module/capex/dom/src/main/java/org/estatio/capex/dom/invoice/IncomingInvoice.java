@@ -1020,21 +1020,24 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Override
     @Programmatic
     public String reasonDisabledDueToState(final Object viewContext) {
-        final IncomingInvoiceApprovalState approvalState1 = getApprovalState();
+        final IncomingInvoiceApprovalState approvalState = getApprovalState();
         // guard for historic invoices (and invoice items)
-        if (approvalState1==null){
-            return "Cannot modify";
+        if (approvalState==null){
+            return "Cannot modify (migrated invoice, state is unknown but assumed to be approved)";
         }
-        switch (approvalState1) {
+        
+        switch (approvalState) {
         case NEW:
             return null;
         case COMPLETED:
+            // CAN still modify once completed, but only through "expert" view (ie entity)
             final MetaModelService2.Sort sort = metaModelService3.sortOf(viewContext.getClass());
             if(sort == MetaModelService2.Sort.VIEW_MODEL) {
                 return "Cannot modify through view because invoice is in state of " + getApprovalState();
             }
             return null;
         default:
+            // once here then approved (or discarded); no change allowed...
             return "Cannot modify because invoice is in state of " + getApprovalState();
         }
     }
