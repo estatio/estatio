@@ -131,6 +131,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
      */
     @Property(hidden = Where.REFERENCES_PARENT)
     public InvoiceSource getSource() {
+        // TODO: this applies to InvoiceItemForLease only, so should probably be moved down.
         return null;
     }
 
@@ -203,9 +204,13 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     public String disableChangeTax() {
         ReasonBuffer2 buf = ReasonBuffer2.forSingle("Can't change tax because");
+        appendReasonChangeTaxDisabledIfAny(buf);
+        return buf.getReason();
+    }
+
+    protected void appendReasonChangeTaxDisabledIfAny(final ReasonBuffer2 buf) {
         buf.append(() -> getInvoice().isImmutableDueToState(), "Invoice can't be changed");
         buf.append(() -> getSource() == null, "Cannot change tax on a generated invoice item");
-        return buf.getReason();
     }
 
     // //////////////////////////////////////

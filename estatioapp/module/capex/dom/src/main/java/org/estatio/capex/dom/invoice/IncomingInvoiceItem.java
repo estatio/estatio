@@ -632,8 +632,14 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return numberOfLinks.size() > 0;
     }
 
-
-
+    /**
+     * The inherited {@link #changeTax(Tax)} action applies to this subtype, but the disablement rules
+     * are completely different.
+     */
+    @Override
+    protected void appendReasonChangeTaxDisabledIfAny(final ReasonBuffer2 buf) {
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
+    }
 
 
 
