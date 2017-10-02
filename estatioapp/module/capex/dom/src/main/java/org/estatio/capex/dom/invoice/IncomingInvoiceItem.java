@@ -639,7 +639,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return getInvoice().isImmutableDueToState() ? "The invoice can't be changed" : null;
+        return isImmutableDueToState() ? itemImmutableReason() : null;
     }
 
     @Programmatic
