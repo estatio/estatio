@@ -539,9 +539,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .collect(Collectors.toList());
     }
 
-    public List<IncomingInvoiceItem> choices1MergeItems(
-            final IncomingInvoiceItem item,
-            final IncomingInvoiceItem mergeInto) {
+    public List<IncomingInvoiceItem> choices1MergeItems(final IncomingInvoiceItem item) {
         return Lists.newArrayList(getItems()).stream()
                 .filter(x->!x.equals(item))
                 .map(IncomingInvoiceItem.class::cast)
