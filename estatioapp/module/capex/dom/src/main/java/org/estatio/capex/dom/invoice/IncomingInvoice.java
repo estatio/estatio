@@ -513,7 +513,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     public String disableMergeItems() {
         final Object viewContext1 = this;
-        if (this.reasonDisabledDueToState(viewContext1) != null) {
+        final String reasonDisabledIfAny = this.reasonDisabledDueToState(viewContext1);
+        if (reasonDisabledIfAny != null) {
             final Object viewContext = this;
             return this.reasonDisabledDueToState(viewContext);
         }
@@ -889,10 +890,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return getSeller();
     }
     public String disableEditSeller(){
-        final Object viewContext1 = this;
-        if (reasonDisabledDueToState(viewContext1) != null){
-            final Object viewContext = this;
-            return reasonDisabledDueToState(viewContext);
+        final Object viewContext = this;
+        final String reasonDisabledIfAny = reasonDisabledDueToState(viewContext);
+        if (reasonDisabledIfAny != null){
+            return reasonDisabledIfAny;
         }
         return sellerIsImmutableReason();
     }
