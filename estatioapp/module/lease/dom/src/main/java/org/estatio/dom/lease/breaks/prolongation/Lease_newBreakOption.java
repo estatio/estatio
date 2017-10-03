@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -45,16 +46,17 @@ import org.estatio.dom.lease.breaks.BreakOptionRepository;
 import org.estatio.dom.lease.breaks.BreakType;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class Lease_newProlongation extends UdoDomainService<Lease_newProlongation> {
+public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption> {
 
-    public Lease_newProlongation() {
-        super(Lease_newProlongation.class);
+    public Lease_newBreakOption() {
+        super(Lease_newBreakOption.class);
     }
 
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed = Contributed.AS_ACTION)
+    @MemberOrder(name = "breakOptions", sequence = "1")
     public Lease newBreakOption(
             final Lease lease,
             final LocalDate breakDate,

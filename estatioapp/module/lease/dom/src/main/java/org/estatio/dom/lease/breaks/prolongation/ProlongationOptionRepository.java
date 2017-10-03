@@ -52,7 +52,12 @@ public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<
             prolongationOption.setBreakDate(lease.getEndDate());
             prolongationOption.setProlongationPeriod(prolongationPeriod);
             prolongationOption.setNotificationPeriod(notificationPeriod);
-            prolongationOption.setExerciseDate(lease.getEndDate().minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
+            if (notificationPeriod != null) {
+                prolongationOption.setExerciseDate(lease.getEndDate().minus(JodaPeriodUtils.asPeriod(notificationPeriod)));
+            } else
+            {
+                prolongationOption.setExerciseDate(lease.getEndDate());
+            }
             prolongationOption.setDescription(description);
             persist(prolongationOption);
         }

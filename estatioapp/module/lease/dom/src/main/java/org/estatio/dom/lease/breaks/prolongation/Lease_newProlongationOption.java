@@ -3,6 +3,7 @@ package org.estatio.dom.lease.breaks.prolongation;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -19,6 +20,7 @@ public class Lease_newProlongationOption {
     }
 
     @Action()
+    @MemberOrder(name = "breakOptions", sequence = "1")
     public Lease $$(
             final String prolongationPeriod,
             final String notificationPeriod,

@@ -117,6 +117,7 @@
             </ns2:collection>
             <ns2:collection id="breakOptions">
                 <ns2:action id="newBreakOption"/>
+                <ns2:action id="newProlongationOption"/>
             </ns2:collection>
         </col>
     </row>

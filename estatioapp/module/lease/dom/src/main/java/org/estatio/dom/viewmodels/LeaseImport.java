@@ -123,7 +123,7 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
         lease.setExternalReference(externalReference);
         lease.setComments(getComments());
 
-        if (getProlongationPeriod() != null && getNotificationPeriod() != null) {
+        if (getProlongationPeriod() != null ) {
             prolongationOptionRepository.newProlongationOption(lease, getProlongationPeriod(), getNotificationPeriod(), null);
         }
 
