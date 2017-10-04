@@ -89,7 +89,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
 
             // when
             final LeaseItem leaseItem = wrap(leasePoison).newItem(
-                    LeaseItemType.DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED,
                     LeaseAgreementRoleTypeEnum.LANDLORD, charge,
                     InvoicingFrequency.FIXED_IN_ADVANCE,
                     PaymentMethod.DIRECT_DEBIT,
@@ -98,7 +98,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
 
             // then
             assertThat(leaseItem.getLease()).isEqualTo(leasePoison);
-            assertThat(leaseItem.getType()).isEqualTo(LeaseItemType.DISCOUNT);
+            assertThat(leaseItem.getType()).isEqualTo(LeaseItemType.RENT_DISCOUNT_FIXED);
             assertThat(leaseItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
             assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
@@ -117,7 +117,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
             expectedExceptions.expectMessage("not valid for this lease");
 
             // when
-            wrap(leasePoison).newItem(LeaseItemType.DISCOUNT, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leasePoison.getStartDate());
+            wrap(leasePoison).newItem(LeaseItemType.RENT_DISCOUNT_FIXED, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT, leasePoison.getStartDate());
         }
     }
 }

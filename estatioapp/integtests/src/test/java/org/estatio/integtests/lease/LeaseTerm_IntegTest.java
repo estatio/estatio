@@ -174,7 +174,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
                 // have to obtain again because runScript commits and so JDO
                 // clears out all enlisted objects.
                 lease = leaseRepository.findLeaseByReference(LeaseForOxfMiracl005Gb.REF);
-                final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.DISCOUNT);
+                final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.RENT_DISCOUNT_FIXED);
 
                 // and given
                 assertThat(leaseTerm.valueType(), is(LeaseTermValueType.FIXED));
@@ -213,7 +213,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
             public void allowedIfLeaseHasNoInvoicesForItsFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                final LeaseItemType leaseItemType = LeaseItemType.DISCOUNT;
+                final LeaseItemType leaseItemType = LeaseItemType.RENT_DISCOUNT_FIXED;
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, leaseItemType);
 
                 // and given

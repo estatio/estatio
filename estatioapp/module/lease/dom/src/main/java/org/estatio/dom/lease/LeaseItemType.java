@@ -34,13 +34,14 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     RENT(LeaseTermForIndexable.class, true, false, true),
     RENT_FIXED(LeaseTermForFixed.class, false, false, true),
     RENT_DISCOUNT(LeaseTermForIndexable.class, false, false, true),
+    RENT_DISCOUNT_FIXED(LeaseTermForFixed.class, false, false, true),
     TURNOVER_RENT(LeaseTermForTurnoverRent.class, true, true, true),
     RENTAL_FEE(LeaseTermForPercentage.class, true, true, true),
     DEPOSIT(LeaseTermForDeposit.class, false, true, true),
     SERVICE_CHARGE(LeaseTermForServiceCharge.class, true, false, true),
     SERVICE_CHARGE_BUDGETED(LeaseTermForServiceCharge.class, false, false, false),
     SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexable.class, true, false, true),
-    DISCOUNT(LeaseTermForFixed.class, false, false, true),
+    SERVICE_CHARGE_DISCOUNT_FIXED(LeaseTermForFixed.class, false, false, true),
     ENTRY_FEE(LeaseTermForFixed.class, false, false, true),
     TAX(LeaseTermForTax.class, true, true, false),
     MARKETING(LeaseTermForServiceCharge.class, true, false, true),
@@ -50,7 +51,6 @@ public enum LeaseItemType implements PowerType<LeaseTerm> {
     private final boolean autoCreateTerms;
     private final boolean useSource;
     private final boolean allowOpenEndDate;
-
 
     // //////////////////////////////////////
 

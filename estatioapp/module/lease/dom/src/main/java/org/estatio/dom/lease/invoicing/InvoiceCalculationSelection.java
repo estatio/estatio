@@ -21,7 +21,7 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE),
     ALL_DISCOUNT(
-            LeaseItemType.DISCOUNT,
+            LeaseItemType.RENT_DISCOUNT_FIXED,
             LeaseItemType.RENT_DISCOUNT),
     ALL_ITEMS(
             LeaseItemType.RENT,
@@ -32,7 +32,7 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.TURNOVER_RENT,
             LeaseItemType.RENTAL_FEE,
             LeaseItemType.TAX,
-            LeaseItemType.DISCOUNT,
+            LeaseItemType.RENT_DISCOUNT_FIXED,
             LeaseItemType.ENTRY_FEE,
             LeaseItemType.DEPOSIT),
     ONLY_RENT(
@@ -48,7 +48,7 @@ public enum InvoiceCalculationSelection {
     ONLY_SERVICE_CHARGE_INDEXABLE(
             LeaseItemType.SERVICE_CHARGE),
     ONLY_DISCOUNT(
-            LeaseItemType.DISCOUNT),
+            LeaseItemType.RENT_DISCOUNT_FIXED),
     ONLY_ENTRY_FEE(
             LeaseItemType.ENTRY_FEE),
     ONLY_DEPOSIT(

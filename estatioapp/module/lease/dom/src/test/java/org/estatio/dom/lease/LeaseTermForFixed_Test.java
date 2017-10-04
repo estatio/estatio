@@ -28,13 +28,13 @@ public class LeaseTermForFixed_Test {
 
         @Test
         public void whenDiscountAndNegative() {
-            leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
+            leaseTerm = newLeaseTerm(LeaseItemType.RENT_DISCOUNT_FIXED);
             assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(-1))).isNull();
         }
 
         @Test
         public void whenDiscountAndZero() {
-            leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
+            leaseTerm = newLeaseTerm(LeaseItemType.RENT_DISCOUNT_FIXED);
             assertThat(leaseTerm.validateChangeValue(BigDecimal.ZERO)).isNull();
         }
 
@@ -46,7 +46,7 @@ public class LeaseTermForFixed_Test {
 
         @Test
         public void whenDiscountAndPositive() {
-            leaseTerm = newLeaseTerm(LeaseItemType.DISCOUNT);
+            leaseTerm = newLeaseTerm(LeaseItemType.RENT_DISCOUNT_FIXED);
             assertThat(leaseTerm.validateChangeValue(BigDecimal.valueOf(+1))).isEqualTo("Discount should be negative or zero");
         }
 

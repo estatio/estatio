@@ -83,7 +83,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
                 executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-                invoice, LeaseItemType.DISCOUNT,
+                invoice, LeaseItemType.RENT_DISCOUNT_FIXED,
                 invoiceStartDate, ldix(invoiceStartDate, invoiceStartDate.plusMonths(3)),
                 executionContext);
 

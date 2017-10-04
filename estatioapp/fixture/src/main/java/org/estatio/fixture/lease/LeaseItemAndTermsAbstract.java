@@ -378,7 +378,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
         final LeaseItem leaseItem = findOrCreateLeaseItem(
                 leaseRef, leaseItemAtPath,
                 ChargeRefData.IT_DISCOUNT,
-                LeaseItemType.DISCOUNT, InvoicingFrequency.FIXED_IN_ADVANCE,
+                LeaseItemType.RENT_DISCOUNT_FIXED, InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
 
         final LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
