@@ -20,7 +20,7 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.estatio.dom.Importable;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.dom.lease.LeaseTermForFixed;
 import org.estatio.dom.lease.LeaseTermStatus;
 
 import lombok.Getter;
@@ -30,23 +30,12 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnoverRentImport"
 )
-public class LeaseTermForTurnoverRentImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
+public class LeaseTermForFixedImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForTurnoverRentImport.class);
-
-    // turnover rent term fields
-    @Getter @Setter
-    private String turnoverRentRule;
+    private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForFixedImport.class);
 
     @Getter @Setter
-    private BigDecimal auditedTurnover;
-
-    @Getter @Setter
-    private BigDecimal auditedTurnoverRent;
-
-    // source fields
-
-    static int counter = 0;
+    private BigDecimal value;
 
     @Programmatic
     @Override
@@ -66,35 +55,28 @@ public class LeaseTermForTurnoverRentImport extends LeaseTermImportAbstract impl
         LeaseItem item = initLeaseItem();
 
         //create term
-        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTermWithSequence(getSequence());
+        LeaseTermForFixed term = (LeaseTermForFixed) item.findTermWithSequence(getSequence());
         if (term == null) {
             if (getStartDate() == null) {
                 throw new IllegalArgumentException("startDate cannot be empty");
             }
             if (getSequence().equals(BigInteger.ONE)) {
-                term = (LeaseTermForTurnoverRent) item.newTerm(getStartDate(), getEndDate());
+                term = (LeaseTermForFixed) item.newTerm(getStartDate(), getEndDate());
             } else {
                 final LeaseTerm previousTerm = item.findTermWithSequence(getSequence().subtract(BigInteger.ONE));
                 if (previousTerm == null) {
                     throw new IllegalArgumentException("Previous term not found");
                 }
-                term = (LeaseTermForTurnoverRent) previousTerm.createNext(getStartDate(), getEndDate());
+                term = (LeaseTermForFixed) previousTerm.createNext(getStartDate(), getEndDate());
             }
             term.setSequence(getSequence());
         }
         term.setStatus(LeaseTermStatus.valueOf(getStatus()));
 
         //set turnover rent term values
-        term.setTurnoverRentRule(turnoverRentRule);
-        term.setAuditedTurnover(auditedTurnover);
-        term.setAuditedTurnoverRent(auditedTurnoverRent);
+        term.setValue(getValue());
 
         return Lists.newArrayList(term);
 
     }
-
-    //region > injected services
-
-    //endregion
-
 }

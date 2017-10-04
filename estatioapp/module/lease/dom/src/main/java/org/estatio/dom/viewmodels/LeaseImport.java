@@ -138,7 +138,6 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
             }
         }
 
-//        container.flush();
         return Lists.newArrayList(lease);
 
     }

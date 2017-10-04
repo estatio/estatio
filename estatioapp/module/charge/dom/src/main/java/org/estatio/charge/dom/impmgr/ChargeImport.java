@@ -17,7 +17,6 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.charge.dom.menu.ChargeMenu;
 import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
@@ -127,8 +126,14 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
             setReference(getName());
         }
 
-        final Charge charge = wrap(chargeMenu)
-                .newCharge(applicationTenancy, reference, name, description, tax, chargeGroup, applicability);
+        final Charge charge = chargeRepository.upsert(
+                getReference(),
+                getName(),
+                getDescription(),
+                applicationTenancy,
+                applicability,
+                tax,
+                chargeGroup);
 
         if (getParent()!=null){
             Charge parentCharge = chargeRepository.findByReference(getParent());
@@ -165,9 +170,6 @@ public class ChargeImport implements ExcelFixtureRowHandler, Importable {
 
     @Inject
     private TaxRepository taxRepository;
-
-    @Inject
-    private ChargeMenu chargeMenu;
 
     @Inject
     private WrapperFactory wrapperFactory;

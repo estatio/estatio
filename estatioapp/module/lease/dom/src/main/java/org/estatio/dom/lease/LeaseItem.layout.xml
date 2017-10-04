@@ -24,7 +24,7 @@
                     <ns2:action id="suspend" position="BELOW"/>
                     <ns2:action id="terminate" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="applicationTenancyPath"/>
+                <ns2:property id="applicationTenancyPath" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Invoicing" id="invoicing">
                 <ns2:property id="invoicedBy"/>
