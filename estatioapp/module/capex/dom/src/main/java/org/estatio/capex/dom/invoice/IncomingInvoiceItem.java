@@ -85,6 +85,30 @@ import lombok.Setter;
                         + "WHERE project == :project "
                         + "   && charge == :charge "),
         @Query(
+                name = "findCompletedOrLaterByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE reportedDate == :reportedDate "),
+        @Query(
+                name = "findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE incomingInvoiceType == :type "
+                        + "   && reportedDate == :reportedDate "),
+        @Query(
+                name = "findCompletedOrLaterByPropertyAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE property == :project "
+                        + "   && reportedDate == :reportedDate "),
+        @Query(
+                name = "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE property == :project "
+                        + "   && incomingInvoiceType == :type "
+                        + "   && reportedDate == :reportedDate "),
+        @Query(
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
@@ -291,7 +315,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         super.setTaxRate(invalidateApprovalIfDiffer(getTaxRate(), taxRate));
     }
 
-    private IncomingInvoice getIncomingInvoice() {
+    IncomingInvoice getIncomingInvoice() {
         return (IncomingInvoice) getInvoice();
     }
 

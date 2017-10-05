@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import com.google.common.collect.Lists;
 
@@ -15,9 +17,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
@@ -250,6 +254,89 @@ public class IncomingInvoiceItemRepository {
                 .collect(Collectors.toList());
     }
 
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByReportedDate(final LocalDate reportedDate) {
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findCompletedOrLaterByReportedDate",
+                        "reportedDate", reportedDate
+                ));
+        return completedOrLater(items);
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate(
+            final IncomingInvoiceType incomingInvoiceType,
+            final LocalDate reportedDate) {
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate",
+                        "incomingInvoiceType", incomingInvoiceType,
+                        "reportedDate", reportedDate
+                ));
+        return completedOrLater(items);
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByPropertyAndReportedDate(
+            final Property property,
+            final LocalDate reportedDate) {
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findCompletedOrLaterByPropertyAndReportedDate",
+                        "property", property,
+                        "reportedDate", reportedDate
+                ));
+        return completedOrLater(items);
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate(
+            final Property property,
+            final IncomingInvoiceType incomingInvoiceType,
+            final LocalDate reportedDate) {
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate",
+                        "property", property,
+                        "incomingInvoiceType", incomingInvoiceType,
+                        "reportedDate", reportedDate
+                ));
+        return completedOrLater(items);
+    }
+
+    private List<IncomingInvoiceItem> completedOrLater(final List<IncomingInvoiceItem> items) {
+        return items.stream()
+                .filter(x -> {
+                    final IncomingInvoiceApprovalState approvalState = x.getIncomingInvoice().getApprovalState();
+                    return approvalState != IncomingInvoiceApprovalState.NEW &&
+                           approvalState != IncomingInvoiceApprovalState.DISCARDED;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<LocalDate> findDistinctReportDates() {
+        final PersistenceManager pm = isisJdoSupport.getJdoPersistenceManager();
+        final Query query = pm.newQuery(IncomingInvoiceItem.class);
+        query.setResultClass(LocalDate.class);
+        query.setResult("distinct reportedDate");
+        return executeListAndClose(query);
+    }
+
+    private static <T> List<T> executeListAndClose(final Query query) {
+        final List<T> elements = (List<T>) query.execute();
+        final List<T> list = Lists.newArrayList(elements);
+        query.closeAll();
+        return list;
+    }
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
     @Inject
     RepositoryService repositoryService;
     @Inject

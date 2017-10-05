@@ -31,9 +31,7 @@ public class IncomingInvoiceManagerMenu {
         final LocalDate endOfMonth = startOfMonth.plusMonths(1).minusDays(1);
 
         final IncomingInvoiceDownloadManager incomingInvoiceDownloadManager =
-                new IncomingInvoiceDownloadManager(
-                        startOfMonth,
-                        endOfMonth, null, null);
+                new IncomingInvoiceDownloadManager(true, null, true, null, null);
         serviceRegistry2.injectServicesInto(incomingInvoiceDownloadManager);
         return incomingInvoiceDownloadManager.init();
     }
