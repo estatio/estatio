@@ -17,11 +17,11 @@
                         <cpt:action id="impersonateUser" position="PANEL_DROPDOWN"/>
                         <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                         <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                        <cpt:property id="fromInputDate"/>
-                        <cpt:property id="toInputDate"/>
+                        <cpt:property id="allUnreported"/>
+                        <cpt:property id="reportedDate"/>
+                        <cpt:property id="allProperties"/>
                         <cpt:property id="property"/>
                         <cpt:property id="incomingInvoiceType"/>
-                        <cpt:property id="propertyReference" hidden="EVERYWHERE"/>
                     </cpt:fieldSet>
                     <cpt:fieldSet name="Other" unreferencedProperties="true">
                     </cpt:fieldSet>
@@ -29,7 +29,7 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="9">
-            <cpt:collection id="invoices">
+            <cpt:collection id="invoiceItem">
             </cpt:collection>
         </bs3:col>
     </bs3:row>
