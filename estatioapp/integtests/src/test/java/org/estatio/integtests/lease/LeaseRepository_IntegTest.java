@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -134,7 +133,7 @@ public class LeaseRepository_IntegTest extends EstatioIntegrationTest {
 
     public static class FindLeases extends LeaseRepository_IntegTest {
 
-        @BeforeClass
+        @Before
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
