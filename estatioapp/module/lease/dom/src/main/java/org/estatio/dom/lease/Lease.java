@@ -106,10 +106,11 @@ import static org.apache.commons.lang3.StringUtils.left;
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.Lease")
-@javax.jdo.annotations.Indices({
-        @javax.jdo.annotations.Index(
-                name = "Lease_reference_name_externalReference_IDX", members = { "reference", "name", "externalReference" }),
-})
+// Throws validation error
+//@javax.jdo.annotations.Indices({
+//        @javax.jdo.annotations.Index(
+//                name = "Lease_reference_name_externalReference_IDX", members = { "reference", "name", "externalReference" }),
+//})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
