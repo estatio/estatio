@@ -88,7 +88,24 @@ public class TaskRepository {
         return findIncompleteByUnassignedForRoles(myRoleTypes);
     }
 
-    private List<Task> findIncompleteByUnassignedForRoles(final List<PartyRoleType> roleTypes) {
+    @Programmatic
+    public List<Task> findIncompleteByRole(final PartyRoleType roleType) {
+        return queryResultsCache.execute(() -> doFindIncompleteByRole(roleType),
+                getClass(),
+                "findIncompleteByRole",
+                roleType);
+    }
+
+    private List<Task> doFindIncompleteByRole(final PartyRoleType roleType) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByRole",
+                        "roleType", roleType));
+    }
+
+    @Programmatic
+    public List<Task> findIncompleteByUnassignedForRoles(final List<PartyRoleType> roleTypes) {
         return queryResultsCache.execute(() -> doFindIncompleteByUnassignedForRoles(roleTypes),
                 getClass(),
                 "findIncompleteByUnassignedForRoles",
@@ -103,56 +120,20 @@ public class TaskRepository {
                         "roleTypes", roleTypes));
     }
 
-    /**
-     * Those tasks that ARE assigned explicitly, but to someone else, for which I have the (party)
-     * roles to perform (ie "my colleague's tasks")
-     */
     @Programmatic
-    public List<Task> findIncompleteForMyRoles() {
-        final Person meAsPerson = meAsPerson();
-        if(meAsPerson == null) {
-            return Lists.newArrayList();
-        }
-        final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
-
-        return findIncompleteByNotPersonAssignedToForRoles(meAsPerson, myRoleTypes);
-    }
-
-    private List<Task> findIncompleteByNotPersonAssignedToForRoles(
-            final Person person, final List<PartyRoleType> roleTypes) {
-        return queryResultsCache.execute(() -> doFindIncompleteByNotPersonAssignedToForRoles(person, roleTypes),
+    public List<Task> findIncompleteByUnassigned() {
+        return queryResultsCache.execute(() -> doFindIncompleteByUnassigned(),
                 getClass(),
-                "findIncompleteByNotPersonAssignedToForRoles",
-                person, roleTypes);
+                "findIncompleteByUnassigned");
     }
 
-    private List<Task> doFindIncompleteByNotPersonAssignedToForRoles(
-            final Person person, final List<PartyRoleType> roleTypes) {
+    private List<Task> doFindIncompleteByUnassigned() {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Task.class,
-                        "findIncompleteByNotPersonAssignedToForRoles",
-                        "personAssignedTo", person,
-                        "roleTypes", roleTypes));
+                        "findIncompleteByUnassigned"));
     }
 
-    @Programmatic
-    public List<Task> findIncompleteForOthers() {
-        return queryResultsCache.execute(this::doFindIncompleteForOthers,
-                getClass(),
-                "findIncompleteForOthers");
-    }
-
-    private List<Task> doFindIncompleteForOthers() {
-        final Person meAsPerson = meAsPerson();
-        final List<PartyRoleType> roleTypes = partyRoleTypesFor(meAsPerson);
-        return repositoryService.allMatches(
-                new QueryDefault<>(
-                        Task.class,
-                        "findIncompleteByNotPersonAssignedToNotForRoles",
-                        "personAssignedTo", meAsPerson,
-                        "roleTypes", roleTypes));
-    }
 
     List<Task> findIncompleteByPersonAssignedTo(final Person personAssignedTo) {
         return queryResultsCache.execute(

@@ -22,23 +22,10 @@
             <bs3:tabGroup unreferencedCollections="true">
                 <bs3:tab name="Tasks">
                     <bs3:row>
-                        <bs3:col span="6">
+                        <bs3:col span="12">
                             <cpt:collection id="tasksForMe" paged="15">
                                 <cpt:action id="assignTasksToMe"/>
                                 <cpt:action id="checkStateOfTasksForMe">
-                                    <cpt:named>Check State</cpt:named>
-                                </cpt:action>
-                            </cpt:collection>
-                        </bs3:col>
-                        <bs3:col span="6">
-                            <cpt:collection id="tasksForMyRolesNotMine" paged="15" defaultView="hide">
-                                <cpt:action id="transferTasks"/>
-                                <cpt:action id="checkStateOfTasksForMyRolesNotMine">
-                                    <cpt:named>Check State</cpt:named>
-                                </cpt:action>
-                            </cpt:collection>
-                            <cpt:collection id="tasksForOthersNotMyRoles" paged="15" defaultView="hide">
-                                <cpt:action id="checkStateOfTasksForOthersNotMyRoles">
                                     <cpt:named>Check State</cpt:named>
                                 </cpt:action>
                             </cpt:collection>

@@ -82,19 +82,19 @@ import lombok.Setter;
                         + "   && personAssignedTo == :personAssignedTo "
                         + "ORDER BY createdOn ASC "),
         @Query(
-                name = "findIncompleteByNotPersonAssignedTo", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.task.Task "
-                        + "WHERE completedBy      == null "
-                        + "   && personAssignedTo != :personAssignedTo "
-                        + "ORDER BY createdOn ASC "),
-        @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnBefore", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "
                         + "WHERE completedBy      == null "
                         + "   && personAssignedTo == :personAssignedTo "
                         + "   && createdOn        <  :createdOn "
+                        + "ORDER BY createdOn DESC "),
+        @Query(
+                name = "findIncompleteByUnassigned", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == null "
                         + "ORDER BY createdOn DESC "),
         @Query(
                 name = "findIncompleteByUnassignedForRoles", language = "JDOQL",
@@ -105,20 +105,11 @@ import lombok.Setter;
                         + "   && :roleTypes.contains(assignedTo) "
                         + "ORDER BY createdOn DESC "),
         @Query(
-                name = "findIncompleteByNotPersonAssignedToForRoles", language = "JDOQL",
+                name = "findIncompleteByRole", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.task.Task "
                         + "WHERE completedBy      == null "
-                        + "   && personAssignedTo != :personAssignedTo "
-                        + "   && :roleTypes.contains(assignedTo) "
-                        + "ORDER BY createdOn DESC "),
-        @Query(
-                name = "findIncompleteByNotPersonAssignedToNotForRoles", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.task.Task "
-                        + "WHERE completedBy      == null "
-                        + "   && personAssignedTo != :personAssignedTo "
-                        + "   && ! (:roleTypes.contains(assignedTo) ) "
+                        + "   && assignedTo == :roleType "
                         + "ORDER BY createdOn DESC "),
         @Query(
                 name = "findIncompleteByPersonAssignedToAndCreatedOnAfter", language = "JDOQL",

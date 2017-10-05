@@ -54,13 +54,11 @@ import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.dom.task.Task_checkState;
-import org.estatio.capex.dom.task.TransferTaskManager;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 
 @DomainObject(
@@ -122,70 +120,6 @@ public class EstatioAppHomePage {
             return "No Person set up for current user";
         }
         return choices0AssignTasksToMe().isEmpty() ? "No tasks to assign" : null;
-    }
-
-
-
-    ////////////////////////////////////////////////
-
-    @Collection(notPersisted = true)
-    public List<Task> getTasksForMyRolesNotMine() {
-
-        List<Task> tasks =
-                queryResultsCache.execute(
-                        this::doGetTasksForMyRoles, EstatioAppHomePage.class, "getTasksForMyRoles");
-
-        tasks.removeAll(getTasksForMe());
-
-        return tasks;
-    }
-
-    private List<Task> doGetTasksForMyRoles() {
-        return taskRepository.findIncompleteForMyRoles();
-    }
-
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
-    )
-    public EstatioAppHomePage checkStateOfTasksForMyRolesNotMine() {
-        return checkStateOf(getTasksForMyRolesNotMine());
-    }
-
-
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public TransferTaskManager transferTasks(final Person transferToOrFrom) {
-        final Person meAsPerson = personRepository.me();
-        final TransferTaskManager taskManager = new TransferTaskManager(meAsPerson, transferToOrFrom, TransferTaskManager.Mode.SAME_ROLES);
-        return serviceRegistry2.injectServicesInto(taskManager);
-    }
-    public String disableTransferTasks() {
-        final Person meAsPerson = personRepository.me();
-        return meAsPerson == null ? "No Person set up for current user" : null;
-    }
-
-
-    ////////////////////////////////////////////////
-
-    @Collection(notPersisted = true)
-    public List<Task> getTasksForOthersNotMyRoles() {
-        final List<Task> tasksIncomplete = taskRepository.findIncompleteForOthers();
-        tasksIncomplete.removeAll(getTasksForMyRolesNotMine());
-        return tasksIncomplete;
-    }
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT
-    )
-    @ActionLayout(
-            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
-    )
-    public EstatioAppHomePage checkStateOfTasksForOthersNotMyRoles() {
-        return checkStateOf(getTasksForOthersNotMyRoles());
     }
 
 

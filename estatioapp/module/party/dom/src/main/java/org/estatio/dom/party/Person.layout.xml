@@ -138,9 +138,6 @@
                     </bs3:tabGroup>
                 </bs3:col>
             </bs3:row>
-            <cpt:collection id="currentTasks">
-                <cpt:action id="transferTasks"/>
-            </cpt:collection>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -153,26 +150,9 @@
             <cpt:collection id="orders"/>
         </bs3:col>
         <bs3:col span="12">
-            <bs3:tabGroup>
-                <bs3:tab name="Recent Communications">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="recentCommunications">
-                                <cpt:action id="findCommunications"/>
-                            </cpt:collection>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-                <bs3:tab name="Documents">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="documents"/>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
-        </bs3:col>
-        <bs3:col span="12">
+            <cpt:collection id="recentCommunications">
+                <cpt:action id="findCommunications"/>
+            </cpt:collection>
             <bs3:tabGroup unreferencedCollections="true">
             </bs3:tabGroup>
         </bs3:col>

@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.RestrictTo;
 
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -30,20 +32,35 @@ public class TaskMenu {
         return taskRepository.listAll();
     }
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "1")
     public List<Task> myTasks(){
         return taskRepository.findIncompleteForMe();
     }
 
-    @MemberOrder(sequence = "1")
-    public List<Task> findTasksFor(final Person person){
+
+    @MemberOrder(sequence = "2")
+    public List<Task> findTasksForPerson(final Person person){
         return taskRepository.findIncompleteByPersonAssignedTo(person);
     }
 
-    public List<Person> choices0FindTasksFor(){
+    public List<Person> choices0FindTasksForPerson(){
         return personRepository.findWithUsername();
     }
 
+
+    @MemberOrder(sequence = "3")
+    public List<Task> findTasksForRole(final PartyRoleType partyRoleType){
+        return taskRepository.findIncompleteByRole(partyRoleType);
+    }
+    public List<PartyRoleType> choices0FindTasksForRole(){
+        return partyRoleTypeRepository.listAll();
+    }
+
+
+    @MemberOrder(sequence = "4")
+    public List<Task> findTasksUnassignedToPerson(){
+        return taskRepository.findIncompleteByUnassigned();
+    }
 
 
     @Inject
@@ -51,4 +68,7 @@ public class TaskMenu {
 
     @Inject
     PersonRepository personRepository;
+
+    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
+
 }
