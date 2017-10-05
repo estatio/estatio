@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -41,16 +39,16 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.PartyConstants;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.dom.party.role.PartyRoleTypeRepository;
 import org.estatio.numerator.dom.NumeratorRepository;
 
 @DomainService(
@@ -71,8 +69,7 @@ public class OrganisationMenu {
                     regexPattern = ReferenceType.Meta.REGEX,
                     regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION,
                     optionality = Optionality.OPTIONAL
-            )
-            final String reference,
+            ) final String reference,
             final boolean useNumereratorForReference,
             final String name,
             final Country country,
@@ -89,15 +86,12 @@ public class OrganisationMenu {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public List<IPartyRoleType> choices4NewOrganisation() {
-        List<IPartyRoleType> choices = Lists.newArrayList();
-        choices.add(IncomingInvoiceRoleTypeEnum.SUPPLIER);
-        choices.add(LeaseRoleTypeEnum.TENANT);
-        return choices;
+    public List<PartyRoleType> choices4NewOrganisation() {
+        return partyRoleTypeRepository.listAll();
     }
 
     public Country default3NewOrganisation() {
-        return  Dflt.of(choices3NewOrganisation());
+        return Dflt.of(choices3NewOrganisation());
     }
 
     public String validateNewOrganisation(
@@ -108,17 +102,19 @@ public class OrganisationMenu {
             final List<IPartyRoleType> partyRoleTypes
     ) {
         if (useNumeratorForReference) {
-
             final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
             if (numeratorRepository
                     .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
                 return "No numerator found";
             }
             return null;
+        } else {
+            if (reference == null) {
+                return "Please provide a reference";
+            }
         }
         return partyRepository.validateNewParty(reference);
     }
-
 
     // //////////////////////////////////////
 
@@ -148,5 +144,6 @@ public class OrganisationMenu {
     @Inject
     PartyRoleRepository partyRoleRepository;
 
+    @Inject PartyRoleTypeRepository partyRoleTypeRepository;
 
 }
