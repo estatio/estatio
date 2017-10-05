@@ -24,9 +24,12 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.asset.PropertyMenu;
 import org.estatio.dom.agreement.AgreementRoleRepository;
@@ -46,7 +49,6 @@ import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -132,7 +134,7 @@ public class LeaseRepository_IntegTest extends EstatioIntegrationTest {
 
     public static class FindLeases extends LeaseRepository_IntegTest {
 
-        @Before
+        @BeforeClass
         public void setupData() {
             runFixtureScript(new FixtureScript() {
                 @Override
@@ -147,6 +149,16 @@ public class LeaseRepository_IntegTest extends EstatioIntegrationTest {
                     executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
                 }
             });
+        }
+
+        @Test
+        public void match_external_reference() throws Exception {
+            //Given
+            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease.setExternalReference("ExTrEf");
+
+            // When Then
+            assertThat(leaseRepository.matchByReferenceOrName("*ref", true)).contains(lease);
         }
 
         @Test

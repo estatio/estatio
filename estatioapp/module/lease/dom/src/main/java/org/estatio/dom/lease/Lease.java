@@ -47,7 +47,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.InvokeOn;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -86,7 +85,6 @@ import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.communications.Agreement_currentCommunicationChannel;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
@@ -108,6 +106,10 @@ import static org.apache.commons.lang3.StringUtils.left;
         strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.Lease")
+@javax.jdo.annotations.Indices({
+        @javax.jdo.annotations.Index(
+                name = "Lease_reference_name_externalReference_IDX", members = { "reference", "name", "externalReference" }),
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -119,7 +121,8 @@ import static org.apache.commons.lang3.StringUtils.left;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
                         + "WHERE (reference.matches(:referenceOrName) "
-                        + "|| name.matches(:referenceOrName)) "
+                        + "|| name.matches(:referenceOrName) "
+                        + "|| externalReference.matches(:referenceOrName)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
