@@ -76,11 +76,18 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.FixEvent ev) {
-        Party sourceParty = ev.getSource();
-        if (orderRepository.findBySellerParty(sourceParty).size() > 0) {
-            sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
-            sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        switch (ev.getEventPhase()) {
+        case EXECUTING:
+            Party sourceParty = ev.getSource();
+            if (orderRepository.findBySellerParty(sourceParty).size() > 0) {
+                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
+                sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            }
+            break;
+        default:
+            break;
         }
+
     }
 
     private transient UUID onPartyRemoveScratchpadKey;

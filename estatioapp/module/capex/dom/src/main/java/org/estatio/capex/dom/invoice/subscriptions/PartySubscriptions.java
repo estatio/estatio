@@ -53,10 +53,10 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
         switch (ev.getEventPhase()) {
         case VALIDATE:
 
-            if (replacementParty == null && incomingInvoiceRepository.findBySeller(sourceParty).size() > 0){
+            if (replacementParty == null && incomingInvoiceRepository.findBySeller(sourceParty).size() > 0) {
                 ev.invalidate("Party is in use as seller in an invoice. Provide replacement");
             }
-            if (replacementParty == null && incomingInvoiceRepository.findByBuyer(sourceParty).size() > 0){
+            if (replacementParty == null && incomingInvoiceRepository.findByBuyer(sourceParty).size() > 0) {
                 ev.invalidate("Party is in use as buyer in an invoice. Provide replacement");
             }
 
@@ -82,14 +82,21 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
     public void on(final Party.FixEvent ev) {
-        Party sourceParty = ev.getSource();
-        if (incomingInvoiceRepository.findByBuyer(sourceParty).size()>0) {
-           sourceParty.addRole(Constants.InvoiceRoleTypeEnum.BUYER);
-           sourceParty.addRole(IncomingInvoiceRoleTypeEnum.ECP);
-        }
-        if (incomingInvoiceRepository.findBySeller(sourceParty).size()>0) {
-           sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
-           sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+
+        switch (ev.getEventPhase()) {
+        case EXECUTING:
+            Party sourceParty = ev.getSource();
+            if (incomingInvoiceRepository.findByBuyer(sourceParty).size() > 0) {
+                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.BUYER);
+                sourceParty.addRole(IncomingInvoiceRoleTypeEnum.ECP);
+            }
+            if (incomingInvoiceRepository.findBySeller(sourceParty).size() > 0) {
+                sourceParty.addRole(Constants.InvoiceRoleTypeEnum.SELLER);
+                sourceParty.addRole(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -100,6 +107,5 @@ public class PartySubscriptions extends UdoDomainService<PartySubscriptions> {
 
     @Inject
     private InvoiceRepository incomingInvoiceRepository;
-
 
 }
