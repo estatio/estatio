@@ -27,8 +27,8 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
@@ -46,6 +46,7 @@ import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
@@ -84,26 +85,26 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public IncomingInvoiceDownloadManager(
-            final boolean allUnreported,
             final LocalDate reportedDate,
             final boolean allProperties,
-            final org.estatio.dom.asset.Property property,
+            final Property property,
             final IncomingInvoiceType incomingInvoiceType) {
-        this.allUnreported = allUnreported;
         this.reportedDate = reportedDate;
         this.allProperties = allProperties;
         this.property = property;
         this.incomingInvoiceType = incomingInvoiceType;
     }
 
-    @XmlElement(required = true)
-    @Getter @Setter
-    private boolean allUnreported;
+    @XmlTransient
+    public boolean isAllUnreported() {
+        return getReportedDate() == null;
+    }
 
     /**
-     * Required if allUnreported not set
+     * Required if 'allUnreported' not set
      */
     @XmlElement(required = false)
+    @Nullable
     @Getter @Setter
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate reportedDate;
@@ -116,26 +117,45 @@ public class IncomingInvoiceDownloadManager {
      * If not set when 'allProperties' not set, will pick up invoices which have no associated properties.
      */
     @XmlElement(required = false)
+    @Nullable
     @Getter @Setter
     private Property property;
 
+    @XmlTransient
+    public boolean isAllTypes() {
+        return getIncomingInvoiceType() == null;
+    }
+
+    /**
+     * Required if 'allTypes' is not set.
+     */
+    @XmlElement(required = false)
+    @Nullable
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
 
-    @Programmatic
-    private List<IncomingInvoice> getInvoices() {
-        return getInvoiceItems().stream()
-                .map(InvoiceItem::getInvoice)
+
+    @XmlTransient
+    public int getNumberOfInvoices() {
+        return getInvoices().size();
+    }
+    @XmlTransient
+    public int getNumberOfInvoiceItems() {
+        return getInvoiceItems().size();
+    }
+
+
+
+    @CollectionLayout(defaultView = "table")
+    public List<IncomingInvoice> getInvoices() {
+        return getInvoiceItems().stream().map(InvoiceItem::getInvoice)
                 .filter(IncomingInvoice.class::isInstance)
                 .map(IncomingInvoice.class::cast)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-
-    @CollectionLayout(defaultView = "table")
-    private List<IncomingInvoiceItem> getInvoiceItems() {
-
+    List<IncomingInvoiceItem> getInvoiceItems() {
         if(isAllProperties()) {
             if(getIncomingInvoiceType() == null) {
                 return incomingInvoiceItemRepository.findCompletedOrLaterByReportedDate(getReportedDate());
@@ -151,72 +171,89 @@ public class IncomingInvoiceDownloadManager {
         }
     }
 
-    @Programmatic
-    public IncomingInvoiceDownloadManager init() {
-        return this;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoiceDownloadManager report(LocalDate reportedDate) {
+        final List<IncomingInvoiceItem> invoiceItems = getInvoiceItems();
+        for (IncomingInvoiceItem invoiceItem : invoiceItems) {
+            if(invoiceItem.getReportedDate() == null) {
+                invoiceItem.setReportedDate(reportedDate);
+            }
+        }
+        return new IncomingInvoiceDownloadManager(
+                reportedDate, allProperties, property, incomingInvoiceType);
     }
+    public LocalDate default0Report() {
+        return clockService.now();
+    }
+    public String disableReport() {
+        if(getReportedDate() != null){
+            return "Select 'all unreported' first";
+        }
+        return null;
+    }
+
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed= Contributed.AS_ACTION)
-    public IncomingInvoiceDownloadManager changeParameters(
-            final boolean allUnreported,
+    public IncomingInvoiceDownloadManager changeReportedDate(
             @Nullable
-            final LocalDate reportedDate,
-            final boolean allProperties,
-            @Nullable
-            final org.estatio.dom.asset.Property property,
-            @Nullable
-            final IncomingInvoiceType incomingInvoiceType){
+            final LocalDate reportedDate){
         return new IncomingInvoiceDownloadManager(
-                allUnreported, reportedDate, allProperties, property, incomingInvoiceType);
+                reportedDate, allProperties, property, incomingInvoiceType);
     }
 
-    public boolean default0ChangeParameters() {
-        return isAllUnreported();
+    public LocalDate default0ChangeReportedDate() {
+        return getReportedDate();
     }
 
-    public boolean default2ChangeParameters() {
-        return isAllProperties();
-    }
-
-    public Property default3ChangeParameters() {
-        return getProperty();
-    }
-
-    public IncomingInvoiceType default4ChangeParameters() {
-        return getIncomingInvoiceType();
-    }
-
-    public List<LocalDate> choices1ChangeParameters() {
+    public List<LocalDate> choices0ChangeReportedDate() {
         return incomingInvoiceItemRepository.findDistinctReportDates();
     }
 
-    public List<Property> choices3ChangeParameters() {
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public IncomingInvoiceDownloadManager changeProperty(
+            final boolean allProperties,
+            @Nullable
+            final org.estatio.dom.asset.Property property){
+        return new IncomingInvoiceDownloadManager(
+                reportedDate, allProperties, allProperties ? null : property, incomingInvoiceType);
+    }
+
+    public boolean default0ChangeProperty() {
+        return isAllProperties();
+    }
+
+    public Property default1ChangeProperty() {
+        return getProperty();
+    }
+
+    public List<Property> choices1ChangeProperty() {
         return propertyRepository.allProperties();
     }
 
-    public String validateChangeParameters(
-            final boolean allUnreported,
-            final LocalDate reportedDate,
-            final boolean allProperties,
-            final org.estatio.dom.asset.Property property,
-            final IncomingInvoiceType incomingInvoiceType){
-        if(allUnreported && reportedDate != null) {
-            return "'Reported date' should be left blank ('allUnreported' is checked)";
-        }
-        if(!allUnreported && reportedDate == null) {
-            return "'Reported date' is required";
-        }
 
-        if(allProperties && property != null) {
-            return "'Property' should be left blank ('allProperties' is checked)";
-        }
-        if(!allProperties && property == null) {
-            return "'Property' is required";
-        }
-        return null;
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public IncomingInvoiceDownloadManager changeType(
+            @Nullable
+            final IncomingInvoiceType incomingInvoiceType){
+        return new IncomingInvoiceDownloadManager(
+                reportedDate, allProperties, property, incomingInvoiceType);
     }
+
+    public IncomingInvoiceType default0ChangeType() {
+        return getIncomingInvoiceType();
+    }
+
+
+
 
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -443,6 +480,10 @@ public class IncomingInvoiceDownloadManager {
 
     @Inject
     @XmlTransient
+    IncomingInvoiceRepository incomingInvoiceRepository;
+
+    @Inject
+    @XmlTransient
     IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
     @Inject
@@ -482,6 +523,10 @@ public class IncomingInvoiceDownloadManager {
     @javax.inject.Inject
     @XmlTransient
     ZipService zipService;
+
+    @javax.inject.Inject
+    @XmlTransient
+    ClockService clockService;
 
 
 }

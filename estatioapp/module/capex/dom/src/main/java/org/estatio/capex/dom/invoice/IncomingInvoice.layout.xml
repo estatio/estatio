@@ -81,7 +81,7 @@
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
                                         <cpt:property id="netAmountLinked" hidden="ALL_TABLES"/>
-                                        <cpt:property id="currency"/>
+                                        <cpt:property id="currency" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="6">
@@ -97,11 +97,11 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Payment" id="details">
-                                        <cpt:property id="bankAccount">
+                                        <cpt:property id="bankAccount" hidden="ALL_TABLES">
                                             <cpt:action id="changeBankAccount" promptStyle="INLINE"/>
                                             <cpt:action id="createBankAccount" position="RIGHT"/>
                                         </cpt:property>
-                                        <cpt:property id="paymentMethod">
+                                        <cpt:property id="paymentMethod" hidden="ALL_TABLES">
                                             <cpt:action id="changePaymentMethod" promptStyle="INLINE"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
@@ -153,8 +153,8 @@
                                                 <cpt:named>Show transitions</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
-                                        <cpt:property id="approvedFully"/>
-                                        <cpt:property id="pendingApprovalTask">
+                                        <cpt:property id="approvedFully" hidden="ALL_TABLES"/>
+                                        <cpt:property id="pendingApprovalTask"  hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>
@@ -169,7 +169,7 @@
                                             <cpt:action id="discard"/>
                                             <cpt:action id="recategorize"/>
                                         </cpt:property>
-                                        <cpt:property id="previousComments"/>
+                                        <cpt:property id="previousComments" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

@@ -2,8 +2,6 @@ package org.estatio.capex.dom.invoice.manager;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
@@ -11,6 +9,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -26,14 +26,11 @@ public class IncomingInvoiceManagerMenu {
     @Action(semantics = SemanticsOf.SAFE)
     public IncomingInvoiceDownloadManager downloadInvoices() {
 
-        final LocalDate now = clockService.now();
-        final LocalDate startOfMonth = now.withDayOfMonth(1);
-        final LocalDate endOfMonth = startOfMonth.plusMonths(1).minusDays(1);
-
         final IncomingInvoiceDownloadManager incomingInvoiceDownloadManager =
-                new IncomingInvoiceDownloadManager(true, null, true, null, null);
+                new IncomingInvoiceDownloadManager(null, true, null, IncomingInvoiceType.CAPEX);
         serviceRegistry2.injectServicesInto(incomingInvoiceDownloadManager);
-        return incomingInvoiceDownloadManager.init();
+
+        return incomingInvoiceDownloadManager;
     }
 
     @Inject

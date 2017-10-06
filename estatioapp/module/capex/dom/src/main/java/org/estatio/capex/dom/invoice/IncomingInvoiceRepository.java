@@ -139,6 +139,27 @@ public class IncomingInvoiceRepository {
     }
 
     @Programmatic
+    public List<IncomingInvoice> findCompletedOrLaterWithItemsByReportedDate(final LocalDate reportedDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findCompletedOrLaterWithItemsByReportedDate",
+                        "reportedDate", reportedDate));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findCompletedOrLaterByPropertyWithItemsByReportedDate(
+            final Property property,
+            final LocalDate reportedDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findCompletedOrLaterByPropertyWithItemsByReportedDate",
+                        "property", property,
+                        "reportedDate", reportedDate));
+    }
+
+    @Programmatic
     public IncomingInvoice create(
             final IncomingInvoiceType type,
             final String invoiceNumber,

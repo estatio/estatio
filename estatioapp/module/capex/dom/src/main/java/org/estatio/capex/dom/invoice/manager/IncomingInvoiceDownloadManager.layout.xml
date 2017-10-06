@@ -13,15 +13,28 @@
             <bs3:row>
                 <bs3:col span="12">
                     <cpt:fieldSet name="Parameters" id="parameters">
-                        <cpt:action id="changeParameters" position="PANEL"/>
+                        <cpt:action id="report" position="PANEL" cssClassFa="cubes" cssClass="btn-warning"/>
                         <cpt:action id="impersonateUser" position="PANEL_DROPDOWN"/>
                         <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                         <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+
                         <cpt:property id="allUnreported"/>
-                        <cpt:property id="reportedDate"/>
+                        <cpt:property id="reportedDate">
+                            <cpt:action id="changeReportedDate" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </cpt:property>
                         <cpt:property id="allProperties"/>
-                        <cpt:property id="property"/>
-                        <cpt:property id="incomingInvoiceType"/>
+                        <cpt:property id="property">
+                            <cpt:action id="changeProperty" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </cpt:property>
+                        <cpt:property id="allTypes"/>
+                        <cpt:property id="incomingInvoiceType">
+                            <cpt:action id="changeType" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </cpt:property>
+                    </cpt:fieldSet>
+
+                    <cpt:fieldSet name="Stats" unreferencedProperties="false">
+                        <cpt:property id="numberOfInvoices"/>
+                        <cpt:property id="numberOfInvoiceItems"/>
                     </cpt:fieldSet>
                     <cpt:fieldSet name="Other" unreferencedProperties="true">
                     </cpt:fieldSet>
@@ -29,7 +42,7 @@
             </bs3:row>
         </bs3:col>
         <bs3:col span="9">
-            <cpt:collection id="invoiceItem">
+            <cpt:collection id="invoices">
             </cpt:collection>
         </bs3:col>
     </bs3:row>

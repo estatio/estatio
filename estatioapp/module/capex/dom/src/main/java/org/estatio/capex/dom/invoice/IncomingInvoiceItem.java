@@ -85,29 +85,35 @@ import lombok.Setter;
                         + "WHERE project == :project "
                         + "   && charge == :charge "),
         @Query(
-                name = "findCompletedOrLaterByReportedDate", language = "JDOQL",
+                name = "findByReportedDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE reportedDate == :reportedDate "),
+                        + "WHERE reportedDate == :reportedDate "
+        ),
         @Query(
-                name = "findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                name = "findByIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE incomingInvoiceType == :type "
-                        + "   && reportedDate == :reportedDate "),
-        @Query(
-                name = "findCompletedOrLaterByPropertyAndReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE property == :project "
-                        + "   && reportedDate == :reportedDate "),
-        @Query(
-                name = "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE property == :project "
-                        + "   && incomingInvoiceType == :type "
-                        + "   && reportedDate == :reportedDate "),
+                        + "WHERE incomingInvoiceType == :incomingInvoiceType "
+                        + "   && reportedDate == :reportedDate "
+        ),
+
+// TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
+
+//        @Query(
+//                name = "findByPropertyAndReportedDate", language = "JDOQL",
+//                value = "SELECT "
+//                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+//                        + "WHERE invoice.property == :property "
+//                        + "   && reportedDate == :reportedDate "),
+
+//        @Query(
+//                name = "findByPropertyAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+//                value = "SELECT "
+//                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+//                        + "WHERE invoice.property == :property "
+//                        + "   && incomingInvoiceType == :incomingInvoiceType "
+//                        + "   && reportedDate == :reportedDate "),
         @Query(
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
@@ -134,7 +140,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implements FinancialItem {
+public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInvoiceItem> implements FinancialItem {
 
     public IncomingInvoiceItem(){}
 
@@ -241,6 +247,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
 
+    IncomingInvoice getIncomingInvoice() {
+        return (IncomingInvoice) super.getInvoice();
+    }
+
+
     @Getter @Setter
     @Column(allowsNull = "true", name="budgetItemId")
     @Property(hidden = Where.REFERENCES_PARENT)
@@ -313,10 +324,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     @Override
     public void setTaxRate(final TaxRate taxRate) {
         super.setTaxRate(invalidateApprovalIfDiffer(getTaxRate(), taxRate));
-    }
-
-    IncomingInvoice getIncomingInvoice() {
-        return (IncomingInvoice) getInvoice();
     }
 
     @Programmatic
@@ -640,7 +647,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     private boolean hasType(final IncomingInvoiceType serviceCharges) {
-        final IncomingInvoiceType incomingInvoiceType = this.getIncomingInvoice().getType();
+        final IncomingInvoiceType incomingInvoiceType = getIncomingInvoice().getType();
         return incomingInvoiceType != null && incomingInvoiceType == serviceCharges;
     }
 
@@ -694,7 +701,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     private ReasonBuffer2 appendReasonIfReversalOrReportedOrApprovalState(final ReasonBuffer2 buf) {
         appendReasonIfReversalOrReported(buf);
 
-        final Object viewContext = getIncomingInvoice();
+        final Object viewContext = getInvoice();
         getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
         return buf;
     }

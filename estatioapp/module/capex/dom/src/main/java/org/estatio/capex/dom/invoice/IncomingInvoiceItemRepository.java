@@ -21,7 +21,6 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.asset.Property;
@@ -259,10 +258,15 @@ public class IncomingInvoiceItemRepository {
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findCompletedOrLaterByReportedDate",
+                        "findByReportedDate",
                         "reportedDate", reportedDate
                 ));
-        return completedOrLater(items);
+
+        final List<IncomingInvoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+
+        // client-side join :-(
+        return join(items, incomingInvoices);
     }
 
     @Programmatic
@@ -272,25 +276,37 @@ public class IncomingInvoiceItemRepository {
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate",
+                        "findByIncomingInvoiceTypeAndReportedDate",
                         "incomingInvoiceType", incomingInvoiceType,
                         "reportedDate", reportedDate
                 ));
-        return completedOrLater(items);
+
+        // we don't use incoming invoice type here because individual invoice items can override
+        final List<IncomingInvoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+
+        // client-side join :-(
+        return join(items, incomingInvoices);
     }
 
     @Programmatic
     public List<IncomingInvoiceItem> findCompletedOrLaterByPropertyAndReportedDate(
             final Property property,
             final LocalDate reportedDate) {
+
+        // TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
+        // this doesn't matter insofar as we already have to do a client-side join with Invoices to filter out on approvalState
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findCompletedOrLaterByPropertyAndReportedDate",
-                        "property", property,
+                        "findByReportedDate",
                         "reportedDate", reportedDate
                 ));
-        return completedOrLater(items);
+        final List<IncomingInvoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterByPropertyWithItemsByReportedDate(property, reportedDate);
+
+        // client-side join :-(
+        return join(items, incomingInvoices);
     }
 
     @Programmatic
@@ -298,26 +314,33 @@ public class IncomingInvoiceItemRepository {
             final Property property,
             final IncomingInvoiceType incomingInvoiceType,
             final LocalDate reportedDate) {
+
+        // TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
+        // this doesn't matter insofar as we already have to do a client-side join with Invoices to filter out on approvalState
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate",
-                        "property", property,
+                        "findByIncomingInvoiceTypeAndReportedDate",
                         "incomingInvoiceType", incomingInvoiceType,
                         "reportedDate", reportedDate
                 ));
-        return completedOrLater(items);
+
+        // we don't use incoming invoice type here because individual invoice items can override
+        final List<IncomingInvoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterByPropertyWithItemsByReportedDate(property, reportedDate);
+
+        // client-side join :-(
+        return join(items, incomingInvoices);
     }
 
-    private List<IncomingInvoiceItem> completedOrLater(final List<IncomingInvoiceItem> items) {
+    private List<IncomingInvoiceItem> join(
+            final List<IncomingInvoiceItem> items,
+            final List<IncomingInvoice> incomingInvoices) {
         return items.stream()
-                .filter(x -> {
-                    final IncomingInvoiceApprovalState approvalState = x.getIncomingInvoice().getApprovalState();
-                    return approvalState != IncomingInvoiceApprovalState.NEW &&
-                           approvalState != IncomingInvoiceApprovalState.DISCARDED;
-                })
+                .filter(x -> incomingInvoices.contains(x.getInvoice()))
                 .collect(Collectors.toList());
     }
+
 
     @Programmatic
     public List<LocalDate> findDistinctReportDates() {
@@ -325,6 +348,7 @@ public class IncomingInvoiceItemRepository {
         final Query query = pm.newQuery(IncomingInvoiceItem.class);
         query.setResultClass(LocalDate.class);
         query.setResult("distinct reportedDate");
+        query.setOrdering("reportedDate descending");
         return executeListAndClose(query);
     }
 
@@ -342,4 +366,6 @@ public class IncomingInvoiceItemRepository {
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
+    @Inject
+    IncomingInvoiceRepository incomingInvoiceRepository;
 }

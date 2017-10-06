@@ -129,6 +129,46 @@ import lombok.Setter;
                         + "WHERE invoiceDate >= :fromDate "
                         + "   && invoiceDate <= :toDate "),
         @Query(
+                name = "findCompletedOrLaterWithItemsByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE items.contains(ii) "
+                        + "   && (ii.reportedDate == :reportedDate) "
+                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
+                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
+        ),
+        @Query(
+                name = "findCompletedOrLaterByIncomingInvoiceTypeWithItemsByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE items.contains(ii) "
+                        + "   && (ii.reportedDate == :reportedDate) "
+                        + "   && (incomingInvoiceType == :incomingInvoiceType) "
+                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
+                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
+        ),
+        @Query(
+                name = "findCompletedOrLaterByPropertyWithItemsByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE items.contains(ii) "
+                        + "   && (ii.reportedDate == :reportedDate) "
+                        + "   && (property == :property) "
+                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
+                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
+        ),
+        @Query(
+                name = "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeWithItemsByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE items.contains(ii) "
+                        + "   && (ii.reportedDate == :reportedDate) "
+                        + "   && (property == :property) "
+                        + "   && (incomingInvoiceType == :incomingInvoiceType) "
+                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
+                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
+        ),
+        @Query(
                 name = "findByDueDateBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "

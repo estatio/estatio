@@ -62,8 +62,8 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.utils.ReasonBuffer2;
-import org.estatio.tax.dom.TaxRate;
 import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -94,7 +94,7 @@ import lombok.Setter;
         column = "version")
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem<T extends InvoiceItem<T>>
+public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,T>>
         extends UdoDomainObject2<T>
         implements WithInterval<T>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
@@ -102,7 +102,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, sequence, uuid");
     }
 
-    public InvoiceItem(final Invoice invoice) {
+    public InvoiceItem(final P invoice) {
         this();
         this.invoice = invoice;
 
@@ -144,6 +144,13 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
+    /**
+     * This ought to be of type 'P', but the DataNucleus annotation processor fails to handle.
+     *
+     * <pre>
+     *     [ERROR] Fatal error compiling: java.lang.ClassCastException: com.sun.tools.javac.code.Symbol$TypeVariableSymbol cannot be cast to javax.lang.model.element.TypeElement -> [Help 1]
+     * </pre>
+     */
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
