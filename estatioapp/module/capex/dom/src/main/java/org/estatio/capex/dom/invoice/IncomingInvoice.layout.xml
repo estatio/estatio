@@ -97,11 +97,11 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:fieldSet name="Payment" id="details">
-                                        <cpt:property id="bankAccount" hidden="ALL_TABLES">
+                                        <cpt:property id="bankAccount">
                                             <cpt:action id="changeBankAccount" promptStyle="INLINE"/>
                                             <cpt:action id="createBankAccount" position="RIGHT"/>
                                         </cpt:property>
-                                        <cpt:property id="paymentMethod" hidden="ALL_TABLES">
+                                        <cpt:property id="paymentMethod">
                                             <cpt:action id="changePaymentMethod" promptStyle="INLINE"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
@@ -127,7 +127,11 @@
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="items" defaultView="table"></cpt:collection>
+                    <cpt:collection id="items" defaultView="table">
+                        <cpt:action id="reverse" cssClassFa="undo">
+                            <cpt:named>Reverse Item</cpt:named>
+                        </cpt:action>
+                    </cpt:collection>
                 </bs3:col>
             </bs3:row>
             <bs3:row>

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
@@ -97,23 +98,20 @@ import lombok.Setter;
                         + "WHERE incomingInvoiceType == :incomingInvoiceType "
                         + "   && reportedDate == :reportedDate "
         ),
+        @Query(
+                name = "findByFixedAssetAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE fixedAsset == :fixedAsset "
+                        + "   && reportedDate == :reportedDate "),
 
-// TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
-
-//        @Query(
-//                name = "findByPropertyAndReportedDate", language = "JDOQL",
-//                value = "SELECT "
-//                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-//                        + "WHERE invoice.property == :property "
-//                        + "   && reportedDate == :reportedDate "),
-
-//        @Query(
-//                name = "findByPropertyAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
-//                value = "SELECT "
-//                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
-//                        + "WHERE invoice.property == :property "
-//                        + "   && incomingInvoiceType == :incomingInvoiceType "
-//                        + "   && reportedDate == :reportedDate "),
+        @Query(
+                name = "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE fixedAsset == :fixedAsset "
+                        + "   && incomingInvoiceType == :incomingInvoiceType "
+                        + "   && reportedDate == :reportedDate "),
         @Query(
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
@@ -157,7 +155,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final org.estatio.dom.asset.Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         super(invoice);
@@ -177,11 +175,27 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         setEndDate(endDate);
 
         setTax(tax);
-        setFixedAsset(property);
+        setFixedAsset(fixedAsset);
         setProject(project);
         setBudgetItem(budgetItem);
 
     }
+
+    /**
+     * One of "reported", "reported-reversal" or "reversal"
+     */
+    public String cssClass() {
+        final StringBuilder buf = new StringBuilder();
+        if(getReportedDate() != null) {
+            buf.append("reported");
+        }
+        if(getReversalOf() != null) {
+            if(buf.length() > 0) buf.append("-");
+            buf.append("reversal");
+        }
+        return buf.toString();
+    }
+
 
 
     @Override
@@ -567,6 +581,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         return budgetItemIsImmutableReason();
     }
 
+
+
+
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editPeriod(@Nullable final String period){
         if (PeriodUtil.isValidPeriod(period)){
             setStartDate(PeriodUtil.yearFromPeriod(period).startDate());
@@ -582,6 +603,37 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     public String validateEditPeriod(final String period){
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
+
+    public String disableEditPeriod(){
+        return periodIsImmutableReason();
+    }
+
+
+
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoice reverse() {
+
+        final IncomingInvoice incomingInvoice = getIncomingInvoice();
+
+        incomingInvoice.reverseItem(this);
+
+        return incomingInvoice;
+    }
+
+    public String disableReverse() {
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Item cannot be reversed because");
+
+        buf.append(getReportedDate() == null, "item has not yet been reported");
+        buf.append(getReversalOf() != null, "item is itself a reversal");
+
+        return buf.getReason();
+    }
+
+
 
     String chargeIsImmutableReason(){
 
@@ -645,6 +697,21 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
         return buf.getReason();
     }
+
+    String periodIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Period cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+
+        return buf.getReason();
+    }
+
+
 
     private boolean hasType(final IncomingInvoiceType serviceCharges) {
         final IncomingInvoiceType incomingInvoiceType = getIncomingInvoice().getType();
@@ -866,27 +933,32 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         }
     }
 
-
-
     @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
+    @NotPersistent
     ChargeRepository chargeRepository;
 
     @Inject
+    @NotPersistent
     RepositoryService repositoryService;
 
     @Inject
+    @NotPersistent
     ProjectRepository projectRepository;
 
     @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
+    @NotPersistent
     BudgetItemChooser budgetItemChooser;
 
     @Inject
+    @NotPersistent
     QueryResultsCache queryResultsCache;
 
 }

@@ -17,14 +17,12 @@
                         <cpt:action id="impersonateUser" position="PANEL_DROPDOWN"/>
                         <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                         <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-
+                        <cpt:property id="property">
+                            <cpt:action id="changeProperty" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </cpt:property>
                         <cpt:property id="allUnreported"/>
                         <cpt:property id="reportedDate">
                             <cpt:action id="changeReportedDate" promptStyle="INLINE_AS_IF_EDIT"/>
-                        </cpt:property>
-                        <cpt:property id="allProperties"/>
-                        <cpt:property id="property">
-                            <cpt:action id="changeProperty" promptStyle="INLINE_AS_IF_EDIT"/>
                         </cpt:property>
                         <cpt:property id="allTypes"/>
                         <cpt:property id="incomingInvoiceType">

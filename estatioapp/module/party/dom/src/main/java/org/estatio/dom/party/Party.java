@@ -32,6 +32,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.ComparisonChain;
+
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -263,6 +265,14 @@ public abstract class Party
         }
         return false;
     }
+
+    @Override
+    public int compareTo(final Party other) {
+        return ComparisonChain.start()
+                .compare(getName(), other.getName())
+                .result();
+    }
+
 
     @Inject
     PartyRoleRepository partyRoleRepository;

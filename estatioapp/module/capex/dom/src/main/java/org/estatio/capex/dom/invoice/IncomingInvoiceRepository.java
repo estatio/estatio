@@ -5,12 +5,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
+import org.datanucleus.query.typesafe.TypesafeQuery;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -140,23 +144,42 @@ public class IncomingInvoiceRepository {
 
     @Programmatic
     public List<IncomingInvoice> findCompletedOrLaterWithItemsByReportedDate(final LocalDate reportedDate) {
+
+        // equivalent to:
+        /*
+        @Query(
+                name = "findCompletedOrLaterWithItemsByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE items.contains(ii) "
+                        + "   && (ii.reportedDate == :reportedDate) "
+                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
+                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
+        ),
+
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoice.class,
                         "findCompletedOrLaterWithItemsByReportedDate",
                         "reportedDate", reportedDate));
-    }
+         */
 
-    @Programmatic
-    public List<IncomingInvoice> findCompletedOrLaterByPropertyWithItemsByReportedDate(
-            final Property property,
-            final LocalDate reportedDate) {
-        return repositoryService.allMatches(
-                new QueryDefault<>(
-                        IncomingInvoice.class,
-                        "findCompletedOrLaterByPropertyWithItemsByReportedDate",
-                        "property", property,
-                        "reportedDate", reportedDate));
+        final QIncomingInvoice ii = QIncomingInvoice.candidate();
+        final QIncomingInvoiceItem iii = QIncomingInvoiceItem.variable("iii");
+
+        final TypesafeQuery<IncomingInvoice> q = isisJdoSupport.newTypesafeQuery(IncomingInvoice.class);
+
+        q.getFetchPlan().addGroup("seller_buyer_property_bankAccount");
+
+        q.filter(
+                ii.items.contains(iii)
+            .and(iii.reportedDate.eq(reportedDate))
+            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.NEW))
+            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.DISCARDED)));
+        final List<IncomingInvoice> incomingInvoices = Lists.newArrayList(q.executeList());
+        q.closeAll();
+        return incomingInvoices;
+
     }
 
     @Programmatic
@@ -259,6 +282,8 @@ public class IncomingInvoiceRepository {
     PaperclipRepository paperclipRepository;
     @Inject
     RepositoryService repositoryService;
+    @Inject
+    IsisJdoSupport isisJdoSupport;
     @Inject
     ServiceRegistry2 serviceRegistry2;
     @Inject

@@ -95,6 +95,14 @@ public class OrderItemInvoiceItemLink {
 
 
 
+    /**
+     * One of "reported", "reported-reversal" or "reversal"
+     */
+    public String cssClass() {
+        return getInvoiceItem().cssClass();
+    }
+
+
     // both order item and invoice item will have the same value for these dimensions
     public Charge getCharge() {
         return orderItem.getCharge();

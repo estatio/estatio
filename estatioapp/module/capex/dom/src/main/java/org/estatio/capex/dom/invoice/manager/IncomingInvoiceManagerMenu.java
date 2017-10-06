@@ -1,5 +1,8 @@
 package org.estatio.capex.dom.invoice.manager;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -7,10 +10,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -24,19 +27,26 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 public class IncomingInvoiceManagerMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
-    public IncomingInvoiceDownloadManager downloadInvoices() {
+    public IncomingInvoiceDownloadManager downloadInvoices(
+            @Nullable
+            final Property property) {
 
         final IncomingInvoiceDownloadManager incomingInvoiceDownloadManager =
-                new IncomingInvoiceDownloadManager(null, true, null, IncomingInvoiceType.CAPEX);
+                new IncomingInvoiceDownloadManager(property, null, null);
         serviceRegistry2.injectServicesInto(incomingInvoiceDownloadManager);
 
         return incomingInvoiceDownloadManager;
     }
 
+    public List<Property> choices0DownloadInvoices() {
+        return propertyRepository.allProperties();
+    }
+
+
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
     @Inject
-    ClockService clockService;
+    PropertyRepository propertyRepository;
 
 }

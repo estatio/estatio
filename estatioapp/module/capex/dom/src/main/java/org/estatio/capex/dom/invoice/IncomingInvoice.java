@@ -10,16 +10,20 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.FetchGroup;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
@@ -51,6 +55,7 @@ import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.PaymentLineRepository;
@@ -61,6 +66,7 @@ import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
@@ -138,37 +144,6 @@ import lombok.Setter;
                         + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
         ),
         @Query(
-                name = "findCompletedOrLaterByIncomingInvoiceTypeWithItemsByReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE items.contains(ii) "
-                        + "   && (ii.reportedDate == :reportedDate) "
-                        + "   && (incomingInvoiceType == :incomingInvoiceType) "
-                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
-                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
-        ),
-        @Query(
-                name = "findCompletedOrLaterByPropertyWithItemsByReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE items.contains(ii) "
-                        + "   && (ii.reportedDate == :reportedDate) "
-                        + "   && (property == :property) "
-                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
-                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
-        ),
-        @Query(
-                name = "findCompletedOrLaterByPropertyAndIncomingInvoiceTypeWithItemsByReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
-                        + "WHERE items.contains(ii) "
-                        + "   && (ii.reportedDate == :reportedDate) "
-                        + "   && (property == :property) "
-                        + "   && (incomingInvoiceType == :incomingInvoiceType) "
-                        + "   && (approvalState != 'NEW' && approvalState != 'DISCARDED') "
-                        + "VARIABLES org.estatio.capex.dom.invoice.IncomingInvoiceItem ii "
-        ),
-        @Query(
                 name = "findByDueDateBetween", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
@@ -199,6 +174,14 @@ import lombok.Setter;
                         + "ORDER BY invoiceDate DESC " // newest first
         )
 })
+@FetchGroup(
+        name="seller_buyer_property_bankAccount",
+        members={
+                @Persistent(name="seller"),
+                @Persistent(name="buyer"),
+                @Persistent(name="property"),
+                @Persistent(name="bankAccount")
+        })
 @Indices({
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" })
 })
@@ -308,24 +291,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             @Nullable final Property property,
             @Nullable final Project project,
             @Nullable final BudgetItem budgetItem) {
-        incomingInvoiceItemRepository.addItem(
-                this,
-                type,
-                charge,
-                description,
-                netAmount,
-                vatAmount,
-                grossAmount,
-                tax,
-                dueDate,
-                period,
-                property,
-                project,
-                budgetItem);
 
+        addItemToThis(
+                type, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate,
+                period, property, project, budgetItem);
         return this;
     }
-
 
     public String disableAddItem() {
         final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot add item because");
@@ -406,14 +377,101 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     }
 
-    @Inject
-    BudgetItemChooser budgetItemChooser;
 
-    @Inject
-    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    @Action
+    @MemberOrder(name="items", sequence = "4")
+    public IncomingInvoiceItem reverseItem(final IncomingInvoiceItem itemToReverse) {
 
-    @Inject
-    ChargeRepository chargeRepository;
+        final IncomingInvoiceItem reversal = copyWithLinks(itemToReverse, Sort.REVERSAL);
+        final IncomingInvoiceItem correction = copyWithLinks(itemToReverse, Sort.CORRECTION);
+
+        return reversal;
+    }
+
+    enum Sort {
+        REVERSAL {
+            @Override BigDecimal adjust(final BigDecimal amount) {
+                return Sort.negate(amount);
+            }
+        },
+        CORRECTION {
+            @Override
+            BigDecimal adjust(final BigDecimal amount) {
+                return amount;
+            }
+        };
+
+        String prefixTo(String description) {
+            return name() + " of " + description;
+        };
+        abstract BigDecimal adjust(BigDecimal amount);
+
+        private static BigDecimal negate(@Nullable final BigDecimal amount) {
+            return amount == null ? amount : BigDecimal.ZERO.subtract(amount);
+        }
+    }
+
+    private IncomingInvoiceItem copyWithLinks(
+            final IncomingInvoiceItem itemToReverse,
+            final Sort sort) {
+
+        final IncomingInvoiceType type = itemToReverse.getIncomingInvoiceType();
+        final String description = itemToReverse.getDescription();
+        final Charge charge = itemToReverse.getCharge();
+        final BigDecimal netAmount = itemToReverse.getNetAmount();
+
+        final BigDecimal vatAmount = itemToReverse.getVatAmount();
+        final BigDecimal grossAmount = itemToReverse.getGrossAmount();
+        final Tax tax = itemToReverse.getTax();
+        final LocalDate dueDate = itemToReverse.getDueDate();
+        final String period = itemToReverse.getPeriod();
+
+        final FixedAsset fixedAsset = itemToReverse.getFixedAsset();
+        final Project project = itemToReverse.getProject();
+        final BudgetItem budgetItem = itemToReverse.getBudgetItem();
+
+        final IncomingInvoiceItem copyItem = addItemToThis(
+                type, charge,
+                sort.prefixTo(description),
+                sort.adjust(netAmount),
+                sort.adjust(vatAmount),
+                sort.adjust(grossAmount),
+                tax, dueDate,
+                period, fixedAsset, project, budgetItem);
+
+        if(sort == Sort.REVERSAL) {
+            copyItem.setReversalOf(itemToReverse);
+        }
+
+        final List<OrderItemInvoiceItemLink> links =
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(itemToReverse);
+
+        for (OrderItemInvoiceItemLink link : links) {
+            orderItemInvoiceItemLinkRepository.createLink(
+                    link.getOrderItem(), copyItem, sort.adjust(link.getNetAmount()));
+        }
+
+        return copyItem;
+    }
+
+    public String disableReverseItem() {
+        return choices0ReverseItem().isEmpty() ? "No items to reverse" : null;
+    }
+    public IncomingInvoiceItem default0ReverseItem() {
+        final List<IncomingInvoiceItem> choices = choices0ReverseItem();
+        return choices.size() == 1 ? choices.get(0) : null;
+    }
+    public List<IncomingInvoiceItem> choices0ReverseItem() {
+        return Lists.newArrayList(getItems()).stream().
+                filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(x -> x.getReportedDate() != null)
+                .filter(x -> x.getReversalOf() == null)
+                .collect(Collectors.toList());
+    }
+
+
+
 
     @MemberOrder(name = "items", sequence = "2")
     public IncomingInvoice splitItem(
@@ -438,21 +496,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final String newItemPeriod
     ) {
         itemToSplit.subtractAmounts(newItemNetAmount, newItemVatAmount, newItemGrossAmount);
-        incomingInvoiceItemRepository.addItem(
-                this,
-                getType()!=null ? getType() : null,
-                newItemCharge,
-                newItemDescription,
-                newItemNetAmount,
-                newItemVatAmount,
-                newItemGrossAmount,
-                newItemtax,
-                getDueDate(),
-                newItemPeriod,
-                newItemProperty,
-                newItemProject,
-                newItemBudgetItem
-                );
+        addItemToThis(getType(), newItemCharge, newItemDescription, newItemNetAmount,
+                newItemVatAmount, newItemGrossAmount, newItemtax, getDueDate(), newItemPeriod, newItemProperty,
+                newItemProject, newItemBudgetItem);
         return this;
     }
 
@@ -540,6 +586,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
 
+
+
     @Programmatic
     public <T> T ofFirstItem(final Function<IncomingInvoiceItem, T> f) {
         final Optional<IncomingInvoiceItem> firstItemIfAny = firstItemIfAny();
@@ -596,6 +644,39 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .filter(x->!x.equals(item))
                 .collect(Collectors.toList());
     }
+
+
+
+    private IncomingInvoiceItem addItemToThis(
+            final IncomingInvoiceType type,
+            final Charge charge,
+            final String description,
+            final BigDecimal netAmount,
+            final BigDecimal vatAmount,
+            final BigDecimal grossAmount,
+            final Tax tax,
+            final LocalDate dueDate,
+            final String period,
+            final FixedAsset<?> fixedAsset,
+            final Project project,
+            final BudgetItem budgetItem) {
+        return incomingInvoiceItemRepository.addItem(
+                this,
+                type,
+                charge,
+                description,
+                netAmount,
+                vatAmount,
+                grossAmount,
+                tax,
+                dueDate,
+                period,
+                fixedAsset,
+                project,
+                budgetItem);
+    }
+
+
 
 
     /**
@@ -1275,25 +1356,58 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         getEventBusService().post(new ApprovalInvalidatedEvent(this));
     }
 
+
+
+
+
+
+    @Override
+    public int compareTo(final IncomingInvoice other) {
+        return ComparisonChain.start()
+                .compare(getSeller(), other.getSeller())
+                .compare(getInvoiceNumber(), other.getInvoiceNumber())
+                .result();
+    }
+
     @Inject
+    @NotPersistent
     PaymentLineRepository paymentLineRepository;
 
     @Inject
+    @NotPersistent
     LookupAttachedPdfService lookupAttachedPdfService;
 
     @Inject
+    @NotPersistent
     MetaModelService3 metaModelService3;
 
     @Inject
+    @NotPersistent
     BankAccountRepository bankAccountRepository;
 
     @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
+    @NotPersistent
     PartyRoleRepository partyRoleRepository;
 
     @Inject
+    @NotPersistent
     PartyRepository partyRepository;
+
+    @Inject
+    @NotPersistent
+    BudgetItemChooser budgetItemChooser;
+
+    @Inject
+    @NotPersistent
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    @NotPersistent
+    ChargeRepository chargeRepository;
+
 
 }

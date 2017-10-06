@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 /**
  * @see OrderItem_removeInvoiceItemLink
@@ -31,7 +32,13 @@ public class IncomingInvoiceItem_removeOrderItemLink extends IncomingInvoiceItem
         return mixee;
     }
     public String disableAct() {
-        return choices0Act().isEmpty()? "No order items" : null;
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+
+        buf.append(choices0Act().isEmpty(), "There are no links to order items");
+        buf.append(mixee.getReportedDate() != null, "Invoice item has been reported");
+        buf.append(mixee.getReversalOf() != null, "Invoice item is a reversal");
+
+        return buf.getReason();
     }
 
     public OrderItem default0Act() {

@@ -152,6 +152,7 @@ public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,
      * </pre>
      */
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true") // eagerly load
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter

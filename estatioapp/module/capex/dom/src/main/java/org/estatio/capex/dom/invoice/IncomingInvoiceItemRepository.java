@@ -23,9 +23,11 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
 import org.estatio.tax.dom.Tax;
 
@@ -61,10 +63,10 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem) {
-        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
+        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, fixedAsset, project, budgetItem);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
 
@@ -87,7 +89,7 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem) {
         IncomingInvoiceItem invoiceItem = findByInvoiceAndChargeAndSequence(invoice, charge, sequence);
@@ -105,7 +107,7 @@ public class IncomingInvoiceItemRepository {
                     dueDate,
                     startDate,
                     endDate,
-                    property,
+                    fixedAsset,
                     project,
                     budgetItem);
         } else {
@@ -120,7 +122,7 @@ public class IncomingInvoiceItemRepository {
                     dueDate,
                     startDate,
                     endDate,
-                    property,
+                    fixedAsset,
                     project,
                     budgetItem);
         }
@@ -139,7 +141,7 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         invoiceItem.setSequence(sequence);
@@ -151,13 +153,13 @@ public class IncomingInvoiceItemRepository {
         invoiceItem.setDueDate(dueDate);
         invoiceItem.setStartDate(startDate);
         invoiceItem.setEndDate(endDate);
-        invoiceItem.setFixedAsset(property);
+        invoiceItem.setFixedAsset(fixedAsset);
         invoiceItem.setProject(project);
         invoiceItem.setBudgetItem(budgetItem);
     }
 
     @Programmatic
-    public void addItem(
+    public IncomingInvoiceItem addItem(
             final IncomingInvoice incomingInvoice,
             final IncomingInvoiceType type,
             final Charge charge,
@@ -168,11 +170,11 @@ public class IncomingInvoiceItemRepository {
             final Tax tax,
             final LocalDate dueDate,
             final String period,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         final BigInteger sequence = incomingInvoice.nextItemSequence();
-        upsert(
+        return upsert(
             sequence,
             incomingInvoice,
             type,
@@ -185,7 +187,7 @@ public class IncomingInvoiceItemRepository {
             dueDate,
             PeriodUtil.yearFromPeriod(period).startDate(),
             PeriodUtil.yearFromPeriod(period).endDate(),
-            property,
+            fixedAsset,
             project,
             budgetItem);
     }
@@ -254,90 +256,54 @@ public class IncomingInvoiceItemRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByReportedDate(final LocalDate reportedDate) {
-        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
-                new QueryDefault<>(
-                        IncomingInvoiceItem.class,
-                        "findByReportedDate",
-                        "reportedDate", reportedDate
-                ));
-
-        final List<IncomingInvoice> incomingInvoices =
-                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
-
-        // client-side join :-(
-        return join(items, incomingInvoices);
-    }
-
-    @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByIncomingInvoiceTypeAndReportedDate(
-            final IncomingInvoiceType incomingInvoiceType,
-            final LocalDate reportedDate) {
-        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
-                new QueryDefault<>(
-                        IncomingInvoiceItem.class,
-                        "findByIncomingInvoiceTypeAndReportedDate",
-                        "incomingInvoiceType", incomingInvoiceType,
-                        "reportedDate", reportedDate
-                ));
-
-        // we don't use incoming invoice type here because individual invoice items can override
-        final List<IncomingInvoice> incomingInvoices =
-                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
-
-        // client-side join :-(
-        return join(items, incomingInvoices);
-    }
-
-    @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByPropertyAndReportedDate(
+    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndReportedDate(
             final Property property,
             final LocalDate reportedDate) {
 
-        // TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
-        // this doesn't matter insofar as we already have to do a client-side join with Invoices to filter out on approvalState
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findByReportedDate",
+                        "findByFixedAssetAndReportedDate",
+                        "fixedAsset", property,
                         "reportedDate", reportedDate
                 ));
-        final List<IncomingInvoice> incomingInvoices =
-                incomingInvoiceRepository.findCompletedOrLaterByPropertyWithItemsByReportedDate(property, reportedDate);
 
-        // client-side join :-(
-        return join(items, incomingInvoices);
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByPropertyAndIncomingInvoiceTypeAndReportedDate(
+    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
             final Property property,
             final IncomingInvoiceType incomingInvoiceType,
             final LocalDate reportedDate) {
 
-        // TODO: for some reason, attempting to use 'invoice' as a field in JDOQL for IncomingInvoiceItem just doesn't work...
-        // this doesn't matter insofar as we already have to do a client-side join with Invoices to filter out on approvalState
         final List<IncomingInvoiceItem> items = repositoryService.allMatches(
                 new QueryDefault<>(
                         IncomingInvoiceItem.class,
-                        "findByIncomingInvoiceTypeAndReportedDate",
+                        "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate",
+                        "fixedAsset", property,
                         "incomingInvoiceType", incomingInvoiceType,
                         "reportedDate", reportedDate
                 ));
 
-        // we don't use incoming invoice type here because individual invoice items can override
-        final List<IncomingInvoice> incomingInvoices =
-                incomingInvoiceRepository.findCompletedOrLaterByPropertyWithItemsByReportedDate(property, reportedDate);
-
-        // client-side join :-(
-        return join(items, incomingInvoices);
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
-    private List<IncomingInvoiceItem> join(
+    private List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
             final List<IncomingInvoiceItem> items,
-            final List<IncomingInvoice> incomingInvoices) {
+            final LocalDate reportedDate) {
+
+        // we can't filter by property or incoming invoice type to filter here
+        // because individual invoice items can override
+        final List<? extends Invoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+
+        // client-side join :-(
         return items.stream()
-                .filter(x -> incomingInvoices.contains(x.getInvoice()))
+                .filter(x -> {
+                    final Invoice<?> invoice = x.getInvoice();
+                    return incomingInvoices.contains(invoice);
+                })
                 .collect(Collectors.toList());
     }
 
