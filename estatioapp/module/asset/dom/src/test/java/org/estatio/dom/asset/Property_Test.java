@@ -31,9 +31,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
-import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.incode.module.country.dom.impl.Country;
+import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.dom.asset.ownership.FixedAssetOwnership;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -129,6 +130,7 @@ public class Property_Test {
         @Before
         public void setUp() throws Exception {
             party = new PartyForTesting();
+            party.setName("Party");
             property = new Property();
 
             fixedAssetOwnership = new FixedAssetOwnership();

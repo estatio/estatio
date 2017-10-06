@@ -33,6 +33,7 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
@@ -269,7 +270,7 @@ public abstract class Party
     @Override
     public int compareTo(final Party other) {
         return ComparisonChain.start()
-                .compare(getName(), other.getName())
+                .compare(getName(), other.getName(), Ordering.natural().nullsFirst())
                 .result();
     }
 
