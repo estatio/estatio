@@ -12,6 +12,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -67,5 +69,25 @@ public class OrderItemRepository_IntegTest extends EstatioIntegrationTest {
 
     }
 
+    public static class FindBySellerAndPropery extends OrderItemRepository_IntegTest {
+
+        @Test
+        public void find_by_seller_and_property_works() {
+            // given
+            Party seller = partyRepository.findPartyByReference(OrganisationForYoukeaSe.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+            // when
+            List<OrderItem> orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
+
+            // then
+            assertThat(orderItems).isNotEmpty();
+            assertThat(orderItems.size()).isEqualTo(1);
+        }
+
+    }
+
     @Inject PartyRepository partyRepository;
+
+    @Inject PropertyRepository propertyRepository;
 }

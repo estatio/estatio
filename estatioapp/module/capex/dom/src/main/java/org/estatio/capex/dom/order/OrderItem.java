@@ -81,6 +81,11 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.OrderItem "
                         + "WHERE ordr.seller == :seller "),
         @Query(
+                name = "findBySellerAndProperty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.order.OrderItem "
+                        + "WHERE ordr.seller == :seller &&  property == :property "),
+        @Query(
                 name = "findByOrderAndCharge", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.OrderItem "

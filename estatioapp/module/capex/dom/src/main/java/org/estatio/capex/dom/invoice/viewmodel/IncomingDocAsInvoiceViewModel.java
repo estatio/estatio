@@ -238,7 +238,13 @@ public class IncomingDocAsInvoiceViewModel
 
     public List<OrderItem> choicesOrderItem(){
         final Party seller = getSeller();
-        final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
+        final org.estatio.dom.asset.Property property = getProperty();
+        final List<OrderItem> orderItems;
+        if (property==null) {
+            orderItems = orderItemRepository.findBySeller(seller);
+        } else {
+            orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
+        }
         if(getOrderItem() != null && !orderItems.contains(getOrderItem())) {
             orderItems.add(getOrderItem());
         }

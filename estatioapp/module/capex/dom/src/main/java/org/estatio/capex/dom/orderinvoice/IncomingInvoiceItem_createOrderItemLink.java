@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 
 /**
@@ -42,8 +43,15 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
         // the disable guard ensures this is non-null
         final Party seller = mixee.getInvoice().getSeller();
 
+        final Property property = (Property) mixee.getFixedAsset();
+
         // candidates
-        final List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
+        final List<OrderItem> orderItems;
+        if (property==null) {
+            orderItems = orderItemRepository.findBySeller(seller);
+        } else {
+            orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
+        }
 
         // exclude any invoice items already linked to this order
         orderItems.removeAll(orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee));

@@ -206,6 +206,16 @@ public class OrderItemRepository {
     }
 
     @Programmatic
+    public List<OrderItem> findBySellerAndProperty(final Party seller, final Property property) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OrderItem.class,
+                        "findBySellerAndProperty",
+                        "seller", seller, "property", property
+                ));
+    }
+
+    @Programmatic
     public List<OrderItem> listAll() {
         return repositoryService.allInstances(OrderItem.class);
     }
