@@ -380,12 +380,12 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Action
     @MemberOrder(name="items", sequence = "4")
-    public IncomingInvoiceItem reverseItem(final IncomingInvoiceItem itemToReverse) {
+    public IncomingInvoice reverseItem(final IncomingInvoiceItem itemToReverse) {
 
         final IncomingInvoiceItem reversal = copyWithLinks(itemToReverse, Sort.REVERSAL);
         final IncomingInvoiceItem correction = copyWithLinks(itemToReverse, Sort.CORRECTION);
 
-        return reversal;
+        return this;
     }
 
     enum Sort {
