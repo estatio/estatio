@@ -320,7 +320,7 @@ public class InvoiceForLease
         }
 
         public String disable$$() {
-            return invoice.isImmutable() ? "Cannot add new item" : null;
+            return invoice.isImmutableDueToState() ? "Cannot add new item" : null;
         }
 
         @Inject

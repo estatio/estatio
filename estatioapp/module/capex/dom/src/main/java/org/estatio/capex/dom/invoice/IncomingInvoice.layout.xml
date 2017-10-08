@@ -81,7 +81,7 @@
                                         <cpt:property id="vatAmount"/>
                                         <cpt:property id="grossAmount"/>
                                         <cpt:property id="netAmountLinked" hidden="ALL_TABLES"/>
-                                        <cpt:property id="currency"/>
+                                        <cpt:property id="currency" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="6">
@@ -127,7 +127,11 @@
             </bs3:row>
             <bs3:row>
                 <bs3:col span="12">
-                    <cpt:collection id="items" defaultView="table"></cpt:collection>
+                    <cpt:collection id="items" defaultView="table">
+                        <cpt:action id="reverse" cssClassFa="undo">
+                            <cpt:named>Reverse Item</cpt:named>
+                        </cpt:action>
+                    </cpt:collection>
                 </bs3:col>
             </bs3:row>
             <bs3:row>
@@ -153,8 +157,8 @@
                                                 <cpt:named>Show transitions</cpt:named>
                                             </cpt:action>
                                         </cpt:property>
-                                        <cpt:property id="approvedFully"/>
-                                        <cpt:property id="pendingApprovalTask">
+                                        <cpt:property id="approvedFully" hidden="ALL_TABLES"/>
+                                        <cpt:property id="pendingApprovalTask"  hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="complete"/>
                                             <cpt:action id="approve"/>
@@ -169,7 +173,7 @@
                                             <cpt:action id="discard"/>
                                             <cpt:action id="recategorize"/>
                                         </cpt:property>
-                                        <cpt:property id="previousComments"/>
+                                        <cpt:property id="previousComments" hidden="ALL_TABLES"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>

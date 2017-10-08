@@ -297,7 +297,7 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
         public String disableExec() {
-            if (invoice.isImmutable()) {
+            if (invoice.isImmutableDueToState()) {
                 return "Due date can't be changed";
             }
             return null;
@@ -421,8 +421,12 @@ public abstract class Invoice<T extends Invoice<T>>
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    /**
+     * Default implementation based on {@link #getStatus() status}, but subclasses can override based on their own
+     * interpretation of "status" (and <tt>IncomingInvoice</tt> does, using its approval cycle).
+     */
     @Programmatic
-    public boolean isImmutable() {
+    public boolean isImmutableDueToState() {
         return !getStatus().invoiceIsChangable();
     }
 
@@ -544,7 +548,7 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
         public String disableAct() {
-            if (invoice.isImmutable()) {
+            if (invoice.isImmutableDueToState()) {
                 return "Invoice can't be changed";
             }
             return null;
@@ -583,7 +587,7 @@ public abstract class Invoice<T extends Invoice<T>>
         }
 
         public String disableAct() {
-            if (invoice.isImmutable()) {
+            if (invoice.isImmutableDueToState()) {
                 return "Invoice can't be changed";
             }
             return null;

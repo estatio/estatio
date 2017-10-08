@@ -61,8 +61,9 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.roles.EstatioRole;
-import org.estatio.tax.dom.TaxRate;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -93,7 +94,7 @@ import lombok.Setter;
         column = "version")
 @DomainObject(editing = Editing.DISABLED)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem<T extends InvoiceItem<T>>
+public abstract class InvoiceItem<P extends Invoice<P>, T extends InvoiceItem<P,T>>
         extends UdoDomainObject2<T>
         implements WithInterval<T>, WithDescriptionGetter, WithApplicationTenancyPropertyLocal {
 
@@ -101,7 +102,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
         super("invoice, charge, startDate desc nullsLast, description, grossAmount, sequence, uuid");
     }
 
-    public InvoiceItem(final Invoice invoice) {
+    public InvoiceItem(final P invoice) {
         this();
         this.invoice = invoice;
 
@@ -130,6 +131,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
      */
     @Property(hidden = Where.REFERENCES_PARENT)
     public InvoiceSource getSource() {
+        // TODO: this applies to InvoiceItemForLease only, so should probably be moved down.
         return null;
     }
 
@@ -142,7 +144,15 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     // //////////////////////////////////////
 
+    /**
+     * This ought to be of type 'P', but the DataNucleus annotation processor fails to handle.
+     *
+     * <pre>
+     *     [ERROR] Fatal error compiling: java.lang.ClassCastException: com.sun.tools.javac.code.Symbol$TypeVariableSymbol cannot be cast to javax.lang.model.element.TypeElement -> [Help 1]
+     * </pre>
+     */
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "false")
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true") // eagerly load
     @Property(hidden = Where.REFERENCES_PARENT)
     @CollectionLayout(render = RenderType.EAGERLY)
     @Getter @Setter
@@ -201,13 +211,14 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeTax() {
-        if (getInvoice().isImmutable()){
-            return "Invoice is immutable";
-        }
-        if(getSource() == null){
-            return  "Cannot change tax on a generated invoice item";
-        }
-        return null;
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle("Can't change tax because");
+        appendReasonChangeTaxDisabledIfAny(buf);
+        return buf.getReason();
+    }
+
+    protected void appendReasonChangeTaxDisabledIfAny(final ReasonBuffer2 buf) {
+        buf.append(() -> getInvoice().isImmutableDueToState(), "Invoice can't be changed");
+        buf.append(() -> getSource() == null, "Cannot change tax on a generated invoice item");
     }
 
     // //////////////////////////////////////
@@ -218,15 +229,13 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     private String description;
 
     public String disableDescription() {
-        if (getInvoice().isImmutable()) {
-            return "Invoice can't be changed";
-        }
-        return null;
+        return getInvoice().isImmutableDueToState() ? "Invoice can't be changed" : null;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public InvoiceItem changeDescription(
             final @ParameterLayout(multiLine = 3) String description) {
+
         setDescription(description);
         return this;
     }
@@ -236,6 +245,9 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeDescription() {
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
         return disableDescription();
     }
 
@@ -276,6 +288,7 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     public InvoiceItem changeEffectiveDates(
             final LocalDate effectiveStartDate,
             final LocalDate effectiveEndDate) {
+
         setEffectiveStartDate(effectiveStartDate);
         setEffectiveEndDate(effectiveEndDate);
         return this;
@@ -290,7 +303,10 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
     }
 
     public String disableChangeEffectiveDates() {
-        return getInvoice().isImmutable() ? "Invoice cannot be changed" : null;
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
+        return getInvoice().isImmutableDueToState() ? "Invoice cannot be changed" : null;
     }
 
     // //////////////////////////////////////
@@ -333,14 +349,19 @@ public abstract class InvoiceItem<T extends InvoiceItem<T>>
 
     @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public Invoice remove() {
-        if (!getInvoice().isImmutable()) {
+        if (!getInvoice().isImmutableDueToState()) {
             repositoryService.remove(this);
         }
         return getInvoice();
     }
 
     public String disableRemove(){
-        return getInvoice().isImmutable() ? "Cannot change invoice" : null;
+        // don't need to worry about generalizing the disable guards for this action on the IncomingInvoiceItem subtype,
+        // since is hidden in .layout.xml.
+        // (as a consequence, should therefore probably move this action down to InvoiceItemForLease).
+        //
+        // nb: in fact, IncomingInvoiceItem actually has its own (equivalent?) removeItem, so probably should be amalgamated.
+        return getInvoice().isImmutableDueToState() ? "Invoice can't be changed" : null;
     }
 
 

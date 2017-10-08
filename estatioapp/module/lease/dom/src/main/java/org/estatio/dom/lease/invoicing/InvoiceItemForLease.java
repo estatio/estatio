@@ -114,12 +114,12 @@ import lombok.Setter;
         // objectType inferred from @Discriminator
 )
 public class InvoiceItemForLease
-        extends InvoiceItem<InvoiceItemForLease> {
+        extends InvoiceItem<InvoiceForLease, InvoiceItemForLease> {
 
     public InvoiceItemForLease() {
     }
 
-    public InvoiceItemForLease(final Invoice invoice, final LocalDate dueDate) {
+    public InvoiceItemForLease(final InvoiceForLease invoice, final LocalDate dueDate) {
         super(invoice);
         setDueDate(dueDate);
         setSequence(BigInteger.ZERO);
@@ -136,6 +136,10 @@ public class InvoiceItemForLease
     @Override
     public InvoiceSource getSource() {
         return getLeaseTerm();
+    }
+
+    InvoiceForLease getInvoiceForLease() {
+        return (InvoiceForLease) super.getInvoice();
     }
 
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")

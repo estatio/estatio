@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
@@ -54,6 +55,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.Tax;
 import org.estatio.tax.dom.TaxRate;
 
@@ -84,6 +86,33 @@ import lombok.Setter;
                         + "WHERE project == :project "
                         + "   && charge == :charge "),
         @Query(
+                name = "findByReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE reportedDate == :reportedDate "
+        ),
+        @Query(
+                name = "findByIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE incomingInvoiceType == :incomingInvoiceType "
+                        + "   && reportedDate == :reportedDate "
+        ),
+        @Query(
+                name = "findByFixedAssetAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE fixedAsset == :fixedAsset "
+                        + "   && reportedDate == :reportedDate "),
+
+        @Query(
+                name = "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
+                        + "WHERE fixedAsset == :fixedAsset "
+                        + "   && incomingInvoiceType == :incomingInvoiceType "
+                        + "   && reportedDate == :reportedDate "),
+        @Query(
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoiceItem "
@@ -109,7 +138,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
 )
-public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implements FinancialItem {
+public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInvoiceItem> implements FinancialItem {
 
     public IncomingInvoiceItem(){}
 
@@ -126,7 +155,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final org.estatio.dom.asset.Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         super(invoice);
@@ -146,11 +175,27 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         setEndDate(endDate);
 
         setTax(tax);
-        setFixedAsset(property);
+        setFixedAsset(fixedAsset);
         setProject(project);
         setBudgetItem(budgetItem);
 
     }
+
+    /**
+     * One of "reported", "reported-reversal" or "reversal"
+     */
+    public String cssClass() {
+        final StringBuilder buf = new StringBuilder();
+        if(getReportedDate() != null) {
+            buf.append("reported");
+        }
+        if(getReversalOf() != null) {
+            if(buf.length() > 0) buf.append("-");
+            buf.append("reversal");
+        }
+        return buf.toString();
+    }
+
 
 
     @Override
@@ -213,6 +258,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
 
     public void setProject(final Project project) {
         this.project = invalidateApprovalIfDiffer(this.project, project);
+    }
+
+
+    IncomingInvoice getIncomingInvoice() {
+        return (IncomingInvoice) super.getInvoice();
     }
 
 
@@ -290,13 +340,41 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         super.setTaxRate(invalidateApprovalIfDiffer(getTaxRate(), taxRate));
     }
 
-    private IncomingInvoice getIncomingInvoice() {
-        return (IncomingInvoice) getInvoice();
-    }
-
     @Programmatic
     public String getPeriod(){
         return PeriodUtil.periodFromInterval(getInterval());
+    }
+
+    /**
+     * The date that this line item was reported to external auditors, thereby should be treated as immutable.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property
+    @javax.jdo.annotations.Persistent
+    @Getter @Setter
+    private LocalDate reportedDate;
+
+    /**
+     * Whether this item is a reversal of a previous invoice item, meaning that it should be treated as immutable.
+     *
+     * Note that reversals are only required on items that have become immutable, typically by virtue of having been
+     * {@link #getReportedDate() reported} to external auditors.
+     */
+    @javax.jdo.annotations.Column(allowsNull = "true", name = "reversalOfInvoiceItemId")
+    @Property
+    @Getter @Setter
+    private IncomingInvoiceItem reversalOf;
+
+
+    void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
+        buf.append(() -> getReversalOf() != null, "item is a reversal");
+        buf.append(() -> getReportedDate() != null, "item has been reported");
+    }
+
+    boolean neitherReversalNorReported() {
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        appendReasonIfReversalOrReported(buf);
+        return buf.getReason() == null;
     }
 
 
@@ -337,7 +415,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableUpdateAmounts(){
-        return isImmutable() ? itemImmutableReason() : null;
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot update amounts because");
+
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
+
+        return buf.getReason();
     }
 
     public String validate0UpdateAmounts(final BigDecimal proposedNetAmount) {
@@ -379,7 +461,12 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDescription(){
-        return isImmutable() ? itemImmutableReason() : null;
+
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle("Cannot edit description because");
+
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
+
+        return buf.getReason();
     }
 
 
@@ -398,7 +485,8 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableEditDueDate(){
-        return isImmutable() ? itemImmutableReason() : null;
+        final ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot edit due date because");
+        return appendReasonIfReversalOrReportedOrApprovalState(buf).getReason();
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
@@ -493,6 +581,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return budgetItemIsImmutableReason();
     }
 
+
+
+
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editPeriod(@Nullable final String period){
         if (PeriodUtil.isValidPeriod(period)){
             setStartDate(PeriodUtil.yearFromPeriod(period).startDate());
@@ -509,68 +604,147 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         return PeriodUtil.isValidPeriod(period) ? null : "Not a valid period";
     }
 
-
-
-
-    private boolean isImmutable(){
-        IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        return invoice.isImmutable();
+    public String disableEditPeriod(){
+        return periodIsImmutableReason();
     }
 
-    private String itemImmutableReason(){
-        return "The invoice cannot be changed";
+
+
+
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoice reverse() {
+
+        final IncomingInvoice incomingInvoice = getIncomingInvoice();
+
+        incomingInvoice.reverseItem(this);
+
+        return incomingInvoice;
     }
 
-    private String chargeIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Charge cannot be changed because this item is linked to an order";
-        }
-        if (this.getBudgetItem()!=null){
-            return "Charge cannot be changed because this item is linked to a budget";
-        }
-        return null;
+    public String disableReverse() {
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Item cannot be reversed because");
+
+        buf.append(getReportedDate() == null, "item has not yet been reported");
+        buf.append(getReversalOf() != null, "item is itself a reversal");
+
+        return buf.getReason();
     }
 
-    private String fixedAssetIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Fixed asset cannot be changed because this item is linked to an order";
-        }
-        if (this.getBudgetItem()!=null){
-            return "Fixed asset cannot be changed because this item is linked to a budget";
-        }
-        if (this.getProject()!=null){
-            return "Fixed asset cannot be changed because this item is linked to a project";
-        }
-        return null;
+
+
+    String chargeIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Charge cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
+        appendReasonIfLinkedToABudget(buf);
+
+        return buf.getReason();
     }
 
-    private String budgetItemIsImmutableReason(){
-        IncomingInvoice invoice = (IncomingInvoice) this.getInvoice();
-        if (invoice.getType()==null || invoice.getType()!=IncomingInvoiceType.SERVICE_CHARGES){
-            return "Budget item cannot be changed because the invoice has not type service charges";
-        }
-        if (this.isLinkedToOrderItem()){
-            return "Budget item cannot be changed because this invoice item is linked to an order";
-        }
-        return null;
+    String fixedAssetIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Fixed asset cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
+        appendReasonIfLinkedToABudget(buf);
+        appendReasonIfLinkedToAProject(buf);
+
+        return buf.getReason();
     }
 
-    private String projectIsImmutableReason(){
-        if (this.isLinkedToOrderItem()){
-            return "Project cannot be changed because this item is linked to an order";
-        }
-        return null;
+    String budgetItemIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Budget item cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+
+        buf.append(
+                !hasType(IncomingInvoiceType.SERVICE_CHARGES),
+                "parent invoice is not for service charges");
+        appendReasonIfLinkedToAnOrder(buf);
+
+        return buf.getReason();
+    }
+
+    String projectIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Project cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+        appendReasonIfLinkedToAnOrder(buf);
+
+        return buf.getReason();
+    }
+
+    String periodIsImmutableReason(){
+
+        // nb: dimensions *are* allowed to change irrespective of state,
+        // so we don't check IncomingInvoice#isImmutableDueToState()
+
+        final ReasonBuffer2 buf =
+                ReasonBuffer2.forAll("Period cannot be changed because");
+
+        appendReasonIfReversalOrReported(buf);
+
+        return buf.getReason();
+    }
+
+
+
+    private boolean hasType(final IncomingInvoiceType serviceCharges) {
+        final IncomingInvoiceType incomingInvoiceType = getIncomingInvoice().getType();
+        return incomingInvoiceType != null && incomingInvoiceType == serviceCharges;
+    }
+
+
+    private void appendReasonIfLinkedToAProject(final ReasonBuffer2 buf) {
+        buf.append(this.getProject() != null, "item is linked to a project");
+    }
+
+    private void appendReasonIfLinkedToABudget(final ReasonBuffer2 buf) {
+        buf.append(this.getBudgetItem() != null, "item is linked to a budget");
+    }
+
+    private void appendReasonIfLinkedToAnOrder(final ReasonBuffer2 buf) {
+        buf.append(this.isLinkedToOrderItem(), "item is linked to an order");
     }
 
     boolean isLinkedToOrderItem(){
-        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()>0){
-            return true;
-        }
-        return false;
+        final List<OrderItemInvoiceItemLink> numberOfLinks =
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
+        return numberOfLinks.size() > 0;
     }
 
-
-
+    /**
+     * The inherited {@link #changeTax(Tax)} action applies to this subtype, but the disablement rules
+     * are completely different.
+     */
+    @Override
+    protected void appendReasonChangeTaxDisabledIfAny(final ReasonBuffer2 buf) {
+        appendReasonIfReversalOrReportedOrApprovalState(buf);
+    }
 
 
 
@@ -587,7 +761,16 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
     }
 
     public String disableRemoveItem(){
-        return isImmutable() ? itemImmutableReason() : null;
+        final ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot remove item because");
+        return appendReasonIfReversalOrReportedOrApprovalState(buf).getReason();
+    }
+
+    private ReasonBuffer2 appendReasonIfReversalOrReportedOrApprovalState(final ReasonBuffer2 buf) {
+        appendReasonIfReversalOrReported(buf);
+
+        final Object viewContext = getInvoice();
+        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+        return buf;
     }
 
     @Programmatic
@@ -750,27 +933,32 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoiceItem> implem
         }
     }
 
-
-
     @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
 
     @Inject
+    @NotPersistent
     ChargeRepository chargeRepository;
 
     @Inject
+    @NotPersistent
     RepositoryService repositoryService;
 
     @Inject
+    @NotPersistent
     ProjectRepository projectRepository;
 
     @Inject
+    @NotPersistent
     OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
+    @NotPersistent
     BudgetItemChooser budgetItemChooser;
 
     @Inject
+    @NotPersistent
     QueryResultsCache queryResultsCache;
 
 }

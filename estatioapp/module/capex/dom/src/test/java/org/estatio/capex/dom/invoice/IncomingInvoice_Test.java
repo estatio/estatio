@@ -3,6 +3,7 @@ package org.estatio.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -15,6 +16,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.metamodel.MetaModelService2;
+import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -28,6 +31,8 @@ import org.estatio.dom.party.Organisation;
 import org.estatio.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.COMPLETED;
+import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.NEW;
 import static org.incode.module.unittestsupport.dom.matchers.IsisMatchers.anInstanceOf;
 
 public class IncomingInvoice_Test {
@@ -136,12 +141,12 @@ public class IncomingInvoice_Test {
             // when condition satisfied
             result = validator.checkNotNull(new Object(), "some property name").getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // and when not conditions satisfied
             result = validator.checkNotNull(null, "some property name").getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("some property name required");
+            assertThat(result).isEqualTo("some property name required");
 
         }
 
@@ -158,7 +163,7 @@ public class IncomingInvoice_Test {
             invoice.setType(IncomingInvoiceType.CAPEX);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("property required");
+            assertThat(result).isEqualTo("property required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -167,7 +172,7 @@ public class IncomingInvoice_Test {
             invoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("property required");
+            assertThat(result).isEqualTo("property required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -176,7 +181,7 @@ public class IncomingInvoice_Test {
             invoice.setType(IncomingInvoiceType.SERVICE_CHARGES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("property required");
+            assertThat(result).isEqualTo("property required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -185,31 +190,31 @@ public class IncomingInvoice_Test {
             invoice.setType(IncomingInvoiceType.LOCAL_EXPENSES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // and when all conditions satisfied
             invoice.setType(IncomingInvoiceType.INTERCOMPANY);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // and when all conditions satisfied
             invoice.setType(IncomingInvoiceType.TANGIBLE_FIXED_ASSET);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // and when all conditions satisfied
             invoice.setType(IncomingInvoiceType.RE_INVOICING);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // and when all conditions satisfied
             invoice.setType(IncomingInvoiceType.CORPORATE_EXPENSES);
             result = validator.validateForIncomingInvoiceType(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
         }
 
@@ -226,7 +231,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.BANK_TRANSFER);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("bank account required");
+            assertThat(result).isEqualTo("bank account required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -235,7 +240,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.BILLING_ACCOUNT);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("bank account required");
+            assertThat(result).isEqualTo("bank account required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -244,7 +249,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.CASH);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("bank account required");
+            assertThat(result).isEqualTo("bank account required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -253,7 +258,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.CHEQUE);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isEqualTo("bank account required");
+            assertThat(result).isEqualTo("bank account required");
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -262,7 +267,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
             // given
             validator = new IncomingInvoice.Validator();
@@ -271,7 +276,7 @@ public class IncomingInvoice_Test {
             invoice.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
             result = validator.validateForPaymentMethod(invoice).getResult();
             // then
-            Assertions.assertThat(result).isNull();
+            assertThat(result).isNull();
 
         }
 
@@ -379,9 +384,9 @@ public class IncomingInvoice_Test {
             invoice.splitItem(itemToSplit, description, newItemNetAmount, newItemVatAmount, tax, newItemGrossAmount,charge, property, project, budgetItem, period);
 
             // then
-            Assertions.assertThat(itemToSplit.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
-            Assertions.assertThat(itemToSplit.getVatAmount()).isEqualTo(new BigDecimal("30.00"));
-            Assertions.assertThat(itemToSplit.getGrossAmount()).isEqualTo(new BigDecimal("180.00"));
+            assertThat(itemToSplit.getNetAmount()).isEqualTo(new BigDecimal("150.00"));
+            assertThat(itemToSplit.getVatAmount()).isEqualTo(new BigDecimal("30.00"));
+            assertThat(itemToSplit.getGrossAmount()).isEqualTo(new BigDecimal("180.00"));
 
         }
     }
@@ -420,6 +425,121 @@ public class IncomingInvoice_Test {
             invoice.reasonDisabledDueToState(invoice);
 
         }
+    }
+
+
+    public static class reasonDisabledDueToApprovalStateIfAny_Test extends IncomingInvoice_Test {
+
+        IncomingInvoice incomingInvoice;
+        IncomingInvoiceApprovalState state;
+
+        @Mock
+        MetaModelService3 mockMetaModelService3;
+
+        @Before
+        public void setUp() throws Exception {
+            incomingInvoice = new IncomingInvoice() {
+                @Override public IncomingInvoiceApprovalState getApprovalState() {
+                    return state;
+                }
+            };
+            incomingInvoice.metaModelService3 = mockMetaModelService3;
+        }
+
+        @Test
+        public void when_state_unknown() throws Exception {
+
+            // given
+            state = null;
+
+            // when
+            final IncomingInvoice viewContext = incomingInvoice;
+            final String reason = incomingInvoice.reasonDisabledDueToApprovalStateIfAny(viewContext);
+
+            // then
+            assertThat(reason).isEqualTo("Cannot modify invoice because invoice state is unknown (was migrated so assumed to be approved)");
+
+        }
+
+        @Test
+        public void when_state_new() throws Exception {
+
+            // given
+            state = NEW;
+
+            // when
+            final IncomingInvoice viewContext = incomingInvoice;
+            final String reason = incomingInvoice.reasonDisabledDueToApprovalStateIfAny(viewContext);
+
+            // then
+            assertThat(reason).isNull();
+
+        }
+
+        @Test
+        public void when_state_completed_and_entity() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.COMPLETED;
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockMetaModelService3).sortOf(incomingInvoice.getClass());
+                will(returnValue(MetaModelService2.Sort.JDO_ENTITY));
+            }});
+
+            // when
+            final IncomingInvoice viewContext = incomingInvoice;
+            final String reason = incomingInvoice.reasonDisabledDueToApprovalStateIfAny(viewContext);
+
+            // then
+            assertThat(reason).isNull();
+
+        }
+
+        @Test
+        public void when_state_completed_and_view_model() throws Exception {
+
+            // given
+            state = IncomingInvoiceApprovalState.COMPLETED;
+
+            // expecting
+            context.checking(new Expectations() {{
+                oneOf(mockMetaModelService3).sortOf(incomingInvoice.getClass());
+                will(returnValue(MetaModelService2.Sort.VIEW_MODEL));
+            }});
+
+            // when
+            final IncomingInvoice viewContext = incomingInvoice;
+            final String reason = incomingInvoice.reasonDisabledDueToApprovalStateIfAny(viewContext);
+
+            // then
+            assertThat(reason).isEqualTo("Cannot modify invoice because modification through view not allowed once invoice is COMPLETED");
+
+        }
+
+        @Test
+        public void when_state_other() throws Exception {
+
+            for (final IncomingInvoiceApprovalState state :
+                            Arrays.asList(IncomingInvoiceApprovalState.values()).stream().
+                                    filter(x -> x != NEW && x != COMPLETED)
+                                    .collect(Collectors.toList())) {
+
+                // given
+                this.state = state;
+
+                // when
+                final IncomingInvoice viewContext = incomingInvoice;
+                final String reason = incomingInvoice.reasonDisabledDueToApprovalStateIfAny(viewContext);
+
+                // then
+                assertThat(reason).isEqualTo("Cannot modify invoice because invoice is in state of " + state);
+            }
+
+        }
+
+
     }
 
 
@@ -528,7 +648,7 @@ public class IncomingInvoice_Test {
         @Test
         public void when_new() {
             // given
-            invoice.setApprovalState(IncomingInvoiceApprovalState.NEW);
+            invoice.setApprovalState(NEW);
 
             // when
             final String reason = invoice.reasonDisabledDueToStateStrict();
@@ -541,7 +661,7 @@ public class IncomingInvoice_Test {
         public void when_anything_else() {
 
             Arrays.stream(IncomingInvoiceApprovalState.values())
-                  .filter(state -> state != IncomingInvoiceApprovalState.NEW)
+                  .filter(state -> state != NEW)
                   .forEach(state -> {
 
                 // given

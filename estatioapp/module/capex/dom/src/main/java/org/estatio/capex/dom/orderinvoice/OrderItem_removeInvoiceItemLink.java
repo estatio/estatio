@@ -1,6 +1,7 @@
 package org.estatio.capex.dom.orderinvoice;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +41,9 @@ public class OrderItem_removeInvoiceItemLink extends OrderItem_abstractMixinInvo
     }
 
     public List<IncomingInvoiceItem> choices0Act() {
-        return orderItemInvoiceItemLinkRepository.findLinkedInvoiceItemsByOrderItem(mixee);
+        return orderItemInvoiceItemLinkRepository.findLinkedInvoiceItemsByOrderItemAsStream(mixee)
+                .filter(x -> x.getReportedDate() == null) // ignore items those that have been reported
+                .filter(x -> x.getReversalOf() == null) // ignore reversals
+                .collect(Collectors.toList());
     }
 }

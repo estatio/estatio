@@ -81,6 +81,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -525,27 +526,25 @@ public class IncomingDocAsInvoiceViewModel
 
     @Override
     protected String reasonNotEditableIfAny() {
-        IncomingInvoice incomingInvoice = getDomainObject();
-        if (getIncomingInvoiceType() == null){
-            return "Incoming invoice type is required";
-        }
-        String propertyInvalidReason = getIncomingInvoiceType().validateProperty(getProperty());
-        if(propertyInvalidReason != null) {
-            return propertyInvalidReason;
-        }
-        final Object viewContext = this;
-        String reasonDisabledDueToState =
-                incomingInvoice.reasonDisabledDueToState(viewContext);
-        if(reasonDisabledDueToState != null) {
-            return reasonDisabledDueToState;
-        }
 
-        SortedSet<InvoiceItem> items = incomingInvoice.getItems();
-        if(items.size() > 1) {
-            return "Only simple invoices with 1 item can be maintained using this view";
-        }
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle();
 
-        return null;
+        buf.append(getIncomingInvoiceType() == null, "Incoming invoice type is required");
+        buf.append(() -> getIncomingInvoiceType().validateProperty(getProperty()));
+
+        buf.append(() -> {
+            final Object viewContext = IncomingDocAsInvoiceViewModel.this;
+            return getDomainObject().reasonDisabledDueToState(viewContext);
+        });
+
+        buf.append(() -> {
+            final IncomingInvoice incomingInvoice = getDomainObject();
+            SortedSet<InvoiceItem> items = incomingInvoice.getItems();
+            return items.size() > 1 ? "Only simple invoices with 1 item can be maintained using this view" : null;
+        });
+
+
+        return buf.getReason();
     }
 
 

@@ -239,7 +239,9 @@ public class Agreement_Test {
             debtorAgreementRoleType = new AgreementRoleType();
 
             creditor = new Organisation();
+            creditor.setName("creditor");
             debtor = new Person();
+            debtor.setName("debtor");
 
             creditorAr = new AgreementRole();
             creditorAr.setType(creditorAgreementRoleType);

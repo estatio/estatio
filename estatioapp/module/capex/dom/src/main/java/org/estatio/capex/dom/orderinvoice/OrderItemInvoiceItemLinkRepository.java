@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -77,9 +78,14 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     @Programmatic
     public List<IncomingInvoiceItem> findLinkedInvoiceItemsByOrderItem(final OrderItem orderItem) {
-        return findByOrderItem(orderItem).stream()
-                .map(OrderItemInvoiceItemLink::getInvoiceItem)
+        return findLinkedInvoiceItemsByOrderItemAsStream(orderItem)
                 .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public Stream<IncomingInvoiceItem> findLinkedInvoiceItemsByOrderItemAsStream(final OrderItem orderItem) {
+        return findByOrderItem(orderItem).stream()
+                .map(OrderItemInvoiceItemLink::getInvoiceItem);
     }
 
     @Programmatic

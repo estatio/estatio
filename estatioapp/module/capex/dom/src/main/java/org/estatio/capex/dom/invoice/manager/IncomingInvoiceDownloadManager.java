@@ -2,15 +2,22 @@ package org.estatio.capex.dom.invoice.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
@@ -20,12 +27,14 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 import org.apache.isis.applib.value.Blob;
+import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
@@ -40,6 +49,7 @@ import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -49,14 +59,22 @@ import org.estatio.capex.dom.state.NatureOfTransition;
 import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @DomainObject(
-        nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.capex.dom.invoice.manager.IncomingInvoiceDownloadManager")
+@XmlRootElement(name = "incomingInvoiceDownloadManager")
+@XmlType(
+        propOrder = {
+
+        }
+)
+@XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
 public class IncomingInvoiceDownloadManager {
 
@@ -67,100 +85,163 @@ public class IncomingInvoiceDownloadManager {
         }
     }
 
-
-
     public String title() {
         return "Invoice Download";
     }
 
-    public IncomingInvoiceDownloadManager(final LocalDate fromInputDate, final LocalDate toInputDate, final org.estatio.dom.asset.Property property, final IncomingInvoiceType incomingInvoiceType){
-        this.fromInputDate = fromInputDate;
-        this.toInputDate = toInputDate;
-        this.propertyReference = property == null ? null : property.getReference();
-        this.incomingInvoiceTypeName = incomingInvoiceType == null ? null : incomingInvoiceType.name();
+    public IncomingInvoiceDownloadManager(
+            final Property property,
+            final LocalDate reportedDate,
+            final IncomingInvoiceType incomingInvoiceType) {
+        this.reportedDate = reportedDate;
+        this.property = property;
+        this.incomingInvoiceType = incomingInvoiceType;
     }
 
+    /**
+     * If not set when 'allProperties' not set, will pick up invoices which have no associated properties.
+     */
+    @XmlElement(required = false)
+    @Nullable
     @Getter @Setter
-    private LocalDate fromInputDate;
+    private Property property;
 
-    @Getter @Setter
-    private LocalDate toInputDate;
 
-    @Getter @Setter
-    private String propertyReference;
-
-    @Getter @Setter
-    @PropertyLayout(named = "Incoming Invoice Type")
-    private String incomingInvoiceTypeName;
-
-    public Property getProperty(){
-        return getPropertyReference() == null ? null : propertyRepository.findPropertyByReference(getPropertyReference());
+    @XmlTransient
+    public boolean isAllUnreported() {
+        return getReportedDate() == null;
     }
 
-    IncomingInvoiceType getIncomingInvoiceType() {
-        return getIncomingInvoiceTypeName() == null ? null : IncomingInvoiceType.valueOf(getIncomingInvoiceTypeName());
+    /**
+     * Required if 'allUnreported' not set
+     */
+    @XmlElement(required = false)
+    @Nullable
+    @Getter @Setter
+    @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
+    private LocalDate reportedDate;
+
+
+
+    @XmlTransient
+    public boolean isAllTypes() {
+        return getIncomingInvoiceType() == null;
     }
+
+    /**
+     * Required if 'allTypes' is not set.
+     */
+    @XmlElement(required = false)
+    @Nullable
+    @Getter @Setter
+    private IncomingInvoiceType incomingInvoiceType;
+
+
+
+    @XmlTransient
+    public int getNumberOfInvoices() {
+        return getInvoices().size();
+    }
+    @XmlTransient
+    public int getNumberOfInvoiceItems() {
+        return getInvoiceItems().size();
+    }
+
 
 
     @CollectionLayout(defaultView = "table")
     public List<IncomingInvoice> getInvoices() {
-        final Predicate<IncomingInvoice> excludeNew = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.NEW);
-        final Predicate<IncomingInvoice> excludeDiscarded = x -> !x.getApprovalState().equals(IncomingInvoiceApprovalState.DISCARDED);
-        final Predicate<IncomingInvoice> filterType = getIncomingInvoiceType()!= null ? x -> x.getType().equals(getIncomingInvoiceType()) : x->true;
-        return incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(getProperty(), getFromInputDate(), getToInputDate())
-                .stream()
-                .filter(excludeNew)
-                .filter(excludeDiscarded)
-                .filter(filterType)
+        return getInvoiceItems().stream().map(InvoiceItem::getInvoice)
+                .filter(IncomingInvoice.class::isInstance)
+                .map(IncomingInvoice.class::cast)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
-    @Programmatic
-    private List<IncomingInvoiceItem> getInvoiceItems() {
-        return getInvoices().stream()
-                .flatMap(inv -> inv.getItems().stream())
-                .map(invoiceItem -> (IncomingInvoiceItem) invoiceItem)
-                .collect(Collectors.toList());
+    List<IncomingInvoiceItem> getInvoiceItems() {
+        if(getIncomingInvoiceType() == null) {
+            return incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
+                    getProperty(), getReportedDate());
+        } else {
+            return incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
+                    getProperty(), getIncomingInvoiceType(), getReportedDate());
+        }
     }
 
-    @Programmatic
-    public IncomingInvoiceDownloadManager init() {
-        return this;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public IncomingInvoiceDownloadManager report() {
+        LocalDate reportedDate = clockService.now();
+        final List<IncomingInvoiceItem> invoiceItems = getInvoiceItems();
+        for (IncomingInvoiceItem invoiceItem : invoiceItems) {
+            if(invoiceItem.getReportedDate() == null) {
+                invoiceItem.setReportedDate(reportedDate);
+            }
+        }
+        return new IncomingInvoiceDownloadManager(
+                property, reportedDate, incomingInvoiceType);
+    }
+    public String disableReport() {
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        buf.append(getReportedDate() != null, "Clear 'report date' in order to report on all items currently unreported.");
+        buf.append(getInvoices().isEmpty(), "No invoices");
+        return buf.getReason();
     }
 
 
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @ActionLayout(contributed= Contributed.AS_ACTION)
-    public IncomingInvoiceDownloadManager changeParameters(
-            final LocalDate fromInputDate,
-            final LocalDate toInputDate,
+    public IncomingInvoiceDownloadManager changeReportedDate(
             @Nullable
-            final org.estatio.dom.asset.Property property,
+            final LocalDate reportedDate){
+        return new IncomingInvoiceDownloadManager(
+                property, reportedDate, incomingInvoiceType);
+    }
+
+    public LocalDate default0ChangeReportedDate() {
+        return getReportedDate();
+    }
+
+    public List<LocalDate> choices0ChangeReportedDate() {
+        return incomingInvoiceItemRepository.findDistinctReportDates();
+    }
+
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public IncomingInvoiceDownloadManager changeProperty(
             @Nullable
-            final IncomingInvoiceType incomingInvoiceType){
-        setFromInputDate(fromInputDate);
-        setToInputDate(toInputDate);
-        setPropertyReference(property == null ? null : property.getReference());
-        setIncomingInvoiceTypeName(incomingInvoiceType == null ? null : incomingInvoiceType.name());
-        return new IncomingInvoiceDownloadManager(fromInputDate, toInputDate, property, incomingInvoiceType);
+            final org.estatio.dom.asset.Property property){
+        return new IncomingInvoiceDownloadManager(
+                property, reportedDate, incomingInvoiceType);
     }
 
-    public LocalDate default0ChangeParameters() {
-        return getFromInputDate();
-    }
-
-    public LocalDate default1ChangeParameters() {
-        return getToInputDate();
-    }
-
-    public Property default2ChangeParameters() {
+    public Property default0ChangeProperty() {
         return getProperty();
     }
 
-    public IncomingInvoiceType default3ChangeParameters() {
+    public List<Property> choices0ChangeProperty() {
+        return propertyRepository.allProperties();
+    }
+
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public IncomingInvoiceDownloadManager changeType(
+            @Nullable
+            final IncomingInvoiceType incomingInvoiceType){
+        return new IncomingInvoiceDownloadManager(
+                property, reportedDate, incomingInvoiceType);
+    }
+
+    public IncomingInvoiceType default0ChangeType() {
         return getIncomingInvoiceType();
     }
+
 
 
 
@@ -187,7 +268,7 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToExcel() {
-        return getInvoices().isEmpty() ? "No invoices to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
     }
 
 
@@ -213,7 +294,7 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToPdfSingle() {
-        return getInvoices().isEmpty() ? "No invoices to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
     }
 
     public String default0DownloadToPdfSingle() {
@@ -250,12 +331,13 @@ public class IncomingInvoiceDownloadManager {
     }
 
     public String disableDownloadToPdfZipped() {
-        return getInvoices().isEmpty() ? "No invoices to download": null;
+        return getInvoiceItems().isEmpty() ? "No invoice items to download": null;
     }
 
     public String default0DownloadToPdfZipped() {
         return defaultFileNameWithSuffix(".zip");
     }
+
 
 
 
@@ -356,11 +438,27 @@ public class IncomingInvoiceDownloadManager {
     final static Class exportClass = IncomingInvoiceExport.class;
 
     String defaultFileNameWithSuffix(final String suffix) {
-        final String fileName = String.format("%s_%s_%s-%s",
+
+        final String reportedDate =
+                isAllUnreported()
+                        ? "unreported"
+                        : getReportedDate().toString("yyyyMMdd");
+
+        final String propertyRef =
+                getProperty() != null
+                        ? getProperty().getReference()
+                        : "withNoProperty";
+
+        final String type =
+                getIncomingInvoiceType() != null
+                        ? getIncomingInvoiceType().name()
+                        : "allIncomingInvoiceTypes";
+
+        final String fileName = String.format("%s_%s_%s_%s",
                 exportClass.getSimpleName(),
-                getPropertyReference() == null ? "" : getPropertyReference(),
-                getFromInputDate().toString("yyyyMMdd"),
-                getToInputDate().toString("yyyyMMdd")
+                reportedDate,
+                propertyRef,
+                type
         );
 
         return fileName.concat(suffix);
@@ -368,38 +466,93 @@ public class IncomingInvoiceDownloadManager {
 
 
 
-    @javax.inject.Inject
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TableColumnOrderServiceForDownloadManager implements TableColumnOrderService
+ {
+
+     @Override
+     public List<String> orderParented(
+             final Object parent,
+             final String collectionId,
+             final Class<?> collectionType,
+             final List<String> propertyIds) {
+         if (!(parent instanceof IncomingInvoiceDownloadManager)) {
+             return null;
+         }
+
+         return Arrays.asList(
+                 "buyer",
+                 "seller",
+                 "type",
+                 //"property",
+                 //"atPath",
+                 //"number",
+                 "grossAmount",
+                 //"bankAccount",
+                 "paymentMethod",
+                 "dateReceived",
+                 "invoiceDate",
+                 "dueDate",
+                 "approvalState"
+         );
+     }
+
+     @Override
+     public List<String> orderStandalone(final Class<?> collectionType, final List<String> propertyIds) {
+         return null;
+     }
+ }
+
+
+    @Inject
+    @XmlTransient
     IncomingInvoiceRepository incomingInvoiceRepository;
 
     @Inject
+    @XmlTransient
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+
+    @Inject
+    @XmlTransient
     CodaMappingRepository codaMappingRepository;
 
     @Inject
+    @XmlTransient
     PropertyRepository propertyRepository;
 
     @Inject
+    @XmlTransient
     StateTransitionRepositoryGeneric stateTransitionRepositoryGeneric;
 
     @Inject
+    @XmlTransient
     IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
 
-
     @javax.inject.Inject
+    @XmlTransient
     ExcelService excelService;
 
 
     @javax.inject.Inject
+    @XmlTransient
     PdfManipulator pdfManipulator;
 
     @javax.inject.Inject
+    @XmlTransient
     LookupAttachedPdfService lookupAttachedPdfService;
 
 
     @javax.inject.Inject
+    @XmlTransient
     PdfBoxService2 pdfBoxService2;
 
     @javax.inject.Inject
+    @XmlTransient
     ZipService zipService;
+
+    @javax.inject.Inject
+    @XmlTransient
+    ClockService clockService;
 
 
 }

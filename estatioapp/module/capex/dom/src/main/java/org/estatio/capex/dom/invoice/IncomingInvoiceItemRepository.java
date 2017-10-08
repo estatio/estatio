@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import com.google.common.collect.Lists;
 
@@ -15,14 +17,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.party.Party;
 import org.estatio.tax.dom.Tax;
 
@@ -58,10 +63,10 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem) {
-        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, property, project, budgetItem);
+        final IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem(sequence, invoice, incomingInvoiceType, charge, description, netAmount, vatAmount, grossAmount, tax, dueDate, startDate, endDate, fixedAsset, project, budgetItem);
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
 
@@ -84,7 +89,7 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem) {
         IncomingInvoiceItem invoiceItem = findByInvoiceAndChargeAndSequence(invoice, charge, sequence);
@@ -102,7 +107,7 @@ public class IncomingInvoiceItemRepository {
                     dueDate,
                     startDate,
                     endDate,
-                    property,
+                    fixedAsset,
                     project,
                     budgetItem);
         } else {
@@ -117,7 +122,7 @@ public class IncomingInvoiceItemRepository {
                     dueDate,
                     startDate,
                     endDate,
-                    property,
+                    fixedAsset,
                     project,
                     budgetItem);
         }
@@ -136,7 +141,7 @@ public class IncomingInvoiceItemRepository {
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         invoiceItem.setSequence(sequence);
@@ -148,13 +153,13 @@ public class IncomingInvoiceItemRepository {
         invoiceItem.setDueDate(dueDate);
         invoiceItem.setStartDate(startDate);
         invoiceItem.setEndDate(endDate);
-        invoiceItem.setFixedAsset(property);
+        invoiceItem.setFixedAsset(fixedAsset);
         invoiceItem.setProject(project);
         invoiceItem.setBudgetItem(budgetItem);
     }
 
     @Programmatic
-    public void addItem(
+    public IncomingInvoiceItem addItem(
             final IncomingInvoice incomingInvoice,
             final IncomingInvoiceType type,
             final Charge charge,
@@ -165,11 +170,11 @@ public class IncomingInvoiceItemRepository {
             final Tax tax,
             final LocalDate dueDate,
             final String period,
-            final Property property,
+            final FixedAsset<?> fixedAsset,
             final Project project,
             final BudgetItem budgetItem){
         final BigInteger sequence = incomingInvoice.nextItemSequence();
-        upsert(
+        return upsert(
             sequence,
             incomingInvoice,
             type,
@@ -182,7 +187,7 @@ public class IncomingInvoiceItemRepository {
             dueDate,
             PeriodUtil.yearFromPeriod(period).startDate(),
             PeriodUtil.yearFromPeriod(period).endDate(),
-            property,
+            fixedAsset,
             project,
             budgetItem);
     }
@@ -250,9 +255,83 @@ public class IncomingInvoiceItemRepository {
                 .collect(Collectors.toList());
     }
 
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndReportedDate(
+            final Property property,
+            final LocalDate reportedDate) {
+
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByFixedAssetAndReportedDate",
+                        "fixedAsset", property,
+                        "reportedDate", reportedDate
+                ));
+
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
+    }
+
+    @Programmatic
+    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
+            final Property property,
+            final IncomingInvoiceType incomingInvoiceType,
+            final LocalDate reportedDate) {
+
+        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoiceItem.class,
+                        "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate",
+                        "fixedAsset", property,
+                        "incomingInvoiceType", incomingInvoiceType,
+                        "reportedDate", reportedDate
+                ));
+
+        return filterByCompletedOrLaterInvoices(items, reportedDate);
+    }
+
+    private List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
+            final List<IncomingInvoiceItem> items,
+            final LocalDate reportedDate) {
+
+        // we can't filter by property or incoming invoice type to filter here
+        // because individual invoice items can override
+        final List<? extends Invoice> incomingInvoices =
+                incomingInvoiceRepository.findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+
+        // client-side join :-(
+        return items.stream()
+                .filter(x -> {
+                    final Invoice<?> invoice = x.getInvoice();
+                    return incomingInvoices.contains(invoice);
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    @Programmatic
+    public List<LocalDate> findDistinctReportDates() {
+        final PersistenceManager pm = isisJdoSupport.getJdoPersistenceManager();
+        final Query query = pm.newQuery(IncomingInvoiceItem.class);
+        query.setResultClass(LocalDate.class);
+        query.setResult("distinct reportedDate");
+        query.setOrdering("reportedDate descending");
+        return executeListAndClose(query);
+    }
+
+    private static <T> List<T> executeListAndClose(final Query query) {
+        final List<T> elements = (List<T>) query.execute();
+        final List<T> list = Lists.newArrayList(elements);
+        query.closeAll();
+        return list;
+    }
+
+    @Inject
+    IsisJdoSupport isisJdoSupport;
     @Inject
     RepositoryService repositoryService;
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
+    @Inject
+    IncomingInvoiceRepository incomingInvoiceRepository;
 }
