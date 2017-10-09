@@ -41,6 +41,7 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfFixtureForOrder().setRunAs("estatio-user-gb"));
+        executionContext.executeChild(this, new PersonForDylanClaytonGb());
 
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForOrder.resourceName).get(0);
         fakeOrder2Doc.setCreatedAt(new DateTime(2014,3,5,10,0));

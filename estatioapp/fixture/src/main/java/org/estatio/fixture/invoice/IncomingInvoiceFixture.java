@@ -49,6 +49,7 @@ public class IncomingInvoiceFixture extends FixtureScript {
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new OrderFixture());
         executionContext.executeChild(this, new IncomingPdfFixtureForInvoice().setRunAs("estatio-user-gb"));
+        executionContext.executeChild(this, new PersonForDylanClaytonGb());
 
         Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForInvoice.resourceName).get(0);
         fakeInvoice2Doc.setCreatedAt(new DateTime(2014,5,22,11,10));
