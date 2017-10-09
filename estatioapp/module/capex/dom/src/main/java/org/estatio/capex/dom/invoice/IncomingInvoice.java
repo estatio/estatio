@@ -455,7 +455,14 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     }
 
     public String disableReverseItem() {
-        return choices0ReverseItem().isEmpty() ? "No items to reverse" : null;
+        ReasonBuffer2 buf = ReasonBuffer2.forAll("Invoice item cannot be reversed because");
+
+        final IncomingInvoice viewContext = this;
+        reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
+        buf.append(choices0ReverseItem().isEmpty(), "no items to reverse");
+
+        return buf.getReason();
     }
     public IncomingInvoiceItem default0ReverseItem() {
         final List<IncomingInvoiceItem> choices = choices0ReverseItem();

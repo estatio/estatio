@@ -627,6 +627,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
         final ReasonBuffer2 buf =
                 ReasonBuffer2.forAll("Item cannot be reversed because");
 
+        final IncomingInvoice viewContext = getIncomingInvoice();
+        getIncomingInvoice().reasonDisabledDueToApprovalStateIfAny(viewContext, buf);
+
         buf.append(getReportedDate() == null, "item has not yet been reported");
         buf.append(getReversalOf() != null, "item is itself a reversal");
 
