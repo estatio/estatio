@@ -17,6 +17,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.order.viewmodel.OrderItemPresentationViewmodel;
 import org.estatio.dom.party.Organisation;
 
 /**
@@ -33,8 +34,8 @@ public class IncomingDocAsInvoiceViewModel_candidateOrderItems {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<OrderItem> $$() {
-        List<OrderItem> result = new ArrayList<>();
+    public List<OrderItemPresentationViewmodel> $$() {
+        List<OrderItemPresentationViewmodel> result = new ArrayList<>();
         if (vm.getSeller() == null && vm.getProperty() == null){
             return result;
         }
@@ -43,7 +44,7 @@ public class IncomingDocAsInvoiceViewModel_candidateOrderItems {
             for (Order order : ordersFromSeller){
                 for (OrderItem orderItem : order.getItems()){
                     if (!orderItem.isInvoiced()){
-                        result.add(orderItem);
+                        result.add(new OrderItemPresentationViewmodel(orderItem));
                     }
                 }
             }
@@ -51,15 +52,15 @@ public class IncomingDocAsInvoiceViewModel_candidateOrderItems {
         if (vm.getProperty()!=null && vm.getSeller()==null){
             for (OrderItem orderItem : orderItemRepository.findByProperty(vm.getProperty())){
                 if (!orderItem.isInvoiced()){
-                    result.add(orderItem);
+                    result.add(new OrderItemPresentationViewmodel(orderItem));
                 }
             }
         }
         if (vm.getProject()!=null){
-            result = result.stream().filter(x->x.getProject()==vm.getProject()).collect(Collectors.toList());
+            result = result.stream().filter(x->x.getOrderItem().getProject()==vm.getProject()).collect(Collectors.toList());
         }
         if (vm.getCharge()!=null){
-            result = result.stream().filter(x->x.getCharge()==vm.getCharge()).collect(Collectors.toList());
+            result = result.stream().filter(x->x.getOrderItem().getCharge()==vm.getCharge()).collect(Collectors.toList());
         }
         return result;
     }

@@ -150,9 +150,15 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
             .withName(" ")
             .withName(getCharge().getReference());
         }
-        titleBuilder
-            .withName(" order: ")
-            .withName(getOrdr().getOrderNumber());
+        if (getOrdr().getSellerOrderReference()!=null) {
+            titleBuilder
+                    .withName(" order: ")
+                    .withName(getOrdr().getSellerOrderReference());
+        } else {
+            titleBuilder
+                    .withName(" order: ")
+                    .withName(getOrdr().getOrderNumber());
+        }
         if(isOverspent()) {
             titleBuilder.withName(" (overspent)");
         }
