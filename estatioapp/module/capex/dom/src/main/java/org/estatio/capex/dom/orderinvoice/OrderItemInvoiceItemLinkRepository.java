@@ -135,7 +135,7 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     BigDecimal calculateNetAmountNotLinkedFromInvoiceItem(final IncomingInvoiceItem invoiceItem) {
         final BigDecimal netAmount = calculateNetAmountLinkedFromInvoiceItem(invoiceItem);
-        return invoiceItem.getNetAmount().subtract(netAmount);
+        return invoiceItem.getNetAmount()!=null ? invoiceItem.getNetAmount().subtract(netAmount) : BigDecimal.ZERO;
     }
 
     BigDecimal sum(final List<OrderItemInvoiceItemLink> links) {

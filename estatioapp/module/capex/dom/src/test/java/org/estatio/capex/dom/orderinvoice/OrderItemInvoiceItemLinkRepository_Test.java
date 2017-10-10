@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
 public class OrderItemInvoiceItemLinkRepository_Test {
 
 
@@ -37,6 +39,24 @@ public class OrderItemInvoiceItemLinkRepository_Test {
         link.setInvoiceItem(new IncomingInvoiceItem());
         link.setNetAmount(netAmount2);
         return link;
+    }
+
+    @Test
+    public void calculateNetAmountNotLinkedFromInvoiceItem_works_when_netAmount_is_null() {
+
+        // given
+        OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository = new OrderItemInvoiceItemLinkRepository(){
+            @Override
+            public BigDecimal calculateNetAmountLinkedFromInvoiceItem(final IncomingInvoiceItem invoiceItem) {
+                return new BigDecimal("123.45");
+            }
+        };
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+        // when
+        invoiceItem.setNetAmount(null);
+        // then
+        assertThat(orderItemInvoiceItemLinkRepository.calculateNetAmountNotLinkedFromInvoiceItem(invoiceItem)).isEqualTo(BigDecimal.ZERO);
+
     }
 
 }
