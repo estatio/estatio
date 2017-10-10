@@ -3,6 +3,7 @@ package org.estatio.capex.dom.order.viewmodel;
 import java.math.BigDecimal;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 
 import org.estatio.capex.dom.order.OrderItem;
@@ -28,18 +29,23 @@ public class OrderItemPresentationViewmodel {
         }
 
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String sellerOrderReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private String description;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private BigDecimal outstandingAmount;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private BigDecimal netAmount;
 
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private OrderItem orderItem;
 
 }
