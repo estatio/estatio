@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><?asciidoc-toc?>
+<?asciidoc-numbered?>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
+<info>
+<title>Business Rules for linking Orders and Invoices</title>
+<date>2017-09-14</date>
+</info>
+<simpara>This discussion paper aims to clarify the rules to apply when linking <emphasis>Order</emphasis>s and <emphasis>Invoice</emphasis>s (or, more precisely, their corresponding <emphasis>Order Item</emphasis>s and <emphasis>Invoice Item</emphasis>s).
+It also tackles how changes to either <emphasis>Order</emphasis>s or <emphasis>Invoice</emphasis>s should be handled once they are have become immutable (due to accounting/reporting or treasury).</simpara>
+<section xml:id="_business_problem">
+<title>Business Problem</title>
+<simpara>The original motivation included these two related issues:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>(EST-1571) discover that the seller was incorrect on an <emphasis>Order</emphasis>; needs fixing</simpara>
+</listitem>
+<listitem>
+<simpara>(EST-1602) realise that an <emphasis>Order</emphasis> should be discarded (eg is a duplicate scan), but it has already been marked as completed/approved</simpara>
+</listitem>
+</itemizedlist>
+<simpara>This led into two sorts of discussions:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>how to make Estatio more user-friendly by defaulting information where possible when linking <emphasis>Order</emphasis>s and <emphasis>Invoice</emphasis>s together</simpara>
+</listitem>
+<listitem>
+<simpara>a deeper discussion about what additional constraints there are on whether an <emphasis>Order</emphasis> or an <emphasis>Invoice</emphasis> and its child items has become immutable.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>This paper tackles the <emphasis role="strong">first</emphasis> of these issues.</simpara>
+</section>
+<section xml:id="_terminology">
+<title>Terminology</title>
+<simpara>"Dimensions" are a means of characterising an <emphasis>Order</emphasis> or an <emphasis>Invoice</emphasis>.</simpara>
+<itemizedlist>
+<listitem>
+<simpara>defined at parent level, ie <emphasis>Invoice</emphasis> or the <emphasis>Order</emphasis>:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>seller party (also called supplier)</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>defined at item level <emphasis>Invoice Item</emphasis> or the <emphasis>Order Item</emphasis> :</simpara>
+<itemizedlist>
+<listitem>
+<simpara>property</simpara>
+</listitem>
+<listitem>
+<simpara>charge</simpara>
+</listitem>
+<listitem>
+<simpara>project</simpara>
+</listitem>
+<listitem>
+<simpara>budget</simpara>
+</listitem>
+<listitem>
+<simpara>period</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+<simpara>The invoice <emphasis>type</emphasis> determines the approval cycle; it also determines which dimensions are mandatory/must be left blank.</simpara>
+<itemizedlist>
+<listitem>
+<simpara>capex/service charge/property expense : have a two-stage approval cycle</simpara>
+<itemizedlist>
+<listitem>
+<simpara>capex: project is required, budget is blank</simpara>
+</listitem>
+<listitem>
+<simpara>service charge: project is blank, budget is required</simpara>
+</listitem>
+<listitem>
+<simpara>property expense: neither is required</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>local expense : single-stage approval cycle</simpara>
+</listitem>
+<listitem>
+<simpara>corporate expense : a (different) single-stage approval cycle</simpara>
+</listitem>
+</itemizedlist>
+</section>
+<section xml:id="_input_validation_rules">
+<title>Input/validation Rules</title>
+<section xml:id="_categorising_new_invoice_linking_immediately">
+<title>Categorising New Invoice + Linking Immediately</title>
+<simpara>given:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>already have <emphasis>Order</emphasis> with some or all of these dimensions on it: seller, charge, project, budget item, (period)</simpara>
+</listitem>
+<listitem>
+<simpara>and categorising a "new" <emphasis>Invoice</emphasis> (still modifiable):</simpara>
+<itemizedlist>
+<listitem>
+<simpara>(a) enter order number, and it’s valid</simpara>
+<itemizedlist>
+<listitem>
+<simpara>given list of <emphasis>Order Item</emphasis>s for that <emphasis>Order</emphasis></simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>(b) enter seller</simpara>
+<itemizedlist>
+<listitem>
+<simpara>given list of <emphasis>Order Item</emphasis>s of all of the <emphasis>Order</emphasis>s (not completely invoiced) of that seller</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+<simpara>when:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>select item and save</simpara>
+</listitem>
+</itemizedlist>
+<simpara>then</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Estatio creates a link the <emphasis>Invoice Item</emphasis> to that <emphasis>Order Item</emphasis></simpara>
+</listitem>
+<listitem>
+<simpara>copies over info from <emphasis>Order</emphasis> to <emphasis>Invoice</emphasis> based on the type of the <emphasis>Invoice</emphasis>:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>specifically, the seller</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>copies over info from <emphasis>Order Item</emphasis> to <emphasis>Invoice Item</emphasis> based on the type of the <emphasis>Invoice</emphasis>:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>if invoice is <emphasis role="strong">capex</emphasis></simpara>
+<itemizedlist>
+<listitem>
+<simpara>copies over charge, project (and property? - at the moment it does when using the viewmodel …​)</simpara>
+</listitem>
+<listitem>
+<simpara>ignores budget item, period</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>if invoice is <emphasis role="strong">service charge</emphasis></simpara>
+<itemizedlist>
+<listitem>
+<simpara>copies over: charge, budget item (and property? - at the moment it does when using the viewmodel …​)</simpara>
+</listitem>
+<listitem>
+<simpara>ignores budget item, period</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<simpara>if invoice is <emphasis role="strong">property expense</emphasis></simpara>
+<itemizedlist>
+<listitem>
+<simpara>copies over: charge (and property? - at the moment it does when using the viewmodel …​)</simpara>
+</listitem>
+<listitem>
+<simpara>ignores project, budget item, period</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+<note>
+<simpara>QN: What if some dimensions have been added to the <emphasis>InvoiceItem</emphasis> already?</simpara>
+<itemizedlist>
+<listitem>
+<simpara>do we ignore them and just overwrite?</simpara>
+</listitem>
+<listitem>
+<simpara>or, do not allow it to be overwritten, and instead use it to constrain the list of candidate <emphasis>Order item</emphasis>s?</simpara>
+<itemizedlist>
+<listitem>
+<simpara>if this last, then if enter just an <emphasis>Order Item</emphasis> and it’s incompatible with data already entered on the <emphasis>Invoice Item</emphasis>, then what?</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</note>
+</section>
+<section xml:id="_linking_invoice_items_afterwards">
+<title>Linking Invoice Items "afterwards"</title>
+<simpara>given:</simpara>
+<itemizedlist>
+<listitem>
+<simpara><emphasis>Invoice Item</emphasis> to be linked that currently has no links, but has dimensions entered onto it</simpara>
+</listitem>
+<listitem>
+<simpara>then:</simpara>
+</listitem>
+</itemizedlist>
+<note>
+<simpara>QN:</simpara>
+<simpara>do we use those dimensions as a way of excluding those <emphasis>Order Item</emphasis>s that do not meet those dimensions?</simpara>
+<simpara>or, do we just ignore any dimensions already entered on the <emphasis>Invoice Item</emphasis>, and show all (not completed invoiced) <emphasis>Order Item</emphasis>s; and overwrite dimensions from <emphasis>Order Item</emphasis> onto <emphasis>Invoice Item</emphasis>?</simpara>
+<simpara>or, do we show all (not completed invoiced) <emphasis>Order Item</emphasis>s but not allow an <emphasis>Order Item</emphasis> to be selected that has mismatched dimensions? [This is what we currently do]</simpara>
+<simpara>or, perhaps a half-way house?  show candidate items, including those that mismatch on the dimensions, but allow those selected to be copied if requested (eg an "overwrite" flag or flags)</simpara>
+</note>
+</section>
+<section xml:id="_linking_invoice_items_afterwards_unmodifiable_invoice">
+<title>Linking Invoice Items "afterwards", unmodifiable Invoice</title>
+<simpara>given:</simpara>
+<itemizedlist>
+<listitem>
+<simpara><emphasis>Invoice Item</emphasis> to be linked that currently is linked to another <emphasis>Order Item</emphasis>, and want to link to further <emphasis>Order Item</emphasis>(s)</simpara>
+<simpara>eg, if the invoice had to be paid to the suppliers before orders for the invoice existed (so this is a post-payment fixing up the accruals of costs)</simpara>
+<note>
+<simpara>QNs</simpara>
+<simpara>My guess is that the selected <emphasis>Order Item</emphasis> must have compatible dimensions with the <emphasis>Invoice Item</emphasis>'s dimensions, because those dimensions are fixed by the existing link to some other <emphasis>Order Item</emphasis>?</simpara>
+</note>
+</listitem>
+</itemizedlist>
+</section>
+</section>
+</article>

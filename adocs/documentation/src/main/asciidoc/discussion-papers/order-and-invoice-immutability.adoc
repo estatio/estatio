@@ -1,0 +1,195 @@
+= Order/Invoice Immutability
+:toc: right
+:_basedir: ./
+
+
+This discussion paper aims to clarify the reasons as to when __Order__s and __Invoice__s, and their corresponding __Order Item__s and __Invoice Item__s, become immutable.
+
+
+
+== Business Problem
+
+The original motivation included these two related issues:
+
+* (EST-1571) discover that the seller was incorrect on an _Order_; needs fixing
+* (EST-1602) realise that an _Order_ should be discarded (eg is a duplicate scan), but it has already been marked as completed/approved
+
+This led into two sorts of discussions:
+
+* how to make Estatio more user-friendly by defaulting information where possible when linking __Order__s and __Invoice__s together
+
+* a deeper discussion about what additional constraints there are on whether an _Order_ or an _Invoice_ and its child items has become immutable.
+
+This paper tackles the *second* of these issues.
+
+
+
+== Reasons why data becomes immutable:
+
+=== Internal ("soft")
+
+The first main reason why we treate data is immutable is that it has gone through an internal approval cycle.
+However, this is only a "soft" constraint, in that we do allow __Invoice__s to be rejected, sent back to fix a data issue, and therefore to go round the loop.
+
+We also intend to do the same for __Order__s (though rather than "reject" an _Order_, the terminology is "fix error").
+Sending an _Order_ back to be fixed also means it can be discarded.
+
+
+[plantuml,images/order-approval-state-chart,png]
+--
+state "Order Approval" as oa {
+
+    state "NEW" as oa_new
+
+    state "APPROVED" as oa_approved
+    note right of oa_approved: immutable at this point on
+
+    state "DISCARDED" as oa_discarded
+    note right of oa_discarded: associated document\nalso discarded
+
+    [*] -right-> oa_new: INSTANTIATE
+
+    oa_new -down-> oa_approved: COMPLETE_\nWITH_APPROVAL
+    oa_approved -up-> oa_new: \nFIX_ERROR
+    oa_new -right-> oa_discarded : DISCARD
+}
+--
+
+
+
+=== External ("hard")
+
+The other reason why data becomes be treated as immutable is when it has been reported/sync'd over to another system/organisation external to estatio.
+
+
+Strictly speaking, we could distinguish between:
+
+* extra-ECP : ie to another system or organisation outside of ECP, eg IBP.
+
+* intra-ECP : ie to another system (eg CODA) that is nevertheless within ECP.
+
+Probably PWC could be thought of as an "internal" interaction.
+
+For extra-ECP interactions, there's little to discuss: any adjustments that have to be made once the information has been extracted from Estatio will have to be done as reversals/deltas.
+Credit notes are one "real-world" example of this.
+
+For intra-ECP interactions, we have more options, so should discuss them.
+
+Since the automated software that will do the copy the data from one system to another (Estatio to CODA, say) is stuff that we will write, we _do_ at least have the option of a design that would keep Estatio simple/naive, and move the complexity into the "glue".
+
+For example, rather than treating __Invoice Item__s as immutable once reported (meaning that changes must be handled as reversals/deltas) we could if we wanted just post snapshots of the current state; ie always the "absolute" current view.
+For anyone using Estatio only this is simpler "view of the world".
+
+On the other hand, the downside is that there is "magic" within the software that syncs Estatio to CODA: it would need to convert the snapshots of current state coming from Estatio into reversals/deltas within CODA.
+There are two consequences of this:
+
+* from a business viewpoint, the information in Estatio vs CODA would look quite different, so would not facilitate conversations between Property Administration vs Accounting.
+
+* from a technical viewpoint, it just moves the complexity from one bit of custom software (Estatio) to another (the glue that sits between Estatio and CODA).
+Most likely we'd prefer to keep the complexity in Estatio than to have it sitting in the glue.
+
+*To conclude*: although intra-ECP vs extra-ECP interactions are theoretically different, it makes the most sense to treat them the same.
+(This was the working assumption in previous meetings/discussions anyway, so nothing really changes),
+
+Thus, *whenever data is extracted from Estatio, for whatever purpose, then that data becomes immutable*.
+
+[IMPORTANT]
+====
+To make this explicit: we are proposing that Estatio could make __Invoice Item__s or __Order Item__s immutable *even if* their parent _Invoice_/_Order_ has not yet been fully approved.
+
+If the approver finds an issue with an item that requires a change, then the amendment required would be done by reversing out the incorrect items, and reposting an amendment.
+====
+
+=== What actually is immutable?
+
+The data that is extracted from Estatio is, basically, the __Order Item__s or __Invoice Item__s, with some information such as supplier copied down from their "header" _Order_ or _Invoice_.
+
+Once an item becomes immutable (by way of being copied to some other system), these parent _Order_/_Invoice_ objects must also be treated as immutable.
+For example, we cannot change the seller on an _Order_ once one of its items has been reported to PWC.
+
+[IMPORTANT]
+====
+Therefore: if the approver finds an issue with a "header" _Order_ or _Invoice_ (specifically, the incorrect seller), then this would require reversing the item on the original _Order_/_Invoice_, and creating a new "header" _Order_/_Invoice_ for the correct seller with the reposted item.
+====
+
+
+On the other hand, the __link__s between __Order Item__s and __Invoice Item__s (by which we accrue __Invoice__s against __Order__s) are _never_ treated as immutable.
+Estatio allows these to be adjusted at any time.
+
+
+
+== Worked Example
+
+The following applies to both __Order__s and __Invoice__s.
+
+While mutable:
+
+[graphviz,images/invoices-mutable,png]
+----
+digraph g {
+  node [shape = circle];
+  invoice [ label = "invoice\n\nreported=N" ];
+  invItem1 [ label = "item #1\n\nreported=N"]
+  party -> invoice[ dir=back, label = "seller" ];
+  invoice -> invItem1 [ label = "" ];
+}
+----
+
+
+Reporting to an external system, the header object (eg _Invoice_) and its child items both become immutable (shown as shaded):
+
+[graphviz,images/invoices-immutable,png]
+----
+digraph g {
+  node [shape = circle];
+  invoice [ label = "invoice\n\nreported=Y" style = filled, color=lightgrey  ];
+  invItem1 [ label = "item #1\n\nreported=Y" style = filled, color=lightgrey ]
+  party -> invoice[ dir=back, label = "seller\n (reference\nis immutable)" ];
+  invoice -> invItem1 [ label = "" ];
+}
+----
+
+To amend immutable (same seller):
+
+[graphviz,images/invoices-amended-same-seller,png]
+----
+digraph g {
+  node [shape = circle];
+  invoice [ label = "invoice\n\nreported=Y" style = filled, color=lightgrey  ];
+  invItem1 [ label = "item #1\n\nreported=Y" style = filled, color=lightgrey ]
+  invItem2 [ label = "item #2\n(-ve amt)\n\nreported=N" style = filled, color=lightgrey ]
+  invItem3 [ label = "item #3\n\nreported=N" ]
+  party -> invoice[ dir=back, label = "seller\n (reference\nis immutable)" ];
+  invoice -> invItem1;
+  invoice -> invItem3 ;
+  invItem2 -> invItem1 [ label = "reverses" ];
+  invoice -> invItem2 ;
+}
+----
+
+Note that the "item #2" is immutable (because it is reversing out "item #1") but has _not yet_ been reported.
+(We might use a timestamp rather than a single flag to indicate if reported or not).
+
+
+To amend an immutable item to change the seller requires the creation of a new invoice referencing the new party:
+
+[graphviz,images/invoices-amended-different-seller, png]
+----
+digraph g {
+  node [shape = circle];
+  party ;
+  party2 [ label = "party #2"] ;
+  invoice [ label = "invoice\n\nreported=Y" style = filled, color=lightgrey  ];
+  invoice2 [ label = "invoice #2\n\nreported=N" ];
+  invItem1 [ label = "item #1\n\nreported=Y" style = filled, color=lightgrey ]
+  invItem2 [ label = "item #2\n(-ve amt)\n\nreported=N" style = filled, color=lightgrey ]
+  invItem3 [ label = "item #3\n\nreported=N" ]
+  party -> invoice[ dir=back, label = "seller\n (reference\nis immutable)" ];
+  party2 -> invoice2 [ dir=back, label = "seller" ];
+  invoice -> invItem1;
+  invoice2 -> invItem3 ;
+  invItem2 -> invItem1 [ label = "reverses" ];
+  invoice -> invItem2 ;
+}
+----
+
