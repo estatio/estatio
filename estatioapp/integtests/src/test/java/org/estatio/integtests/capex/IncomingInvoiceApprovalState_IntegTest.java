@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
@@ -129,6 +130,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         try {
+            queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
@@ -156,6 +158,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         try {
+            queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
             sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
@@ -171,6 +174,9 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
                 expected);
     }
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Inject
     SudoService sudoService;

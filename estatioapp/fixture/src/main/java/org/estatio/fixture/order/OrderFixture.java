@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.incode.module.document.dom.impl.docs.Document;
@@ -53,6 +54,8 @@ public class OrderFixture extends FixtureScript {
 
         // given we categorise for a property
         Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, (Runnable) () ->
         wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, ""));
 
@@ -82,6 +85,9 @@ public class OrderFixture extends FixtureScript {
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Inject
     PropertyRepository propertyRepository;

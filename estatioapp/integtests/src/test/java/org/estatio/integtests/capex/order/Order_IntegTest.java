@@ -12,6 +12,7 @@ import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 
@@ -21,7 +22,6 @@ import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.transitions.Document_categorisationTransitions;
 import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.triggers.Order_completeWithApproval;
@@ -98,6 +98,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         // when
         final Order_discard mixin = mixin(Order_discard.class, order);
 
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
@@ -122,6 +123,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         // when attempt
         final Order_discard mixin = mixin(Order_discard.class, order);
 
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
@@ -143,6 +145,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         final Person person = mixin.default1Act();
         final String comment = "some reason";
 
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act(role, person, comment);
         });
@@ -159,21 +162,28 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         final LocalDate approvedOn = clockService.now();
         final String comment = "some comment";
 
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(username, () -> {
             wrap(mixin).act(approvedBy, approvedOn, comment);
         });
     }
 
+    @Inject
+    QueryResultsCache queryResultsCache;
 
-    @Inject SudoService sudoService;
+    @Inject
+    SudoService sudoService;
 
-    @Inject ClockService clockService;
+    @Inject
+    ClockService clockService;
 
-    @Inject OrderRepository orderRepository;
+    @Inject
+    OrderRepository orderRepository;
 
     @Inject
     PersonRepository personRepository;
 
-    @Inject IncomingDocumentRepository incomingDocumentRepository;
+    @Inject
+    IncomingDocumentRepository incomingDocumentRepository;
 
 }

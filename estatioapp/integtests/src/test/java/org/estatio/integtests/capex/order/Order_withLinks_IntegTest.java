@@ -8,18 +8,15 @@ import org.junit.Test;
 import org.togglz.junit.TogglzRule;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
@@ -72,6 +69,8 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
 
         // when
         final Order_discard mixin = mixin(Order_discard.class, order);
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
@@ -79,17 +78,13 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
     }
 
 
-    @Inject SudoService sudoService;
-
-    @Inject ClockService clockService;
-
-    @Inject OrderItemInvoiceItemLinkRepository linkRepository;
-
-    @Inject OrderRepository orderRepository;
+    @Inject
+    QueryResultsCache queryResultsCache;
 
     @Inject
-    PersonRepository personRepository;
+    SudoService sudoService;
 
-    @Inject IncomingDocumentRepository incomingDocumentRepository;
+    @Inject
+    OrderItemInvoiceItemLinkRepository linkRepository;
 
 }
