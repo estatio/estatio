@@ -12,7 +12,6 @@ import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.DocumentMenu;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.capex.dom.order.Order;
@@ -27,11 +26,13 @@ import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForOrder;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForDylanClaytonGb;
+import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
 import org.estatio.fixture.project.ProjectForOxf;
 import org.estatio.tax.dom.Tax;
 import org.estatio.tax.dom.TaxRepository;
 import org.estatio.tax.fixture.data.Tax_data;
+
+import lombok.Getter;
 
 public class OrderFixture extends FixtureScript {
 
@@ -41,15 +42,19 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfFixtureForOrder().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonForDylanClaytonGb());
+        executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb());
 
+        // given a document has been scanned and uploaded
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForOrder.resourceName).get(0);
         fakeOrder2Doc.setCreatedAt(new DateTime(2014,3,5,10,0));
         fakeOrder2Doc.setAtPath("/GBR");
+
+        // given we categorise for a property
         Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        sudoService.sudo(PersonForDylanClaytonGb.SECURITY_USERNAME, (Runnable) () ->
+        sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, (Runnable) () ->
         wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, ""));
 
+        // given most/all of the info has been completed  (not using our view model here).
         Project projectForOxf = projectRepository.findByReference("OXF-02");
         Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
 
@@ -62,7 +67,11 @@ public class OrderFixture extends FixtureScript {
         fakeOrder.setBuyer(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF));
         fakeOrder.addItem(chargeRepository.findByReference("WORKS"), "order item", new BigDecimal("1000.00"), new BigDecimal("210.00"), new BigDecimal("1210.00"), taxForGbr, "F2017", propertyForOxf,projectForOxf, null);
 
+        this.order = fakeOrder;
     }
+
+    @Getter
+    Order order;
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
@@ -88,7 +97,5 @@ public class OrderFixture extends FixtureScript {
     @Inject
     SudoService sudoService;
 
-    @Inject
-    DocumentMenu documentMenu;
 
 }

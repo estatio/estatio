@@ -24,7 +24,7 @@ import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForDylanClaytonGb extends FixtureScript {
+public class PersonForDylanOfficeAdministratorGb extends FixtureScript {
 
     public static final String REF = "DCLAYTON";
     public static final String SECURITY_USERNAME = REF.toLowerCase();

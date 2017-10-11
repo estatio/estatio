@@ -52,6 +52,12 @@ public enum OrderApprovalStateTransitionType
             return order.reasonIncomplete();
         }
     },
+    FIX_ERROR(
+            OrderApprovalState.APPROVED,
+            OrderApprovalState.NEW,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
     DISCARD(
             OrderApprovalState.NEW,
             OrderApprovalState.DISCARDED,

@@ -20,28 +20,27 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
-import org.estatio.fixture.asset.PropertyForMacFr;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
+import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForOliveBeausoleilFr extends FixtureScript {
+public class PersonForOscarCountryDirectorGb extends FixtureScript {
 
-    public static final String REF = "OBEAUSOLIEL";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final String REF = "OPRITCHARD";
+    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyForMacFr());
+        executionContext.executeChild(this, new OrganisationForYoukeaSe());
 
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setFirstName("Olive")
-                    .setLastName("Beusoleil")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyForMacFr.REF)
+                    .setFirstName("Oscar")
+                    .setLastName("Pritchard")
+                    .setPersonGenderType(PersonGenderType.MALE)
+                    .addPartyRoleType(PartyRoleTypeEnum.COUNTRY_DIRECTOR)
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
     }

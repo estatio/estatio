@@ -20,27 +20,33 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.party.PartyRoleTypeEnum;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
+import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForEmmaFarmerGb extends FixtureScript {
+/**
+ * Property manager for OXF
+ */
+public class PersonForJonathanPropertyManagerGb extends FixtureScript {
 
-    public static final String REF = "EFARMER";
+    public static final String REF = "JRICE";
+    public static final String SECURITY_USERNAME = REF.toLowerCase();
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
+        executionContext.executeChild(this, new PropertyForOxfGb());
 
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setFirstName("E")
-                    .setLastName("Farmer")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.TREASURER)
+                    .setFirstName("Jonathan")
+                    .setLastName("Rice")
+                    .setPersonGenderType(PersonGenderType.MALE)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyForOxfGb.REF)
+                    .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
     }

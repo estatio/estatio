@@ -34,7 +34,7 @@ import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForInvoice;
 import org.estatio.fixture.order.OrderFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForDylanClaytonGb;
+import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
 import org.estatio.fixture.project.ProjectForOxf;
 import org.estatio.tax.dom.Tax;
 import org.estatio.tax.dom.TaxRepository;
@@ -49,13 +49,13 @@ public class IncomingInvoiceFixture extends FixtureScript {
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new OrderFixture());
         executionContext.executeChild(this, new IncomingPdfFixtureForInvoice().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonForDylanClaytonGb());
+        executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb());
 
         Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForInvoice.resourceName).get(0);
         fakeInvoice2Doc.setCreatedAt(new DateTime(2014,5,22,11,10));
         fakeInvoice2Doc.setAtPath("/GBR");
         Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-        sudoService.sudo(PersonForDylanClaytonGb.SECURITY_USERNAME, (Runnable) () ->
+        sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, (Runnable) () ->
         wrap(mixin(Document_categoriseAsPropertyInvoice.class,fakeInvoice2Doc)).act(propertyForOxf, ""));
 
         Project projectForOxf = projectRepository.findByReference("OXF-02");

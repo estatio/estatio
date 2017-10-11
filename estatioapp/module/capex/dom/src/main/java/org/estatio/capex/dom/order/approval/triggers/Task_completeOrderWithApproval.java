@@ -3,6 +3,7 @@ package org.estatio.capex.dom.order.approval.triggers;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
@@ -15,6 +16,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonRepository;
 
 /**
  * This mixin cannot be inlined because Task does not know about its target domain object.
@@ -49,7 +51,7 @@ public class Task_completeOrderWithApproval
     }
 
     public List<Person> autoComplete0Act(@MinLength(3) final String searchPhrase) {
-        return mixin().autoComplete0Act(searchPhrase);
+        return personRepository.autoComplete(searchPhrase);
     }
 
     public String validate1Act(LocalDate approvedOn) {
@@ -66,5 +68,8 @@ public class Task_completeOrderWithApproval
         }
         return mixin().disableAct();
     }
+
+    @Inject
+    PersonRepository personRepository;
 
 }

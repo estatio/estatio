@@ -48,7 +48,7 @@ import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForEmmaFarmerGb;
+import org.estatio.fixture.party.PersonForEmmaTreasurerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +77,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
                 executionContext.executeChild(this, new BankAccountForTopModelGb());
-                executionContext.executeChild(this, new PersonForEmmaFarmerGb());
+                executionContext.executeChild(this, new PersonForEmmaTreasurerGb());
             }
         });
 
@@ -121,14 +121,15 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         Exception error = new Exception();
 
         // given
-        Person personEmmaWithNoRoleAsPropertyManager = (Person) partyRepository.findPartyByReference(PersonForEmmaFarmerGb.REF);
+        Person personEmmaWithNoRoleAsPropertyManager = (Person) partyRepository.findPartyByReference(
+                PersonForEmmaTreasurerGb.REF);
         SortedSet<PartyRole> rolesforEmma = personEmmaWithNoRoleAsPropertyManager.getRoles();
         assertThat(rolesforEmma.size()).isEqualTo(1);
         assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey()));
 
         // when
         try {
-            sudoService.sudo(PersonForEmmaFarmerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;
@@ -145,7 +146,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         Exception error = new Exception();
 
         // given
-        Person personEmma = (Person) partyRepository.findPartyByReference(PersonForEmmaFarmerGb.REF);
+        Person personEmma = (Person) partyRepository.findPartyByReference(PersonForEmmaTreasurerGb.REF);
         PartyRoleType roleAsPropertyManager = partyRoleTypeRepository.findByKey("PROPERTY_MANAGER");
         personEmma.addRole(roleAsPropertyManager);
         transactionService.nextTransaction();
@@ -155,7 +156,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // when
         try {
-            sudoService.sudo(PersonForEmmaFarmerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;

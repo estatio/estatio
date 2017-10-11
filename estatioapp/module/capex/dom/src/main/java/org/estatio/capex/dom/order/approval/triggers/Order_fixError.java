@@ -1,63 +1,47 @@
 package org.estatio.capex.dom.order.approval.triggers;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
+import java.util.List;
 
-import org.joda.time.LocalDate;
+import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
 import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
  * this follows a common pattern applicable for all domain objects that have an associated state transition machine.
  */
 @Mixin(method="act")
-public class Order_completeWithApproval extends
+public class Order_fixError extends
         Order_triggerAbstract {
 
     private final Order order;
 
-    public Order_completeWithApproval(Order order) {
-        super(order, OrderApprovalStateTransitionType.COMPLETE_WITH_APPROVAL);
+    public Order_fixError(Order order) {
+        super(order, OrderApprovalStateTransitionType.FIX_ERROR);
         this.order = order;
     }
 
-    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_completeWithApproval> {}
+    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_fixError> {}
 
     @Action(
             domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.IDEMPOTENT
     )
-    @ActionLayout(cssClassFa = "fa-flag-checkered")
+    @ActionLayout(cssClassFa = "fa-thumbs-o-down", cssClass = "btn-warning")
     public Order act(
-            Person approvedBy,
-            LocalDate approvedOn,
-            @Nullable final String comment) {
-        order.setApprovedBy(approvedBy.getReference());
-        order.setApprovedOn(approvedOn);
-        trigger(comment, null);
+            final String role,
+            @Nullable final Person personToAssignNextTo,
+            final String reason) {
+        trigger(personToAssignNextTo, reason, reason);
         return getDomainObject();
     }
-
-    public String validate1Act(LocalDate approvedOn) {
-        if(approvedOn == null) {
-            return null;
-        }
-        if(clockService.now().isBefore(approvedOn)) {
-            return "Cannot approve in the future";
-        }
-        return null;
-    }
-
 
     public boolean hideAct() {
         return cannotTransition();
@@ -67,7 +51,16 @@ public class Order_completeWithApproval extends
         return reasonGuardNotSatisified();
     }
 
-    @Inject
-    ClockService clockService;
+    public String default0Act() {
+        return enumPartyRoleTypeName();
+    }
+
+    public Person default1Act() {
+        return defaultPersonToAssignNextTo();
+    }
+
+    public List<Person> choices1Act() {
+        return choicesPersonToAssignNextTo();
+    }
 
 }

@@ -24,9 +24,9 @@ import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
 
-public class PersonForOscarPritchardGb extends FixtureScript {
+public class PersonForEmmaTreasurerGb extends FixtureScript {
 
-    public static final String REF = "OPRITCHARD";
+    public static final String REF = "EFARMER";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
@@ -37,10 +37,10 @@ public class PersonForOscarPritchardGb extends FixtureScript {
         getContainer().injectServicesInto(new PersonBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setFirstName("Oscar")
-                    .setLastName("Pritchard")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.COUNTRY_DIRECTOR)
+                    .setFirstName("E")
+                    .setLastName("Farmer")
+                    .setPersonGenderType(PersonGenderType.FEMALE)
+                    .addPartyRoleType(PartyRoleTypeEnum.TREASURER)
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
     }

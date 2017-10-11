@@ -32,9 +32,9 @@ import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
+import org.estatio.dom.party.role.IPartyRoleType;
 import org.estatio.dom.party.role.PartyRoleTypeService;
 import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
@@ -84,8 +84,8 @@ public class PersonBuilder extends PersonAbstract {
     private String securityUserAccountCloneFrom;
 
     @Getter
-    private List<PartyRoleTypeEnum> partyRoleTypes = Lists.newArrayList();
-    public PersonBuilder addPartyRoleType(PartyRoleTypeEnum partyRoleType) {
+    private List<IPartyRoleType> partyRoleTypes = Lists.newArrayList();
+    public PersonBuilder addPartyRoleType(IPartyRoleType partyRoleType) {
         partyRoleTypes.add(partyRoleType);
         return this;
     }
@@ -122,7 +122,7 @@ public class PersonBuilder extends PersonAbstract {
 
         person = createPerson(getAtPath(), getReference(), getInitials(), getFirstName(), getLastName(), getPersonGenderType(), getPhoneNumber(), getEmailAddress(), getFromPartyStr(), getRelationshipType(), executionContext);
 
-        for (PartyRoleTypeEnum partyRoleType : partyRoleTypes) {
+        for (IPartyRoleType partyRoleType : partyRoleTypes) {
             partyRoleTypeService.createRole(person, partyRoleType);
         }
 
