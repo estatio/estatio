@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
@@ -36,9 +37,6 @@ import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 
-/**
- * This cannot be inlined (needs to be a mixin) because Property does not know about occupancy.
- */
 @Mixin
 public class Property_vacantUnits {
 
@@ -51,13 +49,17 @@ public class Property_vacantUnits {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Unit> $$() {
-        List<Unit> occupiedUnits = occupancyRepository.findByProperty(property)
-                .stream()
-                .map(Occupancy::getUnit)
-                .collect(Collectors.toList());
         return unitRepository.findByProperty(property)
                 .stream()
-                .filter(unit -> !occupiedUnits.contains(unit))
+                .filter(unit -> !occupiedUnits().contains(unit))
+                .collect(Collectors.toList());
+    }
+
+    List<Unit> occupiedUnits(){
+        return occupancyRepository.findByProperty(property)
+                .stream()
+                .filter(x->x.getEndDate()==null || x.getEndDate().isAfter(clockService.now()))
+                .map(Occupancy::getUnit)
                 .collect(Collectors.toList());
     }
 
@@ -65,5 +67,8 @@ public class Property_vacantUnits {
     private UnitRepository unitRepository;
 
     @Inject
-    private OccupancyRepository occupancyRepository;
+    OccupancyRepository occupancyRepository;
+
+    @Inject
+    ClockService clockService;
 }
