@@ -1,6 +1,7 @@
 package org.estatio.fixture.order;
 
 import java.math.BigDecimal;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
@@ -68,10 +70,15 @@ public class OrderFixture extends FixtureScript {
         fakeOrder.addItem(chargeRepository.findByReference("WORKS"), "order item", new BigDecimal("1000.00"), new BigDecimal("210.00"), new BigDecimal("1210.00"), taxForGbr, "F2017", propertyForOxf,projectForOxf, null);
 
         this.order = fakeOrder;
+        final SortedSet<OrderItem> items = order.getItems();
+        firstItem = items.first();
+
     }
 
     @Getter
     Order order;
+    @Getter
+    OrderItem firstItem;
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;

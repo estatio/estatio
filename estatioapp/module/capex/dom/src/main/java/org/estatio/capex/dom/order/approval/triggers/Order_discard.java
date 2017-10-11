@@ -17,6 +17,8 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
+import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -59,10 +61,14 @@ public class Order_discard extends
     }
 
     public String disableAct() {
-        return reasonGuardNotSatisified();
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        buf.append(!linkRepository.findByOrder(order).isEmpty(), "One or more items have been linked to an invoice");
+        buf.append(reasonGuardNotSatisified());
+        return buf.getReason();
     }
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
+    @Inject OrderItemInvoiceItemLinkRepository linkRepository;
 
 }

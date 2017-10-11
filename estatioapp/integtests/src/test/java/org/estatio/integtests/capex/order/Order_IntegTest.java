@@ -21,6 +21,7 @@ import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.categorisation.transitions.Document_categorisationTransitions;
 import org.estatio.capex.dom.order.Order;
+import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.triggers.Order_completeWithApproval;
