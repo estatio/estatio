@@ -93,12 +93,12 @@ import lombok.Setter;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Indices({
-        // to cover the 'findAssetsByReferenceOrName' query
-        // both in this superclass and the subclasses
         @javax.jdo.annotations.Index(
                 name = "Lease_reference_name_IDX", members = { "reference", "name" }),
-        @javax.jdo.annotations.Index(
-                name = "Lease_reference_name_type_IDX", members = { "reference", "name", "type" })
+        @javax.jdo.annotations.Index( // TODO: REVIEW - can't see point of this index and Lease_reference_name_IDX. Also, rename?
+                name = "Lease_reference_name_type_IDX", members = { "reference", "name", "type" }),
+        @javax.jdo.annotations.Index( // to support queries matching by name only, eg
+                name = "Agreement_name_reference_IDX", members = { "name", "reference" }),
 })
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
