@@ -18,12 +18,10 @@
                         <col span="12">
                             <ns2:fieldSet name="Asset" id="asset">
                                 <ns2:property id="reference"/>
-                                <ns2:property id="name"/>
+                                <ns2:property id="name" promptStyle="INLINE"/>
                                 <ns2:property id="type"/>
                                 <ns2:property id="property"/>
-                                <ns2:property id="externalReference">
-                                    <ns2:action id="changeAsset" position="BELOW"/>
-                                </ns2:property>
+                                <ns2:property id="externalReference" promptStyle="INLINE"/>
                             </ns2:fieldSet>
                             <ns2:fieldSet name="Dates" id="dates">
                                 <ns2:property id="startDate"/>

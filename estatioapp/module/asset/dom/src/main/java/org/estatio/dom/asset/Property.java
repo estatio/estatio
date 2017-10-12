@@ -19,10 +19,8 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -35,16 +33,15 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -122,13 +119,13 @@ public class Property
 
     // //////////////////////////////////////
 
-    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL)
+    @org.apache.isis.applib.annotation.Property(optionality = Optionality.OPTIONAL, editing = Editing.ENABLED)
+    @PropertyLayout(promptStyle = PromptStyle.INLINE)
     @Getter @Setter
     private String fullName;
 
-    public Property changeFullName(final String fullName) {
+    public void modifyFullName(final String fullName) {
         setFullName(fullName);
-        return this;
     }
 
     // //////////////////////////////////////

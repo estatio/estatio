@@ -24,12 +24,10 @@
                     <row>
                         <col span="12">
                             <ns2:fieldSet name="Property" id="asset">
-                                <ns2:action id="changeFullName" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="changeExternalReference" position="PANEL_DROPDOWN"/>
                                 <ns2:property id="reference"/>
-                                <ns2:property id="name"/>
-                                <ns2:property id="fullName"/>
-                                <ns2:property id="externalReference"/>
+                                <ns2:property id="name" promptStyle="INLINE"/>
+                                <ns2:property id="fullName" promptStyle="INLINE"/>
+                                <ns2:property id="externalReference" promptStyle="INLINE"/>
                                 <ns2:property id="type"/>
                                 <ns2:property id="area"/>
                                 <ns2:property id="parkingSpaces"/>

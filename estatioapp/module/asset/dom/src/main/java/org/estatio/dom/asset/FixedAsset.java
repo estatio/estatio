@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.RenderType;
@@ -65,6 +66,7 @@ import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -156,25 +158,30 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
     // public abstract String getName();
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = NameType.Meta.MAX_LEN)
-    @PropertyLayout(describedAs = "Unique name for this property")
+    @Property(editing = Editing.ENABLED)
+    @PropertyLayout(promptStyle = PromptStyle.INLINE)
     @Getter @Setter
     private String name;
+
+    public void modifyName(final String name) {
+        setName(name);
+    }
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = ReferenceType.Meta.MAX_LEN)
-    @Property(optionality = Optionality.OPTIONAL)
+    @Property(optionality = Optionality.OPTIONAL, editing = Editing.ENABLED)
+    @PropertyLayout(promptStyle = PromptStyle.INLINE)
     @Getter @Setter
     private String externalReference;
 
     @MemberOrder(name = "externalReference", sequence = "1")
-    public FixedAsset changeExternalReference(final String externalReference) {
+    public void modifyExternalReference(final String externalReference) {
         setExternalReference(externalReference);
-        return this;
     }
 
-    public String default0ChangeExternalReference(final String externalReference) {
-        return getExternalReference();
+    public String disableExternalReference(){
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? "Only Admministrators can change existing external references" : null ;
     }
 
     // //////////////////////////////////////
