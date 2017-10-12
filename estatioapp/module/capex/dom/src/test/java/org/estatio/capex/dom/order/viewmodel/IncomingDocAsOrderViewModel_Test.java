@@ -1,7 +1,9 @@
 package org.estatio.capex.dom.order.viewmodel;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -13,6 +15,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItemRepository;
+import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.dom.party.Organisation;
 
 public class IncomingDocAsOrderViewModel_Test {
 
@@ -61,6 +65,55 @@ public class IncomingDocAsOrderViewModel_Test {
         // when
         incomingDocAsOrderViewModel.save();
 
+
+    }
+
+    @Mock
+    OrderRepository mockOrderRepository;
+
+    @Test
+    public void double_order_check_works() throws Exception {
+
+        // given
+        IncomingDocAsOrderViewModel incomingDocAsOrderViewModel = new IncomingDocAsOrderViewModel();
+        incomingDocAsOrderViewModel.orderRepository = mockOrderRepository;
+        Order newOrder = new Order();
+        incomingDocAsOrderViewModel.setDomainObject(newOrder);
+
+        String sellerOrderReference = "123-456-7";
+        Organisation seller = new Organisation();
+        LocalDate orderDate = new LocalDate(2017,01,01);
+
+        Order existingOrder = new Order();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSellerAndOrderDate(sellerOrderReference, seller, orderDate);
+            will(returnValue(newOrder));
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSeller(sellerOrderReference, seller);
+            will(returnValue(Arrays.asList(newOrder, existingOrder)));
+        }});
+
+        // when
+        incomingDocAsOrderViewModel.setSellerOrderReference(sellerOrderReference);
+        incomingDocAsOrderViewModel.setSeller(seller);
+        incomingDocAsOrderViewModel.setOrderDate(orderDate);
+        String message = incomingDocAsOrderViewModel.doubleOrderCheck();
+
+        // then
+        Assertions.assertThat(message).contains("WARNING: Orders with the same seller order reference of this seller are found");
+
+        // and expect
+        context.checking(new Expectations(){{
+            oneOf(mockOrderRepository).findBySellerOrderReferenceAndSellerAndOrderDate(sellerOrderReference, seller, orderDate);
+            will(returnValue(existingOrder));
+        }});
+
+        // when
+        message = incomingDocAsOrderViewModel.doubleOrderCheck();
+
+        // then
+        Assertions.assertThat(message).isEqualTo("WARNING: There is already an order with the same seller order reference and order date for this seller. Please check.");
 
     }
 

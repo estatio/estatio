@@ -15,6 +15,8 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
@@ -104,16 +106,16 @@ import lombok.Setter;
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE orderNumber.matches(:orderNumber) "),
         @Query(
-                name = "findByOrderNumberAndSeller", language = "JDOQL",
+                name = "findBySellerOrderReferenceAndSeller", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
-                        + "WHERE orderNumber == :orderNumber "
+                        + "WHERE sellerOrderReference == :sellerOrderReference "
                         + "   && seller == :seller "),
         @Query(
-                name = "findByOrderNumberAndSellerAndOrderDate", language = "JDOQL",
+                name = "findBySellerOrderReferenceAndSellerAndOrderDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
-                        + "WHERE orderNumber == :orderNumber "
+                        + "WHERE sellerOrderReference == :sellerOrderReference "
                         + "   && seller == :seller "
                         + "   && orderDate == :orderDate "),
         @Query(
@@ -133,6 +135,9 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.order.Order "
                         + "WHERE seller == :seller ")
+})
+@Indices({
+        @Index(name = "Order_sellerOrderReference_IDX", members = { "sellerOrderReference" })
 })
 @DomainObject(
         editing = Editing.DISABLED,

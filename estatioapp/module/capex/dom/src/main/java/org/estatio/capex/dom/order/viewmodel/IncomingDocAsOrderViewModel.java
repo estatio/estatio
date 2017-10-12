@@ -280,12 +280,12 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return getNotification() == null;
     }
 
-    private String doubleOrderCheck(){
+    String doubleOrderCheck(){
         final String doubleOrderCheck = possibleDoubleOrder();
         if (doubleOrderCheck !=null){
             return doubleOrderCheck;
         }
-        final String sameNumberCheck = sameOrderNumber();
+        final String sameNumberCheck = sameSellerOrderReference();
         if (sameNumberCheck !=null){
             return sameNumberCheck;
         }
@@ -293,34 +293,34 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     }
 
     private String possibleDoubleOrder(){
-        if (getOrderNumber()==null || getSeller()==null || getOrderDate()==null){
+        if (getSellerOrderReference()==null || getSeller()==null || getOrderDate()==null){
             return null;
         }
         if (getDomainObject() == null) {
             return null;
         }
-        Order possibleDouble = orderRepository.findByOrderNumberAndSellerAndOrderDate(getOrderNumber(), getSeller(), getOrderDate());
+        Order possibleDouble = orderRepository.findBySellerOrderReferenceAndSellerAndOrderDate(getSellerOrderReference(), getSeller(), getOrderDate());
         if (possibleDouble == null || possibleDouble.equals(domainObject)) {
             return null;
         }
 
-        return "WARNING: There is already an order with the same number and order date for this seller. Please check.";
+        return "WARNING: There is already an order with the same seller order reference and order date for this seller. Please check.";
     }
 
-    private String sameOrderNumber(){
-        if (getOrderNumber()==null || getSeller()==null){
+    private String sameSellerOrderReference(){
+        if (getSellerOrderReference()==null || getSeller()==null){
             return null;
         }
         if (getDomainObject()!=null){
-            List<Order> similarNumberedOrders = new ArrayList<>();
-            for (Order order : orderRepository.findByOrderNumberAndSeller(getOrderNumber(), getSeller())) {
+            List<Order> similarReferencedOrders = new ArrayList<>();
+            for (Order order : orderRepository.findBySellerOrderReferenceAndSeller(getSellerOrderReference(), getSeller())) {
                 if (!order.equals(getDomainObject())) {
-                    similarNumberedOrders.add(order);
+                    similarReferencedOrders.add(order);
                 }
             }
-            if (similarNumberedOrders.size()>0){
-                String message = "WARNING: Orders with the same number of this seller are found ";
-                for (Order order : similarNumberedOrders){
+            if (similarReferencedOrders.size()>0){
+                String message = "WARNING: Orders with the same seller order reference of this seller are found ";
+                for (Order order : similarReferencedOrders){
                     if (order.getOrderDate()!=null) {
                         message = message.concat("on date ").concat(order.getOrderDate().toString()).concat("; ");
                     }

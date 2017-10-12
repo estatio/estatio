@@ -26,7 +26,6 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Organisation;
@@ -56,23 +55,23 @@ public class OrderRepository {
     }
 
     @Programmatic
-    public Order findByOrderNumberAndSellerAndOrderDate(final String orderNumber, final Party seller, final LocalDate orderDate){
+    public Order findBySellerOrderReferenceAndSellerAndOrderDate(final String sellerOrderReference, final Party seller, final LocalDate orderDate){
         return repositoryService.firstMatch(
                 new QueryDefault<>(
                         Order.class,
-                        "findByOrderNumberAndSellerAndOrderDate",
-                        "orderNumber", orderNumber,
+                        "findBySellerOrderReferenceAndSellerAndOrderDate",
+                        "sellerOrderReference", sellerOrderReference,
                         "seller", seller,
                         "orderDate", orderDate));
     }
 
     @Programmatic
-    public List<Order> findByOrderNumberAndSeller(final String orderNumber, final Party seller) {
+    public List<Order> findBySellerOrderReferenceAndSeller(final String sellerOrderReference, final Party seller) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         Order.class,
-                        "findByOrderNumberAndSeller",
-                        "orderNumber", orderNumber,
+                        "findBySellerOrderReferenceAndSeller",
+                        "sellerOrderReference", sellerOrderReference,
                         "seller", seller));
     }
 
