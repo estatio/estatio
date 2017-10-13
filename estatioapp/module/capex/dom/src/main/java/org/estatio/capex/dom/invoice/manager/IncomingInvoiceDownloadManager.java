@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
@@ -98,9 +99,6 @@ public class IncomingInvoiceDownloadManager {
         this.incomingInvoiceType = incomingInvoiceType;
     }
 
-    /**
-     * If not set when 'allProperties' not set, will pick up invoices which have no associated properties.
-     */
     @XmlElement(required = false)
     @Nullable
     @Getter @Setter
@@ -108,34 +106,21 @@ public class IncomingInvoiceDownloadManager {
 
 
     @XmlTransient
+    @Programmatic
     public boolean isAllUnreported() {
         return getReportedDate() == null;
     }
 
-    /**
-     * Required if 'allUnreported' not set
-     */
     @XmlElement(required = false)
     @Nullable
     @Getter @Setter
     @XmlJavaTypeAdapter(JodaLocalDateStringAdapter.ForJaxb.class)
     private LocalDate reportedDate;
 
-
-
-    @XmlTransient
-    public boolean isAllTypes() {
-        return getIncomingInvoiceType() == null;
-    }
-
-    /**
-     * Required if 'allTypes' is not set.
-     */
     @XmlElement(required = false)
     @Nullable
     @Getter @Setter
     private IncomingInvoiceType incomingInvoiceType;
-
 
 
     @XmlTransient
@@ -146,7 +131,6 @@ public class IncomingInvoiceDownloadManager {
     public int getNumberOfInvoiceItems() {
         return getInvoiceItems().size();
     }
-
 
 
     @CollectionLayout(defaultView = "table")
@@ -255,7 +239,7 @@ public class IncomingInvoiceDownloadManager {
                         documentNumberFor(item),
                         codaElementFor(item),
                         commentsFor(item)))
-                .sorted(Comparator.comparing(x -> x.getDocumentNumber()))
+                .sorted(Comparator.comparing(x -> x.getDocumentNumber()!=null ? x.getDocumentNumber() : "_No_Document")) // guard only for (demo)fixtures because in production a document can be expected
                 .collect(Collectors.toList());
 
         WorksheetSpec spec = new WorksheetSpec(IncomingInvoiceDownloadManager.exportClass, "invoiceExport");
