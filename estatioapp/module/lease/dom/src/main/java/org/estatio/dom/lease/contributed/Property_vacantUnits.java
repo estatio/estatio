@@ -51,7 +51,7 @@ public class Property_vacantUnits {
     public List<Unit> $$() {
         return unitRepository.findByProperty(property)
                 .stream()
-                .filter(unit -> !occupiedUnits().contains(unit))
+                .filter(unit -> !occupiedUnits().contains(unit) && (unit.getEndDate()==null || unit.getEndDate().isAfter(clockService.now())))
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +64,7 @@ public class Property_vacantUnits {
     }
 
     @Inject
-    private UnitRepository unitRepository;
+    UnitRepository unitRepository;
 
     @Inject
     OccupancyRepository occupancyRepository;
