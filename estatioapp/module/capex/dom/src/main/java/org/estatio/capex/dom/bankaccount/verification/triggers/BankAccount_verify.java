@@ -32,13 +32,17 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
 
     public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_verify> {}
 
+
+
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
     @MemberOrder(sequence = "9")
-    public BankAccount act(@Nullable final String comment) {
-        return super.act(comment);
+    public BankAccount act(
+            @Nullable final String comment) {
+        trigger(comment, null);
+        return getDomainObject();
     }
 
     public boolean hideAct() {

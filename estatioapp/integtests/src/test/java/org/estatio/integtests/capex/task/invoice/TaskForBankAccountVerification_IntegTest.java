@@ -37,7 +37,7 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
-import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_cancel;
+import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_rejectProof;
 import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
@@ -54,11 +54,11 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.CANCELLED;
+import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.VERIFIED;
-import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.CANCEL;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.INSTANTIATE;
+import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.REJECT_PROOF;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.RESET;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT;
 
@@ -252,7 +252,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
 
         @Test
-        public void cancel_without_pending() throws Exception {
+        public void can_reject_proof_when_not_verified() throws Exception {
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
@@ -262,20 +262,20 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
             transitions = findTransitions(bankAccount);
             assertThat(transitions.size()).isEqualTo(2);
-            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(0), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
             assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
-            assertState(bankAccount, CANCELLED);
+            assertState(bankAccount, AWAITING_PROOF);
         }
 
         @Test
-        public void cancel_when_pending() throws Exception {
+        public void can_reject_proof_when_not_verified_and_a_pending_transition_has_been_setup_somehow() throws Exception {
 
             // given
             assertState(bankAccount, NOT_VERIFIED);
@@ -290,20 +290,20 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
             transitions = findTransitions(bankAccount);
             assertThat(transitions.size()).isEqualTo(2);
-            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
+            assertTransition(transitions.get(0), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
             assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
-            assertState(bankAccount, CANCELLED);
+            assertState(bankAccount, AWAITING_PROOF);
         }
 
         @Test
-        public void cannot_cancel_when_verified() throws Exception {
+        public void cannot_reject_proof_when_verified() throws Exception {
 
             // given
             wrap(mixin(BankAccount_verify.class, bankAccount)).act(null);
@@ -320,7 +320,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             expectedExceptions.expect(HiddenException.class);
 
             // when
-            wrap(mixin(BankAccount_cancel.class, this.bankAccount)).act(null);
+            wrap(mixin(BankAccount_rejectProof.class, this.bankAccount)).act(null, null, "bad!!!");
         }
 
         @Test
@@ -383,34 +383,6 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertState(this.bankAccount, NOT_VERIFIED);
         }
 
-        @Test
-        public void change_when_cancelled_will_reset() throws Exception {
 
-            // given
-            wrap(mixin(BankAccount_cancel.class, bankAccount)).act(null);
-            transactionService.nextTransaction();
-
-            List<BankAccountVerificationStateTransition> transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(2);
-            assertTransition(transitions.get(0), NOT_VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
-
-            assertState(this.bankAccount, CANCELLED);
-
-            // when
-            final String validIban = "NL39ABNA0572008761";
-            wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
-            transactionService.nextTransaction();
-
-            // then
-            transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(4);
-            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitions.get(1), CANCELLED, RESET, NOT_VERIFIED);
-            assertTransition(transitions.get(2), NOT_VERIFIED, CANCEL, CANCELLED);
-            assertTransition(transitions.get(3), null, INSTANTIATE, NOT_VERIFIED);
-
-            assertState(this.bankAccount, NOT_VERIFIED);
-        }
     }
 }

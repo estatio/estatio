@@ -107,16 +107,42 @@ state "OrderApprovalStateTransitionType" as oa {
 
 == Bank Account Verification
 
+current:
+
+[plantuml,bank-account-verification-state-chart-orig,png]
+--
+state "BankAccountVerificationStateTransitionType" as bbv {
+
+state "resettable" as resettable {
+    state "NOT_VERIFIED" as bbv_not_verified
+    state "VERIFIED" as bbv_verified
+    state "CANCELLED" as bbv_cancelled
+}
+
+    [*] --right--> bbv_not_verified: \n  INSTANTIATE
+    bbv_not_verified -down--> bbv_verified: VERIFY_\nBANK_ACCOUNT
+    bbv_verified -right--> bbv_cancelled: CANCEL
+
+    resettable --> bbv_not_verified: RESET
+}
+--
+
+
+EST-1694 instead requires:
+
 [plantuml,bank-account-verification-state-chart,png]
 --
 state "BankAccountVerificationStateTransitionType" as bbv {
 
     state "NOT_VERIFIED" as bbv_not_verified
     state "VERIFIED" as bbv_verified
+    state "AWAITING_PROOF" as bbv_awaiting_proof
 
     [*] --right--> bbv_not_verified: \n  INSTANTIATE
     bbv_not_verified -down--> bbv_verified: VERIFY_\nBANK_ACCOUNT
-
+    bbv_not_verified -up--> bbv_awaiting_proof: REJECT_\nPROOF
+    bbv_awaiting_proof --> bbv_not_verified : PROOF_\n  UPDATED
+    bbv_verified --> bbv_not_verified : RESET\n (change of iban \n  or bic \n  or external reference)
 }
 --
 

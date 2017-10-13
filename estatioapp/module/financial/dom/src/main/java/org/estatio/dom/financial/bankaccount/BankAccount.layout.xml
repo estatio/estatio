@@ -120,7 +120,8 @@
                 </cpt:property>
                 <cpt:property id="pendingVerificationTask">
                     <cpt:action id="verify"/>
-                    <cpt:action id="cancel"/>
+                    <cpt:action id="rejectProof"/>
+                    <cpt:action id="proofUpdated"/>
                 </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
