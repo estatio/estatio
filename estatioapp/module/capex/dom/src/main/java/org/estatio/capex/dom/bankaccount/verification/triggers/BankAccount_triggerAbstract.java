@@ -27,13 +27,4 @@ abstract class BankAccount_triggerAbstract
         );
     }
 
-
-    public boolean hideAct() {
-        return cannotTransition();
-    }
-
-    public String disableAct() {
-        return reasonGuardNotSatisified();
-    }
-
 }

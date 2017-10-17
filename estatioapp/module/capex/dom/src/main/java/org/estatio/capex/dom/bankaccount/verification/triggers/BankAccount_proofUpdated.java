@@ -41,12 +41,12 @@ public class BankAccount_proofUpdated extends BankAccount_triggerAbstract {
         return bankAccount;
     }
 
-    @Override public boolean hideAct() {
-        return super.hideAct();
+    public boolean hideAct() {
+        return cannotTransition();
     }
 
-    @Override public String disableAct() {
-        return super.disableAct();
+    public String disableAct() {
+        return reasonGuardNotSatisified();
     }
 
     public String default0Act() {

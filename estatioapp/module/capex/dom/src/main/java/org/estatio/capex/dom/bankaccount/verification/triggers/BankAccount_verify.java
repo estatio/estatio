@@ -46,10 +46,9 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
     }
 
     public boolean hideAct() {
-        return super.hideAct();
+        return cannotTransition();
     }
 
-    @Override
     public String disableAct() {
         if(bankAccount.getBic() == null) {
             return "BIC is required";
@@ -62,7 +61,7 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
         if(paperclips.isEmpty()) {
             return "IBAN proof must first be attached";
         }
-        return super.disableAct();
+        return reasonGuardNotSatisified();
     }
 
 
