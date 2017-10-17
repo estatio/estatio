@@ -29,6 +29,9 @@
                                         <cpt:named>Toggle</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
+                                <cpt:property id="deprecated">
+                                    <cpt:action id="deprecate"/>
+                                </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
