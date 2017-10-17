@@ -58,6 +58,7 @@ import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerifica
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.VERIFIED;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.INSTANTIATE;
+import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.PROOF_UPDATED;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.REJECT_PROOF;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.RESET;
 import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType.VERIFY_BANK_ACCOUNT;
@@ -262,14 +263,15 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("something why ...?", null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
             transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(2);
-            assertTransition(transitions.get(0), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
-            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            assertThat(transitions.size()).isEqualTo(3);
+            assertTransition(transitions.get(0), AWAITING_PROOF, PROOF_UPDATED, null);
+            assertTransition(transitions.get(1), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
+            assertTransition(transitions.get(2), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(bankAccount, AWAITING_PROOF);
         }
