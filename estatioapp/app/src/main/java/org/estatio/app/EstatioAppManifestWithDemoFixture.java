@@ -1,18 +1,16 @@
 package org.estatio.app;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.fixturescripts.EstatioDemoFixture;
 
-public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest {
+public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest2 {
 
-    public EstatioAppManifestWithDemoFixture() {
-        super(
-                Arrays.asList(EstatioDemoFixture.class),
-                null,
-                Collections.emptyList()
-        );
+    @Override protected void overrideFixtures(final List<Class<? extends FixtureScript>> fixtureScripts) {
+        fixtureScripts.add(EstatioDemoFixture.class);
     }
+
 
 }

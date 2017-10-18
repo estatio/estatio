@@ -10,7 +10,8 @@ public class EstatioAppManifest2 extends AppManifestAbstract {
                    .withAdditionalModules(EstatioAppDefn.addonWicketComponents())
                    .withAdditionalServices(EstatioAppDefn.additionalServices())
                    .withAuthMechanism(null)
-                   .withConfigurationPropertiesFile(EstatioAppManifest.class, "isis-non-changing.properties")
+                   .withConfigurationPropertiesFile(EstatioAppManifest2.class, "isis-non-changing.properties")
+                   .withConfigurationPropertiesFile(EstatioAppManifest2.class, "git.estatio.properties")
             ;
 
     public EstatioAppManifest2() {

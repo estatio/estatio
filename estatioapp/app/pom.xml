@@ -101,11 +101,11 @@ language governing permissions and limitations under the License.
                     <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
                     <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
 
-                    <prefix>git.estatio-os</prefix>
+                    <prefix>git.estatio</prefix>
 
                     <verbose>false</verbose>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.estatio-os.properties</generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/org/estatio/app/git.estatio.properties</generateGitPropertiesFilename>
 
                     <abbrevLength>7</abbrevLength>
 

@@ -14,6 +14,10 @@ import com.google.common.collect.Maps;
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+/**
+ * @deprecated - transitioning over to {@link EstatioAppManifest2}.
+ */
+@Deprecated
 public class EstatioAppManifest implements AppManifest {
 
     private final List<Class<? extends FixtureScript>> fixtureScripts;
@@ -60,7 +64,7 @@ public class EstatioAppManifest implements AppManifest {
         modules.addAll(additionalModules);
     }
 
-    protected List<Class<?>> appendDomModulesAndSecurityAndCommandAddon(List<Class<?>> modules) {
+    List<Class<?>> appendDomModulesAndSecurityAndCommandAddon(List<Class<?>> modules) {
         modules.addAll(Arrays.asList(EstatioAppDefn.domModulesAndSecurityAndCommandAddon()));
         return modules;
     }
