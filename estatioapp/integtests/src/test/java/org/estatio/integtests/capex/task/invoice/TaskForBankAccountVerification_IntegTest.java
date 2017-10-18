@@ -263,7 +263,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(0), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("something why ...?", null, "bad proof, bad!");
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("SOME ROLE", null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
@@ -292,14 +292,15 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             // when
-            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act(null, null, "bad proof, bad!");
+            wrap(mixin(BankAccount_rejectProof.class, bankAccount)).act("SOME ROLE", null, "bad proof, bad!");
             transactionService.nextTransaction();
 
             // then
             transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(2);
-            assertTransition(transitions.get(0), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
-            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
+            assertThat(transitions.size()).isEqualTo(3);
+            assertTransition(transitions.get(0), AWAITING_PROOF, PROOF_UPDATED, null);
+            assertTransition(transitions.get(1), NOT_VERIFIED, REJECT_PROOF, AWAITING_PROOF);
+            assertTransition(transitions.get(2), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(bankAccount, AWAITING_PROOF);
         }
@@ -342,15 +343,18 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
 
             // when
             final String validIban = "NL39ABNA0572008761";
-            wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
+            final String changedExternalReference = "changed-external-reference";
+            wrap(bankAccount).change(validIban, bankAccount.getBic(), changedExternalReference);
             transactionService.nextTransaction();
 
             // then
+            assertThat(bankAccount.getExternalReference()).isEqualTo(changedExternalReference);
+
+            // then no new transition, though (previously we used to create a transition of NOT_VERIFIED -> NOT_VERIFIED)
             transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(3);
+            assertThat(transitions.size()).isEqualTo(2);
             assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitions.get(1), NOT_VERIFIED, RESET, NOT_VERIFIED);
-            assertTransition(transitions.get(2), null, INSTANTIATE, NOT_VERIFIED);
+            assertTransition(transitions.get(1), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, NOT_VERIFIED);
         }
@@ -374,13 +378,14 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
             wrap(bankAccount).change(validIban, bankAccount.getBic(), "changed-external-reference");
             transactionService.nextTransaction();
 
-            // then
+            // then back to not verified.
+            // (Previously we also created a pending transition back to verified, but no longer bother;
+            // there is no task associated, and the user just did a reset anyway...)
             transitions = findTransitions(bankAccount);
-            assertThat(transitions.size()).isEqualTo(4);
-            assertTransition(transitions.get(0), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, null);
-            assertTransition(transitions.get(1), VERIFIED, RESET, NOT_VERIFIED);
-            assertTransition(transitions.get(2), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
-            assertTransition(transitions.get(3), null, INSTANTIATE, NOT_VERIFIED);
+            assertThat(transitions.size()).isEqualTo(3);
+            assertTransition(transitions.get(0), VERIFIED, RESET, NOT_VERIFIED);
+            assertTransition(transitions.get(1), NOT_VERIFIED, VERIFY_BANK_ACCOUNT, VERIFIED);
+            assertTransition(transitions.get(2), null, INSTANTIATE, NOT_VERIFIED);
 
             assertState(this.bankAccount, NOT_VERIFIED);
         }

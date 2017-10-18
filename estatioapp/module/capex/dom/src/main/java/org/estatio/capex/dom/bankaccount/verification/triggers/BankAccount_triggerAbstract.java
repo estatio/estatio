@@ -16,7 +16,7 @@ abstract class BankAccount_triggerAbstract
     public static class ActionDomainEvent<MIXIN> extends DomainObject_triggerAbstract.ActionDomainEvent<MIXIN> {
         @Override
         public Class<?> getStateTransitionClass() {
-            return BankAccountVerificationState.class;
+            return BankAccountVerificationStateTransition.class;
         }
     }
 
