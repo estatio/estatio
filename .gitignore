@@ -38,3 +38,9 @@ forsub.sh
 forsub2.sh
 
 translations.pot
+
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.next
+pom.xml.releaseBackup
+pom.xml.versionsBackup
