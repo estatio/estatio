@@ -138,7 +138,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         }
 
         assertThat(error.getMessage()).isNotNull();
-        assertThat(error.getMessage()).contains("Reason: Task assigned to role PROPERTY_MANAGER");
+        assertThat(error.getMessage()).contains("Reason: Task assigned to 'PROPERTY_MANAGER' role");
 
     }
 
