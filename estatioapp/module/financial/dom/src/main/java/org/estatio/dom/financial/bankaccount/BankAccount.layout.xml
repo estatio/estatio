@@ -23,11 +23,23 @@
                                 <cpt:property id="owner">
                                     <cpt:action id="changeOwner"/>
                                 </cpt:property>
-                                <cpt:property id="preferred">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                        <bs3:col span="6">
+                            <cpt:fieldSet id="x">
+                                <cpt:property id="preferred" labelPosition="TOP">
                                     <cpt:named>For ECP bank accounts, whether this account is preferred for paying incoming invoices</cpt:named>
                                     <cpt:action id="togglePreferred">
                                         <cpt:named>Toggle</cpt:named>
                                     </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                        <bs3:col span="6">
+                            <cpt:fieldSet id="y">
+                                <cpt:property id="deprecated" labelPosition="TOP">
+                                    <cpt:named>For supplier bank accounts, deprecate if the account should no longer be paid into</cpt:named>
+                                    <cpt:action id="deprecate"/>
                                 </cpt:property>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -120,7 +132,8 @@
                 </cpt:property>
                 <cpt:property id="pendingVerificationTask">
                     <cpt:action id="verify"/>
-                    <cpt:action id="cancel"/>
+                    <cpt:action id="rejectProof"/>
+                    <cpt:action id="proofUpdated"/>
                 </cpt:property>
             </cpt:fieldSet>
         </bs3:col>

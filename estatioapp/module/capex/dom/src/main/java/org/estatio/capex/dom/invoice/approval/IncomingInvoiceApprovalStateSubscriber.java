@@ -69,14 +69,17 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
 
             case INSTANTIATE:
                 break;
+
             case VERIFY_BANK_ACCOUNT:
                 final List<IncomingInvoice> incomingInvoices = findIncomingInvoicesUsing(bankAccount);
                 for (IncomingInvoice incomingInvoice : incomingInvoices) {
                     stateTransitionService.trigger(incomingInvoice, CONFIRM_BANK_ACCOUNT_VERIFIED, null, null);
                 }
-
                 break;
-            case CANCEL:
+
+            case REJECT_PROOF:
+                break;
+            case PROOF_UPDATED:
                 break;
             case RESET:
                 break;
@@ -87,6 +90,9 @@ public class IncomingInvoiceApprovalStateSubscriber extends AbstractSubscriber {
     private List<IncomingInvoice> findIncomingInvoicesUsing(final BankAccount bankAccount) {
         return incomingInvoiceRepository.findByBankAccount(bankAccount);
     }
+
+
+
 
 
     @Inject

@@ -718,13 +718,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             }
 
             final List<BankAccount> bankAccountsForSeller = choices0Act();
-            switch(bankAccountsForSeller.size()) {
-            case 0:
+            if (bankAccountsForSeller.isEmpty()) {
                 return "No bank accounts available for seller";
-            case 1:
-                return "No other bank accounts for seller";
-            default:
-                // continue
             }
 
             // if here then enabled

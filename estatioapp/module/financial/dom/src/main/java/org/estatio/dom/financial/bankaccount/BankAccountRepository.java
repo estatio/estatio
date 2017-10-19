@@ -20,6 +20,7 @@
 package org.estatio.dom.financial.bankaccount;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -65,7 +66,10 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
     public List<BankAccount> findBankAccountsByOwner(final Party party) {
         return Lists.newArrayList(
                 Iterables.filter(financialAccountRepository.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party),
-                        BankAccount.class));
+                        BankAccount.class))
+                .stream()
+                .filter(x->x.getDeprecated()==null || !x.getDeprecated())
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -92,7 +96,10 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
 
     public List<BankAccount> autoComplete(@MinLength(3) final String search){
         String regex = StringUtils.wildcardToCaseInsensitiveRegex("*" + search + "*");
-        return findByReferenceMatches(regex);
+        return findByReferenceMatches(regex)
+                .stream()
+                .filter(x->x.getDeprecated()==null || !x.getDeprecated())
+                .collect(Collectors.toList());
     }
 
     @Programmatic
@@ -102,5 +109,5 @@ public class BankAccountRepository extends UdoDomainRepositoryAndFactory<BankAcc
     }
 
     @Inject
-    private FinancialAccountRepository financialAccountRepository;
+    FinancialAccountRepository financialAccountRepository;
 }

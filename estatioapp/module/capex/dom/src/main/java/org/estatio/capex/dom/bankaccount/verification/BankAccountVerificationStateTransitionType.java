@@ -1,6 +1,5 @@
 package org.estatio.capex.dom.bankaccount.verification;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +16,7 @@ import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
+import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.party.PartyRoleTypeEnum;
 import org.estatio.dom.party.Person;
@@ -42,21 +42,26 @@ public enum BankAccountVerificationStateTransitionType
     VERIFY_BANK_ACCOUNT(
             BankAccountVerificationState.NOT_VERIFIED,
             BankAccountVerificationState.VERIFIED,
-            NextTransitionSearchStrategy.none(), TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
-            AdvancePolicy.MANUAL),
-    CANCEL(
-            BankAccountVerificationState.NOT_VERIFIED,
-            BankAccountVerificationState.CANCELLED,
-            NextTransitionSearchStrategy.none(), TaskAssignmentStrategy.none(),
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.TREASURER),
             AdvancePolicy.MANUAL),
     RESET(
-            Arrays.asList(
-                    BankAccountVerificationState.NOT_VERIFIED,
-                    BankAccountVerificationState.VERIFIED,
-                    BankAccountVerificationState.CANCELLED
-            ),
+            BankAccountVerificationState.VERIFIED,
             BankAccountVerificationState.NOT_VERIFIED,
-            NextTransitionSearchStrategy.firstMatching(), TaskAssignmentStrategy.none(),
+            NextTransitionSearchStrategy.none(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    REJECT_PROOF(
+            BankAccountVerificationState.NOT_VERIFIED,
+            BankAccountVerificationState.AWAITING_PROOF,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    PROOF_UPDATED(
+            BankAccountVerificationState.AWAITING_PROOF,
+            BankAccountVerificationState.NOT_VERIFIED,
+            NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.PROPERTY_MANAGER),
             AdvancePolicy.MANUAL);
 
     private final List<BankAccountVerificationState> fromStates;

@@ -32,20 +32,23 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
 
     public static class ActionDomainEvent extends BankAccount_triggerAbstract.ActionDomainEvent<BankAccount_verify> {}
 
+
+
     @Action(
             semantics = SemanticsOf.IDEMPOTENT,
             domainEvent = ActionDomainEvent.class
     )
     @MemberOrder(sequence = "9")
-    public BankAccount act(@Nullable final String comment) {
-        return super.act(comment);
+    public BankAccount act(
+            @Nullable final String comment) {
+        trigger(comment, null);
+        return getDomainObject();
     }
 
     public boolean hideAct() {
-        return super.hideAct();
+        return cannotTransition();
     }
 
-    @Override
     public String disableAct() {
         if(bankAccount.getBic() == null) {
             return "BIC is required";
@@ -58,7 +61,7 @@ public class BankAccount_verify extends BankAccount_triggerAbstract {
         if(paperclips.isEmpty()) {
             return "IBAN proof must first be attached";
         }
-        return super.disableAct();
+        return reasonGuardNotSatisified();
     }
 
 

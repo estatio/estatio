@@ -40,6 +40,7 @@ import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
 import org.estatio.fixture.financial.BankAccountForMediaXGb;
 import org.estatio.fixture.financial.BankAccountForMiracleGb;
 import org.estatio.fixture.financial.BankAccountForPretGb;
+import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
@@ -107,6 +108,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
+        executionContext.executeChild(this, new BankAccountForTopModelGb());
         executionContext.executeChild(this, new PersonForGinoVannelliGb());
 
         executionContext.executeChild(this, new PropertyForGraIt());

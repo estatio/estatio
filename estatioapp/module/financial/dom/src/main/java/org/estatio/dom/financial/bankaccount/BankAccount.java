@@ -146,6 +146,19 @@ public class BankAccount
         return this;
     }
 
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private Boolean deprecated;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public BankAccount deprecate(final String reason){
+        setDeprecated(true);
+        return this;
+    }
+
+    public String disableDeprecate(){
+        return getDeprecated()!=null && getDeprecated() ? "Already deprecated" : null;
+    }
 
     public static class ChangeEvent extends ActionDomainEvent<BankAccount> {}
 
