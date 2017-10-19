@@ -40,6 +40,7 @@ import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForInteg
 import org.apache.isis.core.security.authentication.AuthenticationRequestNameOnly;
 
 import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
+import org.isisaddons.module.fakedata.FakeDataModule;
 
 import org.estatio.app.EstatioAppManifest;
 import org.estatio.integtests.capex.TickingFixtureClock;
@@ -66,7 +67,7 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
                     .with(new EstatioAppManifest(
                             Collections.emptyList(),
                             null,
-                            Arrays.asList(EstatioIntegTestFakeServicesModule.class)
+                            Arrays.asList(EstatioIntegTestFakeServicesModule.class, FakeDataModule.class)
                     ) {
                         @Override
                         public Map<String, String> getConfigurationProperties() {

@@ -1,17 +1,19 @@
 package org.estatio.fixture.order;
 
-import java.math.BigDecimal;
-import java.util.SortedSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
+import org.assertj.core.api.Assertions;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.sudo.SudoService;
 
+import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
@@ -19,11 +21,15 @@ import org.estatio.capex.dom.documents.categorisation.triggers.Document_categori
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.capex.dom.order.viewmodel.IncomingDocAsOrderViewModel;
+import org.estatio.capex.dom.order.viewmodel.Order_switchView;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForOrder;
@@ -53,28 +59,55 @@ public class OrderFixture extends FixtureScript {
         fakeOrder2Doc.setAtPath("/GBR");
 
         // given we categorise for a property
-        Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        final Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, (Runnable) () ->
         wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, ""));
 
         // given most/all of the info has been completed  (not using our view model here).
-        Project projectForOxf = projectRepository.findByReference("OXF-02");
-        Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
+        final Project projectForOxf = projectRepository.findByReference("OXF-02");
+        final Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
+
+        final Party orgTopModelGb = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+        final Party orgHelloWorldGb = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+        final Charge chargeWorks = chargeRepository.findByReference("WORKS");
 
         Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);
-        fakeOrder.setSeller(partyRepository.findPartyByReference(OrganisationForTopModelGb.REF));
-        fakeOrder.setBuyer(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF));
-        fakeOrder.addItem(chargeRepository.findByReference("WORKS"), "order item", new BigDecimal("1000.00"), new BigDecimal("210.00"), new BigDecimal("1210.00"), taxForGbr, "F2016", propertyForOxf,projectForOxf, null);
-        fakeOrder.setEntryDate(new LocalDate(2014,3,6));
-        fakeOrder.setSeller(partyRepository.findPartyByReference(OrganisationForTopModelGb.REF));
-        fakeOrder.setBuyer(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF));
-        fakeOrder.addItem(chargeRepository.findByReference("WORKS"), "order item", new BigDecimal("1000.00"), new BigDecimal("210.00"), new BigDecimal("1210.00"), taxForGbr, "F2017", propertyForOxf,projectForOxf, null);
+
+        // only way to create a first order item "legally" is through the view model
+        final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, fakeOrder).act();
+        final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
+                mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
+        wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), orgHelloWorldGb, orgTopModelGb, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
+
+        wrap(viewModel).editCharge(chargeWorks);
+        wrap(viewModel).setDescription("order item");
+        wrap(viewModel).setNetAmount(VT.bd("1000.00"));
+        wrap(viewModel).setVatAmount(VT.bd("210.00"));
+        wrap(viewModel).setGrossAmount(VT.bd("1210.00"));
+        wrap(viewModel).setTax(taxForGbr);
+        wrap(viewModel).setPeriod("F2016");
+        wrap(viewModel).setProperty(propertyForOxf);
+        wrap(viewModel).setProject(projectForOxf);
+        wrap(viewModel).setBudgetItem(null);
+
+        wrap(viewModel).save();
+
+        wrap(fakeOrder).changeDates(fakeOrder.default0ChangeDates(), VT.ld(2014,3,6));
+
+        // this does an upsert base on the charge, so we still end up with only one item
+        wrap(fakeOrder).addItem(chargeWorks, "order item", VT.bd("1000.00"), VT.bd("210.00"), VT.bd("1210.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
+
+        // add a different charge; this creates a second item
+        final Charge chargeMarketing = chargeRepository.findByReference("MARKETING");
+        wrap(fakeOrder).addItem(chargeMarketing, "marketing stuff", VT.bd("500.00"), VT.bd("105.00"), VT.bd("605.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
 
         this.order = fakeOrder;
-        final SortedSet<OrderItem> items = order.getItems();
-        firstItem = items.first();
+
+        final List<OrderItem> items = Lists.newArrayList(order.getItems());
+        firstItem = items.get(0);
+        secondItem = items.get(1);
 
     }
 
@@ -82,6 +115,8 @@ public class OrderFixture extends FixtureScript {
     Order order;
     @Getter
     OrderItem firstItem;
+    @Getter
+    OrderItem secondItem;
 
     @Inject
     IncomingDocumentRepository incomingDocumentRepository;
