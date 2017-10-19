@@ -1,12 +1,12 @@
 package org.estatio.capex.dom.task.policy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -26,6 +26,7 @@ import org.estatio.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
+import org.estatio.dom.party.role.PartyRole;
 import org.estatio.dom.party.role.PartyRoleType;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
@@ -85,7 +86,7 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
         reasonIfAny.ifPresent(evv::disable);
     }
 
-    private <
+    <
             DO,
             ST extends StateTransition<DO, ST, STT, S>,
             STT extends StateTransitionType<DO, ST, STT, S>,
@@ -112,22 +113,26 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
         }
 
         final Person meAsPerson = personRepository.me();
-
-        final Person taskAssignedTo = task.getPersonAssignedTo();
+        if(meAsPerson == null) {
+            return Optional.of("Could not locate Person for current user");
+        }
 
         // first guard: meAsPerson always needs the PartyRoleType the task is assigned to
-        List<PartyRoleType> meAsPersonRoleTypes = new ArrayList<>(meAsPerson.getRoles()).stream().map(x->x.getRoleType()).collect(Collectors.toList());
+        List<PartyRoleType> meAsPersonRoleTypes =
+                Lists.newArrayList(meAsPerson.getRoles()).stream()
+                        .map(PartyRole::getRoleType)
+                        .collect(Collectors.toList());
         if (!meAsPersonRoleTypes.contains(task.getAssignedTo())) {
-            return Optional.of(String.format("Task assigned to role %s", task.getAssignedTo().getKey()));
+            return Optional.of(String.format("Task assigned to '%s' role", task.getAssignedTo().getKey()));
         }
 
         // second guard: if the task is assigned to a specific person it needs to be meAsPerson
+        final Person taskAssignedTo = task.getPersonAssignedTo();
         if(taskAssignedTo == null || taskAssignedTo == meAsPerson) {
             return Optional.empty();
         } else {
             return Optional.of(String.format("Task assigned to %s", taskAssignedTo.getReference()));
         }
-
 
     }
 

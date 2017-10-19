@@ -140,6 +140,12 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-numerator</artifactId>
             <type>test-jar</type>
