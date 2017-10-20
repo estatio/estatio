@@ -2,7 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -146,7 +146,7 @@ public class IncomingInvoiceItemRepository_Test {
         // expect
         context.checking(new Expectations(){{
             oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(sourceItem);
-            will(returnValue(new ArrayList<>()));
+            will(returnValue(Optional.empty()));
             oneOf(mockRepositoryService).removeAndFlush(sourceItem);
         }});
 
