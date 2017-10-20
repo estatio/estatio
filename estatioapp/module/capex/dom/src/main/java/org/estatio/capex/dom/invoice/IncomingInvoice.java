@@ -443,13 +443,13 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             copyItem.setReversalOf(itemToReverse);
         }
 
-        final List<OrderItemInvoiceItemLink> links =
+        final Optional<OrderItemInvoiceItemLink> linkIfAny =
                 orderItemInvoiceItemLinkRepository.findByInvoiceItem(itemToReverse);
 
-        for (OrderItemInvoiceItemLink link : links) {
+        linkIfAny.ifPresent(link -> {
             orderItemInvoiceItemLinkRepository.createLink(
                     link.getOrderItem(), copyItem, sort.adjust(link.getNetAmount()));
-        }
+        });
 
         return copyItem;
     }

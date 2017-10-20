@@ -67,7 +67,6 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
@@ -409,10 +408,9 @@ public class IncomingDocAsInvoiceViewModel
             setProject(invoiceItem.getProject());
             setBudgetItem(invoiceItem.getBudgetItem());
 
-            List<OrderItemInvoiceItemLink> links =
+            final Optional<OrderItemInvoiceItemLink> linkIfAny =
                     orderItemInvoiceItemLinkRepository.findByInvoiceItem(invoiceItem);
 
-            final Optional<OrderItemInvoiceItemLink> linkIfAny = links.stream().findFirst();
             linkIfAny.ifPresent(link -> {
                 final OrderItem linkOrderItem = link.getOrderItem();
 
@@ -503,10 +501,10 @@ public class IncomingDocAsInvoiceViewModel
             orderItemInvoiceItemLinkRepository.findOrCreateLink(orderItemToLink, firstItem, firstItem.getNetAmount());
         } else {
             // remove all (or the one and only) link.
-            final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(firstItem);
-            for (OrderItemInvoiceItemLink link : links) {
+            final Optional<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(firstItem);
+            links.ifPresent(link -> {
                 link.remove();
-            }
+            });
         }
 
         return incomingInvoice;
@@ -773,12 +771,6 @@ public class IncomingDocAsInvoiceViewModel
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     FactoryService factoryService;
-
-    @Inject
-    @XmlTransient
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
     @Inject
     @XmlTransient

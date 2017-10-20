@@ -14,6 +14,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 /**
  * @see OrderItem_createInvoiceItemLink
@@ -23,7 +24,7 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
     public IncomingInvoiceItem_createOrderItemLink(final IncomingInvoiceItem mixee) { super(mixee); }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @MemberOrder(name = "orderItemLinks", sequence = "1")
+    @MemberOrder(name = "orderItem", sequence = "1")
     public IncomingInvoiceItem act(
             final OrderItem orderItem,
             @Digits(integer = 13, fraction = 2)
@@ -53,25 +54,32 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
             orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
         }
 
-        // exclude any invoice items already linked to this order
-        final List<OrderItem> orderItemsAlreadyLinked = orderItemInvoiceItemLinkRepository
-                .findLinkedOrderItemsByInvoiceItem(mixee);
-        orderItems.removeAll(orderItemsAlreadyLinked);
-
         return orderItems;
     }
     public String disableAct(){
-        if(mixee.getInvoice().getSeller() == null) {
-            return "Invoice's seller is required before items can be linked";
-        }
-        if(mixee.getNetAmount()!=null && orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedFromInvoiceItem(mixee).compareTo(mixee.getNetAmount()) >= 0) {
-            return "The net amount for this invoice item has already been linked to other order items";
-        }
-        return null;
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+
+        buf.append(() -> orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee).isPresent(),
+                "Already linked to an order item");
+        buf.append(() -> mixee.getInvoice().getSeller() == null,
+                "Invoice's seller is required before items can be linked");
+        buf.append(() ->
+                mixee.getNetAmount()!=null &&
+                orderItemInvoiceItemLinkRepository.calculateNetAmountLinkedFromInvoiceItem(mixee).compareTo(mixee.getNetAmount()) >= 0,
+                "The net amount for this invoice item has already been linked to other order items");
+
+        return buf.getReason();
     }
 
     public String validate0Act(final OrderItem orderItem) {
-        return orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee).isEmpty() ? null : linkValidationService.validateOrderItem(orderItem, mixee);
+
+        ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot link to this order item");
+
+        buf.append(() -> mixee.getCharge() != orderItem.getCharge(), "charge is different");
+        buf.append(() -> mixee.getProject() != orderItem.getProject(), "project is different");
+        buf.append(() -> mixee.getFixedAsset() != orderItem.getProperty(), "property is different");
+
+        return buf.getReason();
     }
 
     public BigDecimal default1Act(){

@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
+import org.estatio.dom.utils.ReasonBuffer2;
 
 /**
  * @see IncomingInvoiceItem_updateOrderItemLink
@@ -59,7 +60,14 @@ public class OrderItem_updateInvoiceItemLink extends OrderItem_abstractMixinInvo
     }
 
     public String validate0Act(final IncomingInvoiceItem invoiceItem) {
-        return linkValidationService.validateOrderItem(mixee, invoiceItem);
+
+        ReasonBuffer2 buf = ReasonBuffer2.forAll("Cannot link to this invoice item");
+
+        buf.append(() -> invoiceItem.getCharge() != mixee.getCharge(), "charge is different");
+        buf.append(() -> invoiceItem.getProject() != mixee.getProject(), "project is different");
+        buf.append(() -> invoiceItem.getFixedAsset() != mixee.getProperty(), "property is different");
+
+        return buf.getReason();
     }
 
     public String validateAct(final IncomingInvoiceItem invoiceItem, final BigDecimal proposedNetAmount) {

@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.order.OrderItemRepository;
 
 abstract class AbstractMixinOrderItemLinks<T> {
@@ -46,8 +45,5 @@ abstract class AbstractMixinOrderItemLinks<T> {
 
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
-
-    @Inject
-    OrderItemInvoiceItemLinkValidationService linkValidationService;
 
 }

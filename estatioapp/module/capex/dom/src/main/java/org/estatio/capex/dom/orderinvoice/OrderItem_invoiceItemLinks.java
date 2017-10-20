@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.order.OrderItem;
 
 /**
- * @see IncomingInvoiceItem_orderItemLinks
+ * @see IncomingInvoiceItem_orderItemLink (many-to-one)
  */
 @Mixin(method="coll")
 public class OrderItem_invoiceItemLinks extends OrderItem_abstractMixinInvoiceItemLinks {
