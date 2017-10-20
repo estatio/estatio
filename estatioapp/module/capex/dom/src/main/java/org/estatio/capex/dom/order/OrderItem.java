@@ -58,6 +58,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
+import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.tax.dom.Tax;
 
 import lombok.Getter;
@@ -249,7 +250,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableEditCharge(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
 
 
@@ -330,9 +331,10 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableUpdateAmounts(){
-        return getOrdr().isImmutable()  ? itemImmutableReason() : null;
+        ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        itemImmutableIfOrderImmutable(buf);
+        return buf.getReason();
     }
-
 
 
 
@@ -364,7 +366,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableEditPeriod(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
 
 
@@ -389,7 +391,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableEditProperty(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
 
 
@@ -417,7 +419,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableEditProject(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
 
 
@@ -448,11 +450,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableEditBudgetItem(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
-
-
-
 
     @PropertyLayout(
             named = "Application Level",
@@ -595,18 +594,23 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableRemoveItem(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return itemImmutableReasonIfIsImmutable();
     }
 
-    private String itemImmutableReason(){
-        if (isLinkedToInvoiceItem()){
-            return "This order item is linked to an invoice item";
-        }
-        return "The order cannot be changed";
+    private String itemImmutableReasonIfIsImmutable() {
+        final ReasonBuffer2 buf = ReasonBuffer2.forSingle();
+        itemImmutableIfLinkedToInvoiceItem(buf);
+        itemImmutableIfOrderImmutable(buf);
+        return buf.getReason();
     }
 
+    private void itemImmutableIfLinkedToInvoiceItem(final ReasonBuffer2 buf) {
+        buf.append(this::isLinkedToInvoiceItem, "This order item is linked to an invoice item");
+    }
 
-
+    private void itemImmutableIfOrderImmutable(final ReasonBuffer2 buf) {
+        buf.append(getOrdr()::isImmutable, "The order cannot be changed");
+    }
 
     @Inject
     OrderItemInvoiceItemLinkRepository orderItemInvoiceItemLinkRepository;
