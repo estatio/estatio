@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
-import org.assertj.core.api.Assertions;
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -62,48 +61,51 @@ public class OrderFixture extends FixtureScript {
         final Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, (Runnable) () ->
-        wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, ""));
+        sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, () -> {
 
-        // given most/all of the info has been completed  (not using our view model here).
-        final Project projectForOxf = projectRepository.findByReference("OXF-02");
-        final Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
+            wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, "");
 
-        final Party orgTopModelGb = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-        final Party orgHelloWorldGb = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-        final Charge chargeWorks = chargeRepository.findByReference("WORKS");
+            // given most/all of the info has been completed  (not using our view model here).
+            final Project projectForOxf = projectRepository.findByReference("OXF-02");
+            final Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
 
-        Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);
+            final Party orgTopModelGb = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party orgHelloWorldGb = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            final Charge chargeWorks = chargeRepository.findByReference("WORKS");
 
-        // only way to create a first order item "legally" is through the view model
-        final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, fakeOrder).act();
-        final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
-                mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
-        wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), orgHelloWorldGb, orgTopModelGb, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
+            Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);
 
-        wrap(viewModel).editCharge(chargeWorks);
-        wrap(viewModel).setDescription("order item");
-        wrap(viewModel).setNetAmount(VT.bd("1000.00"));
-        wrap(viewModel).setVatAmount(VT.bd("210.00"));
-        wrap(viewModel).setGrossAmount(VT.bd("1210.00"));
-        wrap(viewModel).setTax(taxForGbr);
-        wrap(viewModel).setPeriod("F2016");
-        wrap(viewModel).setProperty(propertyForOxf);
-        wrap(viewModel).setProject(projectForOxf);
-        wrap(viewModel).setBudgetItem(null);
+            // only way to create a first order item "legally" is through the view model
+            final IncomingDocAsOrderViewModel viewModel = mixin(Order_switchView.class, fakeOrder).act();
+            final IncomingDocAsOrderViewModel.changeOrderDetails changeOrderDetails =
+                    mixin(IncomingDocAsOrderViewModel.changeOrderDetails.class, viewModel);
+            wrap(changeOrderDetails).act(changeOrderDetails.default0Act(), orgHelloWorldGb, orgTopModelGb, changeOrderDetails.default3Act(), changeOrderDetails.default4Act());
 
-        wrap(viewModel).save();
+            wrap(viewModel).editCharge(chargeWorks);
+            wrap(viewModel).setDescription("order item");
+            wrap(viewModel).setNetAmount(VT.bd("1000.00"));
+            wrap(viewModel).setVatAmount(VT.bd("210.00"));
+            wrap(viewModel).setGrossAmount(VT.bd("1210.00"));
+            wrap(viewModel).setTax(taxForGbr);
+            wrap(viewModel).setPeriod("F2016");
+            wrap(viewModel).setProperty(propertyForOxf);
+            wrap(viewModel).setProject(projectForOxf);
+            wrap(viewModel).setBudgetItem(null);
 
-        wrap(fakeOrder).changeDates(fakeOrder.default0ChangeDates(), VT.ld(2014,3,6));
+            wrap(viewModel).save();
 
-        // this does an upsert base on the charge, so we still end up with only one item
-        wrap(fakeOrder).addItem(chargeWorks, "order item", VT.bd("1000.00"), VT.bd("210.00"), VT.bd("1210.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
+            wrap(fakeOrder).changeDates(fakeOrder.default0ChangeDates(), VT.ld(2014,3,6));
 
-        // add a different charge; this creates a second item
-        final Charge chargeMarketing = chargeRepository.findByReference("MARKETING");
-        wrap(fakeOrder).addItem(chargeMarketing, "marketing stuff", VT.bd("500.00"), VT.bd("105.00"), VT.bd("605.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
+            // this does an upsert base on the charge, so we still end up with only one item
+            wrap(fakeOrder).addItem(chargeWorks, "order item", VT.bd("1000.00"), VT.bd("210.00"), VT.bd("1210.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
 
-        this.order = fakeOrder;
+            // add a different charge; this creates a second item
+            final Charge chargeMarketing = chargeRepository.findByReference("MARKETING");
+            wrap(fakeOrder).addItem(chargeMarketing, "marketing stuff", VT.bd("500.00"), VT.bd("105.00"), VT.bd("605.00"), taxForGbr, "F2017", propertyForOxf, projectForOxf, null);
+
+            this.order = fakeOrder;
+        });
+
 
         final List<OrderItem> items = Lists.newArrayList(order.getItems());
         firstItem = items.get(0);
