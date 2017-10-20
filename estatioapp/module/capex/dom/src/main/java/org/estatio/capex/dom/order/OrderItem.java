@@ -330,7 +330,7 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public String disableUpdateAmounts(){
-        return isImmutable() ? itemImmutableReason() : null;
+        return getOrdr().isImmutable()  ? itemImmutableReason() : null;
     }
 
 

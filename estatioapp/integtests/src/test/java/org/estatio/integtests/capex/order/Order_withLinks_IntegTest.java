@@ -1,5 +1,6 @@
 package org.estatio.integtests.capex.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,8 +16,6 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
-
-import org.incode.module.base.integtests.VT;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItem;
@@ -35,6 +34,8 @@ import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.order.OrderFixture;
 import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.tax.dom.Tax;
+import org.estatio.tax.dom.TaxRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -159,14 +160,21 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
     }
 
     @Test
-    public void cannot_update_amounts_when_has_linked_items() throws Exception {
-
-        // expecting
-        expectedExceptions.expect(DisabledException.class);
+    public void can_update_amounts_even_when_has_linked_items() throws Exception {
 
         // when
-        wrap(orderItem).updateAmounts(VT.bd("100.00"), null, null, null);
+        final BigDecimal newNetAmt = fakeDataService.bigDecimals().any(13,2).abs();
+        final BigDecimal newVatAmt = fakeDataService.bigDecimals().any(13,2).abs();
+        final BigDecimal newGrossAmt = fakeDataService.bigDecimals().any(13,2).abs();
+        final Tax tax = fakeDataService.collections().anyOf(taxRepository.allTaxes());
 
+        wrap(orderItem).updateAmounts(newNetAmt, newVatAmt, newGrossAmt, tax);
+
+        // then
+        assertThat(orderItem.getNetAmount()).isEqualTo(newNetAmt);
+        assertThat(orderItem.getVatAmount()).isEqualTo(newVatAmt);
+        assertThat(orderItem.getGrossAmount()).isEqualTo(newGrossAmt);
+        assertThat(orderItem.getTax()).isEqualTo(tax);
     }
 
 
@@ -184,6 +192,8 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
 
     @Inject
     BudgetItemRepository budgetItemRepository;
+
+    @Inject TaxRepository taxRepository;
 
     @Inject ProjectRepository projectRepository;
 
