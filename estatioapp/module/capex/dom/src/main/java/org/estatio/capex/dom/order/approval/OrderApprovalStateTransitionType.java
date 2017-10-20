@@ -52,7 +52,7 @@ public enum OrderApprovalStateTransitionType
             return order.reasonIncomplete();
         }
     },
-    FIX_ERROR(
+    AMEND(
             OrderApprovalState.APPROVED,
             OrderApprovalState.NEW,
             NextTransitionSearchStrategy.firstMatching(),

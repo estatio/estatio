@@ -18,17 +18,17 @@ import org.estatio.dom.party.Person;
  * this follows a common pattern applicable for all domain objects that have an associated state transition machine.
  */
 @Mixin(method="act")
-public class Order_fixError extends
+public class Order_amend extends
         Order_triggerAbstract {
 
     private final Order order;
 
-    public Order_fixError(Order order) {
-        super(order, OrderApprovalStateTransitionType.FIX_ERROR);
+    public Order_amend(Order order) {
+        super(order, OrderApprovalStateTransitionType.AMEND);
         this.order = order;
     }
 
-    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_fixError> {}
+    public static class ActionDomainEvent extends Order_triggerAbstract.ActionDomainEvent<Order_amend> {}
 
     @Action(
             domainEvent = ActionDomainEvent.class,

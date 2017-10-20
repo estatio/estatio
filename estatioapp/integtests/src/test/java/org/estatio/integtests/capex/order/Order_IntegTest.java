@@ -26,7 +26,7 @@ import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.triggers.Order_completeWithApproval;
 import org.estatio.capex.dom.order.approval.triggers.Order_discard;
-import org.estatio.capex.dom.order.approval.triggers.Order_fixError;
+import org.estatio.capex.dom.order.approval.triggers.Order_amend;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
@@ -131,7 +131,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
     }
 
     @Test
-    public void can_fix_error_when_approved() throws Exception {
+    public void can_amend_when_approved() throws Exception {
 
         // given
         assertNotNull(order);
@@ -139,7 +139,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // when
-        final Order_fixError mixin = mixin(Order_fixError.class, order);
+        final Order_amend mixin = mixin(Order_amend.class, order);
 
         final String role = mixin.default0Act();
         final Person person = mixin.default1Act();

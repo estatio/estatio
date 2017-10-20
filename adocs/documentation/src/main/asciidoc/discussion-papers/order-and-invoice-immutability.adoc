@@ -50,7 +50,7 @@ state "Order Approval" as oa {
     [*] -right-> oa_new: INSTANTIATE
 
     oa_new -down-> oa_approved: COMPLETE_\nWITH_APPROVAL
-    oa_approved -up-> oa_new: \nFIX_ERROR
+    oa_approved -up-> oa_new: \nAMEND
     oa_new -right-> oa_discarded : DISCARD
 }
 --
