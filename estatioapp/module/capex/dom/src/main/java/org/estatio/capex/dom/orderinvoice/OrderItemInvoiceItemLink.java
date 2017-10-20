@@ -9,6 +9,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -74,8 +75,10 @@ import lombok.Setter;
                         "FROM org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink " +
                         "WHERE invoiceItem == :invoiceItem")
 })
-@Unique(name = "OrderItemInvoiceItemLink_UNQ", members = { "orderItem", "invoiceItem" })
-
+@Uniques({
+    @Unique(name = "OrderItemInvoiceItemLink_UNQ", members = { "orderItem", "invoiceItem" }), // legacy
+    @Unique(name = "OrderItemInvoiceItemLink_invoiceItem_UNQ", members = { "invoiceItem" }) // can only link to one order item
+})
 @DomainObject(
         objectType = "org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink"
 )

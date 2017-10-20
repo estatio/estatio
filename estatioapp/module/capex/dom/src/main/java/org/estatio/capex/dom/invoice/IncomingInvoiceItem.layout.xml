@@ -125,6 +125,10 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <cpt:fieldSet name="Order">
+                <cpt:property id="orderItem"></cpt:property>
+                <cpt:property id="linkedAmount"></cpt:property>
+            </cpt:fieldSet>
         </bs3:col>
     </bs3:row>
     <bs3:row>
@@ -144,19 +148,6 @@
                 <cpt:property id="source" hidden="EVERYWHERE"/>
                 <cpt:property id="quantity" hidden="EVERYWHERE"/>
             </cpt:fieldSet>
-        </bs3:col>
-    </bs3:row>
-    <bs3:row>
-        <bs3:col span="12">
-            <bs3:tabGroup>
-                <bs3:tab name="Order Item Links">
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:collection id="orderItemLinks" defaultView="table"/>
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-            </bs3:tabGroup>
         </bs3:col>
     </bs3:row>
     <bs3:row>

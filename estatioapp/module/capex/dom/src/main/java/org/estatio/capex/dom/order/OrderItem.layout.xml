@@ -57,35 +57,71 @@
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="4">
-            <cpt:fieldSet name="Dimensions" id="dimensions">
-                <cpt:property id="charge">
-                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
-                </cpt:property>
-                <cpt:property id="fixedAsset">
-                    <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
-                </cpt:property>
-                <cpt:property id="project">
-                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
-                </cpt:property>
-                <cpt:property id="budgetItem">
-                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
-                </cpt:property>
-                <cpt:property id="startDate">
-                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
-                </cpt:property>
-                <cpt:property id="endDate"/>
-                <cpt:property id="type"/>
-            </cpt:fieldSet>
+            <bs3:tabGroup>
+                <bs3:tab name="Dimensions">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Dimensions" id="dimensions">
+                                <cpt:property id="charge">
+                                    <cpt:action id="editCharge" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="fixedAsset">
+                                    <cpt:action id="editProperty" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="project">
+                                    <cpt:action id="editProject" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="budgetItem">
+                                    <cpt:action id="editBudgetItem" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="startDate">
+                                    <cpt:action id="editPeriod" promptStyle="INLINE" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="endDate"/>
+                                <cpt:property id="type" hidden="OBJECT_FORMS"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy_1">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet id="dummy_1">
+                                <cpt:property id="dummy_1"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="4">
-            <cpt:fieldSet name="Amounts" id="amounts">
-                <cpt:action id="updateAmounts" position="PANEL"/>
-                <cpt:property id="netAmount"/>
-                <cpt:property id="vatAmount"/>
-                <cpt:property id="tax"/>
-                <cpt:property id="grossAmount"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Amounts Invoiced" id="amountsInvoiced">
+            <bs3:tabGroup>
+                <bs3:tab name="Details">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Amounts" id="amounts">
+                                <cpt:action id="updateAmounts" position="PANEL"/>
+                                <cpt:property id="netAmount"/>
+                                <cpt:property id="vatAmount"/>
+                                <cpt:property id="grossAmount"/>
+                            </cpt:fieldSet>
+                            <cpt:fieldSet name="Tax" id="tax">
+                                <cpt:property id="tax"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="dummy_2">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet id="dummy_2">
+                                <cpt:property id="dummy_2"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Invoiced" id="amountsInvoiced">
                 <cpt:property id="netAmountInvoiced"/>
                 <cpt:property id="overspent"/>
             </cpt:fieldSet>

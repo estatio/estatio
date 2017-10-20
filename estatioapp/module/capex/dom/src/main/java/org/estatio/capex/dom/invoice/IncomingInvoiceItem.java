@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -31,7 +32,6 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -41,7 +41,6 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemInvoiceItemLinkValidationService;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
@@ -735,9 +734,9 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     }
 
     boolean isLinkedToOrderItem(){
-        final List<OrderItemInvoiceItemLink> numberOfLinks =
+        final Optional<OrderItemInvoiceItemLink> linkIfAny =
                 orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
-        return numberOfLinks.size() > 0;
+        return linkIfAny.isPresent();
     }
 
     /**
@@ -754,11 +753,11 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public Invoice removeItem(){
         IncomingInvoice invoice = (IncomingInvoice) getInvoice();
-        if (isLinkedToOrderItem()){
-            for (OrderItemInvoiceItemLink link : orderItemInvoiceItemLinkRepository.findByInvoiceItem(this)){
-                repositoryService.removeAndFlush(link);
-            }
-        }
+        final Optional<OrderItemInvoiceItemLink> linkIfAny =
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this);
+        linkIfAny.ifPresent(link -> {
+            repositoryService.removeAndFlush(link);
+        });
         repositoryService.removeAndFlush(this);
         return invoice;
     }
@@ -922,18 +921,21 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
     @Programmatic
     public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny(){
-        if (orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).size()==1) {
-            OrderItem linkedOrderItem = orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).get(0).getOrderItem();
-            if (linkedOrderItem.getCharge() != null) {
-                setCharge(linkedOrderItem.getCharge());
+        final Optional<OrderItem> orderItemIfAny =
+                orderItemInvoiceItemLinkRepository.findByInvoiceItem(this).map(OrderItemInvoiceItemLink::getOrderItem);
+        orderItemIfAny.ifPresent(orderItem ->
+        {
+            if (orderItem.getCharge() != null) {
+                setCharge(orderItem.getCharge());
             }
-            if (linkedOrderItem.getProject() != null) {
-                setProject(linkedOrderItem.getProject());
+            if (orderItem.getProject() != null) {
+                setProject(orderItem.getProject());
             }
-            if (linkedOrderItem.getProperty() != null) {
-                setFixedAsset(linkedOrderItem.getProperty());
+            if (orderItem.getProperty() != null) {
+                setFixedAsset(orderItem.getProperty());
             }
-        }
+
+        });
     }
 
     @Inject
@@ -954,14 +956,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
 
     @Inject
     @NotPersistent
-    OrderItemInvoiceItemLinkValidationService linkValidationService;
-
-    @Inject
-    @NotPersistent
     BudgetItemChooser budgetItemChooser;
-
-    @Inject
-    @NotPersistent
-    QueryResultsCache queryResultsCache;
 
 }

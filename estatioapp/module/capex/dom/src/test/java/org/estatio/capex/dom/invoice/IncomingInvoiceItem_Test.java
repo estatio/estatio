@@ -1,9 +1,7 @@
 package org.estatio.capex.dom.invoice;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
@@ -42,19 +40,53 @@ public class IncomingInvoiceItem_Test {
 
     public static class RemoveItem_Test extends IncomingInvoiceItem_Test {
 
-        @Test
-        public void removeItem() throws Exception {
+        private void expectOrderItemInvoiceItemLinkRepository_returns(final OrderItemInvoiceItemLink result) {
+            context.checking(new Expectations(){{
+                allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(item);
+                will(returnValue(Optional.ofNullable(result)));
+            }});
+        }
+
+        IncomingInvoiceItem item;
+        OrderItemInvoiceItemLink link;
+
+        @Before
+        public void setUp() throws Exception {
 
             // given
-            IncomingInvoiceItem item = new IncomingInvoiceItem(){
-                @Override
-                boolean isLinkedToOrderItem(){
-                    return false;
-                }
-            };
+            item = new IncomingInvoiceItem();
             item.repositoryService = mockRepositoryService;
+            item.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
+
+            link = new OrderItemInvoiceItemLink();
+
+        }
+
+        @Test
+        public void when_linked_item() throws Exception {
 
             // expect
+            expectOrderItemInvoiceItemLinkRepository_returns(link);
+
+            context.checking(new Expectations(){
+                {
+                    oneOf(mockRepositoryService).removeAndFlush(link);
+                    oneOf(mockRepositoryService).removeAndFlush(item);
+                }
+            });
+
+            // when
+            item.removeItem();
+
+        }
+
+
+        @Test
+        public void when_no_linked_item() throws Exception {
+
+            // expect
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
+
             context.checking(new Expectations(){
                 {
                     oneOf(mockRepositoryService).removeAndFlush(item);
@@ -459,6 +491,7 @@ public class IncomingInvoiceItem_Test {
             // expect
             context.checking(new Expectations(){{
                 oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
+                will(returnValue(Optional.empty()));
             }});
 
             // when
@@ -466,29 +499,6 @@ public class IncomingInvoiceItem_Test {
 
         }
 
-        @Test
-        public void copyChargeAndProjectFromSingleLinkedOrderItemIfAny_two_items_works() throws Exception {
-
-            // given
-            IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
-            invoiceItem.orderItemInvoiceItemLinkRepository = mockOrderItemInvoiceItemLinkRepository;
-            OrderItemInvoiceItemLink link1 = new OrderItemInvoiceItemLink();
-            OrderItemInvoiceItemLink link2 = new OrderItemInvoiceItemLink();
-
-            // expect
-            context.checking(new Expectations(){{
-                oneOf(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
-                will(returnValue(Arrays.asList(link1, link2)));
-            }});
-
-            // when
-            invoiceItem.copyChargeAndProjectFromSingleLinkedOrderItemIfAny();
-
-            // then
-            assertThat(invoiceItem.getCharge()).isNull();
-            assertThat(invoiceItem.getProject()).isNull();
-
-        }
 
 
         @Test
@@ -515,7 +525,7 @@ public class IncomingInvoiceItem_Test {
             // expect
             context.checking(new Expectations(){{
                 allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(invoiceItem);
-                will(returnValue(Arrays.asList(link)));
+                will(returnValue(Optional.of(link)));
             }});
 
             // when
@@ -532,10 +542,10 @@ public class IncomingInvoiceItem_Test {
 
     public static class ChargeIsImmutableReason_Test extends IncomingInvoiceItem_Test {
 
-        private void expectOrderItemInvoiceItemLinkRepository_returns(final List<OrderItemInvoiceItemLink> result) {
+        private void expectOrderItemInvoiceItemLinkRepository_returns(final OrderItemInvoiceItemLink result) {
             context.checking(new Expectations(){{
                 allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(item);
-                will(returnValue(result));
+                will(returnValue(Optional.ofNullable(result)));
             }});
         }
 
@@ -555,7 +565,7 @@ public class IncomingInvoiceItem_Test {
         public void no_links() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.chargeIsImmutableReason();
@@ -571,7 +581,7 @@ public class IncomingInvoiceItem_Test {
             item.setBudgetItem(new BudgetItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.chargeIsImmutableReason();
@@ -583,7 +593,7 @@ public class IncomingInvoiceItem_Test {
         public void is_linked_to_order_item() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.singletonList(new OrderItemInvoiceItemLink()));
+            expectOrderItemInvoiceItemLinkRepository_returns(new OrderItemInvoiceItemLink());
 
             // when
             final String s = item.chargeIsImmutableReason();
@@ -598,7 +608,7 @@ public class IncomingInvoiceItem_Test {
             item.setReversalOf(new IncomingInvoiceItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.chargeIsImmutableReason();
@@ -613,7 +623,7 @@ public class IncomingInvoiceItem_Test {
             item.setReportedDate(LocalDate.now());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.chargeIsImmutableReason();
@@ -626,10 +636,10 @@ public class IncomingInvoiceItem_Test {
 
     public static class BudgetIsImmutableReason_Test extends IncomingInvoiceItem_Test {
 
-        private void expectOrderItemInvoiceItemLinkRepository_returns(final List<OrderItemInvoiceItemLink> result) {
+        private void expectOrderItemInvoiceItemLinkRepository_returns(OrderItemInvoiceItemLink result) {
             context.checking(new Expectations(){{
                 allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(item);
-                will(returnValue(result));
+                will(returnValue(Optional.ofNullable(result)));
             }});
         }
 
@@ -654,7 +664,7 @@ public class IncomingInvoiceItem_Test {
         public void no_links() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.budgetItemIsImmutableReason();
@@ -674,7 +684,7 @@ public class IncomingInvoiceItem_Test {
             });
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.budgetItemIsImmutableReason();
@@ -686,7 +696,7 @@ public class IncomingInvoiceItem_Test {
         public void is_linked_to_order_item() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.singletonList(new OrderItemInvoiceItemLink()));
+            expectOrderItemInvoiceItemLinkRepository_returns(new OrderItemInvoiceItemLink());
 
             // when
             final String s = item.budgetItemIsImmutableReason();
@@ -701,7 +711,7 @@ public class IncomingInvoiceItem_Test {
             item.setReversalOf(new IncomingInvoiceItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.budgetItemIsImmutableReason();
@@ -716,7 +726,7 @@ public class IncomingInvoiceItem_Test {
             item.setReportedDate(LocalDate.now());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.budgetItemIsImmutableReason();
@@ -729,10 +739,10 @@ public class IncomingInvoiceItem_Test {
 
     public static class ProjectIsImmutableReason_Test extends IncomingInvoiceItem_Test {
 
-        private void expectOrderItemInvoiceItemLinkRepository_returns(final List<OrderItemInvoiceItemLink> result) {
+        private void expectOrderItemInvoiceItemLinkRepository_returns(OrderItemInvoiceItemLink result) {
             context.checking(new Expectations(){{
                 allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(item);
-                will(returnValue(result));
+                will(returnValue(Optional.ofNullable(result)));
             }});
         }
 
@@ -752,7 +762,7 @@ public class IncomingInvoiceItem_Test {
         public void no_links() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.projectIsImmutableReason();
@@ -765,7 +775,7 @@ public class IncomingInvoiceItem_Test {
         public void is_linked_to_order_item() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.singletonList(new OrderItemInvoiceItemLink()));
+            expectOrderItemInvoiceItemLinkRepository_returns(new OrderItemInvoiceItemLink());
 
             // when
             final String s = item.projectIsImmutableReason();
@@ -780,7 +790,7 @@ public class IncomingInvoiceItem_Test {
             item.setReversalOf(new IncomingInvoiceItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.projectIsImmutableReason();
@@ -795,7 +805,7 @@ public class IncomingInvoiceItem_Test {
             item.setReportedDate(LocalDate.now());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.projectIsImmutableReason();
@@ -808,10 +818,10 @@ public class IncomingInvoiceItem_Test {
 
     public static class FixedAssetIsImmutableReason_Test extends IncomingInvoiceItem_Test {
 
-        private void expectOrderItemInvoiceItemLinkRepository_returns(final List<OrderItemInvoiceItemLink> result) {
+        private void expectOrderItemInvoiceItemLinkRepository_returns(OrderItemInvoiceItemLink result) {
             context.checking(new Expectations(){{
                 allowing(mockOrderItemInvoiceItemLinkRepository).findByInvoiceItem(item);
-                will(returnValue(result));
+                will(returnValue(Optional.ofNullable(result)));
             }});
         }
 
@@ -831,7 +841,7 @@ public class IncomingInvoiceItem_Test {
         public void no_links() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.fixedAssetIsImmutableReason();
@@ -847,7 +857,7 @@ public class IncomingInvoiceItem_Test {
             item.setBudgetItem(new BudgetItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.fixedAssetIsImmutableReason();
@@ -862,7 +872,7 @@ public class IncomingInvoiceItem_Test {
             item.setProject(new Project());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.fixedAssetIsImmutableReason();
@@ -875,7 +885,7 @@ public class IncomingInvoiceItem_Test {
         public void is_linked_to_order_item() throws Exception {
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.singletonList(new OrderItemInvoiceItemLink()));
+            expectOrderItemInvoiceItemLinkRepository_returns(new OrderItemInvoiceItemLink());
 
             // when
             final String s = item.fixedAssetIsImmutableReason();
@@ -890,7 +900,7 @@ public class IncomingInvoiceItem_Test {
             item.setReversalOf(new IncomingInvoiceItem());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.fixedAssetIsImmutableReason();
@@ -905,7 +915,7 @@ public class IncomingInvoiceItem_Test {
             item.setReportedDate(LocalDate.now());
 
             // expect
-            expectOrderItemInvoiceItemLinkRepository_returns(Collections.emptyList());
+            expectOrderItemInvoiceItemLinkRepository_returns(null);
 
             // when
             final String s = item.fixedAssetIsImmutableReason();

@@ -3,6 +3,7 @@ package org.estatio.capex.dom.orderinvoice;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -89,24 +90,22 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     }
 
     @Programmatic
-    public List<OrderItemInvoiceItemLink> findByInvoiceItem(
+    public Optional<OrderItemInvoiceItemLink> findByInvoiceItem(
             final IncomingInvoiceItem invoiceItem) {
-        return allMatches("findByInvoiceItem", "invoiceItem", invoiceItem);
+        return Optional.ofNullable(firstMatch("findByInvoiceItem", "invoiceItem", invoiceItem));
     }
 
+
     @Programmatic
-    public List<OrderItem> findLinkedOrderItemsByInvoiceItem(final IncomingInvoiceItem invoiceItem) {
-        return findByInvoiceItem(invoiceItem).stream()
-                .map(OrderItemInvoiceItemLink::getOrderItem)
-                .collect(Collectors.toList());
+    public Optional<OrderItem> findLinkedOrderItemsByInvoiceItem(final IncomingInvoiceItem invoiceItem) {
+        final Optional<OrderItemInvoiceItemLink> linkIfAny = findByInvoiceItem(invoiceItem);
+        return linkIfAny.map(OrderItemInvoiceItemLink::getOrderItem);
     }
 
     @Programmatic
     public List<OrderItemInvoiceItemLink> listAll(){
         return allInstances();
     }
-
-
 
 
     @Programmatic
@@ -129,8 +128,12 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
 
     @Programmatic
     public BigDecimal calculateNetAmountLinkedFromInvoiceItem(final IncomingInvoiceItem invoiceItem) {
-        final List<OrderItemInvoiceItemLink> links = findByInvoiceItem(invoiceItem);
-        return sum(links);
+        final Optional<OrderItemInvoiceItemLink> links = findByInvoiceItem(invoiceItem);
+        return sum(asStream(links));
+    }
+
+    private static <T> Stream<T> asStream(final Optional<T> optional) {
+        return optional.map(Stream::of).orElseGet(Stream::empty);
     }
 
     BigDecimal calculateNetAmountNotLinkedFromInvoiceItem(final IncomingInvoiceItem invoiceItem) {
@@ -139,7 +142,10 @@ public class OrderItemInvoiceItemLinkRepository extends UdoDomainRepositoryAndFa
     }
 
     BigDecimal sum(final List<OrderItemInvoiceItemLink> links) {
-        return links.stream()
+        return sum(links.stream());
+    }
+    BigDecimal sum(final Stream<OrderItemInvoiceItemLink> links) {
+        return links
                 .filter(i->!i.getInvoiceItem().isDiscarded())
                 .map(OrderItemInvoiceItemLink::getNetAmount)
                 .filter(Objects::nonNull)
