@@ -51,7 +51,9 @@ import org.incode.module.base.dom.types.ProperNameType;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -79,13 +81,29 @@ import lombok.Setter;
         editing = Editing.DISABLED,
         autoCompleteRepository = PersonRepository.class
 )
+@NoArgsConstructor
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Person extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
-
-
-
+    @Builder
+    public Person(
+            String reference, String applicationTenancyPath, String name,
+            @Nullable String initials,
+            @Nullable String firstName,
+            String lastName,
+            @Nullable String username,
+            PersonGenderType gender
+    ) {
+        setReference(reference);
+        setApplicationTenancyPath(applicationTenancyPath);
+        setName(name);
+        setInitials(initials);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setUsername(username);
+        setGender(gender);
+    }
 
     @javax.jdo.annotations.Column(length = InitialsType.Meta.MAX_LEN)
     @MemberOrder(sequence = "2")

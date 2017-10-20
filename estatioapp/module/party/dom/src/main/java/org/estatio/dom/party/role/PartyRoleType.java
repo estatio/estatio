@@ -41,6 +41,7 @@ import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Person;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -82,6 +83,13 @@ public class PartyRoleType
 
     public PartyRoleType() {
         super("title");
+    }
+
+    @Builder
+    public PartyRoleType(String key, String title) {
+        this();
+        setKey(key);
+        setTitle(title);
     }
 
     public String title() {

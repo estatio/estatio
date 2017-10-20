@@ -50,6 +50,7 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonRepository;
 import org.estatio.dom.party.role.PartyRoleType;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -125,6 +126,7 @@ import lombok.Setter;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 public class Task implements Comparable<Task>, WithApplicationTenancy {
 
+    @Builder
     public Task(
             final PartyRoleType assignedTo,
             final Person personAssignedTo,
@@ -145,7 +147,21 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
     }
 
     public String title() {
-        return String.format("%s: %s", getDescription(), titleService.titleOf(getObject()));
+        final StringBuilder buf = new StringBuilder();
+        buf.append(getDescription()).append(": ");
+        appendTitleOfObject(buf);
+        final Person personAssignedTo = getPersonAssignedTo();
+        buf.append(", with ");
+        if(personAssignedTo != null) {
+            buf.append(personAssignedTo.getUsername());
+        } else {
+            buf.append(getAssignedTo().getKey());
+        }
+        return buf.toString();
+    }
+
+    void appendTitleOfObject(final StringBuilder buf) {
+        buf.append(titleService.titleOf(getObject()));
     }
 
     @Getter @Setter
