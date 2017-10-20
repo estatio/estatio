@@ -37,7 +37,7 @@ public class Task_title_Test {
         final String title = task.title();
 
         // then
-        assertThat(title).isEqualTo("Feed the cat: Tiddles, with jcapriata@abc.loc");
+        assertThat(title).isEqualTo("Feed the cat: Tiddles - jcapriata@abc.loc");
     }
 
     @Test
@@ -50,7 +50,7 @@ public class Task_title_Test {
         final String title = task.title();
 
         // then
-        assertThat(title).isEqualTo("Feed the cat: Tiddles, with PROJECT_MANAGER");
+        assertThat(title).isEqualTo("Feed the cat: Tiddles - PROJECT_MANAGER");
     }
 
 }

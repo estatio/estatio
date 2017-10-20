@@ -151,7 +151,7 @@ public class Task implements Comparable<Task>, WithApplicationTenancy {
         buf.append(getDescription()).append(": ");
         appendTitleOfObject(buf);
         final Person personAssignedTo = getPersonAssignedTo();
-        buf.append(", with ");
+        buf.append(" - ");
         if(personAssignedTo != null) {
             buf.append(personAssignedTo.getUsername());
         } else {
