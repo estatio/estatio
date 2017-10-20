@@ -3,8 +3,9 @@ package org.estatio.dom.lease.invoicing;
 import java.util.Arrays;
 import java.util.List;
 
-import org.estatio.dom.lease.LeaseItemType;
 import org.incode.module.base.dom.utils.StringUtils;
+
+import org.estatio.dom.lease.LeaseItemType;
 
 public enum InvoiceCalculationSelection {
     ALL_RENT_AND_SERVICE_CHARGE(
@@ -23,18 +24,38 @@ public enum InvoiceCalculationSelection {
     ALL_DISCOUNT(
             LeaseItemType.RENT_DISCOUNT_FIXED,
             LeaseItemType.RENT_DISCOUNT),
+    ALL_ITEMS_USED(
+            LeaseItemType.RENT,
+            LeaseItemType.RENT_DISCOUNT,
+            LeaseItemType.RENT_FIXED,
+            LeaseItemType.RENT_DISCOUNT_FIXED,
+            LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
+            LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED,
+            LeaseItemType.TAX,
+            LeaseItemType.TURNOVER_RENT,
+            LeaseItemType.ENTRY_FEE,
+            LeaseItemType.DEPOSIT,
+            LeaseItemType.MARKETING,
+            LeaseItemType.PROPERTY_TAX
+    ),
     ALL_ITEMS(
             LeaseItemType.RENT,
             LeaseItemType.RENT_DISCOUNT,
             LeaseItemType.RENT_FIXED,
-            LeaseItemType.SERVICE_CHARGE,
-            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
-            LeaseItemType.TURNOVER_RENT,
-            LeaseItemType.RENTAL_FEE,
-            LeaseItemType.TAX,
             LeaseItemType.RENT_DISCOUNT_FIXED,
+            LeaseItemType.RENTAL_FEE,
+            LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_BUDGETED,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
+            LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED,
+            LeaseItemType.TAX,
+            LeaseItemType.TURNOVER_RENT,
             LeaseItemType.ENTRY_FEE,
-            LeaseItemType.DEPOSIT),
+            LeaseItemType.DEPOSIT,
+            LeaseItemType.MARKETING,
+            LeaseItemType.PROPERTY_TAX
+    ),
     ONLY_RENT(
             LeaseItemType.RENT),
     ONLY_RENT_DISCOUNT(
