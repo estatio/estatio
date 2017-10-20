@@ -34,8 +34,8 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
     }
 
     public OrderItem default0Act(){
-        final List<OrderItemInvoiceItemLink> links = orderItemInvoiceItemLinkRepository.findByInvoiceItem(mixee);
-        return links.size() > 0 ? links.get(0).getOrderItem() : null;
+        final List<OrderItem> orderItems = choices0Act();
+        return orderItems.size() == 1 ? orderItems.get(0) : null;
     }
 
     public List<OrderItem> choices0Act(){
@@ -54,7 +54,9 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
         }
 
         // exclude any invoice items already linked to this order
-        orderItems.removeAll(orderItemInvoiceItemLinkRepository.findLinkedOrderItemsByInvoiceItem(mixee));
+        final List<OrderItem> orderItemsAlreadyLinked = orderItemInvoiceItemLinkRepository
+                .findLinkedOrderItemsByInvoiceItem(mixee);
+        orderItems.removeAll(orderItemsAlreadyLinked);
 
         return orderItems;
     }
