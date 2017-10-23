@@ -180,14 +180,18 @@
                 <bs3:tab name="Orders">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="orders"/>
+                            <cpt:collection id="orders">
+                                <cpt:action id="findByProperty"/>
+                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
                 <bs3:tab name="Invoices From">
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:collection id="invoicesFrom" defaultView="table"/>
+                            <cpt:collection id="invoicesFrom" defaultView="table">
+                                <cpt:action id="findByProperty"/>
+                            </cpt:collection>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
