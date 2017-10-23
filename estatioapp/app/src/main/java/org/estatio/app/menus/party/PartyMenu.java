@@ -20,7 +20,9 @@
 package org.estatio.app.menus.party;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -34,6 +36,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
+import org.estatio.dom.party.role.PartyRoleType;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -49,7 +52,15 @@ public class PartyMenu {
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "1")
     public List<Party> findParties(
-            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName) {
+            final @ParameterLayout(named = "Reference or Name", describedAs = "May include wildcards '*' and '?'") String referenceOrName,
+            @Nullable
+            final PartyRoleType role) {
+        if (role!=null){
+            return partyRepository.findParties(referenceOrName)
+                    .stream()
+                    .filter(x->x.hasPartyRoleType(role))
+                    .collect(Collectors.toList());
+        }
         return partyRepository.findParties(referenceOrName);
     }
 
