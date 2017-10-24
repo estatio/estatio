@@ -187,7 +187,7 @@ public class InvoiceServiceMenu extends UdoDomainService<InvoiceServiceMenu> {
     }
 
     private InvoiceCalculationSelection doDefault2CalculateInvoicesForProperty() {
-        return InvoiceCalculationSelection.values()[0];
+        return InvoiceCalculationSelection.values()[4];
     }
 
     private LocalDate doDefault3CalculateInvoicesForProperty() {
