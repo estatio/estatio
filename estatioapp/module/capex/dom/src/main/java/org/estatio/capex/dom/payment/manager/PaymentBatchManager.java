@@ -37,6 +37,7 @@ import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
+import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
@@ -470,8 +471,15 @@ public class PaymentBatchManager {
     public Integer default2DownloadReviewPdf() {
         return 1;
     }
+    public List<Integer> choices2DownloadReviewPdf() {
+        return InvoicePageRange.firstPageChoices();
+    }
+
     public Integer default3DownloadReviewPdf() {
         return 0;
+    }
+    public List<Integer> choices3DownloadReviewPdf() {
+        return InvoicePageRange.lastPageChoices();
     }
 
     public String disableDownloadReviewPdf() {

@@ -88,6 +88,7 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
+import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
@@ -666,8 +667,15 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     public Integer default1DownloadReviewPdf() {
         return 1;
     }
+    public List<Integer> choices1DownloadReviewPdf() {
+        return InvoicePageRange.firstPageChoices();
+    }
+
     public Integer default2DownloadReviewPdf() {
         return 0;
+    }
+    public List<Integer> choices2DownloadReviewPdf() {
+        return InvoicePageRange.lastPageChoices();
     }
 
     public String disableDownloadReviewPdf() {
