@@ -570,126 +570,116 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     }
 
-    /**
-     * TODO: inline this mixin
-     */
-    @Mixin(method="act")
-    public static class downloadReviewPdf {
-        private final PaymentBatch paymentBatch;
-        public downloadReviewPdf(final PaymentBatch paymentBatch) {
-            this.paymentBatch = paymentBatch;
-        }
-        @Action(semantics = SemanticsOf.SAFE)
-        @ActionLayout(contributed= Contributed.AS_ACTION)
-        public Blob act(final String documentName) throws IOException {
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed= Contributed.AS_ACTION)
+    public Blob downloadReviewPdf(final String documentName) throws IOException {
 
-            // TODO: prepend an overview
+        // TODO: prepend an overview
 
-            final List<byte[]> pdfBytes = Lists.newArrayList();
-            final List<CreditTransfer> transfers = paymentBatch.getTransfers();
-            for (CreditTransfer transfer : transfers) {
-                final List<PaymentLine> lines = transfer.getLines();
+        final List<byte[]> pdfBytes = Lists.newArrayList();
+        final List<CreditTransfer> transfers = this.getTransfers();
+        for (CreditTransfer transfer : transfers) {
+            final List<PaymentLine> lines = transfer.getLines();
 
-                for (final PaymentLine line : lines) {
-                    final IncomingInvoice invoice = line.getInvoice();
+            for (final PaymentLine line : lines) {
+                final IncomingInvoice invoice = line.getInvoice();
 
-                    final BankAccount bankAccount = invoice.getBankAccount();
+                final BankAccount bankAccount = invoice.getBankAccount();
 
-                    final Optional<org.incode.module.document.dom.impl.docs.Document> invoiceDocIfAny =
-                            lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
+                final Optional<org.incode.module.document.dom.impl.docs.Document> invoiceDocIfAny =
+                        lookupAttachedPdfService.lookupIncomingInvoicePdfFrom(invoice);
 
-                    if(invoiceDocIfAny.isPresent()) {
-                        final org.incode.module.document.dom.impl.docs.Document invoiceDoc = invoiceDocIfAny.get();
-                        final byte[] invoiceDocBytes = invoiceDoc.asBytes();
+                if(invoiceDocIfAny.isPresent()) {
+                    final org.incode.module.document.dom.impl.docs.Document invoiceDoc = invoiceDocIfAny.get();
+                    final byte[] invoiceDocBytes = invoiceDoc.asBytes();
 
-                        final Optional<org.incode.module.document.dom.impl.docs.Document> ibanProofDocIfAny = lookupAttachedPdfService
-                                .lookupIbanProofPdfFrom(bankAccount);
+                    final Optional<org.incode.module.document.dom.impl.docs.Document> ibanProofDocIfAny = lookupAttachedPdfService
+                            .lookupIbanProofPdfFrom(bankAccount);
 
-                        IncomingInvoiceApprovalStateTransition transitionIfAny =
-                                stateTransitionRepository.findByDomainObjectAndToState(invoice,
-                                        IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
-                                        NatureOfTransition.EXPLICIT);
+                    IncomingInvoiceApprovalStateTransition transitionIfAny =
+                            stateTransitionRepository.findByDomainObjectAndToState(invoice,
+                                    IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
+                                    NatureOfTransition.EXPLICIT);
 
-                        List<String> leftLines = Lists.newArrayList();
-                        leftLines.add("xfer id: " + transfer.getEndToEndId() + " / " + line.getSequence());
-                        if(transitionIfAny != null) {
-                            final String completedBy = transitionIfAny.getCompletedBy();
-                            leftLines.add(String.format(
-                                    "approved by: %s",
-                                    completedBy != null ? completedBy : "(unknown)"));
-                            leftLines.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
-                        }
+                    List<String> leftLines = Lists.newArrayList();
+                    leftLines.add("xfer id: " + transfer.getEndToEndId() + " / " + line.getSequence());
+                    if(transitionIfAny != null) {
+                        final String completedBy = transitionIfAny.getCompletedBy();
+                        leftLines.add(String.format(
+                                "approved by: %s",
+                                completedBy != null ? completedBy : "(unknown)"));
+                        leftLines.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
+                    }
 
-                        final List<String> rightLines = Lists.newArrayList();
-                        rightLines.add(String.format("debtor IBAN: %s", line.getBatch().getDebtorBankAccount().getIban()));
-                        rightLines.add(String.format("crdtor IBAN: %s", line.getCreditorBankAccount().getIban()));
-                        rightLines.add(String.format("gross Amt  : %s", new DecimalFormat("0.00").format(line.getAmount())));
+                    final List<String> rightLines = Lists.newArrayList();
+                    rightLines.add(String.format("debtor IBAN: %s", line.getBatch().getDebtorBankAccount().getIban()));
+                    rightLines.add(String.format("crdtor IBAN: %s", line.getCreditorBankAccount().getIban()));
+                    rightLines.add(String.format("gross Amt  : %s", new DecimalFormat("0.00").format(line.getAmount())));
 
-                        boolean attachProof = false;
-                        final String proof;
-                        if(ibanProofDocIfAny.isPresent()) {
-                            final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
-                            if (DocumentTypeData.IBAN_PROOF.isDocTypeFor(ibanProofDoc)) {
-                                proof = "Separate IBAN proof (next page)";
-                                attachProof = true;
-                            } else {
-                                proof = "Invoice used as IBAN proof";
-                            }
+                    boolean attachProof = false;
+                    final String proof;
+                    if(ibanProofDocIfAny.isPresent()) {
+                        final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
+                        if (DocumentTypeData.IBAN_PROOF.isDocTypeFor(ibanProofDoc)) {
+                            proof = "Separate IBAN proof (next page)";
+                            attachProof = true;
                         } else {
-                            proof = "No IBAN proof";
+                            proof = "Invoice used as IBAN proof";
                         }
-                        rightLines.add(proof);
+                    } else {
+                        proof = "No IBAN proof";
+                    }
+                    rightLines.add(proof);
 
-                        URI uri = deepLinkService.deepLinkFor(invoice);
+                    URI uri = deepLinkService.deepLinkFor(invoice);
 
-                        final Stamp stamp = new Stamp(leftLines, rightLines, uri.toString());
-                        final byte[] firstPageInvoiceDocBytes =
-                                pdfManipulator.extractAndStamp(invoiceDocBytes, ExtractSpec.FIRST_PAGE_ONLY, stamp);
+                    final Stamp stamp = new Stamp(leftLines, rightLines, uri.toString());
+                    final byte[] firstPageInvoiceDocBytes =
+                            pdfManipulator.extractAndStamp(invoiceDocBytes, ExtractSpec.FIRST_PAGE_ONLY, stamp);
 
-                        pdfBytes.add(firstPageInvoiceDocBytes);
+                    pdfBytes.add(firstPageInvoiceDocBytes);
 
-                        if(attachProof) {
-                            final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
-                            final byte[] ibanProofBytes = ibanProofDoc.asBytes();
-                            final byte[] firstPageIbanProofDocBytes =
-                                    pdfManipulator.extract(ibanProofBytes, ExtractSpec.FIRST_PAGE_ONLY);
-                            pdfBytes.add(firstPageIbanProofDocBytes);
-                        }
+                    if(attachProof) {
+                        final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
+                        final byte[] ibanProofBytes = ibanProofDoc.asBytes();
+                        final byte[] firstPageIbanProofDocBytes =
+                                pdfManipulator.extract(ibanProofBytes, ExtractSpec.FIRST_PAGE_ONLY);
+                        pdfBytes.add(firstPageIbanProofDocBytes);
                     }
                 }
             }
-
-            byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});
-            byte[] pdfMergedBytes = pdfBoxService.merge(mergedBytes);
-            return new Blob(documentName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, pdfMergedBytes);
         }
 
-        public String default0Act() {
-            return paymentBatch.fileNameWithSuffix("pdf");
-        }
-
-        public String disableAct() {
-            if(paymentBatch.getLines().isEmpty()) {
-                return "No payment lines";
-            }
-            return null;
-        }
-
-        @Inject
-        PdfBoxService pdfBoxService;
-
-        @Inject
-        LookupAttachedPdfService lookupAttachedPdfService;
-
-        @Inject
-        IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
-
-        @Inject
-        DeepLinkService deepLinkService;
-
-        @Inject
-        PdfManipulator pdfManipulator;
+        byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});
+        byte[] pdfMergedBytes = pdfBoxService.merge(mergedBytes);
+        return new Blob(documentName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, pdfMergedBytes);
     }
+
+    public String default0DownloadReviewPdf() {
+        return this.fileNameWithSuffix("pdf");
+    }
+
+    public String disableDownloadReviewPdf() {
+        if(this.getLines().isEmpty()) {
+            return "No payment lines";
+        }
+        return null;
+    }
+
+    @Inject
+    PdfBoxService pdfBoxService;
+
+    @Inject
+    LookupAttachedPdfService lookupAttachedPdfService;
+
+    @Inject
+    IncomingInvoiceApprovalStateTransition.Repository stateTransitionRepository;
+
+    @Inject
+    DeepLinkService deepLinkService;
+
+    @Inject
+    PdfManipulator pdfManipulator;
 
     @Programmatic
     public String fileNameWithSuffix(String suffix) {

@@ -456,7 +456,7 @@ public class PaymentBatchManager {
             final PaymentBatch paymentBatch,
             @Nullable final String documentName) throws IOException {
         final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("pdf");
-        return factoryService.mixin(PaymentBatch.downloadReviewPdf.class, paymentBatch).act(documentNameToUse);
+        return paymentBatch.downloadReviewPdf(documentNameToUse);
     }
 
     public List<PaymentBatch> choices0DownloadReviewPdf() {
