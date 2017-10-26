@@ -53,7 +53,7 @@ public class PartyRoleTypeService {
     @Programmatic
     public Person onlyMemberOfElseNone(final IPartyRoleType partyRoleType, final Object domainObject) {
         final List<Person> persons = membersOf(partyRoleType, domainObject);
-        return persons != null && !persons.isEmpty() ? persons.get(0) : null;
+        return persons != null && persons.size() == 1 ? persons.get(0) : null;
     }
 
     @Programmatic
