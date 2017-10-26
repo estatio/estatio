@@ -122,8 +122,9 @@ public class FinancialAccount
 
             if(ev.getTitle() == null) {
                 String title = TitleBuilder.start()
-                        .withReference(bankAccount.getReference())
                         .withName(bankAccount.getName())
+                        .withName(" - ")
+                        .withName(bankAccount.getOwner().getReference())
                         .toString();
                 ev.setTitle(title);
             }
