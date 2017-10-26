@@ -1,8 +1,11 @@
 package org.estatio.capex.dom.payment;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -65,7 +68,6 @@ import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
@@ -77,6 +79,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.capex.dom.invoice.manager.PdfBoxService2;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.pdfmanipulator.ExtractSpec;
@@ -580,9 +583,8 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             @ParameterLayout(named = "How many final pages of each invoice's PDF?")
             final Integer numLastPages) throws IOException {
 
-        // TODO: prepend an overview
+        final List<File> pdfFiles = Lists.newArrayList();
 
-        final List<byte[]> pdfBytes = Lists.newArrayList();
         final List<CreditTransfer> transfers = this.getTransfers();
         for (CreditTransfer transfer : transfers) {
             final List<PaymentLine> lines = transfer.getLines();
@@ -643,22 +645,47 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                     final byte[] extractedInvoiceDocBytes =
                             pdfManipulator.extractAndStamp(invoiceDocBytes, new ExtractSpec(numFirstPages, numLastPages), stamp);
 
-                    pdfBytes.add(extractedInvoiceDocBytes);
+                    appendTempFile(extractedInvoiceDocBytes, documentName, pdfFiles);
 
                     if(attachProof) {
                         final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
                         final byte[] ibanProofBytes = ibanProofDoc.asBytes();
                         final byte[] firstPageIbanProofDocBytes =
                                 pdfManipulator.extract(ibanProofBytes, ExtractSpec.FIRST_PAGE_ONLY);
-                        pdfBytes.add(firstPageIbanProofDocBytes);
+
+                        appendTempFile(firstPageIbanProofDocBytes, documentName, pdfFiles);
                     }
                 }
             }
         }
 
-        byte[][] mergedBytes = pdfBytes.toArray(new byte[][] {});
-        byte[] pdfMergedBytes = pdfBoxService.merge(mergedBytes);
+        byte[] pdfMergedBytes = pdfBoxService2.merge(pdfFiles);
+
+        pdfFiles.stream().forEach(this::cleanup);
+
         return new Blob(documentName, DocumentConstants.MIME_TYPE_APPLICATION_PDF, pdfMergedBytes);
+    }
+
+    void cleanup(File tempFile) {
+        if (tempFile != null) {
+            try {
+                Files.delete(tempFile.toPath());
+                tempFile.delete();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
+
+    void appendTempFile(final byte[] pdfBytes, final String documentName, final List<File> pdfFiles)
+            throws IOException {
+        File tempFile = File.createTempFile(documentName, "pdf");
+
+        final FileOutputStream fos = new FileOutputStream(tempFile);
+        fos.write(pdfBytes);
+        fos.close();
+
+        pdfFiles.add(tempFile);
     }
 
     public String default0DownloadReviewPdf() {
@@ -686,7 +713,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
     }
 
     @Inject
-    PdfBoxService pdfBoxService;
+    PdfBoxService2 pdfBoxService2;
 
     @Inject
     LookupAttachedPdfService lookupAttachedPdfService;
