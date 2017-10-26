@@ -34,32 +34,6 @@ public class PartyRoleTypeService_Test {
 
     }
 
-    @Test
-    public void firstMemberOf_when_multiple() throws Exception {
-
-        // given
-        members.add(person1);
-        members.add(person2);
-
-        // when
-        final Person person = partyRoleTypeService.firstMemberOf(null, null);
-
-        // when
-        assertThat(person).isSameAs(person1);
-    }
-
-    @Test
-    public void firstMemberOf_when_one() throws Exception {
-
-        // given
-        members.add(person2);
-
-        // when
-        final Person person = partyRoleTypeService.firstMemberOf(null, null);
-
-        // when
-        assertThat(person).isSameAs(person2);
-    }
 
     @Test
     public void onlyMemberOfElseNone_when_multiple() throws Exception {

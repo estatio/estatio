@@ -41,12 +41,6 @@ public class PartyRoleTypeService {
         return aggregate(inferenceService -> inferenceService.inferMembersOf(partyRoleType, domainObject));
     }
 
-    @Programmatic
-    public Person firstMemberOf(final IPartyRoleType partyRoleType, final Object domainObject) {
-        final List<Person> persons = membersOf(partyRoleType, domainObject);
-        return persons != null && !persons.isEmpty() ? persons.get(0) : null;
-    }
-
     /**
      * If there is only one {@link #membersOf(IPartyRoleType, Object)}, then returned; otherwise null.
      */
