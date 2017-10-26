@@ -37,6 +37,7 @@ import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
+import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
@@ -454,13 +455,31 @@ public class PaymentBatchManager {
     )
     public Blob downloadReviewPdf(
             final PaymentBatch paymentBatch,
-            @Nullable final String documentName) throws IOException {
+            @Nullable final String documentName,
+            @ParameterLayout(named = "How many first pages of each invoice's PDF?")
+            final Integer numFirstPages,
+            @ParameterLayout(named = "How many final pages of each invoice's PDF?")
+            final Integer numLastPages) throws IOException {
         final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("pdf");
-        return factoryService.mixin(PaymentBatch.downloadReviewPdf.class, paymentBatch).act(documentNameToUse);
+        return paymentBatch.downloadReviewPdf(documentNameToUse, numFirstPages, numLastPages);
     }
 
     public List<PaymentBatch> choices0DownloadReviewPdf() {
         return this.getCompletedBatches();
+    }
+
+    public Integer default2DownloadReviewPdf() {
+        return 1;
+    }
+    public List<Integer> choices2DownloadReviewPdf() {
+        return InvoicePageRange.firstPageChoices();
+    }
+
+    public Integer default3DownloadReviewPdf() {
+        return 0;
+    }
+    public List<Integer> choices3DownloadReviewPdf() {
+        return InvoicePageRange.lastPageChoices();
     }
 
     public String disableDownloadReviewPdf() {

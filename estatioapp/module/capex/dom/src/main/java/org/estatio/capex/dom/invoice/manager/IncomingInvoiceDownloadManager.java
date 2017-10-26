@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -58,6 +57,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
 import org.estatio.capex.dom.state.NatureOfTransition;
 import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
+import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.InvoiceItem;
@@ -288,13 +288,13 @@ public class IncomingInvoiceDownloadManager {
         return 3;
     }
     public List<Integer> choices1DownloadToPdfSingle() {
-        return Lists.newArrayList(1,2,3,4,5,10,20,50);
+        return InvoicePageRange.firstPageChoices();
     }
     public Integer default2DownloadToPdfSingle() {
         return 1;
     }
     public List<Integer> choices2DownloadToPdfSingle() {
-        return Lists.newArrayList(0,1,2,3,4,5,10,20,50);
+        return InvoicePageRange.lastPageChoices();
     }
 
 
