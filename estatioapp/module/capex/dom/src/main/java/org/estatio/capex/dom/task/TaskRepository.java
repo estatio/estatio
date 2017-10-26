@@ -252,5 +252,4 @@ public class TaskRepository {
 
     @Inject
     QueryResultsCache queryResultsCache;
-
 }

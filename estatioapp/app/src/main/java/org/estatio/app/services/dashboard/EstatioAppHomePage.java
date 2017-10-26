@@ -126,6 +126,28 @@ public class EstatioAppHomePage {
     ////////////////////////////////////////////////
 
     @Collection(notPersisted = true)
+    public List<Task> getTasksForMyRolesAndUnassigned() {
+        return taskRepository.findIncompleteForMyRolesAndUnassigned();
+    }
+    public boolean hideTasksForMyRolesAndUnassigned() {
+        return getTasksForMyRolesAndUnassigned().isEmpty();
+    }
+
+
+    @Action(
+            semantics = SemanticsOf.IDEMPOTENT
+    )
+    @ActionLayout(
+            cssClassFa = "fa-question-circle" // override isis-non-changing.properties
+    )
+    public EstatioAppHomePage checkStateOfTasksForMyRolesAndUnassigned() {
+        return checkStateOf(getTasksForMyRolesAndUnassigned());
+    }
+
+
+    ////////////////////////////////////////////////
+
+    @Collection(notPersisted = true)
     public List<IncomingInvoice> getIncomingInvoicesNew() {
         return incomingInvoiceRepository.findByApprovalState(IncomingInvoiceApprovalState.NEW);
     }
