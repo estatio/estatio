@@ -572,7 +572,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ACTION)
-    public Blob downloadReviewPdf(final String documentName) throws IOException {
+    public Blob downloadReviewPdf(
+            final String documentName,
+            @ParameterLayout(named = "How many first pages of each invoice's PDF?")
+            final Integer numFirstPages,
+            @ParameterLayout(named = "How many final pages of each invoice's PDF?")
+            final Integer numLastPages) throws IOException {
 
         // TODO: prepend an overview
 
@@ -634,10 +639,10 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
                     URI uri = deepLinkService.deepLinkFor(invoice);
 
                     final Stamp stamp = new Stamp(leftLines, rightLines, uri.toString());
-                    final byte[] firstPageInvoiceDocBytes =
-                            pdfManipulator.extractAndStamp(invoiceDocBytes, ExtractSpec.FIRST_PAGE_ONLY, stamp);
+                    final byte[] extractedInvoiceDocBytes =
+                            pdfManipulator.extractAndStamp(invoiceDocBytes, new ExtractSpec(numFirstPages, numLastPages), stamp);
 
-                    pdfBytes.add(firstPageInvoiceDocBytes);
+                    pdfBytes.add(extractedInvoiceDocBytes);
 
                     if(attachProof) {
                         final org.incode.module.document.dom.impl.docs.Document ibanProofDoc = ibanProofDocIfAny.get();
@@ -657,6 +662,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
     public String default0DownloadReviewPdf() {
         return this.fileNameWithSuffix("pdf");
+    }
+    public Integer default1DownloadReviewPdf() {
+        return 1;
+    }
+    public Integer default2DownloadReviewPdf() {
+        return 0;
     }
 
     public String disableDownloadReviewPdf() {

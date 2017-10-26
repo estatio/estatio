@@ -454,13 +454,24 @@ public class PaymentBatchManager {
     )
     public Blob downloadReviewPdf(
             final PaymentBatch paymentBatch,
-            @Nullable final String documentName) throws IOException {
+            @Nullable final String documentName,
+            @ParameterLayout(named = "How many first pages of each invoice's PDF?")
+            final Integer numFirstPages,
+            @ParameterLayout(named = "How many final pages of each invoice's PDF?")
+            final Integer numLastPages) throws IOException {
         final String documentNameToUse = documentName != null ? documentName : paymentBatch.fileNameWithSuffix("pdf");
-        return paymentBatch.downloadReviewPdf(documentNameToUse);
+        return paymentBatch.downloadReviewPdf(documentNameToUse, numFirstPages, numLastPages);
     }
 
     public List<PaymentBatch> choices0DownloadReviewPdf() {
         return this.getCompletedBatches();
+    }
+
+    public Integer default2DownloadReviewPdf() {
+        return 1;
+    }
+    public Integer default3DownloadReviewPdf() {
+        return 0;
     }
 
     public String disableDownloadReviewPdf() {
