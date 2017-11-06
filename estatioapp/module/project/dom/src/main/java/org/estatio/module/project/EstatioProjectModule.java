@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.project;
+package org.estatio.module.project;
 
 // TODO: eventually this should move to org.estatio.project, and be renamed to EstatioProjectModule (no "Dom" part)
-public final class EstatioProjectDomModule {
+public final class EstatioProjectModule {
 
-    private EstatioProjectDomModule(){}
+    private EstatioProjectModule(){}
 
 }
