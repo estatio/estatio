@@ -41,9 +41,9 @@ import org.estatio.dom.invoice.InvoiceForTesting;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
-import org.estatio.tax.dom.TaxRateRepository;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
+import org.estatio.module.tax.dom.TaxRateRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

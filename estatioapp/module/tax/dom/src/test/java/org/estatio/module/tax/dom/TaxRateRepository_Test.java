@@ -16,10 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.dom;
+package org.estatio.module.tax.dom;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,64 +31,57 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TaxRepository_Test {
+public class TaxRateRepository_Test {
 
     FinderInteraction finderInteraction;
 
-    TaxRepository taxRepository;
+    TaxRateRepository taxRateRepository;
+
+    Tax tax;
+    LocalDate date;
 
     @Before
     public void setup() {
 
-        taxRepository = new TaxRepository() {
+        tax = new Tax();
+        date = new LocalDate(2013, 4, 1);
+
+        taxRateRepository = new TaxRateRepository() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
-            protected List<Tax> allInstances() {
+            protected List<TaxRate> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;
             }
-            @Override
-            protected <T> T uniqueMatch(Query<T> query) {
-                finderInteraction = new FinderInteraction(query, FinderMethod.UNIQUE_MATCH);
-                return null;
-            }
-
         };
+
     }
 
-    public static class FindByReference extends TaxRepository_Test {
+    public static class FindTaxRateByTaxAndDate extends TaxRateRepository_Test {
         @Test
         public void happyCase() {
 
-            taxRepository.findByReference("*REF?1*");
+            taxRateRepository.findTaxRateByTaxAndDate(tax, date);
 
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Tax.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object)"*REF?1*");
+            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.FIRST_MATCH);
+            assertThat(finderInteraction.getResultType()).isEqualTo(TaxRate.class);
+            assertThat(finderInteraction.getQueryName()).isEqualTo("findByTaxAndDate");
+            assertThat(finderInteraction.getArgumentsByParameterName().get("tax")).isEqualTo((Object) tax);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
 
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
-        }
-    }
-
-    public static class AllTaxes extends TaxRepository_Test {
-
-        @Test
-        public void allTaxes() {
-
-            taxRepository.allTaxes();
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
     }
 

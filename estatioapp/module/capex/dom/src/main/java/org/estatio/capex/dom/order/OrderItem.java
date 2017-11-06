@@ -59,7 +59,7 @@ import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
 import org.estatio.dom.utils.ReasonBuffer2;
-import org.estatio.tax.dom.Tax;
+import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;

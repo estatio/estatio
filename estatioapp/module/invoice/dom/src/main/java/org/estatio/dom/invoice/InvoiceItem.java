@@ -62,8 +62,8 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.utils.ReasonBuffer2;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;

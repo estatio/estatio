@@ -20,9 +20,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
-import org.estatio.tax.dom.TaxRepository;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
+import org.estatio.module.tax.dom.TaxRepository;
 
 import lombok.Getter;
 import lombok.Setter;

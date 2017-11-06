@@ -34,8 +34,8 @@ import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.order.OrderFixture;
 import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRepository;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;

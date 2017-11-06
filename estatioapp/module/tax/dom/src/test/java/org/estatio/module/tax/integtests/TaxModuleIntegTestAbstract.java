@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.integtests;
+package org.estatio.module.tax.integtests;
 
 import javax.inject.Inject;
 
@@ -33,10 +33,10 @@ import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.country.dom.CountryModule;
 
-import org.estatio.tax.EstatioTaxModule;
-import org.estatio.tax.fixture.TaxModule_setup;
-import org.estatio.tax.fixture.TaxModule_setupPrereqs;
-import org.estatio.tax.fixture.TaxModule_tearDown;
+import org.estatio.module.tax.EstatioTaxModule;
+import org.estatio.module.tax.fixture.TaxModule_setup;
+import org.estatio.module.tax.fixture.TaxModule_setupPrereqs;
+import org.estatio.module.tax.fixture.TaxModule_tearDown;
 
 public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 

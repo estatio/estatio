@@ -78,7 +78,7 @@ import org.estatio.dom.party.OrganisationRepository;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyRepository;
 import org.estatio.dom.party.role.PartyRoleRepository;
-import org.estatio.tax.dom.Tax;
+import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
 import lombok.Setter;

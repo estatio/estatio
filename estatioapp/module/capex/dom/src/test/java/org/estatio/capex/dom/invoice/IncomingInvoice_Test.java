@@ -28,7 +28,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.party.Organisation;
-import org.estatio.tax.dom.Tax;
+import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState.COMPLETED;

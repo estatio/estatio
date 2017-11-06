@@ -24,7 +24,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.party.Party;
-import org.estatio.tax.dom.Tax;
+import org.estatio.module.tax.dom.Tax;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

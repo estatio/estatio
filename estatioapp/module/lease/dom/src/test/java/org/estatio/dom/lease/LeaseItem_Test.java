@@ -47,7 +47,7 @@ import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTes
 
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.tax.dom.Tax;
+import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

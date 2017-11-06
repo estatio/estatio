@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.integtests;
+package org.estatio.module.tax.integtests;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,9 +27,9 @@ import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRepository;
-import org.estatio.tax.fixture.data.Tax_data;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRepository;
+import org.estatio.module.tax.fixture.data.Tax_data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

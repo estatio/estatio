@@ -16,19 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.fixture;
+package org.estatio.module.tax.fixture;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
+import org.estatio.module.tax.fixture.data.Tax_data;
 
-public class TaxModule_tearDown extends TeardownFixtureAbstract {
+public class TaxModule_setup extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-        deleteFrom(TaxRate.class);
-        deleteFrom(Tax.class);
+        executionContext.executeChild(this, new Tax_data.PersistScript());
     }
 
 }

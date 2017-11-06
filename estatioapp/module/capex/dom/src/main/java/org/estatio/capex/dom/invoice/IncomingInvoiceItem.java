@@ -55,8 +55,8 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
 import org.estatio.dom.utils.ReasonBuffer2;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRate;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
 
 import lombok.Getter;
 import lombok.Setter;

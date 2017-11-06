@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.dom;
+package org.estatio.module.tax.dom;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
@@ -78,7 +78,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.tax.dom.Tax "
+                        + "FROM org.estatio.module.tax.dom.Tax "
                         + "WHERE reference == :reference")
 })
 @DomainObject(

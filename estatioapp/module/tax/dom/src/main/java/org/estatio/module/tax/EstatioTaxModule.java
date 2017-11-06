@@ -16,9 +16,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax;
+package org.estatio.module.tax;
 
-// TODO: eventually this should move to org.estatio.tax, and be renamed to EstatioTaxModule (no "Dom" part)
 public final class EstatioTaxModule {
 
     private EstatioTaxModule(){}

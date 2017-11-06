@@ -36,9 +36,9 @@ import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
 import org.estatio.fixture.project.ProjectForOxf;
-import org.estatio.tax.dom.Tax;
-import org.estatio.tax.dom.TaxRepository;
-import org.estatio.tax.fixture.data.Tax_data;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRepository;
+import org.estatio.module.tax.fixture.data.Tax_data;
 
 import lombok.Getter;
 

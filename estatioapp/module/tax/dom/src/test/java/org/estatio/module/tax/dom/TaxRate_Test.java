@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.tax.dom;
+package org.estatio.module.tax.dom;
 
 import java.util.List;
 
@@ -29,9 +29,11 @@ import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_co
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.with.WithIntervalMutable;
-import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
+
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

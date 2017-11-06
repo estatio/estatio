@@ -26,7 +26,7 @@ import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroupRepository;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.tax.dom.TaxRepository;
+import org.estatio.module.tax.dom.TaxRepository;
 
 public class ChargeGroupRefData extends FixtureScript {
 
