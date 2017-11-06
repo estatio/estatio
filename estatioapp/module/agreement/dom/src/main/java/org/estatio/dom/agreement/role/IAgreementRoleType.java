@@ -3,7 +3,7 @@ package org.estatio.dom.agreement.role;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.agreement.type.IAgreementType;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 public interface IAgreementRoleType extends IPartyRoleType {
 

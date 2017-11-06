@@ -29,9 +29,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.PartyRoleTypeEnum;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.PersonForBrunoTreasurerFr;
 import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;

@@ -22,7 +22,7 @@ import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.OrganisationForTopModelGb;

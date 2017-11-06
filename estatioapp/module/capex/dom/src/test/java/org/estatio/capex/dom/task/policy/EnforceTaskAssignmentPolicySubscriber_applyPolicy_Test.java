@@ -21,10 +21,10 @@ import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationSta
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.PartyRole;
-import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRole;
+import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
 import static org.assertj.core.api.Assertions.assertThat;

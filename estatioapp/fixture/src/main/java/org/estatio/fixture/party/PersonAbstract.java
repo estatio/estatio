@@ -28,12 +28,12 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.relationship.PartyRelationshipRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 
 public abstract class PersonAbstract extends FixtureScript {
 

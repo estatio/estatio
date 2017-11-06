@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

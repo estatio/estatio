@@ -15,8 +15,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.party.PartyConstants;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.PartyConstants;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.numerator.dom.Numerator;
 import org.estatio.numerator.dom.NumeratorRepository;
 

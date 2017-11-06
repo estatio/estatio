@@ -18,7 +18,7 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.order.viewmodel.OrderItemPresentationViewmodel;
-import org.estatio.dom.party.Organisation;
+import org.estatio.module.party.dom.Organisation;
 
 /**
  * TODO: inline this mixin

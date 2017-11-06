@@ -40,10 +40,10 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.OrganisationPreviousName;
-import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationPreviousName;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
 import org.estatio.fixture.party.OrganisationForTopModelGb;

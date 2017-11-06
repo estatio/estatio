@@ -3,8 +3,8 @@ package org.estatio.dom.lease;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeServiceSupportAbstract;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeServiceSupportAbstract;
 
 public enum LeaseRoleTypeEnum implements IPartyRoleType {
     LANDLORD,

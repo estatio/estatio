@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.app.user.MeService;
 
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleMemberInferenceService;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleMemberInferenceService;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class PartyRoleMemberInferenceServiceForAnyone implements PartyRoleMemberInferenceService {

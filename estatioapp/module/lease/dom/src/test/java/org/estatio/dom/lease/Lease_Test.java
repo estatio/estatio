@@ -70,9 +70,9 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;

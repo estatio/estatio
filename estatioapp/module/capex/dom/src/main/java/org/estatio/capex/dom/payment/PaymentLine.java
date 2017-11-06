@@ -39,7 +39,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;

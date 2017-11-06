@@ -29,7 +29,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

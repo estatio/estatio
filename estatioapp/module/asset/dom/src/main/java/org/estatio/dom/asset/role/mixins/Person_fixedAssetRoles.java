@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Person;
 
 @Mixin(method="act")
 public class Person_fixedAssetRoles {

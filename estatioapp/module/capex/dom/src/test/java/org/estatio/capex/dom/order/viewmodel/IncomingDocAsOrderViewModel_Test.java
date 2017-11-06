@@ -16,7 +16,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.dom.party.Organisation;
+import org.estatio.module.party.dom.Organisation;
 
 public class IncomingDocAsOrderViewModel_Test {
 

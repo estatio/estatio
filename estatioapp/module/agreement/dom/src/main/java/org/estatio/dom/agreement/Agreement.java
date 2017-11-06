@@ -71,7 +71,7 @@ import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.role.IAgreementRoleType;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -47,7 +47,7 @@ import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)
 public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {

@@ -45,6 +45,7 @@ import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
+import org.estatio.module.party.dom.Party;
 
 /**
  * These contributions act upon {@link AgreementRoleHolder}, and from its
@@ -56,7 +57,7 @@ import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
  * database; this would be more efficient (avoid an N+1 search as is the current
  * design). However, that query would be quite complex, having to traverse from
  * {@link BankMandate} to {@link AgreementRole} to
- * {@link org.estatio.dom.party.Party}.
+ * {@link Party}.
  */
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY, menuOrder = "30")
 public class AgreementRoleHolder_bankMandateContributions

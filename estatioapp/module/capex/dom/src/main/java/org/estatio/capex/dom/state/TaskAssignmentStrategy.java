@@ -3,7 +3,7 @@ package org.estatio.capex.dom.state;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 /**
  * Define the mechanism to determine which role (if anyone) to assign a {@link Task} associated with a particular

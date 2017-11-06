@@ -12,8 +12,8 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BuyerFinder {

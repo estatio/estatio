@@ -21,8 +21,8 @@ package org.estatio.fixture.lease;
 import javax.inject.Inject;
 
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;

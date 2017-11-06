@@ -7,8 +7,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.util.Enums;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.dom.roles.EstatioRole;
 
 /**

@@ -30,10 +30,10 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.lease.LeaseRoleTypeEnum;
-import org.estatio.dom.party.PartyRoleTypeEnum;
-import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

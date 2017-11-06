@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = FinancialAccount.class)
 public class FinancialAccountRepository extends UdoDomainRepositoryAndFactory<FinancialAccount> {

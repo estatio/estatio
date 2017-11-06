@@ -28,7 +28,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CommunicationChannelSubscriptions extends UdoDomainRepositoryAndFactory<CommunicationChannel> {

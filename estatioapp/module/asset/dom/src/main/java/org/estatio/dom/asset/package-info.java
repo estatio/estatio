@@ -7,7 +7,7 @@
  *
  * <p>
  * Every {@link org.estatio.dom.asset.FixedAsset} (property and unit) can be 
- * {@link org.estatio.dom.asset.FixedAsset#getRoles() associated} {@link org.estatio.dom.party.Party}, for example
+ * {@link org.estatio.dom.asset.FixedAsset#getRoles() associated} {@link org.estatio.module.party.dom.Party}, for example
  * the <i>TENANT</i> or the <i>LANDLORD</i>.  The party playing each role can change over time.  
  * 
  * <p>

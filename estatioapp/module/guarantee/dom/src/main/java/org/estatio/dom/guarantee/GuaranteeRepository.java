@@ -48,7 +48,7 @@ import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)
 public class GuaranteeRepository extends UdoDomainRepositoryAndFactory<Guarantee> {

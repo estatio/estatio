@@ -20,7 +20,7 @@ import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.ActiveOrHistoricCurrencyAndAmount;
 import iso.std.iso._20022.tech.xsd.pain_001_001.AmountType3Choice;

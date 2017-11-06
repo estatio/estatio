@@ -27,7 +27,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Organisation;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.tax.dom.Tax;
 
 import static org.assertj.core.api.Assertions.assertThat;

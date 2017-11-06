@@ -20,8 +20,8 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.CreditTransferTransactionInformation10;
 import static org.assertj.core.api.Assertions.assertThat;

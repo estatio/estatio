@@ -21,8 +21,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

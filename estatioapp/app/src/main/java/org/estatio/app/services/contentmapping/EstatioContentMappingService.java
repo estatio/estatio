@@ -33,7 +33,7 @@ import org.apache.isis.applib.conmap.ContentMappingService;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
-import org.estatio.dom.party.canonical.v1.PartyDtoFactory;
+import org.estatio.module.party.canonical.v1.PartyDtoFactory;
 import org.estatio.canonical.party.v1.PartyDto;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.canonical.v1.BankMandateDtoFactory;
@@ -43,7 +43,7 @@ import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.canonical.v1.BankAccountDtoFactory;
 import org.estatio.dom.lease.invoicing.canonical.v1.InvoiceForLeaseDtoFactory;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

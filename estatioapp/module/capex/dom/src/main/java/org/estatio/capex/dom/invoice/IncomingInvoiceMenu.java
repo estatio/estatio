@@ -25,9 +25,9 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

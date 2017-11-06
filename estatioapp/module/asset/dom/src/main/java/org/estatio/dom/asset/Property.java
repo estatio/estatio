@@ -61,7 +61,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.ownership.FixedAssetOwnershipRepository;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;

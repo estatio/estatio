@@ -20,7 +20,7 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.party.PersonGenderType;
+import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;
 
 public class PersonForFleuretteRenaudFr extends FixtureScript {

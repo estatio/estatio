@@ -16,11 +16,11 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
-import org.estatio.dom.party.role.PartyRoleTypeService;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class StateTransitionRepositoryGeneric {

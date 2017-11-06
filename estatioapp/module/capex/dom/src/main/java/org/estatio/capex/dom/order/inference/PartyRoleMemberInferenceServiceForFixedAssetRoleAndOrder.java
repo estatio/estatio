@@ -13,8 +13,8 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleMemberInferenceServiceForFixedAssetRoleAndOrder

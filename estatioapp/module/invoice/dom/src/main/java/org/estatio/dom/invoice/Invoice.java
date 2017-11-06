@@ -75,7 +75,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.AllArgsConstructor;

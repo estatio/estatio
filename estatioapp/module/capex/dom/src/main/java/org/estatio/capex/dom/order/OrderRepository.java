@@ -28,9 +28,9 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.numerator.dom.Numerator;
 import org.estatio.numerator.dom.NumeratorRepository;
 

@@ -34,12 +34,13 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
 
-import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PersonRepository;
 
 /**
- * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of
+ * Sets up the {@link Organisation} and also a number of
  * {@link CommunicationChannel}s.
  */
 public abstract class OrganisationAbstract extends FixtureScript {

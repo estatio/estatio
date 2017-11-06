@@ -21,7 +21,7 @@ package org.estatio.fixture.numerator;
 import javax.inject.Inject;
 
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.estatio.dom.party.PartyConstants;
+import org.estatio.module.party.dom.PartyConstants;
 import org.incode.module.country.fixture.CountriesRefData;
 
 public class NumeratorForOrganisationFra extends NumeratorForOrganisationAbstract {

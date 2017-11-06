@@ -34,9 +34,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Parameter;
 
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @Mixin
 public class Party_newBankAccount {

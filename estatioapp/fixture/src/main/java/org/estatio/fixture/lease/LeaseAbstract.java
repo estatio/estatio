@@ -60,8 +60,8 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.OccupancyRepository;
 import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import static org.incode.module.base.integtests.VT.ld;
 

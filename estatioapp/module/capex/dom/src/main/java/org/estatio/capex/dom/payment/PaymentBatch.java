@@ -95,8 +95,8 @@ import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.AccountIdentification4Choice;
 import iso.std.iso._20022.tech.xsd.pain_001_001.BranchAndFinancialInstitutionIdentification4;

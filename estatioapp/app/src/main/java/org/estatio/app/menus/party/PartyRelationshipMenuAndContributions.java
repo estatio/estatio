@@ -36,12 +36,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.relationship.PartyRelationship;
-import org.estatio.dom.party.relationship.PartyRelationshipRepository;
-import org.estatio.dom.party.relationship.PartyRelationshipTypeEnum;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.relationship.PartyRelationship;
+import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
+import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 
 @DomainService(
         nature = NatureOfService.VIEW,

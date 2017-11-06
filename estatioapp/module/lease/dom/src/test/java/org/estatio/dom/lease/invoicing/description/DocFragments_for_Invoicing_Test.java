@@ -42,7 +42,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.party.PartyForTesting;
+import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.lease.fixture.seed.DocFragmentData;
 
 public class DocFragments_for_Invoicing_Test {

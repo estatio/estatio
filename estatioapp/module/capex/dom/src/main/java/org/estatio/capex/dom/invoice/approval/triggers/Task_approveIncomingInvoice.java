@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Person;
 
 /**
  * This mixin cannot be inlined because Task does not know about its target domain object.

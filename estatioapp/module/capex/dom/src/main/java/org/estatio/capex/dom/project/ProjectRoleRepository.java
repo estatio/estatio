@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = ProjectRole.class, nature = NatureOfService.DOMAIN)
 public class ProjectRoleRepository extends UdoDomainRepositoryAndFactory<ProjectRole> {

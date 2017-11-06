@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

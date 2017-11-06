@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.OwnershipType;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class FixedAssetOwnershipRepository extends UdoDomainRepositoryAndFactory<FixedAssetOwnership> {

@@ -14,9 +14,9 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Person;
 
 public class IncomingInvoiceMenu_Test {
 

@@ -29,8 +29,8 @@ import org.estatio.dom.lease.LeaseRepository;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.breaks.prolongation.ProlongationOptionRepository;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -15,9 +15,9 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.dom.Importable;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

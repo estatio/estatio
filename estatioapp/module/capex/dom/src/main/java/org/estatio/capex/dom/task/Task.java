@@ -46,9 +46,9 @@ import org.estatio.capex.dom.state.StateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 import lombok.Builder;
 import lombok.Getter;

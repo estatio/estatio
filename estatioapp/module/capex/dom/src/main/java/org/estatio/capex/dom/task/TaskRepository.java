@@ -18,10 +18,10 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.PartyRole;
-import org.estatio.dom.party.role.PartyRoleType;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRole;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 /***
  * There is no "create" method here because tasks are only ever created in the context of state transitions.

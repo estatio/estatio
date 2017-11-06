@@ -16,7 +16,7 @@
  */
 package org.estatio.dom.invoice;
 
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 public final class Constants {
     

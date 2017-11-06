@@ -78,9 +78,9 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 

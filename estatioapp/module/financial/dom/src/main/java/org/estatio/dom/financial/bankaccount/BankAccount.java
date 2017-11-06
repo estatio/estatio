@@ -47,7 +47,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;

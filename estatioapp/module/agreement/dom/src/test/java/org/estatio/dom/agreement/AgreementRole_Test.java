@@ -36,8 +36,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -9,10 +9,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-import org.estatio.dom.party.PartyRoleTypeEnum;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
-import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleMemberInferenceServiceForPartyRoleAndHasAtPath

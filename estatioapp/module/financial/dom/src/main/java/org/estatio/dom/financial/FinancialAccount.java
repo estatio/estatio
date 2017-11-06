@@ -53,7 +53,7 @@ import org.incode.module.base.dom.with.WithReferenceGetter;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;

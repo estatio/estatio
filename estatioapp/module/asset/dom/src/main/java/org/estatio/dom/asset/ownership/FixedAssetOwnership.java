@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.OwnershipType;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;

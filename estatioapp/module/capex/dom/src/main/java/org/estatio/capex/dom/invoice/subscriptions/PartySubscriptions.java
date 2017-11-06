@@ -32,7 +32,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

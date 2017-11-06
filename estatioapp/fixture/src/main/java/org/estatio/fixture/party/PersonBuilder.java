@@ -32,10 +32,10 @@ import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeService;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeService;
 import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 

@@ -44,8 +44,8 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.numerator.dom.NumeratorRepository;
 
 public class NumeratorCollectionRepository_Test {

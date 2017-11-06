@@ -22,7 +22,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.party.OrganisationForAcmeNl;
 import org.estatio.fixture.party.PersonForJohnDoeNl;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;

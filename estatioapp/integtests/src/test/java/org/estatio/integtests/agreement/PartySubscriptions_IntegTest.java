@@ -38,10 +38,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.PartySubscriptions;
-import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;

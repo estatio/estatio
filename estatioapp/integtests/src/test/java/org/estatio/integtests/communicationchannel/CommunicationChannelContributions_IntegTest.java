@@ -29,8 +29,8 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
 import org.estatio.fixture.party.PersonBuilder;

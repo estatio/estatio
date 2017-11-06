@@ -5,8 +5,8 @@ import org.junit.Test;
 
 import org.estatio.capex.dom.documents.BuyerFinder;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 public class IncomingDocAsInvoiceViewModel_Test {
 

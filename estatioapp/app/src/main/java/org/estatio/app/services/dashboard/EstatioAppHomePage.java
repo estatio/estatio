@@ -59,7 +59,7 @@ import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.PersonRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,

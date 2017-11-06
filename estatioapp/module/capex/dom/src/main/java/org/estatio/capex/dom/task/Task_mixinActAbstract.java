@@ -6,8 +6,8 @@ import org.assertj.core.util.Strings;
 
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
 
 /**
  * Base class for mixins on {@link Task} that delegate to a corresponding mixin on some domain object which will

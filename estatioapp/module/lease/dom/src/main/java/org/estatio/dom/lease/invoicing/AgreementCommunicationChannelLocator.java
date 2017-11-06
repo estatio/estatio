@@ -41,7 +41,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLinkRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 /**
  * There are two different ways to obtain {@link CommunicationChannel}s for an {@link Agreement}.  The more complex,

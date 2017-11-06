@@ -16,9 +16,9 @@ import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.task.Task;
 import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeService;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "act")

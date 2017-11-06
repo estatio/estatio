@@ -26,7 +26,7 @@ import org.estatio.dom.guarantee.GuaranteeAgreementRoleTypeEnum;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.party.OrganisationForDagoBankGb;

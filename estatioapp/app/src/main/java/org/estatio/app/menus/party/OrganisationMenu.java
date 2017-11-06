@@ -41,14 +41,14 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.CountryServiceForCurrentUser;
 import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.OrganisationRepository;
-import org.estatio.dom.party.PartyConstants;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleRepository;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
+import org.estatio.module.party.dom.PartyConstants;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.numerator.dom.NumeratorRepository;
 
 @DomainService(

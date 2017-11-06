@@ -37,10 +37,10 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.CountryServiceForCurrentUser;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
-import org.estatio.dom.party.PersonRepository;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.PersonRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

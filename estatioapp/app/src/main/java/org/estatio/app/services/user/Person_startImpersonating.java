@@ -14,7 +14,7 @@ import org.isisaddons.module.security.dom.role.ApplicationRole;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Person;
 
 @Mixin(method = "act")
 public class Person_startImpersonating {

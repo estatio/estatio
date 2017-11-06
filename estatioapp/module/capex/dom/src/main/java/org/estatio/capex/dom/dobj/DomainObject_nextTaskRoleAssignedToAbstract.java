@@ -12,9 +12,9 @@ import org.estatio.capex.dom.state.State;
 import org.estatio.capex.dom.state.StateTransitionAbstract;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.state.StateTransitionType;
-import org.estatio.dom.party.role.IPartyRoleType;
-import org.estatio.dom.party.role.PartyRoleType;
-import org.estatio.dom.party.role.PartyRoleTypeRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "prop")

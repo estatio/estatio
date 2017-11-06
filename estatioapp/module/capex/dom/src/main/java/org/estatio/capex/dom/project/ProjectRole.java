@@ -46,8 +46,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 import lombok.Getter;
 import lombok.Setter;

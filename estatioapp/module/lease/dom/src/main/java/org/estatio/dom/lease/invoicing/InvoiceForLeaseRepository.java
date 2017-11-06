@@ -42,7 +42,7 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = InvoiceForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceForLease> {

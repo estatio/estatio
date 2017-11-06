@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Person;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

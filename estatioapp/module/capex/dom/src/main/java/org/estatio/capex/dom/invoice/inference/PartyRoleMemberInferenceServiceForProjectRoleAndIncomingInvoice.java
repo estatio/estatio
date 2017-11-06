@@ -15,8 +15,8 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRole;
 import org.estatio.capex.dom.project.ProjectRoleRepository;
 import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.PartyRoleMemberInferenceServiceAbstract;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PartyRoleMemberInferenceServiceForProjectRoleAndIncomingInvoice

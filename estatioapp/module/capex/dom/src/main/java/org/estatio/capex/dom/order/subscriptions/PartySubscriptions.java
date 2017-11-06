@@ -32,7 +32,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

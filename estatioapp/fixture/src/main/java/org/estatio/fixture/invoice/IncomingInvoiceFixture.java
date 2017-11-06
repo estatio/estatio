@@ -28,7 +28,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.party.PartyRepository;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForInvoice;
 import org.estatio.fixture.order.OrderFixture;

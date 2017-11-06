@@ -1,6 +1,6 @@
 /**
  * Defines {@link org.estatio.dom.agreement.Agreement}, which associates a number of 
- * {@link org.estatio.dom.party.Party party} playing various {@link org.estatio.dom.agreement.AgreementRole role}s.
+ * {@link org.estatio.module.party.dom.Party party} playing various {@link org.estatio.dom.agreement.AgreementRole role}s.
  * 
  * <p>
  * Agreement itself is abstract, with its associated {@link org.estatio.dom.agreement.type.AgreementType type} acting

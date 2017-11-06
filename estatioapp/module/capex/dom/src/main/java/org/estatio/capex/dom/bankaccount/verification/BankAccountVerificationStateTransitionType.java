@@ -18,9 +18,9 @@ import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.party.PartyRoleTypeEnum;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 import lombok.Getter;
 

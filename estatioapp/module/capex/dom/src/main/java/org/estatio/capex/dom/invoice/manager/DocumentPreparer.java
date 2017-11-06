@@ -16,8 +16,6 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.capex.dom.pdfmanipulator.ExtractSpec;
 import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
 import org.estatio.capex.dom.pdfmanipulator.Stamp;
-import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
 
 /**
  * Wraps a document and is able (using a provided {@link PdfManipulator} object) to extract a selection of pages

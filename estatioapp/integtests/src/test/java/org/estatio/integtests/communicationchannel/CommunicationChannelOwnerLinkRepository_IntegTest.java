@@ -35,12 +35,12 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddressRepository;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
+
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,7 +69,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends EstatioIn
             final CommunicationChannelOwnerLink communicationChannelOwnerLink = communicationChannelOwnerLinkRepository.findByCommunicationChannel(postalAddress);
 
             // then
-            assertThat(communicationChannelOwnerLink.getOwnerObjectType()).isEqualToIgnoringCase(Organisation.class.getCanonicalName());
+            assertThat(communicationChannelOwnerLink.getOwnerObjectType()).isEqualToIgnoringCase("org.estatio.dom.party.Organisation");
         }
     }
 

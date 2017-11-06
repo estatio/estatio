@@ -25,8 +25,8 @@ import org.incode.module.unittestsupport.dom.with.ComparableByNameContractTestAb
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyForTesting;
 
 /**
  * Automatically tests all domain objects implementing

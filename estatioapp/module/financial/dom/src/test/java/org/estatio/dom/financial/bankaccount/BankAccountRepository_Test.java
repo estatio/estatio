@@ -13,8 +13,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 public class BankAccountRepository_Test {
 

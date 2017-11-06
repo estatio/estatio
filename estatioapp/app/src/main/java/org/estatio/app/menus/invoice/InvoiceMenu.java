@@ -57,7 +57,7 @@ import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepo
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.IsisApplibModule;
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
@@ -15,8 +14,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.OrganisationRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
 
 import lombok.Getter;
 

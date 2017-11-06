@@ -17,7 +17,7 @@ import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentLine;
 import org.estatio.capex.dom.payment.PaymentLineRepository;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.dom.party.Person;
+import org.estatio.module.party.dom.Person;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

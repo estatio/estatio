@@ -3,8 +3,8 @@
  * 
  * <p>
  * {@link org.estatio.dom.lease.Lease} is a subtype of {@link org.estatio.dom.agreement.Agreement} and thus
- * associates the {@link org.estatio.dom.party.Party} that is the <i>TENANT</i> and the 
- * {@link org.estatio.dom.party.Party} that is the <i>LANDLORD</i>).  Each {@link org.estatio.dom.lease.Lease}
+ * associates the {@link org.estatio.module.party.dom.Party} that is the <i>TENANT</i> and the
+ * {@link org.estatio.module.party.dom.Party} that is the <i>LANDLORD</i>).  Each {@link org.estatio.dom.lease.Lease}
  * {@link Lease#getItems() contains} a number of {@link org.estatio.dom.lease.LeaseItem}s, being the elements that the
  * tenant is, in effect, purchasing.  There are three {@link org.estatio.dom.lease.LeaseItemType type}s of lease item,
  * {@link org.estatio.dom.lease.LeaseItemType#RENT (indexable) rent}, 

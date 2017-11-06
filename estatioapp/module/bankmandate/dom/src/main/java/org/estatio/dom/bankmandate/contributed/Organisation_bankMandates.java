@@ -19,7 +19,7 @@ import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
 import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
-import org.estatio.dom.party.Organisation;
+import org.estatio.module.party.dom.Organisation;
 
 @Mixin(method="act")
 public class Organisation_bankMandates {

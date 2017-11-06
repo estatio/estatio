@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Invoice.class)
 public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {

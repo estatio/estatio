@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.role.IPartyRoleType;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 public interface StateTransitionRepository<
         DO,

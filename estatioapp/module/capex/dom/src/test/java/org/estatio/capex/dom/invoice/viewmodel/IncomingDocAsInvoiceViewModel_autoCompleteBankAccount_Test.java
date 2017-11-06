@@ -10,12 +10,11 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

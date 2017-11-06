@@ -62,9 +62,9 @@ import org.estatio.dom.lease.LeaseRoleTypeEnum;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypeRepository;
 import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRepository;
-import org.estatio.dom.party.role.PartyRoleRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Party does not know about invoices.

@@ -20,7 +20,7 @@ package org.estatio.fixture.asset;
 
 import org.estatio.dom.asset.PropertyType;
 import org.incode.module.country.dom.impl.Country;
-import org.estatio.dom.party.Party;
+import org.estatio.module.party.dom.Party;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldSe;
 import org.estatio.fixture.party.PersonForAgnethaFaltskogSe;

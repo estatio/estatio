@@ -96,14 +96,14 @@ import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.party.CommunicationChannelOwnerLinkForParty;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.OrganisationPreviousName;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyRegistration;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.relationship.PartyRelationship;
-import org.estatio.dom.party.role.PartyRole;
+import org.estatio.module.party.dom.CommunicationChannelOwnerLinkForParty;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationPreviousName;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRegistration;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.relationship.PartyRelationship;
+import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.numerator.dom.Numerator;
 
 public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
