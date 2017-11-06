@@ -16,12 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.registration;
+package org.estatio.module.registration.dom;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.module.registration.dom.LandRegister;
+
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;

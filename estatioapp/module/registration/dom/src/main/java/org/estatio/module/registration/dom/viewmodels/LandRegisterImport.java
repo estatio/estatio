@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.registration.dom.viewmodels;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -28,8 +28,8 @@ import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationTypeRepository;
-import org.estatio.dom.asset.registration.LandRegister;
-import org.estatio.dom.asset.registration.LandRegisters;
+import org.estatio.module.registration.dom.LandRegister;
+import org.estatio.module.registration.dom.LandRegisters;
 
 import lombok.Getter;
 import lombok.Setter;

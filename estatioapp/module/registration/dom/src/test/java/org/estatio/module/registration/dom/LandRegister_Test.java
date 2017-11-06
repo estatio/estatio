@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.registration;
+package org.estatio.module.registration.dom;
 
 import org.junit.Test;
 
@@ -26,6 +26,9 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationForTesting;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 
 public class LandRegister_Test extends AbstractBeanPropertiesTest {
 

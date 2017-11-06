@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset.registration;
+package org.estatio.module.registration.dom;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -31,6 +31,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationTypeRepository;
 
 @DomainService(menuOrder = "10", repositoryFor = LandRegister.class)
 public class LandRegisters extends UdoDomainRepositoryAndFactory<LandRegister> {

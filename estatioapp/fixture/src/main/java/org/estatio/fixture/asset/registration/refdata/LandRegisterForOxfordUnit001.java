@@ -26,8 +26,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.registration.LandRegister;
-import org.estatio.dom.asset.registration.LandRegisters;
+import org.estatio.module.registration.dom.LandRegister;
+import org.estatio.module.registration.dom.LandRegisters;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 
 public class LandRegisterForOxfordUnit001 extends FixtureScript {

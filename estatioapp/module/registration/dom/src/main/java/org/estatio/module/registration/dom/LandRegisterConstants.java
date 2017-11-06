@@ -1,4 +1,4 @@
-package org.estatio.dom.asset.registration;
+package org.estatio.module.registration.dom;
 
 public class LandRegisterConstants {
 

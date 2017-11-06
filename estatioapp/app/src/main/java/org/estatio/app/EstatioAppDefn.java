@@ -9,7 +9,7 @@ import org.estatio.charge.EstatioChargeModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
-import org.estatio.dom.asset.registration.EstatioRegistrationDomModule;
+import org.estatio.module.registration.EstatioRegistrationModule;
 import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
 import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;
@@ -68,7 +68,7 @@ class EstatioAppDefn  {
                 EstatioNumeratorModule.class,
                 EstatioPartyDomModule.class,
                 EstatioSettingsModule.class,
-                EstatioRegistrationDomModule.class,
+                EstatioRegistrationModule.class,
                 EstatioTaxModule.class,
                 EstatioBaseDtoModule.class,
 
