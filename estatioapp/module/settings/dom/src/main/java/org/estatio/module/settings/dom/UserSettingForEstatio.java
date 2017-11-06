@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.domsettings;
+package org.estatio.module.settings.dom;
 
 
 import javax.jdo.annotations.IdentityType;
@@ -33,7 +33,7 @@ import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.domsettings.types.SettingTypeType;
+import org.estatio.module.settings.dom.types.SettingTypeType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,14 +54,14 @@ import lombok.Setter;
     ,@javax.jdo.annotations.Query(
             name = "findByUser", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
+                    + "FROM org.estatio.module.settings.dom.UserSettingForEstatio "
                     + "WHERE user == :user "
-                    + "ORDER BY key") 
+                    + "ORDER BY key")
     ,@javax.jdo.annotations.Query(
-            name = "findAll", language = "JDOQL", 
+            name = "findAll", language = "JDOQL",
             value = "SELECT "
-                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
-                    + "ORDER BY user, key") 
+                    + "FROM org.estatio.module.settings.dom.UserSettingForEstatio "
+                    + "ORDER BY user, key")
 })
 // can't see how to specify this order in the primary key; however HSQLDB objects :-(
 //@javax.jdo.annotations.Unique(name="USER_KEY_IDX", members={"user","key"})

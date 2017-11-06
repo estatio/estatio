@@ -16,15 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings.types;
+package org.estatio.module.settings.dom.types;
 
-public class SettingKeyType {
+public class SettingTypeType {
 
-    private SettingKeyType() {}
+    private SettingTypeType() {}
 
     public static class Meta {
 
-        public final static int MAX_LEN = 128;
+        public final static int MAX_LEN = 20;
 
         private Meta() {}
 

@@ -16,13 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.base;
+package org.estatio.module.settings.dom;
 
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.privatecons.PrivateConstructorTester;
 
-import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
 
 public class ApplicationSettingCreator_privateConstructor_Test {
 

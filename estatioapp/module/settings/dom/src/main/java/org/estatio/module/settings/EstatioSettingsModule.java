@@ -16,12 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings;
+package org.estatio.module.settings;
 
 // TODO: eventually this should move to org.estatio.setting, and be renamed to EstatioSettingsModule (no "Dom" part)
-public final class EstatioSettingsDomModule {
+public final class EstatioSettingsModule {
 
-    private EstatioSettingsDomModule(){}
+    private EstatioSettingsModule(){}
 
 
 }

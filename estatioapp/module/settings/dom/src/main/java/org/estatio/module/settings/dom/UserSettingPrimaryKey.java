@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domsettings;
+package org.estatio.module.settings.dom;
 
 import java.io.Serializable;
 import java.util.StringTokenizer;

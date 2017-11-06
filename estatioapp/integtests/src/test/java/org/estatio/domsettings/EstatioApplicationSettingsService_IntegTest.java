@@ -30,6 +30,9 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

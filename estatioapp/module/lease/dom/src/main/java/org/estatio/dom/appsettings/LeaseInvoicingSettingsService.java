@@ -31,9 +31,9 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
-import org.estatio.domsettings.ApplicationSettingCreator;
-import org.estatio.domsettings.ApplicationSettingForEstatio;
-import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 /**
  * Estatio-specific settings (eg {@link LeaseInvoicingSettingKey#epochDate epoch

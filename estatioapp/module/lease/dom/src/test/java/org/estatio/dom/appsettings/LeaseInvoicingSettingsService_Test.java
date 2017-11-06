@@ -34,7 +34,7 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingAbstract;
 import org.isisaddons.module.settings.dom.SettingType;
 
-import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

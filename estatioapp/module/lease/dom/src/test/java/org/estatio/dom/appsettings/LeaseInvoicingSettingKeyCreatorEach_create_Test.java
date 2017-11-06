@@ -23,7 +23,7 @@ import org.joda.time.LocalDate;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 
-import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
 
 
 public class LeaseInvoicingSettingKeyCreatorEach_create_Test extends ApplicationSettingCreator_Test.Instantiate {

@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.domsettings;
+package org.estatio.module.settings.dom;
 
 import javax.jdo.annotations.IdentityType;
 
@@ -29,8 +29,8 @@ import org.isisaddons.module.settings.dom.SettingType;
 
 import org.incode.module.base.dom.types.DescriptionType;
 
-import org.estatio.domsettings.types.SettingKeyType;
-import org.estatio.domsettings.types.SettingTypeType;
+import org.estatio.module.settings.dom.types.SettingKeyType;
+import org.estatio.module.settings.dom.types.SettingTypeType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,12 +44,12 @@ import lombok.Setter;
      @javax.jdo.annotations.Query(
              name = "findByKey", language = "JDOQL", 
              value = "SELECT "
-                     + "FROM org.estatio.domsettings.ApplicationSettingForEstatio "
+                     + "FROM org.estatio.module.settings.dom.ApplicationSettingForEstatio "
                      + "WHERE key == :key"),
      @javax.jdo.annotations.Query(
-            name = "findAll", language = "JDOQL", 
+            name = "findAll", language = "JDOQL",
             value = "SELECT "
-                    + "FROM org.estatio.domsettings.ApplicationSettingForEstatio "
+                     + "FROM org.estatio.module.settings.dom.ApplicationSettingForEstatio "
                     + "ORDER BY key")
 })
 @DomainObject(

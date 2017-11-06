@@ -22,7 +22,7 @@ import org.joda.time.LocalDate;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 
-import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
 
 public enum LeaseInvoicingSettingKey implements ApplicationSettingCreator {
     

@@ -27,7 +27,7 @@ import org.estatio.dom.lease.EstatioLeaseDomModule;
 import org.estatio.dom.party.EstatioPartyDomModule;
 import org.estatio.module.tax.EstatioTaxModule;
 import org.estatio.domlink.EstatioLinkDomModule;
-import org.estatio.domsettings.EstatioSettingsDomModule;
+import org.estatio.module.settings.EstatioSettingsModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.lease.fixture.EstatioLeaseFixtureModule;
@@ -67,7 +67,7 @@ class EstatioAppDefn  {
                 EstatioLinkDomModule.class,
                 EstatioNumeratorModule.class,
                 EstatioPartyDomModule.class,
-                EstatioSettingsDomModule.class,
+                EstatioSettingsModule.class,
                 EstatioRegistrationDomModule.class,
                 EstatioTaxModule.class,
                 EstatioBaseDtoModule.class,
@@ -101,7 +101,7 @@ class EstatioAppDefn  {
                 org.isisaddons.module.servletapi.ServletApiModule.class,
                 org.isisaddons.module.poly.PolyModule.class,
                 org.isisaddons.module.sessionlogger.SessionLoggerModule.class,
-                // don't include the settings module, instead we use EstatioSettingsDomModule
+                // don't include the settings module, instead we use EstatioSettingsModule
                 // org.isisaddons.module.settings.SettingsModule.class,
                 org.isisaddons.module.stringinterpolator.StringInterpolatorModule.class,
                 org.isisaddons.module.freemarker.dom.FreeMarkerModule.class,

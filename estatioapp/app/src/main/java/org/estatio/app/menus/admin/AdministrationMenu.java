@@ -40,8 +40,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.app.services.user.HttpSessionProvider;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
-import org.estatio.domsettings.ApplicationSettingForEstatio;
-import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

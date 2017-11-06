@@ -29,7 +29,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 
-import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
 
 
 public class ApplicationSettingCreator_Test {

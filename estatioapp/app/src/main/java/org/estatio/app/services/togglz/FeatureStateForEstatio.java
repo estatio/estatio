@@ -3,7 +3,7 @@ package org.estatio.app.services.togglz;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.togglz.glue.spi.FeatureState;
 
-import org.estatio.domsettings.ApplicationSettingForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 
 class FeatureStateForEstatio implements FeatureState {
 

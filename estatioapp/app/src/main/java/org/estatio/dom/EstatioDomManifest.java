@@ -14,7 +14,7 @@ import org.isisaddons.module.excel.ExcelModule;
 import org.isisaddons.module.security.SecurityModule;
 
 import org.estatio.capex.EstatioCapexModule;
-import org.estatio.domsettings.EstatioSettingsDomModule;
+import org.estatio.module.settings.EstatioSettingsModule;
 
 public class EstatioDomManifest implements AppManifest {
 
@@ -22,7 +22,7 @@ public class EstatioDomManifest implements AppManifest {
     public List<Class<?>> getModules() {
         List<Class<?>> modules = Lists.newArrayList();
         modules.add(EstatioDomainModule.class); // org.estatio.dom
-        modules.add(EstatioSettingsDomModule.class); // org.estatio.domsettings
+        modules.add(EstatioSettingsModule.class); // org.estatio.domsettings
         modules.add(EstatioCapexModule.class); // org.estatio.capex
         modules.add(SecurityModule.class);
         modules.add(ExcelModule.class);

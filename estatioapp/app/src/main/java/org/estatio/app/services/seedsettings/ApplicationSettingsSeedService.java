@@ -28,9 +28,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.domsettings.ApplicationSettingCreator;
+import org.estatio.module.settings.dom.ApplicationSettingCreator;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
-import org.estatio.domsettings.ApplicationSettingsServiceForEstatio;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 /**
  *Installs default settings on  {@link #init(Map) initialization}.

@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.domsettings;
+package org.estatio.module.settings.dom;
 
 import org.joda.time.LocalDate;
 
