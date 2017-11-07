@@ -16,10 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.lease.fixture;
+package org.estatio.module.lease;
 
-public final class EstatioLeaseFixtureModule {
+// TODO: eventually this should move to org.estatio.lease, and be renamed to EstatioLeaseModule (no "Dom" part)
+public final class EstatioLeaseModule {
 
-    private EstatioLeaseFixtureModule(){}
+    private EstatioLeaseModule(){}
 
 }

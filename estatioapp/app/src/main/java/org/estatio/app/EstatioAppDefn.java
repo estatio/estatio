@@ -22,11 +22,10 @@ import org.estatio.dom.financial.EstatioFinancialDomModule;
 import org.estatio.dom.guarantee.EstatioGuaranteeDomModule;
 import org.estatio.dom.index.EstatioIndexDomModule;
 import org.estatio.dom.invoice.EstatioInvoiceDomModule;
-import org.estatio.dom.lease.EstatioLeaseDomModule;
+import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.link.dom.EstatioLinkModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
-import org.estatio.lease.fixture.EstatioLeaseFixtureModule;
 import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.party.EstatioPartyModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
@@ -63,8 +62,7 @@ class EstatioAppDefn  {
                 EstatioGuaranteeDomModule.class,
                 EstatioIndexDomModule.class,
                 EstatioInvoiceDomModule.class,
-                EstatioLeaseDomModule.class,
-                EstatioLeaseFixtureModule.class,
+                EstatioLeaseModule.class,
                 EstatioLinkModule.class,
                 EstatioNumeratorModule.class,
                 EstatioCountryModule.class,
