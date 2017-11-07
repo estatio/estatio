@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.lease.fixture.seed;
+package org.estatio.module.lease.seed;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -34,13 +34,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum DocFragmentDemoData {
+public enum DocFragmentData {
 
-    //
-    // using ITA's fragments for now
-    //
-    InvoicePreliminaryLetterDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/GBR",
+    InvoicePreliminaryLetterDescriptionIta(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/ITA",
             "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
         public FixtureScript script() {
             // subclasses are necessary because
@@ -48,45 +45,52 @@ public enum DocFragmentDemoData {
             return new DocFragmentScript() {};
         }
     },
-    InvoiceDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/GBR",
+    InvoiceDescriptionIta(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/ITA",
             "Invoice_description_ITA.docFragment.ftl") {
         public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
             return new DocFragmentScript() {};
         }
     },
-    InvoiceItemDescription_DemoGbr(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/GBR",
+    InvoiceItemDescriptionIta(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/ITA",
             "InvoiceItem_description_ITA.docFragment.ftl") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
+
+    InvoicePreliminaryLetterDescriptionFra(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/FRA",
+            "Invoice_preliminaryLetterDescription_FRA.docFragment.ftl") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
+    InvoiceDescriptionFra(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/FRA",
+            "Invoice_description_FRA.docFragment.ftl") {
+        public FixtureScript script() {
+            // subclasses are necessary because
+            // FixtureScriptsSpecificationProvider's MultipleExecutionPolicy set to ONCE_PER_CLASS
+            return new DocFragmentScript() {};
+        }
+    },
+
+    InvoiceItemDescriptionFra(
+            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/FRA",
+            "InvoiceItem_description_FRA.docFragment.ftl") {
         public FixtureScript script() {
             return new DocFragmentScript() {};
         }
     },
 
-    //
-    // using ITA's fragments for now
-    //
-    InvoicePreliminaryLetterDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "preliminaryLetterDescription", "/NLD",
-            "Invoice_preliminaryLetterDescription_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
-    },
-    InvoiceDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM", "description", "/NLD",
-            "Invoice_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
-    },
-    InvoiceItemDescription_DemoNld(
-            "org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM", "description", "/NLD",
-            "InvoiceItem_description_ITA.docFragment.ftl") {
-        public FixtureScript script() {
-            return new DocFragmentScript() {};
-        }
-    },
     ;
 
     @Getter
@@ -107,11 +111,13 @@ public enum DocFragmentDemoData {
 
             final DocFragment docFrag = docFragmentRepository
                     .findByObjectTypeAndNameAndApplicableToAtPath(objectType, name, atPath);
-            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
-                return;
-            }
 
-            docFragmentRepository.create(objectType, name, atPath, getTemplateText());
+            final String templateText = getTemplateText();
+            if(docFrag != null && Objects.equals(docFrag.getAtPath(), atPath)) {
+                docFrag.setTemplateText(templateText);
+            } else {
+                docFragmentRepository.create(objectType, name, atPath, templateText);
+            }
         }
 
         @Inject
@@ -122,7 +128,7 @@ public enum DocFragmentDemoData {
 
     public static String read(final String resourceName) {
         try {
-            return Resources.toString(Resources.getResource(DocFragmentDemoData.class, resourceName), Charsets.UTF_8);
+            return Resources.toString(Resources.getResource(DocFragmentData.class, resourceName), Charsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

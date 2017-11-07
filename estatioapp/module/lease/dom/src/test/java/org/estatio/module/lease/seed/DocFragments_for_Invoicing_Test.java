@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.description;
+package org.estatio.module.lease.seed;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -43,7 +43,6 @@ import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.module.party.dom.PartyForTesting;
-import org.estatio.lease.fixture.seed.DocFragmentData;
 
 public class DocFragments_for_Invoicing_Test {
 

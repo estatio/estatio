@@ -28,7 +28,7 @@ import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.currency.CurrenciesRefData;
 import org.estatio.fixture.index.IndexRefData;
-import org.estatio.lease.fixture.seed.DocFragmentDemoFixture;
+import org.estatio.module.lease.fixture.DocFragmentDemoFixture;
 import org.estatio.module.tax.fixture.TaxModule_setup;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {

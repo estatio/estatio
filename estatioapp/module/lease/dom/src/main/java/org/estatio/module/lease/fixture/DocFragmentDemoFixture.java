@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.lease.fixture.seed;
+package org.estatio.module.lease.fixture;
 
 import javax.inject.Inject;
 
@@ -22,16 +22,15 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 
-public class DocFragmentSeedFixture extends DiscoverableFixtureScript {
+public class DocFragmentDemoFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        final DocFragmentData[] data = DocFragmentData.values();
-        for (DocFragmentData value : data) {
+        final DocFragmentDemoData[] data = DocFragmentDemoData.values();
+        for (DocFragmentDemoData value : data) {
             executionContext.executeChild(this, value.script());
         }
-
     }
 
     @Inject
