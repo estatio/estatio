@@ -44,7 +44,10 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.roles.EstatioRole;
 
-@DomainService(repositoryFor = LeaseTerm.class)
+@DomainService(
+        repositoryFor = LeaseTerm.class,
+        objectType = "org.estatio.dom.lease.LeaseTermRepository"
+)
 @DomainServiceLayout(
         named = "Leases",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
