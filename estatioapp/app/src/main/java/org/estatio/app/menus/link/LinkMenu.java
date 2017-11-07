@@ -12,8 +12,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.domlink.Link;
-import org.estatio.domlink.LinkRepository;
+import org.estatio.module.link.dom.Link;
+import org.estatio.module.link.dom.LinkRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

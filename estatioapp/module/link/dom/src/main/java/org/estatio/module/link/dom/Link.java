@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.domlink;
+package org.estatio.module.link.dom;
 
 import javax.jdo.annotations.IdentityType;
 
@@ -50,7 +50,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByClassName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.domlink.Link "
+                        + "FROM org.estatio.module.link.dom.Link "
                         + "WHERE className == :className")
 })
 @javax.jdo.annotations.Unique(members = { "className", "name" })

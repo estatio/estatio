@@ -16,12 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domlink;
+package org.estatio.module.link.dom;
 
 // TODO: eventually this should move to org.estatio.link, and be renamed to EstatioLinkModule (no "Dom" part)
-public final class EstatioLinkDomModule {
+public final class EstatioLinkModule {
 
-    private EstatioLinkDomModule(){}
+    private EstatioLinkModule(){}
 
 
 }

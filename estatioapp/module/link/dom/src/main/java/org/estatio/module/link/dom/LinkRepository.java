@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.domlink;
+package org.estatio.module.link.dom;
 
 import java.util.Collections;
 import java.util.List;

@@ -29,8 +29,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Root;
 
-import org.estatio.domlink.Link;
-import org.estatio.domlink.LinkRepository;
+import org.estatio.module.link.dom.Link;
+import org.estatio.module.link.dom.LinkRepository;
 import org.estatio.dom.document.documents.ReportServerSettingsService;
 
 @Mixin

@@ -32,7 +32,7 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
-import org.estatio.domlink.Link;
+import org.estatio.module.link.dom.Link;
 import org.estatio.module.tax.fixture.TaxModule_tearDown;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {
