@@ -21,7 +21,7 @@ package org.estatio.module.lease.dom.breaks;
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.lease.breaks.prolongation.ProlongationOption;
+import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption;
 
 public enum BreakType implements Titled {
 

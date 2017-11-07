@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease.breaks.prolongation;
+package org.estatio.module.lease.dom.breaks.prolongation;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;

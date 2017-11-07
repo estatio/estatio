@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.breaks.prolongation;
+package org.estatio.module.lease.dom.breaks;
 
 import java.util.List;
 
@@ -40,10 +40,6 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.breaks.BreakExerciseType;
-import org.estatio.module.lease.dom.breaks.BreakOption;
-import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
-import org.estatio.module.lease.dom.breaks.BreakType;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class Lease_newBreakOption extends UdoDomainService<Lease_newBreakOption> {

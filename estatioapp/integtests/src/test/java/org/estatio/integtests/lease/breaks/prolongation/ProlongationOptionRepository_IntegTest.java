@@ -27,8 +27,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.breaks.prolongation.ProlongationOption;
-import org.estatio.dom.lease.breaks.prolongation.ProlongationOptionRepository;
+import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption;
+import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseProlongationOptionsForOxfTopModel001;

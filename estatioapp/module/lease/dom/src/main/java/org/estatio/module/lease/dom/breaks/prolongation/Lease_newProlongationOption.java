@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.breaks.prolongation;
+package org.estatio.module.lease.dom.breaks.prolongation;
 
 import javax.inject.Inject;
 

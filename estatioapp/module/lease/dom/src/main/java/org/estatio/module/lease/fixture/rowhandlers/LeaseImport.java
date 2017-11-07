@@ -28,7 +28,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
-import org.estatio.dom.lease.breaks.prolongation.ProlongationOptionRepository;
+import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.breaks.prolongation;
+package org.estatio.module.lease.dom.breaks.prolongation;
 
 import java.util.Set;
 
@@ -44,7 +44,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.breaks.prolongation.ProlongationOption "
+                        + "FROM org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption "
                         + "WHERE lease == :lease")})
 
 @javax.jdo.annotations.Discriminator("org.estatio.dom.lease.breaks.prolongation.ProlongationOption")
