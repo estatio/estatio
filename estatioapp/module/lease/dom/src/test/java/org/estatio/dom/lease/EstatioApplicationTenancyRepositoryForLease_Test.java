@@ -15,7 +15,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
 import org.estatio.dom.asset.Property;
 import org.incode.module.country.dom.impl.Country;

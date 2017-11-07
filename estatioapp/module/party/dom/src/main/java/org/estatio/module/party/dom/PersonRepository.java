@@ -34,7 +34,7 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;

@@ -39,7 +39,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;

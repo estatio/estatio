@@ -40,7 +40,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.country.CountryServiceForCurrentUser;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyConstants;

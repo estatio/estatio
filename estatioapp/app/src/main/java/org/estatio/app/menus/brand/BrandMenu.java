@@ -40,7 +40,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.dom.lease.tags.BrandRepository;

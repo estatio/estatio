@@ -8,7 +8,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.numerator.dom.Numerator;
 import org.estatio.numerator.dom.NumeratorRepository;
 

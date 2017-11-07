@@ -1,4 +1,4 @@
-package org.estatio.dom.country;
+package org.estatio.module.country.dom;
 
 import java.util.List;
 

@@ -44,7 +44,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.country.CountryServiceForCurrentUser;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

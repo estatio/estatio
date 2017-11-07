@@ -19,7 +19,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.dom.country.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
