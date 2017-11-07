@@ -72,7 +72,7 @@ import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.Partitioning;
-import org.estatio.dom.document.paperclips.PaperclipForParty;
+import org.estatio.module.party.dom.paperclips.PaperclipForParty;
 import org.estatio.module.event.dom.Event;
 import org.estatio.module.event.dom.EventSourceLink;
 import org.estatio.module.financial.dom.FinancialAccount;
