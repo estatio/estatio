@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.documents.binders;
+package org.estatio.module.document.dom.binders;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbstract;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.document.documents.ReportServerSettingsService;
+import org.estatio.module.document.dom.ReportServerSettingsService;
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 
 /**

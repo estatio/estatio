@@ -17,7 +17,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.documents.binders;
+package org.estatio.module.document.dom.binders;
 
 import java.util.Collections;
 import java.util.List;

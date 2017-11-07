@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.module.document.seed;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,11 +40,11 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.document.documents.binders.AttachToNone;
-import org.estatio.dom.document.documents.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
-import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
-import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
-import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
+import org.estatio.module.document.dom.binders.AttachToNone;
+import org.estatio.module.document.dom.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
+import org.estatio.module.document.dom.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
+import org.estatio.module.document.dom.binders.StringInterpolatorToSsrsUrlOfInvoice;
+import org.estatio.module.document.dom.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;

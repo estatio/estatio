@@ -14,7 +14,7 @@ import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;
 import org.estatio.dom.budgeting.EstatioBudgetingDomModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
-import org.estatio.dom.document.EstatioDocumentDomModule;
+import org.estatio.module.document.EstatioDocumentModule;
 import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
@@ -55,7 +55,7 @@ class EstatioAppDefn  {
                 EstatioCapexModule.class,
                 EstatioCapexDomModule.class,
                 EstatioCurrencyModule.class,
-                EstatioDocumentDomModule.class,
+                EstatioDocumentModule.class,
                 EstatioEventModule.class,
                 EstatioBankAccountModule.class,
                 EstatioFinancialModule.class,

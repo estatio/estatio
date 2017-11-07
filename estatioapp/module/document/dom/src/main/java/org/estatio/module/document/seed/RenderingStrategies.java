@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.documents;
+package org.estatio.module.document.seed;
 
 import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 import org.incode.module.docrendering.stringinterpolator.fixture.RenderingStrategyFSForStringInterpolator;

@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,15 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.document.documents.binders;
+package org.estatio.module.document.dom.binders;
 
-import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.module.invoice.dom.Invoice;
 
-public class StringInterpolatorToSsrsUrlOfInvoiceSummary
-        extends StringInterpolatorToSsrsUrlAbstract<InvoiceSummaryForPropertyDueDateStatus> {
+/**
+ * for PrelimLetter or InvoiceNote
+ */
+public class StringInterpolatorToSsrsUrlOfInvoice extends StringInterpolatorToSsrsUrlAbstract<Invoice> {
 
-    public StringInterpolatorToSsrsUrlOfInvoiceSummary() {
-        super(InvoiceSummaryForPropertyDueDateStatus.class);
+    public StringInterpolatorToSsrsUrlOfInvoice() {
+        super(Invoice.class);
     }
+
 
 }

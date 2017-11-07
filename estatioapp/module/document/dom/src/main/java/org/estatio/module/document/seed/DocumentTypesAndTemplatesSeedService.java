@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixturescripts;
+package org.estatio.module.document.seed;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

@@ -15,16 +15,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixturescripts;
+package org.estatio.module.document.seed;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-
-import org.estatio.fixture.documents.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
-import org.estatio.fixture.documents.DocumentTypeFSForIbanProof;
-import org.estatio.fixture.documents.DocumentTypeFSForIncoming;
-import org.estatio.fixture.documents.RenderingStrategies;
 
 public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript {
 
