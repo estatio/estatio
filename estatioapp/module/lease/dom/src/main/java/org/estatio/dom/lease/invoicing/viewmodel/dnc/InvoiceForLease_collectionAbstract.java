@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 public abstract class InvoiceForLease_collectionAbstract<T extends DocAndCommAbstract<T>> {
 

@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
 
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?

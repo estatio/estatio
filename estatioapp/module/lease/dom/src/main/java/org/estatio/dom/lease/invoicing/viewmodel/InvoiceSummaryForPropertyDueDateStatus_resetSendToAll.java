@@ -6,8 +6,8 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.InvoiceForLease_resetSendTo;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease_resetSendTo;
 
 /**
  * TODO: inline this mixin

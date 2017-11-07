@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?

@@ -31,7 +31,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.lease.invoicing.AgreementCommunicationChannelLocator;
+import org.estatio.module.lease.dom.invoicing.AgreementCommunicationChannelLocator;
 
 public abstract class Agreement_currentCommunicationChannel {
 

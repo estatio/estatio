@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 import lombok.Getter;
 import lombok.Setter;

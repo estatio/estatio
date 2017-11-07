@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

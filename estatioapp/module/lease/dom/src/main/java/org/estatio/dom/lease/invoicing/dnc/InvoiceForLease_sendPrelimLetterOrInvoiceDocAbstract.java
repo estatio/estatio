@@ -28,7 +28,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 public abstract class InvoiceForLease_sendPrelimLetterOrInvoiceDocAbstract extends InvoiceForLease_sendAbstract {
 

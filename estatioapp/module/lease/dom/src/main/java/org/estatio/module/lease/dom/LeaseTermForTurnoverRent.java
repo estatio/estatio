@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 
 import lombok.Getter;
 import lombok.Setter;

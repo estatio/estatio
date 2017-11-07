@@ -30,7 +30,7 @@ import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterO
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.module.party.dom.Organisation;
 

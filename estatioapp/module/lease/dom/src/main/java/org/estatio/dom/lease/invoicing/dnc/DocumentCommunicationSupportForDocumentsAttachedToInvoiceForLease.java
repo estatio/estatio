@@ -43,8 +43,8 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.invoicing.AgreementCommunicationChannelLocator;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.AgreementCommunicationChannelLocator;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class DocumentCommunicationSupportForDocumentsAttachedToInvoiceForLease implements DocumentCommunicationSupport {

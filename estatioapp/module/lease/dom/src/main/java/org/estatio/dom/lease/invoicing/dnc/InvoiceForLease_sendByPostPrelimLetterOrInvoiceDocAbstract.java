@@ -35,7 +35,7 @@ import org.incode.module.communications.dom.mixins.DocumentConstants;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * Provides the ability to send an print.

@@ -31,7 +31,7 @@ import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
-import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
 
 import static org.incode.module.base.integtests.VT.bi;

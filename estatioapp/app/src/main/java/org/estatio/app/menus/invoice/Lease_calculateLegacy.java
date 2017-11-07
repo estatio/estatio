@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Lease does not know about InvoiceServiceMenu

@@ -50,8 +50,8 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.module.party.dom.Party;
 

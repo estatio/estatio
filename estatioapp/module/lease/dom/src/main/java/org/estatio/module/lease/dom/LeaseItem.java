@@ -80,7 +80,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;

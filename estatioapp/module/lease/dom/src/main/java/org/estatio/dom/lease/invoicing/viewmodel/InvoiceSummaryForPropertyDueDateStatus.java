@@ -41,7 +41,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

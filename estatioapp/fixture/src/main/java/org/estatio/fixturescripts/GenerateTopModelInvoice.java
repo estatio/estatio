@@ -24,9 +24,9 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationParameters;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.dom.invoice.InvoiceRunType;
 
 import static org.incode.module.base.integtests.VT.ld;

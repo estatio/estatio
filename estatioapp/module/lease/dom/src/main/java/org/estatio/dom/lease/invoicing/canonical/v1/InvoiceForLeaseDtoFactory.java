@@ -17,7 +17,7 @@ import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

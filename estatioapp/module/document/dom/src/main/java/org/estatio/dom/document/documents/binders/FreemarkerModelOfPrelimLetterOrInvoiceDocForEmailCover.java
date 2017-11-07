@@ -34,7 +34,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.tags.Brand;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Data;

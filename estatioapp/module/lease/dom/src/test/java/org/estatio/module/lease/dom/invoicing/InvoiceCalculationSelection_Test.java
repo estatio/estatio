@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing;
+package org.estatio.module.lease.dom.invoicing;
 
 import org.junit.Test;
 

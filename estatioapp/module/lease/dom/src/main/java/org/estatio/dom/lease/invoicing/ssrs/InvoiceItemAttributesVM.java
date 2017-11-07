@@ -28,7 +28,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 
 import lombok.Getter;
 import lombok.Setter;

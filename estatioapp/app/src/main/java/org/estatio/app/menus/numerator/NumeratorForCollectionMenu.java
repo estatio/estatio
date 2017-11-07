@@ -33,7 +33,7 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.document.documents.ReportServerSettingsService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.invoicing.NumeratorForCollectionRepository;
+import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

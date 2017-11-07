@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.base.FragmentRenderService;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -30,8 +30,8 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;

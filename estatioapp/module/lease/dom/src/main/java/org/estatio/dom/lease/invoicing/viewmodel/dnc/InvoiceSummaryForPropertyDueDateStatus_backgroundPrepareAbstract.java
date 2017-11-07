@@ -39,7 +39,7 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
-import org.estatio.dom.lease.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_backgroundPrepare;
 import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 
