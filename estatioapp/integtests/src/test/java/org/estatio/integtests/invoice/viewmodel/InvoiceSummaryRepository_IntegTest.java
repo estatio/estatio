@@ -30,8 +30,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;

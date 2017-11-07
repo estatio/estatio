@@ -43,7 +43,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.module.numerator.dom.NumeratorRepository;

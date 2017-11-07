@@ -35,8 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypeRepository;
+import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.LeaseTypeRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

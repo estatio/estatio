@@ -14,8 +14,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.InvoiceRunType;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemType;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Property does not know about InvoiceServiceMenu

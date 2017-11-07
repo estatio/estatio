@@ -27,8 +27,8 @@ import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;

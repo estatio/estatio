@@ -35,8 +35,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.AgreementRoleRepository;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(menuOrder = "40", nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

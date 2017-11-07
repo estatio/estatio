@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import org.incode.module.base.dom.utils.MathUtils;
 
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermFrequency;
 
 public enum IndexationMethod {
     BASE_INDEX(false, false, true, IndexationCalculationMethod.DEFAULT),

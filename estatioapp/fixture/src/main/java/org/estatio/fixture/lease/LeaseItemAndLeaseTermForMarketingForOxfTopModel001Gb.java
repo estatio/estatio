@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;

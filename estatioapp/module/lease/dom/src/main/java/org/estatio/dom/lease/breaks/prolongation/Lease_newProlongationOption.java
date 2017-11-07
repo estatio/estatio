@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 @Mixin
 public class Lease_newProlongationOption {

@@ -15,10 +15,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseStatus;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseStatus;
+import org.estatio.module.lease.dom.Occupancy;
 
 public class BudgetAssignmentService_Test {
 

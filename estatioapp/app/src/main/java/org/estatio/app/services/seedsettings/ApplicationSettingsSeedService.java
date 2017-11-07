@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.module.lease.dom.ApplicationSettingKey;
 import org.estatio.module.settings.dom.ApplicationSettingCreator;
 import org.estatio.dom.appsettings.LeaseInvoicingSettingKey;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
@@ -50,7 +51,7 @@ public class ApplicationSettingsSeedService extends UdoDomainService<Application
 
     private void installDefaultsIfRequired() {
         createSettingsIfRequired(LeaseInvoicingSettingKey.values());
-        createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
+        createSettingsIfRequired(ApplicationSettingKey.values());
     }
 
     private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {

@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.InvoiceRunType;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTesting;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

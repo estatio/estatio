@@ -9,7 +9,7 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.Status;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 @DomainService(repositoryFor = BudgetCalculationRun.class, nature = NatureOfService.DOMAIN)
 public class BudgetCalculationRunRepository extends UdoDomainRepositoryAndFactory<BudgetCalculationRun> {

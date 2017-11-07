@@ -40,7 +40,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

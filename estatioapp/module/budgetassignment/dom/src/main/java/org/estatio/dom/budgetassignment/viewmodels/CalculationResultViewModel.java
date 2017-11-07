@@ -12,7 +12,7 @@ import org.isisaddons.module.excel.dom.PivotRow;
 import org.isisaddons.module.excel.dom.PivotValue;
 
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 import lombok.Getter;
 import lombok.Setter;

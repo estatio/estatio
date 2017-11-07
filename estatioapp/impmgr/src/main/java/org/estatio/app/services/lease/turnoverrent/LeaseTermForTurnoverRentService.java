@@ -35,8 +35,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTermRepository;
 
 @DomainService(menuOrder = "00")
 @Immutable

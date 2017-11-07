@@ -20,8 +20,8 @@ import java.math.BigInteger;
 
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTesting;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTesting;
 
 public class InstantiatorForLeaseTerm implements Instantiator {
 

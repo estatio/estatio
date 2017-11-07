@@ -42,8 +42,8 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceSource;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseTerm;
 
 import lombok.Getter;
 import lombok.Setter;

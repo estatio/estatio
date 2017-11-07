@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

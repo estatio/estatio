@@ -36,11 +36,11 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermValueType;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermValueType;
+import org.estatio.module.lease.dom.Occupancy;
 
 @DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {

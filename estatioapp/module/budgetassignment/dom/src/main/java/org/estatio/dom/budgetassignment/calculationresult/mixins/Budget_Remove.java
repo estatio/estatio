@@ -26,9 +26,9 @@ import org.estatio.dom.budgeting.budgetcalculation.Status;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.dom.roles.EstatioRole;
 
 /**

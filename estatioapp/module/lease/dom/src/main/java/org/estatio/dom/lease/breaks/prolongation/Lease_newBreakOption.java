@@ -39,7 +39,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;

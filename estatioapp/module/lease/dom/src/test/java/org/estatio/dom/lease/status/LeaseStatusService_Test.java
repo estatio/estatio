@@ -11,10 +11,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemStatus;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

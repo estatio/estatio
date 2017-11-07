@@ -10,10 +10,10 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemStatus;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 
 @DomainService(nature = NatureOfService.DOMAIN)

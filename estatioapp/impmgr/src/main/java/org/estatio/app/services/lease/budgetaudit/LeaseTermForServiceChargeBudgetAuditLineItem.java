@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 import lombok.Getter;
 import lombok.Setter;

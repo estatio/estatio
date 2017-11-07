@@ -33,7 +33,7 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideType;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 public abstract class BudgetOverrideAbstact extends FixtureScript {
 

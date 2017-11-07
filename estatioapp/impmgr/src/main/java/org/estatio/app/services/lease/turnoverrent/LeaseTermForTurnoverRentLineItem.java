@@ -27,8 +27,8 @@ import org.apache.isis.applib.annotation.Property;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 
 import lombok.Getter;
 import lombok.Setter;

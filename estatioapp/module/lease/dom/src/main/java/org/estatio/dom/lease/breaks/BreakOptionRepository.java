@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.dom.lease.breaks.prolongation.ProlongationOption;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = BreakOption.class)

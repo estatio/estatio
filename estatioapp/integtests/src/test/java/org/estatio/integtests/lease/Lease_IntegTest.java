@@ -46,13 +46,13 @@ import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.dom.roles.EstatioRole;
@@ -319,7 +319,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
         /**
          * Compare to tests that verify at the
-         * {@link org.estatio.dom.lease.LeaseTerm} level.
+         * {@link LeaseTerm} level.
          *
          */
         @Test

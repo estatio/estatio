@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermForIndexableRepository;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
 public class IndexValue_leaseTermsContribution extends UdoDomainService<IndexValue_leaseTermsContribution> {

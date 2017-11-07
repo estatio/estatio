@@ -25,10 +25,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;

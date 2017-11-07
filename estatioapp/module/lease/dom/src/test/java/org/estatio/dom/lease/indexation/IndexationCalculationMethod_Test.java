@@ -24,7 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

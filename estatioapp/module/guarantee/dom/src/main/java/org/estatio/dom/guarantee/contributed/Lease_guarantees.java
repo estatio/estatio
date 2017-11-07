@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 /**
  * Cannot be inlined (needs to be a mixin) because Lease does not know about guarantees

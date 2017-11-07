@@ -20,7 +20,7 @@ import java.math.BigInteger;
 
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
-import org.estatio.dom.lease.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItem;
 
 public class InstantiatorForLeaseItem implements Instantiator {
 

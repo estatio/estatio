@@ -36,8 +36,8 @@ import org.estatio.dom.bankmandate.Scheme;
 import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

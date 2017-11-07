@@ -29,12 +29,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermForPercentage;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermForPercentage;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;

@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.Fraction;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Fraction;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
 
 public class LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {

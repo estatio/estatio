@@ -21,8 +21,8 @@ import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;

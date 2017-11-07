@@ -36,10 +36,10 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.OccupancyRepository;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brand.RemoveEvent;
 import org.estatio.dom.lease.tags.BrandRepository;

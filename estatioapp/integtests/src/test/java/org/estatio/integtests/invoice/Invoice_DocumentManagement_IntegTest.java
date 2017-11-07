@@ -81,8 +81,8 @@ import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_d
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.DocAndCommForPrelimLetter_documentState;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.Invoice_invoiceDocs;
 import org.estatio.dom.lease.invoicing.viewmodel.dnc.Invoice_ForLease_preliminaryLetters;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceForLease_overrideSendTo;

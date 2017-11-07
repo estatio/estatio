@@ -11,8 +11,8 @@ import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.InvoiceRunType;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemType;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Lease does not know about InvoiceServiceMenu

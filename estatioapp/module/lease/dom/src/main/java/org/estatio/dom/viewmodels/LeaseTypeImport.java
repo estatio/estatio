@@ -19,8 +19,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypeRepository;
+import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.LeaseTypeRepository;
 
 import lombok.Getter;
 import lombok.Setter;

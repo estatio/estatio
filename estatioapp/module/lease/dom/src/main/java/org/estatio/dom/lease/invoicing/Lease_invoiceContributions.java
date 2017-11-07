@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

@@ -24,10 +24,10 @@ import org.incode.module.classification.dom.impl.classification.ClassificationRe
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.OccupancyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -28,14 +28,15 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.dom.lease.indexation.IndexationMethod;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -204,7 +205,7 @@ public class LeaseTermForIndexableRentImport implements ExcelFixtureRowHandler, 
             }
             term.setSequence(sequence);
         }
-        term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(status));
+        term.setStatus(LeaseTermStatus.valueOf(status));
         final ApplicationTenancy applicationTenancy = term.getLeaseItem().getApplicationTenancy();
 
         //set indexation term values

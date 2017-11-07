@@ -47,14 +47,14 @@ import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseStatus;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemStatus;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseStatus;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field

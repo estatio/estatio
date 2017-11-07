@@ -20,7 +20,7 @@ package org.estatio.app.menus.invoice;
 
 import org.junit.Test;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

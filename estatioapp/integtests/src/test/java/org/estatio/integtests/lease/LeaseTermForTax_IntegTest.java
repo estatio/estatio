@@ -28,13 +28,13 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItemRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTermForTax;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;

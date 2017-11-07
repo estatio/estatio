@@ -29,15 +29,16 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
 import org.estatio.dom.index.IndexRepository;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemStatus;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -180,7 +181,7 @@ public class LeaseTermForServiceChargeImport implements ExcelFixtureRowHandler, 
             }
             term.setSequence(sequence);
         }
-        term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(status));
+        term.setStatus(LeaseTermStatus.valueOf(status));
 
         //set service charge term values
         term.setBudgetedValue(budgetedValue);

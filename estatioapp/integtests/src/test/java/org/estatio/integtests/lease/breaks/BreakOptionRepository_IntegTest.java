@@ -35,8 +35,8 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;

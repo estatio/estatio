@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeRepository;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 public abstract class GuaranteeAbstract extends FixtureScript {
 

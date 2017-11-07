@@ -40,14 +40,14 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermStatus;
+import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.dom.lease.invoicing.InvoiceForLeaseRepository;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -76,19 +76,19 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
 
     /**
      * Fixed lease terms (that is, those that have a
-     * {@link org.estatio.dom.lease.LeaseTerm#valueType() value type} of
-     * {@link org.estatio.dom.lease.LeaseTermValueType#FIXED}) are such that the
+     * {@link LeaseTerm#valueType() value type} of
+     * {@link LeaseTermValueType#FIXED}) are such that the
      * amount to be invoiced is fixed for the term and is apportioned according
-     * to the {@link org.estatio.dom.lease.LeaseTerm}'s parent
-     * {@link org.estatio.dom.lease.LeaseTerm#getLeaseItem() lease item}'s
-     * {@link org.estatio.dom.lease.LeaseItem#getInvoicingFrequency() invoicing
+     * to the {@link LeaseTerm}'s parent
+     * {@link LeaseTerm#getLeaseItem() lease item}'s
+     * {@link LeaseItem#getInvoicingFrequency() invoicing
      * frequency}.
      *
      * <p>
-     * Unlike {@link org.estatio.dom.lease.LeaseTermValueType#ANNUAL annual}
+     * Unlike {@link LeaseTermValueType#ANNUAL annual}
      * lease terms (which are potentially open ended), a fixed lease term must
-     * have fixed {@link org.estatio.dom.lease.LeaseTerm#getStartDate() start}
-     * and {@link org.estatio.dom.lease.LeaseTerm#getEndDate() end date}s
+     * have fixed {@link LeaseTerm#getStartDate() start}
+     * and {@link LeaseTerm#getEndDate() end date}s
      * because the fixed amount is apportioned over that period.
      * </p>
      *

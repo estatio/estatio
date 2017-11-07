@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 /**
  * TODO: inline this mixin

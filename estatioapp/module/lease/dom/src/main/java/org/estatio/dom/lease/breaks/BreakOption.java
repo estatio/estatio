@@ -57,7 +57,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
 import org.estatio.dom.event.EventSource;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 import lombok.Getter;
 import lombok.Setter;

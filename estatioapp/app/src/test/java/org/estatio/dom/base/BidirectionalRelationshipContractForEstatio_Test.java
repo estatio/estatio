@@ -39,8 +39,8 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 

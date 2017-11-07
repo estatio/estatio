@@ -34,12 +34,12 @@ import org.estatio.dom.asset.UnitRepository;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.OccupancyRepository;
 import org.estatio.dom.lease.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

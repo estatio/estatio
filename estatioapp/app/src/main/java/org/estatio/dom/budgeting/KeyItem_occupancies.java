@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.OccupancyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

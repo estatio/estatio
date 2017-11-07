@@ -34,8 +34,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.OccupancyRepository;
+import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.OccupancyRepository;
 
 @Mixin
 public class Property_vacantUnits {

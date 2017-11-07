@@ -50,7 +50,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.dom.roles.EstatioRole;
 
 import lombok.Getter;

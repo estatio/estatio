@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 /**
  * This cannot be inlined because Lease doesn't know about BudgetOverrideRepository.

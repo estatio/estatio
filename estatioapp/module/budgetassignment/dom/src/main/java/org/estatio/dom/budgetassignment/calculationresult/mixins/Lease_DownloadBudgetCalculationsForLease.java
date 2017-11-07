@@ -21,7 +21,7 @@ import org.estatio.dom.budgetassignment.viewmodels.DetailedCalculationResultView
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 /**
  * This cannot be inlined because Lease doesn't know about BudgetCalculationRunRepository.

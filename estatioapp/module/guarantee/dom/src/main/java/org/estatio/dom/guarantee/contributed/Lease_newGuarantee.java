@@ -17,7 +17,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 /**
  * Cannot be inlined (needs to be a mixin) because Lease does not know about guarantees

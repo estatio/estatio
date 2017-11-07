@@ -41,10 +41,10 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemRepository;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItemRepository;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
 
 import lombok.Getter;
 import lombok.Setter;

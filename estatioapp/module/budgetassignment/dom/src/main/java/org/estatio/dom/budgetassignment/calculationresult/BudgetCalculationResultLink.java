@@ -11,7 +11,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 import lombok.Getter;
 import lombok.Setter;

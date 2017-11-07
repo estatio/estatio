@@ -7,10 +7,10 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseType;
-import org.estatio.dom.lease.LeaseTypeRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.LeaseTypeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;

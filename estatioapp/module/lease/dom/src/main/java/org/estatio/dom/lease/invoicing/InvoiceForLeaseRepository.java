@@ -39,9 +39,9 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = InvoiceForLease.class, nature = NatureOfService.DOMAIN)

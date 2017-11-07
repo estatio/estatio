@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 public class BudgetCalculationResultLink_Test {
 

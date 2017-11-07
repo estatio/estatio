@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
 import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 /**
  * This cannot be inlined because Lease doesn't know about BudgetCalculationResultLinkRepository.

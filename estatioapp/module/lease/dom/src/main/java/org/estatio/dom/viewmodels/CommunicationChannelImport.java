@@ -33,9 +33,9 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

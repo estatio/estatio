@@ -36,8 +36,8 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.Occupancy;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -22,8 +22,8 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.dom.lease.breaks.prolongation.ProlongationOptionRepository;
 
 public class LeaseProlongationOptionsForOxfTopModel001 extends FixtureScript {

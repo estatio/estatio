@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseItemType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

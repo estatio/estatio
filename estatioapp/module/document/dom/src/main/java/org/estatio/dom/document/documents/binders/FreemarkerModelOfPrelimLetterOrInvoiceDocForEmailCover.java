@@ -32,7 +32,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.Occupancy;
+import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 import org.estatio.module.party.dom.Party;

@@ -31,7 +31,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 
 /**
  * TODO: inline this mixin

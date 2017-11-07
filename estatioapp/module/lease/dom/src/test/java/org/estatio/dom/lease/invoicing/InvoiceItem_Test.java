@@ -41,10 +41,10 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceForTesting;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseForTesting;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTesting;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseForTesting;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTesting;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 

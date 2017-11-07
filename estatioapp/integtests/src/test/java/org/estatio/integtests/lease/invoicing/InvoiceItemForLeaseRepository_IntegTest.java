@@ -29,12 +29,12 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseRepository;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLeaseRepository;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;

@@ -47,7 +47,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
 import org.estatio.dom.financial.FinancialAccountType;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = Guarantee.class, nature = NatureOfService.DOMAIN)

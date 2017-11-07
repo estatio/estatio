@@ -18,10 +18,10 @@ import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForFixed;
-import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
 import lombok.Setter;

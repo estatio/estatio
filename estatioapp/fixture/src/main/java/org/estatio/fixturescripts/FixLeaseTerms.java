@@ -21,9 +21,9 @@ package org.estatio.fixturescripts;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermRepository;
 
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;

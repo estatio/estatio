@@ -18,10 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKalDefault;

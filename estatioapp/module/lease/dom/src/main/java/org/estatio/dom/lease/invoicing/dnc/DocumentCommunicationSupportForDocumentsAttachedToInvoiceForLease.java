@@ -40,9 +40,9 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.AgreementRoleCommunicationChannelTypeEnum;
-import org.estatio.dom.lease.LeaseAgreementRoleTypeEnum;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.dom.lease.invoicing.AgreementCommunicationChannelLocator;
 import org.estatio.dom.lease.invoicing.InvoiceForLease;
 

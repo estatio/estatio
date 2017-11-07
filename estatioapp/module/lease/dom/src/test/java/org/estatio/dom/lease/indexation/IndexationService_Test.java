@@ -33,7 +33,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

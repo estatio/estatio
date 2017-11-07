@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.event.EventRepository;
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.dom.lease.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakOptionRepository;

@@ -41,10 +41,10 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.LeaseTermRepository;
+import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
+import org.estatio.module.lease.dom.LeaseTermRepository;
 
 import lombok.Getter;
 import lombok.Setter;
