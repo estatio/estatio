@@ -9,4 +9,4 @@
  * the latter is not true.  The {@link org.estatio.module.lease.dom.invoicing.InvoiceItemForLease} enables a many-to-many
  * association between {@link org.estatio.module.lease.dom.LeaseTerm} and {@link org.estatio.dom.invoice.InvoiceItem}.
  */
-package org.estatio.dom.lease.invoicing;
+package org.estatio.module.lease.dom.invoicing;
