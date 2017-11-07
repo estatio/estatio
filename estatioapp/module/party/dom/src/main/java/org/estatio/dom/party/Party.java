@@ -208,6 +208,7 @@ public abstract class Party
             partyRole.remove();
         }
         remove(this);
+        if (replaceWith!=null) replaceWith.fix(); // adds missing party roles where needed for instance when merging supplier to tenant
         return replaceWith;
     }
 
@@ -215,8 +216,22 @@ public abstract class Party
         return !EstatioRole.SUPERUSER.isApplicableFor(getUser());
     }
 
-    public String validateDelete(final Party party) {
-        return party != this ? null : "Cannot replace a party with itself";
+    public String validateDelete(final Party replacementParty) {
+        if (replacementParty!=null && this.isTenant() && replacementParty.isSupplierAndNotATenant()){
+            return "A tenant should not be replaced by a supplier";
+        }
+        return replacementParty != this ? null : "Cannot replace a party with itself";
+    }
+
+    private boolean isTenant(){
+        return hasPartyRoleType(partyRoleTypeRepository.findByKey("TENANT")) ?  true : false;
+    }
+
+    private boolean isSupplierAndNotATenant(){
+        if (hasPartyRoleType(partyRoleTypeRepository.findByKey("SUPPLIER")) && !hasPartyRoleType(partyRoleTypeRepository.findByKey("TENANT"))){
+            return true;
+        }
+        return false;
     }
 
 
