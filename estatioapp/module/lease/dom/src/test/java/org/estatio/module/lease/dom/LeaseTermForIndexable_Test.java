@@ -36,9 +36,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexValueRepository;
-import org.estatio.dom.index.Indexable;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexValueRepository;
+import org.estatio.module.index.dom.Indexable;
 import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationService;
 

@@ -40,12 +40,12 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexBaseRepository;
-import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexBase;
+import org.estatio.module.index.dom.IndexBaseRepository;
+import org.estatio.module.index.dom.IndexRepository;
+import org.estatio.module.index.dom.IndexValue;
+import org.estatio.module.index.dom.IndexValueRepository;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 @DomainObjectLayout(paged = Integer.MAX_VALUE)

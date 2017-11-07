@@ -34,11 +34,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexRepository;
+import org.estatio.module.index.dom.IndexValue;
+import org.estatio.module.index.dom.Indexable;
+import org.estatio.module.lease.dom.indexation.IndexationCalculationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationService;
 

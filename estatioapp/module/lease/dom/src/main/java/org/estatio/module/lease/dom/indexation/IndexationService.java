@@ -22,10 +22,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
-import org.estatio.dom.lease.indexation.IndexationResult;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.Indexable;
 
 @DomainService(menuOrder = "60")
 public class IndexationService extends UdoDomainService<IndexationService> {

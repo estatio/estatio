@@ -27,10 +27,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.api.IndexCreator;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexBase;
+import org.estatio.module.index.dom.IndexValue;
+import org.estatio.module.index.dom.api.IndexCreator;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 
 import static org.incode.module.base.integtests.VT.ld;

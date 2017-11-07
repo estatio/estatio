@@ -20,7 +20,7 @@ import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.dom.event.EstatioEventDomModule;
 import org.estatio.dom.financial.EstatioFinancialDomModule;
 import org.estatio.dom.guarantee.EstatioGuaranteeDomModule;
-import org.estatio.dom.index.EstatioIndexDomModule;
+import org.estatio.module.index.EstatioIndexDomModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.link.dom.EstatioLinkModule;

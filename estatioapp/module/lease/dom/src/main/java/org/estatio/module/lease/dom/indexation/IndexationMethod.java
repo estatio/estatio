@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.module.index.dom.Indexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 

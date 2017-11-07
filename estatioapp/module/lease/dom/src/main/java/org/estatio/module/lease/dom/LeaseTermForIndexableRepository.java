@@ -27,8 +27,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexValue;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexValue;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = LeaseTermForIndexable.class)
 public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFactory<LeaseTermForIndexable> {

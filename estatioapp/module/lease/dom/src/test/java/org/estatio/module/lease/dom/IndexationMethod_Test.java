@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.index.Indexable;
+import org.estatio.module.index.dom.Indexable;
 import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationService;
 

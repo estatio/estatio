@@ -30,8 +30,8 @@ import org.junit.runners.MethodSorters;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexRepository;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

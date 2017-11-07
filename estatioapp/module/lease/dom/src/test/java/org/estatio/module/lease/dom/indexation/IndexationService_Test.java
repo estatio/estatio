@@ -31,8 +31,8 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indexable;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.Indexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 
 import static org.assertj.core.api.Assertions.assertThat;

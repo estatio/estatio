@@ -29,9 +29,9 @@ import org.incode.module.country.dom.impl.State;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexBase;
+import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.link.dom.Link;
 import org.estatio.module.tax.fixture.TaxModule_tearDown;
 

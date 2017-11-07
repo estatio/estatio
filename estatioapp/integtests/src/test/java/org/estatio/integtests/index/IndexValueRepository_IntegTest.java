@@ -23,10 +23,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexRepository;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.IndexValueRepository;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexRepository;
+import org.estatio.module.index.dom.IndexValue;
+import org.estatio.module.index.dom.IndexValueRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioReferenceDataTeardownFixture;
