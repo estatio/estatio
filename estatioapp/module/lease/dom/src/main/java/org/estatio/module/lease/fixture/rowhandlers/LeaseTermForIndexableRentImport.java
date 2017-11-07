@@ -35,7 +35,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
-import org.estatio.dom.lease.indexation.IndexationMethod;
+import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;

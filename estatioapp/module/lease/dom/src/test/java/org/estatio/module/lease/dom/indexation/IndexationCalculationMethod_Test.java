@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.indexation;
+package org.estatio.module.lease.dom.indexation;
 
 import java.math.BigDecimal;
 
@@ -24,6 +24,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import org.estatio.dom.index.Indexable;
+import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.dom.lease.indexation.IndexationResult;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -9,14 +9,12 @@ import org.estatio.dom.index.Indexable;
 public enum IndexationCalculationMethod {
 
     DEFAULT {
-        @Override
-        IndexationResult calc(final Indexable input) {
+        @Override public IndexationResult calc(final Indexable input) {
             return ITALY.calc(input);
         }
     },
     ITALY {
-        @Override
-        IndexationResult calc(final Indexable input) {
+        @Override public IndexationResult calc(final Indexable input) {
             BigDecimal indexedValue = null;
             BigDecimal indexationPercentage = null;
             final BigDecimal baseIndexValue = input.getBaseIndexValue();
@@ -44,8 +42,7 @@ public enum IndexationCalculationMethod {
         }
     },
     FRANCE {
-        @Override
-        IndexationResult calc(final Indexable input) {
+        @Override public IndexationResult calc(final Indexable input) {
             BigDecimal indexedValue = null;
             BigDecimal indexationPercentage = null;
             final BigDecimal baseIndexValue = input.getBaseIndexValue();
@@ -71,7 +68,7 @@ public enum IndexationCalculationMethod {
 
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
-    abstract IndexationResult calc(final Indexable input);
+    public abstract IndexationResult calc(final Indexable input);
 
     public static IndexationResult calculate(final Indexable input) {
         return input.getIndexationCalculation() == null ? DEFAULT.calc(input) : input.getIndexationCalculation().calc(input);

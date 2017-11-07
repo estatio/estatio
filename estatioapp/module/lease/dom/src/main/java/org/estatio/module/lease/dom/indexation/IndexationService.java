@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.indexation;
+package org.estatio.module.lease.dom.indexation;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -24,6 +24,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
+import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
+import org.estatio.dom.lease.indexation.IndexationResult;
 
 @DomainService(menuOrder = "60")
 public class IndexationService extends UdoDomainService<IndexationService> {

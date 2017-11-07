@@ -1,10 +1,11 @@
-package org.estatio.dom.lease.indexation;
+package org.estatio.module.lease.dom.indexation;
 
 import java.math.BigDecimal;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
 import org.estatio.dom.index.Indexable;
+import org.estatio.dom.lease.indexation.IndexationCalculationMethod;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 

@@ -7,7 +7,7 @@ import org.estatio.dom.index.Indexable;
 /**
  * Created by jvanderwal on 01/03/16.
  */
-class IndexationResult {
+public class IndexationResult {
 
     public static final IndexationResult NULL = new IndexationResult(null, null, null, null);
 
