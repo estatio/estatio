@@ -12,7 +12,7 @@ import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceAttributeName;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
 
 /**
  * TODO: inline this mixin

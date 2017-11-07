@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.ssrs;
+package org.estatio.module.lease.dom.invoicing.ssrs;
 
 import org.joda.time.LocalDate;
 

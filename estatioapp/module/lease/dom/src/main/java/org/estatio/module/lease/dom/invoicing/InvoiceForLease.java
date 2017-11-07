@@ -72,8 +72,8 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.module.numerator.dom.Numerator;
 

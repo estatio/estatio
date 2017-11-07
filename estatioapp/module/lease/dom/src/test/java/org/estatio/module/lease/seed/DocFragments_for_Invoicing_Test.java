@@ -39,8 +39,8 @@ import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceAttributesVM;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.module.party.dom.PartyForTesting;
 

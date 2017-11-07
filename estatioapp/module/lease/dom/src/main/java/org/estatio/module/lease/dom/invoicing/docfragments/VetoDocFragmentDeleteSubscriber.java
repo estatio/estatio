@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.docfragments;
+package org.estatio.module.lease.dom.invoicing.docfragments;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;

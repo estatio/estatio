@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.ssrs;
+package org.estatio.module.lease.dom.invoicing.ssrs;
 
 import java.util.TreeSet;
 

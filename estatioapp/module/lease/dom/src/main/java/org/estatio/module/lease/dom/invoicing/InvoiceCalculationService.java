@@ -55,7 +55,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermValueType;
-import org.estatio.dom.lease.invoicing.ssrs.InvoiceItemAttributesVM;
+import org.estatio.module.lease.dom.invoicing.ssrs.InvoiceItemAttributesVM;
 
 //@RequestScoped  // TODO: this should be @RequestScoped, I think, since has a field
 @DomainService(menuOrder = "50", nature = NatureOfService.DOMAIN)

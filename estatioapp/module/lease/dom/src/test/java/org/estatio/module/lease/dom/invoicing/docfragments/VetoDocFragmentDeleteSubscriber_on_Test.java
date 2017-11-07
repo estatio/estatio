@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.docfragments;
+package org.estatio.module.lease.dom.invoicing.docfragments;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 
 import org.incode.module.docfragment.dom.impl.DocFragment;
+
+import org.estatio.module.lease.dom.invoicing.docfragments.VetoDocFragmentDeleteSubscriber;
 
 public class VetoDocFragmentDeleteSubscriber_on_Test {
 
