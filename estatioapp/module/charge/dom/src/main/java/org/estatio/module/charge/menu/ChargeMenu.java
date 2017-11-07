@@ -43,7 +43,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.charge.impmgr.ChargeImportManager;
+import org.estatio.module.charge.imports.ChargeImportManager;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.charge.dom.Applicability;

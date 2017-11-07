@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.module.charge.fixture.rowhandlers.ChargeImport;
+import org.estatio.module.charge.imports.ChargeImport;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFixed;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideForFlatRate;

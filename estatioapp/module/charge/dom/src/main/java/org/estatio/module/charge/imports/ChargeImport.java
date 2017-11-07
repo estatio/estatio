@@ -1,4 +1,4 @@
-package org.estatio.module.charge.fixture.rowhandlers;
+package org.estatio.module.charge.imports;
 
 import java.util.List;
 
