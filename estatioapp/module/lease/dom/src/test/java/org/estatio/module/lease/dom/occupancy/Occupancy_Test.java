@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom;
+package org.estatio.module.lease.dom.occupancy;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
