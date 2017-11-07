@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.status;
+package org.estatio.module.lease.dom.status;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

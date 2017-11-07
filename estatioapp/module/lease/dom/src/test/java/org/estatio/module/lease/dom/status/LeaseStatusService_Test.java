@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.status;
+package org.estatio.module.lease.dom.status;
 
 import java.math.BigInteger;
 
@@ -15,6 +15,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseStatus;
+import org.estatio.module.lease.dom.status.LeaseStatusService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

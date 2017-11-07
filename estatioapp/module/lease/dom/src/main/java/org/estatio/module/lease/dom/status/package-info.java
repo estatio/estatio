@@ -19,4 +19,4 @@
  *
  * @version $Rev$ $Date$
  */
-package org.estatio.dom.lease.status;
+package org.estatio.module.lease.dom.status;
