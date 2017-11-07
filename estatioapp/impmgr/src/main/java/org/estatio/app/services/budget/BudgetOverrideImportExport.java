@@ -19,8 +19,8 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 

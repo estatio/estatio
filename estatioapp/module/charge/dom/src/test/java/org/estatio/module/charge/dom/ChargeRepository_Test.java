@@ -16,10 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -36,8 +37,6 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
 import org.estatio.module.tax.dom.Tax;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChargeRepository_Test {
 
@@ -82,11 +81,11 @@ public class ChargeRepository_Test {
 
             chargeRepository.findByReference("*REF?1*");
 
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Charge.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "*REF?1*");
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
+            Assertions.assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.UNIQUE_MATCH);
+            Assertions.assertThat(finderInteraction.getResultType()).isEqualTo(Charge.class);
+            Assertions.assertThat(finderInteraction.getQueryName()).isEqualTo("findByReference");
+            Assertions.assertThat(finderInteraction.getArgumentsByParameterName().get("reference")).isEqualTo((Object) "*REF?1*");
+            Assertions.assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(1);
         }
 
     }
@@ -98,7 +97,7 @@ public class ChargeRepository_Test {
 
             chargeRepository.listAll();
 
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
+            Assertions.assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_INSTANCES);
         }
 
     }
@@ -149,11 +148,11 @@ public class ChargeRepository_Test {
             final Charge newCharge = chargeRepository.upsert("CG-REF", "CG-Name", "CG-Description",
                     newApplicationTenancy("/it"), Applicability.IN_AND_OUT, tax, chargeGroup
             );
-            assertThat(newCharge.getReference()).isEqualTo("CG-REF");
-            assertThat(newCharge.getName()).isEqualTo("CG-Name");
-            assertThat(newCharge.getDescription()).isEqualTo("CG-Description");
-            assertThat(newCharge.getTax()).isEqualTo(tax);
-            assertThat(newCharge.getGroup()).isEqualTo(chargeGroup);
+            Assertions.assertThat(newCharge.getReference()).isEqualTo("CG-REF");
+            Assertions.assertThat(newCharge.getName()).isEqualTo("CG-Name");
+            Assertions.assertThat(newCharge.getDescription()).isEqualTo("CG-Description");
+            Assertions.assertThat(newCharge.getTax()).isEqualTo(tax);
+            Assertions.assertThat(newCharge.getGroup()).isEqualTo(chargeGroup);
         }
 
         @Test
@@ -163,7 +162,7 @@ public class ChargeRepository_Test {
             final Charge newCharge = chargeRepository.upsert("CG-REF", "Some other description", "Some other code",
                     newApplicationTenancy("/it"), Applicability.IN_AND_OUT, null, null
             );
-            assertThat(newCharge).isEqualTo(existingCharge);
+            Assertions.assertThat(newCharge).isEqualTo(existingCharge);
         }
 
         private ApplicationTenancy newApplicationTenancy(final String path) {

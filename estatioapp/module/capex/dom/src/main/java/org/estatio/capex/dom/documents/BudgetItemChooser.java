@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetItemChooser {

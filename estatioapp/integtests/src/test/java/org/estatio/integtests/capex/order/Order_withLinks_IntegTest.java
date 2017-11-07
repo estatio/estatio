@@ -26,7 +26,7 @@ import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;

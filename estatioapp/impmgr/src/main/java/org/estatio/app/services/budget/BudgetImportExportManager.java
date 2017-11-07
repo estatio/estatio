@@ -44,7 +44,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.charge.dom.impmgr.ChargeImport;
+import org.estatio.module.charge.fixture.rowhandlers.ChargeImport;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;

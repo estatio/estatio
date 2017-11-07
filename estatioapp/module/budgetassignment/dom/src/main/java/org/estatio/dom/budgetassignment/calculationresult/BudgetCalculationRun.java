@@ -25,7 +25,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetcalculation.Status;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Lease;
 
 import lombok.Getter;

@@ -5,7 +5,7 @@ import org.incode.module.base.services.calendar.CalendarService;
 import org.estatio.capex.EstatioCapexModule;
 import org.estatio.capex.dom.EstatioCapexDomModule;
 import org.estatio.capex.fixture.EstatioCapexFixtureModule;
-import org.estatio.charge.EstatioChargeModule;
+import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
 import org.estatio.dom.asset.EstatioAssetDomModule;
@@ -13,7 +13,6 @@ import org.estatio.dom.assetfinancial.EstatioAssetFinancialDomModule;
 import org.estatio.dom.bankmandate.EstatioBankMandateDomModule;
 import org.estatio.dom.budgetassignment.EstatioBudgetAssignmentDomModule;
 import org.estatio.dom.budgeting.EstatioBudgetingDomModule;
-import org.estatio.dom.charge.EstatioChargeDomModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.dom.document.EstatioDocumentDomModule;
 import org.estatio.dom.dto.EstatioBaseDtoModule;
@@ -53,7 +52,6 @@ class EstatioAppDefn  {
                 EstatioBudgetingDomModule.class,
                 EstatioBudgetAssignmentDomModule.class,
                 EstatioChargeModule.class,
-                EstatioChargeDomModule.class,
                 EstatioCapexModule.class,
                 EstatioCapexDomModule.class,
                 EstatioCurrencyModule.class,

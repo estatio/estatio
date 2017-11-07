@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.PaymentMethod;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseItem.class, nature = NatureOfService.DOMAIN)

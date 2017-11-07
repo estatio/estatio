@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.module.tax.dom.Tax;
 

@@ -13,7 +13,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 
 @DomainService(

@@ -22,8 +22,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;

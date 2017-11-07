@@ -27,7 +27,7 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

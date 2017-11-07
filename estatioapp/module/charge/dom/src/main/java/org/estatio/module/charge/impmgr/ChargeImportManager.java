@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.charge.dom.impmgr;
+package org.estatio.module.charge.impmgr;
 
 import java.util.List;
 
@@ -33,6 +33,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+
+import org.estatio.module.charge.fixture.rowhandlers.ChargeImport;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -8,9 +8,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import org.estatio.dom.charge.Applicability;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Applicability;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -23,9 +23,9 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroupRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.ChargeGroup;
+import org.estatio.module.charge.dom.ChargeGroupRepository;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.tax.dom.TaxRepository;
 
 public class ChargeGroupRefData extends FixtureScript {

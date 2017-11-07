@@ -64,7 +64,7 @@ import org.incode.module.docfragment.dom.types.AtPathType;
 
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;
 

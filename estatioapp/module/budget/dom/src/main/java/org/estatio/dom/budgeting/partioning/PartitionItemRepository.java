@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 @DomainService(repositoryFor = PartitionItem.class, nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()

@@ -51,7 +51,7 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 import lombok.Getter;
 import lombok.Setter;

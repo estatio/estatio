@@ -59,7 +59,7 @@ import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.dom.roles.EstatioRole;
 import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;

@@ -14,7 +14,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

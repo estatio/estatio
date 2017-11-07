@@ -42,7 +42,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.invoice.dom.InvoiceItem;

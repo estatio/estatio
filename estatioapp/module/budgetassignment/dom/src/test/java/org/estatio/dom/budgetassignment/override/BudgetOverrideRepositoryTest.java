@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 public class BudgetOverrideRepositoryTest {
 

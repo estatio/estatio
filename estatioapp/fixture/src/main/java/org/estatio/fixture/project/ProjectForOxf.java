@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 
 import static org.incode.module.base.integtests.VT.ld;

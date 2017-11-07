@@ -37,7 +37,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceForTesting;
 import org.estatio.module.invoice.dom.InvoiceItem;

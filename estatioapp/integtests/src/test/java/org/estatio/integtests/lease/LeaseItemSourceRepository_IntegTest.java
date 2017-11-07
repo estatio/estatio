@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.InvoicingFrequency;

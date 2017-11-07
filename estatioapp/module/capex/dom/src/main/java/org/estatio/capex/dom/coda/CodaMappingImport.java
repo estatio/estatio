@@ -16,9 +16,9 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.capex.dom.util.PeriodUtil;
-import org.estatio.dom.charge.Applicability;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Applicability;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -13,8 +13,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 import org.estatio.capex.fixture.charge.IncomingChargeFixture;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 

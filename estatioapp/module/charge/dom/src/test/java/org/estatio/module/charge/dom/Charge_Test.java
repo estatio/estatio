@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -25,6 +25,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.tax.dom.Tax;
 
 public class Charge_Test {

@@ -28,11 +28,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.dom.charge.Applicability;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroupRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Applicability;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
+import org.estatio.module.charge.dom.ChargeGroupRepository;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;

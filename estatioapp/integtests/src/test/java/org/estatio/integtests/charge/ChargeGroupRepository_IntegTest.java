@@ -23,8 +23,8 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroupRepository;
+import org.estatio.module.charge.dom.ChargeGroup;
+import org.estatio.module.charge.dom.ChargeGroupRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.integtests.EstatioIntegrationTest;

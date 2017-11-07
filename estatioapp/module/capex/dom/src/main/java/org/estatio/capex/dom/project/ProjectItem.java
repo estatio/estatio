@@ -55,7 +55,7 @@ import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;

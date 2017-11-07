@@ -30,8 +30,8 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.InvoicingFrequency;

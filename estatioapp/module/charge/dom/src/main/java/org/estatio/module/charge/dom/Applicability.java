@@ -1,4 +1,4 @@
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 public enum Applicability {
     OUTGOING,

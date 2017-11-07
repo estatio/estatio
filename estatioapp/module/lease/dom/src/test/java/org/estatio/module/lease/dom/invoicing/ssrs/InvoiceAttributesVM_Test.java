@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 

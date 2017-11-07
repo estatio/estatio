@@ -26,8 +26,8 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;

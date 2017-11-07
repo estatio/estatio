@@ -16,13 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 import org.junit.Test;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.module.charge.dom.ChargeGroup;
 
 public class ChargeGroup_Test {
     public static class BeanProperties extends AbstractBeanPropertiesTest {

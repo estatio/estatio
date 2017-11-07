@@ -11,8 +11,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.dom.dto.DtoMappingHelper;
 import org.estatio.module.invoice.dom.InvoiceItem;

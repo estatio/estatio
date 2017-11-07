@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -76,26 +76,26 @@ import lombok.experimental.UtilityClass;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.Charge "
+                        + "FROM org.estatio.module.charge.dom.Charge "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByApplicabilities", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.Charge "
+                        + "FROM org.estatio.module.charge.dom.Charge "
                         + "WHERE "
                         + "(applicability == :applicability1 || applicability == :applicability2) "
                         + "ORDER BY reference" ),
         @javax.jdo.annotations.Query(
                 name = "matchOnReferenceOrName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.Charge "
+                        + "FROM org.estatio.module.charge.dom.Charge "
                         + "WHERE "
                         + "(reference.matches(:regex) || name.matches(:regex)) "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByApplicabilityAndMatchOnReferenceOrName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.Charge "
+                        + "FROM org.estatio.module.charge.dom.Charge "
                         + "WHERE "
                         + "(applicability == :applicability1 || applicability == :applicability2) "
                         + "&& (reference.matches(:regex) || name.matches(:regex)) "

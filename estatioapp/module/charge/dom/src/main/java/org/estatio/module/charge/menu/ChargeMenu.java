@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.charge.dom.menu;
+package org.estatio.module.charge.menu;
 
 import java.util.List;
 
@@ -43,13 +43,13 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.charge.dom.impmgr.ChargeImportManager;
+import org.estatio.module.charge.impmgr.ChargeImportManager;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.dom.charge.Applicability;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Applicability;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.tax.dom.Tax;
 
 @DomainService(

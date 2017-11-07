@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.charge;
+package org.estatio.module.charge.dom;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -66,7 +66,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.charge.ChargeGroup "
+                        + "FROM org.estatio.module.charge.dom.ChargeGroup "
                         + "WHERE reference == :reference")
 })
 @DomainObject(

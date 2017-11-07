@@ -38,8 +38,8 @@ import org.estatio.dom.budgeting.keytable.KeyTableRepository;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;

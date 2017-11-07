@@ -24,7 +24,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;

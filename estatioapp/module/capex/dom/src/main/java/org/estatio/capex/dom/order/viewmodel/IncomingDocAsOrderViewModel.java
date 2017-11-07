@@ -40,7 +40,7 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 
 import lombok.AccessLevel;

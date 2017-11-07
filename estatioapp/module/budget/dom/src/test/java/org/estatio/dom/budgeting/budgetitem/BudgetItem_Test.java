@@ -23,7 +23,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 public class BudgetItem_Test {
 

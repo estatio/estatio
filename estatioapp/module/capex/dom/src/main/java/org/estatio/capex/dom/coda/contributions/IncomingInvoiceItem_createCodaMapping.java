@@ -14,7 +14,7 @@ import org.estatio.capex.dom.coda.DocumentType;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 /**
  * This cannot be inlined (needs to be a mixin) because IncomingInvoiceItem does not know about Coda.

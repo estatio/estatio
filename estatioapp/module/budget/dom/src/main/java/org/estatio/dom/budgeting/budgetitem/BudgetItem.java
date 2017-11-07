@@ -40,7 +40,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -62,8 +61,8 @@ import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.Partitioning;
 import org.estatio.dom.budgeting.partioning.PartitioningRepository;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;

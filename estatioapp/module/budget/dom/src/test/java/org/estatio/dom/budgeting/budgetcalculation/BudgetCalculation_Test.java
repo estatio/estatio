@@ -31,7 +31,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 public class BudgetCalculation_Test {
 

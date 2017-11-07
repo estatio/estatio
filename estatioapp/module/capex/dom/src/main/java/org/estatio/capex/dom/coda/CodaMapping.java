@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -18,8 +18,8 @@ import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRe
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

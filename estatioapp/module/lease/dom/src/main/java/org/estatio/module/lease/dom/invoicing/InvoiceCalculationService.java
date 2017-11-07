@@ -44,7 +44,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.dom.base.FragmentRenderService;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoicingInterval;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;

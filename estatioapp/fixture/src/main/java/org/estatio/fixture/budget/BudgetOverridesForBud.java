@@ -24,8 +24,8 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

@@ -51,7 +51,7 @@ import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 import lombok.Getter;
 import lombok.Setter;

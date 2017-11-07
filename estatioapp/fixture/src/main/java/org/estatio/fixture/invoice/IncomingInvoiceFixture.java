@@ -26,7 +26,7 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.charge.ChargeRepository;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;

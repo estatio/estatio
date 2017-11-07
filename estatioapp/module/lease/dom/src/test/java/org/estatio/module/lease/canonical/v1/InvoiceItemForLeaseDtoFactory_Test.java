@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

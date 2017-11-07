@@ -25,7 +25,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.charge.Charge;
+import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
