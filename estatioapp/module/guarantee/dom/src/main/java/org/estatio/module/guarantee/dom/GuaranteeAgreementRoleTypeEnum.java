@@ -1,4 +1,4 @@
-package org.estatio.dom.guarantee;
+package org.estatio.module.guarantee.dom;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;

@@ -16,11 +16,10 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee;
+package org.estatio.module.guarantee;
 
-// TODO: eventually this should move to org.estatio.guarantee, and be renamed to EstatioGuaranteeModule (no "Dom" part)
-public final class EstatioGuaranteeDomModule {
+public final class EstatioGuaranteeModule {
 
-    private EstatioGuaranteeDomModule(){}
+    private EstatioGuaranteeModule(){}
 
 }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.module.guarantee.dom.Guarantee;
 
 /**
  * TODO: inline this mixin

@@ -1,4 +1,4 @@
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.lease.dom.Lease;
 
 /**

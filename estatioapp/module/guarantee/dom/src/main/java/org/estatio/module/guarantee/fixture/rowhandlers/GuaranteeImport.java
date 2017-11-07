@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.guarantee.fixture.rowhandlers;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,9 +24,9 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.estatio.dom.Importable;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeRepository;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.module.guarantee.dom.Guarantee;
+import org.estatio.module.guarantee.dom.GuaranteeRepository;
+import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 

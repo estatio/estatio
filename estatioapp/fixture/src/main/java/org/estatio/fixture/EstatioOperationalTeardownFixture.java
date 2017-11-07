@@ -79,7 +79,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.PaperclipForBankAccount;
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
 import org.estatio.module.invoice.dom.InvoiceItem;

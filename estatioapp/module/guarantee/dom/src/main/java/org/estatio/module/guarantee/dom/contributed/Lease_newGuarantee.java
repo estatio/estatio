@@ -1,4 +1,4 @@
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 
@@ -15,8 +15,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.module.guarantee.dom.Guarantee;
+import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
 
 /**

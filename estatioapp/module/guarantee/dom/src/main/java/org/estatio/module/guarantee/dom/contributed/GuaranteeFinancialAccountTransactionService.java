@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountRepository;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.module.guarantee.dom.Guarantee;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

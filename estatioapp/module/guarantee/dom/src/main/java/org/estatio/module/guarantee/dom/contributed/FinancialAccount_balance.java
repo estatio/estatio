@@ -16,46 +16,39 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.financial.FinancialAccount;
 
 /**
- * TODO: inline this mixin
+ * Cannot be inlined (needs to be a mixin) because FinancialAccount does not know about guarantees
  */
 @Mixin(method = "exec")
-public class Guarantee_newTransaction {
+public class FinancialAccount_balance {
 
-    private final Guarantee guarantee;
 
-    public Guarantee_newTransaction(final Guarantee guarantee) {
-        this.guarantee = guarantee;
+    private final FinancialAccount financialAccount;
+
+    public FinancialAccount_balance(final FinancialAccount financialAccount) {
+        this.financialAccount = financialAccount;
     }
 
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public Guarantee exec(
-            final LocalDate transactionDate,
-            final String description,
-            final BigDecimal amount) {
-
-        return guaranteeFinancialAccountTransactionService.newTransaction(guarantee, transactionDate, description, amount);
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal exec() {
+        return guaranteeFinancialAccountTransactionService.balance(financialAccount);
     }
-
-    public boolean hideExec() {
-        return guaranteeFinancialAccountTransactionService.hideNewTransaction(guarantee);
-    }
-
 
 
     @Inject

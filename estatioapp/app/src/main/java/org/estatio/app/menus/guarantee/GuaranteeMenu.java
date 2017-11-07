@@ -43,9 +43,9 @@ import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeRepository;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.module.guarantee.dom.Guarantee;
+import org.estatio.module.guarantee.dom.GuaranteeRepository;
+import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.guarantee.contributed;
+package org.estatio.module.guarantee.dom.contributed;
 
 import java.math.BigDecimal;
 
@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.guarantee.GuaranteeRepository;
+import org.estatio.module.guarantee.dom.GuaranteeRepository;
 
 // REVIEW: this has been refactored to a mixin, but previously it wasn't annotated as @DomainService, so this is still not actually in use.
 public class FinancialAccount_newAdjustmentUNUSED {

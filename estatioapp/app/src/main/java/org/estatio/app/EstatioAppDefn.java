@@ -19,7 +19,7 @@ import org.estatio.dom.document.EstatioDocumentDomModule;
 import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.dom.event.EstatioEventDomModule;
 import org.estatio.dom.financial.EstatioFinancialDomModule;
-import org.estatio.dom.guarantee.EstatioGuaranteeDomModule;
+import org.estatio.module.guarantee.EstatioGuaranteeModule;
 import org.estatio.module.index.EstatioIndexDomModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.EstatioLeaseModule;
@@ -59,7 +59,7 @@ class EstatioAppDefn  {
                 EstatioDocumentDomModule.class,
                 EstatioEventDomModule.class,
                 EstatioFinancialDomModule.class,
-                EstatioGuaranteeDomModule.class,
+                EstatioGuaranteeModule.class,
                 EstatioIndexDomModule.class,
                 EstatioInvoiceModule.class,
                 EstatioLeaseModule.class,

@@ -1,4 +1,4 @@
-package org.estatio.dom.guarantee;
+package org.estatio.module.guarantee.dom;
 
 import org.incode.module.base.dom.utils.StringUtils;
 

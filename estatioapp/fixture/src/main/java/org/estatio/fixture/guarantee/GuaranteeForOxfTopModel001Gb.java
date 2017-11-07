@@ -21,9 +21,9 @@ package org.estatio.fixture.guarantee;
 import javax.inject.Inject;
 
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.guarantee.Guarantee;
-import org.estatio.dom.guarantee.GuaranteeAgreementRoleTypeEnum;
-import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.module.guarantee.dom.Guarantee;
+import org.estatio.module.guarantee.dom.GuaranteeAgreementRoleTypeEnum;
+import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.PartyRepository;
