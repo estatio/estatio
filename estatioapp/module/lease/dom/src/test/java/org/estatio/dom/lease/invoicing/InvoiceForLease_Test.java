@@ -49,7 +49,7 @@ import org.estatio.dom.invoice.InvoiceRepository;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
-import org.estatio.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.Numerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

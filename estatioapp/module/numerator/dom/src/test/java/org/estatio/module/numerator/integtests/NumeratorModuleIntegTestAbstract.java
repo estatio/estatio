@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.integtests;
+package org.estatio.module.numerator.integtests;
 
 import javax.inject.Inject;
 
@@ -31,10 +31,10 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.SecurityModule;
 
-import org.estatio.numerator.EstatioNumeratorModule;
-import org.estatio.numerator.fixture.NumeratorModule_setup;
-import org.estatio.numerator.fixture.NumeratorModule_setupPrereqs;
-import org.estatio.numerator.fixture.NumeratorModule_tearDown;
+import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.fixture.NumeratorModule_setup;
+import org.estatio.module.numerator.fixture.NumeratorModule_setupPrereqs;
+import org.estatio.module.numerator.fixture.NumeratorModule_tearDown;
 
 /**
  * Base class for integration tests.

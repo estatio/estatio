@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.integtests;
+package org.estatio.module.numerator.integtests;
 
 import java.math.BigInteger;
 
@@ -29,10 +29,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
-import org.estatio.numerator.dom.Numerator;
-import org.estatio.numerator.dom.NumeratorRepository;
-import org.estatio.numerator.fixture.data.NumeratorExampleObject_data;
-import org.estatio.numerator.fixture.dom.NumeratorExampleObject;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_data;
+import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;

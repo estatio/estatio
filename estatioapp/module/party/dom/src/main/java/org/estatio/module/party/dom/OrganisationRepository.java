@@ -32,7 +32,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Organisation.class)
 public class OrganisationRepository extends UdoDomainRepositoryAndFactory<Organisation> {

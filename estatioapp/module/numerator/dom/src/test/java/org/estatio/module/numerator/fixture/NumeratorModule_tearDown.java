@@ -16,7 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.dom;
+package org.estatio.module.numerator.fixture;
 
-public class Property {
+import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
+
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
+
+public class NumeratorModule_tearDown extends TeardownFixtureAbstract {
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        deleteAllDirect();
+    }
+
+    protected void deleteAllDirect() {
+
+        deleteFrom(Numerator.class);
+        deleteFrom(NumeratorExampleObject.class);
+    }
+
+
 }

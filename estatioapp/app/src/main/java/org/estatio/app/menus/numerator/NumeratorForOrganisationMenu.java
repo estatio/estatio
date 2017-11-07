@@ -36,8 +36,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.party.dom.PartyConstants;
-import org.estatio.numerator.dom.Numerator;
-import org.estatio.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

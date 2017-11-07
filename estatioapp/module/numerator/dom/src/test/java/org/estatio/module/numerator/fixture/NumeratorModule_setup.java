@@ -16,7 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator;
+package org.estatio.module.numerator.fixture;
 
-public class EstatioNumeratorModule {}
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_data;
+
+public class NumeratorModule_setup extends FixtureScript {
+
+    @Override
+    protected void execute(final ExecutionContext executionContext) {
+        executionContext.executeChild(this, new NumeratorExampleObject_data.PersistScript());
+    }
+
+}

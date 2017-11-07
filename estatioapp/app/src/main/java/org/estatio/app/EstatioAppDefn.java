@@ -32,7 +32,7 @@ import org.estatio.module.party.EstatioPartyModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
 import org.estatio.module.settings.EstatioSettingsModule;
 import org.estatio.module.tax.EstatioTaxModule;
-import org.estatio.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.EstatioNumeratorModule;
 
 class EstatioAppDefn  {
 

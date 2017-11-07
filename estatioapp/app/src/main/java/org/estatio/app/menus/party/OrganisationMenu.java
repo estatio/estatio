@@ -49,7 +49,7 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

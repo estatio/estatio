@@ -31,8 +31,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.numerator.dom.Numerator;
-import org.estatio.numerator.dom.NumeratorRepository;
+import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

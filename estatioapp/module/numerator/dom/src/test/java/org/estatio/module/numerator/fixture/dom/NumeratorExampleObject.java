@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.numerator.fixture.dom;
+package org.estatio.module.numerator.fixture.dom;
 
 import javax.jdo.annotations.IdentityType;
 
