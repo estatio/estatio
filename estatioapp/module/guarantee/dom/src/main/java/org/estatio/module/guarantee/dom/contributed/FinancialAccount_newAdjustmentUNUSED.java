@@ -27,8 +27,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 
 // REVIEW: this has been refactored to a mixin, but previously it wasn't annotated as @DomainService, so this is still not actually in use.

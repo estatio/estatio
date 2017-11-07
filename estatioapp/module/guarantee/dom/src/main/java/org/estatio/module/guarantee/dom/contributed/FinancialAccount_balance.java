@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccount;
 
 /**
  * Cannot be inlined (needs to be a mixin) because FinancialAccount does not know about guarantees

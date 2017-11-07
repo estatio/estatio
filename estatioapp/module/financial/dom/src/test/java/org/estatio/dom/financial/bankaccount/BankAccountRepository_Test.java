@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 

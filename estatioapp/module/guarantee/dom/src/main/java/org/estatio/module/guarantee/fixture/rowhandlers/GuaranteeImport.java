@@ -22,8 +22,8 @@ import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.module.financial.dom.FinancialAccountTransaction;
+import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;

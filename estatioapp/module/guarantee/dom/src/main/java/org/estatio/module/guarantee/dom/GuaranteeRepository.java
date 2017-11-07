@@ -43,10 +43,10 @@ import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
+import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 

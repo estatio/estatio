@@ -1,10 +1,10 @@
 /**
- * Defines {@link org.estatio.dom.financial.FinancialAccount}s, each of which is
- * {@link org.estatio.dom.financial.FinancialAccount#getOwner() owned} by a {@link org.estatio.module.party.dom.Party}.
+ * Defines {@link org.estatio.module.financial.dom.FinancialAccount}s, each of which is
+ * {@link org.estatio.module.financial.dom.FinancialAccount#getOwner() owned} by a {@link org.estatio.module.party.dom.Party}.
  *
  * <p>
- * {@link org.estatio.dom.financial.FinancialAccount} is abstract, with 
- * {@link org.estatio.dom.financial.FinancialAccountType} acts as a powertype.  Currently only a single concrete 
+ * {@link org.estatio.module.financial.dom.FinancialAccount} is abstract, with
+ * {@link org.estatio.module.financial.dom.FinancialAccountType} acts as a powertype.  Currently only a single concrete
  * subtype, {@link org.estatio.dom.financial.bankaccount.BankAccount}, exists.
  * 
  * <p>

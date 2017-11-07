@@ -28,9 +28,9 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;

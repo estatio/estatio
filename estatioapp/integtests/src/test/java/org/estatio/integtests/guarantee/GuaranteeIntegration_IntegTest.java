@@ -37,7 +37,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;

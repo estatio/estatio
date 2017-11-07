@@ -47,9 +47,9 @@ import org.incode.module.base.dom.types.MoneyType;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.dom.roles.EstatioRole;
 

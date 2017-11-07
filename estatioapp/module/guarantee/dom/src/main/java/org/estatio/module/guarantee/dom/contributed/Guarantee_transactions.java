@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.FinancialAccountTransaction;
+import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.guarantee.dom.Guarantee;
 
 /**

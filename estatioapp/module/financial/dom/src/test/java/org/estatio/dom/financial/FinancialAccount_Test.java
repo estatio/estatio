@@ -26,6 +26,9 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 

@@ -30,10 +30,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountRepository;
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountRepository;
+import org.estatio.module.financial.dom.FinancialAccountTransaction;
+import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 import org.estatio.module.guarantee.dom.Guarantee;
 
 @DomainService(

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.module.financial.dom;
 
 import org.apache.isis.applib.FatalException;
 import org.apache.isis.applib.services.factory.FactoryService;

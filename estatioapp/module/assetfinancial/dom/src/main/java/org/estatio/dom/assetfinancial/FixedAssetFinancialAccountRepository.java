@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccount;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

@@ -26,6 +26,9 @@ import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.module.financial.dom.FinancialAccount;
+import org.estatio.module.financial.dom.FinancialAccountTransaction;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FinancialAccountTransaction_Test {

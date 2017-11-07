@@ -45,6 +45,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -278,7 +279,7 @@ public class InvoiceForLease_Test {
                 {
                     allowing(lease).getPaidBy();
                     will(returnValue(new BankMandate() {
-                        public org.estatio.dom.financial.FinancialAccount getBankAccount() {
+                        public FinancialAccount getBankAccount() {
                             return new BankAccount() {
                                 public boolean isValidIban() {
                                     return true;

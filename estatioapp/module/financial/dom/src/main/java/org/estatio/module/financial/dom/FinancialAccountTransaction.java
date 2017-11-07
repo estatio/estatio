@@ -1,4 +1,4 @@
-package org.estatio.dom.financial;
+package org.estatio.module.financial.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -49,18 +49,18 @@ import lombok.Setter;
         @Query(
                 name = "findByFinancialAccount",
                 language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
+                value = "SELECT FROM org.estatio.module.financial.dom.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount"),
         @Query(
                 name = "findByFinancialAccountAndTransactionDate",
                 language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
+                value = "SELECT FROM org.estatio.module.financial.dom.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount && "
                         + "transactionDate == :transactionDate"),
         @Query(
                 name = "findByFinancialAccountAndTransactionDateAndSequence",
                 language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
+                value = "SELECT FROM org.estatio.module.financial.dom.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount && "
                         + "transactionDate == :transactionDate && "
                         + "sequence == :sequence")

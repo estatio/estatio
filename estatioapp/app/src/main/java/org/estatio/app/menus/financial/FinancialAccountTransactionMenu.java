@@ -31,8 +31,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.financial.FinancialAccountTransaction;
-import org.estatio.dom.financial.FinancialAccountTransactionRepository;
+import org.estatio.module.financial.dom.FinancialAccountTransaction;
+import org.estatio.module.financial.dom.FinancialAccountTransactionRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

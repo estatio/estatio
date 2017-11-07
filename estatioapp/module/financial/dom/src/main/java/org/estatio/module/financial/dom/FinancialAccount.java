@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.module.financial.dom;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -85,19 +85,19 @@ import lombok.Setter;
                 name = "findByOwnerAndReference", language = "JDOQL",
 //                name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "FROM org.estatio.module.financial.dom.FinancialAccount "
                         + "WHERE owner == :owner "
                         + "&& reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndOwner", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "FROM org.estatio.module.financial.dom.FinancialAccount "
                         + "WHERE type == :type "
                         + "&& owner == :owner"),
         @javax.jdo.annotations.Query(
                 name = "findByOwner", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "FROM org.estatio.module.financial.dom.FinancialAccount "
                         + "WHERE owner == :owner")
 })
 @DomainObject(editing = Editing.DISABLED)
