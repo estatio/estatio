@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.viewmodel;
+package org.estatio.module.lease.dom.invoicing.summary;
 
 import org.jmock.auto.Mock;
 import org.junit.Rule;

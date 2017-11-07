@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.viewmodel;
+package org.estatio.module.lease.dom.invoicing.summary;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -85,7 +85,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByRunId", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun " +
+                        "FROM org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun " +
                         "WHERE " +
                         "runId == :runId ")
 })

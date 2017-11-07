@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.viewmodel;
+package org.estatio.module.lease.dom.invoicing.summary;
 
 import org.apache.isis.applib.annotation.Mixin;
 

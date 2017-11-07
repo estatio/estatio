@@ -19,7 +19,7 @@
  */
 package org.estatio.dom.document.documents.binders;
 
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 
 public class StringInterpolatorToSsrsUrlOfInvoiceSummary
         extends StringInterpolatorToSsrsUrlAbstract<InvoiceSummaryForPropertyDueDateStatus> {

@@ -52,11 +52,11 @@ import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyInvoiceDateRepository;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

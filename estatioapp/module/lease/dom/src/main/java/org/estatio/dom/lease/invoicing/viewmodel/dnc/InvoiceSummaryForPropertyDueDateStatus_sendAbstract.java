@@ -37,7 +37,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 
 import lombok.Data;
 

@@ -14,7 +14,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Property does not know about InvoiceServiceMenu

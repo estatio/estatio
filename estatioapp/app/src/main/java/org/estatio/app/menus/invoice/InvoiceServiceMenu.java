@@ -26,8 +26,8 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationParameters;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRun;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForInvoiceRunRepository;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)

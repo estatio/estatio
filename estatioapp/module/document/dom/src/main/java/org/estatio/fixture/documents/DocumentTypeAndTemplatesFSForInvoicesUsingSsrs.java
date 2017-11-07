@@ -47,7 +47,7 @@ import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfI
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
 

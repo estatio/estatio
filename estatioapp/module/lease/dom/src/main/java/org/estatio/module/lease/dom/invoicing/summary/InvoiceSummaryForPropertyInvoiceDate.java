@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.viewmodel;
+package org.estatio.module.lease.dom.invoicing.summary;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,10 +27,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
@@ -39,8 +37,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -50,16 +46,15 @@ import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
-        table = "InvoiceSummaryForPropertyDueDateStatus",
+        table = "InvoiceSummaryForPropertyInvoiceDate",
         schema = "dbo",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"dbo\".\"InvoiceSummaryForPropertyDueDateStatus\" " +
+                        value = "CREATE VIEW \"dbo\".\"InvoiceSummaryForPropertyInvoiceDate\" " +
                                 "( " +
                                 "  {this.atPath}, " +
                                 "  {this.sellerReference}, " +
-                                "  {this.dueDate}, " +
-                                "  {this.status}, " +
+                                "  {this.invoiceDate}, " +
                                 "  {this.total}, " +
                                 "  {this.netAmount}, " +
                                 "  {this.vatAmount}, " +
@@ -68,8 +63,7 @@ import lombok.Setter;
                                 "SELECT " +
                                 "  i.\"atPath\", " +
                                 "  p.\"reference\" , " +
-                                "  i.\"dueDate\", " +
-                                "  i.\"status\", " +
+                                "  i.\"invoiceDate\", " +
                                 "  COUNT(DISTINCT(i.\"id\")) AS \"total\", " +
                                 "   SUM(ii.\"netAmount\") AS \"netAmount\", " +
                                 "   SUM(ii.\"vatAmount\") AS \"vatAmount\", " +
@@ -83,45 +77,25 @@ import lombok.Setter;
                                 "GROUP BY " +
                                 "  i.\"atPath\", " +
                                 "  p.\"reference\", " +
-                                "  i.\"dueDate\", " +
-                                "  i.\"status\"")
+                                "  i.\"invoiceDate\"")
         })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByStatus", language = "JDOQL",
+                name = "all", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                        "WHERE status == :status "),
+                        "FROM org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyInvoiceDate " +
+                        "ORDER BY invoiceDate DESCENDING, atPath "),
         @javax.jdo.annotations.Query(
-                name = "findByStatusAndDueDateAfter", language = "JDOQL",
+                name = "byInvoiceDate", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                        "WHERE status == :status " +
-                        "   && dueDate >= :dueDateAfter "
-        ),
-        @javax.jdo.annotations.Query(
-                name = "findByAtPathAndSellerReferenceAndStatus", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                        "WHERE atPath == :atPath " +
-                        "   && sellerReference == :sellerReference " +
-                        "   && status == :status "
-        ),
-        @javax.jdo.annotations.Query(
-                name = "findByAtPathAndSellerReferenceAndStatusAndDueDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                        "WHERE atPath == :atPath " +
-                        "   && sellerReference == :sellerReference " +
-                        "   && status == :status " +
-                        "   && dueDate == :dueDate "
-        )
+                        "FROM org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyInvoiceDate " +
+                        "WHERE invoiceDate >= :date " +
+                        "ORDER BY invoiceDate DESCENDING, atPath ")
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @ViewModel
 @DomainObject(editing = Editing.DISABLED)
-@DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstract {
+public class InvoiceSummaryForPropertyInvoiceDate extends InvoiceSummaryAbstract {
 
     public String iconName() {
         return "InvoiceSummary";
@@ -131,7 +105,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
         return TitleBuilder.start()
                 .withName(getAtPath())
                 .withName(getSellerReference())
-                .withName(getDueDate())
+                .withName(getInvoiceDate())
                 .toString();
     }
 
@@ -162,10 +136,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     }
 
     @Getter @Setter
-    private InvoiceStatus status;
-
-    @Getter @Setter
-    private LocalDate dueDate;
+    private LocalDate invoiceDate;
 
     @Getter @Setter
     private int total;
@@ -180,19 +151,18 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     @Getter @Setter
     private BigDecimal grossAmount;
 
+    // //////////////////////////////////////
 
     @CollectionLayout(defaultView = "table")
     public List<InvoiceForLease> getInvoices() {
         return invoiceForLeaseRepository
-                .findByApplicationTenancyPathAndSellerAndDueDateAndStatus(getAtPath(), getSeller(), getDueDate(), getStatus());
+                .findByApplicationTenancyPathAndSellerAndInvoiceDate(getAtPath(), getSeller(), getInvoiceDate());
     }
 
+    // //////////////////////////////////////
 
-    @Inject
-    PropertyRepository propertyRepository;
 
     @Inject
     PartyRepository partyRepository;
-
 
 }
