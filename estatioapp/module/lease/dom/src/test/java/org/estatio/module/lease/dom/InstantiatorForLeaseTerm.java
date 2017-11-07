@@ -14,23 +14,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.dom.base;
+package org.estatio.module.lease.dom;
 
 import java.math.BigInteger;
 
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
-import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForTesting;
 
-public class InstantiatorForLeaseItem implements Instantiator {
+public class InstantiatorForLeaseTerm implements Instantiator {
 
     private long sequence;
     
     @Override
     public Object instantiate() {
-        final LeaseItem leaseItem = new LeaseItem();
-        leaseItem.setSequence(BigInteger.valueOf(sequence++));
-        return leaseItem;
+        final LeaseTerm lt = new LeaseTermForTesting();
+        lt.setSequence(BigInteger.valueOf(sequence++));
+        return lt;
     }
 
 }
