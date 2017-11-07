@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.canonical.v1;
+package org.estatio.module.lease.canonical.v1;
 
 import java.util.Optional;
 import java.util.SortedSet;

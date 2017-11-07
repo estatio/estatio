@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.canonical.v1;
+package org.estatio.module.lease.canonical.v1;
 
 import java.math.BigDecimal;
 
@@ -18,6 +18,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
+import org.estatio.module.lease.canonical.v1.InvoiceForLeaseDtoFactory;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.tax.dom.Tax;
 

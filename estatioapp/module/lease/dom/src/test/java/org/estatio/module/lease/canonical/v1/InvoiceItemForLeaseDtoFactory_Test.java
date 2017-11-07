@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.invoicing.canonical.v1;
+package org.estatio.module.lease.canonical.v1;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -9,6 +9,7 @@ import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.module.lease.canonical.v1.InvoiceItemForLeaseDtoFactory;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.lease.fixture.rowhandlers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -20,7 +20,7 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.estatio.dom.Importable;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.LeaseTermStatus;
 
 import lombok.Getter;
@@ -30,12 +30,23 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.LeaseTermForTurnoverRentImport"
 )
-public class LeaseTermForFixedImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
+public class LeaseTermForTurnoverRentImport extends LeaseTermImportAbstract implements ExcelFixtureRowHandler, Importable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForFixedImport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LeaseTermForTurnoverRentImport.class);
+
+    // turnover rent term fields
+    @Getter @Setter
+    private String turnoverRentRule;
 
     @Getter @Setter
-    private BigDecimal value;
+    private BigDecimal auditedTurnover;
+
+    @Getter @Setter
+    private BigDecimal auditedTurnoverRent;
+
+    // source fields
+
+    static int counter = 0;
 
     @Programmatic
     @Override
@@ -55,28 +66,35 @@ public class LeaseTermForFixedImport extends LeaseTermImportAbstract implements 
         LeaseItem item = initLeaseItem();
 
         //create term
-        LeaseTermForFixed term = (LeaseTermForFixed) item.findTermWithSequence(getSequence());
+        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) item.findTermWithSequence(getSequence());
         if (term == null) {
             if (getStartDate() == null) {
                 throw new IllegalArgumentException("startDate cannot be empty");
             }
             if (getSequence().equals(BigInteger.ONE)) {
-                term = (LeaseTermForFixed) item.newTerm(getStartDate(), getEndDate());
+                term = (LeaseTermForTurnoverRent) item.newTerm(getStartDate(), getEndDate());
             } else {
                 final LeaseTerm previousTerm = item.findTermWithSequence(getSequence().subtract(BigInteger.ONE));
                 if (previousTerm == null) {
                     throw new IllegalArgumentException("Previous term not found");
                 }
-                term = (LeaseTermForFixed) previousTerm.createNext(getStartDate(), getEndDate());
+                term = (LeaseTermForTurnoverRent) previousTerm.createNext(getStartDate(), getEndDate());
             }
             term.setSequence(getSequence());
         }
         term.setStatus(LeaseTermStatus.valueOf(getStatus()));
 
         //set turnover rent term values
-        term.setValue(getValue());
+        term.setTurnoverRentRule(turnoverRentRule);
+        term.setAuditedTurnover(auditedTurnover);
+        term.setAuditedTurnoverRent(auditedTurnoverRent);
 
         return Lists.newArrayList(term);
 
     }
+
+    //region > injected services
+
+    //endregion
+
 }

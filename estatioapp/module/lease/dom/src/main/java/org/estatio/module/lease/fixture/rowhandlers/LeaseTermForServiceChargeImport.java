@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.lease.fixture.rowhandlers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
