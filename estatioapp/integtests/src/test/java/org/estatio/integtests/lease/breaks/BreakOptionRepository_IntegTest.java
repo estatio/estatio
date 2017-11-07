@@ -33,8 +33,8 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.dom.event.Event;
-import org.estatio.dom.event.EventRepository;
+import org.estatio.module.event.dom.Event;
+import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;

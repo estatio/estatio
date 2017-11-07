@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.module.event.dom;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -45,7 +45,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.event.types.CalendarNameType;
+import org.estatio.module.event.dom.types.CalendarNameType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -68,7 +68,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findInDateRange", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.event.Event " +
+                        "FROM org.estatio.module.event.dom.Event " +
                     "WHERE date >= :rangeStartDate " +
                     "   && date <= :rangeEndDate")
 })

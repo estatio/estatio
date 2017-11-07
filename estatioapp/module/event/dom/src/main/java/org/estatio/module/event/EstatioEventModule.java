@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.module.event;
 
 // TODO: eventually this should move to org.estatio.event, and be renamed to EstatioEventModule (no "Dom" part)
-public final class EstatioEventDomModule {
+public final class EstatioEventModule {
 
-    private EstatioEventDomModule(){}
+    private EstatioEventModule(){}
 
 }

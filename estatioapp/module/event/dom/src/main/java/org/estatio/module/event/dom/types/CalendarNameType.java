@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event.types;
+package org.estatio.module.event.dom.types;
 
 public class CalendarNameType {
 

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.module.event.dom;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.isisaddons.module.poly.dom.PolymorphicAssociationLink;
 
-import org.estatio.dom.event.types.CalendarNameType;
+import org.estatio.module.event.dom.types.CalendarNameType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,18 +49,18 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByEvent", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.event.EventSourceLink "
+                        + "FROM org.estatio.module.event.dom.EventSourceLink "
                         + "WHERE event == :event"),
         @javax.jdo.annotations.Query(
                 name = "findBySource", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.event.EventSourceLink "
+                        + "FROM org.estatio.module.event.dom.EventSourceLink "
                         + "WHERE sourceObjectType == :sourceObjectType "
                         + "   && sourceIdentifier == :sourceIdentifier "),
         @javax.jdo.annotations.Query(
                 name = "findBySourceAndCalendarName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.event.EventSourceLink "
+                        + "FROM org.estatio.module.event.dom.EventSourceLink "
                         + "WHERE sourceObjectType == :sourceObjectType "
                         + "   && sourceIdentifier == :sourceIdentifier "
                         + "   && calendarName == :calendarName")
@@ -157,10 +157,10 @@ public abstract class EventSourceLink extends PolymorphicAssociationLink<Event, 
 
     //region > calendarName (property)
     /**
-     * Copy of the {@link #getEvent() event}'s {@link org.estatio.dom.event.Event#getCalendarName() calendar name}.
+     * Copy of the {@link #getEvent() event}'s {@link Event#getCalendarName() calendar name}.
      *
      * <p>
-     *     To support querying.  This is an immutable property of {@link org.estatio.dom.event.Event} so
+     *     To support querying.  This is an immutable property of {@link Event} so
      *     it is safe to copy.
      * </p>
      */

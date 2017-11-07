@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.event.EventRepository;
+import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.module.lease.dom.LeaseRepository;

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.module.event.dom;
 
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 
