@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communications;
+package org.estatio.module.lease.dom.contributed;
 
 import java.util.List;
 
@@ -33,6 +33,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.module.lease.dom.invoicing.AgreementCommunicationChannelLocator;
 
+// TODO: there's only one subclass of this, so why not push this logic down?
 public abstract class Agreement_currentCommunicationChannel {
 
     private final Agreement agreement;

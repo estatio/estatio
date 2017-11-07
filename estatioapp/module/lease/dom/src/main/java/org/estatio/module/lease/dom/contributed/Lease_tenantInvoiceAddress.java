@@ -16,11 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom;
+package org.estatio.module.lease.dom.contributed;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.communications.Agreement_currentCommunicationChannel;
+import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 
 /**
  * TODO: inline this mixin (although it has a superclass, this is the only subclass implementation so the superclass' functionality too can be inlined)

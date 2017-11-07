@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.contributed;
+package org.estatio.module.lease.dom.contributed;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +18,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.OccupancyRepository;
+import org.estatio.module.lease.dom.contributed.Property_vacantUnits;
 
 public class Property_vacantUnits_Test {
 

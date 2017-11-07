@@ -17,10 +17,9 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease.contributed;
+package org.estatio.module.lease.dom.contributed;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -29,46 +28,31 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.OccupancyRepository;
 
+/**
+ * This cannot be inlined (needs to be a mixin) because Unit does not know about occupancy.
+ */
 @Mixin
-public class Property_vacantUnits {
+public class Unit_occupiedBy {
 
-    final private Property property;
+    private final Unit unit;
 
-    public Property_vacantUnits(Property property) {
-        this.property = property;
+    public Unit_occupiedBy(Unit unit) {
+        this.unit = unit;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public List<Unit> $$() {
-        return unitRepository.findByProperty(property)
-                .stream()
-                .filter(unit -> !occupiedUnits().contains(unit) && (unit.getEndDate()==null || unit.getEndDate().isAfter(clockService.now())))
-                .collect(Collectors.toList());
-    }
-
-    List<Unit> occupiedUnits(){
-        return occupancyRepository.findByProperty(property)
-                .stream()
-                .filter(x->x.getEndDate()==null || x.getEndDate().isAfter(clockService.now()))
-                .map(Occupancy::getUnit)
-                .collect(Collectors.toList());
+    public Occupancy $$() {
+        Optional<Occupancy> ifOccupied = occupancyRepository.findByUnit(unit).stream().filter(Occupancy::isCurrent).findFirst();
+        return ifOccupied.isPresent() ? ifOccupied.get() : null;
     }
 
     @Inject
-    UnitRepository unitRepository;
+    private OccupancyRepository occupancyRepository;
 
-    @Inject
-    OccupancyRepository occupancyRepository;
-
-    @Inject
-    ClockService clockService;
 }
