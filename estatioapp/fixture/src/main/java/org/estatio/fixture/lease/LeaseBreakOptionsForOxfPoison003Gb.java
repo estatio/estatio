@@ -19,8 +19,8 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.module.lease.dom.breaks.BreakExerciseType;
+import org.estatio.module.lease.dom.breaks.BreakType;
 
 public class LeaseBreakOptionsForOxfPoison003Gb extends LeaseBreakOptionsAbstract {
 

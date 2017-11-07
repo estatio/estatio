@@ -30,7 +30,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.lease.breaks.BreakOption;
+import org.estatio.module.lease.dom.breaks.BreakOption;
 
 import lombok.Getter;
 import lombok.Setter;

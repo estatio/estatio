@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.breaks;
+package org.estatio.module.lease.dom.breaks;
 
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.StringUtils;

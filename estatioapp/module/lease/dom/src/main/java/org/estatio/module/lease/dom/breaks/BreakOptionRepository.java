@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease.breaks;
+package org.estatio.module.lease.dom.breaks;
 
 import java.util.List;
 

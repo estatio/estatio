@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.breaks;
+package org.estatio.module.lease.dom.breaks;
 
 import java.util.List;
 
@@ -87,12 +87,12 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.breaks.BreakOption "
+                        + "FROM org.estatio.module.lease.dom.breaks.BreakOption "
                         + "WHERE lease == :lease"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndBreakDateAndExerciseType", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.breaks.BreakOption "
+                        + "FROM org.estatio.module.lease.dom.breaks.BreakOption "
                         + "WHERE lease == :lease "
                         + "&& type == :type"
                         + "&& breakDate == :breakDate "

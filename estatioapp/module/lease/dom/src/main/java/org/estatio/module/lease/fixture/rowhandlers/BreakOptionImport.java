@@ -23,10 +23,10 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.Importable;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOption;
-import org.estatio.dom.lease.breaks.BreakOptionRepository;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.module.lease.dom.breaks.BreakExerciseType;
+import org.estatio.module.lease.dom.breaks.BreakOption;
+import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
+import org.estatio.module.lease.dom.breaks.BreakType;
 
 import lombok.Getter;
 import lombok.Setter;

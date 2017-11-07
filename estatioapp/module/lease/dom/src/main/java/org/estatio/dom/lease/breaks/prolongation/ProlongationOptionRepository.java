@@ -27,8 +27,8 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.module.lease.dom.breaks.BreakExerciseType;
+import org.estatio.module.lease.dom.breaks.BreakType;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = ProlongationOption.class)
 public class ProlongationOptionRepository extends UdoDomainRepositoryAndFactory<ProlongationOption> {

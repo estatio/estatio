@@ -26,9 +26,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.Lease_breakOptionContributions;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.module.lease.dom.breaks.BreakExerciseType;
+import org.estatio.module.lease.dom.breaks.Lease_breakOptionContributions;
+import org.estatio.module.lease.dom.breaks.BreakType;
 
 public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
 

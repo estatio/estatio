@@ -27,9 +27,9 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.Lease_breakOptionContributions;
-import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.module.lease.dom.breaks.BreakExerciseType;
+import org.estatio.module.lease.dom.breaks.Lease_breakOptionContributions;
+import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 
 public class CreateBreakOptions extends DiscoverableFixtureScript {

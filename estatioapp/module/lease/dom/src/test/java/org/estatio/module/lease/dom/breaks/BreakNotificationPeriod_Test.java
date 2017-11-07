@@ -14,15 +14,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.dom.lease.breaks;
+package org.estatio.module.lease.dom.breaks;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BreakNotifionPeriod_Test {
-    public static class AddTo extends BreakNotifionPeriod_Test {
+public class BreakNotificationPeriod_Test {
+    public static class AddTo extends BreakNotificationPeriod_Test {
 
         @Test
         public void addTo() {
@@ -42,7 +42,7 @@ public class BreakNotifionPeriod_Test {
 
     }
 
-    public static class SubtractFrom extends BreakNotifionPeriod_Test {
+    public static class SubtractFrom extends BreakNotificationPeriod_Test {
 
         @Test
         public void subtractFrom() {

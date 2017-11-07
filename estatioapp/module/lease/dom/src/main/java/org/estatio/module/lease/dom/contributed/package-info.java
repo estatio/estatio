@@ -3,4 +3,4 @@
  * the leases of a party to be viewed as a collection based only on Party being an 
  * {@link org.estatio.dom.agreement.AgreementRoleHolder}.
  */
-package org.estatio.dom.lease.contributed;
+package org.estatio.module.lease.dom.contributed;
