@@ -34,7 +34,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.PaperclipRoleNames;
+import org.estatio.module.lease.dom.invoicing.comms.PaperclipRoleNames;
 
 public class ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments extends
         AttachmentAdvisorAbstract<Invoice> {

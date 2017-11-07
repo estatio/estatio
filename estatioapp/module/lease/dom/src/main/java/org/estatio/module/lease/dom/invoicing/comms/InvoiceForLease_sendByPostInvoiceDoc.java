@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
 import org.apache.isis.applib.annotation.Mixin;
 
@@ -27,11 +27,10 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
-public class InvoiceForLease_sendByPostPrelimLetter extends InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceForLease_sendByPostInvoiceDoc extends InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract {
 
-    public InvoiceForLease_sendByPostPrelimLetter(final InvoiceForLease invoice) {
-        super(invoice, DocumentTypeData.PRELIM_LETTER);
+    public InvoiceForLease_sendByPostInvoiceDoc(final InvoiceForLease invoice) {
+        super(invoice, DocumentTypeData.INVOICE);
     }
-
 
 }

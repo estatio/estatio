@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,21 +17,30 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
+import java.io.IOException;
+
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
-public class InvoiceForLease_sendByEmailInvoiceDoc extends InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceForLease_preparePrelimLetter extends InvoiceForLease_prepareAbstract {
 
-    public InvoiceForLease_sendByEmailInvoiceDoc(final InvoiceForLease invoice) {
-        super(invoice, DocumentTypeData.INVOICE);
+    public InvoiceForLease_preparePrelimLetter(final InvoiceForLease invoiceForLease) {
+        super(invoiceForLease, DocumentTypeData.PRELIM_LETTER);
+    }
+
+    @MemberOrder(name = "preliminaryLetters", sequence = "2")
+    public Invoice $$() throws IOException {
+        return super.$$();
     }
 
 

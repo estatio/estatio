@@ -16,37 +16,56 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.DocumentAbstract;
+import org.incode.module.document.dom.impl.docs.DocumentState;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
-public abstract class InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract extends
-        InvoiceForLease_sendPrelimLetterOrInvoiceDocAbstract {
+/**
+ * Provides the ability to send an email.
+ *
+ * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
+ */
+@Mixin
+public class InvoiceForLease_sendByEmail extends InvoiceForLease_sendAbstract {
 
-    public InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract(final InvoiceForLease invoice, final DocumentTypeData documentTypeData) {
-        super(invoice, documentTypeData);
+    public InvoiceForLease_sendByEmail(final InvoiceForLease invoice) {
+        super(invoice);
     }
 
-    public static class DomainEvent extends ActionDomainEvent<InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract> { }
+    public static class DomainEvent extends ActionDomainEvent<InvoiceForLease_sendByEmail> { }
 
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
@@ -56,7 +75,9 @@ public abstract class InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstrac
             cssClassFa = "at",
             contributed = Contributed.AS_ACTION
     )
-    public Invoice $$(
+    @MemberOrder(name = "documents", sequence = "4.1")
+    public Communication $$(
+            final Document document,
             @ParameterLayout(named = "to:")
             final EmailAddress toChannel,
             @Parameter(
@@ -96,39 +117,76 @@ public abstract class InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstrac
             final String bcc2
             ) throws IOException {
 
-        final Document document = findDocument();
-        createEmailCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
+        final Communication communication = createEmailCommunication(document, toChannel, cc, cc2, cc3, bcc, bcc2);
 
-        return invoice;
+        return communication;
     }
 
     public String disable$$() {
-        final Document document = findDocument();
-        if (document == null) {
-            return "No document available to send";
+        if (emailService == null || !emailService.isConfigured()) {
+            return "Email service not configured";
         }
-        return document_sendByEmail(document).disableAct();
+        if(choices0$$().isEmpty()) {
+            return "No documents available to send";
+        }
+        return null;
     }
 
-    public Set<EmailAddress> choices0$$() {
-        final Document document = findDocument();
+    public Document default0$$() {
+        final List<Document> documents = choices0$$();
+        return documents.size() == 1 ? documents.get(0): null;
+    }
+
+    public List<Document> choices0$$() {
+        final List<Paperclip> paperclips = paperclipRepository.findByAttachedTo(invoice);
+        final List<Document> documents = Lists.newArrayList();
+        for (Paperclip paperclip : paperclips) {
+            final DocumentAbstract documentAbs = paperclip.getDocument();
+            if (!(documentAbs instanceof Document)) {
+                continue;
+            }
+            final Document document = (Document) documentAbs;
+            if (document.getState() != DocumentState.RENDERED) {
+                continue;
+            }
+            if (!DocumentTypeData.isPrimaryType(document)) {
+                continue;
+            }
+            final Document_sendByEmail document_email = document_sendByEmail(document);
+            if(document_email.disableAct() != null) {
+                continue;
+            }
+            documents.add(document);
+        }
+        return documents;
+    }
+
+    public Set<EmailAddress> choices1$$(final Document document) {
         return document == null ? Collections.emptySet() : document_sendByEmail(document).choices0Act();
     }
 
-    public EmailAddress default0$$() {
-        final Document document = findDocument();
+    // TODO: currently not properly supported by Isis, but does no harm
+    @Programmatic
+    public EmailAddress default1$$(final Document document) {
         return document == null ? null : document_sendByEmail(document).default0Act();
     }
 
-    public String default1$$() {
-        final Document document = findDocument();
+    // TODO: currently not properly supported by Isis, but does no harm
+    @Programmatic
+    public String default2$$(final Document document) {
         return document == null ? null : document_sendByEmail(document).default1Act();
     }
 
-    public String default4$$() {
-        final Document document = findDocument();
+    // TODO: currently not properly supported by Isis, but does no harm
+    @Programmatic
+    public String default5$$(final Document document) {
         return document == null ? null : document_sendByEmail(document).default4Act();
     }
 
+    @Inject
+    PaperclipRepository paperclipRepository;
+
+    @Inject
+    EmailService emailService;
 
 }

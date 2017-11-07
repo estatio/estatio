@@ -38,7 +38,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.lease.invoicing.dnc.InvoiceForLease_sendByEmail;
+import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_sendByEmail;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_sendByEmailAbstract extends InvoiceSummaryForPropertyDueDateStatus_sendAbstract {

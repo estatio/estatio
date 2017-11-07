@@ -17,7 +17,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
 import java.io.IOException;
 import java.util.List;

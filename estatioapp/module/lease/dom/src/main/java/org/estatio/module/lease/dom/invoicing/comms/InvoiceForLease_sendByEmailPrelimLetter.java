@@ -1,4 +1,3 @@
-
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -17,38 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
-import java.io.IOException;
-
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Where;
 
-import org.incode.module.document.dom.impl.docs.DocumentTemplate;
-import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndScheduleRender;
-
+import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
-public class InvoiceForLease_backgroundPrepare
-        extends T_createAndAttachDocumentAndScheduleRender<InvoiceForLease> {
+public class InvoiceForLease_sendByEmailPrelimLetter extends InvoiceForLease_sendByEmailPrelimLetterOrInvoiceDocAbstract {
 
-    public InvoiceForLease_backgroundPrepare(final InvoiceForLease invoiceForLease) {
-        super(invoiceForLease);
+    public InvoiceForLease_sendByEmailPrelimLetter(final InvoiceForLease invoice) {
+        super(invoice, DocumentTypeData.PRELIM_LETTER);
     }
 
-    /**
-     * For use only programmatically.
-     */
-    @Action(hidden = Where.EVERYWHERE)
-    @Override
-    public Object $$(
-            final DocumentTemplate template) throws IOException {
-        super.$$(template);
-        return domainObject;
-    }
+
 }

@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.lease.invoicing.dnc.InvoicePrintAndEmailPolicyService;
+import org.estatio.module.lease.dom.invoicing.comms.InvoicePrintAndEmailPolicyService;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 
 /**

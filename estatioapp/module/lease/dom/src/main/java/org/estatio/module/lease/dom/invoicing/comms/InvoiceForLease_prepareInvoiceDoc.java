@@ -1,3 +1,4 @@
+
 /*
  *
  *  Copyright 2012-2014 Eurocommercial Properties NV
@@ -16,21 +17,42 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
+import java.io.IOException;
+
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 /**
  * TODO: REVIEW: this mixin could in theory be inlined, but maybe we want to keep invoices and documents decoupled?
  */
 @Mixin
-public class InvoiceForLease_sendByPostInvoiceDoc extends InvoiceForLease_sendByPostPrelimLetterOrInvoiceDocAbstract {
+public class InvoiceForLease_prepareInvoiceDoc extends InvoiceForLease_prepareAbstract {
 
-    public InvoiceForLease_sendByPostInvoiceDoc(final InvoiceForLease invoice) {
+    public InvoiceForLease_prepareInvoiceDoc(final InvoiceForLease invoice) {
         super(invoice, DocumentTypeData.INVOICE);
+    }
+
+
+    @MemberOrder(name = "invoiceDocs", sequence = "2")
+    public Invoice $$() throws IOException {
+        return super.$$();
+    }
+
+    @Override public String disable$$() {
+        final String reasonIfAny = super.disable$$();
+        if(reasonIfAny != null) {
+            return reasonIfAny;
+        }
+        if(Invoice.Predicates.isChangeable().apply(invoiceForLease)) {
+            return "Invoice must be approved/invoiced first";
+        }
+        return null;
     }
 
 }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.invoicing.dnc;
+package org.estatio.module.lease.dom.invoicing.comms;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.comms.Communication;
