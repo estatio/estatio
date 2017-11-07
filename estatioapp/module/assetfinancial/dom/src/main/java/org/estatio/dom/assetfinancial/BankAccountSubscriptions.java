@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

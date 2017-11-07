@@ -20,7 +20,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know about incoming invoices or documents.

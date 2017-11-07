@@ -16,7 +16,7 @@ import org.estatio.app.services.dashboard.EstatioAppHomePage;
 import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 /**
  * For testing only

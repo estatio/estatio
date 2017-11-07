@@ -15,7 +15,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

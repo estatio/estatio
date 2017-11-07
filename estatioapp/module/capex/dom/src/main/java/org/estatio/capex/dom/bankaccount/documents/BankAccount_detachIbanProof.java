@@ -17,7 +17,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know about incoming invoices or documents.

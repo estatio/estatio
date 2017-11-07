@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 @Mixin
 public class BankAccount_bankMandates {

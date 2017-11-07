@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;

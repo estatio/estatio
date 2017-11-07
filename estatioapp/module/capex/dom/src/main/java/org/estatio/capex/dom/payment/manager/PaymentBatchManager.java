@@ -42,8 +42,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 

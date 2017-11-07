@@ -41,8 +41,8 @@ import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_rejec
 import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;

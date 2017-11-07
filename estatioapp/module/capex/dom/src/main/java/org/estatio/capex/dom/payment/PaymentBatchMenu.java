@@ -20,7 +20,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

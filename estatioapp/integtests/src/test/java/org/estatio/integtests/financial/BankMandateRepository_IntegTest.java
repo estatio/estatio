@@ -32,7 +32,7 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

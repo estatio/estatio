@@ -42,8 +42,8 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.financial.dom.FinancialAccount;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 
 import lombok.Getter;
 import lombok.Setter;

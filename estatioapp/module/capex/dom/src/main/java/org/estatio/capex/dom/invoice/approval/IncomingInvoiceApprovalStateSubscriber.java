@@ -16,7 +16,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.state.StateTransitionEvent;
 import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 import static org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType.CONFIRM_BANK_ACCOUNT_VERIFIED;
 

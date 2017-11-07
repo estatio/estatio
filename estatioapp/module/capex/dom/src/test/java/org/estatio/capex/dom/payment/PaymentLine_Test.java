@@ -14,7 +14,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.dom.financial.bankaccount.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccount;
 
 public class PaymentLine_Test {
 

@@ -19,9 +19,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.financial.utils.IBANValidator;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 

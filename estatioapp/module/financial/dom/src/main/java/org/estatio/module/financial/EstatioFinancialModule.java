@@ -18,7 +18,6 @@
  */
 package org.estatio.module.financial;
 
-// TODO: eventually this should move to org.estatio.financial, and be renamed to EstatioFinancialModule (no "Dom" part)
 public final class EstatioFinancialModule {
 
     private EstatioFinancialModule(){}
