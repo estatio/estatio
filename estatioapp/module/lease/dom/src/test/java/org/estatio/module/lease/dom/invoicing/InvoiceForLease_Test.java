@@ -45,9 +45,9 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.numerator.dom.Numerator;
 

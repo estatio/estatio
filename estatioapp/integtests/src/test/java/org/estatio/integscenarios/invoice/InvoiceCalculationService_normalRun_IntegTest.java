@@ -32,7 +32,7 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -45,7 +45,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;

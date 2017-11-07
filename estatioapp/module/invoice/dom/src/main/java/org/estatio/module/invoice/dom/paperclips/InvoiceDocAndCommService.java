@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.paperclips;
+package org.estatio.module.invoice.dom.paperclips;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class InvoiceDocAndCommService {

@@ -16,9 +16,8 @@ import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.canonical.invoice.v1.PaymentMethod;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItemForTesting;
-import org.estatio.module.lease.canonical.v1.InvoiceForLeaseDtoFactory;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceItemForTesting;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.tax.dom.Tax;
 
@@ -51,7 +50,7 @@ public class InvoiceForLeaseDtoFactory_Test {
         // given
         invoice = new InvoiceForLease();
         invoice.setInvoiceDate(new LocalDate(2016,1,1));
-        invoice.setPaymentMethod(org.estatio.dom.invoice.PaymentMethod.DIRECT_DEBIT);
+        invoice.setPaymentMethod(org.estatio.module.invoice.dom.PaymentMethod.DIRECT_DEBIT);
 
 
         invoice.getItems().add(newItem(invoice, "1.01", "2.02", "3.03"));

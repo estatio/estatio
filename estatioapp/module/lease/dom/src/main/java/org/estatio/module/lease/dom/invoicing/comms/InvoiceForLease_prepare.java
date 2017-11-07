@@ -30,8 +30,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 import static com.google.common.base.Predicates.not;

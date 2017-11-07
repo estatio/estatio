@@ -16,15 +16,29 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
+import org.incode.module.base.dom.utils.StringUtils;
 
-/**
- * For UI purposes only. allows an {@link InvoiceItem} to indicate its source.
- * 
- * <p>
- * The {@link InvoiceItem#getSource()} is therefore rendered in the UI as a column in tables, enabling a drill-down.
- */
-public interface InvoiceSource {
+public enum InvoiceStatus {
 
+    NEW,
+    APPROVED,
+    INVOICED,
+    HISTORIC;
+
+    public String title() {
+        return StringUtils.enumTitle(this.name());
+    }
+
+    public boolean invoiceIsChangable() {
+        return this.equals(InvoiceStatus.APPROVED) || this.equals(InvoiceStatus.NEW);
+    }
+
+    public static class Meta {
+        private Meta() {}
+
+        public final static int MAX_LEN = 20;
+
+    }
 }

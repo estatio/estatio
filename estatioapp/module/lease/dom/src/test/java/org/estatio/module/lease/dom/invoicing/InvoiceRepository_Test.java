@@ -37,10 +37,10 @@ import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;

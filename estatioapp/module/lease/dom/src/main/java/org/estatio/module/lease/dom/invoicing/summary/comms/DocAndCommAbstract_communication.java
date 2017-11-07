@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.communications.dom.impl.comms.Communication;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 public abstract class DocAndCommAbstract_communication<T extends DocAndCommAbstract<T>> extends DocAndCommAbstract_abstract<T> {
 

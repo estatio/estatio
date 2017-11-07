@@ -13,7 +13,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.app.services.dashboard.EstatioAppHomePage;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 
 /**
  * For testing only

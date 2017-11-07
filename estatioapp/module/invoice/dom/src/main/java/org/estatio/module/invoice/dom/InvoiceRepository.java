@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.dom.invoice.QInvoice;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Invoice.class)

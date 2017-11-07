@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -30,12 +30,12 @@ import lombok.Setter;
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.invoice.InvoiceAttribute "
+                        + "FROM org.estatio.module.invoice.dom.InvoiceAttribute "
                         + "WHERE invoice == :invoice"),
         @Query(
                 name = "findByInvoiceAndName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.invoice.InvoiceAttribute "
+                        + "FROM org.estatio.module.invoice.dom.InvoiceAttribute "
                         + "WHERE invoice == :invoice && "
                         + "name == :name")
 })

@@ -77,8 +77,8 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.dom.utils.ReasonBuffer2;
 

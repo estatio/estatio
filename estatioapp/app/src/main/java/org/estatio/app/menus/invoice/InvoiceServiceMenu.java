@@ -19,7 +19,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;

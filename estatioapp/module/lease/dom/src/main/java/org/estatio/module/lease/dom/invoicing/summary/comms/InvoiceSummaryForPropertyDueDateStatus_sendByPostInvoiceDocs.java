@@ -20,7 +20,7 @@ package org.estatio.module.lease.dom.invoicing.summary.comms;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 
 /**

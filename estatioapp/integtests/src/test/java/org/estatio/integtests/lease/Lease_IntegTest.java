@@ -45,7 +45,7 @@ import org.incode.module.base.integtests.VT;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;

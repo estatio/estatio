@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;

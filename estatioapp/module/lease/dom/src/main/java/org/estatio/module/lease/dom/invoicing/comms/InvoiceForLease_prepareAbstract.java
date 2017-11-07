@@ -39,8 +39,8 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 import org.incode.module.document.dom.services.DocumentCreatorService;
 
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_actionAbstract;
 

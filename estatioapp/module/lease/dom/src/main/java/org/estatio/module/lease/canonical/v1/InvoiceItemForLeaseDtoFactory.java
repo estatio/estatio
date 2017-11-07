@@ -15,7 +15,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.dom.dto.DtoMappingHelper;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

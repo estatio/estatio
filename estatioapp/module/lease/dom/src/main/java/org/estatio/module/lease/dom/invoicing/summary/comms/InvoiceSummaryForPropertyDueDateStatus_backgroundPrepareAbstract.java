@@ -36,9 +36,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.paperclips.InvoiceDocAndCommService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_backgroundPrepare;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;

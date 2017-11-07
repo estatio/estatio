@@ -25,8 +25,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class InvoicePrintAndEmailPolicyService extends AbstractSubscriber {

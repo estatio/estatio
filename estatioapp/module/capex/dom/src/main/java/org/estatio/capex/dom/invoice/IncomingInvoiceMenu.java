@@ -24,7 +24,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

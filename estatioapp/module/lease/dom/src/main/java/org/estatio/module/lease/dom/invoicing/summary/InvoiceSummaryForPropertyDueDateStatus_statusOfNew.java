@@ -2,7 +2,7 @@ package org.estatio.module.lease.dom.invoicing.summary;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 
 /**
  * TODO: REVIEW: could inline this mixin, however inherits functionality from superclass, so maybe best left as is?

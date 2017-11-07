@@ -42,11 +42,11 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.CommunicationChannelSubscriptions;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.CommunicationChannelSubscriptions;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

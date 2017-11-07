@@ -94,7 +94,7 @@ import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 

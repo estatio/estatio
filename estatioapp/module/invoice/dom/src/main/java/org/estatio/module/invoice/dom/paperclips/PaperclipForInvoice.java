@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice.paperclips;
+package org.estatio.module.invoice.dom.paperclips;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
@@ -34,7 +34,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.mixins.T_documents;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.Invoice;
 
 import lombok.Getter;
 import lombok.Setter;

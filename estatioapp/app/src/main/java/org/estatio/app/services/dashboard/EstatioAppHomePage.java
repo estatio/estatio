@@ -56,7 +56,7 @@ import org.estatio.capex.dom.task.TaskRepository;
 import org.estatio.capex.dom.task.Task_checkState;
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.EventRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.PersonRepository;

@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 

@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.document.documents.binders;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.Invoice;
 
 /**
  * for PrelimLetter or InvoiceNote

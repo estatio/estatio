@@ -35,8 +35,10 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -50,7 +52,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
 /**
- * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.
+ * Creates {@link Invoice} and associated {@link InvoiceItem}s.
  */
 public abstract class InvoiceAbstract extends FixtureScript {
 

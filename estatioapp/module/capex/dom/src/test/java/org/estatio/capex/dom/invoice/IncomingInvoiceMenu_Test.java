@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;

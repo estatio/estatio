@@ -33,10 +33,10 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceRunType;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceRunType;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.Fraction;
 import org.estatio.module.lease.dom.InvoicingFrequency;

@@ -7,8 +7,7 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.module.lease.dom.InvoicingFrequency;
+import org.estatio.module.invoice.dom.InvoicingInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

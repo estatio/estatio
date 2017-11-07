@@ -20,7 +20,7 @@ package org.estatio.module.lease.dom.invoicing.summary.comms;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**
  * TODO: inline this mixin (including superclass functionality) ... too confusing/abstracted

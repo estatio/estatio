@@ -21,7 +21,7 @@ package org.estatio.fixture.documents;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 public class DocumentTypeFSForIbanProof extends DocumentTemplateFSAbstract {
 

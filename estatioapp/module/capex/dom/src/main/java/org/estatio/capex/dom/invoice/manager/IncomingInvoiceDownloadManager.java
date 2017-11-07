@@ -60,7 +60,7 @@ import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.capex.dom.util.InvoicePageRange;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.dom.utils.ReasonBuffer2;
 
 import lombok.Getter;

@@ -10,7 +10,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.message.MessageService;
 
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_filterAbstract {
     final InvoiceSummaryForPropertyDueDateStatus invoiceSummary;

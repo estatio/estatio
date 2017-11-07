@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceItem;
 
 /**
  * This cannot be inlined (must be a mixin) because Project does not know about incoming invoices.

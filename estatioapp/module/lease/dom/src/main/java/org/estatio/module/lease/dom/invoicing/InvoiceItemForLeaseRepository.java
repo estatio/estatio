@@ -35,7 +35,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseTerm;

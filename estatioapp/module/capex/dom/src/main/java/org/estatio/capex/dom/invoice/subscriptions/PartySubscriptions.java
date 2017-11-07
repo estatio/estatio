@@ -29,9 +29,9 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
+import org.estatio.module.invoice.dom.Constants;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(

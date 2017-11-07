@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.ViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 
 import lombok.Getter;
 import lombok.Setter;

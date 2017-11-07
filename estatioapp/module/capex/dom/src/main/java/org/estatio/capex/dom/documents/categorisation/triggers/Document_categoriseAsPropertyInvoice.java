@@ -18,8 +18,8 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Document is part of the incode platform and

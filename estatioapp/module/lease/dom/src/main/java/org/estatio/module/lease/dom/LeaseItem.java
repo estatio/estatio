@@ -78,8 +78,8 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.InvoicingInterval;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.module.tax.dom.Tax;
 

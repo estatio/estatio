@@ -41,7 +41,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentSort;
 import org.incode.module.document.dom.impl.docs.DocumentState;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 import static org.incode.module.communications.dom.mixins.DocumentConstants.MIME_TYPE_APPLICATION_PDF;
 

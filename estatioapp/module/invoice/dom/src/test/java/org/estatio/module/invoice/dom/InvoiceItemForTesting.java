@@ -16,33 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
-import org.incode.module.base.dom.utils.StringUtils;
 
-public enum PaymentMethod {
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-    DIRECT_DEBIT,
-    BILLING_ACCOUNT,
-    BANK_TRANSFER,
-    CASH,
-    CHEQUE,
-    MANUAL_PROCESS;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceItem;
 
-    public String title() {
-        return StringUtils.enumTitle(this.name());
-    }
-    
-    public boolean isDirectDebit() {
-        return this == DIRECT_DEBIT;
+public class InvoiceItemForTesting extends InvoiceItem {
+
+    public InvoiceItemForTesting(final Invoice invoice) {
+        super(invoice);
     }
 
-    public static class Meta {
-
-        public final static int MAX_LEN = 30;
-
-        private Meta() {}
-
+    public ApplicationTenancy getApplicationTenancy() {
+        return null;
     }
 
 }

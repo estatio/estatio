@@ -27,9 +27,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.paperclips.InvoiceDocAndCommService;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.paperclips.InvoiceDocAndCommService;
 
 public abstract class DocAndCommAbstract_abstract<T extends DocAndCommAbstract<T>> {
 

@@ -27,7 +27,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

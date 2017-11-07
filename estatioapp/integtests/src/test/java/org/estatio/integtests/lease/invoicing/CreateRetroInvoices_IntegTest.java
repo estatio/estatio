@@ -34,9 +34,9 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.invoice.InvoiceServiceMenu;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceRunType;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;

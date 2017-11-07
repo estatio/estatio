@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
 import org.incode.module.base.dom.utils.StringUtils;
 

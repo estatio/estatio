@@ -16,29 +16,33 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-public enum InvoiceStatus {
+public enum PaymentMethod {
 
-    NEW,
-    APPROVED,
-    INVOICED,
-    HISTORIC;
+    DIRECT_DEBIT,
+    BILLING_ACCOUNT,
+    BANK_TRANSFER,
+    CASH,
+    CHEQUE,
+    MANUAL_PROCESS;
 
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
-
-    public boolean invoiceIsChangable() {
-        return this.equals(InvoiceStatus.APPROVED) || this.equals(InvoiceStatus.NEW);
+    
+    public boolean isDirectDebit() {
+        return this == DIRECT_DEBIT;
     }
 
     public static class Meta {
+
+        public final static int MAX_LEN = 30;
+
         private Meta() {}
 
-        public final static int MAX_LEN = 20;
-
     }
+
 }

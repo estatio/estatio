@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 
-import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 
 public abstract class InvoiceSummaryForPropertyDueDateStatus_statusOfAbstract extends InvoiceSummaryForPropertyDueDateStatus_filterAbstract {
 

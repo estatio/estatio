@@ -44,7 +44,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

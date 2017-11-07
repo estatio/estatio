@@ -16,19 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.module.invoice.dom;
 
+import java.math.BigDecimal;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+public final class InvoiceConstants {
 
-public class InvoiceItemForTesting extends InvoiceItem {
+    private InvoiceConstants() {}
 
-    public InvoiceItemForTesting(final Invoice invoice) {
-        super(invoice);
-    }
+    public static final BigDecimal PERCENTAGE_DIVISOR = BigDecimal.valueOf(100);
 
-    public ApplicationTenancy getApplicationTenancy() {
-        return null;
-    }
 
 }

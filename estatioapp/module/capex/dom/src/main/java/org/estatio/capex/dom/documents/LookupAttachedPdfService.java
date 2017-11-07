@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -22,7 +20,7 @@ import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachInvoiceAsIb
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.order.Order;
 import org.estatio.dom.financial.bankaccount.BankAccount;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LookupAttachedPdfService {

@@ -32,7 +32,7 @@ import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.capex.dom.state.StateTransitionService;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**
  * TODO: inline this mixin

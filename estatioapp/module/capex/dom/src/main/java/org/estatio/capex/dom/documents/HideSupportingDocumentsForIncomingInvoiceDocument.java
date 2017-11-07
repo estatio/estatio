@@ -11,7 +11,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.Document_backgroundCommands;
 import org.incode.module.document.dom.mixins.T_documents;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class HideSupportingDocumentsForIncomingInvoiceDocument extends AbstractSubscriber {

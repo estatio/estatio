@@ -45,8 +45,8 @@ import org.estatio.dom.document.documents.binders.ForPrimaryDocOfInvoiceAttachTo
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoice;
 import org.estatio.dom.document.documents.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
-import org.estatio.dom.invoice.DocumentTypeData;
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;

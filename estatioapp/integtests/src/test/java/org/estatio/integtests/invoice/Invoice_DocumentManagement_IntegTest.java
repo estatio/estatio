@@ -59,12 +59,12 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip_changeRole;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.dom.invoice.DocumentTypeData;
+import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.invoicing.comms.PaperclipRoleNames;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceRepository;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_attachSupportingDocument;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_prepare;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_sendByEmail;

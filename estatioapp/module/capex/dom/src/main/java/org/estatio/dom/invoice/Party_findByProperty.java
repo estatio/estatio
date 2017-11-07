@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.dom.asset.Property;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.party.dom.Party;
 
 /**

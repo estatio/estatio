@@ -56,7 +56,7 @@ import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.charge.Applicability;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeRepository;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.dom.utils.FinancialAmountUtil;
 import org.estatio.dom.utils.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;

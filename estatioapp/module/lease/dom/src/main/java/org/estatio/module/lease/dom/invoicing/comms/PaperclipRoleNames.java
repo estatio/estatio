@@ -25,7 +25,7 @@ import org.incode.module.communications.dom.mixins.Document_sendByEmail;
 import org.incode.module.communications.dom.mixins.Document_sendByPost;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.dom.invoice.Invoice;
+import org.estatio.module.invoice.dom.Invoice;
 
 public final class PaperclipRoleNames {
 

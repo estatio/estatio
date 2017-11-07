@@ -26,15 +26,15 @@
  * 
  * <p>
  * {@link org.estatio.module.lease.dom.Lease} also integrates with the <tt>invoicing</tt> module, by implementing the
- * {@link org.estatio.dom.invoice.InvoiceSource} interface.  In practice each {@link org.estatio.module.lease.dom.LeaseTerm}
- * corresponds to an {@link org.estatio.dom.invoice.InvoiceItem}... the bill for a particular service for a particular
+ * {@link org.estatio.module.invoice.dom.InvoiceSource} interface.  In practice each {@link org.estatio.module.lease.dom.LeaseTerm}
+ * corresponds to an {@link org.estatio.module.invoice.dom.InvoiceItem}... the bill for a particular service for a particular
  * period of time.
  * 
  * <p>
- * An important philosophy is that {@link org.estatio.dom.invoice.InvoiceItem}s become immutable once invoiced.  If 
+ * An important philosophy is that {@link org.estatio.module.invoice.dom.InvoiceItem}s become immutable once invoiced.  If
  * there is a retrospective change in reference data (eg {@link org.estatio.dom.index.Index indices} which impact the
  * {@link org.estatio.module.lease.dom.LeaseTermForIndexable}, then the invoice calculations for that term can be re-run.
- * This may produce a delta {@link org.estatio.dom.invoice.InvoiceItem} (debit or credit), which is billed in arrears.
+ * This may produce a delta {@link org.estatio.module.invoice.dom.InvoiceItem} (debit or credit), which is billed in arrears.
  *  
  * <p>
  * As already noted, {@link org.estatio.module.lease.dom.Lease} is a particular (sub)type of

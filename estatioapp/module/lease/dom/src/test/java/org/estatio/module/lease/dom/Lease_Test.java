@@ -69,7 +69,7 @@ import org.estatio.dom.bankmandate.SequenceType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.bankaccount.BankAccount;
 import org.estatio.dom.financial.bankaccount.BankAccountRepository;
-import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
