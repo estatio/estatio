@@ -28,7 +28,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;

@@ -40,7 +40,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermValueType;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(repositoryFor = InvoiceItemForLease.class, nature = NatureOfService.DOMAIN)
 public class InvoiceItemForLeaseRepository extends UdoDomainRepositoryAndFactory<InvoiceItemForLease> {

@@ -29,7 +29,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.document.documents.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.module.party.dom.Organisation;

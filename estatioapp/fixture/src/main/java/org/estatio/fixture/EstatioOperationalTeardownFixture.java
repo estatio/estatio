@@ -89,7 +89,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseType;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
 import org.estatio.module.lease.dom.tags.Activity;

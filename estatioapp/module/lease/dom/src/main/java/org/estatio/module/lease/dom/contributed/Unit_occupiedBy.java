@@ -30,8 +30,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.module.lease.dom.OccupancyRepository;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Unit does not know about occupancy.

@@ -42,7 +42,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.LeaseTermRepository;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetAssignmentService {

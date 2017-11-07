@@ -21,7 +21,7 @@
  * {@link org.estatio.module.lease.dom.LeaseTermForServiceCharge lease term for service charge}.
  *
  * <p>
- * The {@link org.estatio.module.lease.dom.Occupancy} entity associates the {@link org.estatio.module.lease.dom.Lease} with a
+ * The {@link org.estatio.module.lease.dom.occupancy.Occupancy} entity associates the {@link org.estatio.module.lease.dom.Lease} with a
  * particular {@link org.estatio.dom.asset.Unit}.
  * 
  * <p>

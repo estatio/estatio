@@ -39,6 +39,7 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.dom.asset.Unit;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.tags.Activity;
 import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.module.lease.dom.tags.Sector;

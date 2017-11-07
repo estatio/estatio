@@ -122,7 +122,7 @@ import lombok.Setter;
                         + "   && startDate == :startDate "
                         + "   && leaseItem.lease.occupancies.contains(lu) "
                         + "   && (lu.unit.property == :property) "
-                        + "VARIABLES org.estatio.module.lease.dom.Occupancy lu"),
+                        + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu"),
         @javax.jdo.annotations.Query(
                 name = "findStartDatesByPropertyAndType", language = "JDOQL",
                 value = "SELECT DISTINCT startDate "
@@ -130,7 +130,7 @@ import lombok.Setter;
                         + "WHERE leaseItem.type == :leaseItemType "
                         + "   && leaseItem.lease.occupancies.contains(lu) "
                         + "   && (lu.unit.property == :property) "
-                        + "VARIABLES org.estatio.module.lease.dom.Occupancy lu "
+                        + "VARIABLES org.estatio.module.lease.dom.occupancy.Occupancy lu "
                         + "ORDER BY startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByStatusAndActiveDate", language = "JDOQL",

@@ -91,6 +91,8 @@ import org.estatio.dom.financial.bankaccount.BankAccountRepository;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.dom.roles.EstatioRole;
 
@@ -133,7 +135,7 @@ import static org.apache.commons.lang3.StringUtils.left;
                         + "WHERE occupancies.contains(occ) "
                         + "&& (occ.unit.property == :property) "
                         + "VARIABLES "
-                        + "org.estatio.module.lease.dom.Occupancy occ "
+                        + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByBrand", language = "JDOQL",
@@ -143,7 +145,7 @@ import static org.apache.commons.lang3.StringUtils.left;
                         + "&& (occ.brand == :brand)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
                         + "VARIABLES "
-                        + "org.estatio.module.lease.dom.Occupancy occ "
+                        + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
@@ -154,7 +156,7 @@ import static org.apache.commons.lang3.StringUtils.left;
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
                         + "&& (occ.unit.property == :asset) "
                         + "VARIABLES "
-                        + "org.estatio.module.lease.dom.Occupancy occ "
+                        + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findExpireInDateRange", language = "JDOQL",

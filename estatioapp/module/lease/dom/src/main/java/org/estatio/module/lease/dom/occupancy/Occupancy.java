@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom;
+package org.estatio.module.lease.dom.occupancy;
 
 import java.util.List;
 
@@ -52,6 +52,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.tags.Activity;
 import org.estatio.module.lease.dom.tags.ActivityRepository;
 import org.estatio.module.lease.dom.tags.Brand;
@@ -85,25 +86,25 @@ import lombok.experimental.UtilityClass;
         @javax.jdo.annotations.Query(
                 name = "findByUnit", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE unit == :unit "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE unit.property == :property "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE lease == :lease "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndDate", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE lease == :lease "
                         + " && (startDate == null || startDate <= :date) "
                         + " && (endDate == null || endDate >= :dateAsEndDate) "
@@ -111,14 +112,14 @@ import lombok.experimental.UtilityClass;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE lease == :lease "
                         + "&& unit == :unit "
                         + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByBrand", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.Occupancy "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE brand == :brand "
                         + "&& (:includeTerminated || endDate == null || endDate >= :date)")
 })

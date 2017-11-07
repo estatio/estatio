@@ -16,9 +16,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.module.lease.dom.OccupancyRepository;
-import org.estatio.module.lease.dom.contributed.Property_vacantUnits;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
 public class Property_vacantUnits_Test {
 

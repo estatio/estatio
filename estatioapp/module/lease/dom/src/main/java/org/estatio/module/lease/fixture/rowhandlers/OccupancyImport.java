@@ -28,8 +28,8 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.OccupancyRepository;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
 import lombok.Setter;

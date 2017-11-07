@@ -36,7 +36,7 @@ import org.incode.module.classification.dom.impl.classification.T_classify;
 import org.incode.module.classification.dom.impl.classification.T_unclassify;
 import org.incode.module.classification.dom.spi.ApplicationTenancyService;
 
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
 import lombok.Setter;

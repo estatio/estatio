@@ -18,7 +18,7 @@ import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseStatus;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 public class BudgetAssignmentService_Test {
 
