@@ -43,4 +43,4 @@
  * lease {@link org.estatio.module.lease.dom.Lease#getPaidBy() tracks} the {@link org.estatio.dom.bankmandate.BankMandate} by
  * which its invoices are paid.
  */
-package org.estatio.dom.lease;
+package org.estatio.module.lease.dom;
