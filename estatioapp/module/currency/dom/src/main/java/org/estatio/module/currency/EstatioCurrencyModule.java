@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.currency;
+package org.estatio.module.currency;
 
 // TODO: eventually this should move to org.estatio.currency, and be renamed to EstatioCurrencyModule (no "Dom" part)
-public final class EstatioCurrencyDomModule {
+public final class EstatioCurrencyModule {
 
-    private EstatioCurrencyDomModule(){}
+    private EstatioCurrencyModule(){}
 
 }

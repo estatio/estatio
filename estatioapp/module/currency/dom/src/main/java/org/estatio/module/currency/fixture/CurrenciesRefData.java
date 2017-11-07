@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.currency;
+package org.estatio.module.currency.fixture;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.currency.CurrencyRepository;
+import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.currency.dom.CurrencyRepository;
 
 public class CurrenciesRefData extends FixtureScript {
 

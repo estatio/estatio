@@ -16,11 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.currency;
+package org.estatio.module.currency.dom;
 
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.module.currency.dom.Currency;
 
 public class Currency_Test {
 

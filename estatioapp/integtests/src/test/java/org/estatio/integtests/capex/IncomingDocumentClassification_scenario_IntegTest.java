@@ -43,7 +43,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //        Party buyer;
 //        Country greatBritain;
 //        Charge charge_for_works;
-//        org.estatio.dom.currency.Currency euro;
+//        org.estatio.module.currency.dom.Currency euro;
 //        DocumentType INCOMING;
 //        DocumentType INCOMING_ORDER;
 //        DocumentType INCOMING_INVOICE;

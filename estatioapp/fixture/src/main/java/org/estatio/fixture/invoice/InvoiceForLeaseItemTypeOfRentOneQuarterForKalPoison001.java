@@ -28,7 +28,7 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.fixture.currency.CurrenciesRefData;
+import org.estatio.module.currency.fixture.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.party.OrganisationForAcmeNl;

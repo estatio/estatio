@@ -74,7 +74,7 @@ import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
-import org.estatio.dom.currency.Currency;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.party.dom.Party;
 import org.estatio.dom.roles.EstatioRole;
 

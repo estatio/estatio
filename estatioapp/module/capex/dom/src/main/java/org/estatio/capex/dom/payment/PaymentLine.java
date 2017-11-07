@@ -37,7 +37,7 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.currency.Currency;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 

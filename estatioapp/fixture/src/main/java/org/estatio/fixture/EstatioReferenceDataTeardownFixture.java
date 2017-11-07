@@ -28,7 +28,7 @@ import org.incode.module.country.dom.impl.State;
 
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.currency.Currency;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
