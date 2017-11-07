@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.appsettings;
+package org.estatio.module.lease.dom.settings;
 
 public class LeaseInvoicingSettingKeyCreator_create_Test extends ApplicationSettingCreator_Test.Instantiate {
 

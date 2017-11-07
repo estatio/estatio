@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.appsettings;
+package org.estatio.module.lease.dom.settings;
 
 import javax.inject.Inject;
 

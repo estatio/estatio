@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.appsettings;
+package org.estatio.module.lease.dom.settings;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;

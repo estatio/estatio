@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.seedsettings;
+package org.estatio.module.lease.seed;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.module.lease.dom.ApplicationSettingKey;
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
 import org.estatio.module.settings.dom.ApplicationSettingCreator;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
@@ -36,10 +36,10 @@ import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
  *Installs default settings on  {@link #init(Map) initialization}.
  */
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
-public class ApplicationSettingsSeedService extends UdoDomainService<ApplicationSettingsSeedService> {
+public class LeaseModuleSettingsSeedService extends UdoDomainService<LeaseModuleSettingsSeedService> {
 
-    public ApplicationSettingsSeedService() {
-        super(ApplicationSettingsSeedService.class);
+    public LeaseModuleSettingsSeedService() {
+        super(LeaseModuleSettingsSeedService.class);
     }
 
     @PostConstruct
@@ -49,7 +49,7 @@ public class ApplicationSettingsSeedService extends UdoDomainService<Application
     }
 
     private void installDefaultsIfRequired() {
-        createSettingsIfRequired(ApplicationSettingKey.values());
+        createSettingsIfRequired(LeaseInvoicingSettingKey.values());
     }
 
     private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {

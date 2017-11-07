@@ -42,7 +42,7 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.appsettings.LeaseInvoicingSettingsService;
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceRunType;

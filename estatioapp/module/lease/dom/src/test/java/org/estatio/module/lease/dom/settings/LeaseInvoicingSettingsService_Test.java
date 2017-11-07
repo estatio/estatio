@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.appsettings;
+package org.estatio.module.lease.dom.settings;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -34,6 +34,8 @@ import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.isisaddons.module.settings.dom.SettingAbstract;
 import org.isisaddons.module.settings.dom.SettingType;
 
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
+import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
