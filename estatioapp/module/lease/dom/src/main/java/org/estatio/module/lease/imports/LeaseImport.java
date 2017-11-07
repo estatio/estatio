@@ -1,4 +1,4 @@
-package org.estatio.module.lease.fixture.rowhandlers;
+package org.estatio.module.lease.imports;
 
 import java.util.List;
 

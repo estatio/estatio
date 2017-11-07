@@ -1,4 +1,4 @@
-package org.estatio.module.index.fixture.rowhandlers;
+package org.estatio.module.index.imports;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.estatio.module.registration.dom.viewmodels;
+package org.estatio.module.registration.imports;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
