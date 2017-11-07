@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom.tags;
+package org.estatio.module.lease.dom.occupancy.tags;
 
 import java.util.List;
 

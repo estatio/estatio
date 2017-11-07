@@ -34,8 +34,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.module.lease.dom.tags.Brand;
-import org.estatio.module.lease.dom.tags.BrandRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.fixture.lease.tags.BrandsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 

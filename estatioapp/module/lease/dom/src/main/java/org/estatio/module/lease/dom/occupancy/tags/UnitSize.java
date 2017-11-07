@@ -16,10 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom.tags;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
+package org.estatio.module.lease.dom.occupancy.tags;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -49,34 +46,36 @@ import lombok.Setter;
         ,schema = "dbo"    // Isis' ObjectSpecId inferred from @DomainObject#objectType
 )
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE,
+        strategy = IdGeneratorStrategy.NATIVE, 
         column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Unique(
-        name = "Sector_name_UNQ", members = "name")
+@javax.jdo.annotations.Uniques({
+        @javax.jdo.annotations.Unique(
+                name = "UnitSize_name_UNQ", members = "name")
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Sector "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.UnitSize "
                         + "WHERE name == :name"),
         @javax.jdo.annotations.Query(
                 name = "findUniqueNames", language = "JDOQL",
                 value = "SELECT name "
-                        + "FROM org.estatio.module.lease.dom.tags.Sector")
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.UnitSize")
 })
 @DomainObject(
         bounded = true,
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.lease.tags.Sector"
+        objectType = "org.estatio.dom.lease.tags.UnitSize"
 )
-public class Sector
-        extends UdoDomainObject2<Sector>
-        implements WithNameUnique, WithNameComparable<Sector>, WithApplicationTenancyGlobal {
+public class UnitSize
+        extends UdoDomainObject2<UnitSize>
+        implements WithNameUnique, WithNameComparable<UnitSize>, WithApplicationTenancyGlobal {
 
-    public Sector() {
+    public UnitSize() {
         super("name");
     }
 
@@ -96,17 +95,13 @@ public class Sector
     @Getter @Setter
     private String name;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent(mappedBy = "sector")
-    private SortedSet<Activity> activities = new TreeSet<>();
-
-    public SortedSet<Activity> getActivities() {
-        return activities;
+    public UnitSize change(
+            final String name) {
+        setName(name);
+        return this;
     }
 
-    public void setActivities(final SortedSet<Activity> activities) {
-        this.activities = activities;
+    public String default0Change() {
+        return getName();
     }
-
 }

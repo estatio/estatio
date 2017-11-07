@@ -40,10 +40,10 @@ import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTes
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.lease.dom.tags.Activity;
-import org.estatio.module.lease.dom.tags.Brand;
-import org.estatio.module.lease.dom.tags.Sector;
-import org.estatio.module.lease.dom.tags.UnitSize;
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
+import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

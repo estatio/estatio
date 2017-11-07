@@ -31,7 +31,7 @@ import org.estatio.dom.invoice.DocumentTypeData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.lease.dom.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.party.dom.Organisation;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {

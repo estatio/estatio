@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.lease.dom.tags.UnitSize;
+import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 
 @DomainService(repositoryFor = UnitSize.class)
 @DomainServiceLayout(

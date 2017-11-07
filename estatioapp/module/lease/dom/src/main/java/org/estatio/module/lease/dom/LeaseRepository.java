@@ -46,7 +46,7 @@ import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.module.lease.dom.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(repositoryFor = Lease.class, nature = NatureOfService.DOMAIN)

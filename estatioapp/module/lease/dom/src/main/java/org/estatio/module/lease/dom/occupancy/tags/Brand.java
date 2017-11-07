@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom.tags;
+package org.estatio.module.lease.dom.occupancy.tags;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -62,31 +62,31 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand "
                         + "WHERE name == :name"),
         @javax.jdo.annotations.Query(
                 name = "findByNameAndAtPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand "
                         + "WHERE name == :name && applicationTenancyPath == :atPath "),
         @javax.jdo.annotations.Query(
                 name = "findByNameLowerCaseAndAppTenancy", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand "
                         + "WHERE name.toLowerCase() == :name && applicationTenancyPath == :atPath "),
         @javax.jdo.annotations.Query(
                 name = "matchByName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand "
                         + "WHERE name.matches(:name)"),
         @javax.jdo.annotations.Query(
                 name = "findUniqueNames", language = "JDOQL",
                 value = "SELECT name "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand ORDER BY name"),
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand ORDER BY name"),
         @javax.jdo.annotations.Query(
                 name = "findUniqueGroups", language = "JDOQL",
                 value = "SELECT DISTINCT this.group "
-                        + "FROM org.estatio.module.lease.dom.tags.Brand WHERE this.group != null "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Brand WHERE this.group != null "
                         + "ORDER BY this.group ")
 })
 @DomainObject(

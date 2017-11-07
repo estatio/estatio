@@ -40,7 +40,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)
 public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy> {

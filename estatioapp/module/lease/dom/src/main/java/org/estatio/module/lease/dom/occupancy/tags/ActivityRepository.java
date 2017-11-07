@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom.tags;
+package org.estatio.module.lease.dom.occupancy.tags;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         if(sector == null) {
             return Collections.emptyList();
         }
-        final Query query = newQuery("SELECT name FROM org.estatio.module.lease.dom.tags.Activity WHERE sector == :sector");
+        final Query query = newQuery("SELECT name FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
         return (List<String>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
@@ -52,7 +52,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         if(sector == null) {
             return Collections.emptyList();
         }
-        final Query query = newQuery("SELECT FROM org.estatio.module.lease.dom.tags.Activity WHERE sector == :sector");
+        final Query query = newQuery("SELECT FROM org.estatio.module.lease.dom.occupancy.tags.Activity WHERE sector == :sector");
         return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 

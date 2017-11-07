@@ -30,6 +30,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BrandRepository_Test {

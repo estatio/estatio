@@ -41,9 +41,9 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.module.lease.dom.tags.Brand;
-import org.estatio.module.lease.dom.tags.BrandCoverage;
-import org.estatio.module.lease.dom.tags.BrandRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
+import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

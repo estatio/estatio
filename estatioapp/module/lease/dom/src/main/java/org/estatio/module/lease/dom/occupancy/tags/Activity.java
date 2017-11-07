@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.dom.tags;
+package org.estatio.module.lease.dom.occupancy.tags;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -58,7 +58,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findBySectorAndName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.tags.Activity "
+                        + "FROM org.estatio.module.lease.dom.occupancy.tags.Activity "
                         + "WHERE sector == :sector "
                         + "   && name == :name")
 })

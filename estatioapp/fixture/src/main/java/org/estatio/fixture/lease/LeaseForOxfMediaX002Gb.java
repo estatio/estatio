@@ -21,7 +21,7 @@ package org.estatio.fixture.lease;
 import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.tags.BrandCoverage;
+import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.party.OrganisationForHelloWorldGb;
