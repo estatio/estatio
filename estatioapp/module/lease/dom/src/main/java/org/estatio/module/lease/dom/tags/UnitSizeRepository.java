@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease.tags;
+package org.estatio.module.lease.dom.tags;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class UnitSizeRepository extends UdoDomainRepositoryAndFactory<UnitSize> 
     @SuppressWarnings({ "unchecked" })
     @Programmatic
     public List<String> findUniqueNames() {
-        final Query query = newQuery("SELECT name FROM org.estatio.dom.lease.tags.UnitSize");
+        final Query query = newQuery("SELECT name FROM org.estatio.module.lease.dom.tags.UnitSize");
         return (List<String>) query.execute();
     }
 

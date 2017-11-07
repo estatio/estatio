@@ -20,7 +20,7 @@ package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.lease.tags.BrandCoverage;
+import org.estatio.module.lease.dom.tags.BrandCoverage;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.asset.PropertyForOxfGb;

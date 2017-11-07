@@ -16,10 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.lease.tags;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
+package org.estatio.module.lease.dom.tags;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -36,8 +33,7 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.incode.module.base.dom.with.WithNameComparable;
-import org.incode.module.base.dom.with.WithNameUnique;
+import org.incode.module.base.dom.with.WithNameGetter;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
 
@@ -54,34 +50,36 @@ import lombok.Setter;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Unique(
-        name = "Sector_name_UNQ", members = "name")
+@javax.jdo.annotations.Uniques({
+        @javax.jdo.annotations.Unique(
+                name = "Activity_sector_name_UNQ", members = { "sector", "name" })
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByName", language = "JDOQL",
+                name = "findBySectorAndName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.tags.Sector "
-                        + "WHERE name == :name"),
-        @javax.jdo.annotations.Query(
-                name = "findUniqueNames", language = "JDOQL",
-                value = "SELECT name "
-                        + "FROM org.estatio.dom.lease.tags.Sector")
+                        + "FROM org.estatio.module.lease.dom.tags.Activity "
+                        + "WHERE sector == :sector "
+                        + "   && name == :name")
 })
 @DomainObject(
         bounded = true,
         editing = Editing.DISABLED,
-        objectType = "org.estatio.dom.lease.tags.Sector"
+        objectType = "org.estatio.dom.lease.tags.Activity"
 )
-public class Sector
-        extends UdoDomainObject2<Sector>
-        implements WithNameUnique, WithNameComparable<Sector>, WithApplicationTenancyGlobal {
+public class Activity
+        extends UdoDomainObject2<Activity>
+        implements WithNameGetter, WithApplicationTenancyGlobal {
 
-    public Sector() {
-        super("name");
+    public Activity() {
+        super("sector,name");
     }
 
     public String title() {
-        return TitleBuilder.start().withName(getName()).toString();
+        return TitleBuilder.start()
+                .withName(getName())
+                .withParent(getSector())
+                .toString();
     }
 
     @Property(hidden = Where.EVERYWHERE)
@@ -92,21 +90,29 @@ public class Sector
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "false")
+    @Getter @Setter
+    private Sector sector;
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(allowsNull = "false", length= NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent(mappedBy = "sector")
-    private SortedSet<Activity> activities = new TreeSet<>();
-
-    public SortedSet<Activity> getActivities() {
-        return activities;
+    public Activity change(
+            final String name,
+            final Sector sector) {
+        setName(name);
+        setSector(sector);
+        return this;
     }
 
-    public void setActivities(final SortedSet<Activity> activities) {
-        this.activities = activities;
+    public String default0Change() {
+        return getName();
     }
 
+    public Sector default1Change() {
+        return getSector();
+    }
 }

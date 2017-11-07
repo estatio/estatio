@@ -20,7 +20,7 @@ package org.estatio.fixture.lease;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.dom.lease.tags.BrandCoverage;
+import org.estatio.module.lease.dom.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.incode.module.country.fixture.CountriesRefData;

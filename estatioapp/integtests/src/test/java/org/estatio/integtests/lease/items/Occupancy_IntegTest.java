@@ -29,7 +29,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.app.menus.lease.LeaseMenu;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.Occupancy;
-import org.estatio.dom.lease.tags.Brand;
+import org.estatio.module.lease.dom.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;

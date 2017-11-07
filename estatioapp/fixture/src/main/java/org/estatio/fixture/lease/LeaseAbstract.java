@@ -59,7 +59,7 @@ import org.estatio.module.lease.dom.LeaseTypeRepository;
 import org.estatio.module.lease.dom.Occupancy;
 import org.estatio.module.lease.dom.OccupancyRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
-import org.estatio.dom.lease.tags.BrandCoverage;
+import org.estatio.module.lease.dom.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

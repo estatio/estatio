@@ -39,12 +39,10 @@ import org.incode.module.unittestsupport.dom.bean.PojoTester;
 import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.lease.tags.Activity;
-import org.estatio.dom.lease.tags.Brand;
-import org.estatio.dom.lease.tags.Sector;
-import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.Occupancy;
+import org.estatio.module.lease.dom.tags.Activity;
+import org.estatio.module.lease.dom.tags.Brand;
+import org.estatio.module.lease.dom.tags.Sector;
+import org.estatio.module.lease.dom.tags.UnitSize;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

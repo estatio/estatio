@@ -7,8 +7,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.estatio.dom.lease.tags.BrandCoverage;
-import org.estatio.dom.lease.tags.BrandRepository;
+import org.estatio.module.lease.dom.tags.BrandCoverage;
+import org.estatio.module.lease.dom.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.incode.module.country.fixture.CountriesRefData;
 

@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.lease.tags;
+package org.estatio.module.lease.dom.tags;
 
 import org.incode.module.base.dom.utils.StringUtils;
 

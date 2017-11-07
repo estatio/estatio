@@ -1,4 +1,4 @@
-package org.estatio.dom.lease.upgrade;
+package org.estatio.module.lease.migrations;
 
 import java.math.BigInteger;
 
