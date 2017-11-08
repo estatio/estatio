@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.export;
+package org.estatio.module.capex.app;
 
 import javax.inject.Inject;
 
@@ -10,6 +10,8 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.estatio.module.capex.app.paymentline.PaymentLineDownloadManager;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

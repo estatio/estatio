@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.contributed;
+package org.estatio.module.capex.dom.payment.contributions;
 
 import java.util.List;
 

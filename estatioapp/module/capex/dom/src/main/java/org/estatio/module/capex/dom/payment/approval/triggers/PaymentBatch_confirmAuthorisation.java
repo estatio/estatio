@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval.triggers;
+package org.estatio.module.capex.dom.payment.approval.triggers;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 
 /**

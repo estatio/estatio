@@ -17,10 +17,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.module.capex.dom.payment.CreditTransfer;
-import org.estatio.module.capex.dom.payment.PaymentBatch;
-import org.estatio.module.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;

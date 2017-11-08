@@ -50,7 +50,7 @@ import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.app.PaymentBatchMenu;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
+import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;

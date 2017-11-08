@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval;
+package org.estatio.module.capex.dom.payment.approval;
 
 import javax.inject.Inject;
 

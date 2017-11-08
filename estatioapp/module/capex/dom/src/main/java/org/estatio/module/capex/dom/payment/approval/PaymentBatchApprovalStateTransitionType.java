@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval;
+package org.estatio.module.capex.dom.payment.approval;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,9 +17,9 @@ import org.estatio.module.capex.dom.state.StateTransitionRepository;
 import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import lombok.Getter;
 

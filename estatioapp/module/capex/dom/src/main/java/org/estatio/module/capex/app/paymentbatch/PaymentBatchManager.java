@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.manager;
+package org.estatio.module.capex.app.paymentbatch;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -36,7 +36,7 @@ import org.estatio.module.capex.dom.payment.CreditTransfer;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.approval.triggers.PaymentBatch_complete;
+import org.estatio.module.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;

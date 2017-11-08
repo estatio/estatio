@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.export;
+package org.estatio.module.capex.app.paymentline;
 
 import java.math.BigDecimal;
 

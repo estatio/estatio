@@ -1,9 +1,9 @@
-package org.estatio.capex.dom.payment.approval;
+package org.estatio.module.capex.dom.payment.approval;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

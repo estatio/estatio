@@ -16,7 +16,7 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransi
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.PaymentLineRepository;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.party.dom.Person;
 
 /**

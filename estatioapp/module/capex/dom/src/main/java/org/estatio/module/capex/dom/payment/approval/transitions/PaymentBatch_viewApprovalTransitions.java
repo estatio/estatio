@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval.transitions;
+package org.estatio.module.capex.dom.payment.approval.transitions;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval.triggers;
+package org.estatio.module.capex.dom.payment.approval.triggers;
 
 import javax.annotation.Nullable;
 
@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
+import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

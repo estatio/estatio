@@ -1,4 +1,4 @@
-package org.estatio.capex.dom.payment.approval;
+package org.estatio.module.capex.dom.payment.approval;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -39,14 +39,14 @@ import lombok.Setter;
         @Query(
                 name = "findByDomainObject", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
+                        + "FROM org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
                         + "WHERE paymentBatch == :domainObject "
                         + "ORDER BY completedOn DESC "
         ),
         @Query(
                 name = "findByDomainObjectAndCompleted", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
+                        + "FROM org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
                         + "WHERE paymentBatch == :domainObject "
                         + "&& completed == :completed "
                         + "ORDER BY completedOn DESC "
@@ -54,7 +54,7 @@ import lombok.Setter;
         @Query(
                 name = "findByTask", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
+                        + "FROM org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition "
                         + "WHERE task == :task "
         ),
 })
