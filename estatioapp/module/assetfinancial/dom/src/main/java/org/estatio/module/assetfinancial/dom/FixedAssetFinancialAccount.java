@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.assetfinancial;
+package org.estatio.module.assetfinancial.dom;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -56,18 +56,18 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByFixedAsset", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
+                        + "FROM org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset"),
         @javax.jdo.annotations.Query(
                 name = "findByFixedAssetAndFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
+                        + "FROM org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount "
                         + "WHERE fixedAsset == :fixedAsset "
                         + "&& financialAccount == :financialAccount"),
         @javax.jdo.annotations.Query(
                 name = "findByFinancialAccount", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.assetfinancial.FixedAssetFinancialAccount "
+                        + "FROM org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount "
                         + "WHERE financialAccount == :financialAccount")
 })
 @Unique(name = "FixedAssetFinancialAccount_fixedAsset_financialAccount_IDX", members = { "fixedAsset", "financialAccount" })

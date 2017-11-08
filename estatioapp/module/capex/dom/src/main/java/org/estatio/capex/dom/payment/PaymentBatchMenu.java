@@ -19,7 +19,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.payment.manager.PaymentBatchManager;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
 
 @DomainService(

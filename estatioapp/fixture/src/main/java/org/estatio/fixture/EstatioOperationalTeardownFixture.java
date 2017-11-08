@@ -57,7 +57,7 @@ import org.estatio.dom.asset.paperclips.PaperclipForFixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.module.registration.dom.LandRegister;
 import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccount;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;

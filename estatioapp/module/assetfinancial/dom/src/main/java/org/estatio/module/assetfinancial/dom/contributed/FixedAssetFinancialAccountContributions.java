@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.dom.assetfinancial;
+package org.estatio.module.assetfinancial.dom.contributed;
 
 import java.util.List;
 
@@ -36,6 +36,8 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 

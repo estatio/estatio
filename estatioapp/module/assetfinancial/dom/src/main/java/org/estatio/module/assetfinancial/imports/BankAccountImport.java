@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.assetfinancial.imports;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 import org.estatio.dom.Importable;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;

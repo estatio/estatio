@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.assetfinancial;
+package org.estatio.module.assetfinancial;
 
 // TODO: eventually this should move to org.estatio.assetfinancial, and be renamed to EstatioAssetFinancialModule (no "Dom" part)
-public final class EstatioAssetFinancialDomModule {
+public final class EstatioAssetFinancialModule {
 
-    private EstatioAssetFinancialDomModule(){}
+    private EstatioAssetFinancialModule(){}
 
 }

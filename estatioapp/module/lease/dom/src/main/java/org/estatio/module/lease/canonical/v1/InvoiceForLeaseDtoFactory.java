@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.assetfinancial.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.dom.dto.DtoMappingHelper;
