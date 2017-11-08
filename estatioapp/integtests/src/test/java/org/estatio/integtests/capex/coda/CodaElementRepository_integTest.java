@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.capex.dom.coda.CodaElementLevel;
-import org.estatio.capex.dom.coda.CodaElementRepository;
+import org.estatio.module.capex.dom.coda.CodaElementLevel;
+import org.estatio.module.capex.dom.coda.CodaElementRepository;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

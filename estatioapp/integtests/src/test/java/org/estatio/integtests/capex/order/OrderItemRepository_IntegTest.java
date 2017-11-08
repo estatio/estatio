@@ -11,7 +11,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.party.dom.Party;

@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.items.FinancialItem;
 import org.estatio.module.capex.dom.items.FinancialItemType;

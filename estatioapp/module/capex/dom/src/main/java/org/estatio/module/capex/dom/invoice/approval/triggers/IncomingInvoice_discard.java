@@ -12,9 +12,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
+import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 

@@ -23,7 +23,7 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.incode.module.country.fixture.StatesRefData;
 
-import org.estatio.capex.fixture.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;

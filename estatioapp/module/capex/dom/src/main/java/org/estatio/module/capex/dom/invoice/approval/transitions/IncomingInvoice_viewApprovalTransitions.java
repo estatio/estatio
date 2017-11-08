@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
+import org.estatio.module.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;

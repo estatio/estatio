@@ -2,7 +2,7 @@ package org.estatio.module.capex.dom.payment.approval.tasks;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.dobj.DomainObject_nextTaskRoleAssignedToAbstract;
+import org.estatio.module.capex.dom.dobj.DomainObject_nextTaskRoleAssignedToAbstract;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;

@@ -6,7 +6,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.dobj.DomainObject_pendingTaskAbstract;
+import org.estatio.module.capex.dom.dobj.DomainObject_pendingTaskAbstract;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

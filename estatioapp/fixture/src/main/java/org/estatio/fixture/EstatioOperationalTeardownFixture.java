@@ -30,10 +30,10 @@ import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.integtestsupport.dom.TeardownFixtureAbstract;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.capex.dom.coda.CodaElement;
-import org.estatio.capex.dom.coda.CodaMapping;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.capex.dom.coda.CodaElement;
+import org.estatio.module.capex.dom.coda.CodaMapping;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;

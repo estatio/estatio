@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
-import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;

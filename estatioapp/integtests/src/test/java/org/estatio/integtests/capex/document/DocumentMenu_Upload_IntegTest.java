@@ -17,18 +17,18 @@ import org.apache.isis.applib.value.Blob;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
+import org.estatio.module.capex.app.DocumentMenu;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE;
-import static org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
+import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState.NEW;
+import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.CATEGORISE;
+import static org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType.INSTANTIATE;
 
 public class DocumentMenu_Upload_IntegTest extends EstatioIntegrationTest {
 

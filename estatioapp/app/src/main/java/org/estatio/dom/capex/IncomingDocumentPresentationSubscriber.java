@@ -12,7 +12,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 import org.incode.module.document.dom.impl.docs.Document_delete;
 
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
+import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(

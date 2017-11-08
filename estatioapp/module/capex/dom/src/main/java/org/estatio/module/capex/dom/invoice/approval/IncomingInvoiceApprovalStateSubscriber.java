@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;

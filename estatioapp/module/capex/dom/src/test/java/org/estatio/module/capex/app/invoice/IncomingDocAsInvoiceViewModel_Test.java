@@ -3,8 +3,7 @@ package org.estatio.module.capex.app.invoice;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import org.estatio.capex.dom.documents.BuyerFinder;
-import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;

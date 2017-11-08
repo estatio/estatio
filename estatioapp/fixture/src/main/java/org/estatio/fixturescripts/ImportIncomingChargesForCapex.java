@@ -20,7 +20,7 @@ package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.capex.fixture.charge.IncomingChargeFixture;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 
 public class ImportIncomingChargesForCapex extends DiscoverableFixtureScript {
 

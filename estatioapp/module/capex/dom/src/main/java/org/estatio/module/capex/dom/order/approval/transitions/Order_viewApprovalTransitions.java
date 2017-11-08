@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
+import org.estatio.module.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;

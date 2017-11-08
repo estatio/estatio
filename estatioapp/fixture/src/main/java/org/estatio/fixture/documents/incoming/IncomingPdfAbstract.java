@@ -12,7 +12,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.capex.dom.documents.DocumentMenu;
+import org.estatio.module.capex.app.DocumentMenu;
 
 public abstract class IncomingPdfAbstract extends FixtureScript {
 

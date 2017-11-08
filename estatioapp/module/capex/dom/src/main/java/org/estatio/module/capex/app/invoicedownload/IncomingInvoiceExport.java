@@ -9,7 +9,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 
-import org.estatio.capex.dom.coda.CodaElement;
+import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.project.Project;

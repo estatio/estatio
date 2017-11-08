@@ -42,7 +42,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.items.FinancialItem;
 import org.estatio.module.capex.dom.items.FinancialItemType;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;

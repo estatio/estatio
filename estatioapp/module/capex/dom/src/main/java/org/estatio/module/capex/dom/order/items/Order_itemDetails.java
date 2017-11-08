@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.project.Project;

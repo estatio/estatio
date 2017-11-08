@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.app.services.dashboard.EstatioAppHomePage;
-import org.estatio.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
+import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
 import org.estatio.module.bankaccount.dom.BankAccount;

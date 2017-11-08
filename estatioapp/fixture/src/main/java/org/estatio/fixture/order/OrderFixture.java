@@ -15,8 +15,8 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;

@@ -22,7 +22,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;

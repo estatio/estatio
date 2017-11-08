@@ -43,7 +43,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
-import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;

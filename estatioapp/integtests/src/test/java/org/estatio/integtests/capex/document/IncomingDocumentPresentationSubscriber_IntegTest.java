@@ -19,8 +19,8 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.Document_delete;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
-import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.app.DocumentMenu;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;

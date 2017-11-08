@@ -6,7 +6,7 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.capex.dom.dobj.DomainObject_tasksAbstract;
+import org.estatio.module.capex.dom.dobj.DomainObject_tasksAbstract;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

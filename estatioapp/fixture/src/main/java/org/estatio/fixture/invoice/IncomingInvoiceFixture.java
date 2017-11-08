@@ -12,9 +12,9 @@ import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
+import org.estatio.module.capex.app.DocumentMenu;
+import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsPropertyInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;

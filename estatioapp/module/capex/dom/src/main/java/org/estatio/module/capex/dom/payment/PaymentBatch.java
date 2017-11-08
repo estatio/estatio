@@ -74,7 +74,7 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;

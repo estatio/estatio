@@ -20,7 +20,7 @@ package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
+import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForCARTEST;
 import org.estatio.fixture.asset.PropertyForGraIt;

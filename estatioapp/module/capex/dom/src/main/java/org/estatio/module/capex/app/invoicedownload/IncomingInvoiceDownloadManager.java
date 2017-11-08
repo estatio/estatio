@@ -43,10 +43,10 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
-import org.estatio.capex.dom.coda.CodaElement;
-import org.estatio.capex.dom.coda.CodaMapping;
-import org.estatio.capex.dom.coda.CodaMappingRepository;
-import org.estatio.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.module.capex.dom.coda.CodaElement;
+import org.estatio.module.capex.dom.coda.CodaMapping;
+import org.estatio.module.capex.dom.coda.CodaMappingRepository;
+import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;

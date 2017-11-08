@@ -20,8 +20,8 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.capex.dom.bankaccount.verification.BankAccount_verificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -53,7 +53,7 @@ import org.estatio.fixture.party.PersonForEmmaTreasurerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
+import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 
 public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTest {
 

@@ -55,8 +55,8 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.documents.BuyerFinder;
-import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
+import org.estatio.module.capex.app.document.IncomingDocViewModel;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;

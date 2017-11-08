@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
+import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
