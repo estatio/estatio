@@ -34,11 +34,12 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.module.party.dom.Party;
 
+// TODO: REVIEW, should this be inlined as a derived collection on Party?
 @DomainService(nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)
-public class PartyRelationshipContributions extends UdoDomainService<PartyRelationshipContributions> {
+public class Party_PartyRelationshipContributions extends UdoDomainService<Party_PartyRelationshipContributions> {
 
-    public PartyRelationshipContributions() {
-        super(PartyRelationshipContributions.class);
+    public Party_PartyRelationshipContributions() {
+        super(Party_PartyRelationshipContributions.class);
     }
 
     @PostConstruct

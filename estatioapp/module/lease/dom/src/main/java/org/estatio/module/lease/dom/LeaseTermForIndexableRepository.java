@@ -24,11 +24,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.index.dom.Index;
-import org.estatio.module.index.dom.IndexValue;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = LeaseTermForIndexable.class)
 public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFactory<LeaseTermForIndexable> {
@@ -43,15 +41,5 @@ public class LeaseTermForIndexableRepository extends UdoDomainRepositoryAndFacto
         return allMatches("findByIndexAndDate", "index", index, "date", date);
     }
 
-    // //////////////////////////////////////
-
-    @Programmatic
-    @com.google.common.eventbus.Subscribe
-    @org.axonframework.eventhandling.annotation.EventHandler
-    public void on(final IndexValue.UpdateEvent ev) {
-        for (LeaseTermForIndexable term : findByIndexAndDate(ev.getSource().getIndexBase().getIndex(), ev.getSource().getStartDate())) {
-            term.verify();
-        }
-    }
 
 }

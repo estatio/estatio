@@ -73,6 +73,7 @@ public class LeaseStatusService {
 
     // //////////////////////////////////////
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -85,6 +86,7 @@ public class LeaseStatusService {
         }
     }
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -97,6 +99,7 @@ public class LeaseStatusService {
         }
     }
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -109,6 +112,7 @@ public class LeaseStatusService {
         }
     }
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -123,6 +127,7 @@ public class LeaseStatusService {
 
     // //////////////////////////////////////
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -135,6 +140,7 @@ public class LeaseStatusService {
         }
     }
 
+    // TODO: REVIEW - this is intra-module interaction, so should subscribers be used here? or is this a symptom of a module that's too large
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler

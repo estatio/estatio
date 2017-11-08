@@ -26,7 +26,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.relationship.PartyRelationshipView;
-import org.estatio.module.party.dom.relationship.PartyRelationshipContributions;
+import org.estatio.module.party.dom.relationship.Party_PartyRelationshipContributions;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.OrganisationForTopModelGb;
 import org.estatio.fixture.party.PersonForGinoVannelliGb;
@@ -56,7 +56,7 @@ public class PartyrelationshipViewService_IntegTest extends EstatioIntegrationTe
     private Party person;
 
     @Inject
-    private PartyRelationshipContributions service;
+    private Party_PartyRelationshipContributions service;
 
     @Inject
     private PartyRepository partyRepository;

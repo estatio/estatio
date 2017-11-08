@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.invoice.dom;
+package org.estatio.module.invoice.subscriptions;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +33,8 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
 import org.estatio.dom.UdoDomainService;
+import org.estatio.module.invoice.dom.Invoice;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

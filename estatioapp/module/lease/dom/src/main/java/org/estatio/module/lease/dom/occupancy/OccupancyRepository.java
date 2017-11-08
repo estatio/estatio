@@ -143,6 +143,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     // //////////////////////////////////////
 
+    // TODO: REVIEW, should this be removed since it is intra-module?  However, we might split occupancy away from lease, in which case this will be needed after all.
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -156,6 +157,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
         }
     }
 
+    // TODO: REVIEW, should this be removed since it is intra-module?  However, we might split occupancy away from lease, in which case this will be needed after all.
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler
@@ -171,6 +173,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     // //////////////////////////////////////
 
+    // TODO: REVIEW, should this be removed since it is intra-module?  However, we might split occupancy away from lease, in which case this will be needed after all.
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler

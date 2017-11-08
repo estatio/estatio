@@ -42,7 +42,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.module.invoice.dom.CommunicationChannelSubscriptions;
+import org.estatio.module.invoice.subscriptions.CommunicationChannelSubscriptions;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;

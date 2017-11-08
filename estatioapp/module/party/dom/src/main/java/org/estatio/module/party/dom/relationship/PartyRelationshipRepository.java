@@ -103,6 +103,9 @@ public class PartyRelationshipRepository extends UdoDomainRepositoryAndFactory<P
 
     // //////////////////////////////////////
 
+    /**
+     * Although this is an intra-module interaction, we use the subscriber because many of the other modules need to subscribe to this event also.
+     */
     @Programmatic
     @com.google.common.eventbus.Subscribe
     @org.axonframework.eventhandling.annotation.EventHandler

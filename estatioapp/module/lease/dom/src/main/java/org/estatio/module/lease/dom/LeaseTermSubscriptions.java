@@ -30,6 +30,7 @@ import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.dom.UdoDomainService;
 
+// TODO: REVIEW, why use a subscriber for intra-module interactions ??
 @DomainService(nature = NatureOfService.DOMAIN)
 public class LeaseTermSubscriptions extends UdoDomainService<LeaseTermSubscriptions> {
 

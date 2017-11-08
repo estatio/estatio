@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.module.lease.dom.invoicing.comms;
+package org.estatio.module.lease.subscriptions;
 
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
