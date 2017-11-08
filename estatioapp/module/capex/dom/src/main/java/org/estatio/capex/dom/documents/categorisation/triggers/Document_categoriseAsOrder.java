@@ -14,8 +14,8 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 

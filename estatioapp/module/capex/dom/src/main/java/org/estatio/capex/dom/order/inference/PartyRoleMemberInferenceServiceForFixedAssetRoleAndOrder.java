@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;

@@ -37,11 +37,11 @@ import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisa
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.PaperclipForOrder;
-import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.paperclips.PaperclipForOrder;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;

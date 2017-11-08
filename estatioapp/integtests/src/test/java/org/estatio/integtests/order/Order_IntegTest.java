@@ -28,8 +28,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;

@@ -181,7 +181,9 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:collection id="orders">
-                                <cpt:action id="findByProperty"/>
+                                <cpt:action id="findOrdersByProperty">
+                                    <cpt:named>Find by Property</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>
@@ -190,7 +192,9 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:collection id="invoicesFrom" defaultView="table">
-                                <cpt:action id="findByProperty"/>
+                                <cpt:action id="findIncomingInvoicesByProperty">
+                                    <cpt:named>Find by Property</cpt:named>
+                                </cpt:action>
                             </cpt:collection>
                         </bs3:col>
                     </bs3:row>

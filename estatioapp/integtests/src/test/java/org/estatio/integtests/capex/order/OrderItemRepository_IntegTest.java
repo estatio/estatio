@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.fixture.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;

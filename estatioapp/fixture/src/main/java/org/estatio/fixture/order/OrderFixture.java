@@ -17,11 +17,11 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.capex.dom.order.viewmodel.IncomingDocAsOrderViewModel;
-import org.estatio.capex.dom.order.viewmodel.Order_switchView;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
+import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.asset.dom.Property;

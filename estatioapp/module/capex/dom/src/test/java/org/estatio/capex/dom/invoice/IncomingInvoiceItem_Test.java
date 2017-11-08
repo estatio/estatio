@@ -15,9 +15,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
-import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;

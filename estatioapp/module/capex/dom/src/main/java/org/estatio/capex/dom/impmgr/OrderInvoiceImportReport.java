@@ -12,8 +12,8 @@ import org.apache.isis.applib.annotation.Nature;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 

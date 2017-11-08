@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

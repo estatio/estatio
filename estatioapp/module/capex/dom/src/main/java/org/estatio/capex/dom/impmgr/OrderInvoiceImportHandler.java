@@ -18,7 +18,7 @@ import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.ExcelMetaDataEnabled;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
-import org.estatio.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.OrderRepository;
 
 import lombok.Getter;
 import lombok.Setter;

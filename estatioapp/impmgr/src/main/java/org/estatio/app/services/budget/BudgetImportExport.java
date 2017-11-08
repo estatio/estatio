@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.dom.Importable;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;

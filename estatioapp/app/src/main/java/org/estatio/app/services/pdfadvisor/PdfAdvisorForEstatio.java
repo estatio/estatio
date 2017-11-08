@@ -26,7 +26,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
-import org.estatio.capex.dom.order.viewmodel.IncomingDocAsOrderViewModel;
+import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PdfAdvisorForEstatio implements PdfJsViewerAdvisor {
