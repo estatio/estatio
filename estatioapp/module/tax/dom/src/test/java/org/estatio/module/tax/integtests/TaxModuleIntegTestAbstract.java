@@ -34,9 +34,9 @@ import org.isisaddons.module.security.SecurityModule;
 import org.incode.module.country.dom.CountryModule;
 
 import org.estatio.module.tax.EstatioTaxModule;
-import org.estatio.module.tax.fixture.TaxModule_setup;
-import org.estatio.module.tax.fixture.TaxModule_setupPrereqs;
-import org.estatio.module.tax.fixture.TaxModule_tearDown;
+import org.estatio.module.tax.fixtures.TaxModule_setup;
+import org.estatio.module.tax.fixtures.TaxModule_setupPrereqs;
+import org.estatio.module.tax.fixtures.TaxModule_tearDown;
 
 public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 

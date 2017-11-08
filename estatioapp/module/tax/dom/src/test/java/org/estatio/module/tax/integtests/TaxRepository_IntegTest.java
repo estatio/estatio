@@ -29,7 +29,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
-import org.estatio.module.tax.fixture.data.Tax_data;
+import org.estatio.module.tax.fixtures.data.Tax_data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

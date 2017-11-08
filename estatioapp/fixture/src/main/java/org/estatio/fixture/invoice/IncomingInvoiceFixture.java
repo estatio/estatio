@@ -38,7 +38,7 @@ import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
 import org.estatio.fixture.project.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
-import org.estatio.module.tax.fixture.data.Tax_data;
+import org.estatio.module.tax.fixtures.data.Tax_data;
 
 public class IncomingInvoiceFixture extends FixtureScript {
 

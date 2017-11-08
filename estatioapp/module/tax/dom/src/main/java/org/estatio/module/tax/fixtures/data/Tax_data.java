@@ -1,4 +1,4 @@
-package org.estatio.module.tax.fixture.data;
+package org.estatio.module.tax.fixtures.data;
 
 import java.math.BigDecimal;
 import java.util.List;

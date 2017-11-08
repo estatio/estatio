@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.tax.fixture;
+package org.estatio.module.tax.fixtures;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 

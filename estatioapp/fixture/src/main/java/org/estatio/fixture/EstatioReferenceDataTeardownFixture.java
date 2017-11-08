@@ -33,7 +33,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.link.dom.Link;
-import org.estatio.module.tax.fixture.TaxModule_tearDown;
+import org.estatio.module.tax.fixtures.TaxModule_tearDown;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
