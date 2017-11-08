@@ -16,7 +16,7 @@ import org.estatio.capex.dom.state.StateTransitionRepository;
 import org.estatio.capex.dom.state.StateTransitionServiceSupportAbstract;
 import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.TaskAssignmentStrategy;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;

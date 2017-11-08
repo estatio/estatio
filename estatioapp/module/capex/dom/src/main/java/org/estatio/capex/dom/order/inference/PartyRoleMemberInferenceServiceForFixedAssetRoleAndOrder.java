@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
 

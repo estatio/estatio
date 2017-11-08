@@ -25,14 +25,13 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY

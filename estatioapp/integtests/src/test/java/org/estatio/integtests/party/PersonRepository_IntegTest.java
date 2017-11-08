@@ -27,7 +27,7 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;

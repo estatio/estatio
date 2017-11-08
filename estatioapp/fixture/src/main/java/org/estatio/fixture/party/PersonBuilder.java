@@ -31,7 +31,7 @@ import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.role.IPartyRoleType;

@@ -20,7 +20,7 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.fixture.asset.PropertyForMacFr;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForFr;

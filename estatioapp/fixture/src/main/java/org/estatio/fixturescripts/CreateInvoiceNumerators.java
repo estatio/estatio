@@ -25,9 +25,9 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;

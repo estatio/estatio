@@ -32,6 +32,10 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetForTesting;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationType;
+import org.estatio.module.asset.dom.registration.FixedAsset_registrationContributions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

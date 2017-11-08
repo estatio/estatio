@@ -34,7 +34,7 @@ import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.asset.ownership.FixedAssetOwnership;
+import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 

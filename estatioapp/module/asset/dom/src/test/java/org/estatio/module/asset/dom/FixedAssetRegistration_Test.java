@@ -26,9 +26,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationForTesting;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationType;
 
 public class FixedAssetRegistration_Test {
 

@@ -19,7 +19,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.NameType;
 
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 
 import lombok.Getter;
 import lombok.Setter;

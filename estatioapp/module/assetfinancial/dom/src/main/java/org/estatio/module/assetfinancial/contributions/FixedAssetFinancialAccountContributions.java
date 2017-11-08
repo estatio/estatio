@@ -33,9 +33,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.dom.asset.role.FixedAssetRole;
-import org.estatio.dom.asset.role.FixedAssetRoleRepository;
-import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
