@@ -23,9 +23,9 @@ import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.partioning.Partitioning;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.keytable.KeyTable;
+import org.estatio.module.budgeting.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;

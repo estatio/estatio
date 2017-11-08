@@ -68,7 +68,7 @@ import org.estatio.capex.dom.state.StateTransitionType;
 import org.estatio.capex.dom.state.Stateful;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;

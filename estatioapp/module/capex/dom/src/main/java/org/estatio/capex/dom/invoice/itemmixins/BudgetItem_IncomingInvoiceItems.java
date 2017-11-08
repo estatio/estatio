@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 
 /**
  * This cannot be inlined (must be a mixin) because BudgetItem does not know about incoming invoices.

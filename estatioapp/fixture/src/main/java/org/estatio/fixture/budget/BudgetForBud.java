@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.asset.Property;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.charge.ChargeRefData;

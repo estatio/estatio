@@ -17,7 +17,7 @@ import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderItemRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 

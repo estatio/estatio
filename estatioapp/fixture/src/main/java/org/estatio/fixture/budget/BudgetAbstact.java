@@ -30,11 +30,11 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemValueRepository;
-import org.estatio.dom.budgeting.partioning.PartitioningRepository;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItemValue;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItemValueRepository;
+import org.estatio.module.budgeting.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 

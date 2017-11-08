@@ -24,8 +24,8 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.charge.dom.Charge;
 
 public abstract class BudgetItemAbstact extends FixtureScript {

@@ -7,9 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.module.budgeting.dom.Distributable;
-import org.estatio.module.budgeting.dom.DistributionService;
+import org.estatio.module.budgeting.dom.keyitem.KeyItem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

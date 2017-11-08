@@ -24,13 +24,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.module.budgeting.dom.partioning.PartitionItem;
 import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItemValue;
+import org.estatio.module.budgeting.dom.keyitem.KeyItem;
+import org.estatio.module.budgeting.dom.keytable.KeyTable;
+import org.estatio.module.budgeting.dom.keytable.KeyValueMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

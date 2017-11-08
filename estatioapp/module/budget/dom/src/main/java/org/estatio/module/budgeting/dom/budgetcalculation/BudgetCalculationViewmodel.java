@@ -24,8 +24,8 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 
-import org.estatio.dom.budgeting.partioning.PartitionItem;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.module.budgeting.dom.partioning.PartitionItem;
+import org.estatio.module.budgeting.dom.keyitem.KeyItem;
 
 import lombok.Getter;
 import lombok.Setter;

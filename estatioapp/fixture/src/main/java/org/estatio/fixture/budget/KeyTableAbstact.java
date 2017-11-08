@@ -24,10 +24,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
-import org.estatio.dom.budgeting.keytable.FoundationValueType;
-import org.estatio.dom.budgeting.keytable.KeyTable;
-import org.estatio.dom.budgeting.keytable.KeyTableRepository;
-import org.estatio.dom.budgeting.keytable.KeyValueMethod;
+import org.estatio.module.budgeting.dom.keytable.FoundationValueType;
+import org.estatio.module.budgeting.dom.keytable.KeyTable;
+import org.estatio.module.budgeting.dom.keytable.KeyTableRepository;
+import org.estatio.module.budgeting.dom.keytable.KeyValueMethod;
 
 public abstract class KeyTableAbstact extends FixtureScript {
 

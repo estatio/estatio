@@ -10,10 +10,10 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.module.budgeting.dom.partioning.PartitionItem;
 import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
-import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.keyitem.KeyItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetCalculationService {

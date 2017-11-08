@@ -37,7 +37,7 @@ import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationRepos
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgeting.dom.budgetcalculation.Status;
-import org.estatio.dom.budgeting.keytable.KeyTable;
+import org.estatio.module.budgeting.dom.keytable.KeyTable;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;

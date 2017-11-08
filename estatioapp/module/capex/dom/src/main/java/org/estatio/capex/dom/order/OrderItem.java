@@ -52,7 +52,7 @@ import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budgetitem.BudgetItem;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
