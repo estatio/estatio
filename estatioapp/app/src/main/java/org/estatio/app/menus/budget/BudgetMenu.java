@@ -20,8 +20,8 @@ import org.estatio.app.services.budget.BudgetImportExportManager;
 import org.estatio.dom.asset.Property;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;
 

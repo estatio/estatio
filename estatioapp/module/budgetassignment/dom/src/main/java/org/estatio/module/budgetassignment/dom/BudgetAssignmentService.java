@@ -18,11 +18,11 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
-import org.estatio.dom.budgetassignment.viewmodels.CalculationResultViewModel;
-import org.estatio.dom.budgetassignment.viewmodels.DetailedCalculationResultViewmodel;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.module.budgetassignment.dom.contributed.results.CalculationResultViewModel;
+import org.estatio.module.budgetassignment.dom.contributed.results.DetailedCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;

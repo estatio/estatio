@@ -28,9 +28,9 @@ import org.junit.rules.ExpectedException;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgetassignment.override.BudgetOverride;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideDummy;
-import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideDummy;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
 import org.estatio.module.charge.dom.Charge;
 
