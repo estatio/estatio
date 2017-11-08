@@ -12,11 +12,11 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.user.UserService;
 
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgeting.budget.Budget;

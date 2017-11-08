@@ -15,12 +15,14 @@
  * under the License.
  */
 
-package org.estatio.dom.budgetassignment.calculationresult;
+package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 public class BudgetCalculationResultLink_Test {

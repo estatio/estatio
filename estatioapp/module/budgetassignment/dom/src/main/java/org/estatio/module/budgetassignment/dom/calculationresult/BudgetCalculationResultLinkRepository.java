@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment.calculationresult;
+package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import java.util.List;
 

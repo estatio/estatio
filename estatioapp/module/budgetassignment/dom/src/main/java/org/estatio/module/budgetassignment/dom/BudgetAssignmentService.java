@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment;
+package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,11 +13,11 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLinkRepository;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverride;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;

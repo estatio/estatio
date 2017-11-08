@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment.calculationresult;
+package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -45,29 +45,29 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun " +
                         "WHERE lease == :lease && "
                         + "budget == :budget && "
                         + "type == :type"),
         @Query(
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun " +
                         "WHERE lease == :lease"),
         @Query(
                 name = "findByBudget", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun " +
                         "WHERE budget == :budget"),
         @Query(
                 name = "findByBudgetAndType", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun " +
                         "WHERE budget == :budget && type == :type"),
         @Query(
                 name = "findByBudgetAndTypeAndStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRun " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun " +
                         "WHERE budget == :budget && type == :type && status == :status")
 })
 @Unique(name = "BudgetCalculationRun_lease_budget_type_UNQ", members = { "lease", "budget", "type" })

@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment.calculationresult;
+package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -29,18 +29,18 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink " +
                         "WHERE budgetCalculationResult == :budgetCalculationResult && "
                         + "leaseTermForServiceCharge == :leaseTermForServiceCharge"),
         @Query(
                 name = "findByCalculationResult", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink " +
                         "WHERE budgetCalculationResult == :budgetCalculationResult"),
         @Query(
                 name = "findByLeaseTerm", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultLink " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink " +
                         "WHERE leaseTermForServiceCharge == :leaseTermForServiceCharge")
 })
 @Unique(name = "BudgetCalculationResultLink_result_leaseTerm_UNQ", members = { "budgetCalculationResult", "leaseTermForServiceCharge" })

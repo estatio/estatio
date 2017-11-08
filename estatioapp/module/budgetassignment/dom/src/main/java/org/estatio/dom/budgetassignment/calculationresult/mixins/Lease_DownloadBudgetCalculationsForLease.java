@@ -15,8 +15,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.dom.budgetassignment.BudgetAssignmentService;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.dom.budgetassignment.viewmodels.DetailedCalculationResultViewmodel;
 import org.estatio.dom.budgeting.budget.Budget;
 import org.estatio.dom.budgeting.budget.BudgetRepository;

@@ -1,4 +1,4 @@
-package org.estatio.dom.budgetassignment.calculationresult;
+package org.estatio.module.budgetassignment.dom.calculationresult;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
                         "WHERE budgetCalculationRun == :budgetCalculationRun && "
                         + "invoiceCharge == :invoiceCharge")
 })

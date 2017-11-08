@@ -18,8 +18,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.app.services.budget.BudgetImportExportManager;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResult;
-import org.estatio.dom.budgetassignment.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValue;
 import org.estatio.dom.budgetassignment.override.BudgetOverrideValueRepository;
 import org.estatio.dom.budgeting.budget.Budget;
