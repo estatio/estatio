@@ -1,4 +1,4 @@
-package org.estatio.dom.bankmandate.contributed;
+package org.estatio.module.bankmandate.dom.contributed;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +16,9 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
-import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementRoleTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.party.dom.Organisation;
 
 @Mixin(method="act")

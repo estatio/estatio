@@ -34,9 +34,9 @@ import org.incode.module.base.dom.utils.StringUtils;
 import org.estatio.dom.UdoDomainService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
-import org.estatio.dom.bankmandate.BankMandateRepository;
+import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandateRepository;
 
 @DomainService(
     nature = NatureOfService.VIEW_MENU_ONLY

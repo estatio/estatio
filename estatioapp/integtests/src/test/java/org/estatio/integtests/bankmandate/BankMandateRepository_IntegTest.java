@@ -27,10 +27,10 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateRepository;
-import org.estatio.dom.bankmandate.Scheme;
-import org.estatio.dom.bankmandate.SequenceType;
+import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandateRepository;
+import org.estatio.module.bankmandate.dom.Scheme;
+import org.estatio.module.bankmandate.dom.SequenceType;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.lease.dom.Lease;

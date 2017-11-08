@@ -1,4 +1,4 @@
-package org.estatio.dom.bankmandate.canonical.v1;
+package org.estatio.module.bankmandate.canonical.v1;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +9,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.bankmandate.BankMandateAgreementRoleTypeEnum;
-import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementRoleTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.dom.dto.DtoFactoryAbstract;
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
@@ -21,7 +21,7 @@ import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;

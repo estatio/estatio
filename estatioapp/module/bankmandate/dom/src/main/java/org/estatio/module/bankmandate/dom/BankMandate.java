@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankmandate;
+package org.estatio.module.bankmandate.dom;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findBankMandatesFor", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.bankmandate.BankMandate "
+                        + "FROM org.estatio.module.bankmandate.dom.BankMandate "
                         + "WHERE bankAccount == :bankAccount")
 })
 @DomainObject(editing = Editing.DISABLED)

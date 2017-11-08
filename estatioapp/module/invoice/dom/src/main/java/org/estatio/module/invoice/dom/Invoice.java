@@ -72,7 +72,7 @@ import org.incode.module.document.dom.types.AtPathType;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.party.dom.Party;

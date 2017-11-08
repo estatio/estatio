@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankmandate.contributed;
+package org.estatio.module.bankmandate.dom.contributed;
 
 import java.util.Collection;
 
@@ -43,8 +43,8 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateAgreementTypeEnum;
+import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.party.dom.Party;
 
 /**

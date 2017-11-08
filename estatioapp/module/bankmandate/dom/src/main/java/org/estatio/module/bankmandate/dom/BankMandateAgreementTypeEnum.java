@@ -1,4 +1,4 @@
-package org.estatio.dom.bankmandate;
+package org.estatio.module.bankmandate.dom;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
