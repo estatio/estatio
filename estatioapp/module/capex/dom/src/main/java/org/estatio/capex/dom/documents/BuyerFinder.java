@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

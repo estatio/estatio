@@ -23,9 +23,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
-
-import org.assertj.core.util.Lists;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -41,16 +40,16 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.app.DirectDebitsMenu;
-import org.estatio.module.capex.app.paydd.DirectDebitsManager;
-import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.app.PaymentBatchMenu;
+import org.estatio.module.capex.app.paydd.DirectDebitsManager;
+import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
-import org.estatio.module.capex.app.paymentbatch.PaymentBatchManager;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.Task_checkState;

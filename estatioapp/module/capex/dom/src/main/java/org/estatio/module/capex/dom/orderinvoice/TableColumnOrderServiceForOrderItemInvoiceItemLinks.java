@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.OrderItem;
 
 @DomainService(nature = NatureOfService.DOMAIN)

@@ -2,7 +2,7 @@ package org.estatio.module.capex.dom.util;
 
 import java.util.List;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
 
 public class InvoicePageRange {
 

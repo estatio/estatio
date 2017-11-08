@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.task.Task;
 
 /**

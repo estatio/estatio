@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.coda.CodaMapping;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
-import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
 
 /**
  * This cannot be inlined (needs to be a mixin) because IncomingInvoiceItem does not know about Coda.

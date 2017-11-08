@@ -16,8 +16,8 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanProof;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.bankaccount.dom.BankAccount;

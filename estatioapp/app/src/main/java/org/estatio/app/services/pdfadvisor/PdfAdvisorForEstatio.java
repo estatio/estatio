@@ -25,7 +25,7 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewerAdvisor;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
-import org.estatio.capex.dom.invoice.viewmodel.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
 import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
 
 @DomainService(nature = NatureOfService.DOMAIN)

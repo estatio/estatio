@@ -18,8 +18,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderService;
 
-import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.party.dom.Party;
 
 import iso.std.iso._20022.tech.xsd.pain_001_001.ActiveOrHistoricCurrencyAndAmount;

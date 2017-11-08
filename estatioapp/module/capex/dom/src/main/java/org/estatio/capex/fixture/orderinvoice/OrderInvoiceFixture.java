@@ -11,8 +11,8 @@ import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.excel.dom.util.Mode;
 
-import org.estatio.capex.dom.impmgr.OrderInvoiceImportHandler;
-import org.estatio.capex.dom.impmgr.OrderInvoiceLine;
+import org.estatio.module.capex.imports.OrderInvoiceImportHandler;
+import org.estatio.module.capex.imports.OrderInvoiceLine;
 
 public class OrderInvoiceFixture extends ExcelFixture2 {
 

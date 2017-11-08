@@ -18,10 +18,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByDirectDebit;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByDirectDebit;
 import org.estatio.module.invoice.dom.PaymentMethod;
 
 import lombok.AccessLevel;

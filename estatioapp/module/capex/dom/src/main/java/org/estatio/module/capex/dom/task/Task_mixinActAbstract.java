@@ -2,10 +2,10 @@ package org.estatio.module.capex.dom.task;
 
 import javax.inject.Inject;
 
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 
-import org.estatio.module.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
 import org.estatio.module.capex.EstatioCapexModule;
+import org.estatio.module.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 

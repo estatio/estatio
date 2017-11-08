@@ -26,7 +26,8 @@ import javax.jdo.annotations.VersionStrategy;
 import javax.validation.constraints.Digits;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -56,8 +57,12 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.bankaccount.dom.utils.IBANValidator;
+import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
@@ -67,12 +72,8 @@ import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
-import org.estatio.module.bankaccount.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;

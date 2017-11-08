@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
@@ -29,21 +30,21 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.payment.CreditTransfer;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.module.capex.dom.payment.PaymentBatchRepository;
 import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.approval.triggers.PaymentBatch_complete;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 

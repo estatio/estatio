@@ -2,7 +2,7 @@ package org.estatio.module.capex.dom.orderinvoice;
 
 import java.math.BigDecimal;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 
 /**
  * @see OrderItem_abstractMixinInvoiceItemLinks

@@ -17,7 +17,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachInvoiceAsIbanProof;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.invoice.dom.DocumentTypeData;

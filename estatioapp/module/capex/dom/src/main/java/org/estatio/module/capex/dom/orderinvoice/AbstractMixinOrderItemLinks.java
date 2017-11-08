@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 
 abstract class AbstractMixinOrderItemLinks<T> {

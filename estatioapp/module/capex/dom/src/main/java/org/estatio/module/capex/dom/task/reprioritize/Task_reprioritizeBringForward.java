@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;

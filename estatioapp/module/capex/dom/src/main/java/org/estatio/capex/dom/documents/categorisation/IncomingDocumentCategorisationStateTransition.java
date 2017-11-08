@@ -28,7 +28,7 @@ import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.module.capex.dom.task.Task;

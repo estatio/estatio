@@ -21,8 +21,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.title.TitleService;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.project.Project;

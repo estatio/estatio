@@ -2,9 +2,8 @@ package org.estatio.module.capex.platform.pdfmanipulator;
 
 import java.util.TreeSet;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import org.assertj.core.util.Lists;
 
 import lombok.Data;
 

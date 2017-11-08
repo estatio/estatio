@@ -50,11 +50,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.capex.dom.items.FinancialItem;
-import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.UdoDomainObject;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.items.FinancialItem;
+import org.estatio.module.capex.dom.items.FinancialItemType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 

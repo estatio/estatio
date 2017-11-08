@@ -7,9 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 

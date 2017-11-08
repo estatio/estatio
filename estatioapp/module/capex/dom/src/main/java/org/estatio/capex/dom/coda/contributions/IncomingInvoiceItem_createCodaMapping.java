@@ -11,7 +11,7 @@ import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.coda.CodaMappingRepository;
 import org.estatio.capex.dom.coda.CodaTransactionType;
 import org.estatio.capex.dom.coda.DocumentType;
-import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.charge.dom.Charge;

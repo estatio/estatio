@@ -14,7 +14,7 @@ import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;

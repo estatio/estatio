@@ -11,7 +11,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.party.dom.PartyRepository;
 
 public class BuyerFinder_Test {

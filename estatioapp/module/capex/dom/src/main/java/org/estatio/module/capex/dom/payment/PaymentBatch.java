@@ -39,8 +39,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
-import org.assertj.core.util.Lists;
 import org.joda.time.DateTime;
 
 import org.apache.isis.applib.annotation.Action;
@@ -75,16 +75,14 @@ import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 import org.incode.module.communications.dom.mixins.DocumentConstants;
 
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.invoice.manager.PdfBoxService2;
+import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
-import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
-import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
-import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
 import org.estatio.module.capex.dom.state.NatureOfTransition;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
@@ -92,8 +90,10 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.capex.platform.PdfBoxService2;
+import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
+import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
+import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
