@@ -49,8 +49,8 @@ import org.incode.module.base.dom.with.WithInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 
 import lombok.Getter;

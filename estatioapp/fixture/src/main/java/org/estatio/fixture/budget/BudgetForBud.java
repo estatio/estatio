@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;

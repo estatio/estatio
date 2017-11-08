@@ -27,10 +27,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.budgeting.budgetcalculation.Status;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFixed;
-import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
+import org.estatio.module.budgeting.dom.budgetcalculation.Status;
 
 public class BudgetOverrideValue_Test {
 

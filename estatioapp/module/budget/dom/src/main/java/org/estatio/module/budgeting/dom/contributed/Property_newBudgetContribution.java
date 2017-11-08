@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.budget;
+package org.estatio.module.budgeting.dom.contributed;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY

@@ -64,8 +64,8 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
 import org.estatio.dom.budgeting.keyitem.KeyItem;

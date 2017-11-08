@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.budgeting.budget;
+package org.estatio.module.budgeting.dom.budget;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -60,10 +60,10 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.api.BudgetItemCreator;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.api.BudgetItemCreator;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
@@ -94,13 +94,13 @@ import lombok.Setter;
         @Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budget.Budget " +
+                        "FROM org.estatio.module.budgeting.dom.budget.Budget " +
                         "WHERE property == :property " +
                         "ORDER BY startDate DESC"),
         @Query(
                 name = "findByPropertyAndStartDate", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.budgeting.budget.Budget " +
+                        "FROM org.estatio.module.budgeting.dom.budget.Budget " +
                         "WHERE property == :property && startDate == :startDate")
 })
 @Unique(name = "Budget_property_startDate_UNQ", members = { "property", "startDate" })

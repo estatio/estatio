@@ -17,7 +17,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFixed;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;

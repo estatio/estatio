@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.module.budgeting.dom.budgetcalculation;
 
 import java.math.BigDecimal;
 

@@ -31,7 +31,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;

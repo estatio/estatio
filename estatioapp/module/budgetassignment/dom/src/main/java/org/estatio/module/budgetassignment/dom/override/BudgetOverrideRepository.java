@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Lease;
 

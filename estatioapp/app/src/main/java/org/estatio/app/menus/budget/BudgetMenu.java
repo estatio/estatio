@@ -22,8 +22,8 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

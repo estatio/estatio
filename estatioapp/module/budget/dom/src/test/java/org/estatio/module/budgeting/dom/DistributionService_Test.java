@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting;
+package org.estatio.module.budgeting.dom;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.Test;
 
 import org.estatio.dom.budgeting.keyitem.KeyItem;
+import org.estatio.module.budgeting.dom.Distributable;
+import org.estatio.module.budgeting.dom.DistributionService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

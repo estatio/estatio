@@ -12,12 +12,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.BudgetRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;

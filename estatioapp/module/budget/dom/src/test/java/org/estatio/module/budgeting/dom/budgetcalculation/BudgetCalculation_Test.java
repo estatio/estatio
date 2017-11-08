@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.module.budgeting.dom.budgetcalculation;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -28,9 +28,11 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budgeting.dom.budgetcalculation.Status;
 import org.estatio.module.charge.dom.Charge;
 
 public class BudgetCalculation_Test {

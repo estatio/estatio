@@ -31,7 +31,7 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForFlatRat
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideForMax;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideType;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Lease;
 

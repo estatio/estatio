@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.module.budgeting.dom.budgetcalculation;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.budgeting.partioning.PartitionItem;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemValue;
 import org.estatio.dom.budgeting.keyitem.KeyItem;

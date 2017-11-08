@@ -1,4 +1,4 @@
-package org.estatio.dom.viewmodels;
+package org.estatio.module.budgeting.imports;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,9 +25,9 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
 import org.estatio.dom.budgeting.partioning.PartitionItemRepository;
 import org.estatio.dom.budgeting.partioning.PartitionItem;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.BudgetRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.budgetitem.BudgetItemRepository;
 import org.estatio.dom.budgeting.keyitem.KeyItem;

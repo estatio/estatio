@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.module.budgeting.dom.budgetcalculation;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.partioning.PartitionItem;

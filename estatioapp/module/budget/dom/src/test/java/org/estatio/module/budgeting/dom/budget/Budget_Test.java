@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budget;
+package org.estatio.module.budgeting.dom.budget;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;

@@ -30,11 +30,11 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budget.BudgetRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculation;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.BudgetRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;

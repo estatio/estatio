@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.budgetcalculation;
+package org.estatio.module.budgeting.dom.budgetcalculation;
 
 
 public enum BudgetCalculationType {

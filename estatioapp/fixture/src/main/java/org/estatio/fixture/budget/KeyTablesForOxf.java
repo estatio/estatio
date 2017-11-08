@@ -20,7 +20,7 @@ package org.estatio.fixture.budget;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.dom.budgeting.keytable.FoundationValueType;
 import org.estatio.dom.budgeting.keytable.KeyValueMethod;
 import org.estatio.fixture.asset.PropertyForOxfGb;

@@ -59,9 +59,9 @@ import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.budgeting.Distributable;
-import org.estatio.dom.budgeting.DistributionService;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.Distributable;
+import org.estatio.module.budgeting.dom.DistributionService;
+import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.dom.budgeting.keyitem.KeyItem;
 import org.estatio.dom.budgeting.keyitem.KeyItemRepository;
 

@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.api;
+package org.estatio.module.budgeting.dom.api;
 
 import java.math.BigDecimal;
 

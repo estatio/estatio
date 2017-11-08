@@ -15,7 +15,7 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.module.budgetassignment.dom.contributed.results.CalculationResultViewModel;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about CalculationResultViewModel

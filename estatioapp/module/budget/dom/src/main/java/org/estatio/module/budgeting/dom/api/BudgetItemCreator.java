@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting.api;
+package org.estatio.module.budgeting.dom.api;
 
 import org.estatio.dom.budgeting.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;

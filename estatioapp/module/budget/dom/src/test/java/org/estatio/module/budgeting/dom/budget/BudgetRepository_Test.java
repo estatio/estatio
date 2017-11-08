@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.dom.budgeting.budget;
+package org.estatio.module.budgeting.dom.budget;
 
 import java.util.List;
 
@@ -32,6 +32,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.estatio.dom.asset.Property;
+
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;

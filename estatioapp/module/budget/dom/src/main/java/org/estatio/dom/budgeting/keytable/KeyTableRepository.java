@@ -18,7 +18,7 @@ package org.estatio.dom.budgeting.keytable;
 
 import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.budgeting.budget.Budget;
+import org.estatio.module.budgeting.dom.budget.Budget;
 
 import java.util.List;
 

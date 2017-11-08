@@ -42,7 +42,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.budgeting.Distributable;
+import org.estatio.module.budgeting.dom.Distributable;
 import org.estatio.dom.budgeting.keytable.KeyTable;
 
 import lombok.Getter;

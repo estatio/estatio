@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
-import org.estatio.dom.budgeting.budget.Budget;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationService;
-import org.estatio.dom.budgeting.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetAssignmentService.

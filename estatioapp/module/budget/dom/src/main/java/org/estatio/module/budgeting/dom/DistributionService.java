@@ -1,4 +1,4 @@
-package org.estatio.dom.budgeting;
+package org.estatio.module.budgeting.dom;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -9,7 +9,7 @@ public class DistributionService {
 
     /**
      * @return a {@link List} of
-     * {@link org.estatio.dom.budgeting.Distributable} items with {@link BigDecimal} targetTotal
+     * {@link Distributable} items with {@link BigDecimal} targetTotal
      * equally distributed over {@link BigDecimal} item.value according to
      * {@link BigDecimal} item.sourceValue.
      *

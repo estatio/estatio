@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.budgeting;
+package org.estatio.module.budgeting;
 
 // TODO: eventually this should move to org.estatio.budgeting, and be renamed to EstatioBudgetingModule (no "Dom" part)
-public final class EstatioBudgetingDomModule {
+public final class EstatioBudgetingModule {
 
-    private EstatioBudgetingDomModule(){}
+    private EstatioBudgetingModule(){}
 
 }
