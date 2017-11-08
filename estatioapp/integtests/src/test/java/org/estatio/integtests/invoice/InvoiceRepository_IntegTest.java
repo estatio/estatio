@@ -62,7 +62,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.module.currency.fixture.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;

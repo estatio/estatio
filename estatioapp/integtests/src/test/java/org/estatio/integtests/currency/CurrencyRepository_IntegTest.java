@@ -27,7 +27,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
-import org.estatio.module.currency.fixture.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

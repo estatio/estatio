@@ -26,7 +26,7 @@ import org.incode.module.country.fixture.StatesRefData;
 import org.estatio.capex.fixture.charge.IncomingChargeFixture;
 import org.estatio.fixture.charge.ChargeGroupRefData;
 import org.estatio.fixture.charge.ChargeRefData;
-import org.estatio.module.currency.fixture.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.index.IndexRefData;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.tax.fixtures.TaxModule_setup;
