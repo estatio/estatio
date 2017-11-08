@@ -3,9 +3,9 @@ package org.estatio.module.lease.dom;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.agreement.commchantype.AgreementRoleCommunicationChannelTypeServiceSupportAbstract;
-import org.estatio.dom.agreement.commchantype.IAgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.type.IAgreementType;
+import org.estatio.module.agreement.dom.commchantype.AgreementRoleCommunicationChannelTypeServiceSupportAbstract;
+import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunicationChannelType;
+import org.estatio.module.agreement.dom.type.IAgreementType;
 
 public enum AgreementRoleCommunicationChannelTypeEnum implements IAgreementRoleCommunicationChannelType {
     INVOICE_ADDRESS,

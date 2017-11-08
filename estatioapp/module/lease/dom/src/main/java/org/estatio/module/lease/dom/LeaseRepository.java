@@ -39,11 +39,11 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementType;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementType;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;

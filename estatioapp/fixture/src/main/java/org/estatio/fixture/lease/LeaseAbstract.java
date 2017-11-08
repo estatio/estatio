@@ -41,12 +41,12 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.commchantype.IAgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelType;
+import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunicationChannelType;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;

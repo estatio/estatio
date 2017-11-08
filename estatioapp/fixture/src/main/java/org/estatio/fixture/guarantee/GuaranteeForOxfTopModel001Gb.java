@@ -20,7 +20,7 @@ package org.estatio.fixture.guarantee;
 
 import javax.inject.Inject;
 
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeAgreementRoleTypeEnum;
 import org.estatio.module.guarantee.dom.GuaranteeType;

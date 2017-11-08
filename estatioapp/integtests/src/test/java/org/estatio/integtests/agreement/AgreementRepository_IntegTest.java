@@ -27,11 +27,11 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementType;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementType;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

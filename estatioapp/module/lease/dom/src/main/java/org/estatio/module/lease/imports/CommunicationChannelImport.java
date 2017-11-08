@@ -29,10 +29,10 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypeRepository;
-import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelType;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;

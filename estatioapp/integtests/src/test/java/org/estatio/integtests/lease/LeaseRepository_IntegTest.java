@@ -31,8 +31,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.app.menus.asset.PropertyMenu;
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.lease.dom.Lease;

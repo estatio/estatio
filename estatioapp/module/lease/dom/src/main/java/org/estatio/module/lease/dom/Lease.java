@@ -67,11 +67,11 @@ import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.agreement.type.AgreementType;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.Property;

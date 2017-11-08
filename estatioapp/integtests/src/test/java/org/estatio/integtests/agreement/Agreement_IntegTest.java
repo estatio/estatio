@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementRepository;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.party.dom.PartyRepository;

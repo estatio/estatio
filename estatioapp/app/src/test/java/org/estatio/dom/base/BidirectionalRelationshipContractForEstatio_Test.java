@@ -35,8 +35,8 @@ import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByNam
 import org.incode.module.unittestsupport.dom.with.InstantiatorForComparableByReference;
 import org.incode.module.unittestsupport.dom.with.InstantiatorForWithStartDate;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementForTesting;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetForTesting;
 import org.estatio.module.lease.dom.InstantiatorForLeaseItem;

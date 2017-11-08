@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRepository;
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;

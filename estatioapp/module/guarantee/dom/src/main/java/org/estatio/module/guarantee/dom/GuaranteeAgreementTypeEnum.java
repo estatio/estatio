@@ -3,8 +3,8 @@ package org.estatio.module.guarantee.dom;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.agreement.type.AgreementTypeServiceSupportAbstract;
-import org.estatio.dom.agreement.type.IAgreementType;
+import org.estatio.module.agreement.dom.type.AgreementTypeServiceSupportAbstract;
+import org.estatio.module.agreement.dom.type.IAgreementType;
 
 public enum GuaranteeAgreementTypeEnum implements IAgreementType {
     GUARANTEE;

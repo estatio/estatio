@@ -28,10 +28,10 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.agreement.AgreementRepository;
-import org.estatio.dom.agreement.role.AgreementRoleType;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleType;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 

@@ -27,8 +27,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.incode.module.country.dom.impl.Country;

@@ -36,8 +36,8 @@ import org.isisaddons.module.security.dom.role.ApplicationRoleRepository;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.agreement.AgreementRoleRepository;
-import org.estatio.dom.agreement.PartySubscriptions;
+import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.estatio.module.agreement.subscriptions.PartySubscriptions;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;

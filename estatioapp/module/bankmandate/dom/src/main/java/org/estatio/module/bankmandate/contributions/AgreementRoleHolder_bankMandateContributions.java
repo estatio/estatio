@@ -39,10 +39,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainService;
 import org.incode.module.base.dom.with.WithInterval;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleHolder;
-import org.estatio.dom.agreement.type.AgreementType;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.AgreementRoleHolder;
+import org.estatio.module.agreement.dom.type.AgreementType;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.party.dom.Party;

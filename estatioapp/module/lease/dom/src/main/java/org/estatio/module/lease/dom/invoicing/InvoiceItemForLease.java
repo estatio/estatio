@@ -36,8 +36,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;

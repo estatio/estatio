@@ -40,8 +40,8 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
-import org.estatio.dom.agreement.type.AgreementTypeRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;

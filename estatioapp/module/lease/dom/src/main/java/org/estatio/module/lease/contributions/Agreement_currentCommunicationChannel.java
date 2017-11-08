@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.dom.agreement.Agreement;
+import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.lease.dom.invoicing.AgreementCommunicationChannelLocator;
 
 // TODO: there's only one subclass of this, so why not push this logic down?

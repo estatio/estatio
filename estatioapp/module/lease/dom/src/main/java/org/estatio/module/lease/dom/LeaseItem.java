@@ -72,7 +72,7 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.agreement.role.IAgreementRoleType;
+import org.estatio.module.agreement.dom.role.IAgreementRoleType;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
