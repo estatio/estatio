@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
-import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
+import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;

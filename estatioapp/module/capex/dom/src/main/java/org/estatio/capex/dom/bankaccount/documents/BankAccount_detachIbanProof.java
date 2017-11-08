@@ -16,7 +16,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.bankaccount.dom.BankAccount;
 
 /**

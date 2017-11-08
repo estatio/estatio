@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.asset.dom.Property;
 
 /**

@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.invoice.dom.InvoiceItem;
 
 /**

@@ -2,36 +2,34 @@ package org.estatio.app;
 
 import org.incode.module.base.services.calendar.CalendarService;
 
-import org.estatio.capex.EstatioCapexModule;
-import org.estatio.capex.dom.EstatioCapexDomModule;
-import org.estatio.capex.fixture.EstatioCapexFixtureModule;
-import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.dom.EstatioDomainModule;
+import org.estatio.dom.dto.EstatioBaseDtoModule;
+import org.estatio.fixture.EstatioFixtureModule;
+import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.budgeting.EstatioBudgetingModule;
+import org.estatio.module.capex.EstatioCapexModule;
+import org.estatio.module.charge.EstatioChargeModule;
+import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.document.EstatioDocumentModule;
-import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.module.event.EstatioEventModule;
-import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.financial.EstatioFinancialModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
 import org.estatio.module.index.EstatioIndexDomModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.link.dom.EstatioLinkModule;
-import org.estatio.fixture.EstatioFixtureModule;
-import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
-import org.estatio.module.country.EstatioCountryModule;
+import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.party.EstatioPartyModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
 import org.estatio.module.settings.EstatioSettingsModule;
 import org.estatio.module.tax.EstatioTaxModule;
-import org.estatio.module.numerator.EstatioNumeratorModule;
 
 class EstatioAppDefn  {
 
@@ -53,7 +51,6 @@ class EstatioAppDefn  {
                 EstatioBudgetAssignmentModule.class,
                 EstatioChargeModule.class,
                 EstatioCapexModule.class,
-                EstatioCapexDomModule.class,
                 EstatioCurrencyModule.class,
                 EstatioDocumentModule.class,
                 EstatioEventModule.class,
@@ -80,7 +77,6 @@ class EstatioAppDefn  {
                 org.incode.module.classification.dom.ClassificationModule.class,
 
                 // TODO: one day these module may not be required (if we're able to move all the fixtures into the respective modules).
-                EstatioCapexFixtureModule.class,
                 EstatioFixtureModule.class,
                 EstatioFixtureScriptsModule.class,
 

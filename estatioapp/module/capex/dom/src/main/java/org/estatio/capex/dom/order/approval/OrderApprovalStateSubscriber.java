@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class OrderApprovalStateSubscriber extends AbstractSubscriber {

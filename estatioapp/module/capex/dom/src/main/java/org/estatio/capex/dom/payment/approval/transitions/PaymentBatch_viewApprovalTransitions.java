@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.capex.dom.dobj.DomainObject_viewTransitionsAbstract;
-import org.estatio.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;

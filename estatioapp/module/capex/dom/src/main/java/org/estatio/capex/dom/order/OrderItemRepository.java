@@ -19,7 +19,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;

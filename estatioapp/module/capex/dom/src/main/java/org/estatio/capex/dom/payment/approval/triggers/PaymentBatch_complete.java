@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
 
 /**

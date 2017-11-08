@@ -15,7 +15,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItem;
 
 public class ProjectItem_InvoicedAmount_Test {
 

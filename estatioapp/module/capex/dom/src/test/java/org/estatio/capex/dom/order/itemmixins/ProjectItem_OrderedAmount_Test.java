@@ -13,7 +13,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItem;
 
 public class ProjectItem_OrderedAmount_Test {
 

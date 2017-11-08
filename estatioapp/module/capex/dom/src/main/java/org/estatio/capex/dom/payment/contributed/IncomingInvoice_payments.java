@@ -11,8 +11,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.PaymentLineRepository;
+import org.estatio.module.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 
 /**
  * TODO: inline this mixin (unless payments is gonna be decoupled?)

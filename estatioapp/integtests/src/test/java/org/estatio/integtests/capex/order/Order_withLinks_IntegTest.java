@@ -22,7 +22,7 @@ import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;

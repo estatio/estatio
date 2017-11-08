@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.bankaccount.dom.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN)

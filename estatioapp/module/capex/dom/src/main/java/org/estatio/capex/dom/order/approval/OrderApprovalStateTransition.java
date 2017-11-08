@@ -17,9 +17,9 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.capex.dom.order.Order;
-import org.estatio.capex.dom.state.StateTransitionAbstract;
-import org.estatio.capex.dom.state.StateTransitionRepositoryAbstract;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.state.StateTransitionAbstract;
+import org.estatio.module.capex.dom.state.StateTransitionRepositoryAbstract;
+import org.estatio.module.capex.dom.task.Task;
 
 import lombok.Getter;
 import lombok.Setter;

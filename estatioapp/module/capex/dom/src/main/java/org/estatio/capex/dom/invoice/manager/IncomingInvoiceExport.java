@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.ViewModel;
 import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.FixedAsset;
 
 import lombok.Getter;

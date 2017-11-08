@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.party.dom.Person;
 
 /**

@@ -18,8 +18,8 @@ import org.estatio.capex.dom.bankaccount.documents.BankAccount_attachPdfAsIbanPr
 import org.estatio.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.state.StateTransitionEvent;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionEvent;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.bankaccount.dom.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")

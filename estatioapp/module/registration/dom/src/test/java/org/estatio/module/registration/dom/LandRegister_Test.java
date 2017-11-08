@@ -27,7 +27,7 @@ import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetForTesting;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationForTesting;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationForTesting;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationType;
 
 public class LandRegister_Test extends AbstractBeanPropertiesTest {

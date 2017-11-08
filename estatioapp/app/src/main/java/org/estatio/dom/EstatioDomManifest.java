@@ -13,7 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.excel.ExcelModule;
 import org.isisaddons.module.security.SecurityModule;
 
-import org.estatio.capex.EstatioCapexModule;
+import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 public class EstatioDomManifest implements AppManifest {

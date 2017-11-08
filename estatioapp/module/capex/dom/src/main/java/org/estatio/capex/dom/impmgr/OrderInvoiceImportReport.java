@@ -14,8 +14,8 @@ import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,

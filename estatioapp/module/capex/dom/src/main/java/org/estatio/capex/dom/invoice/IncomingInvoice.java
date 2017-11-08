@@ -57,15 +57,15 @@ import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.PaymentLineRepository;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.state.State;
-import org.estatio.capex.dom.state.StateTransition;
-import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.capex.dom.state.StateTransitionType;
-import org.estatio.capex.dom.state.Stateful;
-import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.module.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.PaymentLineRepository;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.state.State;
+import org.estatio.module.capex.dom.state.StateTransition;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionType;
+import org.estatio.module.capex.dom.state.Stateful;
+import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
@@ -161,7 +161,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.capex.dom.invoice.IncomingInvoice "
                         + "WHERE !(SELECT invoice "
-                        +         "  FROM org.estatio.capex.dom.payment.PaymentLine).contains(this) "
+                        +         "  FROM org.estatio.module.capex.dom.payment.PaymentLine).contains(this) "
                         + "   && approvalState == :approvalState "
                         + "   && paymentMethod == :paymentMethod "
                         + "ORDER BY invoiceDate ASC " // oldest first

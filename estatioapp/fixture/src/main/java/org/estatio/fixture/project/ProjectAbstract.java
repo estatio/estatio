@@ -27,8 +27,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 
 public abstract class ProjectAbstract extends FixtureScript {
 

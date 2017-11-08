@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.order.OrderItem;
 import org.estatio.capex.dom.order.OrderItemRepository;
-import org.estatio.capex.dom.project.ProjectItem;
+import org.estatio.module.capex.dom.project.ProjectItem;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Project does not know about orders.

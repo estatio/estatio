@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.capex.dom.documents.DocumentMenu;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingDocumentCategorisationStateSubscriber extends AbstractSubscriber {

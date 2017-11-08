@@ -7,10 +7,10 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.state.State;
-import org.estatio.capex.dom.state.StateTransitionAbstract;
-import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.capex.dom.state.StateTransitionType;
+import org.estatio.module.capex.dom.state.State;
+import org.estatio.module.capex.dom.state.StateTransitionAbstract;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.state.StateTransitionType;
 
 /**
  * Subclasses should be annotated using: @Mixin(method = "act")

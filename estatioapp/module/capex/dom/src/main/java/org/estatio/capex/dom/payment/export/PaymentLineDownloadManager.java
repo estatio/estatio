@@ -22,8 +22,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.PaymentLineRepository;
+import org.estatio.module.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

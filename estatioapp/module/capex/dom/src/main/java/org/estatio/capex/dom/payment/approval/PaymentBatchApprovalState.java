@@ -1,6 +1,6 @@
 package org.estatio.capex.dom.payment.approval;
 
-import org.estatio.capex.dom.state.State;
+import org.estatio.module.capex.dom.state.State;
 
 public enum PaymentBatchApprovalState implements State<PaymentBatchApprovalState> {
     NEW,

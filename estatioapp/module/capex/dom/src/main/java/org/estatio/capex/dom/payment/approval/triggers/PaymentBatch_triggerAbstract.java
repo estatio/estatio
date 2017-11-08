@@ -1,10 +1,10 @@
 package org.estatio.capex.dom.payment.approval.triggers;
 
-import org.estatio.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransition;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalStateTransitionType;
-import org.estatio.capex.dom.triggers.DomainObject_triggerAbstract;
+import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
 
 abstract class PaymentBatch_triggerAbstract
         extends DomainObject_triggerAbstract<

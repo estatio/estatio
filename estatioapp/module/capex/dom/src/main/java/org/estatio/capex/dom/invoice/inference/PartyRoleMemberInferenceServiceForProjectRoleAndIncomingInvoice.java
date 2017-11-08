@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRole;
-import org.estatio.capex.dom.project.ProjectRoleRepository;
-import org.estatio.capex.dom.project.ProjectRoleTypeEnum;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRole;
+import org.estatio.module.capex.dom.project.ProjectRoleRepository;
+import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleMemberInferenceServiceAbstract;
 

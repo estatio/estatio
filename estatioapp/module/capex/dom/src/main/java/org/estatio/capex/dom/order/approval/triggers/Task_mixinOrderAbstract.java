@@ -4,8 +4,8 @@ import javax.inject.Inject;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.approval.OrderApprovalStateTransition;
-import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.Task_mixinActAbstract;
+import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
 
 public abstract class Task_mixinOrderAbstract<M>
         extends

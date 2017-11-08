@@ -13,9 +13,9 @@ import org.apache.isis.applib.services.title.TitleService;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.payment.PaymentLine;
-import org.estatio.capex.dom.payment.PaymentLineRepository;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.party.dom.Person;
 

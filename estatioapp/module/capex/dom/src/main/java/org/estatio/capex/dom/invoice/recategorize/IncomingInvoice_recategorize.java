@@ -31,8 +31,8 @@ import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.capex.dom.state.StateTransitionService;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**

@@ -1,6 +1,6 @@
 package org.estatio.capex.dom.invoice.approval;
 
-import org.estatio.capex.dom.state.State;
+import org.estatio.module.capex.dom.state.State;
 
 public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprovalState> {
     NEW,

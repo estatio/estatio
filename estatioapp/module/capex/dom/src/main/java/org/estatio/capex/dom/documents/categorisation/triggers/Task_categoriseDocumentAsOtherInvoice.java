@@ -3,7 +3,6 @@ package org.estatio.capex.dom.documents.categorisation.triggers;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -11,12 +10,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.incode.module.document.dom.impl.docs.Document;
-
-import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.Task;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.

@@ -7,8 +7,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.state.StateTransitionService;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class PaymentBatchApprovalStateSubscriber extends AbstractSubscriber {

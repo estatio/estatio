@@ -45,11 +45,11 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 
 import org.estatio.capex.dom.documents.BudgetItemChooser;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
-import org.estatio.capex.dom.project.Project;
-import org.estatio.capex.dom.project.ProjectRepository;
-import org.estatio.capex.dom.task.Task;
-import org.estatio.capex.dom.task.policy.ViewModelWrapper;
-import org.estatio.capex.dom.util.PeriodUtil;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.policy.ViewModelWrapper;
+import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.OwnershipType;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.charge.dom.Charge;

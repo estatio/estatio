@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.Task;
 
 /**
  * This mixin cannot be inlined because Task does not know about its target domain object.

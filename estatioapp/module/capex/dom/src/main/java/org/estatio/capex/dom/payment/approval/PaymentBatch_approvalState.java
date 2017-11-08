@@ -2,7 +2,7 @@ package org.estatio.capex.dom.payment.approval;
 
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
 import org.estatio.capex.dom.dobj.DomainObject_currentStateAbstract;
 
 /**

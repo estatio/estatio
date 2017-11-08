@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.capex.dom.payment.PaymentBatch;
-import org.estatio.capex.dom.payment.PaymentLine;
+import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.invoice.dom.PaymentMethod;
 
 import lombok.Getter;
