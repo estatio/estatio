@@ -24,6 +24,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import org.estatio.module.index.dom.Indexable;
+import org.estatio.module.index.dom.calc.IndexationCalculationMethod;
+import org.estatio.module.index.dom.calc.IndexationResult;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 
 import static org.assertj.core.api.Assertions.assertThat;

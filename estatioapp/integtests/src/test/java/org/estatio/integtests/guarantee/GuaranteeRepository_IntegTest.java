@@ -38,7 +38,7 @@ import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;
-import org.estatio.module.guarantee.dom.contributed.LeaseGuaranteeService;
+import org.estatio.module.guarantee.contributions.LeaseGuaranteeService;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.Party;

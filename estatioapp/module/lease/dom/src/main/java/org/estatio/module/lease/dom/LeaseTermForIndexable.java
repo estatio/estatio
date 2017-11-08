@@ -38,7 +38,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.Indexable;
-import org.estatio.module.lease.dom.indexation.IndexationCalculationMethod;
+import org.estatio.module.index.dom.calc.IndexationCalculationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.dom.indexation.IndexationService;
 

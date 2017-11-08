@@ -15,7 +15,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
+import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -28,8 +28,8 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
-import org.estatio.module.budgetassignment.dom.contributed.results.CalculationResultViewModel;
-import org.estatio.module.budgetassignment.dom.contributed.results.DetailedCalculationResultViewmodel;
+import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
+import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;

@@ -38,7 +38,7 @@ import org.estatio.dom.asset.PropertyRepository;
 import org.estatio.dom.asset.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
-import org.estatio.module.lease.dom.contributed.Property_vacantUnits;
+import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioFakeDataService;
 import org.estatio.fixture.asset.PropertyBuilder;
