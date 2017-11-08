@@ -8,7 +8,7 @@ import org.estatio.capex.fixture.EstatioCapexFixtureModule;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.dom.EstatioDomainModule;
 import org.estatio.dom.agreement.EstatioAgreementDomModule;
-import org.estatio.dom.asset.EstatioAssetDomModule;
+import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
@@ -46,7 +46,7 @@ class EstatioAppDefn  {
 
                 // the domain modules.  At the moment these aren't actually required to be registered because we also register EstatioDomainModule (above); but this will change when we sort out the package names for these.
                 EstatioAgreementDomModule.class,
-                EstatioAssetDomModule.class,
+                EstatioAssetModule.class,
                 EstatioAssetFinancialModule.class,
                 EstatioBankMandateModule.class,
                 EstatioBudgetingModule.class,

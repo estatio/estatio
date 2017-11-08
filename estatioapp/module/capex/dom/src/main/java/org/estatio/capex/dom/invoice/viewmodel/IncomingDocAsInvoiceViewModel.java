@@ -238,7 +238,7 @@ public class IncomingDocAsInvoiceViewModel
 
     public List<OrderItem> choicesOrderItem(){
         final Party seller = getSeller();
-        final org.estatio.dom.asset.Property property = getProperty();
+        final org.estatio.module.asset.dom.Property property = getProperty();
         final List<OrderItem> orderItems;
         if (property==null) {
             orderItems = orderItemRepository.findBySeller(seller);
@@ -404,7 +404,7 @@ public class IncomingDocAsInvoiceViewModel
             setTax(invoiceItem.getTax());
             setDueDate(invoiceItem.getDueDate());
             setPeriod(periodFrom(invoiceItem.getStartDate(), invoiceItem.getEndDate()));
-            setProperty((org.estatio.dom.asset.Property) invoiceItem.getFixedAsset());
+            setProperty((org.estatio.module.asset.dom.Property) invoiceItem.getFixedAsset());
             setProject(invoiceItem.getProject());
             setBudgetItem(invoiceItem.getBudgetItem());
 
@@ -646,7 +646,7 @@ public class IncomingDocAsInvoiceViewModel
             @Parameter(optionality = Optionality.OPTIONAL)
             final Charge charge,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Project project,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -668,7 +668,7 @@ public class IncomingDocAsInvoiceViewModel
         return getCharge();
     }
 
-    public org.estatio.dom.asset.Property default1ChangeDimensions(){
+    public org.estatio.module.asset.dom.Property default1ChangeDimensions(){
         return getProperty();
     }
 
@@ -688,7 +688,7 @@ public class IncomingDocAsInvoiceViewModel
         return autoComplete0EditCharge(search);
     }
 
-    public List<org.estatio.dom.asset.Property> choices1ChangeDimensions() {
+    public List<org.estatio.module.asset.dom.Property> choices1ChangeDimensions() {
         return choicesProperty();
     }
 
@@ -702,7 +702,7 @@ public class IncomingDocAsInvoiceViewModel
 
     public String validateChangeDimensions(
             final Charge charge,
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final Project project,
             final BudgetItem budgetItem,
             final String period

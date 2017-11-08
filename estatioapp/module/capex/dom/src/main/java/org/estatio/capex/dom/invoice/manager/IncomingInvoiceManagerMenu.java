@@ -12,8 +12,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

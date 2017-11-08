@@ -33,8 +33,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.OwnershipType;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.OwnershipType;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;

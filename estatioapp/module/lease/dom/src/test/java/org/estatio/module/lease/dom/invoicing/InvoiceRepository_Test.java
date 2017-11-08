@@ -35,7 +35,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;

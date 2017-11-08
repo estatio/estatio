@@ -58,8 +58,8 @@ import org.estatio.capex.dom.pdfmanipulator.PdfManipulator;
 import org.estatio.capex.dom.state.NatureOfTransition;
 import org.estatio.capex.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.capex.dom.util.InvoicePageRange;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.dom.utils.ReasonBuffer2;
 
@@ -198,7 +198,7 @@ public class IncomingInvoiceDownloadManager {
     @ActionLayout(contributed= Contributed.AS_ACTION)
     public IncomingInvoiceDownloadManager changeProperty(
             @Nullable
-            final org.estatio.dom.asset.Property property){
+            final Property property){
         return new IncomingInvoiceDownloadManager(
                 property, reportedDate, incomingInvoiceType);
     }

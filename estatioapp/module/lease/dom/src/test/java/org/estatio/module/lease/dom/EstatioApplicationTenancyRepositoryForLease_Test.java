@@ -16,11 +16,10 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.dom.asset.EstatioApplicationTenancyRepositoryForProperty;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.EstatioApplicationTenancyRepositoryForProperty;
+import org.estatio.module.asset.dom.Property;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.module.lease.dom.EstatioApplicationTenancyRepositoryForLease;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 

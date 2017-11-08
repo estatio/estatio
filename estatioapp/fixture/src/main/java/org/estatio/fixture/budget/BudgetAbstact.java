@@ -25,8 +25,8 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;

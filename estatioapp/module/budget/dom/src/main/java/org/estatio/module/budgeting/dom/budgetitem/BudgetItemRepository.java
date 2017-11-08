@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;

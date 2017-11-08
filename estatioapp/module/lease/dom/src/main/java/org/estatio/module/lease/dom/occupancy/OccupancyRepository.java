@@ -35,9 +35,9 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;

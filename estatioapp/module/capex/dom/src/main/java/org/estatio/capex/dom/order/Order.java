@@ -168,7 +168,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public Order(
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final String orderNumber,
             final String sellerOrderReference,
             final LocalDate entryDate,
@@ -219,12 +219,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
      */
     @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "true")
     @Getter @Setter
-    private org.estatio.dom.asset.Property property;
+    private org.estatio.module.asset.dom.Property property;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public Order editProperty(
             @Nullable
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final boolean changeOnItemsAsWell){
         setProperty(property);
         if (changeOnItemsAsWell){
@@ -236,7 +236,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return this;
     }
 
-    public org.estatio.dom.asset.Property default0EditProperty(){
+    public org.estatio.module.asset.dom.Property default0EditProperty(){
         return getProperty();
     }
 
@@ -468,7 +468,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal grossAmount,
             @Nullable final Tax tax,
             @Nullable final String period,
-            @Nullable final org.estatio.dom.asset.Property property,
+            @Nullable final org.estatio.module.asset.dom.Property property,
             @Nullable final Project project,
             @Nullable final BudgetItem budgetItem
     ) {
@@ -492,7 +492,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return ofFirstItem(OrderItem::getStartDate)!=null ? PeriodUtil.periodFromInterval(new LocalDateInterval(ofFirstItem(OrderItem::getStartDate), ofFirstItem(OrderItem::getEndDate))) : null;
     }
 
-    public org.estatio.dom.asset.Property default7AddItem(){
+    public org.estatio.module.asset.dom.Property default7AddItem(){
         return ofFirstItem(OrderItem::getProperty);
     }
 
@@ -507,7 +507,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal grossAmount,
             final Tax tax,
             final String period,
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final Project project,
             final BudgetItem budgetItem){
         if (period!=null && !period.equals("")) {
@@ -524,7 +524,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal grossAmount,
             final Tax tax,
             final String period,
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final Project project,
             final BudgetItem budgetItem) {
 
@@ -554,7 +554,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
             @Nullable
-            final org.estatio.dom.asset.Property newItemProperty,
+            final org.estatio.module.asset.dom.Property newItemProperty,
             @Nullable
             final Project newItemProject,
             @Nullable
@@ -592,7 +592,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
         return ofFirstItem(OrderItem::getTax);
     }
 
-    public org.estatio.dom.asset.Property default7SplitItem() {
+    public org.estatio.module.asset.dom.Property default7SplitItem() {
         return getProperty();
     }
 
@@ -620,7 +620,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Tax newItemtax,
             final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
-            final org.estatio.dom.asset.Property newItemProperty,
+            final org.estatio.module.asset.dom.Property newItemProperty,
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
             final String newItemPeriod
@@ -642,7 +642,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Tax newItemtax,
             final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
-            final org.estatio.dom.asset.Property newItemProperty,
+            final org.estatio.module.asset.dom.Property newItemProperty,
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
             final String newItemPeriod) {
@@ -658,7 +658,7 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             final Tax newItemtax,
             final BigDecimal newItemGrossAmount,
             final Charge newItemCharge,
-            final org.estatio.dom.asset.Property newItemProperty,
+            final org.estatio.module.asset.dom.Property newItemProperty,
             final Project newItemProject,
             final BudgetItem newItemBudgetItem,
             final String newItemPeriod){

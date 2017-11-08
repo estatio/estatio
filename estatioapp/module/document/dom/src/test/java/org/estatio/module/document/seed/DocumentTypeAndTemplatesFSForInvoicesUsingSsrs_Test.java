@@ -24,10 +24,9 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.document.dom.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
-import org.estatio.module.document.seed.DocumentTypeAndTemplatesFSForInvoicesUsingSsrs;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;

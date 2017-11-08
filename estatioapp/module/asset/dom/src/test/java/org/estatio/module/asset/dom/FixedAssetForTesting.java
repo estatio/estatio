@@ -16,12 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 
 import javax.jdo.annotations.Discriminator;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.module.asset.dom.FixedAsset;
 
 @Discriminator("org.estatio.dom.asset.FixedAssetForTesting")
 public class FixedAssetForTesting extends FixedAsset {

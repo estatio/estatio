@@ -1,9 +1,9 @@
 /*
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
+ *
+ *  Copyright 2012-2015 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
@@ -16,11 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
 
-// TODO: eventually this should move to org.estatio.asset, and be renamed to EstatioAssetModule (no "Dom" part)
-public final class EstatioAssetDomModule {
+package org.estatio.module.asset.dom;
 
-    private EstatioAssetDomModule(){}
+public enum OwnershipType {
+
+    FULL,
+    SHARED
 
 }

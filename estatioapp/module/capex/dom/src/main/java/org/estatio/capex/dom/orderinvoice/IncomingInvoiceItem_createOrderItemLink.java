@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.order.OrderItem;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Party;
 import org.estatio.dom.utils.ReasonBuffer2;
 

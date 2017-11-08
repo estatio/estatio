@@ -28,11 +28,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.asset.UnitType;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.PropertyType;
+import org.estatio.module.asset.dom.UnitRepository;
+import org.estatio.module.asset.dom.UnitType;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;

@@ -41,7 +41,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budgeting.dom.Distributable;
 import org.estatio.module.budgeting.dom.keytable.KeyTable;
 

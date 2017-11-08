@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;

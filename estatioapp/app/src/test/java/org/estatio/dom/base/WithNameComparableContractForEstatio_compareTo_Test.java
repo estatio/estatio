@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableMap;
 import org.incode.module.base.dom.with.WithNameComparable;
 import org.incode.module.unittestsupport.dom.with.ComparableByNameContractTestAbstract_compareTo;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.FixedAssetForTesting;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyForTesting;
 

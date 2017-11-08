@@ -25,9 +25,9 @@ import org.isisaddons.module.freemarker.dom.service.FreeMarkerService;
 
 import org.incode.module.unittestsupport.dom.reflect.ReflectUtils;
 
-import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.FixedAssetForTesting;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.financial.dom.FinancialAccount;

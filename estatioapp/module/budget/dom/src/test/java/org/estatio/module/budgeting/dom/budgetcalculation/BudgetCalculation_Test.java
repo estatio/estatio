@@ -27,7 +27,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.keyitem.KeyItem;
 import org.estatio.module.budgeting.dom.partioning.PartitionItem;

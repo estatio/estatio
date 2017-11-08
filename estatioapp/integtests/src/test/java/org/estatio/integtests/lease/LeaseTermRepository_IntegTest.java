@@ -35,7 +35,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;

@@ -46,7 +46,7 @@ import org.estatio.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -515,13 +515,13 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public IncomingInvoiceItem editFixedAsset(
             @Nullable
-            final org.estatio.dom.asset.Property property){
+            final org.estatio.module.asset.dom.Property property){
         setFixedAsset(property);
         return this;
     }
 
-    public org.estatio.dom.asset.Property default0EditFixedAsset(){
-        return (org.estatio.dom.asset.Property) getFixedAsset();
+    public org.estatio.module.asset.dom.Property default0EditFixedAsset(){
+        return (org.estatio.module.asset.dom.Property) getFixedAsset();
     }
 
     public String disableEditFixedAsset(){
@@ -573,7 +573,7 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     }
 
     public List<BudgetItem> choices0EditBudgetItem() {
-        return budgetItemChooser.choicesBudgetItemFor((org.estatio.dom.asset.Property) getFixedAsset(), getCharge());
+        return budgetItemChooser.choicesBudgetItemFor((org.estatio.module.asset.dom.Property) getFixedAsset(), getCharge());
     }
 
     public String disableEditBudgetItem(){

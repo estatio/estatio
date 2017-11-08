@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;

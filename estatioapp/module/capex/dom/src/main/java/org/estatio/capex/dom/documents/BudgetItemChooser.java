@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.charge.dom.Charge;

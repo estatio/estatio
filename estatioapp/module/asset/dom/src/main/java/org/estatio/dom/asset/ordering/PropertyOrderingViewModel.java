@@ -43,8 +43,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

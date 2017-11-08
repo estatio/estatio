@@ -13,7 +13,7 @@ import org.estatio.capex.dom.coda.CodaElement;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;

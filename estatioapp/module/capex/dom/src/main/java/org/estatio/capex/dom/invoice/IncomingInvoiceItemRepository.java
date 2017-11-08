@@ -23,8 +23,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.util.PeriodUtil;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.Invoice;

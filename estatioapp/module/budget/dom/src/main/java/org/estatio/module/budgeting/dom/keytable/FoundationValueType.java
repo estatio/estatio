@@ -20,7 +20,7 @@ package org.estatio.module.budgeting.dom.keytable;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 
 public enum FoundationValueType {
     AREA{

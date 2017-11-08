@@ -13,10 +13,9 @@ import org.junit.Test;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
-import org.estatio.module.lease.contributions.Property_vacantUnits;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 

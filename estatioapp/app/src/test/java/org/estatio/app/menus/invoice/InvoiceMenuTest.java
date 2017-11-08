@@ -21,7 +21,7 @@ package org.estatio.app.menus.invoice;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 

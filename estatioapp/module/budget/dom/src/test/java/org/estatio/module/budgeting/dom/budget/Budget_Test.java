@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

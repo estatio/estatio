@@ -59,7 +59,7 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.api.BudgetItemCreator;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationService;

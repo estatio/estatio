@@ -32,8 +32,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRepository;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.bankaccount.dom.BankAccount;

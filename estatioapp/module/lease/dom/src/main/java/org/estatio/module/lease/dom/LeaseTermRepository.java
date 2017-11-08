@@ -41,7 +41,7 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.dom.roles.EstatioRole;
 
 @DomainService(

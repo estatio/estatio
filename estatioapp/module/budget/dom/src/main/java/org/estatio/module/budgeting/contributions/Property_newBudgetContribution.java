@@ -18,7 +18,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RenderType;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 

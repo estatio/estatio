@@ -23,8 +23,8 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;

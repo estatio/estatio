@@ -29,7 +29,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculation;

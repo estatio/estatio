@@ -37,9 +37,9 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.PropertyType;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.PropertyType;
 
 @DomainService(repositoryFor = Property.class)
 @DomainServiceLayout(

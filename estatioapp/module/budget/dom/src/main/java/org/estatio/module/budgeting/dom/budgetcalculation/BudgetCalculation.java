@@ -53,7 +53,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.budgeting.dom.keyitem.KeyItem;

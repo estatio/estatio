@@ -53,8 +53,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.estatio.capex.dom.items.FinancialItem;
 import org.estatio.capex.dom.items.FinancialItemType;
 import org.estatio.dom.UdoDomainObject;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 

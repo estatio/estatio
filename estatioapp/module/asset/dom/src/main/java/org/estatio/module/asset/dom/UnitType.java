@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;

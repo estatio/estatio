@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -100,7 +100,7 @@ import lombok.Setter;
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.asset.FixedAsset "
+                value = "SELECT FROM org.estatio.module.asset.dom.FixedAsset "
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")
 })

@@ -37,7 +37,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.financial.dom.FinancialAccount;
 
 import lombok.Getter;

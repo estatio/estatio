@@ -2,7 +2,7 @@ package org.estatio.capex.dom.invoice;
 
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 
 public enum IncomingInvoiceType {
 

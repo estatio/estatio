@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.order.Order;
 import org.estatio.capex.dom.order.OrderRepository;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Party;
 
 /**

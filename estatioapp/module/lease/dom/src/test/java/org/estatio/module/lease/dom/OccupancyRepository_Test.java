@@ -29,7 +29,7 @@ import org.apache.isis.applib.query.Query;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 

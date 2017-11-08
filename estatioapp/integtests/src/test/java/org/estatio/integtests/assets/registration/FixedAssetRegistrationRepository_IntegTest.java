@@ -29,8 +29,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRepository;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

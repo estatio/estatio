@@ -1,4 +1,4 @@
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import java.util.List;
 

@@ -19,10 +19,10 @@ import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budgeting.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budgeting.dom.partioning.PartitionItem;
 import org.estatio.module.budgeting.dom.budget.Budget;

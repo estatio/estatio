@@ -39,9 +39,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.dom.apptenancy.WithApplicationTenancy;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.bankaccount.dom.BankAccount;

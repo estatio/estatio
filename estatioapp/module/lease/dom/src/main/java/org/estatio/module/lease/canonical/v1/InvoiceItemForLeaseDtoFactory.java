@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.dom.dto.DtoFactoryAbstract;

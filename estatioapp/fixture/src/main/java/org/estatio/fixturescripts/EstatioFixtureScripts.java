@@ -39,7 +39,7 @@ import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.Lease;
 
 @DomainService(

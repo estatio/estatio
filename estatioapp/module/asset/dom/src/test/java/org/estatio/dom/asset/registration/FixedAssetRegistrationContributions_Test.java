@@ -30,8 +30,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.FixedAssetForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -20,8 +20,8 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

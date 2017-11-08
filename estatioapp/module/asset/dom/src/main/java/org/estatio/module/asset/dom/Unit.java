@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
 
@@ -57,30 +57,30 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Unit "
+                        + "FROM org.estatio.module.asset.dom.Unit "
                         + "WHERE (reference.matches(:referenceOrName) "
                         + "   || name.matches(:referenceOrName)) "
                         + "&& (:includeTerminated || endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Unit "
+                        + "FROM org.estatio.module.asset.dom.Unit "
                         + "WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(
                 name = "findByActiveOnDate", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Unit "
+                        + "FROM org.estatio.module.asset.dom.Unit "
                         + "WHERE (startDate == null || startDate <= :startDate) "
                         + "&& (endDate == null || endDate >= :endDate)"),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Unit "
+                        + "FROM org.estatio.module.asset.dom.Unit "
                         + "WHERE (property == :property) "),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Unit "
+                        + "FROM org.estatio.module.asset.dom.Unit "
                         + "WHERE (property == :property) "
                         + "&& (startDate == null || startDate <= :date) "
                         + "&& (endDate == null || endDate >= :date)")

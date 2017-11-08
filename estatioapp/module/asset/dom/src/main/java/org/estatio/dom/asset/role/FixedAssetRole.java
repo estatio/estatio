@@ -51,7 +51,7 @@ import org.incode.module.base.dom.with.WithIntervalContiguous;
 
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.dom.roles.EstatioRole;

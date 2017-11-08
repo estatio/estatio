@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import org.junit.Test;
 
@@ -24,6 +24,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 
 public class Unit_Test {
 

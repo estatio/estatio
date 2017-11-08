@@ -37,8 +37,8 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForFreemarker;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRepository;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
 

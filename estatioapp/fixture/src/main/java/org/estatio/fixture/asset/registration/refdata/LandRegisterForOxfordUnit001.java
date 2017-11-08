@@ -24,8 +24,8 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.registration.dom.LandRegister;
 import org.estatio.module.registration.dom.LandRegisters;
 import org.estatio.fixture.asset.PropertyForOxfGb;

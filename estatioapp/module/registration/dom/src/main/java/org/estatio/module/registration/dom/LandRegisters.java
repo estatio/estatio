@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationTypeRepository;
 
 @DomainService(menuOrder = "10", repositoryFor = LandRegister.class)

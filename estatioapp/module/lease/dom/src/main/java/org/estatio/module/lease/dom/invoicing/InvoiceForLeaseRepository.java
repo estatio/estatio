@@ -34,7 +34,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceStatus;

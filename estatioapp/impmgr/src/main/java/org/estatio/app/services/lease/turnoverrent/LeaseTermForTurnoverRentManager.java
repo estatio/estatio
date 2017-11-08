@@ -40,7 +40,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;

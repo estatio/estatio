@@ -28,11 +28,11 @@ import org.estatio.dom.Importable;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
-import org.estatio.dom.asset.UnitType;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
+import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

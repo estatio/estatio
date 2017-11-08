@@ -50,8 +50,8 @@ import org.estatio.capex.dom.project.Project;
 import org.estatio.capex.dom.project.ProjectRepository;
 import org.estatio.capex.dom.util.PeriodUtil;
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
@@ -381,13 +381,13 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     @ActionLayout(promptStyle = PromptStyle.INLINE)
     public OrderItem editProperty(
             @Nullable
-            final org.estatio.dom.asset.Property property){
+            final Property property){
         setProperty(property);
         return this;
     }
 
-    public org.estatio.dom.asset.Property default0EditProperty(){
-        return (org.estatio.dom.asset.Property) getFixedAsset();
+    public Property default0EditProperty(){
+        return (Property) getFixedAsset();
     }
 
     public String disableEditProperty(){

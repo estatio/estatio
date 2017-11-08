@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.capex.dom.order.Order;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.dom.asset.role.FixedAssetRole;
 import org.estatio.dom.asset.role.FixedAssetRoleRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;

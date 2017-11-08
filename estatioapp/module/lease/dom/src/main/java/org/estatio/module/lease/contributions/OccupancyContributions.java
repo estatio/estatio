@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;

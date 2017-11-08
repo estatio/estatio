@@ -24,8 +24,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.asset.Unit;
-import org.estatio.module.budgeting.dom.keytable.FoundationValueType;
+import org.estatio.module.asset.dom.Unit;
 
 import static org.junit.Assert.assertEquals;
 

@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.estatio.capex.dom.order.approval.OrderApprovalState;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 

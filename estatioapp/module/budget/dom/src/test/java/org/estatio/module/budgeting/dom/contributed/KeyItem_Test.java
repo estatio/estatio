@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budgeting.dom.keytable.KeyTable;
 import org.estatio.module.budgeting.dom.keyitem.KeyItem;
 

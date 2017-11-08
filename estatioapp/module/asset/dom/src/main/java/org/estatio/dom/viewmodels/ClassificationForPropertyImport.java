@@ -22,8 +22,8 @@ import org.incode.module.classification.dom.impl.classification.Classification;
 import org.incode.module.classification.dom.impl.classification.ClassificationRepository;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 
 import lombok.Getter;
 import lombok.Setter;

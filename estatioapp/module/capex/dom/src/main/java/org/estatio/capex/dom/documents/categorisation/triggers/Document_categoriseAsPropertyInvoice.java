@@ -17,7 +17,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.capex.dom.invoice.IncomingInvoice;
 import org.estatio.capex.dom.invoice.IncomingInvoiceRepository;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 

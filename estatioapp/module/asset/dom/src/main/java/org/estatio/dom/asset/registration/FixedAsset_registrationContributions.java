@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY,

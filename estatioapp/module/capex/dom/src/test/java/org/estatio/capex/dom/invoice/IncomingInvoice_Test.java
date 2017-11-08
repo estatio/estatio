@@ -22,7 +22,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.capex.dom.project.Project;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.bankaccount.dom.BankAccount;

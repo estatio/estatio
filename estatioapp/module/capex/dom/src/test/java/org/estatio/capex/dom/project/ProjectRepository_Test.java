@@ -29,8 +29,8 @@ import org.apache.isis.applib.query.Query;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.Unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

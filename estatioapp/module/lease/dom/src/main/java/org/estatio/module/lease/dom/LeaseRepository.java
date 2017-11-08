@@ -44,8 +44,8 @@ import org.estatio.dom.agreement.role.AgreementRoleType;
 import org.estatio.dom.agreement.role.AgreementRoleTypeRepository;
 import org.estatio.dom.agreement.type.AgreementType;
 import org.estatio.dom.agreement.type.AgreementTypeRepository;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.party.dom.Party;
 

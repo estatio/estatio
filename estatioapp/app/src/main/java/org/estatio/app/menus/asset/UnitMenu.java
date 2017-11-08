@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY

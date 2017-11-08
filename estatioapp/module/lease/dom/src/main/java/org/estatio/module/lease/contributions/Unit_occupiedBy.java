@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 

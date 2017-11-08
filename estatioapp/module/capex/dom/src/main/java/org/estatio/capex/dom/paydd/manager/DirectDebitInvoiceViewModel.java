@@ -16,7 +16,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.estatio.capex.dom.invoice.IncomingInvoice;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 

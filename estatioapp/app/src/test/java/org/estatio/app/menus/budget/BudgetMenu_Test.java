@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budgeting.dom.budget.Budget;
 import org.estatio.module.budgeting.dom.budget.BudgetRepository;
 

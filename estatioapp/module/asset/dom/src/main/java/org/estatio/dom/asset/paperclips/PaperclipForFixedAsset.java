@@ -34,7 +34,7 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.mixins.T_documents;
 
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 
 import lombok.Getter;
 import lombok.Setter;

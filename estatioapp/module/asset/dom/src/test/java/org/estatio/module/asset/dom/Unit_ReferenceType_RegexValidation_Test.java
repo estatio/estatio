@@ -1,4 +1,4 @@
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 /*
  *  Licensed to the Apache Software Foundation (ASF) under one
@@ -29,6 +29,8 @@ import org.junit.Test;
 
 import org.apache.isis.core.metamodel.facetapi.FacetHolder;
 import org.apache.isis.core.metamodel.facets.objectvalue.regex.RegExFacet;
+
+import org.estatio.module.asset.dom.Unit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;

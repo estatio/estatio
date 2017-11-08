@@ -57,7 +57,7 @@ import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.FixedAsset;
+import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.dom.base.FragmentRenderService;

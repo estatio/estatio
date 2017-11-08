@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.capex.dom.documents.viewmodel.IncomingDocViewModel;
 import org.estatio.capex.dom.task.Task;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.

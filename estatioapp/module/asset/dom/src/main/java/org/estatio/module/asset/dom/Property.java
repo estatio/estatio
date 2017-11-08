@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
@@ -76,13 +76,13 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Property "
+                        + "FROM org.estatio.module.asset.dom.Property "
                         + "WHERE reference.matches(:referenceOrName) "
                         + "|| name.matches(:referenceOrName)"),
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrNameAndAtPath", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Property "
+                        + "FROM org.estatio.module.asset.dom.Property "
                         + "WHERE (reference.matches(:referenceOrName)"
                         + " || name.matches(:referenceOrName) ) "
                         + "&& applicationTenancyPath.matches(:atPath) "
@@ -90,7 +90,7 @@ import lombok.Setter;
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.asset.Property "
+                        + "FROM org.estatio.module.asset.dom.Property "
                         + "WHERE reference == :reference")
 })
 @DomainObject(autoCompleteRepository = PropertyRepository.class)

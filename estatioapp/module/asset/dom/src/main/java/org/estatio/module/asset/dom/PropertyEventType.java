@@ -16,29 +16,29 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.asset;
+package org.estatio.module.asset.dom;
 
 import org.incode.module.base.dom.TitledEnum;
 import org.incode.module.base.dom.utils.StringUtils;
 
-public enum PropertyType implements TitledEnum {
+// TODO: is this in scope?
+// EST-131: convert to entity, since will vary by location
+//
+// my idea is that these will become the values of Event#subjectEventType 
+// (scoped by the subject to which the event refers)
+//
+// see BreakOption for a usage of this...
+// 
+public enum PropertyEventType implements TitledEnum {
 
-    SHOPPING_CENTER, 
-    WAREHOUSE,
-    RESIDENTIAL,
-    RETAIL_PARK,
-    MIXED,
-    CINEMA,
-    OFFICE;
-    
+    DISRUPTION, 
+    EXTENSION, 
+    REFURBISHMENT, 
+    EVENT, 
+    TASK;
+
     public String title() {
         return StringUtils.enumTitle(this.toString());
-    }
-
-    public static class Meta {
-        private Meta(){}
-
-        public final static int MAX_LEN = 30;
     }
 
 }

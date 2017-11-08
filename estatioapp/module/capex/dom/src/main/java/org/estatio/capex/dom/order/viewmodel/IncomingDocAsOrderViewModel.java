@@ -346,7 +346,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
     public IncomingDocAsOrderViewModel changeDimensions(
             final Charge charge,
             @Parameter(optionality = Optionality.OPTIONAL)
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             @Parameter(optionality = Optionality.OPTIONAL)
             final Project project,
             @Parameter(optionality = Optionality.OPTIONAL)
@@ -367,7 +367,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return getCharge();
     }
 
-    public org.estatio.dom.asset.Property default1ChangeDimensions(){
+    public org.estatio.module.asset.dom.Property default1ChangeDimensions(){
         return getProperty();
     }
 
@@ -387,7 +387,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
         return autoComplete0EditCharge(search);
     }
 
-    public List<org.estatio.dom.asset.Property> choices1ChangeDimensions() {
+    public List<org.estatio.module.asset.dom.Property> choices1ChangeDimensions() {
         return choicesProperty();
     }
 
@@ -401,7 +401,7 @@ public class IncomingDocAsOrderViewModel extends IncomingDocViewModel<Order> {
 
     public String validateChangeDimensions(
             final Charge charge,
-            final org.estatio.dom.asset.Property property,
+            final org.estatio.module.asset.dom.Property property,
             final Project project,
             final BudgetItem budgetItem,
             final String period

@@ -40,8 +40,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.dom.base.FragmentRenderService;
 import org.estatio.module.bankaccount.dom.BankAccount;

@@ -23,8 +23,8 @@ import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.estatio.dom.Importable;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.UnitRepository;
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationRepository;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationTypeRepository;

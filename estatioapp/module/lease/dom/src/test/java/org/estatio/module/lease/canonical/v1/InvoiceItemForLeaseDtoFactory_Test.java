@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
-import org.estatio.dom.asset.Unit;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.lease.dom.Lease;

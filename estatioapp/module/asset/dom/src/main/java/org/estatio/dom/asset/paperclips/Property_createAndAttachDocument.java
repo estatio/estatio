@@ -23,7 +23,7 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.document.dom.mixins.T_createAndAttachDocumentAndRender;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 
 @Mixin
 public class Property_createAndAttachDocument extends T_createAndAttachDocumentAndRender<Property> {

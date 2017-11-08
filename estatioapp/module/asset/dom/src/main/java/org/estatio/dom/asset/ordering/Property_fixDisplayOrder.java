@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.dom.asset.Property;
+import org.estatio.module.asset.dom.Property;
 
 /**
  * TODO: REVIEW: do we want to inline these mixins too?  would imply domain layer -> app layer, so arguably not...?

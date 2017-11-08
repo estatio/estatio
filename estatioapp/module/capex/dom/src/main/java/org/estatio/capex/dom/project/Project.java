@@ -160,7 +160,7 @@ public class Project extends UdoDomainObject<Project> implements
 			final LocalDate startDate,
 			@Parameter(optionality = Optionality.OPTIONAL)
 			final LocalDate endDate,
-			final org.estatio.dom.asset.Property property,
+			final org.estatio.module.asset.dom.Property property,
 			@Parameter(optionality = Optionality.OPTIONAL)
 			final Tax tax
 	) {

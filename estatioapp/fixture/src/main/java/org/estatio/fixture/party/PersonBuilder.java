@@ -29,8 +29,8 @@ import org.apache.isis.applib.value.Password;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyRepository;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.dom.asset.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
