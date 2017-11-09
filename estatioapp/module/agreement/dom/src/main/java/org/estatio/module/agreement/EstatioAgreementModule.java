@@ -18,7 +18,6 @@
  */
 package org.estatio.module.agreement;
 
-// TODO: eventually this should move to org.estatio.agreement, and be renamed to EstatioAgreementModule (no "Dom" part)
 public final class EstatioAgreementModule {
 
     private EstatioAgreementModule(){}

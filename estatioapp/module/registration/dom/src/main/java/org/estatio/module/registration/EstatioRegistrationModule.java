@@ -18,7 +18,6 @@
  */
 package org.estatio.module.registration;
 
-// TODO: eventually this should move to org.estatio.registration, and be renamed to RegistrationTaxModule (no "Dom" part)
 public final class EstatioRegistrationModule {
 
     private EstatioRegistrationModule(){}

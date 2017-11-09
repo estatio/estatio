@@ -18,9 +18,8 @@
  */
 package org.estatio.module.index;
 
-// TODO: eventually this should move to org.estatio.index, and be renamed to EstatioIndexModule (no "Dom" part)
-public final class EstatioIndexDomModule {
+public final class EstatioIndexModule {
 
-    private EstatioIndexDomModule(){}
+    private EstatioIndexModule(){}
 
 }

@@ -18,7 +18,6 @@
  */
 package org.estatio.module.bankmandate;
 
-// TODO: eventually this should move to org.estatio.bankmandate, and be renamed to EstatioBankMandateModule (no "Dom" part)
 public final class EstatioBankMandateModule {
 
     private EstatioBankMandateModule(){}

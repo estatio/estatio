@@ -16,10 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.budgeting;
+package org.estatio.module.application;
 
-public final class EstatioBudgetingModule {
+/**
+ * A "global" module for the entire app (=big ball of mud, stuff to decouple)
+ */
+public final class EstatioApplicationModule {
 
-    private EstatioBudgetingModule(){}
+    private EstatioApplicationModule(){}
 
 }

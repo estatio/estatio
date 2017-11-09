@@ -18,7 +18,6 @@
  */
 package org.estatio.module.event;
 
-// TODO: eventually this should move to org.estatio.event, and be renamed to EstatioEventModule (no "Dom" part)
 public final class EstatioEventModule {
 
     private EstatioEventModule(){}

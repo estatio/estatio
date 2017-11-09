@@ -18,7 +18,6 @@
  */
 package org.estatio.module.budgetassignment;
 
-// TODO: eventually this should move to org.estatio.budgetassignment, and be renamed to EstatioBudgetAssignmentModule (no "Dom" part)
 public final class EstatioBudgetAssignmentModule {
 
     private EstatioBudgetAssignmentModule(){}

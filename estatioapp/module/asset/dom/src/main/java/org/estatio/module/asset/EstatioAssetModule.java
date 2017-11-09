@@ -18,7 +18,6 @@
  */
 package org.estatio.module.asset;
 
-// TODO: eventually this should move to org.estatio.asset, and be renamed to EstatioAssetModule (no "Dom" part)
 public final class EstatioAssetModule {
 
     private EstatioAssetModule(){}

@@ -18,7 +18,6 @@
  */
 package org.estatio.module.lease;
 
-// TODO: eventually this should move to org.estatio.lease, and be renamed to EstatioLeaseModule (no "Dom" part)
 public final class EstatioLeaseModule {
 
     private EstatioLeaseModule(){}

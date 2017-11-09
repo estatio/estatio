@@ -18,7 +18,6 @@
  */
 package org.estatio.module.currency;
 
-// TODO: eventually this should move to org.estatio.currency, and be renamed to EstatioCurrencyModule (no "Dom" part)
 public final class EstatioCurrencyModule {
 
     private EstatioCurrencyModule(){}

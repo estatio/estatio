@@ -18,7 +18,6 @@
  */
 package org.estatio.module.settings;
 
-// TODO: eventually this should move to org.estatio.setting, and be renamed to EstatioSettingsModule (no "Dom" part)
 public final class EstatioSettingsModule {
 
     private EstatioSettingsModule(){}

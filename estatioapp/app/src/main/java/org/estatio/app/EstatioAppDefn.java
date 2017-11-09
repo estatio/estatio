@@ -7,6 +7,7 @@ import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.module.agreement.EstatioAgreementModule;
+import org.estatio.module.application.EstatioApplicationModule;
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
@@ -21,7 +22,7 @@ import org.estatio.module.document.EstatioDocumentModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.financial.EstatioFinancialModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
-import org.estatio.module.index.EstatioIndexDomModule;
+import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.link.dom.EstatioLinkModule;
@@ -43,6 +44,8 @@ class EstatioAppDefn  {
                 EstatioDomainModule.class,
 
                 // the domain modules.  At the moment these aren't actually required to be registered because we also register EstatioDomainModule (above); but this will change when we sort out the package names for these.
+                EstatioApplicationModule.class,
+
                 EstatioAgreementModule.class,
                 EstatioAssetModule.class,
                 EstatioAssetFinancialModule.class,
@@ -57,7 +60,7 @@ class EstatioAppDefn  {
                 EstatioBankAccountModule.class,
                 EstatioFinancialModule.class,
                 EstatioGuaranteeModule.class,
-                EstatioIndexDomModule.class,
+                EstatioIndexModule.class,
                 EstatioInvoiceModule.class,
                 EstatioLeaseModule.class,
                 EstatioLinkModule.class,

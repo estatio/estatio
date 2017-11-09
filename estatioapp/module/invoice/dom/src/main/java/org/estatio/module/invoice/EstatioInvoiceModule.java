@@ -18,7 +18,6 @@
  */
 package org.estatio.module.invoice;
 
-// TODO: eventually this should move to org.estatio.invoice, and be renamed to EstatioInvoiceModule (no "Dom" part)
 public final class EstatioInvoiceModule {
 
     private EstatioInvoiceModule(){}
