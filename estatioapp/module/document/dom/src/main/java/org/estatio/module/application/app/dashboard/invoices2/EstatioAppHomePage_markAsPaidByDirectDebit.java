@@ -1,4 +1,4 @@
-package org.estatio.app.services.dashboard.invoices2;
+package org.estatio.module.application.app.dashboard.invoices2;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
-import org.estatio.app.services.dashboard.EstatioAppHomePage;
+import org.estatio.module.application.app.dashboard.EstatioAppHomePage;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByDirectDebit;
 

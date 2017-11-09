@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.email;
+package org.estatio.module.application.spiimpl.email;
 
 import java.util.List;
 import java.util.Properties;

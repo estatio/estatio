@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.exceprecog;
+package org.estatio.module.application.spiimpl.exceprecog;
 
 import java.util.Set;
 import java.util.SortedMap;

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.contentmapping;
+package org.estatio.module.application.spiimpl.contentmapping;
 
 import java.util.List;
 import java.util.Map;
@@ -33,16 +33,16 @@ import org.apache.isis.applib.conmap.ContentMappingService;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
 import org.estatio.canonical.bankmandate.v1.BankAccountsAndMandatesDto;
-import org.estatio.module.party.canonical.v1.PartyDtoFactory;
 import org.estatio.canonical.party.v1.PartyDto;
-import org.estatio.module.bankmandate.dom.BankMandate;
+import org.estatio.module.application.canonical.v1.PostalAddressDtoFactory;
+import org.estatio.module.bankaccount.canonical.v1.BankAccountDtoFactory;
+import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankmandate.canonical.v1.BankMandateDtoFactory;
 import org.estatio.module.bankmandate.canonical.v1.PartyBankAccountsAndMandatesDtoFactory;
-import org.estatio.dom.communications.canonical.v1.PostalAddressDtoFactory;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.canonical.v1.BankAccountDtoFactory;
+import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.lease.canonical.v1.InvoiceForLeaseDtoFactory;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.party.canonical.v1.PartyDtoFactory;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(

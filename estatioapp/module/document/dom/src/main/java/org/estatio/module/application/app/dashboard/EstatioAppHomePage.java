@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.dashboard;
+package org.estatio.module.application.app.dashboard;
 
 import java.util.List;
 import java.util.stream.Collectors;

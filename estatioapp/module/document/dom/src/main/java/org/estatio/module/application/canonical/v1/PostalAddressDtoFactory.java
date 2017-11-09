@@ -1,4 +1,4 @@
-package org.estatio.dom.communications.canonical.v1;
+package org.estatio.module.application.canonical.v1;
 
 import javax.inject.Inject;
 

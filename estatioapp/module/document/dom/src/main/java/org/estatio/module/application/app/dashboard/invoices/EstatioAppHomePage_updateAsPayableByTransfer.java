@@ -1,4 +1,4 @@
-package org.estatio.app.services.dashboard.invoices;
+package org.estatio.module.application.app.dashboard.invoices;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
-import org.estatio.app.services.dashboard.EstatioAppHomePage;
+import org.estatio.module.application.app.dashboard.EstatioAppHomePage;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.invoice.dom.PaymentMethod;
 

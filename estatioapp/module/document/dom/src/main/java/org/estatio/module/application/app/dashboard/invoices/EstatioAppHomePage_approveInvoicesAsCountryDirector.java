@@ -1,4 +1,4 @@
-package org.estatio.app.services.dashboard.invoices;
+package org.estatio.module.application.app.dashboard.invoices;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 
-import org.estatio.app.services.dashboard.EstatioAppHomePage;
+import org.estatio.module.application.app.dashboard.EstatioAppHomePage;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
 
 /**
  * For testing only
@@ -22,11 +22,11 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
  * this could be inlined, but perhaps should not given that it is for testing/prototyping only?
  */
 @Mixin(method = "act")
-public class EstatioAppHomePage_approveInvoices {
+public class EstatioAppHomePage_approveInvoicesAsCountryDirector {
 
     private final EstatioAppHomePage homePage;
 
-    public EstatioAppHomePage_approveInvoices(EstatioAppHomePage homePage) {
+    public EstatioAppHomePage_approveInvoicesAsCountryDirector(EstatioAppHomePage homePage) {
         this.homePage = homePage;
     }
 
@@ -38,19 +38,18 @@ public class EstatioAppHomePage_approveInvoices {
             final String comment) {
 
         for (IncomingInvoice invoice : invoices) {
-            factoryService.mixin(IncomingInvoice_approve.class, invoice).act(null, null, comment, false);
+            factoryService.mixin(IncomingInvoice_approveAsCountryDirector.class, invoice).act(comment, false);
         }
 
         return homePage;
     }
 
     public List<IncomingInvoice> choices0Act() {
-        return homePage.getIncomingInvoicesCompleted();
+        return homePage.getIncomingInvoicesApproved();
     }
     public List<IncomingInvoice> default0Act() {
         return choices0Act();
     }
-
 
     @Inject
     FactoryService factoryService;
