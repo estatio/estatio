@@ -59,7 +59,10 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyD
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyInvoiceDateRepository;
 import org.estatio.module.party.dom.Party;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.invoice.InvoiceMenu"
+)
 @DomainServiceLayout(
         named = "Invoices Out",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

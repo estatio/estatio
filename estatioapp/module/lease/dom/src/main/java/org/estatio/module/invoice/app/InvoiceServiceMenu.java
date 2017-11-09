@@ -30,7 +30,10 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRu
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.dom.togglz.EstatioTogglzFeature;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.invoice.InvoiceServiceMenu"
+)
 @DomainServiceLayout(
         named = "Invoices Out",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

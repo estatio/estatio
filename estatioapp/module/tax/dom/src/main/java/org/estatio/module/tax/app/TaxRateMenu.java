@@ -30,7 +30,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.tax.dom.TaxRate;
 
-@DomainService(repositoryFor = TaxRate.class)
+@DomainService(
+        repositoryFor = TaxRate.class,
+        objectType = "org.estatio.app.menus.tax.TaxRateMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

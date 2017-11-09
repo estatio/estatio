@@ -33,7 +33,11 @@ import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 
-@DomainService(menuOrder = "80", nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        menuOrder = "80",
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.numerator.NumeratorMenu"
+)
 @DomainServiceLayout(
         named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "900.14"
 )

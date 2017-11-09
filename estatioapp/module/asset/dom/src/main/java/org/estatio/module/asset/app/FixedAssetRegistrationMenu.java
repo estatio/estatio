@@ -34,7 +34,8 @@ import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
 
 @DomainService(
-        nature = NatureOfService.VIEW_MENU_ONLY
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.assetregistration.FixedAssetRegistrationMenu"
 )
 @DomainServiceLayout(
         named = "Assets",

@@ -41,7 +41,10 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 
-@DomainService(repositoryFor = Property.class)
+@DomainService(
+        repositoryFor = Property.class,
+        objectType = "org.estatio.app.menus.asset.PropertyMenu"
+)
 @DomainServiceLayout(
         named = "Assets",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

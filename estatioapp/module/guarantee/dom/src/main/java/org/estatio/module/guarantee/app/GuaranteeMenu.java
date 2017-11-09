@@ -48,7 +48,10 @@ import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.guarantee.GuaranteeMenu"
+)
 @DomainServiceLayout(
         named = "Finance",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

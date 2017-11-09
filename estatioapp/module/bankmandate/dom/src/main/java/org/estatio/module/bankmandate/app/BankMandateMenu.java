@@ -39,7 +39,8 @@ import org.estatio.module.bankmandate.dom.BankMandateAgreementTypeEnum;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 
 @DomainService(
-    nature = NatureOfService.VIEW_MENU_ONLY
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.bankmandate.BankMandateMenu"
 )
 @DomainServiceLayout(
         named = "Finance",

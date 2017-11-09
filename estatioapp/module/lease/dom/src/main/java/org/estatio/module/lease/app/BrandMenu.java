@@ -45,7 +45,11 @@ import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 
-@DomainService(repositoryFor = Brand.class, nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        repositoryFor = Brand.class,
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.brand.BrandMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

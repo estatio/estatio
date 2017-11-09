@@ -35,7 +35,10 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.invoicing.NumeratorForCollectionRepository;
 import org.estatio.module.numerator.dom.Numerator;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.numerator.NumeratorForCollectionMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

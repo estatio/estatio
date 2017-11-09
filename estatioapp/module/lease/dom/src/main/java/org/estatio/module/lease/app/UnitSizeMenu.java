@@ -29,7 +29,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 
-@DomainService(repositoryFor = UnitSize.class)
+@DomainService(
+        repositoryFor = UnitSize.class,
+        objectType = "org.estatio.app.menus.brand.UnitSizeMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
