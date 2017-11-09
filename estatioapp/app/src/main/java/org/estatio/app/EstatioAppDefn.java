@@ -18,7 +18,6 @@ import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
-import org.estatio.module.document.EstatioDocumentModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.financial.EstatioFinancialModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
@@ -55,7 +54,6 @@ class EstatioAppDefn  {
                 EstatioChargeModule.class,
                 EstatioCapexModule.class,
                 EstatioCurrencyModule.class,
-                EstatioDocumentModule.class,
                 EstatioEventModule.class,
                 EstatioBankAccountModule.class,
                 EstatioFinancialModule.class,

@@ -31,7 +31,7 @@ import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Ro
 
 import org.estatio.module.link.dom.Link;
 import org.estatio.module.link.dom.LinkRepository;
-import org.estatio.module.document.dom.ReportServerSettingsService;
+import org.estatio.module.settings.dom.ReportServerSettingsService;
 
 // TODO: perhaps logically this could live in org.estatio.module.document (only other client of ReportServerSettingsService)
 @Mixin
