@@ -1,4 +1,4 @@
-package org.estatio.app.services.userprofile;
+package org.estatio.module.application.spiimpl.userprof;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;

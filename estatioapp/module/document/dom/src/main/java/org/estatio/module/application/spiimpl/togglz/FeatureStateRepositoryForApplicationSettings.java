@@ -1,4 +1,4 @@
-package org.estatio.app.services.togglz;
+package org.estatio.module.application.spiimpl.togglz;
 
 import javax.inject.Inject;
 

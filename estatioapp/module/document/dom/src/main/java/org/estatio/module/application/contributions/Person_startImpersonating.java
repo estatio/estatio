@@ -1,4 +1,4 @@
-package org.estatio.app.services.user;
+package org.estatio.module.application.contributions;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import org.isisaddons.module.security.dom.role.ApplicationRole;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
+import org.estatio.module.application.platform.security.EstatioImpersonateMenu;
+import org.estatio.module.application.platform.security.EstatioUserService;
 import org.estatio.module.party.dom.Person;
 
 @Mixin(method = "act")

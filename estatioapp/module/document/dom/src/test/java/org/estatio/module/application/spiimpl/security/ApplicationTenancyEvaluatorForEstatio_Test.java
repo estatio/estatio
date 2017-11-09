@@ -15,10 +15,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.tenancy;
+package org.estatio.module.application.spiimpl.security;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import org.estatio.module.application.spiimpl.security.ApplicationTenancyEvaluatorForEstatio;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

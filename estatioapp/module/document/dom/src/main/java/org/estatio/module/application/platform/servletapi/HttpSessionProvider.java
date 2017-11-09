@@ -1,4 +1,4 @@
-package org.estatio.app.services.user;
+package org.estatio.module.application.platform.servletapi;
 
 import java.util.Objects;
 import java.util.Optional;

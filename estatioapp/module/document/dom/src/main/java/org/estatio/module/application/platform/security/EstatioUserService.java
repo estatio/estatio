@@ -1,4 +1,4 @@
-package org.estatio.app.services.user;
+package org.estatio.module.application.platform.security;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +14,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.security.RoleMemento;
 import org.apache.isis.applib.security.UserMemento;
 import org.apache.isis.applib.services.user.UserService;
+
+import org.estatio.module.application.platform.servletapi.HttpSessionProvider;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuBar = DomainServiceLayout.MenuBar.TERTIARY)

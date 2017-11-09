@@ -1,4 +1,4 @@
-package org.estatio.app.services.user;
+package org.estatio.module.application.contributions;
 
 import javax.inject.Inject;
 
@@ -6,6 +6,8 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.RestrictTo;
+
+import org.estatio.module.application.platform.security.EstatioImpersonateMenu;
 
 @Mixin(method = "act")
 public class Object_stopImpersonating {

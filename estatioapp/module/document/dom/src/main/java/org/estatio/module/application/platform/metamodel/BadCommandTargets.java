@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.metamodel;
+package org.estatio.module.application.platform.metamodel;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
-import org.apache.isis.applib.services.repository.RepositoryService;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package org.estatio.app.services.pdfadvisor;
+package org.estatio.module.application.spiimpl.pdfadvisor;
 
 import java.util.Iterator;
 import java.util.Map;

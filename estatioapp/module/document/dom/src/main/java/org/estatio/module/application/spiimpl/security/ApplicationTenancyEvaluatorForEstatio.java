@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.tenancy;
+package org.estatio.module.application.spiimpl.security;
 
 import java.util.List;
 import java.util.Objects;
