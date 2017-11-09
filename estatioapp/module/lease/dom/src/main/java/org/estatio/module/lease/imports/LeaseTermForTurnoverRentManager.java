@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.lease.turnoverrent;
+package org.estatio.module.lease.imports;
 
 import java.util.List;
 

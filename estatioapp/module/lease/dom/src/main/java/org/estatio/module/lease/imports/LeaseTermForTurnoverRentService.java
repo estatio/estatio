@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.lease.budgetaudit;
+package org.estatio.module.lease.imports;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
@@ -41,10 +40,10 @@ import org.estatio.module.lease.dom.LeaseTermRepository;
 
 @DomainService(menuOrder = "00")
 @Immutable
-public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainService<LeaseTermForServiceChargeBudgetAuditService> {
+public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermForTurnoverRentService> {
 
-    public LeaseTermForServiceChargeBudgetAuditService() {
-        super(LeaseTermForServiceChargeBudgetAuditService.class);
+    public LeaseTermForTurnoverRentService() {
+        super(LeaseTermForTurnoverRentService.class);
     }
 
     // //////////////////////////////////////
@@ -52,9 +51,6 @@ public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainServic
     @PostConstruct
     public void init(final Map<String, String> properties) {
         super.init(properties);
-        if (bookmarkService == null) {
-            throw new IllegalStateException("Require BookmarkService to be configured");
-        }
         if (excelService == null) {
             throw new IllegalStateException("Require ExcelService to be configured");
         }
@@ -65,32 +61,20 @@ public class LeaseTermForServiceChargeBudgetAuditService extends UdoDomainServic
     @NotContributed(As.ASSOCIATION)
     // ie *is* contributed as action
     @NotInServiceMenu
-    public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
+    public LeaseTermForTurnoverRentManager maintainTurnoverRent(
             final Property property,
-            final List<LeaseItemType> leaseItemTypes,
             @Named("Start date") final LocalDate startDate) {
-        return new LeaseTermForServiceChargeBudgetAuditManager(property, leaseItemTypes, startDate);
+        return new LeaseTermForTurnoverRentManager(property, startDate);
     }
 
-    public List<LeaseItemType> choices1MaintainServiceCharges(){
-        return LeaseItemType.typesForLeaseTermForServiceCharge();
-    }
-
-    public List<LeaseItemType> default1MaintainServiceCharges(){
-        return LeaseItemType.typesForLeaseTermForServiceCharge();
-    }
-
-    public List<LocalDate> choices2MaintainServiceCharges(final Property property, final List<LeaseItemType> leaseItemTypes, final LocalDate startDate) {
-        return leaseTermRepository.findServiceChargeDatesByPropertyAndLeaseItemType(property, leaseItemTypes);
+    public List<LocalDate> choices1MaintainTurnoverRent(final Property property) {
+        return leaseTermRepository.findStartDatesByPropertyAndType(property, LeaseItemType.TURNOVER_RENT);
     }
 
     // //////////////////////////////////////
 
     @javax.inject.Inject
     private ExcelService excelService;
-
-    @javax.inject.Inject
-    private BookmarkService bookmarkService;
 
     @javax.inject.Inject
     private LeaseTermRepository leaseTermRepository;

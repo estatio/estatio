@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.lease.budgetaudit;
+package org.estatio.module.budgetassignment.imports;
 
 import java.math.BigDecimal;
 

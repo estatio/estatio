@@ -1,10 +1,11 @@
-package org.estatio.app.services.lease.budgetaudit;
+package org.estatio.module.budgetassignment.imports;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
+import org.estatio.module.budgetassignment.imports.LeaseTermForServiceChargeBudgetAuditManager;
 import org.estatio.module.lease.dom.LeaseItemType;
 
 import static org.assertj.core.api.Assertions.assertThat;
