@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.asset;
+package org.estatio.module.asset.app;
 
 import java.util.List;
 

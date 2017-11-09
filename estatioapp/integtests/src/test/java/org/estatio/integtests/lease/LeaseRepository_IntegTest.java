@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.app.menus.asset.PropertyMenu;
+import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Property;
