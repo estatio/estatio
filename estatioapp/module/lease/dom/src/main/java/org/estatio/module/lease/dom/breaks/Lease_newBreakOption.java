@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
 
 @DomainService(repositoryFor = BreakOption.class, nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY)

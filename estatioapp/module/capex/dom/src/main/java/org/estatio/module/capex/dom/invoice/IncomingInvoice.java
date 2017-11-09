@@ -81,7 +81,7 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;

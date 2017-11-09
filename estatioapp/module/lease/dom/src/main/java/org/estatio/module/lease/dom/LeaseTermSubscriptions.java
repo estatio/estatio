@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.title.TitleService;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 
 // TODO: REVIEW, why use a subscriber for intra-module interactions ??
 @DomainService(nature = NatureOfService.DOMAIN)

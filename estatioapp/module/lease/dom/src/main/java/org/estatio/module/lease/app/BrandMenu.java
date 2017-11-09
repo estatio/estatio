@@ -38,8 +38,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;

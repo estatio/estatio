@@ -31,7 +31,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.api.IndexCreator;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForIt;
 
 import static org.incode.module.base.integtests.VT.ld;
 

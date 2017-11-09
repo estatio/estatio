@@ -48,8 +48,8 @@ import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
 import org.incode.module.base.dom.types.ProperNameType;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 import lombok.Builder;
 import lombok.Getter;

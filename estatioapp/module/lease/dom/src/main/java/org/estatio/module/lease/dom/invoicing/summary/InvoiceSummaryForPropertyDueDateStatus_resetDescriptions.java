@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.base.FragmentRenderService;
+import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttributeName;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;

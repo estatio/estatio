@@ -33,7 +33,7 @@ import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.isisaddons.module.settings.dom.SettingAbstract;
 import org.isisaddons.module.settings.dom.SettingType;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 /**
  * Estatio-specific implementation of {@link ApplicationSettingsServiceRW} 

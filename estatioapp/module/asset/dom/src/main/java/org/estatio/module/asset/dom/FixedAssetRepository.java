@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.incode.module.base.dom.utils.StringUtils;
 
 @DomainService(

@@ -46,7 +46,7 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(

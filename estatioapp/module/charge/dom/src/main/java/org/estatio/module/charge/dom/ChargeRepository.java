@@ -35,8 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.tax.dom.Tax;
 
 @DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Charge.class)

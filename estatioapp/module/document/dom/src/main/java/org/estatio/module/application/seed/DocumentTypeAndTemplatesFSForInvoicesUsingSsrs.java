@@ -48,8 +48,8 @@ import org.estatio.module.application.spiimpl.document.binders.StringInterpolato
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForGlobal;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForIt;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemplateFSAbstract {
 

@@ -42,7 +42,7 @@ import org.incode.module.docfragment.dom.impl.DocFragment;
 import org.incode.module.docfragment.dom.impl.DocFragmentRepository;
 import org.incode.module.docfragment.dom.types.TemplateTextType;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

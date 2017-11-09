@@ -29,7 +29,7 @@ import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.EstatioRole;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository

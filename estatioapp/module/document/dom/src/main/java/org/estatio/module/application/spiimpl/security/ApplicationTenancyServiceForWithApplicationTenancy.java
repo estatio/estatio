@@ -22,7 +22,7 @@ package org.estatio.module.application.spiimpl.security;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class ApplicationTenancyServiceForWithApplicationTenancy

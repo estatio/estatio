@@ -18,7 +18,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 /**
  * REVIEW: it's rather peculiar that this functionality has ended up here.  It was in udo-dom-geography (now moved out
@@ -113,7 +114,7 @@ public class EstatioApplicationTenancyRepositoryForCountry {
 
         public static Predicate<? super ApplicationTenancy> isCountryTenancyFor(final ApplicationTenancy tenancy) {
             return com.google.common.base.Predicates.and(
-                    isCountry(), org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
+                    isCountry(), EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
         }
 
         public static Predicate<? super ApplicationTenancy> isGlobalOrCountryTenancyFor(final ApplicationTenancy tenancy) {

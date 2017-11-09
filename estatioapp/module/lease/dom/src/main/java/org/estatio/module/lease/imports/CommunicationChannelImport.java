@@ -28,7 +28,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.StateRepository;
 
-import org.estatio.dom.Importable;
+import org.estatio.module.base.dom.Importable;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelType;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;

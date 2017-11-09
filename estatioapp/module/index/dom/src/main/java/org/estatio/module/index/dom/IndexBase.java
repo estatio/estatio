@@ -54,8 +54,8 @@ import org.incode.module.base.dom.with.WithStartDate;
 import org.incode.module.base.dom.utils.MathUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
 import org.estatio.module.index.dom.api.IndexValueCreator;
 
 import lombok.Getter;

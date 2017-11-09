@@ -57,7 +57,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.bankaccount.dom.utils.IBANValidator;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;

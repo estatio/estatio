@@ -20,7 +20,7 @@ import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
-import org.estatio.dom.Importable;
+import org.estatio.module.base.dom.Importable;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;

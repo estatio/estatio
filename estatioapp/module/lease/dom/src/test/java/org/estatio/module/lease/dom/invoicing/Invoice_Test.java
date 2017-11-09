@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.dom.base.FragmentRenderService;
+import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
 import org.estatio.module.invoice.dom.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.InvoiceAttributeRepository;

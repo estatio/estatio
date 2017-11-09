@@ -80,7 +80,7 @@ import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 import lombok.AccessLevel;
 import lombok.Getter;

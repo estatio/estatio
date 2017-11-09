@@ -20,7 +20,7 @@ package org.estatio.module.numerator.fixture;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
+import org.estatio.module.base.fixtures.security.apptenancy.data.ApplicationTenancy_data;
 
 public class NumeratorModule_setupPrereqs extends FixtureScript {
 

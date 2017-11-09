@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.application.platform.servletapi.HttpSessionProvider;
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;

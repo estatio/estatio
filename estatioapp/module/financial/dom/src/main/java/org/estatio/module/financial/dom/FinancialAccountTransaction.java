@@ -32,9 +32,9 @@ import org.incode.module.base.dom.types.DescriptionType;
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -20,7 +20,7 @@ package org.estatio.module.lease.dom;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.module.lease.dom.util.CalendarUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
 

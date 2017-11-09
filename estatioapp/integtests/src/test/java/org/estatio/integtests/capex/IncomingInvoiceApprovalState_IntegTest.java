@@ -20,6 +20,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -42,7 +43,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.dom.togglz.EstatioTogglzFeature;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;

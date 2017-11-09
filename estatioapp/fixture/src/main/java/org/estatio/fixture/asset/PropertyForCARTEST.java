@@ -24,7 +24,7 @@ import org.estatio.module.party.dom.Party;
 import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.fixture.party.OrganisationForHelloWorldIt;
 import org.estatio.fixture.party.PersonForLucianoPavarottiIt;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForIt;
 
 import static org.incode.module.base.integtests.VT.ld;
 

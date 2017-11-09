@@ -37,11 +37,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.TitleType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunicationChannelType;
 import org.estatio.module.agreement.dom.type.AgreementType;
-import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
-import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyConstants;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyGlobal;
 
 import lombok.Getter;
 import lombok.Setter;

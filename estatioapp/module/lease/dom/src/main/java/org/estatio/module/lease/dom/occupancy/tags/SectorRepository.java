@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
 public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {

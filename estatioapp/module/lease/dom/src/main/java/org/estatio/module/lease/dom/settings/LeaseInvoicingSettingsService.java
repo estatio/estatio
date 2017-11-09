@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.settings.dom.ApplicationSettingCreator;

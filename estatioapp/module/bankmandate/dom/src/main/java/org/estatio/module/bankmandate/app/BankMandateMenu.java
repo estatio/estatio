@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;

@@ -37,13 +37,13 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
-import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.EstatioRole;
 
 public abstract class InvoiceSummaryAbstract implements WithApplicationTenancy, WithApplicationTenancyAny {
 

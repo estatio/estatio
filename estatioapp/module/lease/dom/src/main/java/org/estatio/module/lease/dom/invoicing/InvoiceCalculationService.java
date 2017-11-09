@@ -41,9 +41,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.incode.module.base.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
-import org.estatio.dom.base.FragmentRenderService;
+import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoicingInterval;

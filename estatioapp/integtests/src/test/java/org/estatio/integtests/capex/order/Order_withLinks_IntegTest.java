@@ -27,7 +27,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.dom.togglz.EstatioTogglzFeature;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;

@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;

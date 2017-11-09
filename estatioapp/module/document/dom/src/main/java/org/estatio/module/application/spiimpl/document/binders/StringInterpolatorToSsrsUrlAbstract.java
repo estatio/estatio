@@ -24,7 +24,7 @@ import org.incode.module.document.dom.impl.applicability.RendererModelFactoryAbs
 import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 
 import org.estatio.module.settings.dom.ReportServerSettingsService;
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 
 /**
  * Creates a dataModel to be used with {@link StringInterpolatorService} for both content and subject;

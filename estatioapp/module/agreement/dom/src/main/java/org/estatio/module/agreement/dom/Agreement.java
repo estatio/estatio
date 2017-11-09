@@ -65,7 +65,7 @@ import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;

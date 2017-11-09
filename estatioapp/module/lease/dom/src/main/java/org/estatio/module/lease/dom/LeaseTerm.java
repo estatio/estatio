@@ -61,13 +61,13 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.module.invoice.dom.InvoiceSource;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.Setter;

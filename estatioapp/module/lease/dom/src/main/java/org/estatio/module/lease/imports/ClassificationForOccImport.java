@@ -21,7 +21,7 @@ import org.incode.module.classification.dom.impl.category.taxonomy.Taxonomy;
 import org.incode.module.classification.dom.impl.classification.Classification;
 import org.incode.module.classification.dom.impl.classification.ClassificationRepository;
 
-import org.estatio.dom.Importable;
+import org.estatio.module.base.dom.Importable;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.Lease;

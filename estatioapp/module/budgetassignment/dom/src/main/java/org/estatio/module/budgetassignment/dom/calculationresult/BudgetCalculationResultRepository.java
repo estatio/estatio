@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.charge.dom.Charge;
 
 @DomainService(repositoryFor = BudgetCalculationResult.class, nature = NatureOfService.DOMAIN)

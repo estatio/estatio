@@ -9,7 +9,7 @@ import org.apache.isis.applib.services.userprof.UserProfileService;
 import org.isisaddons.module.security.app.user.MeService;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
 @DomainServiceLayout(

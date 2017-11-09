@@ -39,8 +39,8 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 import lombok.Getter;
 import lombok.Setter;

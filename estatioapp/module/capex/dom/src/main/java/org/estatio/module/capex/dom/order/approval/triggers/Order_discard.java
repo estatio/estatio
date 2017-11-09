@@ -18,7 +18,7 @@ import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCat
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransitionType;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

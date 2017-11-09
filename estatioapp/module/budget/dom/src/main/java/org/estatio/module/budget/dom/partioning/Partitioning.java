@@ -47,8 +47,8 @@ import org.incode.module.base.dom.valuetypes.AbstractInterval;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithInterval;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;

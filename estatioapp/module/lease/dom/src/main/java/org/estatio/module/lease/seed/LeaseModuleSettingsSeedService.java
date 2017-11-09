@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.isisaddons.module.settings.dom.ApplicationSetting;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingKey;
 import org.estatio.module.settings.dom.ApplicationSettingCreator;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;

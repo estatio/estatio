@@ -35,9 +35,9 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.UrlTemplateType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -37,7 +37,7 @@ import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
 import org.estatio.fixture.EstatioFakeDataService;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGlobal;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForGlobal;
 
 import lombok.Data;
 import lombok.Getter;

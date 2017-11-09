@@ -16,6 +16,8 @@
  */
 package org.estatio.fixture.security.tenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.named.AbstractApplicationTenancyFixtureScript;
+
 public class ApplicationTenancyForGbOxfDefault extends AbstractApplicationTenancyFixtureScript {
 
     public static final String PATH = ApplicationTenancyForGb.PATH+"/OXF/_";

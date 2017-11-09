@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = TaxRate.class, nature = NatureOfService.DOMAIN)
 public class TaxRateRepository extends UdoDomainRepositoryAndFactory<TaxRate> {

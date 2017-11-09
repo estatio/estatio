@@ -49,8 +49,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
@@ -62,7 +62,7 @@ import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSizeRepository;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

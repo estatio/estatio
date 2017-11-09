@@ -53,8 +53,8 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.dom.utils.FinancialAmountUtil;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 

@@ -17,7 +17,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
@@ -28,7 +28,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRun;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
-import org.estatio.dom.togglz.EstatioTogglzFeature;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

@@ -31,7 +31,7 @@ import org.isisaddons.module.security.app.user.MeService;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.utils.AtPathUtils;
+import org.estatio.module.country.dom.util.AtPathUtils;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class CountryServiceForCurrentUser {

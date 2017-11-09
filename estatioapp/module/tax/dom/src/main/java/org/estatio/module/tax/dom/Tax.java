@@ -51,9 +51,9 @@ import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

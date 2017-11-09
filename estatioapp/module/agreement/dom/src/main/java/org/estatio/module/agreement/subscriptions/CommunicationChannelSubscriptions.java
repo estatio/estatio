@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
 

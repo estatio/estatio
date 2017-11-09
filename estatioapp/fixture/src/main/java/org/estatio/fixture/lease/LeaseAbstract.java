@@ -47,7 +47,7 @@ import org.estatio.module.agreement.dom.commchantype.IAgreementRoleCommunication
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
-import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyConstants;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;

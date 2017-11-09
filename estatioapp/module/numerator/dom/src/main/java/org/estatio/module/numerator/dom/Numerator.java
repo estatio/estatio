@@ -41,9 +41,9 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ObjectIdentifierType;
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyAny;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyAny;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 
 import lombok.Getter;
 import lombok.Setter;

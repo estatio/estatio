@@ -36,7 +36,7 @@ import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

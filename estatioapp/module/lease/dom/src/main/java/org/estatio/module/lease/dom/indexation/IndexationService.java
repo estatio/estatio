@@ -21,7 +21,7 @@ package org.estatio.module.lease.dom.indexation;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.Indexable;
 import org.estatio.module.index.dom.calc.IndexationCalculationMethod;

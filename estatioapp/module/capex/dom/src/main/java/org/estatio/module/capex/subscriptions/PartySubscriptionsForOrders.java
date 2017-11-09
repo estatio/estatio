@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.scratchpad.Scratchpad;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.party.dom.Party;
 

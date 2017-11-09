@@ -14,7 +14,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.party.dom.Party;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 /**
  * @see OrderItem_createInvoiceItemLink

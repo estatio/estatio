@@ -16,6 +16,8 @@
  */
 package org.estatio.fixture.security.tenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.named.AbstractApplicationTenancyFixtureScript;
+
 public class ApplicationTenancyForSeHan extends AbstractApplicationTenancyFixtureScript {
 
     public static final String PATH = ApplicationTenancyForSe.PATH+"/HAN";

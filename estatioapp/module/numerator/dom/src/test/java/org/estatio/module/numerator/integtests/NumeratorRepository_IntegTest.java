@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.apptenancy.fixture.data.ApplicationTenancy_data;
+import org.estatio.module.base.fixtures.security.apptenancy.data.ApplicationTenancy_data;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_data;

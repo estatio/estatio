@@ -39,7 +39,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.financial.dom.FinancialAccountRepository;

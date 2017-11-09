@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
 import org.estatio.module.charge.dom.ChargeRepository;

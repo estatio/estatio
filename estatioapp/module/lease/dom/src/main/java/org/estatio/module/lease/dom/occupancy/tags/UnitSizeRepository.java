@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = UnitSize.class, nature = NatureOfService.DOMAIN)
 public class UnitSizeRepository extends UdoDomainRepositoryAndFactory<UnitSize> {

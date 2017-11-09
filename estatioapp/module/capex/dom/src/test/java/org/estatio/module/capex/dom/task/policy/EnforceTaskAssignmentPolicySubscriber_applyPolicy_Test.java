@@ -25,7 +25,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
-import org.estatio.dom.togglz.EstatioTogglzFeature;
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

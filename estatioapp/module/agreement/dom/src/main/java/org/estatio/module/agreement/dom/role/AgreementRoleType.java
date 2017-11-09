@@ -37,10 +37,10 @@ import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithTitleComparable;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.type.AgreementType;
-import org.estatio.dom.apptenancy.ApplicationTenancyConstants;
-import org.estatio.dom.apptenancy.WithApplicationTenancyGlobal;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyConstants;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyGlobal;
 
 import lombok.Getter;
 import lombok.Setter;

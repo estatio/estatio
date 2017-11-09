@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 

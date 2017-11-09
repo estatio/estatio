@@ -6,7 +6,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.dto.DtoMappingHelper;
+import org.estatio.module.base.platform.applib.DtoMappingHelper;
 import org.estatio.canonical.financial.v1.BankAccountDto;
 import org.estatio.module.bankaccount.dom.BankAccount;
 

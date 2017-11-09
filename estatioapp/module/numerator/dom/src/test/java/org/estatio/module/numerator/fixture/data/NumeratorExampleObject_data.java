@@ -2,8 +2,8 @@ package org.estatio.module.numerator.fixture.data;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.dom.fixture.DemoData2;
-import org.estatio.dom.fixture.DemoData2PersistAbstract;
+import org.estatio.module.base.platform.fixturesupport.DemoData2;
+import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
 import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
 
 import lombok.AllArgsConstructor;

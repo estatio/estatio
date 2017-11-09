@@ -49,7 +49,7 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkReposit
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
@@ -57,8 +57,8 @@ import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.dom.utils.FinancialAmountUtil;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.capex.dom.util.FinancialAmountUtil;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;

@@ -22,7 +22,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForIt;
 
 public class PersonForLucianoPavarottiIt extends FixtureScript {
 

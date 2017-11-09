@@ -69,7 +69,7 @@ import org.estatio.fixture.party.PersonForRosaireEvrardFr;
 import org.estatio.fixture.party.PersonForThibaultOfficerAdministratorFr;
 import org.estatio.fixture.project.ProjectsForGra;
 import org.estatio.fixture.project.ProjectsForKal;
-import org.estatio.integtests.capex.TickingFixtureClock;
+import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 

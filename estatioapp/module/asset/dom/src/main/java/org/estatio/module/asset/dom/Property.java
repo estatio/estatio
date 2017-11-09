@@ -56,8 +56,8 @@ import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 import org.incode.module.base.dom.types.ProperNameType;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.apptenancy.WithApplicationTenancyProperty;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;

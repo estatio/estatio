@@ -24,7 +24,7 @@ import org.apache.isis.applib.annotation.HomePage;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 
 @DomainService(menuOrder = "90", nature = NatureOfService.DOMAIN)
 public class EstatioAppHomePageService extends UdoDomainService<EstatioAppHomePageService> {

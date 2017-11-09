@@ -29,7 +29,7 @@ import org.incode.module.integtestsupport.dom.ClockFixture;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
-import org.estatio.integtests.capex.TickingFixtureClock;
+import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}

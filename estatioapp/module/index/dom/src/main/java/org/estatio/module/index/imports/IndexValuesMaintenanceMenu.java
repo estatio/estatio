@@ -42,7 +42,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.country.dom.CountryServiceForCurrentUser;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 

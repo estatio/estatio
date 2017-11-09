@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class ReportServerSettingsService extends UdoDomainService<ReportServerSettingsService> {

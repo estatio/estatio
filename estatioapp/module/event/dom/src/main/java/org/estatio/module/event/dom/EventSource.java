@@ -20,7 +20,7 @@ package org.estatio.module.event.dom;
 
 import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 
-import org.estatio.dom.apptenancy.WithApplicationTenancy;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancy;
 
 public interface EventSource extends Calendarable, WithApplicationTenancy {
 

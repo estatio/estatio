@@ -71,11 +71,11 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithSequence;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.agreement.dom.role.IAgreementRoleType;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoicingInterval;

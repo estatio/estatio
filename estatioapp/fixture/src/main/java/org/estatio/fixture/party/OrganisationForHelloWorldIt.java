@@ -19,7 +19,7 @@
 package org.estatio.fixture.party;
 
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.named.ApplicationTenancyForIt;
 
 public class OrganisationForHelloWorldIt extends OrganisationAbstract {
 

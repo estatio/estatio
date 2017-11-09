@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 /**
  * @see OrderItem_removeInvoiceItemLink

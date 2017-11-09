@@ -50,8 +50,8 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategy;
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.types.NameType;
 
-import org.estatio.dom.UdoDomainService;
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.module.base.dom.UdoDomainService;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

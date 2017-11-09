@@ -45,7 +45,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.dom.UdoDomainObject;
+import org.estatio.module.base.dom.UdoDomainObject;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 

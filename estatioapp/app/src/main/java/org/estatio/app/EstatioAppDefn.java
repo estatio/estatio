@@ -2,7 +2,6 @@ package org.estatio.app;
 
 import org.incode.module.base.services.calendar.CalendarService;
 
-import org.estatio.dom.dto.EstatioBaseDtoModule;
 import org.estatio.fixture.EstatioFixtureModule;
 import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.module.agreement.EstatioAgreementModule;
@@ -11,6 +10,7 @@ import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.budget.EstatioBudgetingModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
@@ -37,8 +37,8 @@ class EstatioAppDefn  {
     static Class<?>[] domModulesAndSecurityAndCommandAddon() {
         return new Class<?>[] {
 
-                // the domain modules.  At the moment these aren't actually required to be registered because we also register EstatioDomainModule (above); but this will change when we sort out the package names for these.
                 EstatioApplicationModule.class,
+                EstatioBaseModule.class,
 
                 EstatioAgreementModule.class,
                 EstatioAssetModule.class,
@@ -63,7 +63,6 @@ class EstatioAppDefn  {
                 EstatioSettingsModule.class,
                 EstatioRegistrationModule.class,
                 EstatioTaxModule.class,
-                EstatioBaseDtoModule.class,
 
                 // the incode catalog modules
                 org.incode.module.country.dom.CountryModule.class,

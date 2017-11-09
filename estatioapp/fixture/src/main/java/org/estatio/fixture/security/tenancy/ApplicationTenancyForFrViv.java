@@ -16,6 +16,8 @@
  */
 package org.estatio.fixture.security.tenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.named.AbstractApplicationTenancyFixtureScript;
+
 public class ApplicationTenancyForFrViv extends AbstractApplicationTenancyFixtureScript {
 
     public static final String PATH = ApplicationTenancyForFr.PATH+"/VIV";

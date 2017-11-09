@@ -57,11 +57,11 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithDescriptionGetter;
 import org.incode.module.base.dom.with.WithInterval;
 
-import org.estatio.dom.UdoDomainObject2;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPropertyLocal;
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPropertyLocal;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.dom.roles.EstatioRole;
-import org.estatio.dom.utils.ReasonBuffer2;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 

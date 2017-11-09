@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = FinancialAccountTransaction.class, nature = NatureOfService.DOMAIN)
 public class FinancialAccountTransactionRepository extends UdoDomainRepositoryAndFactory<FinancialAccountTransaction> {

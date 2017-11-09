@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.types.ReferenceType;
 
-import org.estatio.dom.UdoDomainService;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.guarantee.dom.GuaranteeType;

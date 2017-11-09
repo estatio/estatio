@@ -18,7 +18,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(
@@ -93,7 +94,7 @@ public class EstatioApplicationTenancyRepositoryForProperty {
 
         public static Predicate<? super ApplicationTenancy> isPropertyTenancyUnder(final ApplicationTenancy tenancy) {
             return com.google.common.base.Predicates.and(
-                    isProperty(), org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
+                    isProperty(), EstatioApplicationTenancyRepository.Predicates.isSelfOrChildOf(tenancy));
         }
 
         public static Predicate<ApplicationTenancy> isProperty() {

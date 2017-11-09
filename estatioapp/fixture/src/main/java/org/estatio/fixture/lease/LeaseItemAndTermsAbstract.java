@@ -30,7 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.dom.apptenancy.EstatioApplicationTenancyRepository;
+import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.index.dom.IndexRepository;
@@ -53,7 +53,7 @@ import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.dom.LeaseTermRepository;
-import org.estatio.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.fixture.charge.ChargeRefData;
 
 public abstract class LeaseItemAndTermsAbstract extends FixtureScript {

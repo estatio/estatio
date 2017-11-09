@@ -12,7 +12,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

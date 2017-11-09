@@ -34,7 +34,7 @@ import org.incode.module.document.dom.impl.docs.Document_delete;
 import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,

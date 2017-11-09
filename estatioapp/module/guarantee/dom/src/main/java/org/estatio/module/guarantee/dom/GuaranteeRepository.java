@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementType;

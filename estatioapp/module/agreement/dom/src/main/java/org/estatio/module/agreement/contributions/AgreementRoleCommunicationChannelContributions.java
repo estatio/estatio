@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
 

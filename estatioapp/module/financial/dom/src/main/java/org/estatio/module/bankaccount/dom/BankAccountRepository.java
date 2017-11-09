@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
 import org.estatio.module.party.dom.Party;

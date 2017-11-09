@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 
 @DomainService(repositoryFor = BudgetItemValue.class, nature = NatureOfService.DOMAIN)

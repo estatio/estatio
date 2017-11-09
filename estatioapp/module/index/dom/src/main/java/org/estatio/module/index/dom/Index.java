@@ -56,11 +56,11 @@ import org.incode.module.base.dom.types.NameType;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.UdoDomainObject2;
 import org.incode.module.base.dom.with.WithNameUnique;
 import org.incode.module.base.dom.with.WithReferenceComparable;
-import org.estatio.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.dom.apptenancy.WithApplicationTenancyPathPersisted;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
 import org.estatio.module.index.dom.api.IndexBaseCreator;
 import org.estatio.module.index.dom.api.IndexValueCreator;
 

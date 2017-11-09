@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;

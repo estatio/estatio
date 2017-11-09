@@ -32,7 +32,7 @@ import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.invoice.dom.InvoicingInterval;
-import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.module.lease.dom.util.CalendarUtils;
 
 public enum InvoicingFrequency {
 

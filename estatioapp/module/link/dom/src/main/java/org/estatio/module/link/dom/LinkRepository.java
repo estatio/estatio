@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(repositoryFor = Link.class, nature = NatureOfService.DOMAIN)
 public class LinkRepository extends UdoDomainRepositoryAndFactory<Link> {

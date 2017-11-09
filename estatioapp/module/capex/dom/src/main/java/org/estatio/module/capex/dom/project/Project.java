@@ -63,8 +63,8 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.docfragment.dom.types.AtPathType;
 
-import org.estatio.dom.UdoDomainObject;
-import org.estatio.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
+import org.estatio.module.base.dom.UdoDomainObject;
+import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyGlobalAndCountry;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;

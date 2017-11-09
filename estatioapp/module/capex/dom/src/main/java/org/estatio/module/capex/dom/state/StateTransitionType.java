@@ -9,7 +9,7 @@ import org.apache.isis.applib.util.Enums;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.dom.roles.EstatioRole;
+import org.estatio.module.base.dom.EstatioRole;
 
 /**
  * An identified sequence of {@link State} transitions.
