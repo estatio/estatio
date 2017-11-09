@@ -712,19 +712,6 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-impmgr</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-impmgr</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
                 <groupId>org.incode.estatio</groupId>
                 <artifactId>estatio-canonical</artifactId>
                 <version>${estatio-canonical.version}</version>
@@ -838,7 +825,6 @@ language governing permissions and limitations under the License.
         <module>estatioapp/module/settings/dom</module>
         <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
-        <module>estatioapp/impmgr</module>
         <module>estatioapp/fixture</module>
         <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>

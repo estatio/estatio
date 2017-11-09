@@ -214,11 +214,6 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-impmgr</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
 
