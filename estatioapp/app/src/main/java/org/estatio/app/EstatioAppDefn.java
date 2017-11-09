@@ -25,7 +25,7 @@ import org.estatio.module.guarantee.EstatioGuaranteeModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.EstatioLeaseModule;
-import org.estatio.module.link.dom.EstatioLinkModule;
+import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.party.EstatioPartyModule;
 import org.estatio.module.registration.EstatioRegistrationModule;

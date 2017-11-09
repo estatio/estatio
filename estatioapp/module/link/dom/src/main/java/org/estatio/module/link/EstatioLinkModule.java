@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.link.dom;
+package org.estatio.module.link;
 
 public final class EstatioLinkModule {
 
