@@ -16,15 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.event;
+package org.estatio.module.application;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioEventModule {
+/**
+ * A "global" module for the entire app (=big ball of mud, stuff to decouple)
+ */
+public final class EstatioApplicationModule {
 
-    private EstatioEventModule(){}
+    private EstatioApplicationModule(){}
 
 
 
@@ -36,6 +39,7 @@ public final class EstatioEventModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
+
 
 
 

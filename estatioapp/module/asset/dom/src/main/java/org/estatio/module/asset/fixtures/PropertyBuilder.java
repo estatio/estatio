@@ -41,116 +41,40 @@ import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class PropertyBuilder extends FixtureScript {
 
-    //region > reference
+    @Getter @Setter
     private String reference;
-    public String getReference() {
-        return reference;
-    }
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-    //endregion
 
-    //region > name
+    @Getter @Setter
     private String name;
-    public String getName() {
-        return name;
-    }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
-    //endregion
-
-    //region > city
+    @Getter @Setter
     private String city;
-    public String getCity() {
-        return city;
-    }
 
-    public void setCity(final String city) {
-        this.city = city;
-    }
-    //endregion
-
-    //region > country
+    @Getter @Setter
     private Country country;
 
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(final Country country) {
-        this.country = country;
-    }
-    //endregion
-
-    //region > propertyType
+    @Getter @Setter
     private PropertyType propertyType;
-    public PropertyType getPropertyType() {
-        return propertyType;
-    }
 
-    public void setPropertyType(final PropertyType propertyType) {
-        this.propertyType = propertyType;
-    }
-    //endregion
-
-    //region > acquireDate
+    @Getter @Setter
     private LocalDate acquireDate;
-    public LocalDate getAcquireDate() {
-        return acquireDate;
-    }
 
-    public void setAcquireDate(final LocalDate acquireDate) {
-        this.acquireDate = acquireDate;
-    }
-    //endregion
-
-    //region > owner
+    @Getter @Setter
     private Party owner;
-    public Party getOwner() {
-        return owner;
-    }
-    public void setOwner(final Party owner) {
-        this.owner = owner;
-    }
-    //endregion
 
-    //region > manager
+    @Getter @Setter
     private Party manager;
-    public Party getManager() {
-        return manager;
-    }
-    public void setManager(final Party manager) {
-        this.manager = manager;
-    }
-    //endregion
 
-    //region > numberOfUnits
+    @Getter @Setter
     private Integer numberOfUnits;
-    public Integer getNumberOfUnits() {
-        return numberOfUnits;
-    }
-    public void setNumberOfUnits(final Integer numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
-    }
-    //endregion
 
-
-
-    //region > property (output property)
+    @Getter @Setter
     private Property property;
-    public Property getProperty() {
-        return property;
-    }
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
-    //endregion
-
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

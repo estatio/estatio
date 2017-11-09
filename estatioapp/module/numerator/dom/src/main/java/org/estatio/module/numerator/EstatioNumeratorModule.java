@@ -27,6 +27,21 @@ import org.estatio.module.numerator.dom.Numerator;
 
 public class EstatioNumeratorModule {
 
+
+    private EstatioNumeratorModule() {}
+
+
+
+    public abstract static class ActionDomainEvent<S>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
+
+    public abstract static class CollectionDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
+
+    public abstract static class PropertyDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
+
+
     public static class Setup extends FixtureScript {
 
         static boolean prereqsRun = false;

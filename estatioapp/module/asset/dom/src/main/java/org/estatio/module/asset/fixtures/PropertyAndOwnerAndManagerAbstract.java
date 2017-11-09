@@ -42,6 +42,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
+import lombok.Getter;
 import static org.incode.module.base.integtests.VT.ld;
 
 /**
@@ -49,6 +50,9 @@ import static org.incode.module.base.integtests.VT.ld;
  * {@link Unit}s.
  */
 public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
+
+    @Getter
+    public Property property;
 
     protected Property createPropertyAndUnits(
             final String atPath,
@@ -74,6 +78,9 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
             int unitNumber = i + 1;
             property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
         }
+
+        this.property = property;
+
         return fixtureResults.addResult(this, property.getReference(), property);
     }
 

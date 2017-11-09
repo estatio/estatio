@@ -9,7 +9,7 @@ import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.base.EstatioBaseModule;
-import org.estatio.module.budget.EstatioBudgetingModule;
+import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -42,7 +42,7 @@ class EstatioAppDefn  {
                 EstatioAssetModule.class,
                 EstatioAssetFinancialModule.class,
                 EstatioBankMandateModule.class,
-                EstatioBudgetingModule.class,
+                EstatioBudgetModule.class,
                 EstatioBudgetAssignmentModule.class,
                 EstatioChargeModule.class,
                 EstatioCapexModule.class,

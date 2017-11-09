@@ -504,12 +504,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
+                <artifactId>estatio-module-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
+                <artifactId>estatio-module-application</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -794,6 +794,7 @@ language governing permissions and limitations under the License.
 
     <modules>
         <module>iso20022</module>
+        <module>estatioapp/module/application/dom</module>
         <module>estatioapp/module/base/dom</module>
         <module>estatioapp/module/capex/dom</module>
         <module>estatioapp/module/agreement/dom</module>
@@ -804,7 +805,6 @@ language governing permissions and limitations under the License.
         <module>estatioapp/module/budgetassignment/dom</module>
         <module>estatioapp/module/charge/dom</module>
         <module>estatioapp/module/currency/dom</module>
-        <module>estatioapp/module/document/dom</module>
         <module>estatioapp/module/event/dom</module>
         <module>estatioapp/module/financial/dom</module>
         <module>estatioapp/module/guarantee/dom</module>

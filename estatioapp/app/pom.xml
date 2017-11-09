@@ -129,7 +129,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-document</artifactId>
+            <artifactId>estatio-module-application</artifactId>
         </dependency>
 
         <dependency>

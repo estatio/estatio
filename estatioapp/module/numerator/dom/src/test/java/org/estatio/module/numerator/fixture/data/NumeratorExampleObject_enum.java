@@ -4,6 +4,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
+import org.estatio.module.base.platform.fixturesupport.DemoData2TeardownAbstract;
 import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
 
 import lombok.AllArgsConstructor;
@@ -32,5 +33,13 @@ public enum NumeratorExampleObject_enum implements DemoData2<NumeratorExampleObj
             super(NumeratorExampleObject_enum.class);
         }
     }
+
+    public static class DeleteScript
+            extends DemoData2TeardownAbstract<NumeratorExampleObject_enum, NumeratorExampleObject> {
+        public DeleteScript() {
+            super(NumeratorExampleObject_enum.class);
+        }
+    }
+
 
 }

@@ -16,16 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.event;
+package org.estatio.module.budget;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioEventModule {
+public final class EstatioBudgetModule {
 
-    private EstatioEventModule(){}
-
+    private EstatioBudgetModule(){}
 
 
     public abstract static class ActionDomainEvent<S>
