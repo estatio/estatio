@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.Mixin;
 
-import org.estatio.module.invoice.app.InvoiceServiceMenu;
+import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;

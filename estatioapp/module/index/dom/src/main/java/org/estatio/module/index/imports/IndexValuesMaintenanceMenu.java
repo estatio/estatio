@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.indexmaint;
+package org.estatio.module.index.imports;
 
 import java.util.List;
 import java.util.Map;

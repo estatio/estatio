@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.invoice.app.InvoiceServiceMenu;
+import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;

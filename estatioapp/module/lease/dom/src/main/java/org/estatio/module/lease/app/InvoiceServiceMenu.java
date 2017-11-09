@@ -1,4 +1,4 @@
-package org.estatio.module.invoice.app;
+package org.estatio.module.lease.app;
 
 import java.util.Arrays;
 import java.util.List;

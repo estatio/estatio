@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.services.indexmaint;
+package org.estatio.module.index.imports;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,6 +39,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
@@ -46,7 +47,6 @@ import org.estatio.module.index.dom.IndexBaseRepository;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.IndexValueRepository;
-import org.incode.module.base.dom.utils.TitleBuilder;
 
 @DomainObjectLayout(paged = Integer.MAX_VALUE)
 @MemberGroupLayout(

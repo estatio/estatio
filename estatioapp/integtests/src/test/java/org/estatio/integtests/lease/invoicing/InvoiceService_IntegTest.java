@@ -31,8 +31,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.invoice.app.InvoiceMenu;
-import org.estatio.module.invoice.app.InvoiceServiceMenu;
+import org.estatio.module.lease.app.InvoiceMenu;
+import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.index.dom.Index;
