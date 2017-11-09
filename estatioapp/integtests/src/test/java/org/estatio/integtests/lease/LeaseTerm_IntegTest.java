@@ -51,7 +51,7 @@ import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;

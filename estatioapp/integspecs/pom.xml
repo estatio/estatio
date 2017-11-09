@@ -77,11 +77,6 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-fixture</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>estatio-integtests</artifactId>
             <!-- TODO: not sure why need this, the parent pom has a dependencyManagement entry -->
             <version>${project.version}</version>

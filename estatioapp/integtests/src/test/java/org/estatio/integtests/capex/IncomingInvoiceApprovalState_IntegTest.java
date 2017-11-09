@@ -47,7 +47,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.fixture.invoice.IncomingInvoiceFixture;
+import org.estatio.module.application.fixtures.capex.IncomingInvoiceFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;

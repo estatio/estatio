@@ -198,10 +198,6 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-fixture</artifactId>
-        </dependency>
 
         <!-- incode modules -->
 

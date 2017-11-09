@@ -2,8 +2,6 @@ package org.estatio.app;
 
 import org.incode.module.base.services.calendar.CalendarService;
 
-import org.estatio.fixture.EstatioFixtureModule;
-import org.estatio.fixturescripts.EstatioFixtureScriptsModule;
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.application.EstatioApplicationModule;
 import org.estatio.module.asset.EstatioAssetModule;
@@ -70,10 +68,6 @@ class EstatioAppDefn  {
                 org.incode.module.docfragment.dom.DocFragmentModuleDomModule.class,
                 org.incode.module.document.dom.DocumentModule.class,
                 org.incode.module.classification.dom.ClassificationModule.class,
-
-                // TODO: one day these module may not be required (if we're able to move all the fixtures into the respective modules).
-                EstatioFixtureModule.class,
-                EstatioFixtureScriptsModule.class,
 
                 // the technical modules
                 org.isisaddons.module.pdfbox.dom.PdfBoxModule.class,

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.fixturescripts.EstatioDemoFixture;
+import org.estatio.module.application.fixtures.EstatioDemoFixture;
 
 public class EstatioAppManifestWithDemoFixture extends EstatioAppManifest2 {
 

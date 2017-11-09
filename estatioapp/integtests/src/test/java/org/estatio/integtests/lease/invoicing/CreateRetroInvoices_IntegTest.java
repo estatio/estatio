@@ -49,7 +49,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixturescripts.CreateRetroInvoices;
+import org.estatio.module.application.fixtures.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

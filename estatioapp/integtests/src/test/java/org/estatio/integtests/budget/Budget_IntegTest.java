@@ -24,10 +24,10 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
-import org.estatio.fixture.budget.BudgetForBud;
-import org.estatio.fixture.budget.BudgetsForOxf;
-import org.estatio.fixture.budget.PartitioningAndItemsForBud;
-import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
+import org.estatio.module.application.fixtures.budget.BudgetForBud;
+import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
+import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForBud;
+import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForOxf;
 import org.estatio.module.application.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 

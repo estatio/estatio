@@ -54,15 +54,15 @@ import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfPret004Gb;
 import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.fixturescripts.CreateInvoiceNumerators;
+import org.estatio.module.application.fixtures.CreateInvoiceNumerators;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -19,7 +19,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.budget.BudgetsForOxf;
+import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

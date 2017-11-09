@@ -19,7 +19,7 @@ import org.estatio.module.application.fixtures.property.personas.PropertyAndOwne
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.budget.BudgetsForOxf;
+import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

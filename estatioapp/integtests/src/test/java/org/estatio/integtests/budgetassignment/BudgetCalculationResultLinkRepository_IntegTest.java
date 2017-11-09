@@ -30,7 +30,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.budget.BudgetsForOxf;
+import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
