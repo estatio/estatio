@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BudgetItem does not know about orders.

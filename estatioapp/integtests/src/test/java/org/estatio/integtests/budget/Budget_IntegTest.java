@@ -16,11 +16,11 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgeting.dom.keytable.FoundationValueType;
-import org.estatio.module.budgeting.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.keytable.FoundationValueType;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForBudNl;
 import org.estatio.fixture.asset.PropertyForOxfGb;

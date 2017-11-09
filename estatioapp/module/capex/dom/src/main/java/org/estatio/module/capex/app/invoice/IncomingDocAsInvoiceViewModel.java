@@ -73,7 +73,7 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.bankaccount.dom.BankAccount;

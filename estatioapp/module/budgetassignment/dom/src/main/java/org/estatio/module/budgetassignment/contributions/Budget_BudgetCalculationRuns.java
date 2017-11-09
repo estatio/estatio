@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Budget;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationRun

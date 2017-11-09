@@ -13,8 +13,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.charge.dom.Charge;
 
 @DomainService(nature = NatureOfService.DOMAIN)

@@ -68,7 +68,7 @@ import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;

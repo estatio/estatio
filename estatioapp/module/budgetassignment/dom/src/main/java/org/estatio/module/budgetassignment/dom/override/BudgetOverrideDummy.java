@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 
 @javax.jdo.annotations.PersistenceCapable(
         schema = "dbo"     // Isis' ObjectSpecId inferred from @Discriminator

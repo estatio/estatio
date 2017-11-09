@@ -27,14 +27,14 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItemValue;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItemValueRepository;
-import org.estatio.module.budgeting.dom.partioning.PartitioningRepository;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
+import org.estatio.module.budget.dom.budgetitem.BudgetItemValueRepository;
+import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 

@@ -7,7 +7,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Budget;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it

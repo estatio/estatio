@@ -29,8 +29,8 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;

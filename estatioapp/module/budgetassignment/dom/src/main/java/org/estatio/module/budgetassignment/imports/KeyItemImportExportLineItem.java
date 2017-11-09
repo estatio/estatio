@@ -37,12 +37,12 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
-import org.estatio.module.budgeting.dom.keyitem.KeyItem;
-import org.estatio.module.budgeting.dom.keyitem.KeyItemRepository;
-import org.estatio.module.budgeting.dom.keytable.KeyTable;
-import org.estatio.module.budgeting.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
+import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -20,9 +20,9 @@ package org.estatio.fixture.budget;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.keytable.FoundationValueType;
-import org.estatio.module.budgeting.dom.keytable.KeyValueMethod;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.keytable.FoundationValueType;
+import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.fixture.asset.PropertyForOxfGb;
 
 public class KeyTablesForOxf extends KeyTableAbstact {

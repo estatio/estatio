@@ -15,14 +15,10 @@ import org.junit.Test;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 

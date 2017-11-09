@@ -60,7 +60,7 @@ import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.dom.UdoDomainObject2;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.bankaccount.dom.utils.IBANValidator;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;

@@ -20,7 +20,7 @@ import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.Assertions.assertThat;

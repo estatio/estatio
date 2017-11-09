@@ -13,7 +13,7 @@ import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
-import org.estatio.module.budgeting.EstatioBudgetingModule;
+import org.estatio.module.budget.EstatioBudgetingModule;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.country.EstatioCountryModule;

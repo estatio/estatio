@@ -10,13 +10,10 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.dom.order.Order;
-import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.tax.dom.Tax;

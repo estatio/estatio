@@ -24,17 +24,17 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItemRepository;
-import org.estatio.module.budgeting.dom.keytable.KeyTable;
-import org.estatio.module.budgeting.dom.keytable.KeyTableRepository;
-import org.estatio.module.budgeting.dom.partioning.PartitionItem;
-import org.estatio.module.budgeting.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budgeting.dom.partioning.Partitioning;
-import org.estatio.module.budgeting.dom.partioning.PartitioningRepository;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budget.dom.keytable.KeyTableRepository;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
+import org.estatio.module.budget.dom.partioning.Partitioning;
+import org.estatio.module.budget.dom.partioning.PartitioningRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 

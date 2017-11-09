@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;

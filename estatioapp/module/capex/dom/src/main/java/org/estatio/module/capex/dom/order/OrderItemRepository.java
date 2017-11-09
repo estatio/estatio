@@ -21,7 +21,7 @@ import org.incode.module.base.dom.utils.StringUtils;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budgeting.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.tax.dom.Tax;

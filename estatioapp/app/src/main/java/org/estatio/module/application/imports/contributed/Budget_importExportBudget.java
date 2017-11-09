@@ -30,7 +30,7 @@ import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
 import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.module.application.imports.BudgetImportExportManager;
-import org.estatio.module.budgeting.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Budget;
 
 // TODO: need to untangle this and push back down to budget module
 @DomainService(

@@ -22,9 +22,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.dom.UdoDomainObject2;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgeting.dom.budgetcalculation.Status;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Lease;
 

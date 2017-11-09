@@ -22,8 +22,8 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
-import org.estatio.module.budgeting.dom.budget.Budget;
-import org.estatio.module.budgeting.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
 
 // TODO: need to untangle this and push back down to budget module
 @DomainService(
