@@ -12,7 +12,6 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.capex.dom.coda.QCodaElement;
 import org.estatio.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(
