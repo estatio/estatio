@@ -19,8 +19,8 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.fixture.index.IndexRefData;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
+import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
 
 import static org.incode.module.base.integtests.VT.bd;
 import static org.incode.module.base.integtests.VT.ld;

@@ -21,7 +21,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -66,8 +66,8 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
                 LeaseAgreementTypeEnum.LEASE.getTitle()), LeaseForKalPoison001Nl.REF);
         assertNotNull(agreement);
 
-        party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
-        assertThat(party.getReference(), is(PersonForJohnDoeNl.REF));
+        party = partyRepository.findPartyByReference(PersonAndRolesForJohnDoeNl.REF);
+        assertThat(party.getReference(), is(PersonAndRolesForJohnDoeNl.REF));
     }
 
     public static class NewRole extends Agreement_IntegTest {

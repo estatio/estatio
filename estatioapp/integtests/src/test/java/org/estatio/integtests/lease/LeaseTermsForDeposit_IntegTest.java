@@ -51,7 +51,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;

@@ -32,11 +32,11 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.junit.Assert.assertNotNull;
@@ -50,7 +50,7 @@ public class FixedAssetRoleRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
             }
         });
     }

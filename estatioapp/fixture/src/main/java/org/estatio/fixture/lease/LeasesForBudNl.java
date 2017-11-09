@@ -20,17 +20,17 @@ package org.estatio.fixture.lease;
 
 import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.asset.PropertyForBudNl;
-import org.estatio.fixture.party.OrganisationForAcmeNl;
-import org.estatio.fixture.party.OrganisationForDagoBankNl;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForHyperNl;
-import org.estatio.fixture.party.OrganisationForMiracleNl;
-import org.estatio.fixture.party.OrganisationForNlBankNl;
-import org.estatio.fixture.party.OrganisationForPoisonNl;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForDagoBankNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHyperNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForNlBankNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -44,13 +44,13 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String REF5 = "BUD-HYPER-005";
     public static final String REF6 = "BUD-HELLO-006";
 
-    public static final String UNIT_REF1 = PropertyForBudNl.unitReference("001");
-    public static final String UNIT_REF2 = PropertyForBudNl.unitReference("002");
-    public static final String UNIT_REF3 = PropertyForBudNl.unitReference("003");
-    public static final String UNIT_REF4 = PropertyForBudNl.unitReference("004");
-    public static final String UNIT_REF5 = PropertyForBudNl.unitReference("005");
-    public static final String UNIT_REF6 = PropertyForBudNl.unitReference("006");
-    public static final String UNIT_REF7 = PropertyForBudNl.unitReference("007");
+    public static final String UNIT_REF1 = PropertyAndOwnerAndManagerForBudNl.unitReference("001");
+    public static final String UNIT_REF2 = PropertyAndOwnerAndManagerForBudNl.unitReference("002");
+    public static final String UNIT_REF3 = PropertyAndOwnerAndManagerForBudNl.unitReference("003");
+    public static final String UNIT_REF4 = PropertyAndOwnerAndManagerForBudNl.unitReference("004");
+    public static final String UNIT_REF5 = PropertyAndOwnerAndManagerForBudNl.unitReference("005");
+    public static final String UNIT_REF6 = PropertyAndOwnerAndManagerForBudNl.unitReference("006");
+    public static final String UNIT_REF7 = PropertyAndOwnerAndManagerForBudNl.unitReference("007");
 
     public static final String PARTY_REF_TENANT1 = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_TENANT2 = OrganisationForMiracleNl.REF;
@@ -60,7 +60,7 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String PARTY_REF_TENANT5 = OrganisationForHyperNl.REF;
 
     public static final String PARTY_REF_LANDLORD = OrganisationForAcmeNl.REF;
-    public static final String PARTY_REF_MANAGER = PersonForJohnDoeNl.REF;
+    public static final String PARTY_REF_MANAGER = PersonAndRolesForJohnDoeNl.REF;
 
     public static final String BRAND1 = "Poison";
     public static final String BRAND2 = "Miracle";
@@ -76,7 +76,7 @@ public class LeasesForBudNl extends LeaseAbstract {
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PersonForJohnDoeNl());
+        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
         executionContext.executeChild(this, new OrganisationForAcmeNl());
         executionContext.executeChild(this, new OrganisationForPoisonNl());
         executionContext.executeChild(this, new OrganisationForMiracleNl());
@@ -84,7 +84,7 @@ public class LeasesForBudNl extends LeaseAbstract {
         executionContext.executeChild(this, new OrganisationForDagoBankNl());
         executionContext.executeChild(this, new OrganisationForNlBankNl());
         executionContext.executeChild(this, new OrganisationForHyperNl());
-        executionContext.executeChild(this, new PropertyForBudNl());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForBudNl());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

@@ -20,7 +20,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -59,7 +59,7 @@ public class KeyItemRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByProperty(property).get(0);
             KeyTable keyTable = budget.createKeyTable("table", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             keyTable.generateItems();

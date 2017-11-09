@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.bankaccount.dom.BankAccount;
@@ -42,9 +43,8 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForOxford;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.fixture.security.users.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -60,11 +60,11 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountForOxford());
             }
         });
-        owner = partyRepository.findPartyByReference(PropertyForOxfGb.PARTY_REF_OWNER);
+        owner = partyRepository.findPartyByReference(PropertyAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
     }
 
     @Inject
@@ -89,7 +89,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
         @Test
         public void findByFixedAsset() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
+                    PropertyAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -105,7 +106,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
         @Test
         public void findByFinancialAccount() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
+                    PropertyAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -121,7 +123,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
         @Test
         public void find() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
+                    PropertyAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

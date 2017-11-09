@@ -16,14 +16,14 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForBudNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
@@ -63,7 +63,7 @@ public class Budget_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyBud = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
+            propertyBud = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
             budgetsForBud = budgetRepository.findByProperty(propertyBud);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyBud, BudgetForBud.BUDGET_2015_START_DATE);
         }
@@ -123,7 +123,7 @@ public class Budget_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
         }

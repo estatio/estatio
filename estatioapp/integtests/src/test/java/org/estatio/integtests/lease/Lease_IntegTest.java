@@ -57,14 +57,14 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.fixture.party.OrganisationForMediaXGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
 import org.estatio.fixture.security.users.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 

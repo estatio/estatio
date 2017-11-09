@@ -36,13 +36,13 @@ import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFakeDataService;
-import org.estatio.fixture.asset.PropertyBuilder;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
+import org.estatio.module.asset.fixtures.builders.PropertyBuilder;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -57,7 +57,7 @@ public class Property_IntegTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
@@ -75,7 +75,7 @@ public class Property_IntegTest extends EstatioIntegrationTest {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -87,7 +87,7 @@ public class Property_IntegTest extends EstatioIntegrationTest {
         @Test
         public void occupiedUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             Set<Unit> allUnits = property.getUnits();
             Set<Unit> occupiedUnits = occupancyRepository.findByProperty(property)

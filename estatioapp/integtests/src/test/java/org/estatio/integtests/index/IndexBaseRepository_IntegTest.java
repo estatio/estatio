@@ -28,7 +28,7 @@ import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexBaseRepository;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.index.IndexRefData;
+import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.incode.module.base.integtests.VT;
 

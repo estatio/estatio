@@ -39,15 +39,15 @@ import org.incode.module.docrendering.freemarker.fixture.RenderingStrategyFSForF
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
 
 public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends DocumentTemplateFSAbstract {
 
     public static final String TYPE_REF = "FLOOR_PLAN";
 
     public static final String FILE_SUFFIX = "svg";
-    public static final String NAME = PropertyForOxfGb.REF + "." + FILE_SUFFIX;
+    public static final String NAME = PropertyAndOwnerAndManagerForOxfGb.REF + "." + FILE_SUFFIX;
 
     protected Clob readSvgResourceAsClob(String fileName) {
         try {
@@ -66,12 +66,12 @@ public class DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS extends Docum
         // prereqs
         executionContext.executeChild(this, new RenderingStrategyFSForSvg());
         executionContext.executeChild(this, new ApplicationTenancyForGbOxf());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 
         upsertType(TYPE_REF, "Floor plan", executionContext);
 
         final FixedAsset property =
-                fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF).get(0);
+                fixedAssetRepository.matchAssetsByReferenceOrName(PropertyAndOwnerAndManagerForOxfGb.REF).get(0);
 
         final DocumentType documentType =
                 documentTypeRepository.findByReference(DocumentTypeAndTemplateForFloorPlanDocumentForGbOxfFS.TYPE_REF);

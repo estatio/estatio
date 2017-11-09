@@ -42,6 +42,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.asset.dom.Property;
@@ -59,18 +61,16 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForPoisonGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
@@ -154,8 +154,8 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxfGb());
-                    executionContext.executeChild(this, new PropertyForKalNl());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
                 }
             });
         }
@@ -167,8 +167,8 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
-            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
 
             propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
         }
@@ -241,7 +241,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
         }
@@ -250,7 +250,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         }
 
         @Test
@@ -272,7 +272,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
         }
@@ -288,7 +288,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
         public void setUp() throws Exception {
             applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
             applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
             numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
                     Constants.NumeratorName.INVOICE_NUMBER,
@@ -346,7 +346,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
-            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
 
             InvoiceForLease invoiceForLease = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
@@ -593,7 +593,7 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }
             });

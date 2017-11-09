@@ -30,7 +30,7 @@ import org.estatio.module.index.dom.IndexValueRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioReferenceDataTeardownFixture;
-import org.estatio.fixture.index.IndexRefData;
+import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.incode.module.base.integtests.VT;
 

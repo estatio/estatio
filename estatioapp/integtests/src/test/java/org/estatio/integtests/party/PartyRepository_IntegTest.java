@@ -32,9 +32,9 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +53,7 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new PersonForJohnDoeNl());
+                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
                     executionContext.executeChild(this, new OrganisationForHelloWorldNl());
                 }
             });
@@ -153,7 +153,7 @@ public class PartyRepository_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForJohnDoeNl());
+                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
                     executionContext.executeChild(this, new OrganisationForHelloWorldNl());
                     executionContext.executeChild(this, new OrganisationForTopModelGb());
                 }

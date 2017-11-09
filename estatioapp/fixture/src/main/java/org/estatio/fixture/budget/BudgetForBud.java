@@ -26,8 +26,8 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForBudNl;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeasesForBudNl;
 
 public class BudgetForBud extends BudgetAbstact {
@@ -44,7 +44,7 @@ public class BudgetForBud extends BudgetAbstact {
         executionContext.executeChild(this, new BudgetOverridesForBud());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
 
         createBudget(executionContext, property, BigDecimal.valueOf(10000.00), BigDecimal.valueOf(20000.00), BigDecimal.valueOf(30000.00), BUDGET_2015_START_DATE);
     }

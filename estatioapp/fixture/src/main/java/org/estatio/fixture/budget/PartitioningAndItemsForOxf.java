@@ -22,14 +22,14 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 
 public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstact {
 
@@ -38,11 +38,11 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstact {
 
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
         executionContext.executeChild(this, new KeyTablesForOxf());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         LocalDate startDate = BudgetsForOxf.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);

@@ -27,22 +27,22 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.PersonForBrunoTreasurerFr;
-import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
-import org.estatio.fixture.party.PersonForEmmaTreasurerGb;
-import org.estatio.fixture.party.PersonForFaithConwayGb;
-import org.estatio.fixture.party.PersonForFifineLacroixFr;
-import org.estatio.fixture.party.PersonForGabrielHerveFr;
-import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
-import org.estatio.fixture.party.PersonForOlivePropertyManagerFr;
-import org.estatio.fixture.party.PersonForOscarCountryDirectorGb;
-import org.estatio.fixture.party.PersonForRosaireEvrardFr;
-import org.estatio.fixture.party.PersonForThibaultOfficerAdministratorFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,18 +64,18 @@ public class PersonRepository_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb()); // gb mailroom
-                    executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());  // gb property mgr for OXF
-                    executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
-                    executionContext.executeChild(this, new PersonForOscarCountryDirectorGb());  // gb country director
-                    executionContext.executeChild(this, new PersonForEmmaTreasurerGb());   // gb treasurer
+                    executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
+                    executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
+                    executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb country administrator
+                    executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
+                    executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
 
-                    executionContext.executeChild(this, new PersonForThibaultOfficerAdministratorFr());  // fr mailroom
-                    executionContext.executeChild(this, new PersonForFifineLacroixFr());  // fr property mgr for VIV and MNS
-                    executionContext.executeChild(this, new PersonForOlivePropertyManagerFr());  // fr property mgr for MAC
-                    executionContext.executeChild(this, new PersonForRosaireEvrardFr());  // fr country administrator
-                    executionContext.executeChild(this, new PersonForGabrielHerveFr());  // fr country director
-                    executionContext.executeChild(this, new PersonForBrunoTreasurerFr()); // fr treasurer
+                    executionContext.executeChild(this, new PersonAndRolesForThibaultOfficerAdministratorFr());  // fr mailroom
+                    executionContext.executeChild(this, new PersonAndRolesForFifineLacroixFr());  // fr property mgr for VIV and MNS
+                    executionContext.executeChild(this, new PersonAndRolesForOlivePropertyManagerFr());  // fr property mgr for MAC
+                    executionContext.executeChild(this, new PersonAndRolesForRosaireEvrardFr());  // fr country administrator
+                    executionContext.executeChild(this, new PersonAndRolesForGabrielHerveFr());  // fr country director
+                    executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
                 }
             });
         }

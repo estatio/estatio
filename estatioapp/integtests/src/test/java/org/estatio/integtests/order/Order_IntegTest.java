@@ -32,7 +32,7 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class Order_IntegTest extends EstatioIntegrationTest {
@@ -48,7 +48,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new OrderInvoiceFixture());
                 }
             });

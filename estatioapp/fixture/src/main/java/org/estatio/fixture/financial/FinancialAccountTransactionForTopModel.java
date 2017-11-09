@@ -21,7 +21,7 @@ package org.estatio.fixture.financial;
 import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 public class FinancialAccountTransactionForTopModel extends FinancialAccountTransactionAbstract {
 

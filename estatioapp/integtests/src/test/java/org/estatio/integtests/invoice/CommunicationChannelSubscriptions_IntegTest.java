@@ -54,15 +54,15 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForPoisonGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 
@@ -136,7 +136,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
-            propertyKal = propertyRepository.findPropertyByReference(PropertyForKalNl.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
 
             InvoiceForLease invoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,

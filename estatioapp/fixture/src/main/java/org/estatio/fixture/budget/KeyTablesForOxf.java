@@ -23,7 +23,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 
 public class KeyTablesForOxf extends KeyTableAbstact {
 
@@ -42,7 +42,7 @@ public class KeyTablesForOxf extends KeyTableAbstact {
         executionContext.executeChild(this, new BudgetsForOxf());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, START_DATE);
 
         createKeyTable(budget, NAME_BY_AREA, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);

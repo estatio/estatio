@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNl;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 
 public class EstatioUserInNetherlands extends AbstractUserAndRolesFixtureScript {
 

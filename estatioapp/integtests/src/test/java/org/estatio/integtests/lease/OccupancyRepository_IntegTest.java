@@ -44,7 +44,7 @@ import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Brand.RemoveEvent;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -69,7 +69,7 @@ public class OccupancyRepository_IntegTest extends EstatioIntegrationTest {
             }
         });
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-        unit = unitRepository.findUnitByReference(PropertyForOxfGb.unitReference("001"));
+        unit = unitRepository.findUnitByReference(PropertyAndOwnerAndManagerForOxfGb.unitReference("001"));
     }
 
     @Inject

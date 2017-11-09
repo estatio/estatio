@@ -18,6 +18,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.transitions.Document_categorisationTransitions;
@@ -32,7 +33,6 @@ import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.order.OrderFixture;
-import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +52,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, orderFixture);
-                executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());
+                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());
             }
         });
         order = orderFixture.getOrder();
@@ -81,7 +81,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         assertNotNull(order);
 
         // when
-        approve(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, this.order);
+        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, this.order);
 
         // then
         assertThat(this.order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
@@ -99,7 +99,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -114,7 +114,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
 
         // given
         assertNotNull(order);
-        approve(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
+        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // expect
@@ -124,7 +124,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -135,7 +135,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
 
         // given
         assertNotNull(order);
-        approve(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
+        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // when
@@ -146,7 +146,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act(role, person, comment);
         });
 

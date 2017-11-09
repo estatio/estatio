@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.Enums;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -45,9 +46,8 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +63,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
 
@@ -91,7 +91,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends EstatioIntegrati
 
             final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
             final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
                     "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,

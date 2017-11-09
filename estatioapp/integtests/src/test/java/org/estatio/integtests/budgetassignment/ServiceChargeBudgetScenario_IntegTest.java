@@ -49,10 +49,10 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForBudNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeasesForBudNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -136,7 +136,7 @@ ServiceChargeBudgetScenario_IntegTest extends EstatioIntegrationTest {
         @Before
         public void setup() {
             // given
-            property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
+            property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
             budget = budgetRepository.findByPropertyAndStartDate(property, BudgetForBud.BUDGET_2015_START_DATE);
             //**IMPORTANT!** truncate keytable
             KeyTable key2 = budget.getKeyTables().last();

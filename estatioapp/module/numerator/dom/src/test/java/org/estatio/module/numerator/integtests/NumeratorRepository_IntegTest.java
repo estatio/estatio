@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
-import org.estatio.module.base.fixtures.security.apptenancy.data.ApplicationTenancy_data;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_data;
@@ -54,8 +54,8 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Before
     public void setUp() throws Exception {
-        applicationTenancyKal = ApplicationTenancy_data.NlKal.findUsing(serviceRegistry);
-        applicationTenancyOxf = ApplicationTenancy_data.GbOxf.findUsing(serviceRegistry);
+        applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
+        applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
 
         propertyKal = NumeratorExampleObject_data.Kal.findUsing(serviceRegistry);
         propertyOxf = NumeratorExampleObject_data.Oxf.findUsing(serviceRegistry);

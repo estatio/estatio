@@ -13,11 +13,11 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixture;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +34,7 @@ public class IncomingDocumentRepository_IntegTest extends EstatioIntegrationTest
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountForHelloWorldNl());
                 executionContext.executeChild(this, new IncomingPdfFixture());
             }

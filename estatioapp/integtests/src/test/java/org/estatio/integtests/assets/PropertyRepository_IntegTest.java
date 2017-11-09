@@ -37,8 +37,8 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -54,8 +54,8 @@ public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
-                executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
             }
         });
     }
@@ -113,10 +113,10 @@ public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
         public void withReference() throws Exception {
 
             // when
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             // then
-            Assertions.assertThat(property.getReference()).isEqualTo(PropertyForOxfGb.REF);
+            Assertions.assertThat(property.getReference()).isEqualTo(PropertyAndOwnerAndManagerForOxfGb.REF);
         }
     }
 

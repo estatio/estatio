@@ -20,8 +20,8 @@ package org.estatio.module.tax.fixtures;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.base.fixtures.security.apptenancy.data.ApplicationTenancy_data;
-import org.estatio.module.base.fixtures.country.data.Country_data;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.base.fixtures.country.enums.Country_enum;
 
 public class TaxModule_setupPrereqs extends FixtureScript {
 
@@ -30,8 +30,8 @@ public class TaxModule_setupPrereqs extends FixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
         if(beenRun) return;
-        executionContext.executeChild(this, new ApplicationTenancy_data.PersistScript());
-        executionContext.executeChild(this, new Country_data.PersistScript());
+        executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
+        executionContext.executeChild(this, new Country_enum.PersistScript());
         beenRun = true;
     }
 

@@ -15,10 +15,10 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -50,7 +50,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             // when
             final List<Budget> budgetList = budgetRepository.findByProperty(property);
             // then
@@ -65,7 +65,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             // when
             final Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
             // then
@@ -85,7 +85,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             // when (case existing budget found)
             final Budget budget = budgetRepository.findOrCreateBudget(property, new LocalDate(2015, 01, 01), new LocalDate(2015, 12, 31));
@@ -111,7 +111,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             // when
             final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
             // then
@@ -145,7 +145,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         public void budgetPeriodCannotExceedYear() throws Exception {
 
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             //then
             expectedException.expect(InvalidException.class);
@@ -160,7 +160,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         public void emptyStartDate() {
 
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             //then
             expectedException.expect(InvalidException.class);
@@ -173,7 +173,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         public void wrongBudgetDates() {
 
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             //then
             expectedException.expect(InvalidException.class);
@@ -188,7 +188,7 @@ public class BudgetRepository_IntegTest extends EstatioIntegrationTest {
         public void overlappingDates() {
 
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             final Budget budget = budgetRepository.findByPropertyAndDate(property, new LocalDate(2015, 01, 01));
 
             //then

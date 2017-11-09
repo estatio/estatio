@@ -24,10 +24,10 @@ import org.incode.module.country.fixture.CountriesRefData;
 import org.incode.module.country.fixture.StatesRefData;
 
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
-import org.estatio.fixture.charge.ChargeGroupRefData;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeGroupRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
-import org.estatio.fixture.index.IndexRefData;
+import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.tax.fixtures.TaxModule_setup;
 

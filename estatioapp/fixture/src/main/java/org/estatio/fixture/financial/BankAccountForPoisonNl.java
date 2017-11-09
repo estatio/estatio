@@ -19,7 +19,7 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.party.OrganisationForPoisonNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
 
 public class BankAccountForPoisonNl extends BankAccountAbstract {
 

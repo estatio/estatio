@@ -49,7 +49,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
 

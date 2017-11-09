@@ -29,13 +29,13 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 
 public class BudgetsForOxf extends FixtureScript {
 
@@ -47,10 +47,10 @@ public class BudgetsForOxf extends FixtureScript {
 
         // prereqs
         executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         Charge charge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
         Charge charge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);
 

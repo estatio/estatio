@@ -21,7 +21,7 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxfDefault;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
 
 public class LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb extends LeaseItemAndTermsAbstract {
 

@@ -32,8 +32,8 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.PersonBuilder;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesBuilder;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -72,11 +72,11 @@ public class CommunicationChannelContributions_IntegTest extends EstatioIntegrat
 
     public static class NewEmail extends CommunicationChannelContributions_IntegTest {
 
-        private PersonBuilder fs;
+        private PersonAndRolesBuilder fs;
 
         @Before
         public void setup() {
-            fs = new PersonBuilder();
+            fs = new PersonAndRolesBuilder();
 
             runFixtureScript(new FixtureScript() {
                 @Override

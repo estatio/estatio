@@ -24,17 +24,17 @@ import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForPoisonGb;
-import org.estatio.fixture.party.PersonForJohnSmithGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-POISON-003";
-    public static final String UNIT_REFERENCE = PropertyForOxfGb.unitReference("003");
+    public static final String UNIT_REFERENCE = PropertyAndOwnerAndManagerForOxfGb.unitReference("003");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
 
     public static final String BRAND = "Poison";
@@ -42,7 +42,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
     public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
 
     public static final String PARTY_REF_TENANT = OrganisationForPoisonGb.REF;
-    public static final String PARTY_REF_MANAGER = PersonForJohnSmithGb.REF;
+    public static final String PARTY_REF_MANAGER = PersonAndRolesForJohnSmithGb.REF;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -50,8 +50,8 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
         // prereqs
         executionContext.executeChild(this, new OrganisationForHelloWorldGb());
         executionContext.executeChild(this, new OrganisationForPoisonGb());
-        executionContext.executeChild(this, new PersonForJohnSmithGb());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

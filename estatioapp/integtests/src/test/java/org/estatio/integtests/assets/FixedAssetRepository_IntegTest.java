@@ -26,8 +26,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class FixedAssetRepository_IntegTest extends EstatioIntegrationTest {
@@ -39,8 +39,8 @@ public class FixedAssetRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
-                executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
             }
         });
     }

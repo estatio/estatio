@@ -35,6 +35,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.integtests.VT;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.charge.dom.Charge;
@@ -53,8 +55,6 @@ import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
@@ -64,10 +64,10 @@ import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForPoisonGb;
-import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -158,10 +158,10 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
+                    executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
 
-                    executionContext.executeChild(this, new PropertyForOxfGb());
-                    executionContext.executeChild(this, new PropertyForKalNl());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
 
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 

@@ -31,9 +31,9 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForMiracleGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;

@@ -20,14 +20,17 @@ package org.estatio.fixturescripts;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForGraIt;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForCARTEST;
-import org.estatio.fixture.asset.PropertyForGraIt;
-import org.estatio.fixture.asset.PropertyForHanSe;
-import org.estatio.fixture.asset.PropertyForMacFr;
-import org.estatio.fixture.asset.PropertyForMnsFr;
-import org.estatio.fixture.asset.PropertyForVivFr;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForCARTEST;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForHanSe;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForMacFr;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.KeyTablesForOxf;
 import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
@@ -52,23 +55,20 @@ import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.fixture.numerator.NumeratorForOrganisationFra;
+import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 import org.estatio.fixture.order.OrderFixture;
-import org.estatio.fixture.party.PersonForBrunoTreasurerFr;
-import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
-import org.estatio.fixture.party.PersonForEmmaTreasurerGb;
-import org.estatio.fixture.party.PersonForFaithConwayGb;
-import org.estatio.fixture.party.PersonForFifineLacroixFr;
-import org.estatio.fixture.party.PersonForGabrielHerveFr;
-import org.estatio.fixture.party.PersonForGinoVannelliGb;
-import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
-import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
-import org.estatio.fixture.party.PersonForOlivePropertyManagerFr;
-import org.estatio.fixture.party.PersonForOscarCountryDirectorGb;
-import org.estatio.fixture.party.PersonForRosaireEvrardFr;
-import org.estatio.fixture.party.PersonForThibaultOfficerAdministratorFr;
-import org.estatio.fixture.project.ProjectsForGra;
-import org.estatio.fixture.project.ProjectsForKal;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
+import org.estatio.module.application.fixtures.project.personas.ProjectsForGra;
+import org.estatio.module.application.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
@@ -89,7 +89,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     private void doExecute(final ExecutionContext executionContext) {
         executionContext.executeChild(this, new EstatioBaseLineFixture());
-        executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
+        executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
         executionContext.executeChild(this, new BankAccountForAcmeNl());
         executionContext.executeChild(this, new BankAccountForHelloWorldNl());
         executionContext.executeChild(this, new BankAccountForHelloWorldGb());
@@ -109,26 +109,26 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
         executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
         executionContext.executeChild(this, new BankAccountForTopModelGb());
-        executionContext.executeChild(this, new PersonForGinoVannelliGb());
+        executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
 
-        executionContext.executeChild(this, new PropertyForGraIt());
-        executionContext.executeChild(this, new PropertyForVivFr());
-        executionContext.executeChild(this, new PropertyForHanSe());
-        executionContext.executeChild(this, new PropertyForMnsFr());
-        executionContext.executeChild(this, new PropertyForMacFr());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForGraIt());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForVivFr());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForHanSe());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMnsFr());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMacFr());
 
-        executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb()); // gb mailroom
-        executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());  // gb property mgr for OXF
-        executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
-        executionContext.executeChild(this, new PersonForOscarCountryDirectorGb());  // gb country director
-        executionContext.executeChild(this, new PersonForEmmaTreasurerGb());   // gb treasurer
+        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
+        executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
+        executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb country administrator
+        executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
+        executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
 
-        executionContext.executeChild(this, new PersonForThibaultOfficerAdministratorFr());  // fr mailroom
-        executionContext.executeChild(this, new PersonForFifineLacroixFr());  // fr property mgr for VIV and MNS
-        executionContext.executeChild(this, new PersonForOlivePropertyManagerFr());  // fr property mgr for MAC
-        executionContext.executeChild(this, new PersonForRosaireEvrardFr());  // fr country administrator
-        executionContext.executeChild(this, new PersonForGabrielHerveFr());  // fr country director
-        executionContext.executeChild(this, new PersonForBrunoTreasurerFr()); // fr treasurer
+        executionContext.executeChild(this, new PersonAndRolesForThibaultOfficerAdministratorFr());  // fr mailroom
+        executionContext.executeChild(this, new PersonAndRolesForFifineLacroixFr());  // fr property mgr for VIV and MNS
+        executionContext.executeChild(this, new PersonAndRolesForOlivePropertyManagerFr());  // fr property mgr for MAC
+        executionContext.executeChild(this, new PersonAndRolesForRosaireEvrardFr());  // fr country administrator
+        executionContext.executeChild(this, new PersonAndRolesForGabrielHerveFr());  // fr country director
+        executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
 
         executionContext.executeChild(this, new ProjectsForKal());
         executionContext.executeChild(this, new ProjectsForGra());
@@ -137,7 +137,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningAndItemsForOxf());
 
-        executionContext.executeChild(this, new PropertyForCARTEST());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForCARTEST());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());

@@ -35,12 +35,12 @@ import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
@@ -206,7 +206,7 @@ public class LeaseRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             // when
             final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
@@ -269,7 +269,7 @@ public class LeaseRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             System.out.println(property);
             // when
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);

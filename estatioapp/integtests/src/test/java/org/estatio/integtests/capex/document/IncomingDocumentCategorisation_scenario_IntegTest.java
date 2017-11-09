@@ -20,13 +20,13 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //            @Override
 //            protected void execute(final ExecutionContext executionContext) {
 //                executionContext.executeChild(this, new EstatioBaseLineFixture());
-//                executionContext.executeChild(this, new PropertyForOxfGb());
+//                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 //
-//                executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb()); // gb mailroom
-//                executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());  // gb property mgr for OXF
-//                executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
-//                executionContext.executeChild(this, new PersonForOscarCountryDirectorGb());  // gb country director
-//                executionContext.executeChild(this, new PersonForEmmaTreasurerGb());   // gb treasurer
+//                executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
+//                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
+//                executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb country administrator
+//                executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
+//                executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
 //
 //            }
 //        });
@@ -62,7 +62,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //    public void scenario() throws Exception {
 //
 //        // given
-//        final Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+//        final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 //        List<Document> incomingDocumentsBefore = repository.findIncomingDocuments();
 //        assertThat(incomingDocumentsBefore).hasSize(1);
 //
@@ -81,7 +81,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //        Task task = transitions.get(0).getTask();
 //        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
 //        assertThat(task.getPersonAssignedTo()).isNotNull();
-//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanOfficeAdministratorGb.REF);
+//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonAndRolesForDylanOfficeAdministratorGb.REF);
 //
 //        // when
 //        wrap(mixin(Task_categoriseDocumentAsOtherInvoice.class, task)).act(documentTypeData, DocumentTypeData.INCOMING_INVOICE, property, null, true);
@@ -103,7 +103,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //        task = transitions.get(0).getTask();
 //        assertThat(task.getAssignedTo().getKey()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey());
 //        assertThat(task.getPersonAssignedTo()).isNotNull();
-//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForJonathanPropertyManagerGb.REF);
+//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonAndRolesForJonathanPropertyManagerGb.REF);
 //
 //
 //
@@ -130,7 +130,7 @@ public class IncomingDocumentCategorisation_scenario_IntegTest extends EstatioIn
 //        task = transitions.get(0).getTask();
 //        assertThat(task.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
 //        assertThat(task.getPersonAssignedTo()).isNotNull();
-//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanOfficeAdministratorGb.REF);
+//        assertThat(task.getPersonAssignedTo().getReference()).isEqualTo(PersonAndRolesForDylanOfficeAdministratorGb.REF);
 //
 //
 //        assertState(document, NEW);

@@ -13,13 +13,13 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            @Override
 //            protected void execute(final FixtureScript.ExecutionContext executionContext) {
 //                executionContext.executeChild(this, new EstatioBaseLineFixture());
-//                executionContext.executeChild(this, new PropertyForOxfGb());
+//                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 //
-//                executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb()); // gb mailroom
-//                executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());  // gb property mgr for OXF
-//                executionContext.executeChild(this, new PersonForFaithConwayGb());  // gb country administrator
-//                executionContext.executeChild(this, new PersonForOscarCountryDirectorGb());  // gb country director
-//                executionContext.executeChild(this, new PersonForEmmaTreasurerGb());   // gb treasurer
+//                executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
+//                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
+//                executionContext.executeChild(this, new PersonAndRolesForFaithConwayGb());  // gb country administrator
+//                executionContext.executeChild(this, new PersonAndRolesForOscarCountryDirectorGb());  // gb country director
+//                executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());   // gb treasurer
 //
 //                executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-gb"));
 //            }
@@ -51,11 +51,11 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //
 //        @Before
 //        public void setUp(){
-//            propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+//            propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 //            INCOMING = documentTypeRepository.findByReference(DocumentTypeData.INCOMING.getRef());
 //            INCOMING_ORDER = documentTypeRepository.findByReference(DocumentTypeData.INCOMING_ORDER.getRef());
 //            INCOMING_INVOICE = documentTypeRepository.findByReference(DocumentTypeData.INCOMING_INVOICE.getRef());
-//            buyer = partyRepository.findPartyByReference(PropertyForOxfGb.PARTY_REF_OWNER);
+//            buyer = partyRepository.findPartyByReference(PropertyAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
 //            greatBritain = countryRepository.findCountry(CountriesRefData.GBR);
 //            charge_for_works = chargeRepository.findByReference("WORKS");
 //            euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
@@ -92,11 +92,11 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            // and
 //            assertThat(task1.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
 //            assertThat(task1.getPersonAssignedTo()).isNotNull();
-//            assertThat(task1.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanOfficeAdministratorGb.REF);
+//            assertThat(task1.getPersonAssignedTo().getReference()).isEqualTo(PersonAndRolesForDylanOfficeAdministratorGb.REF);
 //
 //            assertThat(task2.getPersonAssignedTo()).isNotNull();
 //            assertThat(task2.getAssignedTo().getKey()).isEqualTo(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.getKey());
-//            assertThat(task2.getPersonAssignedTo().getReference()).isEqualTo(PersonForDylanOfficeAdministratorGb.REF);
+//            assertThat(task2.getPersonAssignedTo().getReference()).isEqualTo(PersonAndRolesForDylanOfficeAdministratorGb.REF);
 //
 //        }
 //
@@ -116,7 +116,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //
 //            // when gotoNext is set to true
 //            Object nextObj =
-//                sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME,
+//                sudoService.sudo(PersonAndRolesForDylanOfficeAdministratorGb.SECURITY_USERNAME,
 //                        () -> wrap(mixin(Task_categoriseDocumentAsOtherInvoice.class, task1))
 //                                .act(documentTypeData, DocumentTypeData.INCOMING_ORDER, propertyForOxf, null, true));
 //            transactionService.nextTransaction();

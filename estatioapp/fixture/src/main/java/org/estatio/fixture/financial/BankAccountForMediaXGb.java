@@ -19,7 +19,7 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.party.OrganisationForMediaXGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
 
 public class BankAccountForMediaXGb extends BankAccountAbstract {
 

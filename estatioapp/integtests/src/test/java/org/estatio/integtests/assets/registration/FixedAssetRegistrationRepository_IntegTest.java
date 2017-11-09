@@ -34,7 +34,7 @@ import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -49,7 +49,7 @@ public class FixedAssetRegistrationRepository_IntegTest extends EstatioIntegrati
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
             }
         });
     }
@@ -69,7 +69,8 @@ public class FixedAssetRegistrationRepository_IntegTest extends EstatioIntegrati
         @Test
         public void findBySubject() throws Exception {
             // given
-            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(PropertyForOxfGb.REF);
+            List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
+                    PropertyAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

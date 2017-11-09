@@ -17,6 +17,7 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -32,7 +33,6 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.order.OrderFixture;
-import org.estatio.fixture.party.PersonForJonathanPropertyManagerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
@@ -56,7 +56,7 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, orderFixture);
                 executionContext.executeChild(this, new BudgetsForOxf());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new PersonForJonathanPropertyManagerGb());
+                executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());
             }
         });
         order = orderFixture.getOrder();
@@ -86,7 +86,7 @@ public class Order_withLinks_IntegTest extends EstatioIntegrationTest {
         // when
         final Order_discard mixin = mixin(Order_discard.class, order);
 
-        sudoService.sudo(PersonForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
             wrap(mixin).act("Discarding junk");
         });
 

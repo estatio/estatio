@@ -21,11 +21,11 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +44,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountForHelloWorldNl());
             }
         });
@@ -123,7 +123,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
     private IncomingInvoice createIncomingInvoice(){
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-        property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);
         dueDate = invoiceDate.minusMonths(1);

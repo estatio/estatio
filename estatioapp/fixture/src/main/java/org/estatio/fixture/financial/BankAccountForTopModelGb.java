@@ -19,7 +19,7 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 public class BankAccountForTopModelGb extends BankAccountAbstract {
 

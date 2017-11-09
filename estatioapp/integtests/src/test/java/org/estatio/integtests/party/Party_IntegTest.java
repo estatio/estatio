@@ -34,10 +34,10 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.OrganisationForAcmeNl;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForGinoVannelliGb;
-import org.estatio.fixture.party.PersonForJohnDoeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.fixture.security.users.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -64,9 +64,9 @@ public class Party_IntegTest extends EstatioIntegrationTest {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
                     // linked together:
                     executionContext.executeChild(this, new OrganisationForTopModelGb());
-                    executionContext.executeChild(this, new PersonForGinoVannelliGb());
+                    executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
                     // only relationship
-                    executionContext.executeChild(this, new PersonForJohnDoeNl());
+                    executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
                     // only comm channels
                     executionContext.executeChild(this, new OrganisationForAcmeNl());
                 }
@@ -75,7 +75,7 @@ public class Party_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() {
-            Party party = partyRepository.findPartyByReference(PersonForJohnDoeNl.REF);
+            Party party = partyRepository.findPartyByReference(PersonAndRolesForJohnDoeNl.REF);
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.SUPERUSER.getRoleName()),
                     new Runnable() {
@@ -84,7 +84,7 @@ public class Party_IntegTest extends EstatioIntegrationTest {
                         }
                     });
 
-            assertNull(partyRepository.findPartyByReferenceOrNull(PersonForJohnDoeNl.REF));
+            assertNull(partyRepository.findPartyByReferenceOrNull(PersonAndRolesForJohnDoeNl.REF));
         }
 
     }

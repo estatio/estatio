@@ -43,7 +43,7 @@ import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.dom.breaks.RollingBreakOption;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioFakeDataService;
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseBuilder;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;

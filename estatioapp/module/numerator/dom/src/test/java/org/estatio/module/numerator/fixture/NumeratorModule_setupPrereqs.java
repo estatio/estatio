@@ -20,7 +20,7 @@ package org.estatio.module.numerator.fixture;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.base.fixtures.security.apptenancy.data.ApplicationTenancy_data;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 
 public class NumeratorModule_setupPrereqs extends FixtureScript {
 
@@ -29,7 +29,7 @@ public class NumeratorModule_setupPrereqs extends FixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
         if(beenRun) return;
-        executionContext.executeChild(this, new ApplicationTenancy_data.PersistScript());
+        executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
         beenRun = true;
     }
 

@@ -28,8 +28,8 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForBudNl;
-import org.estatio.fixture.charge.ChargeRefData;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 
 public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstact {
 
@@ -41,7 +41,7 @@ public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstact {
         executionContext.executeChild(this, new KeyTablesForBud());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyForBudNl.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
         LocalDate startDate = BudgetForBud.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);

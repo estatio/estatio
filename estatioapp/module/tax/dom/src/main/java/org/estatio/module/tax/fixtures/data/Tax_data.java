@@ -8,7 +8,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.base.fixtures.country.data.Country_data;
+import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
 import org.estatio.module.tax.dom.Tax;
@@ -27,13 +27,13 @@ import static org.incode.module.base.integtests.VT.ld;
 @Accessors(chain = true)
 public enum Tax_data implements DemoData2<Tax_data, Tax> {
 
-    GB_VATSTD(Country_data.GBR, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
-    NL_VATSTD(Country_data.NLD, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
-    FR_VATSTD(Country_data.FRA, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
-    SW_VATSTD(Country_data.SWE, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
-    IT_VATSTD(Country_data.ITA, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21))));
+    GB_VATSTD(Country_enum.GBR, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
+    NL_VATSTD(Country_enum.NLD, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
+    FR_VATSTD(Country_enum.FRA, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
+    SW_VATSTD(Country_enum.SWE, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
+    IT_VATSTD(Country_enum.ITA, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21))));
 
-    private final Country_data countryData;
+    private final Country_enum countryData;
     private final String referenceSuffix;
     private final List<RateData> rates;
 

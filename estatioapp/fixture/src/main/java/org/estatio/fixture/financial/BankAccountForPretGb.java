@@ -19,7 +19,7 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
-import org.estatio.fixture.party.OrganisationForPretGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPretGb;
 
 public class BankAccountForPretGb extends BankAccountAbstract {
 

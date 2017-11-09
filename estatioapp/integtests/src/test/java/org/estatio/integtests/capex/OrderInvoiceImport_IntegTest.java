@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.app.OrderInvoiceImportMenu;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -45,7 +46,6 @@ import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,13 +56,13 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setupData() {
-//            runFixtureScript(new EstatioBaseLineFixture(), new IncomingChargeFixture(), new PropertyForOxfGb());
+//            runFixtureScript(new EstatioBaseLineFixture(), new IncomingChargeFixture(), new PropertyAndOwnerAndManagerForOxfGb());
 
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new PropertyForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
 

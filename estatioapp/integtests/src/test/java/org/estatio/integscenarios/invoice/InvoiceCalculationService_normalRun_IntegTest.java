@@ -47,15 +47,15 @@ import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.fixture.party.PersonForLinusTorvaldsNl;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -102,9 +102,9 @@ public class InvoiceCalculationService_normalRun_IntegTest extends EstatioIntegr
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
-                executionContext.executeChild(this, new PropertyForOxfGb());
-                executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                 executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());

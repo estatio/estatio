@@ -35,6 +35,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
@@ -44,11 +45,10 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
 import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
 import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -150,7 +150,8 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
             Assert.assertThat(results.size(), is(1));
             fixedAssetFinancialAccount = results.get(0);
 
-            Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(PropertyForKalNl.REF));
+            Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(
+                    PropertyAndOwnerAndManagerForKalNl.REF));
 
             // When
             sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()), new Runnable() {

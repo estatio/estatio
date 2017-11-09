@@ -19,7 +19,7 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.party.OrganisationForMiracleGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
 
 public class BankAccountForMiracleGb extends BankAccountAbstract {
 

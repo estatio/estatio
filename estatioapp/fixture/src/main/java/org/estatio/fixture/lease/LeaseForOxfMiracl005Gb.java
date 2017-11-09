@@ -18,20 +18,21 @@
  */
 package org.estatio.fixture.lease;
 
+import org.incode.module.country.fixture.CountriesRefData;
+
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.incode.module.country.fixture.CountriesRefData;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForMiracleGb;
-import org.estatio.fixture.party.PersonForJohnSmithGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-MIRACL-005";
-    public static final String UNIT_REF = PropertyForOxfGb.unitReference("005");
+    public static final String UNIT_REF = PropertyAndOwnerAndManagerForOxfGb.unitReference("005");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
     public static final String PARTY_REF_TENANT = OrganisationForMiracleGb.REF;
 
@@ -45,12 +46,12 @@ public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
         // prereqs
         executionContext.executeChild(this, new OrganisationForHelloWorldGb());
         executionContext.executeChild(this, new OrganisationForMiracleGb());
-        executionContext.executeChild(this, new PersonForJohnSmithGb());
-        executionContext.executeChild(this, new PropertyForOxfGb());
+        executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 
         // exec
 
-        Party manager = partyRepository.findPartyByReference(PersonForJohnSmithGb.REF);
+        Party manager = partyRepository.findPartyByReference(PersonAndRolesForJohnSmithGb.REF);
 
         createLease(
                 REF,

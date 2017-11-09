@@ -30,8 +30,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.project.ProjectsForGra;
-import org.estatio.fixture.project.ProjectsForKal;
+import org.estatio.module.application.fixtures.project.personas.ProjectsForGra;
+import org.estatio.module.application.fixtures.project.personas.ProjectsForKal;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

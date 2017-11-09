@@ -31,9 +31,9 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.fixture.party.OrganisationForAcmeNl;
-import org.estatio.fixture.party.OrganisationForPoisonNl;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForNlKal;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlKal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;

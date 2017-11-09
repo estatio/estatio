@@ -20,6 +20,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -45,12 +46,11 @@ import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.financial.BankAccountForTopModelGb;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForEmmaTreasurerGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,7 +79,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
                 executionContext.executeChild(this, new BankAccountForTopModelGb());
-                executionContext.executeChild(this, new PersonForEmmaTreasurerGb());
+                executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }
         });
 
@@ -88,7 +88,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
     @Before
     public void setUp() {
-        propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
@@ -124,7 +124,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         // given
         Person personEmmaWithNoRoleAsPropertyManager = (Person) partyRepository.findPartyByReference(
-                PersonForEmmaTreasurerGb.REF);
+                PersonAndRolesForEmmaTreasurerGb.REF);
         SortedSet<PartyRole> rolesforEmma = personEmmaWithNoRoleAsPropertyManager.getRoles();
         assertThat(rolesforEmma.size()).isEqualTo(1);
         assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey()));
@@ -132,7 +132,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;
@@ -149,7 +149,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         Exception error = new Exception();
 
         // given
-        Person personEmma = (Person) partyRepository.findPartyByReference(PersonForEmmaTreasurerGb.REF);
+        Person personEmma = (Person) partyRepository.findPartyByReference(PersonAndRolesForEmmaTreasurerGb.REF);
         PartyRoleType roleAsPropertyManager = partyRoleTypeRepository.findByKey("PROPERTY_MANAGER");
         personEmma.addRole(roleAsPropertyManager);
         transactionService.nextTransaction();
@@ -160,7 +160,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;

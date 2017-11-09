@@ -17,8 +17,8 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForOxfGb;
-import org.estatio.fixture.party.OrganisationForYoukeaSe;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ public class OrderItemRepository_IntegTest extends EstatioIntegrationTest {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
-                executionContext.executeChild(this, new PropertyForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new OrganisationForYoukeaSe());
                 executionContext.executeChild(this, new OrderInvoiceFixture());
             }
@@ -75,7 +75,7 @@ public class OrderItemRepository_IntegTest extends EstatioIntegrationTest {
         public void find_by_seller_and_property_works() {
             // given
             Party seller = partyRepository.findPartyByReference(OrganisationForYoukeaSe.REF);
-            Property property = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             // when
             List<OrderItem> orderItems = orderItemRepository.findBySellerAndProperty(seller, property);

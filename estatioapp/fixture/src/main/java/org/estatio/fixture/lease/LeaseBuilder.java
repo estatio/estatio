@@ -43,9 +43,9 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioFakeDataService;
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 
 public class LeaseBuilder extends FixtureScript {
 

@@ -32,8 +32,8 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.asset.PropertyForOxfGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -48,8 +48,8 @@ public class UnitRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executionContext.executeChild(this, new PropertyForOxfGb());
-                executionContext.executeChild(this, new PropertyForKalNl());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
             }
         });
     }
@@ -64,7 +64,7 @@ public class UnitRepository_IntegTest extends EstatioIntegrationTest {
 
         @Test
         public void findByReference() throws Exception {
-            final Unit unit = unitRepository.findUnitByReference(PropertyForOxfGb.unitReference("001"));
+            final Unit unit = unitRepository.findUnitByReference(PropertyAndOwnerAndManagerForOxfGb.unitReference("001"));
             // then
             Assert.assertEquals("OXF-001", unit.getReference());
         }
@@ -75,7 +75,7 @@ public class UnitRepository_IntegTest extends EstatioIntegrationTest {
             assertThat(unitRepository.findUnits("*XF*", false).size(), is(25));
 
             // when
-            Unit unit = unitRepository.findUnitByReference(PropertyForOxfGb.unitReference("001"));
+            Unit unit = unitRepository.findUnitByReference(PropertyAndOwnerAndManagerForOxfGb.unitReference("001"));
             unit.setEndDate(new LocalDate(2014, 1, 1));
 
             // then
@@ -90,10 +90,10 @@ public class UnitRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given
-            Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
             // when
-            Unit unit = unitRepository.findUnitByReference(PropertyForOxfGb.REF + "-001");
+            Unit unit = unitRepository.findUnitByReference(PropertyAndOwnerAndManagerForOxfGb.REF + "-001");
             LocalDate startDate = new LocalDate(2013, 1, 1);
             LocalDate endDate = new LocalDate(2013, 12, 31);
             unit.setEndDate(endDate);
@@ -112,7 +112,7 @@ public class UnitRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void findActiveByProperty() throws Exception {
             // given, when
-            Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+            Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             // then
             assertThat(unitRepository.findByProperty(propertyForOxf).size(), is(25));
         }

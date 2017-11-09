@@ -31,10 +31,10 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForHelloWorldNl;
-import org.estatio.fixture.party.OrganisationForPoisonGb;
-import org.estatio.fixture.security.tenancy.ApplicationTenancyForGbOxf;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;

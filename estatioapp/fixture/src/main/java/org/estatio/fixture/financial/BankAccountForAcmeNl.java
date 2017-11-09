@@ -18,14 +18,14 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.asset.PropertyForKalNl;
-import org.estatio.fixture.party.OrganisationForAcmeNl;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 public class BankAccountForAcmeNl extends BankAccountAbstract {
 
     public static final String REF = "NL31ABNA0580744433";
     public static final String PARTY_REF = OrganisationForAcmeNl.REF;
-    public static final String PROPERTY_REF = PropertyForKalNl.REF;
+    public static final String PROPERTY_REF = PropertyAndOwnerAndManagerForKalNl.REF;
 
     public BankAccountForAcmeNl() {
         this(null, null);
@@ -40,7 +40,7 @@ public class BankAccountForAcmeNl extends BankAccountAbstract {
 
         // prereqs
         executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new PropertyForKalNl());
+        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(

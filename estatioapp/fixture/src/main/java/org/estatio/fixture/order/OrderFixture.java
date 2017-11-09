@@ -15,6 +15,8 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
+import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.order.Order;
@@ -30,12 +32,10 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.asset.PropertyForOxfGb;
 import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForOrder;
-import org.estatio.fixture.party.OrganisationForHelloWorldGb;
-import org.estatio.fixture.party.OrganisationForTopModelGb;
-import org.estatio.fixture.party.PersonForDylanOfficeAdministratorGb;
-import org.estatio.fixture.project.ProjectForOxf;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.application.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.data.Tax_data;
@@ -50,7 +50,7 @@ public class OrderFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new IncomingPdfFixtureForOrder().setRunAs("estatio-user-gb"));
-        executionContext.executeChild(this, new PersonForDylanOfficeAdministratorGb());
+        executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
 
         // given a document has been scanned and uploaded
         Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForOrder.resourceName).get(0);
@@ -58,10 +58,10 @@ public class OrderFixture extends FixtureScript {
         fakeOrder2Doc.setAtPath("/GBR");
 
         // given we categorise for a property
-        final Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyForOxfGb.REF);
+        final Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonForDylanOfficeAdministratorGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(PersonAndRolesForDylanOfficeAdministratorGb.SECURITY_USERNAME, () -> {
 
             wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, "");
 
