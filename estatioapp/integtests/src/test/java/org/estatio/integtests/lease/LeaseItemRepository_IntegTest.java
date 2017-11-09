@@ -42,9 +42,9 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfPoison003Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

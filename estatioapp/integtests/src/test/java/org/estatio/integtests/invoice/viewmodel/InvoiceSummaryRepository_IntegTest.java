@@ -42,7 +42,7 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyD
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
+import org.estatio.module.application.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

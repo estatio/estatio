@@ -30,7 +30,7 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class Guarantee_TODO_IntegTest extends EstatioIntegrationTest {

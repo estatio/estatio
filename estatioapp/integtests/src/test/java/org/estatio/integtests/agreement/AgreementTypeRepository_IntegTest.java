@@ -12,12 +12,12 @@ import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForKalPoison001Nl;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfPoison003Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfPret004Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

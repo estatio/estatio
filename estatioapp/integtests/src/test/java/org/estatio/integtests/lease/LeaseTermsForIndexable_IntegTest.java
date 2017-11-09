@@ -36,7 +36,7 @@ import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForIndexableRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.index.fixtures.IndexRefData;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

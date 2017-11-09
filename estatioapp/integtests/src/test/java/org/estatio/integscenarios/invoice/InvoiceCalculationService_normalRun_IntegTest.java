@@ -49,12 +49,12 @@ import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfPret004Gb;
-import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfPret004Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 

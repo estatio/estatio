@@ -52,11 +52,11 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfPoison003Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

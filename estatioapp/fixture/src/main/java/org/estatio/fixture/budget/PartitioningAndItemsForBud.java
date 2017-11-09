@@ -31,7 +31,7 @@ import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 
-public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstact {
+public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

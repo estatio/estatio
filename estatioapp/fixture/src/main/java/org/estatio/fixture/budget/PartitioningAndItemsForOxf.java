@@ -31,7 +31,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 
-public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstact {
+public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

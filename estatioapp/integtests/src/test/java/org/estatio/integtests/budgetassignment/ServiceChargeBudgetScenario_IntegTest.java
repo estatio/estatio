@@ -53,7 +53,7 @@ import org.estatio.module.application.fixtures.property.personas.PropertyAndOwne
 import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.fixture.lease.LeasesForBudNl;
+import org.estatio.module.application.fixtures.lease.LeasesForBudNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -25,7 +25,7 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 
-public class KeyTablesForOxf extends KeyTableAbstact {
+public class KeyTablesForOxf extends KeyTableAbstract {
 
     public static final String NAME_BY_AREA = "Service Charges By Area year 2015";
     public static final String NAME_BY_COUNT = "Service Charges By Count year 2015";

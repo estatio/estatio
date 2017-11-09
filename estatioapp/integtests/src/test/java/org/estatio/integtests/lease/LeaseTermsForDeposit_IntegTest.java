@@ -52,10 +52,10 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfMediax002Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

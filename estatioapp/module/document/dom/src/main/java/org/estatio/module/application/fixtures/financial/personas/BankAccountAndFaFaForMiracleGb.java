@@ -18,7 +18,7 @@
  */
 package org.estatio.module.application.fixtures.financial.personas;
 
-import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
 

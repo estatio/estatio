@@ -18,9 +18,9 @@
  */
 package org.estatio.module.application.fixtures.financial.personas;
 
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 
 public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbstract {
 

@@ -25,7 +25,7 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 
-public class KeyTablesForBud extends KeyTableAbstact {
+public class KeyTablesForBud extends KeyTableAbstract {
 
     public static final String NAME_BY_AREA = "table1";
     public static final String NAME_BY_COUNT = "table2";

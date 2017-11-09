@@ -89,7 +89,12 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-document</artifactId>
+            <artifactId>estatio-dom-settings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
 
         <!-- testing -->

@@ -27,10 +27,11 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.budget.fixtures.BudgetAbstract;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.fixture.lease.LeasesForBudNl;
+import org.estatio.module.application.fixtures.lease.LeasesForBudNl;
 
-public class BudgetForBud extends BudgetAbstact {
+public class BudgetForBud extends BudgetAbstract {
 
     public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 01, 01);
     public static final LocalDate BUDGET_2015_END_DATE = BUDGET_2015_START_DATE.plusYears(1).minusDays(1);

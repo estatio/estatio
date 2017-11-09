@@ -18,9 +18,9 @@
  */
 package org.estatio.module.application.fixtures.financial.personas;
 
+import org.estatio.module.application.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 

@@ -28,7 +28,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.application.fixtures.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForDagoBankGb;
 
 import static org.incode.module.base.integtests.VT.bd;

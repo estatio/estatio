@@ -44,7 +44,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;

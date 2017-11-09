@@ -28,7 +28,7 @@ import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.PartitioningAndItemsForBud;
 import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
-import org.estatio.fixture.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
+import org.estatio.module.application.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
