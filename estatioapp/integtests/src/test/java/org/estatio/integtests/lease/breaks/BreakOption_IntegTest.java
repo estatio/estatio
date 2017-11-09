@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.app.menus.lease.LeaseMenu;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakOption;

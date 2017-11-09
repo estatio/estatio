@@ -32,7 +32,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseItemRepository;
-import org.estatio.app.menus.lease.LeaseMenu;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.fixture.EstatioBaseLineFixture;

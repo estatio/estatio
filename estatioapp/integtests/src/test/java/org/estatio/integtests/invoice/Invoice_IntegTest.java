@@ -35,7 +35,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.app.menus.lease.LeaseMenu;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;

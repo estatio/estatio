@@ -31,10 +31,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.app.menus.invoice.InvoiceMenu;
-import org.estatio.app.menus.invoice.InvoiceServiceMenu;
-import org.estatio.app.menus.lease.LeaseMenu;
-import org.estatio.app.menus.numerator.NumeratorForCollectionMenu;
+import org.estatio.module.invoice.app.InvoiceMenu;
+import org.estatio.module.invoice.app.InvoiceServiceMenu;
+import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.invoice.dom.Invoice;

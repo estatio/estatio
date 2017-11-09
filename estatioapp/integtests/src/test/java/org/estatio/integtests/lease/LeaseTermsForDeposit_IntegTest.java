@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 
-import org.estatio.app.menus.invoice.InvoiceServiceMenu;
+import org.estatio.module.invoice.app.InvoiceServiceMenu;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
