@@ -18,8 +18,37 @@
  */
 package org.estatio.module.tax;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
+import org.estatio.module.base.fixtures.country.enums.Country_enum;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.tax.fixtures.data.Tax_enum;
+
 public final class EstatioTaxModule {
 
     private EstatioTaxModule(){}
 
+    public static class Setup extends FixtureScript {
+        static boolean prereqsRun = false;
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            if(!prereqsRun) {
+                prereqsRun = true;
+                executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
+                executionContext.executeChild(this, new Country_enum.PersistScript());
+            }
+            executionContext.executeChild(this, new Tax_enum.PersistScript());
+        }
+    }
+
+    public static class Teardown extends TeardownFixtureAbstract {
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            executionContext.executeChild(this, new Tax_enum.DeleteScript());
+//            executionContext.executeChild(this, new Country_enum.DeleteScript());
+//            executionContext.executeChild(this, new ApplicationTenancy_enum.DeleteScript());
+        }
+    }
 }

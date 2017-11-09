@@ -33,7 +33,7 @@ import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.link.dom.Link;
-import org.estatio.module.tax.fixtures.TaxModule_tearDown;
+import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
@@ -48,7 +48,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
         deleteFrom(Charge.class);
         deleteFrom(ChargeGroup.class);
 
-        executionContext.executeChild(this, new TaxModule_tearDown());
+        executionContext.executeChild(this, new EstatioTaxModule.Teardown());
 
         deleteFrom(IndexValue.class);
         deleteFrom(IndexBase.class);

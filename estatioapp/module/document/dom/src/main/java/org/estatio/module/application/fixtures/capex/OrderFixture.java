@@ -38,7 +38,7 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTo
 import org.estatio.module.application.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
-import org.estatio.module.tax.fixtures.data.Tax_data;
+import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 import lombok.Getter;
 
@@ -67,7 +67,7 @@ public class OrderFixture extends FixtureScript {
 
             // given most/all of the info has been completed  (not using our view model here).
             final Project projectForOxf = projectRepository.findByReference("OXF-02");
-            final Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
+            final Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
 
             final Party orgTopModelGb = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             final Party orgHelloWorldGb = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);

@@ -46,7 +46,10 @@ import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.country.dom.CountryServiceForCurrentUser;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.services.indexmaint.IndexValuesMaintenanceMenu"
+)
 @DomainServiceLayout(
         named="Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,

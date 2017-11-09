@@ -30,7 +30,10 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.estatio.module.base.dom.UdoDomainService;
 
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.prototype.PrototypeMenu"
+)
 @DomainServiceLayout(
         named = "Prototyping",
         menuBar = DomainServiceLayout.MenuBar.SECONDARY,

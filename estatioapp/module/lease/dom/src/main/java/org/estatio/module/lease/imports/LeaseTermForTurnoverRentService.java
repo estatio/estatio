@@ -38,7 +38,10 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
-@DomainService(menuOrder = "00")
+@DomainService(
+        menuOrder = "00",
+        objectType = "org.estatio.app.services.lease.turnoverrent.LeaseTermForTurnoverRentService"
+)
 @Immutable
 public class LeaseTermForTurnoverRentService extends UdoDomainService<LeaseTermForTurnoverRentService> {
 

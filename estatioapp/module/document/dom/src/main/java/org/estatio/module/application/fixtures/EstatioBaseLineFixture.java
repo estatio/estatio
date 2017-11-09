@@ -24,12 +24,12 @@ import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.incode.module.integtestsupport.dom.ClockFixture;
+import org.incode.module.fixturesupport.dom.scripts.ClockFixture;
 
-import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.base.fixtures.security.EstatioSecurityModuleDemoFixture;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
+import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.currency.dom.CurrencyRepository;
 
 /**
  * Will reset to a fixed baseline of the {@link EstatioRefDataSetupFixture reference data}

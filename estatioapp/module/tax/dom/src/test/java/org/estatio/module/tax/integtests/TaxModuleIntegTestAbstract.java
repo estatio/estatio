@@ -34,37 +34,23 @@ import org.isisaddons.module.security.SecurityModule;
 import org.incode.module.country.dom.CountryModule;
 
 import org.estatio.module.tax.EstatioTaxModule;
-import org.estatio.module.tax.fixtures.TaxModule_setup;
-import org.estatio.module.tax.fixtures.TaxModule_setupPrereqs;
-import org.estatio.module.tax.fixtures.TaxModule_tearDown;
 
 public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 
-    public static class TaxAppManifest extends AppManifestAbstract {
-
-        final static Builder BUILDER =
-                Builder.forModules(CountryModule.class, EstatioTaxModule.class , SecurityModule.class);
-
-        public TaxAppManifest() {
-            super(BUILDER);
-        }
-    }
-
     @BeforeClass
     public static void initClass() {
-        bootstrapUsing(TaxAppManifest.BUILDER.withAdditionalModules(FakeDataModule.class));
+        bootstrapUsing(AppManifestAbstract.Builder.forModules(
+                CountryModule.class,
+                EstatioTaxModule.class,
+                SecurityModule.class,
+                FakeDataModule.class));
     }
 
     @Before
-    public void setup() {
-        runFixtureScript(new TaxModule_setupPrereqs());
-        runFixtureScript(new TaxModule_setup());
-    }
+    public void setup() { runFixtureScript(new EstatioTaxModule.Setup()); }
 
     @After
-    public void tearDown() {
-        runFixtureScript(new TaxModule_tearDown());
-    }
+    public void tearDown() { runFixtureScript(new EstatioTaxModule.Teardown()); }
 
     @Inject
     protected FakeDataService fakeDataService;

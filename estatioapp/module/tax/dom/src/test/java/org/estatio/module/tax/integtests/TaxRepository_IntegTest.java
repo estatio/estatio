@@ -29,7 +29,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
-import org.estatio.module.tax.fixtures.data.Tax_data;
+import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,7 +43,7 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             // given
-            final int size = Tax_data.values().length;
+            final int size = Tax_enum.values().length;
 
             // when
             final List<Tax> taxList = taxRepository.allTaxes();
@@ -58,7 +58,7 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             // given
-            final Tax_data data = fakeDataService.enums().anyOf(Tax_data.class);
+            final Tax_enum data = fakeDataService.enums().anyOf(Tax_enum.class);
 
             // when
             final Tax tax = taxRepository.findByReference(data.getReference());
@@ -74,7 +74,7 @@ public class TaxRepository_IntegTest extends TaxModuleIntegTestAbstract {
         public void happyCase() throws Exception {
 
             // given
-            final Tax_data data = fakeDataService.enums().anyOf(Tax_data.class);
+            final Tax_enum data = fakeDataService.enums().anyOf(Tax_enum.class);
             final Tax tax = data.findUsing(serviceRegistry);
             final ApplicationTenancy applicationTenancy = tax.getApplicationTenancy();
 

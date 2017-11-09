@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.numerator.integtests;
+package org.estatio.module.link.integtests;
 
 import javax.inject.Inject;
 
@@ -34,30 +34,26 @@ import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.numerator.EstatioNumeratorModule;
-import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_enum;
-import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
+import org.estatio.module.link.EstatioLinkModule;
 
 /**
  * Base class for integration tests.
  */
-public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class LinkModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 
     @BeforeClass
     public static void initClass() {
         bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                EstatioNumeratorModule.class,
+                EstatioLinkModule.class,
                 SecurityModule.class,
                 FakeDataModule.class));
     }
 
     @Before
     public void setup() {
-        runFixtureScript(new EstatioNumeratorModule.Setup());
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new NumeratorExampleObject_enum.PersistScript());
             }
         });
     }
@@ -67,10 +63,8 @@ public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAb
         runFixtureScript(new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(NumeratorExampleObject.class);
             }
         });
-        runFixtureScript(new EstatioNumeratorModule.Teardown());
     }
 
     @Inject

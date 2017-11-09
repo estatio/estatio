@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.value.Password;
 
@@ -32,12 +32,12 @@ import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
 import org.estatio.module.party.fixtures.PersonAndRolesAbstract;
 
 import lombok.Data;

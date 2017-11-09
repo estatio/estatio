@@ -43,7 +43,10 @@ import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.settings.dom.ApplicationSettingForEstatio;
 import org.estatio.module.settings.dom.ApplicationSettingsServiceForEstatio;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.admin.AdministrationMenu"
+)
 @DomainServiceLayout(
         menuBar = DomainServiceLayout.MenuBar.TERTIARY,
         menuOrder = "10.1"

@@ -34,10 +34,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.CountryRepository;
 
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.lease.fixtures.BrandsFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,6 +60,7 @@ public class BrandRepository_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BrandsFixture());
             }
         });

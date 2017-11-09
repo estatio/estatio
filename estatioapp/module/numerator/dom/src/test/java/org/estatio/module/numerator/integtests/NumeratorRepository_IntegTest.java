@@ -31,7 +31,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_data;
+import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_enum;
 import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -39,7 +39,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstract {
-
 
     @Inject
     NumeratorRepository numeratorRepository;
@@ -57,8 +56,8 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
         applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
 
-        propertyKal = NumeratorExampleObject_data.Kal.findUsing(serviceRegistry);
-        propertyOxf = NumeratorExampleObject_data.Oxf.findUsing(serviceRegistry);
+        propertyKal = NumeratorExampleObject_enum.Kal.findUsing(serviceRegistry);
+        propertyOxf = NumeratorExampleObject_enum.Oxf.findUsing(serviceRegistry);
     }
 
 

@@ -3,10 +3,12 @@ package org.estatio.module.base.fixtures.country.enums;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
+import org.estatio.module.base.platform.fixturesupport.DemoData2TeardownAbstract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,10 +39,27 @@ public enum Country_enum implements DemoData2<Country_enum, Country> {
         return appTenancyData.getPath();
     }
 
+    @Override
+    public Country findUsing(final ServiceRegistry2 serviceRegistry) {
+        return findByPath(serviceRegistry, this.ref3);
+    }
+
+    private static Country findByPath(final ServiceRegistry2 serviceRegistry2, final String reference) {
+        return serviceRegistry2.lookupService(CountryRepository.class).findCountry(reference);
+    }
+
     public static class PersistScript extends DemoData2PersistAbstract<PersistScript, Country_enum, Country> {
         public PersistScript() {
             super(Country_enum.class);
         }
     }
+
+    public static class DeleteScript
+            extends DemoData2TeardownAbstract<Country_enum, Country> {
+        public DeleteScript() {
+            super(Country_enum.class);
+        }
+    }
+
 
 }

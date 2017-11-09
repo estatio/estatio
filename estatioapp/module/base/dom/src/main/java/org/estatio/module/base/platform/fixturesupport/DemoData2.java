@@ -16,6 +16,13 @@ public interface DemoData2<D extends DemoData2<D, T>, T> {
     default T findUsing(final ServiceRegistry2 serviceRegistry) {
         return Util.firstMatch(this, serviceRegistry);
     }
+    default Class<T> toDomainClass() {
+        final Type[] genericInterfaces = this.getClass().getGenericInterfaces();
+        final ParameterizedType genericSuperclass = (ParameterizedType) genericInterfaces[0];
+        final Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
+        final Type type = actualTypeArguments[1];
+        return (Class<T>) type;
+    }
 
     class Util {
 

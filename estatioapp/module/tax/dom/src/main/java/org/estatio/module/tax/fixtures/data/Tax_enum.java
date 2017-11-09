@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
@@ -25,7 +27,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Tax_data implements DemoData2<Tax_data, Tax> {
+public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
 
     GB_VATSTD(Country_enum.GBR, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
     NL_VATSTD(Country_enum.NLD, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
@@ -78,10 +80,19 @@ public enum Tax_data implements DemoData2<Tax_data, Tax> {
         return tax;
     }
 
-    public static class PersistScript extends DemoData2PersistAbstract<PersistScript, Tax_data, Tax> {
+    public static class PersistScript extends DemoData2PersistAbstract<PersistScript, Tax_enum, Tax> {
         public PersistScript() {
-            super(Tax_data.class);
+            super(Tax_enum.class);
         }
     }
+
+    public static class DeleteScript extends TeardownFixtureAbstract {
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            deleteFrom(TaxRate.class);
+            deleteFrom(Tax.class);
+        }
+    }
+
 
 }

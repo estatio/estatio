@@ -37,7 +37,7 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTo
 import org.estatio.module.application.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
-import org.estatio.module.tax.fixtures.data.Tax_data;
+import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 public class IncomingInvoiceFixture extends FixtureScript {
 
@@ -58,7 +58,7 @@ public class IncomingInvoiceFixture extends FixtureScript {
         wrap(mixin(Document_categoriseAsPropertyInvoice.class,fakeInvoice2Doc)).act(propertyForOxf, ""));
 
         Project projectForOxf = projectRepository.findByReference("OXF-02");
-        Tax taxForGbr = taxRepository.findByReference(Tax_data.GB_VATSTD.getReference());
+        Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
 
         IncomingInvoice fakeInvoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName("fakeInvoice2.pdf").get(0);
         fakeInvoice.setDateReceived(new LocalDate(2014,5,15));
