@@ -32,10 +32,6 @@ language governing permissions and limitations under the License.
         Estatio App (manifest and application-scoped services)
     </description>
 
-    <properties>
-        <isis-maven-plugin.validate.appManifest>org.estatio.dom.EstatioDomManifest</isis-maven-plugin.validate.appManifest>
-    </properties>
-
     <build>
         <resources>
             <resource>
@@ -65,10 +61,6 @@ language governing permissions and limitations under the License.
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>standard</artifactId>
                         </mixin>
-                        <!--<mixin>-->
-                            <!--<groupId>com.danhaywood.mavenmixin</groupId>-->
-                            <!--<artifactId>isisvalidate</artifactId>-->
-                        <!--</mixin>-->
                         <mixin>
                             <groupId>com.danhaywood.mavenmixin</groupId>
                             <artifactId>staticanalysis</artifactId>
@@ -200,12 +192,6 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-settings</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
             <artifactId>incode-module-unittestsupport-dom</artifactId>
@@ -348,36 +334,7 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-servletapi-dom</artifactId>
         </dependency>
 
-        <!-- requires FixedAssetForTesting -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-asset</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
-        <!-- requires PartyForTesting -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-agreement</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-lease</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 
