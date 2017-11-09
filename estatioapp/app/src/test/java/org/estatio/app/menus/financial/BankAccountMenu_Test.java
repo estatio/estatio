@@ -22,6 +22,7 @@ package org.estatio.app.menus.financial;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.module.bankaccount.app.BankAccountMenu;
 import org.estatio.module.party.dom.Person;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.country.CountryServiceForCurrentUser;
+import org.estatio.module.country.dom.CountryServiceForCurrentUser;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;

@@ -86,6 +86,12 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-base</artifactId>
         </dependency>
 
+        <!-- needed just for the country stuff -->
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom-party</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.mavendeps</groupId>

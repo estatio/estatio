@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.menus.tax;
+package org.estatio.module.index.app;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
@@ -37,65 +36,60 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.country.dom.CountryServiceForCurrentUser;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
-import org.estatio.module.tax.dom.Tax;
-import org.estatio.module.tax.dom.TaxRepository;
+import org.estatio.module.index.dom.Index;
+import org.estatio.module.index.dom.IndexRepository;
 
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY)
+@DomainService(
+        nature = NatureOfService.VIEW_MENU_ONLY,
+        objectType = "org.estatio.app.menus.index.IndexMenu"
+)
 @DomainServiceLayout(
         named = "Other",
         menuBar = DomainServiceLayout.MenuBar.PRIMARY,
-        menuOrder = "900.7")
-public class TaxMenu extends UdoDomainRepositoryAndFactory<Tax> {
-
-    public TaxMenu() {
-        super(TaxMenu.class, Tax.class);
-    }
-
-    // //////////////////////////////////////
+        menuOrder = "900.2"
+)
+public class IndexMenu {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Tax newTax(
+    public Index newIndex(
             @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
             final String reference,
-            @Parameter(optionality = Optionality.OPTIONAL)
             final String name,
             final Country country) {
 
-        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
-        return taxRepository.newTax(reference, name, applicationTenancy);
+        final ApplicationTenancy applicationTenancy =  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        return indexRepository.newIndex(reference, name, applicationTenancy);
     }
 
-    public List<Country> choices2NewTax() {
+    public List<Country> choices2NewIndex() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public Country default2NewTax() {
-        return Dflt.of(choices2NewTax());
+    public Country default2NewIndex() {
+        return Dflt.of(choices2NewIndex());
     }
 
-    // //////////////////////////////////////
+
+
 
     @Action(semantics = SemanticsOf.SAFE)
-    @MemberOrder(sequence = "2")
-    public List<Tax> allTaxes() {
-        return allInstances();
+    @MemberOrder(sequence = "60.3")
+    public List<Index> allIndices() {
+        return indexRepository.all();
     }
 
 
-    // //////////////////////////////////////
 
     @Inject
     private EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
     @Inject
-    private TaxRepository taxRepository;
-
-    @Inject
     CountryServiceForCurrentUser countryServiceForCurrentUser;
 
 
+    @Inject
+    private IndexRepository indexRepository;
 }
