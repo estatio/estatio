@@ -9,7 +9,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.incode.module.country.fixture.CountriesRefData;
 
 public class BrandsFixture extends FixtureScript {

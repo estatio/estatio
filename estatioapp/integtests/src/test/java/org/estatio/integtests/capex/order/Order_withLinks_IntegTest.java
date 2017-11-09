@@ -29,7 +29,7 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.fixture.order.OrderFixture;

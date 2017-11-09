@@ -22,7 +22,7 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.fixture.budget.BudgetForBud;
 import org.estatio.fixture.budget.BudgetsForOxf;

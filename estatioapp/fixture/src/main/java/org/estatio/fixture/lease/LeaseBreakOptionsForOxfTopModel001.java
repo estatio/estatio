@@ -21,6 +21,7 @@ package org.estatio.fixture.lease;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;
+import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
 
 public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstract {
 

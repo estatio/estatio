@@ -37,8 +37,8 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForTopModelGb;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -54,7 +54,7 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, new BankAccountForTopModelGb());
+                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
             }
         });
 
@@ -85,7 +85,7 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
 
             // Given
             Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-            BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountForTopModelGb.REF);
+            BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForTopModelGb.REF);
 
             final String reference = "REF";
             final String name = "NAME";

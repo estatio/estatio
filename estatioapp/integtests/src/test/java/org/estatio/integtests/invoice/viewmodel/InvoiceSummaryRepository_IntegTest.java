@@ -39,7 +39,7 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRu
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;

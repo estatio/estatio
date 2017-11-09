@@ -42,10 +42,10 @@ import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForOxford;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForOxford;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.fixture.security.users.EstatioAdmin;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -61,7 +61,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new BankAccountForOxford());
+                executionContext.executeChild(this, new BankAccountAndFaFaForOxford());
             }
         });
         owner = partyRepository.findPartyByReference(PropertyAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
@@ -111,7 +111,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner, BankAccountForOxford.BANK_ACCOUNT_REF));
+            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF));
 
             // then
             assertThat(results.size(), is(1));
@@ -128,7 +128,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner, BankAccountForOxford.BANK_ACCOUNT_REF));
+            final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF));
 
             // then
             assertNotNull(result);
@@ -145,7 +145,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioInteg
 
         @Before
         public void setUp() throws Exception {
-            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountForOxford.BANK_ACCOUNT_REF);
+            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF);
             newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
         }
 

@@ -24,6 +24,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 
 /**
  * Property manager for OXF

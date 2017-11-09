@@ -54,7 +54,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;

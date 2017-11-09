@@ -43,8 +43,8 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForTopModelGb;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -60,7 +60,7 @@ public class GuaranteeRepository_IntegTest extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
-                executionContext.executeChild(this, new BankAccountForTopModelGb());
+                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
             }
         });
 

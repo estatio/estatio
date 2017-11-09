@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
+import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 

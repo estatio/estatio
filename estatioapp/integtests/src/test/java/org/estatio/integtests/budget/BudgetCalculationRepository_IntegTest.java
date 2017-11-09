@@ -22,7 +22,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;

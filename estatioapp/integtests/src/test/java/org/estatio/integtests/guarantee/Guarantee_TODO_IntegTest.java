@@ -28,7 +28,7 @@ import org.estatio.module.guarantee.dom.GuaranteeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.app.LeaseMenu;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;

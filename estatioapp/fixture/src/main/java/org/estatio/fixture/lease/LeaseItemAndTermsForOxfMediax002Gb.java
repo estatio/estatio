@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
+
 public class LeaseItemAndTermsForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 
     @Override

@@ -45,8 +45,8 @@ import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForTopModelGb;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.fixture.invoice.IncomingInvoiceFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
@@ -78,7 +78,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new BankAccountForTopModelGb());
+                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }
         });
@@ -98,7 +98,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
         project = projectRepository.findByReference("OXF-02");
 
-        bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountForTopModelGb.REF);
+        bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountAndFaFaForTopModelGb.REF);
 
         incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
         incomingInvoice.setBankAccount(bankAccount);

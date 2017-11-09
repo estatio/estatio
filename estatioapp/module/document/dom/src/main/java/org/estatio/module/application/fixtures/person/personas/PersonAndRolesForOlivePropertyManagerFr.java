@@ -24,6 +24,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForMacFr;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 
 public class PersonAndRolesForOlivePropertyManagerFr extends FixtureScript {
 

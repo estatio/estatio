@@ -36,7 +36,7 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddressReposi
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.module.party.dom.Party;

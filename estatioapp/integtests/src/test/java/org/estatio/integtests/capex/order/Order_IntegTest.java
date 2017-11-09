@@ -31,7 +31,7 @@ import org.estatio.module.capex.dom.order.approval.triggers.Order_amend;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.order.OrderFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 

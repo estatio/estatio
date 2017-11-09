@@ -25,6 +25,7 @@ import org.estatio.module.application.fixtures.property.personas.PropertyAndOwne
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 
 public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
 

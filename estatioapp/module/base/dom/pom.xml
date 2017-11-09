@@ -134,6 +134,11 @@ language governing permissions and limitations under the License.
             <artifactId>togglz-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.isisaddons.module.togglz</groupId>
+            <artifactId>isis-module-togglz-glue</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>

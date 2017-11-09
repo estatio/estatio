@@ -33,12 +33,12 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.fixture.security.users.EstatioAdmin;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.junit.Assert.assertNull;

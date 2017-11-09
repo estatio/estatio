@@ -22,6 +22,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 
 public class PersonAndRolesForJohnSmithGb extends FixtureScript {
 

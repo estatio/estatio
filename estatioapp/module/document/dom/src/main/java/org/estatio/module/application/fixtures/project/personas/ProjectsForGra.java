@@ -18,6 +18,8 @@
  */
 package org.estatio.module.application.fixtures.project.personas;
 
+import org.estatio.module.capex.fixtures.project.personas.ProjectAbstract;
+
 import static org.incode.module.base.integtests.VT.ld;
 
 public class ProjectsForGra extends ProjectAbstract {

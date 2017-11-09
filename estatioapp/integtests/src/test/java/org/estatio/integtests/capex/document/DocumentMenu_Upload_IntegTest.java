@@ -22,7 +22,7 @@ import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

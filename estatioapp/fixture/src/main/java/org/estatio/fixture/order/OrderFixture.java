@@ -32,7 +32,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForOrder;
+import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixtureForOrder;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.application.fixtures.project.personas.ProjectForOxf;

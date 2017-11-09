@@ -44,9 +44,9 @@ import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForHelloWorldGb;
-import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForHelloWorldGb;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -63,7 +63,7 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new BankAccountForHelloWorldGb());
+                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldGb());
                 }
             });
         }
@@ -108,7 +108,7 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new BankAccountForHelloWorldNl());
+                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
                 }
             });
         }
@@ -134,7 +134,7 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
         @Before
         public void setUp() throws Exception {
             owner = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
-            FinancialAccount financialAccount = financialAccountRepository.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF);
+            FinancialAccount financialAccount = financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF);
 
             Assert.assertTrue(financialAccount instanceof BankAccount);
             bankAccount = (BankAccount) financialAccount;
@@ -164,7 +164,7 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountForHelloWorldNl.REF));
+            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF));
 
         }
     }

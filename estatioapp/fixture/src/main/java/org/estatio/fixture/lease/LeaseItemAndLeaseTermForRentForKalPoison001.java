@@ -25,6 +25,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlKalDefault;
+import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 
 import static org.incode.module.base.integtests.VT.bd;
 

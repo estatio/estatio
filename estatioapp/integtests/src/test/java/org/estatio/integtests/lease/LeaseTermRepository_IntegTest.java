@@ -44,7 +44,7 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.dom.LeaseTermRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;

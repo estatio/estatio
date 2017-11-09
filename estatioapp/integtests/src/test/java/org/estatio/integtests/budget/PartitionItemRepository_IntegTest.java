@@ -23,7 +23,7 @@ import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.PartitioningAndItemsForOxf;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.module.charge.fixtures.ChargeRefData;

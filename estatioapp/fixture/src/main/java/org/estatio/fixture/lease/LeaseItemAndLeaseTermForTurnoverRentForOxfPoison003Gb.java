@@ -20,6 +20,7 @@ package org.estatio.fixture.lease;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
+import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 

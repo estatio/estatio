@@ -31,9 +31,9 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesBuilder;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

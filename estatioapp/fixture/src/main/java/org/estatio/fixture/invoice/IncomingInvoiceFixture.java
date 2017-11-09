@@ -31,7 +31,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.documents.incoming.IncomingPdfFixtureForInvoice;
+import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixtureForInvoice;
 import org.estatio.fixture.order.OrderFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;

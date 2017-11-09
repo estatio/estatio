@@ -29,8 +29,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForTopModelGb;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -45,7 +45,7 @@ public class BankAccountRepository_IntegTest extends EstatioIntegrationTest {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new BankAccountForTopModelGb());
+                    executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 }
             });
         }

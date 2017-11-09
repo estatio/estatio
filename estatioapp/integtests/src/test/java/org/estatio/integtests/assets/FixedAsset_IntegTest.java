@@ -19,7 +19,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 

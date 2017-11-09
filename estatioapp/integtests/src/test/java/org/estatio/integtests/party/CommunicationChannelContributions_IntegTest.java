@@ -26,7 +26,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 

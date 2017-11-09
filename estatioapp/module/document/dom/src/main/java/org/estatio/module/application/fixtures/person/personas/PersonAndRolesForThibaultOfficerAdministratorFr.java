@@ -23,6 +23,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
+import org.estatio.module.application.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
 
 public class PersonAndRolesForThibaultOfficerAdministratorFr extends FixtureScript {

@@ -34,7 +34,7 @@ import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005Gb;

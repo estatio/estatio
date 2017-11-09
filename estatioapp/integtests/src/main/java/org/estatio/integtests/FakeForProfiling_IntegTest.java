@@ -23,9 +23,9 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.EstatioRefDataSetupFixture;
-import org.estatio.fixture.security.EstatioSecurityModuleDemoFixture;
+import org.estatio.module.application.fixtures.EstatioOperationalTeardownFixture;
+import org.estatio.module.application.fixtures.EstatioRefDataSetupFixture;
+import org.estatio.module.base.fixtures.security.EstatioSecurityModuleDemoFixture;
 
 public class FakeForProfiling_IntegTest extends EstatioIntegrationTest {
 

@@ -25,7 +25,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeasesForBudNl;

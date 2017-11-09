@@ -22,7 +22,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.module.capex.app.DocumentMenu;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

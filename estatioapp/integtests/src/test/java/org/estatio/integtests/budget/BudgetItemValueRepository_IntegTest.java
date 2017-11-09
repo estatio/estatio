@@ -20,7 +20,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValueRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.budget.BudgetsForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 

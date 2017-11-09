@@ -22,6 +22,7 @@ import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
+import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForDagoBankNl;

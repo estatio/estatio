@@ -20,9 +20,9 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.fixture.financial.BankAccountForHelloWorldNl;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
@@ -45,7 +45,7 @@ public class IncomingInvoiceRepository_IntegTest extends EstatioIntegrationTest 
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new BankAccountForHelloWorldNl());
+                executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
             }
         });
     }

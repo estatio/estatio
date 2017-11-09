@@ -36,7 +36,7 @@ import org.incode.module.country.fixture.CountriesRefData;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;

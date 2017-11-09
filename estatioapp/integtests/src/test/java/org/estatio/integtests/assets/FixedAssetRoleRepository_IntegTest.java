@@ -35,7 +35,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 

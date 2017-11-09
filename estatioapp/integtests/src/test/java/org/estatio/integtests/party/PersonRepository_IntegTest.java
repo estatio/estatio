@@ -33,7 +33,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;

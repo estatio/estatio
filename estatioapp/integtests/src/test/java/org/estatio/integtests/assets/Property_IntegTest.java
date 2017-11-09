@@ -40,9 +40,9 @@ import org.estatio.module.application.fixtures.property.personas.PropertyAndOwne
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.asset.fixtures.builders.PropertyBuilder;
+import org.estatio.module.asset.fixtures.PropertyBuilder;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 

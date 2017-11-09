@@ -33,7 +33,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 

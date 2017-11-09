@@ -21,6 +21,7 @@ package org.estatio.fixture.lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
+import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 
 import static org.incode.module.base.integtests.VT.bd;
 

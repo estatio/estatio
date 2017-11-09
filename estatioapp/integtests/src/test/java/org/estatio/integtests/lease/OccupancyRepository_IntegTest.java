@@ -43,7 +43,7 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Brand.RemoveEvent;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;

@@ -46,7 +46,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002Gb;

@@ -46,7 +46,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixturescripts.CreateRetroInvoices;

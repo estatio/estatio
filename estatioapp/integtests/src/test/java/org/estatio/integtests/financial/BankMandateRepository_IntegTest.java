@@ -35,10 +35,10 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateForPoisonNl;
-import org.estatio.fixture.financial.BankAccountAndMandateForTopModelGb;
-import org.estatio.fixture.financial.BankAccountForPoisonNl;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndMandateForPoisonNl;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForPoisonNl;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -74,7 +74,7 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
 
             // given
             Party owner = partyRepository.findPartyByReference(LeaseForKalPoison001Nl.PARTY_REF_TENANT);
-            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, BankAccountForPoisonNl.REF);
+            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForPoisonNl.REF);
 
             Assert.assertThat(account instanceof BankAccount, is(true));
             final BankAccount bankAccount = (BankAccount) account;

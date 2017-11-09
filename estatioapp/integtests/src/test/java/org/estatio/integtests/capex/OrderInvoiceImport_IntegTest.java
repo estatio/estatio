@@ -45,7 +45,7 @@ import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

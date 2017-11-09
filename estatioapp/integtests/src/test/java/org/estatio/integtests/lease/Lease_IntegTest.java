@@ -56,7 +56,7 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.fixture.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.fixture.lease.LeaseForOxfPoison003Gb;
@@ -65,7 +65,7 @@ import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
-import org.estatio.fixture.security.users.EstatioAdmin;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

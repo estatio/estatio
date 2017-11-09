@@ -47,8 +47,8 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountForTopModelGb;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
@@ -132,7 +132,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
         public void happy_case() throws Exception {
 
             // when
-            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller, BankAccountForTopModelGb.REF, "12345");
+            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller, BankAccountAndFaFaForTopModelGb.REF, "12345");
 
             // then
             assertState(bankAccount, NOT_VERIFIED);
@@ -179,13 +179,13 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
-                    executionContext.executeChild(this, new BankAccountForTopModelGb());
+                    executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 }
             });
 
             // given
             seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountForTopModelGb.REF);
+            bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountAndFaFaForTopModelGb.REF);
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 

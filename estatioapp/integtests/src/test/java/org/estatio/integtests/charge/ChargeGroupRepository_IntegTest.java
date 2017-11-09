@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 

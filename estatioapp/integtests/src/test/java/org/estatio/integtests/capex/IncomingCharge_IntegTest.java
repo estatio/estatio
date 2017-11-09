@@ -15,7 +15,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

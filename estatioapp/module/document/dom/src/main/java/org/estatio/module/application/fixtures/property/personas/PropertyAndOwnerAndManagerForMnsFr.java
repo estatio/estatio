@@ -23,6 +23,7 @@ import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFleuretteRenaudFr;
 import org.estatio.module.asset.dom.PropertyType;
+import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;

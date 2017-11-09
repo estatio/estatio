@@ -19,7 +19,7 @@ import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;

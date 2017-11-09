@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 

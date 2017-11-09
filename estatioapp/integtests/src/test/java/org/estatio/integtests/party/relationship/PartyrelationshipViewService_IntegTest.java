@@ -27,7 +27,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.relationship.PartyRelationshipView;
 import org.estatio.module.party.dom.relationship.Party_PartyRelationshipContributions;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.integtests.EstatioIntegrationTest;

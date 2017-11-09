@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.FixedAssetRepository;
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.integtests.EstatioIntegrationTest;
