@@ -1,4 +1,4 @@
-package org.estatio.module.base.fixtures.country.enums;
+package org.estatio.module.country.fixtures.enums;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
@@ -7,8 +7,6 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
-import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
-import org.estatio.module.base.platform.fixturesupport.DemoData2TeardownAbstract;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public enum Country_enum implements DemoData2<Country_enum, Country> {
 
-    GBR("GBR", "GB", "Great Britain",   ApplicationTenancy_enum.Gb),
+    GBR("GBR", "GB", "United Kingdom",   ApplicationTenancy_enum.Gb),
     NLD("NLD", "NL", "The Netherlands", ApplicationTenancy_enum.Nl),
     ITA("ITA", "IT", "Italy",           ApplicationTenancy_enum.It),
     FRA("FRA", "FR", "France",          ApplicationTenancy_enum.Fr),
@@ -47,19 +45,5 @@ public enum Country_enum implements DemoData2<Country_enum, Country> {
     private static Country findByPath(final ServiceRegistry2 serviceRegistry2, final String reference) {
         return serviceRegistry2.lookupService(CountryRepository.class).findCountry(reference);
     }
-
-    public static class PersistScript extends DemoData2PersistAbstract<PersistScript, Country_enum, Country> {
-        public PersistScript() {
-            super(Country_enum.class);
-        }
-    }
-
-    public static class DeleteScript
-            extends DemoData2TeardownAbstract<Country_enum, Country> {
-        public DeleteScript() {
-            super(Country_enum.class);
-        }
-    }
-
 
 }

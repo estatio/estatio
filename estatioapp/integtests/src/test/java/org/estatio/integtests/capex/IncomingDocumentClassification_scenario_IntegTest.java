@@ -56,7 +56,7 @@ public class IncomingDocumentClassification_scenario_IntegTest extends EstatioIn
 //            INCOMING_ORDER = documentTypeRepository.findByReference(DocumentTypeData.INCOMING_ORDER.getRef());
 //            INCOMING_INVOICE = documentTypeRepository.findByReference(DocumentTypeData.INCOMING_INVOICE.getRef());
 //            buyer = partyRepository.findPartyByReference(PropertyAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
-//            greatBritain = countryRepository.findCountry(CountriesRefData.GBR);
+//            greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
 //            charge_for_works = chargeRepository.findByReference("WORKS");
 //            euro = currencyRepository.findCurrency(CurrenciesRefData.EUR);
 //            fakeIban = "NL05ABNA0214875743";

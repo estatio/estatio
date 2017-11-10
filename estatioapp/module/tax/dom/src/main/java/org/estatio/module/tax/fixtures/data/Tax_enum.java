@@ -8,11 +8,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
-import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
-import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 
@@ -79,20 +76,5 @@ public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
         repositoryService.persist(tax);
         return tax;
     }
-
-    public static class PersistScript extends DemoData2PersistAbstract<PersistScript, Tax_enum, Tax> {
-        public PersistScript() {
-            super(Tax_enum.class);
-        }
-    }
-
-    public static class DeleteScript extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            deleteFrom(TaxRate.class);
-            deleteFrom(Tax.class);
-        }
-    }
-
 
 }

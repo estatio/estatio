@@ -9,11 +9,11 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-public abstract class DemoData2PersistAbstract<S extends DemoData2PersistAbstract<S, D, T>, D extends DemoData2<D,T>, T> extends FixtureScript {
+public class DemoData2Persist<D extends DemoData2<D,T>, T> extends FixtureScript {
 
     private final Class<D> demoDataClass;
 
-    protected DemoData2PersistAbstract(final Class<D> demoDataClass) {
+    public DemoData2Persist(final Class<D> demoDataClass) {
         this.demoDataClass = demoDataClass;
     }
 
@@ -22,9 +22,8 @@ public abstract class DemoData2PersistAbstract<S extends DemoData2PersistAbstrac
      */
     @Getter
     private Integer number;
-    public S setNumber(final Integer number) {
+    public void setNumber(final Integer number) {
         this.number = number;
-        return (S)this;
     }
 
     /**

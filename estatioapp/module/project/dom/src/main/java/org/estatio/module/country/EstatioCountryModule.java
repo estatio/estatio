@@ -18,13 +18,52 @@
  */
 package org.estatio.module.country;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.dom.impl.State;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioCountryModule {
+import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
+import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 
-    private EstatioCountryModule(){}
+/**
+ * This is a "proxy" for the country module defined in the platform.
+ */
+public final class EstatioCountryModule implements Module {
+
+    @Override
+    public Set<Class<?>> getDependenciesAsClass() {
+        return Sets.newHashSet(CountryModule.class);
+    }
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this,
+                        new DemoData2Persist<>(Country_enum.class));
+            }
+        };
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        final TeardownFixtureAbstract teardownState = new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(State.class);
+            }
+        };
+        return Utils.allOf(teardownState, new DemoData2Teardown<>(Country_enum.class));
+    }
 
 
 
@@ -36,24 +75,5 @@ public final class EstatioCountryModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }

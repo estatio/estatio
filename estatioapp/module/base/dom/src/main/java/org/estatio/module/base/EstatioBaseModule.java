@@ -18,9 +18,9 @@
  */
 package org.estatio.module.base;
 
-import java.util.List;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -28,19 +28,16 @@ import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.CountryModule;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.State;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.applib.Module;
 
 public final class EstatioBaseModule implements Module {
 
     @Override
-    public List<Class<?>> getDependenciesAsClass() {
-        return Lists.newArrayList(SecurityModule.class, CountryModule.class);
+    public Set<Class<?>> getDependenciesAsClass() {
+        return Sets.newHashSet(SecurityModule.class, CountryModule.class);
     }
 
 
@@ -50,7 +47,6 @@ public final class EstatioBaseModule implements Module {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
-                executionContext.executeChild(this, new Country_enum.PersistScript());
             }
         };
     }
@@ -60,8 +56,6 @@ public final class EstatioBaseModule implements Module {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(State.class);
-                deleteFrom(Country.class);
                 deleteFrom(ApplicationTenancy.class);
             }
         };

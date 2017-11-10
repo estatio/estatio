@@ -37,17 +37,17 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -156,7 +156,8 @@ public class Organisation_IntegTest extends EstatioIntegrationTest {
         public void newOrganisationUsingNumerator() throws Exception {
 
             // given
-            ApplicationTenancy applicationTenancyForFra = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(CountriesRefData.FRA));
+            ApplicationTenancy applicationTenancyForFra = estatioApplicationTenancyRepository.findOrCreateTenancyFor(countryRepository.findCountry(
+                    Country_enum.FRA.getRef3()));
 
             // when
             organisation1 = organisationRepository.newOrganisation(null, true, "SOME_NAME", applicationTenancyForFra);

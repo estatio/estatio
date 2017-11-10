@@ -19,18 +19,15 @@
 package org.estatio.module.application.fixtures;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.incode.module.country.fixture.CountriesRefData;
-import org.incode.module.country.fixture.StatesRefData;
 
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
 import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
-import org.estatio.module.tax.fixtures.data.Tax_enum;
+import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
@@ -42,14 +39,9 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, "currencies", new CurrenciesRefData());
-        executionContext.executeChild(this, "countries", new CountriesRefData());
-        executionContext.executeChild(this, "states", new StatesRefData());
-        executionContext.executeChild(this, "taxes", new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new Tax_enum.PersistScript());
-            }
-        });
+        executionContext.executeChild(this, "countries", new EstatioCountryModule().getRefDataSetupFixture());
+        //executionContext.executeChild(this, "states", new StatesRefData());
+        executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
         executionContext.executeChild(this, "charges", new ChargeRefData());
         executionContext.executeChild(this, "incomingCharges", new IncomingChargeFixture());

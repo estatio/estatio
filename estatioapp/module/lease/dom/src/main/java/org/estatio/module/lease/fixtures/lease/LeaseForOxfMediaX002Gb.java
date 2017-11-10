@@ -18,16 +18,15 @@
  */
 package org.estatio.module.lease.fixtures.lease;
 
-import org.incode.module.country.fixture.CountriesRefData;
-
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -41,7 +40,7 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
 
     public static final String BRAND = "Mediax";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.GBR;
+    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.GBR.getRef3();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

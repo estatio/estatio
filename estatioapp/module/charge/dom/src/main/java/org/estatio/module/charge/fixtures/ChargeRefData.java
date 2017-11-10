@@ -26,14 +26,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.country.fixture.CountriesRefData;
-
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 
@@ -54,66 +53,66 @@ public class ChargeRefData extends FixtureScript {
     private static final String CHARGE_SUFFIX_TAX = "_TAX";
     private static final String CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE = "_SVC_CHG_INDEXABLE";
 
-    public static final String IT_RENT = CountriesRefData.ITA + CHARGE_SUFFIX_RENT;
-    public static final String IT_SERVICE_CHARGE = CountriesRefData.ITA + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String IT_TURNOVER_RENT = CountriesRefData.ITA + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String IT_PERCENTAGE = CountriesRefData.ITA + CHARGE_SUFFIX_PERCENTAGE;
-    public static final String IT_DEPOSIT = CountriesRefData.ITA + CHARGE_SUFFIX_DEPOSIT;
-    public static final String IT_DISCOUNT = CountriesRefData.ITA + CHARGE_SUFFIX_DISCOUNT;
-    public static final String IT_ENTRY_FEE = CountriesRefData.ITA + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String IT_TAX = CountriesRefData.ITA + CHARGE_SUFFIX_TAX;
-    public static final String IT_SERVICE_CHARGE_INDEXABLE = CountriesRefData.ITA + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String IT_RENT = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_RENT;
+    public static final String IT_SERVICE_CHARGE = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String IT_TURNOVER_RENT = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String IT_PERCENTAGE = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_PERCENTAGE;
+    public static final String IT_DEPOSIT = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_DEPOSIT;
+    public static final String IT_DISCOUNT = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_DISCOUNT;
+    public static final String IT_ENTRY_FEE = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String IT_TAX = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_TAX;
+    public static final String IT_SERVICE_CHARGE_INDEXABLE = Country_enum.ITA.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String NL_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_RENT;
-    public static final String NL_SERVICE_CHARGE = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String NL_SERVICE_CHARGE2 = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE2;
-    public static final String NL_INCOMING_CHARGE_1 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_1;
-    public static final String NL_INCOMING_CHARGE_2 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_2;
-    public static final String NL_INCOMING_CHARGE_3 = CountriesRefData.NLD + CHARGE_SUFFIX_INCOMING_CHARGE_3;
-    public static final String NL_TURNOVER_RENT = CountriesRefData.NLD + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String NL_PERCENTAGE = CountriesRefData.NLD + CHARGE_SUFFIX_PERCENTAGE;
-    public static final String NL_DEPOSIT = CountriesRefData.NLD + CHARGE_SUFFIX_DEPOSIT;
-    public static final String NL_DISCOUNT = CountriesRefData.NLD + CHARGE_SUFFIX_DISCOUNT;
-    public static final String NL_ENTRY_FEE = CountriesRefData.NLD + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String NL_TAX = CountriesRefData.NLD + CHARGE_SUFFIX_TAX;
-    public static final String NL_SERVICE_CHARGE_INDEXABLE = CountriesRefData.NLD + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String NL_RENT = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_RENT;
+    public static final String NL_SERVICE_CHARGE = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String NL_SERVICE_CHARGE2 = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE2;
+    public static final String NL_INCOMING_CHARGE_1 = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String NL_INCOMING_CHARGE_2 = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_2;
+    public static final String NL_INCOMING_CHARGE_3 = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_3;
+    public static final String NL_TURNOVER_RENT = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String NL_PERCENTAGE = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_PERCENTAGE;
+    public static final String NL_DEPOSIT = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_DEPOSIT;
+    public static final String NL_DISCOUNT = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_DISCOUNT;
+    public static final String NL_ENTRY_FEE = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String NL_TAX = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_TAX;
+    public static final String NL_SERVICE_CHARGE_INDEXABLE = Country_enum.NLD.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String SE_RENT = CountriesRefData.SWE + CHARGE_SUFFIX_RENT;
-    public static final String SE_SERVICE_CHARGE = CountriesRefData.SWE + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String SE_TURNOVER_RENT = CountriesRefData.SWE + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String SE_PERCENTAGE = CountriesRefData.SWE + CHARGE_SUFFIX_PERCENTAGE;
-    public static final String SE_DEPOSIT = CountriesRefData.SWE + CHARGE_SUFFIX_DEPOSIT;
-    public static final String SE_DISCOUNT = CountriesRefData.SWE + CHARGE_SUFFIX_DISCOUNT;
-    public static final String SE_ENTRY_FEE = CountriesRefData.SWE + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String SE_TAX = CountriesRefData.SWE + CHARGE_SUFFIX_TAX;
-    public static final String SE_SERVICE_CHARGE_INDEXABLE = CountriesRefData.SWE + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String SE_RENT = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_RENT;
+    public static final String SE_SERVICE_CHARGE = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String SE_TURNOVER_RENT = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String SE_PERCENTAGE = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_PERCENTAGE;
+    public static final String SE_DEPOSIT = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_DEPOSIT;
+    public static final String SE_DISCOUNT = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_DISCOUNT;
+    public static final String SE_ENTRY_FEE = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String SE_TAX = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_TAX;
+    public static final String SE_SERVICE_CHARGE_INDEXABLE = Country_enum.SWE.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String FR_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_RENT;
-    public static final String FR_SERVICE_CHARGE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String FR_SERVICE_CHARGE_ONBUDGET1 = CountriesRefData.FRA + CHARGE_SUFFIX_INCOMING_CHARGE_1;
-    public static final String FR_SERVICE_CHARGE_ONBUDGET2 = CountriesRefData.FRA + CHARGE_SUFFIX_INCOMING_CHARGE_2;
-    public static final String FR_TURNOVER_RENT = CountriesRefData.FRA + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String FR_PERCENTAGE = CountriesRefData.FRA + CHARGE_SUFFIX_PERCENTAGE;
-    public static final String FR_DEPOSIT = CountriesRefData.FRA + CHARGE_SUFFIX_DEPOSIT;
-    public static final String FR_DISCOUNT = CountriesRefData.FRA + CHARGE_SUFFIX_DISCOUNT;
-    public static final String FR_ENTRY_FEE = CountriesRefData.FRA + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String FR_TAX = CountriesRefData.FRA + CHARGE_SUFFIX_TAX;
-    public static final String FR_SERVICE_CHARGE_INDEXABLE = CountriesRefData.FRA + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String FR_RENT = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_RENT;
+    public static final String FR_SERVICE_CHARGE = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET1 = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String FR_SERVICE_CHARGE_ONBUDGET2 = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_2;
+    public static final String FR_TURNOVER_RENT = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String FR_PERCENTAGE = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_PERCENTAGE;
+    public static final String FR_DEPOSIT = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_DEPOSIT;
+    public static final String FR_DISCOUNT = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_DISCOUNT;
+    public static final String FR_ENTRY_FEE = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String FR_TAX = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_TAX;
+    public static final String FR_SERVICE_CHARGE_INDEXABLE = Country_enum.FRA.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
 
-    public static final String GB_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_RENT;
-    public static final String GB_SERVICE_CHARGE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE;
-    public static final String GB_SERVICE_CHARGE2 = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE2;
-    public static final String GB_INCOMING_CHARGE_1 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_1;
-    public static final String GB_INCOMING_CHARGE_2 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_2;
-    public static final String GB_INCOMING_CHARGE_3 = CountriesRefData.GBR + CHARGE_SUFFIX_INCOMING_CHARGE_3;
-    public static final String GB_TURNOVER_RENT = CountriesRefData.GBR + CHARGE_SUFFIX_TURNOVER_RENT;
-    public static final String GB_PERCENTAGE = CountriesRefData.GBR + CHARGE_SUFFIX_PERCENTAGE;
-    public static final String GB_DEPOSIT = CountriesRefData.GBR + CHARGE_SUFFIX_DEPOSIT;
-    public static final String GB_DISCOUNT = CountriesRefData.GBR + CHARGE_SUFFIX_DISCOUNT;
-    public static final String GB_ENTRY_FEE = CountriesRefData.GBR + CHARGE_SUFFIX_ENTRY_FEE;
-    public static final String GB_TAX = CountriesRefData.GBR + CHARGE_SUFFIX_TAX;
-    public static final String GB_SERVICE_CHARGE_INDEXABLE = CountriesRefData.GBR + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
-    public static final String GB_MARKETING = CountriesRefData.GBR + CHARGE_SUFFIX_MARKETING;
+    public static final String GB_RENT = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_RENT;
+    public static final String GB_SERVICE_CHARGE = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE;
+    public static final String GB_SERVICE_CHARGE2 = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE2;
+    public static final String GB_INCOMING_CHARGE_1 = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_1;
+    public static final String GB_INCOMING_CHARGE_2 = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_2;
+    public static final String GB_INCOMING_CHARGE_3 = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_INCOMING_CHARGE_3;
+    public static final String GB_TURNOVER_RENT = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_TURNOVER_RENT;
+    public static final String GB_PERCENTAGE = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_PERCENTAGE;
+    public static final String GB_DEPOSIT = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_DEPOSIT;
+    public static final String GB_DISCOUNT = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_DISCOUNT;
+    public static final String GB_ENTRY_FEE = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_ENTRY_FEE;
+    public static final String GB_TAX = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_TAX;
+    public static final String GB_SERVICE_CHARGE_INDEXABLE = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_SERVICE_CHARGE_INDEXABLE;
+    public static final String GB_MARKETING = Country_enum.GBR.getRef3() + CHARGE_SUFFIX_MARKETING;
 
 
     @Override

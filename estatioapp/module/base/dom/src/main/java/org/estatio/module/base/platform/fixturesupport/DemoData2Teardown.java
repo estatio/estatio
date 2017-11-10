@@ -2,11 +2,11 @@ package org.estatio.module.base.platform.fixturesupport;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public abstract class DemoData2TeardownAbstract<D extends DemoData2<D,T>, T> extends
+public class DemoData2Teardown<D extends DemoData2<D,T>, T> extends
         TeardownFixtureAbstract {
 
     private final Class<D> demoDataClass;
-    protected DemoData2TeardownAbstract(final Class<D> demoDataClass) {
+    public DemoData2Teardown(final Class<D> demoDataClass) {
         this.demoDataClass = demoDataClass;
     }
 

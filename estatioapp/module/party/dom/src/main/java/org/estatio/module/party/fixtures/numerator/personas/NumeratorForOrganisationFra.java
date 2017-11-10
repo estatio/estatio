@@ -21,8 +21,9 @@ package org.estatio.module.party.fixtures.numerator.personas;
 import javax.inject.Inject;
 
 import org.incode.module.country.dom.impl.CountryRepository;
+
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.PartyConstants;
-import org.incode.module.country.fixture.CountriesRefData;
 
 public class NumeratorForOrganisationFra extends NumeratorForOrganisationAbstract {
 
@@ -33,7 +34,7 @@ public class NumeratorForOrganisationFra extends NumeratorForOrganisationAbstrac
         createNumeratorForOrganisation(
                 PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME,
                 "FRCL%04d",
-                countryRepository.findCountry(CountriesRefData.FRA),
+                countryRepository.findCountry(Country_enum.FRA.getRef3()),
                 executionContext);
     }
 

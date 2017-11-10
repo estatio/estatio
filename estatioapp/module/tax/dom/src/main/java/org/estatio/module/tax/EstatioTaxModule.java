@@ -24,8 +24,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
+import org.estatio.module.tax.dom.Tax;
+import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 public final class EstatioTaxModule implements Module {
@@ -38,11 +43,17 @@ public final class EstatioTaxModule implements Module {
     }
 
     @Override public FixtureScript getRefDataSetupFixture() {
-        return new Tax_enum.PersistScript();
+        return new DemoData2Persist<>(Tax_enum.class);
     }
 
     @Override public FixtureScript getTeardownFixture() {
-        return new Tax_enum.DeleteScript();
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(TaxRate.class);
+                deleteFrom(Tax.class);
+            }
+        };
     }
 
 
@@ -56,6 +67,5 @@ public final class EstatioTaxModule implements Module {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
 
 }

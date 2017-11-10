@@ -29,12 +29,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.incode.module.country.fixture.CountriesRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 
 public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
 
@@ -103,7 +103,7 @@ public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void forCountry() throws Exception {
             // when
-            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + CountriesRefData.GBR);
+            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3());
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
@@ -112,7 +112,7 @@ public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void forProperty() throws Exception {
             // when
-            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + CountriesRefData.GBR + "/OXF");
+            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3() + "/OXF");
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));
@@ -121,7 +121,7 @@ public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
         @Test
         public void forLocal() throws Exception {
             // when
-            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + CountriesRefData.GBR + "/OXF/ta");
+            final List<Charge> chargeList = chargeRepository.chargesForCountry("/" + Country_enum.GBR.getRef3() + "/OXF/ta");
 
             // then
             Assertions.assertThat(chargeList).containsOnly(gbCharges.toArray(new Charge[gbCharges.size()]));

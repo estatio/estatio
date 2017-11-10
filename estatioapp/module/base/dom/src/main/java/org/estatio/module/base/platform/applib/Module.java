@@ -26,8 +26,8 @@ public interface Module {
     /**
      * Support for "legacy" modules that do not implement {@link Module}.
      */
-    default List<Class<?>> getDependenciesAsClass() {
-        return Collections.emptyList();
+    default Set<Class<?>> getDependenciesAsClass() {
+        return Collections.emptySet();
     }
 
     default FixtureScript getRefDataSetupFixture() {
@@ -74,36 +74,20 @@ public interface Module {
         }
     }
 
-    /**
-     * Tand then orders, with the leaf levels ("furthest away") first
-     */
-    /*
-    default List<Module> getTransitiveDependencies() {
-        final List<Module> ordered = Lists.newArrayList();
 
-        final Set<Module> directDependencies = getDependencies();
-        final List<Module> dependenciesToOrder = Lists.newArrayList(directDependencies);
-
-        while(!dependenciesToOrder.isEmpty()) {
-            boolean foundCandidate = false;
-            for (Module candidate : dependenciesToOrder) {
-                final List<Module> candidateDependencies = candidate.getTransitiveDependencies();
-                final boolean seenEverything = ordered.containsAll(candidateDependencies);
-                final boolean allForeign = !directDependencies.containsAll(candidateDependencies);
-                if (seenEverything || allForeign) {
-                    ordered.addAll(candidateDependencies);
-                    dependenciesToOrder.removeAll(candidateDependencies);
-                    // have found our candidate; start over
-                    foundCandidate = true;
-                    break;
+    class Utils {
+        private Utils(){}
+        public static FixtureScript allOf(
+                final FixtureScript... fixtureScriptArray) {
+            return new FixtureScript() {
+                @Override
+                protected void execute(final ExecutionContext executionContext) {
+                    for (FixtureScript fixtureScript : fixtureScriptArray) {
+                        executionContext.executeChild(this, fixtureScript);
+                    }
                 }
-            }
-            if(!foundCandidate) {
-                throw new IllegalStateException("Cyclic dependency found in " + getDependencies());
-            }
+            };
         }
+    }
 
-        ordered.add(this);
-        return ordered;
-    }*/
 }

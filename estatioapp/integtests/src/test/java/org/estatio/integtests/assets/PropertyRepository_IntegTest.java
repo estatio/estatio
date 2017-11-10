@@ -31,15 +31,15 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.fixture.CountriesRefData;
 
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -144,7 +144,7 @@ public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
 
             // given
-            final Country gbrCountry = countryRepository.findCountry(CountriesRefData.GBR);
+            final Country gbrCountry = countryRepository.findCountry(Country_enum.GBR.getRef3());
 
             // when
             final Property property = propertyRepository.newProperty("ARN", "Arndale", PropertyType.RETAIL_PARK, "Manchester", gbrCountry, new LocalDate(2014,4,1));
@@ -155,7 +155,7 @@ public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
             Assertions.assertThat(property.getCountry()).isEqualTo(gbrCountry);
             Assertions.assertThat(property.getCity()).isEqualTo("Manchester");
             Assertions.assertThat(property.getAcquireDate()).isEqualTo(new LocalDate(2014, 4, 1));
-            Assertions.assertThat(property.getApplicationTenancy().getPath()).isEqualTo("/" + CountriesRefData.GBR + "/ARN");
+            Assertions.assertThat(property.getApplicationTenancy().getPath()).isEqualTo("/" + Country_enum.GBR.getRef3() + "/ARN");
 
         }
     }

@@ -19,10 +19,10 @@
 package org.estatio.module.lease.fixtures.lease;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.country.fixture.CountriesRefData;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
@@ -43,7 +43,7 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
 
     public static final String BRAND = "Poison";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;
-    public static final String COUNTRY_OF_ORIGIN_REF = CountriesRefData.NLD;
+    public static final String COUNTRY_OF_ORIGIN_REF = Country_enum.NLD.getRef3();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

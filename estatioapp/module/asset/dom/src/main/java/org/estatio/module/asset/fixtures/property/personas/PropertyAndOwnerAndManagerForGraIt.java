@@ -19,12 +19,12 @@
 package org.estatio.module.asset.fixtures.property.personas;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLucianoPavarottiIt;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLucianoPavarottiIt;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldIt;
 
@@ -52,7 +52,8 @@ public class PropertyAndOwnerAndManagerForGraIt extends PropertyAndOwnerAndManag
         final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country italy = countryRepository.findCountry(CountriesRefData.ITA);
+        final Country italy = Country_enum.ITA.findUsing(serviceRegistry);
+
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Centro Grande Punto", "Milano", italy, PropertyType.SHOPPING_CENTER,

@@ -19,12 +19,12 @@
 package org.estatio.module.asset.fixtures.property.personas;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.fixture.CountriesRefData;
 
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForAgnethaFaltskogSe;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForAgnethaFaltskogSe;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSe;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldSe;
 
@@ -52,7 +52,8 @@ public class PropertyAndOwnerAndManagerForHanSe extends PropertyAndOwnerAndManag
         Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
         Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
-        Country sweden = countryRepository.findCountry(CountriesRefData.SWE);
+        final Country sweden = Country_enum.SWE.findUsing(serviceRegistry);
+
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
                 REF, "Handla Center", "Malmo", sweden, PropertyType.SHOPPING_CENTER,

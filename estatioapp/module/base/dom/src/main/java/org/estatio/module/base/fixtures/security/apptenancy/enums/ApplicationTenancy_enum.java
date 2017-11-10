@@ -6,8 +6,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
-import org.estatio.module.base.platform.fixturesupport.DemoData2PersistAbstract;
-import org.estatio.module.base.platform.fixturesupport.DemoData2TeardownAbstract;
+import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
+import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -86,14 +86,14 @@ public enum ApplicationTenancy_enum implements DemoData2<ApplicationTenancy_enum
     }
 
     public static class PersistScript
-            extends DemoData2PersistAbstract<PersistScript, ApplicationTenancy_enum, ApplicationTenancy> {
+            extends DemoData2Persist<ApplicationTenancy_enum, ApplicationTenancy> {
         public PersistScript() {
             super(ApplicationTenancy_enum.class);
         }
     }
 
     public static class DeleteScript
-            extends DemoData2TeardownAbstract<ApplicationTenancy_enum, ApplicationTenancy> {
+            extends DemoData2Teardown<ApplicationTenancy_enum, ApplicationTenancy> {
         public DeleteScript() {
             super(ApplicationTenancy_enum.class);
         }
