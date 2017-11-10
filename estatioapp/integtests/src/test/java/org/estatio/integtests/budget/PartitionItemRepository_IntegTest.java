@@ -12,7 +12,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.budget.Budget;
@@ -24,8 +24,8 @@ import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForOxf;
-import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.BudgetsForOxf;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.integtests.EstatioIntegrationTest;
 

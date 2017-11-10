@@ -49,11 +49,11 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
-import org.estatio.module.application.fixtures.budget.BudgetForBud;
-import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForBud;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
+import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.module.application.fixtures.lease.LeasesForBudNl;
+import org.estatio.module.lease.fixtures.lease.LeasesForBudNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

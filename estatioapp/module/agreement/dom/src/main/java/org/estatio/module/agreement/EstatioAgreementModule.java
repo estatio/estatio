@@ -22,21 +22,22 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioAgreementModule {
+import org.estatio.module.base.platform.applib.Module;
 
-    private EstatioAgreementModule(){}
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode // value semantics based on the object's class
+public final class EstatioAgreementModule implements Module {
 
+    @Override
+    public FixtureScript getSetupFixture() {
+        return new Setup();
+    }
 
-    public abstract static class ActionDomainEvent<S>
-            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
-
-    public abstract static class CollectionDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
-
-    public abstract static class PropertyDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new Teardown();
+    }
 
 
     public static class Setup extends FixtureScript {
@@ -56,5 +57,16 @@ public final class EstatioAgreementModule {
         protected void execute(final ExecutionContext executionContext) {
         }
     }
+
+
+    public abstract static class ActionDomainEvent<S>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
+
+    public abstract static class CollectionDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
+
+    public abstract static class PropertyDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
+
 
 }

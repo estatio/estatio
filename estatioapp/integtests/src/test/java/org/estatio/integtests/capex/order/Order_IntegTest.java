@@ -18,7 +18,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.transitions.Document_categorisationTransitions;
@@ -32,7 +32,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.capex.OrderFixture;
+import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

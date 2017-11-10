@@ -18,28 +18,39 @@
  */
 package org.estatio.module.tax;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.security.SecurityModule;
+
+import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
-public final class EstatioTaxModule {
+public final class EstatioTaxModule implements Module {
 
-    private EstatioTaxModule(){}
+    public EstatioTaxModule(){}
 
+    @Override
+    public List<Class<?>> getDependenciesAsClass() {
+        return Lists.<Class<?>>newArrayList(CountryModule.class, SecurityModule.class);
+    }
 
-    public abstract static class ActionDomainEvent<S>
-            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
+    @Override public FixtureScript getSetupFixture() {
+        return new Setup();
+    }
 
-    public abstract static class CollectionDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
-
-    public abstract static class PropertyDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
+    @Override public FixtureScript getTeardownFixture() {
+        return new Teardown();
+    }
 
     public static class Setup extends FixtureScript {
         static boolean prereqsRun = false;
@@ -62,4 +73,15 @@ public final class EstatioTaxModule {
 //            executionContext.executeChild(this, new ApplicationTenancy_enum.DeleteScript());
         }
     }
+
+    public abstract static class ActionDomainEvent<S>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
+
+    public abstract static class CollectionDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
+
+    public abstract static class PropertyDomainEvent<S,T>
+            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
+
+
 }

@@ -36,10 +36,10 @@ import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.financial.personas.BankAccountAndMandateForPoisonNl;
-import org.estatio.module.application.fixtures.financial.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForPoisonNl;
-import org.estatio.module.application.fixtures.lease.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
+import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
+import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
+import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

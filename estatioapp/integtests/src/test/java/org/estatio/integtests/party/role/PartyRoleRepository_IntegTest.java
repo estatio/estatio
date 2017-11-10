@@ -27,23 +27,23 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFaithConwayGb;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFifineLacroixFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGabrielHerveFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOlivePropertyManagerFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

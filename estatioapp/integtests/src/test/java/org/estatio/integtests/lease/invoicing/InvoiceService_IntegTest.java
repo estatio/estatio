@@ -31,7 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.lease.app.InvoiceMenu;
 import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.lease.app.LeaseMenu;
@@ -53,16 +53,16 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.application.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.application.fixtures.lease.LeaseForOxfPret004Gb;
-import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.application.fixtures.CreateInvoiceNumerators;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.application.migrations.CreateInvoiceNumerators;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

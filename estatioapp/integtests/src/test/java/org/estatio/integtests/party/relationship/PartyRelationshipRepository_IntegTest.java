@@ -43,8 +43,8 @@ import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.application.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

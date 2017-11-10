@@ -44,10 +44,10 @@ import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Brand.RemoveEvent;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.application.fixtures.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;

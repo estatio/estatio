@@ -16,19 +16,19 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
-import org.estatio.module.application.fixtures.budget.BudgetForBud;
-import org.estatio.module.application.fixtures.budget.BudgetsForOxf;
-import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForBud;
-import org.estatio.module.application.fixtures.budget.PartitioningAndItemsForOxf;
-import org.estatio.module.application.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
+import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
+import org.estatio.module.budget.fixtures.PartitioningAndItemsForOxf;
+import org.estatio.module.lease.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -23,7 +23,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecification;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider;
 
-import org.estatio.module.application.fixtures.EstatioDemoFixture;
+import org.estatio.module.application.demos.EstatioDemoFixture;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class EstatioFixtureScriptsSpecificationProvider implements FixtureScriptsSpecificationProvider {

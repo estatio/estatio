@@ -13,9 +13,9 @@ import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixture;
-import org.estatio.module.application.fixtures.financial.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.integtests.EstatioIntegrationTest;

@@ -36,8 +36,8 @@ import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForPercentage;
 import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.module.application.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
 public class LeaseTermsForPercentage_IntegTest extends EstatioIntegrationTest {

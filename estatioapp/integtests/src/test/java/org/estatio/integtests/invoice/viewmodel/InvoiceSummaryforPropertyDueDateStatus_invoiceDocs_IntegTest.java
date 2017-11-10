@@ -57,7 +57,7 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPro
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.lease.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.application.seed.DocumentTypesAndTemplatesFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 
