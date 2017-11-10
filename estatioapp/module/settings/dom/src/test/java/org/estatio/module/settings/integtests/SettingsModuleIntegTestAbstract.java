@@ -18,19 +18,17 @@
  */
 package org.estatio.module.settings.integtests;
 
-import org.isisaddons.module.fakedata.FakeDataModule;
-
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 /**
  * Base class for integration tests.
  */
-public abstract class SettingsModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class SettingsModuleIntegTestAbstract
+        extends IntegrationTestAbstract3<EstatioSettingsModule> {
 
     public SettingsModuleIntegTestAbstract() {
-        super(new EstatioSettingsModule(),
-                FakeDataModule.class);
+        super(new EstatioSettingsModule());
     }
 
 }

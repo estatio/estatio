@@ -25,7 +25,8 @@ import org.incode.module.country.dom.CountryModule;
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
-public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class BaseModuleIntegTestAbstract
+        extends IntegrationTestAbstract3<EstatioBaseModule> {
 
     public BaseModuleIntegTestAbstract() {
         super(new EstatioBaseModule(), SecurityModule.class, CountryModule.class);

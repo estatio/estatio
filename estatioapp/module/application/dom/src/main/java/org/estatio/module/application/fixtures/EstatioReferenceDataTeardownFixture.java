@@ -28,7 +28,7 @@ import org.incode.module.country.dom.impl.State;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
-import org.estatio.module.currency.dom.Currency;
+import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
@@ -40,7 +40,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        deleteFrom(Currency.class);
+        executionContext.executeChild(this, new EstatioCurrencyModule().getTeardownFixture());
 
         deleteFrom(State.class);
         deleteFrom(Country.class);

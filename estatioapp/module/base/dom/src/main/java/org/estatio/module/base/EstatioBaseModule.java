@@ -20,12 +20,9 @@ package org.estatio.module.base;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -33,6 +30,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.country.dom.CountryModule;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.country.enums.Country_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -57,17 +55,15 @@ public final class EstatioBaseModule implements Module {
         };
     }
 
-    @Override public FixtureScript getTeardownFixture() {
-        return new FixtureScript() {
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                isisJdoSupport.deleteAll(State.class);
-                isisJdoSupport.deleteAll(Country.class);
-
-                isisJdoSupport.deleteAll(ApplicationTenancy.class);
+                deleteFrom(State.class);
+                deleteFrom(Country.class);
+                deleteFrom(ApplicationTenancy.class);
             }
-            @Inject
-            IsisJdoSupport isisJdoSupport;
         };
     }
 

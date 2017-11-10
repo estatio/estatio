@@ -41,17 +41,13 @@ public final class EstatioLinkModule implements Module {
 
     @Override
     public FixtureScript getTeardownFixture() {
-        return new DeleteScript();
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(Link.class);
+            }
+        };
     }
-
-    // TODO: is this really needed? (Was in EstatioReferenceDataTeardownFixture)
-    private static class DeleteScript extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final FixtureScript.ExecutionContext executionContext) {
-            deleteFrom(Link.class);
-        }
-    }
-
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }

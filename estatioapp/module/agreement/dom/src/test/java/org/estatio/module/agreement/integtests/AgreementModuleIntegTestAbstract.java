@@ -19,16 +19,15 @@
 package org.estatio.module.agreement.integtests;
 
 import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.security.SecurityModule;
 
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
-public abstract class AgreementModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class AgreementModuleIntegTestAbstract
+        extends IntegrationTestAbstract3<EstatioAgreementModule> {
 
     public AgreementModuleIntegTestAbstract() {
         super(new EstatioAgreementModule(),
-                SecurityModule.class,
                 FakeDataModule.class);
     }
 

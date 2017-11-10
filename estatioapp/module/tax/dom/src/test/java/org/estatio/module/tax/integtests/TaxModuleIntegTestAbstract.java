@@ -23,11 +23,11 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.tax.EstatioTaxModule;
 
-public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public abstract class TaxModuleIntegTestAbstract
+        extends IntegrationTestAbstract3<EstatioTaxModule> {
 
     public TaxModuleIntegTestAbstract() {
-        super(new EstatioTaxModule(),
-                FakeDataModule.class);
+        super(new EstatioTaxModule(), FakeDataModule.class);
     }
 
 }

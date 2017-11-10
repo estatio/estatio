@@ -239,7 +239,6 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
 
     @Inject
     protected FakeDataService fakeDataService;
-
     @Inject
     protected FixtureScripts fixtureScripts;
     @Inject

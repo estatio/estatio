@@ -16,33 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.currency;
+package org.estatio.module.currency.integtests;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CurrencyRepository_IntegTest extends EstatioIntegrationTest {
-
-    @Before
-    public void setupData() {
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new CurrenciesRefData());
-            }
-        });
-    }
+public class CurrencyRepository_IntegTest extends CurrencyModuleIntegTestAbstract {
 
     public static class FindCurrency extends CurrencyRepository_IntegTest {
 
