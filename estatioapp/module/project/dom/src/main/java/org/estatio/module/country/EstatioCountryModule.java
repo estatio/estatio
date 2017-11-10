@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -49,7 +50,7 @@ public final class EstatioCountryModule implements Module {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this,
-                        new DemoData2Persist<>(Country_enum.class));
+                        new DemoData2Persist<Country_enum, Country>(Country_enum.class) {});
             }
         };
     }
