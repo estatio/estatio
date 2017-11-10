@@ -35,7 +35,6 @@ import org.isisaddons.module.security.SecurityModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.numerator.EstatioNumeratorModule;
-import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_enum;
 
 /**
  * Base class for integration tests.
@@ -56,7 +55,6 @@ public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new NumeratorExampleObject_enum.PersistScript());
             }
         });
     }
@@ -66,7 +64,6 @@ public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAb
         runFixtureScript(new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new NumeratorExampleObject_enum.DeleteScript());
             }
         });
         runFixtureScript(new EstatioNumeratorModule.Teardown());

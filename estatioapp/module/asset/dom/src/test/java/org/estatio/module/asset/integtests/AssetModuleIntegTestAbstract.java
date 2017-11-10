@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.tax.integtests;
+package org.estatio.module.asset.integtests;
 
 import javax.inject.Inject;
 
@@ -32,28 +32,26 @@ import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.SecurityModule;
 
-import org.incode.module.country.dom.CountryModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.tax.EstatioTaxModule;
+import org.estatio.module.asset.EstatioAssetModule;
 
-public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class AssetModuleIntegTestAbstract extends IntegrationTestAbstract2 {
 
     @BeforeClass
     public static void initClass() {
         bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                CountryModule.class,
-                EstatioTaxModule.class,
+                EstatioAssetModule.class,
                 SecurityModule.class,
                 FakeDataModule.class));
     }
 
     @Before
     public void setup() {
-        runFixtureScript(new EstatioTaxModule.Setup());
+        runFixtureScript(new EstatioAssetModule.Setup());
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            protected void execute(final ExecutionContext executionContext) {
             }
         });
     }
@@ -65,7 +63,7 @@ public abstract class TaxModuleIntegTestAbstract extends IntegrationTestAbstract
             protected void execute(final ExecutionContext executionContext) {
             }
         });
-        runFixtureScript(new EstatioTaxModule.Teardown());
+        runFixtureScript(new EstatioAssetModule.Teardown());
     }
 
     @Inject

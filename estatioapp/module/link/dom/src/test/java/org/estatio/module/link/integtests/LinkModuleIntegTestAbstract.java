@@ -51,6 +51,7 @@ public abstract class LinkModuleIntegTestAbstract extends IntegrationTestAbstrac
 
     @Before
     public void setup() {
+        runFixtureScript(new EstatioLinkModule.Setup());
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -65,6 +66,7 @@ public abstract class LinkModuleIntegTestAbstract extends IntegrationTestAbstrac
             protected void execute(final ExecutionContext executionContext) {
             }
         });
+        runFixtureScript(new EstatioLinkModule.Teardown());
     }
 
     @Inject
