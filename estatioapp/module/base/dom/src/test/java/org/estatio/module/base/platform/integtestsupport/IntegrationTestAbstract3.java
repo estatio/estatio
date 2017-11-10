@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
@@ -71,13 +72,19 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
 
     @Before
     public void bootstrapIfRequired() {
-        final Class[] moduleDependencies = asClasses(module.getTransitiveDependencies());
-        final List<Class<?>> furtherDependencies = module.getDependenciesAsClass();
+        final List<Module> transitiveDependencies = module.getTransitiveDependencies();
+        final Class[] moduleTransitiveDependencies = asClasses(transitiveDependencies);
+
+        final List<Class<?>> furtherDependencies = Lists.newArrayList();
+        for (Module transitiveDependency : transitiveDependencies) {
+            furtherDependencies.addAll(transitiveDependency.getDependenciesAsClass());
+        }
+
         final AppManifestAbstract.Builder builder =
-                AppManifestAbstract.Builder.forModules(module.getClass())
-                .withAdditionalModules(moduleDependencies)
-                .withAdditionalModules(furtherDependencies)
-                .withAdditionalModules(additionalModuleClasses);
+                AppManifestAbstract.Builder
+                    .forModules(moduleTransitiveDependencies)
+                    .withAdditionalModules(furtherDependencies)
+                    .withAdditionalModules(additionalModuleClasses);
         final AppManifest appManifest = builder.build();
 
         bootstrapUsing(appManifest);
@@ -185,10 +192,10 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
     private void setup() {
         final List<Module> dependencies = module.getTransitiveDependencies();
         for (Module dependency : dependencies) {
-            final FixtureScript setupFixture = dependency.getSetupFixture();
+            final FixtureScript setupFixture = dependency.getRefDataSetupFixture();
             runFixtureScript(setupFixture);
         }
-        final FixtureScript fixtureScript = module.getSetupFixture();
+        final FixtureScript fixtureScript = module.getRefDataSetupFixture();
         if(fixtureScript == null) {
             return;
         }

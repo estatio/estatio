@@ -16,15 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.project;
+package org.estatio.module.country;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioProjectModule {
+public final class EstatioCountryModule {
 
-    private EstatioProjectModule(){}
+    private EstatioCountryModule(){}
 
 
 

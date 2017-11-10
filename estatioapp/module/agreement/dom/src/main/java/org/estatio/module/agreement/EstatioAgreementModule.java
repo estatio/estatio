@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
 public final class EstatioAgreementModule implements Module {
 
     @Override
-    public FixtureScript getSetupFixture() {
+    public FixtureScript getRefDataSetupFixture() {
         return new Setup();
     }
 

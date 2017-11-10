@@ -18,55 +18,17 @@
  */
 package org.estatio.module.base.integtests;
 
-import javax.inject.Inject;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
-import org.apache.isis.applib.AppManifestAbstract;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
-
-import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.isisaddons.module.security.SecurityModule;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.incode.module.country.dom.CountryModule;
 
 import org.estatio.module.base.EstatioBaseModule;
+import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
-public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class BaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                EstatioBaseModule.class,
-                SecurityModule.class,
-                FakeDataModule.class));
+    public BaseModuleIntegTestAbstract() {
+        super(new EstatioBaseModule(), SecurityModule.class, CountryModule.class);
     }
-
-    @Before
-    public void setup() {
-        runFixtureScript(new EstatioBaseModule.Setup());
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-    }
-
-    @After
-    public void tearDown() {
-        runFixtureScript(new TeardownFixtureAbstract() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-        runFixtureScript(new EstatioBaseModule.Teardown());
-    }
-
-    @Inject
-    protected FakeDataService fakeDataService;
 
 }

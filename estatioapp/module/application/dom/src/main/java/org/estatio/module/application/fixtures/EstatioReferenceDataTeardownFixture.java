@@ -48,7 +48,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
         deleteFrom(Charge.class);
         deleteFrom(ChargeGroup.class);
 
-        executionContext.executeChild(this, new EstatioTaxModule.Teardown());
+        executionContext.executeChild(this, new EstatioTaxModule().getTeardownFixture());
 
         deleteFrom(IndexValue.class);
         deleteFrom(IndexBase.class);

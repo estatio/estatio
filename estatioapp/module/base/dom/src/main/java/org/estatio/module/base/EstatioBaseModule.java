@@ -18,13 +18,58 @@
  */
 package org.estatio.module.base;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.isisaddons.module.security.SecurityModule;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-public final class EstatioBaseModule {
+import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.State;
 
-    private EstatioBaseModule(){}
+import org.estatio.module.base.fixtures.country.enums.Country_enum;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.base.platform.applib.Module;
+
+public final class EstatioBaseModule implements Module {
+
+    @Override
+    public List<Class<?>> getDependenciesAsClass() {
+        return Lists.newArrayList(SecurityModule.class, CountryModule.class);
+    }
+
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
+                executionContext.executeChild(this, new Country_enum.PersistScript());
+            }
+        };
+    }
+
+    @Override public FixtureScript getTeardownFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                isisJdoSupport.deleteAll(State.class);
+                isisJdoSupport.deleteAll(Country.class);
+
+                isisJdoSupport.deleteAll(ApplicationTenancy.class);
+            }
+            @Inject
+            IsisJdoSupport isisJdoSupport;
+        };
+    }
 
 
 
@@ -37,24 +82,5 @@ public final class EstatioBaseModule {
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
 
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }

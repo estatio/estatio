@@ -30,7 +30,7 @@ public interface Module {
         return Collections.emptyList();
     }
 
-    default FixtureScript getSetupFixture() {
+    default FixtureScript getRefDataSetupFixture() {
         return null;
     }
 
@@ -69,7 +69,9 @@ public interface Module {
                 appendDependenciesTo(ordered, dependency, visited);
             }
         }
-        ordered.add(module);
+        if(!ordered.contains(module)) {
+            ordered.add(module);
+        }
     }
 
     /**
