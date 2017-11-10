@@ -18,14 +18,39 @@
  */
 package org.estatio.module.link;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-public final class EstatioLinkModule {
+import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.link.dom.Link;
+import org.estatio.module.settings.EstatioSettingsModule;
 
-    private EstatioLinkModule(){}
+public final class EstatioLinkModule implements Module {
 
+    public EstatioLinkModule(){}
+
+    @Override
+    public Set<Module> getDependencies() {
+        return Sets.newHashSet(new EstatioSettingsModule());
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new DeleteScript();
+    }
+
+    // TODO: is this really needed? (Was in EstatioReferenceDataTeardownFixture)
+    private static class DeleteScript extends TeardownFixtureAbstract {
+        @Override
+        protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            deleteFrom(Link.class);
+        }
+    }
 
 
     public abstract static class ActionDomainEvent<S>
@@ -36,25 +61,5 @@ public final class EstatioLinkModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }

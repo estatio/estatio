@@ -18,59 +18,20 @@
  */
 package org.estatio.module.settings.integtests;
 
-import javax.inject.Inject;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
-import org.apache.isis.applib.AppManifestAbstract;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
-
 import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.fakedata.dom.FakeDataService;
-import org.isisaddons.module.security.SecurityModule;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
+import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 /**
  * Base class for integration tests.
  */
-public abstract class SettingsModuleIntegTestAbstract extends IntegrationTestAbstract2 {
+public abstract class SettingsModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                EstatioSettingsModule.class,
-                SecurityModule.class,
-                FakeDataModule.class));
+    public SettingsModuleIntegTestAbstract() {
+        super(new EstatioSettingsModule(),
+                FakeDataModule.class);
     }
-
-    @Before
-    public void setup() {
-        runFixtureScript(new EstatioSettingsModule.Setup());
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-    }
-
-    @After
-    public void tearDown() {
-        runFixtureScript(new TeardownFixtureAbstract() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-        runFixtureScript(new EstatioSettingsModule.Teardown());
-    }
-
-    @Inject
-    protected FakeDataService fakeDataService;
 
 }
 

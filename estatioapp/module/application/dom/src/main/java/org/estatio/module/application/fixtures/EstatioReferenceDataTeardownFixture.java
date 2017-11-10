@@ -32,7 +32,7 @@ import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
-import org.estatio.module.link.dom.Link;
+import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioReferenceDataTeardownFixture extends FixtureScript {
@@ -54,7 +54,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
         deleteFrom(IndexBase.class);
         deleteFrom(Index.class);
 
-        deleteFrom(Link.class);
+        executionContext.executeChild(this, new EstatioLinkModule().getTeardownFixture());
 
     }
 
