@@ -18,15 +18,21 @@
  */
 package org.estatio.module.registration;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import java.util.Set;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import com.google.common.collect.Sets;
 
-public final class EstatioRegistrationModule {
+import org.estatio.module.asset.EstatioAssetModule;
+import org.estatio.module.base.platform.applib.Module;
 
-    private EstatioRegistrationModule(){}
+public final class EstatioRegistrationModule implements Module {
 
+    public EstatioRegistrationModule(){}
 
+    @Override
+    public Set<Module> getDependencies(){
+        return Sets.newHashSet(new EstatioAssetModule());
+    }
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
@@ -36,25 +42,5 @@ public final class EstatioRegistrationModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }
