@@ -18,15 +18,22 @@
  */
 package org.estatio.module.bankmandate;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import java.util.Set;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import com.google.common.collect.Sets;
 
-public final class EstatioBankMandateModule {
+import org.estatio.module.agreement.EstatioAgreementModule;
+import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.party.EstatioPartyModule;
 
-    private EstatioBankMandateModule(){}
+public final class EstatioBankMandateModule implements Module {
 
+    public EstatioBankMandateModule(){}
 
+    @Override
+    public Set<Module> getDependencies(){
+        return Sets.newHashSet(new EstatioAgreementModule(), new EstatioPartyModule());
+    }
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
@@ -37,23 +44,5 @@ public final class EstatioBankMandateModule {
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
 
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }

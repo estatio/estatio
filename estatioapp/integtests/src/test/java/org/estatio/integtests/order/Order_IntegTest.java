@@ -30,6 +30,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
@@ -49,6 +50,7 @@ public class Order_IntegTest extends EstatioIntegrationTest {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new IncomingChargeFixture());
                     executionContext.executeChild(this, new OrderInvoiceFixture());
                 }
             });

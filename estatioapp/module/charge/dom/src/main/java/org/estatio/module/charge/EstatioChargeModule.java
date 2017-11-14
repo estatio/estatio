@@ -43,11 +43,6 @@ public final class EstatioChargeModule implements Module {
         return Sets.newHashSet(new EstatioBaseModule(), new EstatioTaxModule());
     }
 
-    /*
-    executionContext.executeChild(this, "chargegroups", new ChargeGroupRefData());
-        executionContext.executeChild(this, "charges", new ChargeRefData());
-     */
-
     @Override
     public FixtureScript getRefDataSetupFixture() {
         return new FixtureScript() {

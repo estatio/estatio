@@ -20,11 +20,10 @@ package org.estatio.module.application.fixtures;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
-import org.estatio.module.index.fixtures.IndexRefData;
+import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.tax.EstatioTaxModule;
 
@@ -42,8 +41,8 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         //executionContext.executeChild(this, "states", new StatesRefData());
         executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "taxes", new EstatioChargeModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "incomingCharges", new IncomingChargeFixture());
-        executionContext.executeChild(this, "indexs", new IndexRefData());
+        executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "docFrags", new DocFragmentDemoFixture());
 
     }

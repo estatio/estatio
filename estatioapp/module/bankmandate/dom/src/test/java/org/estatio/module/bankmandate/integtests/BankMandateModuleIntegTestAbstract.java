@@ -18,55 +18,12 @@
  */
 package org.estatio.module.bankmandate.integtests;
 
-import javax.inject.Inject;
+import org.estatio.module.bankaccount.EstatioBankAccountModule;
+import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-import org.apache.isis.applib.AppManifestAbstract;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
-
-import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.fakedata.dom.FakeDataService;
-import org.isisaddons.module.security.SecurityModule;
-
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
-import org.estatio.module.bankmandate.EstatioBankMandateModule;
-
-public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract2 {
-
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                EstatioBankMandateModule.class,
-                SecurityModule.class,
-                FakeDataModule.class));
+    public BankMandateModuleIntegTestAbstract() {
+        super(new EstatioBankAccountModule());
     }
-
-    @Before
-    public void setup() {
-        runFixtureScript(new EstatioBankMandateModule.Setup());
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-    }
-
-    @After
-    public void tearDown() {
-        runFixtureScript(new TeardownFixtureAbstract() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-        runFixtureScript(new EstatioBankMandateModule.Teardown());
-    }
-
-    @Inject
-    protected FakeDataService fakeDataService;
-
 }

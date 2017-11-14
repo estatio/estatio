@@ -28,6 +28,7 @@ import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonath
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForGraIt;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForCARTEST;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForHanSe;
@@ -143,6 +144,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());
 
+        executionContext.executeChild(this, new IncomingChargeFixture());
         executionContext.executeChild(this, new OrderInvoiceFixture());
 
         executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-fr"));
