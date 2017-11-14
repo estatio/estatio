@@ -15,7 +15,7 @@ public final class EstatioPartyModule implements Module {
     public Set<Module> getDependencies() {
         return Sets.newHashSet(new EstatioBaseModule());
     }
-    
+
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
 
