@@ -18,55 +18,12 @@
  */
 package org.estatio.module.assetfinancial.integtests;
 
-import javax.inject.Inject;
+import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.financial.EstatioFinancialModule;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+public abstract class AssetFinancialModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
-import org.apache.isis.applib.AppManifestAbstract;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.integtestsupport.IntegrationTestAbstract2;
-
-import org.isisaddons.module.fakedata.FakeDataModule;
-import org.isisaddons.module.fakedata.dom.FakeDataService;
-import org.isisaddons.module.security.SecurityModule;
-
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
-import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-
-public abstract class AssetFinancialModuleIntegTestAbstract extends IntegrationTestAbstract2 {
-
-    @BeforeClass
-    public static void initClass() {
-        bootstrapUsing(AppManifestAbstract.Builder.forModules(
-                EstatioAssetFinancialModule.class,
-                SecurityModule.class,
-                FakeDataModule.class));
+    public AssetFinancialModuleIntegTestAbstract() {
+        super(new EstatioFinancialModule());
     }
-
-    @Before
-    public void setup() {
-        runFixtureScript(new EstatioAssetFinancialModule.Setup());
-        runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-    }
-
-    @After
-    public void tearDown() {
-        runFixtureScript(new TeardownFixtureAbstract() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        });
-        runFixtureScript(new EstatioAssetFinancialModule.Teardown());
-    }
-
-    @Inject
-    protected FakeDataService fakeDataService;
-
 }
