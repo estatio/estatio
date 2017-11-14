@@ -101,7 +101,7 @@ public class Numerator_Test {
         @Test
         public void test() {
             newPojoTester()
-                    .withFixture(pojos(Property.class))
+                    .withFixture(pojos(PropertyForTest.class))
                     .withFixture(pojos(ApplicationTenancy.class))
                     .exercise(new Numerator());
         }

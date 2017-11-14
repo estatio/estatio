@@ -18,5 +18,5 @@
  */
 package org.estatio.module.numerator.dom;
 
-public class Property {
+public class PropertyForTest {
 }

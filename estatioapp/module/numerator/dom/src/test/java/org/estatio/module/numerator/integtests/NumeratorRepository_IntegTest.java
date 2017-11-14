@@ -31,8 +31,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.numerator.fixture.data.NumeratorExampleObject_enum;
-import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
+import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
+import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;

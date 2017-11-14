@@ -1,11 +1,10 @@
-package org.estatio.module.numerator.fixture.data;
+package org.estatio.module.numerator.fixtures.data;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
-import org.estatio.module.numerator.fixture.dom.NumeratorExampleObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

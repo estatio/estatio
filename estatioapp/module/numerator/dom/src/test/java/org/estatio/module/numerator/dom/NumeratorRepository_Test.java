@@ -54,7 +54,7 @@ public class NumeratorRepository_Test {
 
     @Ignoring
     @Mock
-    Property mockProperty;
+    PropertyForTest mockProperty;
 
     Bookmark propertyBookmark;
 
