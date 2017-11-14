@@ -23,14 +23,10 @@ import javax.inject.Inject;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.State;
-
 import org.estatio.module.charge.EstatioChargeModule;
+import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
-import org.estatio.module.index.dom.Index;
-import org.estatio.module.index.dom.IndexBase;
-import org.estatio.module.index.dom.IndexValue;
+import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
@@ -41,16 +37,13 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
         executionContext.executeChild(this, new EstatioCurrencyModule().getTeardownFixture());
 
-        deleteFrom(State.class);
-        deleteFrom(Country.class);
+        executionContext.executeChild(this, new EstatioCountryModule().getTeardownFixture());
 
         executionContext.executeChild(this, new EstatioChargeModule().getTeardownFixture());
 
         executionContext.executeChild(this, new EstatioTaxModule().getTeardownFixture());
 
-        deleteFrom(IndexValue.class);
-        deleteFrom(IndexBase.class);
-        deleteFrom(Index.class);
+        executionContext.executeChild(this, new EstatioIndexModule().getTeardownFixture());
 
         executionContext.executeChild(this, new EstatioLinkModule().getTeardownFixture());
 

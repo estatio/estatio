@@ -24,7 +24,7 @@ import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.EstatioIndexModule;
-import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
+import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
@@ -43,7 +43,7 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, "taxes", new EstatioChargeModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "docFrags", new DocFragmentDemoFixture());
+        executionContext.executeChild(this, "docFrags", new EstatioLeaseModule().getRefDataSetupFixture());
 
     }
 }

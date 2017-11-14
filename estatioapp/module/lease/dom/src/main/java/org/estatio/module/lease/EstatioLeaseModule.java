@@ -18,15 +18,38 @@
  */
 package org.estatio.module.lease;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.event.EstatioEventModule;
+import org.estatio.module.index.EstatioIndexModule;
+import org.estatio.module.invoice.EstatioInvoiceModule;
+import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
+import org.estatio.module.settings.EstatioSettingsModule;
 
-public final class EstatioLeaseModule {
+public final class EstatioLeaseModule implements Module {
 
-    private EstatioLeaseModule(){}
+    public EstatioLeaseModule(){}
 
+    @Override
+    public Set<Module> getDependencies(){
+        return Sets.newHashSet(
+                new EstatioAssetFinancialModule(),
+                new EstatioInvoiceModule(),
+                new EstatioIndexModule(),
+                new EstatioEventModule(),
+                new EstatioSettingsModule());
+    }
 
+    @Override
+    public FixtureScript getRefDataSetupFixture(){
+        return new DocFragmentDemoFixture();
+    }
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
@@ -36,25 +59,5 @@ public final class EstatioLeaseModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
 
 }
