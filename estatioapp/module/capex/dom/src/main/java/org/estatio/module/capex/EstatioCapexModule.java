@@ -1,13 +1,28 @@
 package org.estatio.module.capex;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import java.util.Set;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import com.google.common.collect.Sets;
 
-public class EstatioCapexModule {
+import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.budget.EstatioBudgetModule;
+import org.estatio.module.invoice.EstatioInvoiceModule;
+import org.estatio.module.tax.EstatioTaxModule;
 
-    private EstatioCapexModule() {}
+public class EstatioCapexModule implements Module {
 
+    public EstatioCapexModule() {}
+
+    @Override
+    public Set<Module> getDependencies(){
+        return Sets.newHashSet(
+                new EstatioAssetFinancialModule(),
+                new EstatioInvoiceModule(),
+                new EstatioBudgetModule(),
+                new EstatioTaxModule()
+                );
+    }
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
@@ -17,27 +32,5 @@ public class EstatioCapexModule {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
-
-
-
-    public static class Setup extends FixtureScript {
-
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
-            }
-        }
-    }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
-
 
 }
