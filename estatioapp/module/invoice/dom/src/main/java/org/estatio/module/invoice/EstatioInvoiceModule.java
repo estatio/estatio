@@ -24,10 +24,11 @@ import com.google.common.collect.Sets;
 
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 
-public final class EstatioInvoiceModule implements Module {
+public final class EstatioInvoiceModule extends ModuleAbstract {
 
     public EstatioInvoiceModule(){}
 

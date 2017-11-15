@@ -23,9 +23,10 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.financial.EstatioFinancialModule;
 
-public final class EstatioBankAccountModule implements Module{
+public final class EstatioBankAccountModule extends ModuleAbstract {
 
     public EstatioBankAccountModule(){}
 

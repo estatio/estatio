@@ -23,9 +23,10 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.lease.EstatioLeaseModule;
 
-public final class EstatioGuaranteeModule implements Module {
+public final class EstatioGuaranteeModule extends ModuleAbstract {
 
     public EstatioGuaranteeModule(){}
 

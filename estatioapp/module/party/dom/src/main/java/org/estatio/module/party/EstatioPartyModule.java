@@ -5,9 +5,10 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.numerator.EstatioNumeratorModule;
 
-public final class EstatioPartyModule implements Module {
+public final class EstatioPartyModule extends ModuleAbstract {
 
     public EstatioPartyModule(){}
 

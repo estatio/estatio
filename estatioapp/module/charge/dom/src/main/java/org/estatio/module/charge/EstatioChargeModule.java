@@ -27,19 +27,21 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
 import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
-public final class EstatioChargeModule implements Module {
+public final class EstatioChargeModule extends ModuleAbstract {
 
     public EstatioChargeModule(){}
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioTaxModule());
+        return Sets.newHashSet(new EstatioTaxModule(), new EstatioCountryModule());
     }
 
     @Override

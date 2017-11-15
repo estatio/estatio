@@ -25,8 +25,9 @@ import com.google.common.collect.Sets;
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 
-public final class EstatioAssetFinancialModule implements Module {
+public final class EstatioAssetFinancialModule extends ModuleAbstract {
 
     public EstatioAssetFinancialModule(){}
 

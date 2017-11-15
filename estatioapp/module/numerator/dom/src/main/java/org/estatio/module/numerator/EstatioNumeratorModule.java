@@ -26,12 +26,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 
-public class EstatioNumeratorModule implements Module{
+public class EstatioNumeratorModule extends ModuleAbstract {
 
 
     public EstatioNumeratorModule() {}

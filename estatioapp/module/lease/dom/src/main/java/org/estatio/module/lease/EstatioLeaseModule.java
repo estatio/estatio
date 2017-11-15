@@ -26,13 +26,14 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.settings.EstatioSettingsModule;
 
-public final class EstatioLeaseModule implements Module {
+public final class EstatioLeaseModule extends ModuleAbstract {
 
     public EstatioLeaseModule(){}
 

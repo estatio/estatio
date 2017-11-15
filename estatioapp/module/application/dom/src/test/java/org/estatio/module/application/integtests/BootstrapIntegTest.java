@@ -18,12 +18,25 @@
  */
 package org.estatio.module.application.integtests;
 
+import javax.inject.Inject;
+
 import org.junit.Test;
+
+import org.apache.isis.applib.services.jaxb.JaxbService;
+
+import org.estatio.module.application.EstatioApplicationModule;
 
 public class BootstrapIntegTest extends ApplicationModuleIntegTestAbstract {
 
     @Test
     public void bootstraps_ok() throws Exception {
 
+        final EstatioApplicationModule module = new EstatioApplicationModule();
+
+        final String s = jaxbService.toXml(module);
+        System.out.println(s);
     }
+
+    @Inject
+    JaxbService jaxbService;
 }

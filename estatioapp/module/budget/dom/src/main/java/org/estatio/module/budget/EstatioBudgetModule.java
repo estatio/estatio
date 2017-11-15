@@ -24,9 +24,10 @@ import com.google.common.collect.Sets;
 
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
 
-public final class EstatioBudgetModule implements Module {
+public final class EstatioBudgetModule extends ModuleAbstract {
 
     public EstatioBudgetModule(){}
 

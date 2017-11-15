@@ -52,9 +52,9 @@ import org.incode.module.document.dom.DocumentModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 
-public final class EstatioBaseModule implements Module {
+public final class EstatioBaseModule extends ModuleAbstract {
 
     /**
      * For now, we'll reference all of the incode platform that we need.

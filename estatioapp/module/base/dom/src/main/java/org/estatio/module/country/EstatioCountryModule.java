@@ -29,7 +29,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -37,7 +37,7 @@ import org.estatio.module.country.fixtures.enums.Country_enum;
 /**
  * This is a "proxy" for the country module defined in the platform.
  */
-public final class EstatioCountryModule implements Module {
+public final class EstatioCountryModule extends ModuleAbstract {
 
     @Override
     public Set<Class<?>> getDependenciesAsClass() {

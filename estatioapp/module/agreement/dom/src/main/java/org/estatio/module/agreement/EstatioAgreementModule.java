@@ -27,12 +27,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode // value semantics based on the object's class
-public final class EstatioAgreementModule implements Module {
+public final class EstatioAgreementModule extends ModuleAbstract {
 
 
     @Override

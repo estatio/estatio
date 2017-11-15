@@ -27,10 +27,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.link.dom.Link;
 import org.estatio.module.settings.EstatioSettingsModule;
 
-public final class EstatioLinkModule implements Module {
+public final class EstatioLinkModule extends ModuleAbstract {
 
     public EstatioLinkModule(){}
 

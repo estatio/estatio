@@ -24,8 +24,9 @@ import com.google.common.collect.Sets;
 
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 
-public final class EstatioRegistrationModule implements Module {
+public final class EstatioRegistrationModule extends ModuleAbstract {
 
     public EstatioRegistrationModule(){}
 

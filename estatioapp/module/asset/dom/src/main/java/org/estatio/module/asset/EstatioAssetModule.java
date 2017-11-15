@@ -23,9 +23,10 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
-public final class EstatioAssetModule implements Module {
+public final class EstatioAssetModule extends ModuleAbstract {
 
     public EstatioAssetModule(){}
 

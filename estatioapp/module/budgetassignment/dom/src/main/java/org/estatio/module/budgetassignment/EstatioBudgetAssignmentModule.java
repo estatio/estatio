@@ -23,10 +23,11 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 
-public final class EstatioBudgetAssignmentModule implements Module {
+public final class EstatioBudgetAssignmentModule extends ModuleAbstract {
 
     public EstatioBudgetAssignmentModule(){}
 

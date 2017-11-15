@@ -6,10 +6,11 @@ import com.google.common.collect.Sets;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 
-public class EstatioCapexModule implements Module {
+public class EstatioCapexModule extends ModuleAbstract {
 
     public EstatioCapexModule() {}
 

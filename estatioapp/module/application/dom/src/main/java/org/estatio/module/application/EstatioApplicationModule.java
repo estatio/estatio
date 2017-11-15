@@ -20,9 +20,12 @@ package org.estatio.module.application;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
@@ -32,7 +35,8 @@ import org.estatio.module.registration.EstatioRegistrationModule;
 /**
  * A "global" module for the entire app (=big ball of mud, stuff to decouple)
  */
-public final class EstatioApplicationModule implements Module {
+@XmlRootElement(name = "module")
+public final class EstatioApplicationModule extends ModuleAbstract {
 
     public EstatioApplicationModule(){}
 
