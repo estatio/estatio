@@ -39,10 +39,10 @@ public final class EstatioApplicationModule implements Module {
     @Override
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
-                new EstatioCapexModule(),
-                new EstatioBudgetAssignmentModule(),
-                new EstatioRegistrationModule(),
                 new EstatioGuaranteeModule(),
+                new EstatioBudgetAssignmentModule(),
+                new EstatioCapexModule(),
+                new EstatioRegistrationModule(),
                 new EstatioLinkModule()
         );
     }

@@ -87,11 +87,6 @@ language governing permissions and limitations under the License.
             <version>001.001.003</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
-        </dependency>
-
 		<dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-assetfinancial</artifactId>
@@ -105,11 +100,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-budget</artifactId>
-        </dependency>
-
-		<dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-tax</artifactId>
         </dependency>
 
         <!-- testing -->

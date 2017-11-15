@@ -90,11 +90,6 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-agreement</artifactId>
         </dependency>
 

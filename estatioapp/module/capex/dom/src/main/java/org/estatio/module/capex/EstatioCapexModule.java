@@ -5,11 +5,9 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
-import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioCapexModule implements Module {
 
@@ -18,11 +16,9 @@ public class EstatioCapexModule implements Module {
     @Override
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
-                new EstatioAssetFinancialModule(),
                 new EstatioInvoiceModule(),
-                new EstatioBudgetModule(),
-                new EstatioBankAccountModule(),
-                new EstatioTaxModule()
+                new EstatioAssetFinancialModule(),
+                new EstatioBudgetModule()
                 );
     }
 

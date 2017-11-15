@@ -39,11 +39,12 @@ public final class EstatioLeaseModule implements Module {
     @Override
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
-                new EstatioAssetFinancialModule(),
                 new EstatioInvoiceModule(),
+                new EstatioAssetFinancialModule(),
                 new EstatioIndexModule(),
                 new EstatioEventModule(),
-                new EstatioSettingsModule());
+                new EstatioSettingsModule()
+                );
     }
 
     @Override

@@ -91,19 +91,10 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-assetfinancial</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-charge</artifactId>
         </dependency>
 
         <dependency>
@@ -124,12 +115,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-settings</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
 
 

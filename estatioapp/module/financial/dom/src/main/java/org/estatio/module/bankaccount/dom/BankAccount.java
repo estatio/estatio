@@ -24,15 +24,19 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.IsisApplibModule.ActionDomainEvent;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -42,6 +46,7 @@ import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.incode.module.base.dom.types.NameType;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.financial.dom.FinancialAccount;
@@ -319,4 +324,23 @@ public class BankAccount
 
     }
 
+    @DomainService(nature = NatureOfService.DOMAIN)
+    public static class TitleSubscriber extends AbstractSubscriber {
+
+        @Programmatic
+        @com.google.common.eventbus.Subscribe
+        @org.axonframework.eventhandling.annotation.EventHandler
+        public void titleOf(TitleUiEvent ev) {
+            final BankAccount bankAccount = ev.getSource();
+
+            if(ev.getTitle() == null) {
+                String title = TitleBuilder.start()
+                        .withName(bankAccount.getName())
+                        .withName(" - ")
+                        .withName(bankAccount.getOwner().getReference())
+                        .toString();
+                ev.setTitle(title);
+            }
+        }
+    }
 }

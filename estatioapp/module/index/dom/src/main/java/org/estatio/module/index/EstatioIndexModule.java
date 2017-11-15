@@ -26,12 +26,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.fixtures.IndexRefData;
-import org.estatio.module.party.EstatioPartyModule;
 
 public final class EstatioIndexModule implements Module {
 
@@ -39,7 +39,7 @@ public final class EstatioIndexModule implements Module {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioPartyModule());
+        return Sets.newHashSet(new EstatioBaseModule());
     }
 
     @Override

@@ -4,8 +4,8 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.numerator.EstatioNumeratorModule;
 
 public final class EstatioPartyModule implements Module {
 
@@ -13,7 +13,7 @@ public final class EstatioPartyModule implements Module {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule());
+        return Sets.newHashSet(new EstatioNumeratorModule());
     }
 
     public abstract static class ActionDomainEvent<S>

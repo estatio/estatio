@@ -33,7 +33,10 @@ public final class EstatioInvoiceModule implements Module {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioBankMandateModule(), new EstatioChargeModule(), new EstatioCurrencyModule());
+        return Sets.newHashSet(
+                new EstatioBankMandateModule(),
+                new EstatioChargeModule(),
+                new EstatioCurrencyModule());
     }
 
 }

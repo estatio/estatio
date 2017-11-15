@@ -23,8 +23,8 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.agreement.EstatioAgreementModule;
+import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.party.EstatioPartyModule;
 
 public final class EstatioBankMandateModule implements Module {
 
@@ -32,7 +32,9 @@ public final class EstatioBankMandateModule implements Module {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioAgreementModule(), new EstatioPartyModule());
+        return Sets.newHashSet(
+                new EstatioBankAccountModule(),
+                new EstatioAgreementModule());
     }
 
     public abstract static class ActionDomainEvent<S>

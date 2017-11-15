@@ -82,10 +82,6 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.incode.estatio</groupId>
@@ -102,7 +98,6 @@ language governing permissions and limitations under the License.
             <artifactId>iban4j</artifactId>
             <version>3.2.1</version>
         </dependency>
-
 
         <!-- testing -->
         <dependency>

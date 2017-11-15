@@ -81,15 +81,10 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-base</artifactId>
-        </dependency>
-
-        <!-- needed just for the country stuff -->
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
         </dependency>
 
         <!-- testing -->

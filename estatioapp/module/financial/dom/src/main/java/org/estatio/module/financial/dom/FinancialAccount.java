@@ -111,26 +111,6 @@ public class FinancialAccount
 //        super("type, reference");
     }
 
-    @DomainService(nature = NatureOfService.DOMAIN)
-    public static class FinancialAccountTitleSubscriber extends AbstractSubscriber {
-
-        @Programmatic
-        @com.google.common.eventbus.Subscribe
-        @org.axonframework.eventhandling.annotation.EventHandler
-        public void titleOf(BankAccount.TitleUiEvent ev) {
-            final BankAccount bankAccount = ev.getSource();
-
-            if(ev.getTitle() == null) {
-                String title = TitleBuilder.start()
-                        .withName(bankAccount.getName())
-                        .withName(" - ")
-                        .withName(bankAccount.getOwner().getReference())
-                        .toString();
-                ev.setTitle(title);
-            }
-        }
-    }
-
     @PropertyLayout(
             named = "Application Level",
             describedAs = "Determines those users for whom this object is available to view and/or modify."

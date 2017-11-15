@@ -32,7 +32,9 @@ public final class EstatioBudgetAssignmentModule implements Module {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioBudgetModule(), new EstatioLeaseModule());
+        return Sets.newHashSet(
+                new EstatioBudgetModule(),
+                new EstatioLeaseModule());
     }
 
     public abstract static class ActionDomainEvent<S>

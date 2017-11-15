@@ -26,8 +26,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.party.EstatioPartyModule;
 
 import lombok.EqualsAndHashCode;
 
@@ -37,7 +37,7 @@ public final class EstatioAgreementModule implements Module {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule());
+        return Sets.newHashSet(new EstatioPartyModule());
     }
 
     @Override

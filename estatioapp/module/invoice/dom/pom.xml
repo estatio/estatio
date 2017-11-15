@@ -82,10 +82,6 @@ language governing permissions and limitations under the License.
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-base</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.estatio</groupId>
@@ -100,11 +96,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-currency</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-party</artifactId>
         </dependency>
 
         <!-- testing -->
