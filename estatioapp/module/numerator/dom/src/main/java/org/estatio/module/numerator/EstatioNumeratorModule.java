@@ -24,11 +24,14 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
 import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
+import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 
@@ -42,6 +45,7 @@ public class EstatioNumeratorModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioBaseModule());
     }
 
+
     @Override
     public FixtureScript getRefDataSetupFixture() {
         return new DemoData2Persist<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {};
@@ -49,7 +53,13 @@ public class EstatioNumeratorModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture(){
-        return new DemoData2Teardown<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {};
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                executionContext.executeChild(this, new DemoData2Teardown<>(NumeratorExampleObject_enum.class));
+                deleteFrom(Numerator.class);
+            }
+        };
     }
 
 

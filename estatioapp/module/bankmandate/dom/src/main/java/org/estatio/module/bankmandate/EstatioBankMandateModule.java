@@ -22,8 +22,13 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
+import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 
@@ -37,6 +42,27 @@ public final class EstatioBankMandateModule extends ModuleAbstract {
                 new EstatioBankAccountModule(),
                 new EstatioAgreementModule());
     }
+
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            }
+        };
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(BankMandate.class);
+            }
+        };
+    }
+
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }

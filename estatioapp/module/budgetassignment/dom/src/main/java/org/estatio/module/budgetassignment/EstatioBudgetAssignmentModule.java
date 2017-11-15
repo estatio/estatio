@@ -22,9 +22,18 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.budget.EstatioBudgetModule;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverride;
+import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.module.lease.EstatioLeaseModule;
 
 public final class EstatioBudgetAssignmentModule extends ModuleAbstract {
@@ -37,6 +46,32 @@ public final class EstatioBudgetAssignmentModule extends ModuleAbstract {
                 new EstatioBudgetModule(),
                 new EstatioLeaseModule());
     }
+
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            }
+        };
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(BudgetCalculationResultLink.class);
+                deleteFrom(BudgetCalculationResult.class);
+                deleteFrom(BudgetCalculationRun.class);
+                deleteFrom(BudgetOverrideValue.class);
+                deleteFrom(BudgetOverride.class);
+            }
+        };
+    }
+
+
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }

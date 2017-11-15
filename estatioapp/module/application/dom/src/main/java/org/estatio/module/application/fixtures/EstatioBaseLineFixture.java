@@ -20,14 +20,10 @@ package org.estatio.module.application.fixtures;
 
 import java.util.List;
 
-import org.apache.isis.applib.clock.Clock;
-import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.ClockFixture;
-
+import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.EstatioSecurityModuleDemoFixture;
-import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 
@@ -56,17 +52,7 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        final Clock instance = Clock.getInstance();
-
-        if(instance instanceof TickingFixtureClock) {
-            TickingFixtureClock.reinstateExisting();
-            executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
-            TickingFixtureClock.replaceExisting();
-        }
-
-        if(instance instanceof FixtureClock) {
-            executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
-        }
+        executionContext.executeChild(this, new TickingClockFixture());
 
 
         teardown(executionContext);

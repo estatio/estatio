@@ -50,6 +50,7 @@ public final class EstatioLinkModule extends ModuleAbstract {
         };
     }
 
+
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
 

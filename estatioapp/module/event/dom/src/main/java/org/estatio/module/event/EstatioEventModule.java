@@ -22,9 +22,15 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.event.dom.Event;
+import org.estatio.module.event.dom.EventSourceLink;
 
 public final class EstatioEventModule extends ModuleAbstract {
 
@@ -34,6 +40,29 @@ public final class EstatioEventModule extends ModuleAbstract {
     public Set<Module> getDependencies() {
         return Sets.newHashSet(new EstatioBaseModule());
     }
+
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            }
+        };
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(EventSourceLink.class);
+                deleteFrom(Event.class);
+            }
+        };
+    }
+
+
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }

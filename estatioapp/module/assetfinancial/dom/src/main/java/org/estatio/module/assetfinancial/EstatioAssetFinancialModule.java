@@ -22,7 +22,12 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.asset.EstatioAssetModule;
+import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
@@ -36,6 +41,26 @@ public final class EstatioAssetFinancialModule extends ModuleAbstract {
         return Sets.newHashSet( new EstatioAssetModule(), new EstatioBankAccountModule());
     }
 
+
+
+    @Override
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            }
+        };
+    }
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(FixedAssetFinancialAccount.class);
+            }
+        };
+    }
 
 
     public abstract static class ActionDomainEvent<S>

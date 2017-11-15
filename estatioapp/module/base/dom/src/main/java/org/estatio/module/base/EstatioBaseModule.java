@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.command.dom.CommandJdo;
 import org.isisaddons.module.excel.ExcelModule;
 import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
 import org.isisaddons.module.poly.PolyModule;
@@ -43,14 +44,23 @@ import org.isisaddons.wicket.pdfjs.cpt.PdfjsCptModule;
 
 import org.incode.module.classification.dom.ClassificationModule;
 import org.incode.module.communications.dom.CommunicationsModule;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
+import org.incode.module.communications.dom.impl.comms.CommChannelRole;
+import org.incode.module.communications.dom.impl.comms.Communication;
+import org.incode.module.communications.dom.impl.paperclips.PaperclipForCommunication;
 import org.incode.module.country.dom.CountryModule;
 import org.incode.module.docfragment.dom.DocFragmentModuleDomModule;
 import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
 import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
 import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
 import org.incode.module.document.dom.DocumentModule;
+import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
+import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
+import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 
@@ -112,6 +122,7 @@ public final class EstatioBaseModule extends ModuleAbstract {
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new TickingClockFixture());
                 executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
             }
         };
@@ -122,6 +133,20 @@ public final class EstatioBaseModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+
+                deleteFrom(PaperclipForCommunication.class);
+                deleteFrom(CommChannelRole.class); // ie communication correspondent
+                deleteFrom(Communication.class);
+
+                deleteFrom(CommunicationChannelOwnerLink.class);
+                deleteFrom(CommunicationChannel.class);
+
+                deleteFrom(PaperclipForDocument.class);
+                deleteFrom(Paperclip.class);
+                deleteFrom(Document.class);
+
+                deleteFrom(CommandJdo.class);
+
                 deleteFrom(ApplicationTenancy.class);
             }
         };

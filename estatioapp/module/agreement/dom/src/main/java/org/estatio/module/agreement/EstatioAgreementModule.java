@@ -26,11 +26,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.agreement.dom.AgreementRole;
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
-
-import lombok.EqualsAndHashCode;
 
 public final class EstatioAgreementModule extends ModuleAbstract {
 
@@ -42,33 +43,27 @@ public final class EstatioAgreementModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getRefDataSetupFixture() {
-        return new Setup();
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+            }
+        };
     }
 
     @Override
     public FixtureScript getTeardownFixture() {
-        return new Teardown();
-    }
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
 
+                deleteFrom(AgreementRoleCommunicationChannel.class);
+                deleteFrom(AgreementRole.class);
 
-    public static class Setup extends FixtureScript {
+                deleteFrom(Agreement.class);
 
-        static boolean prereqsRun = false;
-
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            if(!prereqsRun) {
-                prereqsRun = true;
             }
-        }
+        };
     }
-
-    public static class Teardown extends TeardownFixtureAbstract {
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-        }
-    }
-
 
     public abstract static class ActionDomainEvent<S>
             extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }

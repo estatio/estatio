@@ -43,6 +43,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioBaseModule());
     }
 
+
     @Override
     public FixtureScript getRefDataSetupFixture() {
         return new DemoData2Persist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
