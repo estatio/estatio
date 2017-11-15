@@ -18,6 +18,7 @@
  */
 package org.estatio.module.base.platform.integtestsupport;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,19 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
     }
 
     @Before
-    public void bootstrapIfRequired() {
+    public void bootstrapAndSetupIfRequired() {
+
+        System.setProperty("estatio.integTest", "true");
+
+        bootstrapIfRequired();
+
+        beginTransaction();
+
+        setupModuleRefData();
+
+    }
+
+    private void bootstrapIfRequired() {
         final List<Module> transitiveDependencies = module.getTransitiveDependencies();
         final Class[] moduleTransitiveDependencies = asClasses(transitiveDependencies);
 
@@ -88,12 +101,6 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
         final AppManifest appManifest = builder.build();
 
         bootstrapUsing(appManifest);
-
-        beginTransaction();
-
-        setup();
-
-
     }
 
     /**
@@ -189,28 +196,27 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
         isft.beginTran();
     }
 
-    private void setup() {
+    private void setupModuleRefData() {
         final List<Module> dependencies = module.getTransitiveDependencies();
         for (Module dependency : dependencies) {
-            final FixtureScript setupFixture = dependency.getRefDataSetupFixture();
-            if(setupFixture != null) {
-                runFixtureScript(setupFixture);
+            final FixtureScript fixture = dependency.getRefDataSetupFixture();
+            if(fixture != null) {
+                runFixtureScript(fixture);
             }
         }
-        final FixtureScript fixtureScript = module.getRefDataSetupFixture();
-        if(fixtureScript == null) {
-            return;
-        }
-        runFixtureScript(fixtureScript);
     }
 
     @After
     public void tearDown() {
-        final FixtureScript fixtureScript = module.getTeardownFixture();
-        if(fixtureScript == null) {
-            return;
+        final List<Module> dependencies = module.getTransitiveDependencies();
+        Collections.reverse(dependencies);
+
+        for (Module dependency : dependencies) {
+            final FixtureScript fixture = dependency.getTeardownFixture();
+            if(fixture != null) {
+                runFixtureScript(fixture);
+            }
         }
-        runFixtureScript(fixtureScript);
     }
 
 

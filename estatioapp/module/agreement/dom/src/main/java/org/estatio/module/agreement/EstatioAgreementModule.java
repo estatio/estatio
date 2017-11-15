@@ -32,7 +32,6 @@ import org.estatio.module.party.EstatioPartyModule;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode // value semantics based on the object's class
 public final class EstatioAgreementModule extends ModuleAbstract {
 
 

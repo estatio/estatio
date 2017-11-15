@@ -33,6 +33,10 @@ public class DocFragmentSeedService {
 
     @PostConstruct
     public void init() {
+        if(System.getProperty("estatio.integTest") != null) {
+            return;
+        }
+
         fixtureScripts.runFixtureScript(new DocFragmentSeedFixture(), null);
     }
 

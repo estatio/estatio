@@ -1,10 +1,12 @@
 package org.estatio.module.base.platform.applib;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -45,7 +47,8 @@ public interface Module {
         final List<Module> ordered = Lists.newArrayList();
         final List<Module> visited = Lists.newArrayList();
         appendDependenciesTo(ordered, this, visited);
-        return ordered;
+        final LinkedHashSet<Module> orderedSet = Sets.newLinkedHashSet(ordered);
+        return Lists.newArrayList(orderedSet);
     }
 
     default void appendDependenciesTo(

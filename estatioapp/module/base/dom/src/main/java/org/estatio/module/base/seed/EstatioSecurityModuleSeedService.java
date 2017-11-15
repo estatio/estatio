@@ -30,6 +30,11 @@ public class EstatioSecurityModuleSeedService {
 
     @PostConstruct
     public void init() {
+
+        if(System.getProperty("estatio.integTest") != null) {
+            return;
+        }
+
         fixtureScripts.runFixtureScript(new EstatioSecurityModuleSeedFixture(), null);
     }
 

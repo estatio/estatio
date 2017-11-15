@@ -36,6 +36,10 @@ public class DocumentTypesAndTemplatesSeedService {
     @PostConstruct
     public void init() {
 
+        if(System.getProperty("estatio.integTest") != null) {
+            return;
+        }
+
         // If we get new versions of the templates in the future, then update this date
         // the upsert logic here should result in the new templates being inserted alongside existing
         // (with a different template date).

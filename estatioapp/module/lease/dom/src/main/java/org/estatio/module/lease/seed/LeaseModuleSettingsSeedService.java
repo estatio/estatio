@@ -44,6 +44,11 @@ public class LeaseModuleSettingsSeedService extends UdoDomainService<LeaseModule
 
     @PostConstruct
     public void init(final Map<String,String> props) {
+
+        if(System.getProperty("estatio.integTest") != null) {
+            return;
+        }
+
         super.init(props);
         installDefaultsIfRequired();
     }

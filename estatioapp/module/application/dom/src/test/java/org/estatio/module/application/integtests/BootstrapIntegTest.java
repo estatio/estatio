@@ -31,6 +31,11 @@ public class BootstrapIntegTest extends ApplicationModuleIntegTestAbstract {
     @Test
     public void bootstraps_ok() throws Exception {
 
+    }
+
+    @Test
+    public void serializes_module() throws Exception {
+
         final EstatioApplicationModule module = new EstatioApplicationModule();
 
         final String s = jaxbService.toXml(module);
