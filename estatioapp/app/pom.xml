@@ -250,6 +250,13 @@ language governing permissions and limitations under the License.
             <artifactId>isis-wicket-gmap3-cpt</artifactId>
         </dependency>
         <dependency>
+            <!--
+            because isis-wicket-gmap3-cpt excludes wicketstuff-gmap3 (wrong wicket version)
+            -->
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-gmap3</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
             <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
         </dependency>

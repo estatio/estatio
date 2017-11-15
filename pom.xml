@@ -100,7 +100,7 @@ language governing permissions and limitations under the License.
         <isis-wicket-gmap3.version>${incode-platform.version}</isis-wicket-gmap3.version>
         <isis-wicket-pdfjs.version>${incode-platform.version}</isis-wicket-pdfjs.version>
 
-        <wicketstuff.version>7.7.0</wicketstuff.version>
+        <wicketstuff.version>7.9.0</wicketstuff.version>
 
         <incode-module-base.version>${incode-platform.version}</incode-module-base.version>
         <incode-module-classification.version>${incode-platform.version}</incode-module-classification.version>
@@ -410,6 +410,11 @@ language governing permissions and limitations under the License.
                 <groupId>org.isisaddons.wicket.excel</groupId>
                 <artifactId>isis-wicket-excel-cpt</artifactId>
                 <version>${isis-wicket-excel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wicketstuff</groupId>
+                <artifactId>wicketstuff-gmap3</artifactId>
+                <version>${wicketstuff.version}</version>
             </dependency>
 
             <!-- Estatio modules -->
