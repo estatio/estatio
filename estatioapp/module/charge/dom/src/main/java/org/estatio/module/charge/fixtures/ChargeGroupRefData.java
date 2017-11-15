@@ -66,7 +66,7 @@ public class ChargeGroupRefData extends FixtureScript {
             final String chargeGroupReference,
             final String description,
             final ExecutionContext executionContext) {
-        final ChargeGroup chargeGroup = chargeGroupRepository.createChargeGroup(
+        final ChargeGroup chargeGroup = chargeGroupRepository.upsert(
                 chargeGroupReference, description);
         return executionContext.addResult(this, chargeGroup.getReference(), chargeGroup);
     }

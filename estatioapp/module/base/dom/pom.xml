@@ -99,34 +99,122 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-wrapper</artifactId>
+        </dependency>
+
+
+        <!-- libraries -->
+        <dependency>
+            <groupId>org.incode.module.base</groupId>
+            <artifactId>incode-module-base-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.docrendering</groupId>
+            <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.docrendering</groupId>
+            <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.docrendering</groupId>
+            <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
             <artifactId>isis-module-excel-dom</artifactId>
             <version>${isis-module-excel.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.incode.module.docfragment</groupId>
-            <artifactId>incode-module-docfragment-dom</artifactId>
+            <groupId>org.incode.module.fixturesupport</groupId>
+            <artifactId>incode-module-fixturesupport-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.pdfbox</groupId>
+            <artifactId>isis-module-pdfbox-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.poly</groupId>
+            <artifactId>isis-module-poly-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.servletapi</groupId>
+            <artifactId>isis-module-servletapi-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.settings</groupId>
+            <artifactId>isis-module-settings-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
 
+        <!-- generic dom -->
         <dependency>
             <groupId>org.incode.module.classification</groupId>
             <artifactId>incode-module-classification-dom</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.incode.module.communications</groupId>
+            <artifactId>incode-module-communications-dom</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.incode.module.country</groupId>
             <artifactId>incode-module-country-dom</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.incode.module.docfragment</groupId>
+            <artifactId>incode-module-docfragment-dom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.incode.module.document</groupId>
+            <artifactId>incode-module-document-dom</artifactId>
+        </dependency>
 
+
+        <!-- spi -->
         <dependency>
             <groupId>org.isisaddons.module.security</groupId>
             <artifactId>isis-module-security-dom</artifactId>
         </dependency>
 
+
+        <!-- wicket -->
         <dependency>
-            <groupId>org.incode.module.base</groupId>
-            <artifactId>incode-module-base-dom</artifactId>
+            <groupId>org.isisaddons.wicket.excel</groupId>
+            <artifactId>isis-wicket-excel-cpt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.isisaddons.wicket.pdfjs</groupId>
+            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
+        </dependency>
+
+
+        <!-- extensions -->
+        <dependency>
+            <groupId>org.isisaddons.module.togglz</groupId>
+            <artifactId>isis-module-togglz-glue</artifactId>
+        </dependency>
+
+
+
+
+
+
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
@@ -134,15 +222,6 @@ language governing permissions and limitations under the License.
             <artifactId>togglz-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.isisaddons.module.togglz</groupId>
-            <artifactId>isis-module-togglz-glue</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.fixturesupport</groupId>
-            <artifactId>incode-module-fixturesupport-dom</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>

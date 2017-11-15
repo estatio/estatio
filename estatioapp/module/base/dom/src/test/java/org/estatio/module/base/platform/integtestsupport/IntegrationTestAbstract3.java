@@ -84,7 +84,7 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
                 AppManifestAbstract.Builder
                     .forModules(moduleTransitiveDependencies)
                     .withAdditionalModules(furtherDependencies)
-                    .withAdditionalModules(additionalModuleClasses);
+                    .withAdditionalModules(additionalModuleClasses)                ;
         final AppManifest appManifest = builder.build();
 
         bootstrapUsing(appManifest);
@@ -193,7 +193,9 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
         final List<Module> dependencies = module.getTransitiveDependencies();
         for (Module dependency : dependencies) {
             final FixtureScript setupFixture = dependency.getRefDataSetupFixture();
-            runFixtureScript(setupFixture);
+            if(setupFixture != null) {
+                runFixtureScript(setupFixture);
+            }
         }
         final FixtureScript fixtureScript = module.getRefDataSetupFixture();
         if(fixtureScript == null) {

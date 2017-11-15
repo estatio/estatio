@@ -97,20 +97,6 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-numerator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-project</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>

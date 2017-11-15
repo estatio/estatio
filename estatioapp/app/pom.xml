@@ -184,11 +184,6 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.estatio</groupId>
-            <artifactId>estatio-dom-project</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.estatio</groupId>
             <artifactId>estatio-dom-settings</artifactId>
         </dependency>
 

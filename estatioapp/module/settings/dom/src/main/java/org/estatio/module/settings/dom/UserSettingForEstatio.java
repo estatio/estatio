@@ -48,11 +48,11 @@ import lombok.Setter;
     @javax.jdo.annotations.Query(
             name = "findByUserAndKey", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.domsettings.UserSettingForEstatio "
+                    + "FROM org.estatio.module.settings.dom.UserSettingForEstatio "
                     + "WHERE user == :user "
-                    + "&& key == :key ") 
+                    + "&& key == :key ")
     ,@javax.jdo.annotations.Query(
-            name = "findByUser", language = "JDOQL", 
+            name = "findByUser", language = "JDOQL",
             value = "SELECT "
                     + "FROM org.estatio.module.settings.dom.UserSettingForEstatio "
                     + "WHERE user == :user "

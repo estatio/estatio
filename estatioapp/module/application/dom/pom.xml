@@ -117,56 +117,8 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.isisaddons.module.togglz</groupId>
-            <artifactId>isis-module-togglz-glue</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.module.servletapi</groupId>
-            <artifactId>isis-module-servletapi-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-stringinterpolator-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-freemarker-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.incode.module.docrendering</groupId>
-            <artifactId>incode-module-docrendering-xdocreport-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.document</groupId>
-            <artifactId>incode-module-document-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.module.stringinterpolator</groupId>
-            <artifactId>isis-module-stringinterpolator-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.isisaddons.wicket.pdfjs</groupId>
-            <artifactId>isis-wicket-pdfjs-cpt</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-wrapper</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- testing -->

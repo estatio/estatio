@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.bankmandate.integtests;
+package org.estatio.module.application.integtests;
 
-import org.estatio.module.bankmandate.EstatioBankMandateModule;
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.junit.Test;
 
-public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public class BootstrapIntegTest extends ApplicationModuleIntegTestAbstract {
 
-    public BankMandateModuleIntegTestAbstract() {
-        super(new EstatioBankMandateModule());
+    @Test
+    public void bootstraps_ok() throws Exception {
+
     }
 }

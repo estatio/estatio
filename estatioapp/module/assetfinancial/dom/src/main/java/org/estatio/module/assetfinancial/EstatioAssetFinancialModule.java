@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.base.platform.applib.Module;
+import org.estatio.module.financial.EstatioFinancialModule;
 import org.estatio.module.party.EstatioPartyModule;
 
 public final class EstatioAssetFinancialModule implements Module {
@@ -32,7 +33,7 @@ public final class EstatioAssetFinancialModule implements Module {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioPartyModule(), new EstatioAssetModule());
+        return Sets.newHashSet(new EstatioPartyModule(), new EstatioAssetModule(), new EstatioFinancialModule());
     }
 
 

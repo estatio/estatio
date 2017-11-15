@@ -104,16 +104,6 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-party</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.incode.module.communications</groupId>
-            <artifactId>incode-module-communications-dom</artifactId>
-        </dependency>
-
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>

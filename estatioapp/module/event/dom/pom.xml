@@ -85,15 +85,6 @@ language governing permissions and limitations under the License.
     <dependencies>
 
         <dependency>
-            <groupId>org.isisaddons.module.poly</groupId>
-            <artifactId>isis-module-poly-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
-            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.estatio</groupId>
             <artifactId>estatio-base</artifactId>
         </dependency>

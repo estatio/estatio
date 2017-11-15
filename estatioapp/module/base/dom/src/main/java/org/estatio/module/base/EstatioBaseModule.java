@@ -24,10 +24,31 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.excel.ExcelModule;
+import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
+import org.isisaddons.module.poly.PolyModule;
 import org.isisaddons.module.security.SecurityModule;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.servletapi.ServletApiModule;
+import org.isisaddons.module.settings.SettingsModule;
+import org.isisaddons.module.stringinterpolator.StringInterpolatorModule;
+import org.isisaddons.module.togglz.TogglzModule;
+import org.isisaddons.wicket.excel.cpt.ui.ExcelUiModule;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.FullCalendar2ApplibModule;
+import org.isisaddons.wicket.fullcalendar2.cpt.ui.FullCalendar2UiModule;
+import org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule;
+import org.isisaddons.wicket.gmap3.cpt.service.Gmap3ServiceModule;
+import org.isisaddons.wicket.gmap3.cpt.ui.Gmap3UiModule;
+import org.isisaddons.wicket.pdfjs.cpt.PdfjsCptModule;
 
+import org.incode.module.classification.dom.ClassificationModule;
+import org.incode.module.communications.dom.CommunicationsModule;
 import org.incode.module.country.dom.CountryModule;
+import org.incode.module.docfragment.dom.DocFragmentModuleDomModule;
+import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
+import org.incode.module.document.dom.DocumentModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -35,9 +56,54 @@ import org.estatio.module.base.platform.applib.Module;
 
 public final class EstatioBaseModule implements Module {
 
+    /**
+     * For now, we'll reference all of the incode platform that we need.
+     * Later on, we might introduce proxies (see EstatioCountryModule as proxy
+     * for CountryModule).
+     * @return
+     */
     @Override
     public Set<Class<?>> getDependenciesAsClass() {
-        return Sets.newHashSet(SecurityModule.class, CountryModule.class);
+        return Sets.newHashSet(
+
+                // lib
+                // (nothing for incode-module-base-dom)
+                // (nothing for incode-module-fixturesupport-dom)
+                ExcelModule.class,
+                FreemarkerDocRenderingModule.class,
+                StringInterpolatorDocRenderingModule.class,
+                XDocReportDocRenderingModule.class,
+                PdfBoxModule.class,
+                PolyModule.class,
+                ServletApiModule.class,
+                SettingsModule.class,
+                StringInterpolatorModule.class,
+
+
+                // generic dom
+                ClassificationModule.class,
+                CommunicationsModule.class,
+                CountryModule.class,
+                DocFragmentModuleDomModule.class,
+                DocumentModule.class,
+
+
+                // spi
+                SecurityModule.class,
+
+                // wkt
+                ExcelUiModule.class,
+                FullCalendar2ApplibModule.class,
+                FullCalendar2UiModule.class,
+                Gmap3ApplibModule.class,
+                Gmap3UiModule.class,
+                Gmap3ServiceModule.class,
+                PdfjsCptModule.class,
+
+                // ext
+                TogglzModule.class
+
+                );
     }
 
 

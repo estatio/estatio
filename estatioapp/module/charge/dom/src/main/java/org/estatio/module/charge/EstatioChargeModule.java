@@ -32,6 +32,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
 import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
 public final class EstatioChargeModule implements Module {
@@ -40,7 +41,7 @@ public final class EstatioChargeModule implements Module {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule(), new EstatioTaxModule());
+        return Sets.newHashSet(new EstatioBaseModule(), new EstatioTaxModule(), new EstatioCountryModule());
     }
 
     @Override

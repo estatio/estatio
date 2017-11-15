@@ -37,6 +37,15 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
     // //////////////////////////////////////
 
     @Programmatic
+    public ChargeGroup upsert(final String reference, final String description) {
+        ChargeGroup chargeGroup = findChargeGroup(reference);
+        if(chargeGroup == null) {
+            chargeGroup = createChargeGroup(reference, description);
+        }
+        return chargeGroup;
+    }
+
+    @Programmatic
     public ChargeGroup createChargeGroup(final String reference, final String description) {
         final ChargeGroup chargeGroup = newTransientInstance();
         chargeGroup.setReference(reference);
@@ -59,4 +68,5 @@ public class ChargeGroupRepository extends UdoDomainRepositoryAndFactory<ChargeG
     public List<ChargeGroup> allChargeGroups() {
         return allInstances();
     }
+
 }

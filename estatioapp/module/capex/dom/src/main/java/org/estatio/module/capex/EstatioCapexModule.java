@@ -5,6 +5,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -20,6 +21,7 @@ public class EstatioCapexModule implements Module {
                 new EstatioAssetFinancialModule(),
                 new EstatioInvoiceModule(),
                 new EstatioBudgetModule(),
+                new EstatioBankAccountModule(),
                 new EstatioTaxModule()
                 );
     }

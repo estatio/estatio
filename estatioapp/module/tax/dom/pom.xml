@@ -93,11 +93,6 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-dom-party</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.incode.module.fixturesupport</groupId>
-            <artifactId>incode-module-fixturesupport-dom</artifactId>
-        </dependency>
-
         <!-- testing -->
         <dependency>
             <groupId>org.incode.module.unittestsupport</groupId>
