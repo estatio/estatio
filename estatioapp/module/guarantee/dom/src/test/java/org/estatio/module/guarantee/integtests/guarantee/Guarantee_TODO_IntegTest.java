@@ -16,24 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.guarantee;
+package org.estatio.module.guarantee.integtests.guarantee;
 
 import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeRepository;
+import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
+import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.app.LeaseMenu;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
-public class Guarantee_TODO_IntegTest extends EstatioIntegrationTest {
+public class Guarantee_TODO_IntegTest extends GuaranteeModuleIntegTestAbstract {
 
     public static class UpdateOrSomething extends Guarantee_TODO_IntegTest {
 
@@ -45,7 +47,6 @@ public class Guarantee_TODO_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
                 }
             }.withTracing());
