@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.seed;
+package org.estatio.module.capex.seed;
 
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
@@ -24,7 +24,6 @@ import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 public class DocumentTypeFSForIncoming extends DocumentTemplateFSAbstract {
-
 
     protected DocumentType upsertType(
             DocumentTypeData documentTypeData,

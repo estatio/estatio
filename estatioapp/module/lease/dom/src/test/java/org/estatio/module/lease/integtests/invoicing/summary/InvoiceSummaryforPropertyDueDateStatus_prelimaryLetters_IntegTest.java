@@ -57,7 +57,7 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPro
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_sendByEmailPreliminaryLetters;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
-import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -73,7 +73,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
-                    executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
+                    executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
                 }
             });
         }

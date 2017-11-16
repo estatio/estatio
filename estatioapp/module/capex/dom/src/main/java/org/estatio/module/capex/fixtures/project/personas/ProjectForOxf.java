@@ -22,11 +22,10 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.fixtures.project.personas.ProjectAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
@@ -53,7 +52,8 @@ public class ProjectForOxf extends ProjectAbstract {
 
     }
 
-    @Inject ChargeRepository chargeRepository;
+    @Inject
+    ChargeRepository chargeRepository;
 
     @Inject PropertyRepository propertyRepository;
 

@@ -89,7 +89,7 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_ForLease_pre
 import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_invoiceDocs;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
-import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -104,7 +104,7 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
-                executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
             }
         });
     }

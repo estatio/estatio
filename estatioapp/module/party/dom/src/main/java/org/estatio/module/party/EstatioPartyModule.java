@@ -1,7 +1,9 @@
 package org.estatio.module.party;
 
+import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
@@ -19,6 +21,7 @@ import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.party.dom.CommunicationChannelOwnerLinkForParty;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationPreviousName;
+import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRegistration;
 import org.estatio.module.party.dom.Person;
@@ -62,11 +65,17 @@ public final class EstatioPartyModule extends ModuleAbstract {
                 deleteFrom(PartyRegistration.class);
                 deleteFrom(PartyRelationship.class);
                 deleteFrom(PartyRole.class);
+
+                final List<Organisation> before = organisationRepository.allOrganisations();
                 deleteFrom(Organisation.class);
+                final List<Organisation> after = organisationRepository.allOrganisations();
                 deleteFrom(Person.class);
                 deleteFrom(Party.class);
             }
+            @Inject
+            OrganisationRepository organisationRepository;
         };
+
     }
 
 

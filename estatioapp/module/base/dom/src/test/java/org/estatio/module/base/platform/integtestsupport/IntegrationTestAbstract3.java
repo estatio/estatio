@@ -218,7 +218,7 @@ public abstract class IntegrationTestAbstract3 {
     }
 
     @After
-    public void tearDown() {
+    public void tearDownAllModules() {
         transactionService.nextTransaction();
 
         final List<Module> dependencies = module.getTransitiveDependencies();

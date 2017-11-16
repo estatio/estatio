@@ -78,6 +78,13 @@ public class EstatioCapexModule extends ModuleAbstract {
                 String sql;
                 String table;
 
+                deleteFrom(PaymentBatchApprovalStateTransition.class);
+                deleteFrom(IncomingInvoiceApprovalStateTransition.class);
+                deleteFrom(OrderApprovalStateTransition.class);
+                deleteFrom(BankAccountVerificationStateTransition.class);
+                deleteFrom(IncomingDocumentCategorisationStateTransition.class);
+                deleteFrom(Task.class);
+
                 deleteFrom(CodaMapping.class);
                 deleteFrom(CodaElement.class);
 
@@ -126,15 +133,7 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(IncomingInvoiceItem.class);
                 deleteFrom(IncomingInvoice.class);
 
-                deleteFrom(PaymentBatchApprovalStateTransition.class);
-                deleteFrom(IncomingInvoiceApprovalStateTransition.class);
-                deleteFrom(OrderApprovalStateTransition.class);
-                deleteFrom(BankAccountVerificationStateTransition.class);
-                deleteFrom(IncomingDocumentCategorisationStateTransition.class);
-                deleteFrom(Task.class);
-
                 deleteFrom(PaymentBatch.class);
-
 
                 deleteFrom(PaperclipForOrder.class);
                 deleteFrom(OrderItem.class);

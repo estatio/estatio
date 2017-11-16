@@ -15,29 +15,27 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.seed;
+package org.estatio.module.capex.seed;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-public class DocumentTypesAndTemplatesFixture extends DiscoverableFixtureScript {
+public class DocumentTypesAndTemplatesForCapexFixture extends DiscoverableFixtureScript {
 
     private final LocalDate templateDateIfAny;
 
-    public DocumentTypesAndTemplatesFixture() {
+    public DocumentTypesAndTemplatesForCapexFixture() {
         this(null);
     }
 
-    public DocumentTypesAndTemplatesFixture(final LocalDate templateDateIfAny) {
+    public DocumentTypesAndTemplatesForCapexFixture(final LocalDate templateDateIfAny) {
         this.templateDateIfAny = templateDateIfAny;
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new RenderingStrategies());
-        executionContext.executeChild(this, new DocumentTypeAndTemplatesFSForInvoicesUsingSsrs(getTemplateDateIfAny()));
         executionContext.executeChild(this, new DocumentTypeFSForIncoming());
         executionContext.executeChild(this, new DocumentTypeFSForIbanProof());
 

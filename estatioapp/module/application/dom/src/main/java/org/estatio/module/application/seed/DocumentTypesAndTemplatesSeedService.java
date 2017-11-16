@@ -26,7 +26,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 
 /**
  * Apologies: have chosen to load in the DocFragment entities this way rather than using flywaydb mostly because
@@ -51,7 +52,8 @@ public class DocumentTypesAndTemplatesSeedService {
         //
         final LocalDate templateDate = new LocalDate(2012,1,1);
 
-        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesFixture(templateDate), null);
+        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForLeaseFixture(templateDate), null);
+        fixtureScripts.runFixtureScript(new DocumentTypesAndTemplatesForCapexFixture(templateDate), null);
     }
 
     @Inject

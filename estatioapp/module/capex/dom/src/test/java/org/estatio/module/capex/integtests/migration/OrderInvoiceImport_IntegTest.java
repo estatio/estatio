@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.capex;
+package org.estatio.module.capex.integtests.migration;
 
 import java.util.List;
 
@@ -44,13 +44,13 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
+public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
 
     public static class LoadFixtures extends OrderInvoiceImport_IntegTest {
 
@@ -61,7 +61,6 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
@@ -118,6 +117,7 @@ public class OrderInvoiceImport_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                    executionContext.executeChild(this, new IncomingChargeFixture());
                     executionContext.executeChild(this, new OrderInvoiceFixture());
                 }
             });

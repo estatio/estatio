@@ -1,11 +1,11 @@
-package org.estatio.integtests.capex;
+package org.estatio.module.capex.integtests.invoice;
 
 import java.util.SortedSet;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,15 +19,13 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
-import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -39,11 +37,12 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_co
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
+import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -57,7 +56,7 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTo
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
 
-public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTest {
+public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTestAbstract {
 
     Property propertyForOxf;
     Party buyer;
@@ -77,15 +76,15 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+                executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }
         });
 
-        TickingFixtureClock.replaceExisting();
+//        TickingFixtureClock.replaceExisting();
     }
 
     @Before
@@ -111,10 +110,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
 
     }
 
-    @After
-    public void tearDown() {
-        TickingFixtureClock.reinstateExisting();
-    }
+//    @After
+//    public void tearDown() {
+//        TickingFixtureClock.reinstateExisting();
+//    }
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(EstatioTogglzFeature.class);
@@ -174,7 +173,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
     }
 
     void assertState(final BankAccount bankAccount, final BankAccountVerificationState expected) {
-        assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
+        Assertions.assertThat(wrap(mixin(BankAccount_verificationState.class, bankAccount)).prop()).isEqualTo(
                 expected);
     }
 
