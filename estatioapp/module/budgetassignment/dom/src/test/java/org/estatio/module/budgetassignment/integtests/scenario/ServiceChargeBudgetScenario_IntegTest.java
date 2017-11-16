@@ -1,4 +1,4 @@
-package org.estatio.integtests.budgetassignment;
+package org.estatio.module.budgetassignment.integtests.scenario;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,7 +15,15 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -28,18 +36,15 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideRepository
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideType;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValue;
 import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepository;
+import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budget.BudgetRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.dom.keytable.KeyTable;
+import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
+import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
+import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -48,19 +53,13 @@ import org.estatio.module.lease.dom.LeaseItemStatus;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
-import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
-import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.lease.fixtures.lease.LeasesForBudNl;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class
 
-ServiceChargeBudgetScenario_IntegTest extends EstatioIntegrationTest {
+ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
     PropertyRepository propertyRepository;
@@ -106,7 +105,6 @@ ServiceChargeBudgetScenario_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PartitioningAndItemsForBud());
             }
         });

@@ -1,4 +1,4 @@
-package org.estatio.integtests.budgetassignment;
+package org.estatio.module.budgetassignment.integtests.calc;
 
 import java.util.List;
 
@@ -12,22 +12,21 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
+import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
+import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BudgetCalculationRunRepository_IntegTest extends EstatioIntegrationTest {
+public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
     @Inject
     BudgetRepository budgetRepository;
@@ -50,7 +49,6 @@ public class BudgetCalculationRunRepository_IntegTest extends EstatioIntegration
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
