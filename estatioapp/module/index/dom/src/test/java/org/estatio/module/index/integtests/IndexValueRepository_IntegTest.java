@@ -16,28 +16,24 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.index;
+package org.estatio.module.index.integtests;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
+
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.dom.IndexValueRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.fixtures.EstatioOperationalTeardownFixture;
-import org.estatio.module.application.fixtures.EstatioReferenceDataTeardownFixture;
 import org.estatio.module.index.fixtures.IndexRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndexValueRepository_IntegTest extends EstatioIntegrationTest {
+public class IndexValueRepository_IntegTest extends IndexModuleIntegTestAbstract {
 
     @Inject
     IndexRepository indexRepository;
@@ -45,11 +41,6 @@ public class IndexValueRepository_IntegTest extends EstatioIntegrationTest {
     IndexValueRepository indexValueRepository;
 
     public static class FindIndexValueByIndexAndStartDate extends IndexValueRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
 
         @Test
         public void happyCase() throws Exception {
@@ -64,16 +55,16 @@ public class IndexValueRepository_IntegTest extends EstatioIntegrationTest {
 
     public static class FindLastByIndex extends IndexValueRepository_IntegTest {
 
-        @Before
-        public void setupData() {
-            runFixtureScript(
-                    // tearing down because of a failure which suggests that one of the other tests is creating new index values...
-                    // (not sure which one though :-( )
-                    new EstatioOperationalTeardownFixture(),
-                    new EstatioReferenceDataTeardownFixture(),
-                    new EstatioBaseLineFixture()
-            );
-        }
+//        @Before
+//        public void setupData() {
+//            runFixtureScript(
+//                    // tearing down because of a failure which suggests that one of the other tests is creating new index values...
+//                    // (not sure which one though :-( )
+//                    new EstatioOperationalTeardownFixture(),
+//                    new EstatioReferenceDataTeardownFixture(),
+//                    new EstatioBaseLineFixture()
+//            );
+//        }
 
         @Test
         public void happyCase() throws Exception {

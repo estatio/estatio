@@ -16,33 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.index;
+package org.estatio.module.index.integtests;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
+
+import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexBaseRepository;
 import org.estatio.module.index.dom.IndexRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.index.fixtures.IndexRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IndexBaseRepository_IntegTest extends EstatioIntegrationTest {
+public class IndexBaseRepository_IntegTest extends IndexModuleIntegTestAbstract {
 
     public static class FindByIndexAndDate extends IndexBaseRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
 
         @Inject
         private IndexRepository indexRepository;
