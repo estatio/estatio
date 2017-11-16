@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.invoicing;
+package org.estatio.module.lease.integtests.migrations;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -32,11 +32,11 @@ import org.apache.isis.applib.services.factory.FactoryService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
+import org.estatio.module.lease.app.InvoiceServiceMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -46,23 +46,21 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.module.application.migrations.CreateRetroInvoices;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.lease.migrations.CreateRetroInvoices;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class CreateRetroInvoices_IntegTest extends EstatioIntegrationTest {
+public class CreateRetroInvoices_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }

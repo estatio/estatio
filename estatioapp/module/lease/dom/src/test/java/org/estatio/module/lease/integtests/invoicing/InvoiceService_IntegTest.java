@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.invoicing;
+package org.estatio.module.lease.integtests.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,17 +31,19 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.base.integtests.VT;
 
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.lease.app.InvoiceMenu;
-import org.estatio.module.lease.app.InvoiceServiceMenu;
-import org.estatio.module.lease.app.LeaseMenu;
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.lease.app.InvoiceMenu;
+import org.estatio.module.lease.app.InvoiceServiceMenu;
+import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -52,8 +54,6 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
@@ -61,15 +61,14 @@ import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfPoison003G
 import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.application.migrations.CreateInvoiceNumerators;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class InvoiceService_IntegTest extends EstatioIntegrationTest {
+public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
 
     private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
 
@@ -114,7 +113,6 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
@@ -200,7 +198,7 @@ public class InvoiceService_IntegTest extends EstatioIntegrationTest {
             index.newIndexValue(VT.ld(2013, 11, 1), VT.bd(110));
             index.newIndexValue(VT.ld(2014, 12, 1), VT.bd(115));
 
-            nextTransaction();
+            transactionService.nextTransaction();
 
             lease.verifyUntil(VT.ld(2015, 3, 31));
             final LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));

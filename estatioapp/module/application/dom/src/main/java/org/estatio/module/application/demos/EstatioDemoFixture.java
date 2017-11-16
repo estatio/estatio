@@ -21,7 +21,7 @@ package org.estatio.module.application.demos;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.application.migrations.CreateInvoiceNumerators;
+import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;

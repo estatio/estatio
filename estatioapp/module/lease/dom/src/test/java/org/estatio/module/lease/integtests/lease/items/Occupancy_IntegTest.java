@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.items;
+package org.estatio.module.lease.integtests.lease.items;
 
 import javax.inject.Inject;
 
@@ -25,21 +25,20 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class Occupancy_IntegTest extends EstatioIntegrationTest {
+public class Occupancy_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class GetBrand extends Occupancy_IntegTest {
 
@@ -48,8 +47,6 @@ public class Occupancy_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });

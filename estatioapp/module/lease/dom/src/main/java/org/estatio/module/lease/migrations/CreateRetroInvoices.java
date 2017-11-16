@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.migrations;
+package org.estatio.module.lease.migrations;
 
 import java.util.List;
 

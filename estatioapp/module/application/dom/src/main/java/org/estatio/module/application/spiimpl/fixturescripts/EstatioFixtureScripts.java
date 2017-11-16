@@ -39,7 +39,7 @@ import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
-import org.estatio.module.application.migrations.CreateRetroInvoices;
+import org.estatio.module.lease.migrations.CreateRetroInvoices;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.Lease;
 
