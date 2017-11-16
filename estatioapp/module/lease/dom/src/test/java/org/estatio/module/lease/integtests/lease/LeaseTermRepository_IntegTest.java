@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,24 +44,23 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForTax;
 import org.estatio.module.lease.dom.LeaseTermRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.unittestsupport.dom.assertions.Asserting.assertType;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LeaseTermRepository_IntegTest extends EstatioIntegrationTest {
+public class LeaseTermRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }

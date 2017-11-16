@@ -165,7 +165,6 @@ language governing permissions and limitations under the License.
             <groupId>org.estatio</groupId>
             <artifactId>estatio-base</artifactId>
             <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

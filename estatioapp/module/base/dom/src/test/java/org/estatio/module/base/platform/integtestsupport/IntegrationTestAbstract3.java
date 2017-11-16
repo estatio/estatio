@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,8 +44,11 @@ import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.AppManifestAbstract;
 import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.RecoverableException;
+import org.apache.isis.applib.clock.Clock;
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -55,9 +59,10 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
+import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
-import org.isisaddons.module.base.platform.applib.Module;
+import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 public abstract class IntegrationTestAbstract3 {
 
@@ -129,6 +134,8 @@ public abstract class IntegrationTestAbstract3 {
             // used to bootstrap the system onto thread-loca
             IsisSystemForTest.set(isft);
             isftAppManifest.set(appManifest);
+
+            TickingFixtureClock.replaceExisting();
         }
     }
 
@@ -264,6 +271,39 @@ public abstract class IntegrationTestAbstract3 {
     protected <T> T mixin(final Class<T> mixinClass, final Object mixedIn) {
         return factoryService.mixin(mixinClass, mixedIn);
     }
+
+
+    /**
+     * To use instead of {@link #getFixtureClock()}'s {@link FixtureClock#setDate(int, int, int)} ()}.
+     */
+    protected void setFixtureClockDate(final LocalDate date) {
+        setFixtureClockDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+    }
+
+    /**
+     * To use instead of {@link #getFixtureClock()}'s {@link FixtureClock#setDate(int, int, int)} ()}.
+     */
+    protected void setFixtureClockDate(final int year, final int month, final int day) {
+        final Clock instance = Clock.getInstance();
+
+        if(instance instanceof TickingFixtureClock) {
+            TickingFixtureClock.reinstateExisting();
+            getFixtureClock().setDate(year, month, day);
+            TickingFixtureClock.replaceExisting();
+        }
+
+        if(instance instanceof FixtureClock) {
+            getFixtureClock().setDate(year, month, day);
+        }
+    }
+
+    /**
+     * If just require the current time, use {@link ClockService}
+     */
+    private FixtureClock getFixtureClock() {
+        return ((FixtureClock)FixtureClock.getInstance());
+    }
+
 
 
     /**

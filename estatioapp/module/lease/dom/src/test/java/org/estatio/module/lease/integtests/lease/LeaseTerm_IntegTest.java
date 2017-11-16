@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,8 +38,8 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -50,14 +50,13 @@ import org.estatio.module.lease.dom.LeaseTermStatus;
 import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -66,7 +65,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertNotNull;
 
-public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
+public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -109,7 +108,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
                 runFixtureScript(new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
-                        executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     }
@@ -290,7 +289,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
@@ -337,7 +336,7 @@ public class LeaseTerm_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }

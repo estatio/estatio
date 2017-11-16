@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,13 +37,14 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
@@ -51,27 +52,25 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.unittestsupport.dom.assertions.Asserting.assertType;
 
-public class LeaseItem_IntegTest extends EstatioIntegrationTest {
+public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                 executionContext.executeChild(this, new LeaseForKalPoison001Nl());
                 executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());

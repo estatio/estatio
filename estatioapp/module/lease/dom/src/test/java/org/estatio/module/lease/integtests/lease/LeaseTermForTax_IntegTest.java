@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import java.math.BigDecimal;
 
@@ -28,24 +28,23 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
-import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseItemRepository;
-import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTermForTax;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class LeaseTermForTax_IntegTest extends EstatioIntegrationTest {
+public class LeaseTermForTax_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -63,7 +62,7 @@ public class LeaseTermForTax_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
                     executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
                 }

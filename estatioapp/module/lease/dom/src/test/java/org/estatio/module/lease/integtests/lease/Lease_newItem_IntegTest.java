@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import javax.inject.Inject;
 
@@ -30,25 +30,25 @@ import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.integtests.VT;
+
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.incode.module.base.integtests.VT;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
+public class Lease_newItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     LeaseRepository leaseRepository;
@@ -63,7 +63,7 @@ public class Lease_newItem_IntegTest extends EstatioIntegrationTest {
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                 executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
             }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.module.lease.integtests.lease;
 
 import java.util.SortedSet;
 
@@ -42,37 +42,36 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
-import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.incode.module.base.integtests.VT.ld;
 
-public class Lease_IntegTest extends EstatioIntegrationTest {
+public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -93,7 +92,6 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
             });
@@ -129,7 +127,6 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
             });
@@ -173,7 +170,6 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
@@ -205,7 +201,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
@@ -223,10 +219,10 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
         @Before
         public void setupData() {
-            runScript(new FixtureScript() {
+            runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                     executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
                 }
             });
@@ -295,7 +291,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
@@ -346,7 +342,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfMediax002Gb());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
@@ -370,7 +366,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
             // commit to get the BigDecimals to be stored to the correct
             // precision by DN.
-            nextTransaction();
+            transactionService.nextTransaction();
 
             // and reload
             leaseMediax = leaseRepository.findLeaseByReference("OXF-MEDIAX-002");
@@ -400,7 +396,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
 
             // commit to get the BigDecimals to be stored to the correct
             // precision by DN; reload
-            nextTransaction();
+            transactionService.nextTransaction();
             leasePoison = leaseRepository.findLeaseByReference("OXF-POISON-003");
             leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, VT.ld(2011, 1, 1), VT.bi(1));
             leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2011, 1, 1), VT.bi(1));
@@ -428,7 +424,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
@@ -465,7 +461,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
 
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
@@ -506,7 +502,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
@@ -574,7 +570,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
@@ -615,7 +611,7 @@ public class Lease_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+
                     executionContext.executeChild(this, new LeaseForOxfPoison003Gb());
                 }
             });
