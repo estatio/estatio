@@ -42,7 +42,8 @@ import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -78,6 +79,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends EstatioIntegrationTe
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
                 executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
+                executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }

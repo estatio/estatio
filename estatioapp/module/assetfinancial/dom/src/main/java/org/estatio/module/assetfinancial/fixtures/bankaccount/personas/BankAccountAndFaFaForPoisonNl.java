@@ -16,36 +16,31 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMiracl005Gb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
 
-public class BankAccountAndFaFaForMiracleGb extends BankAccountAndFaFaAbstract {
+public class BankAccountAndFaFaForPoisonNl extends BankAccountAndFaFaAbstract {
 
-    public static final String REF = "NL31ABNA0580744439";
-    public static final String PARTY_REF = OrganisationForMiracleGb.REF;
+    public static final String REF = "NL31ABNA0580744437";
+    public static final String PARTY_REF = OrganisationForPoisonNl.REF;
 
-    public BankAccountAndFaFaForMiracleGb() {
+    public BankAccountAndFaFaForPoisonNl() {
         this(null, null);
     }
 
-    public BankAccountAndFaFaForMiracleGb(String friendlyName, String localName) {
+    public BankAccountAndFaFaForPoisonNl(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new LeaseForOxfMiracl005Gb());
-
-        // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                null, // no property = no FAFA
+                null, // no property = no FAFA,
                 executionContext);
     }
 

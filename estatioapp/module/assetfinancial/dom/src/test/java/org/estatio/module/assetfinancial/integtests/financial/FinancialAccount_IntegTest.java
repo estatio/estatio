@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.financial;
+package org.estatio.module.assetfinancial.integtests.financial;
 
 import java.util.List;
 
@@ -38,22 +38,21 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
+public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbstract {
 
     public static class GetOwner extends FinancialAccount_IntegTest {
 
@@ -62,7 +61,6 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldGb());
                 }
             });
@@ -107,7 +105,6 @@ public class FinancialAccount_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
                 }
             });

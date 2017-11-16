@@ -19,8 +19,10 @@
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
 import java.math.BigDecimal;
+
 import org.joda.time.LocalDate;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.fixtures.FinancialAccountTransactionAbstract;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
@@ -37,10 +39,6 @@ public class FinancialAccountTransactionForTopModel extends FinancialAccountTran
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
-
-        // exec
         createFinancialAccountTransaction(OrganisationForTopModelGb.REF, new LocalDate(2014, 7, 1), new BigDecimal(1000), executionContext);
         createFinancialAccountTransaction(OrganisationForTopModelGb.REF, new LocalDate(2014, 7, 2), new BigDecimal(2000), executionContext);
     }

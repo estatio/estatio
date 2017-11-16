@@ -32,6 +32,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
+import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
+import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -41,17 +46,13 @@ import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccoun
 import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccount_verify;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.capex.document.IncomingDocumentPresentationSubscriber_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
@@ -179,6 +180,7 @@ public class TaskForBankAccountVerification_IntegTest extends EstatioIntegration
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                     executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 }
             });

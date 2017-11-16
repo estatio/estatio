@@ -38,7 +38,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.integtests.EstatioIntegrationTest;
 
@@ -57,6 +57,7 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
                     executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
+                    executionContext.executeChild(this, new LeaseForKalPoison001Nl());
                     executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                 }
             });

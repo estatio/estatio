@@ -16,9 +16,8 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
@@ -38,10 +37,7 @@ public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
-        // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,

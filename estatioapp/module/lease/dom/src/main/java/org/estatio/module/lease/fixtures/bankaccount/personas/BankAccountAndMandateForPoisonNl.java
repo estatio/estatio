@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;

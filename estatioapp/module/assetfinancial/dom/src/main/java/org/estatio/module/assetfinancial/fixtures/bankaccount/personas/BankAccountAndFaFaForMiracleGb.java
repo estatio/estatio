@@ -16,39 +16,31 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMiracleGb;
 
-public class BankAccountAndFaFaForHelloWorldGb extends BankAccountAndFaFaAbstract {
+public class BankAccountAndFaFaForMiracleGb extends BankAccountAndFaFaAbstract {
 
-    public static final String REF = "GB31ABNA0580744434";
+    public static final String REF = "NL31ABNA0580744439";
+    public static final String PARTY_REF = OrganisationForMiracleGb.REF;
 
-    public static final String PARTY_REF = OrganisationForHelloWorldGb.REF;
-    public static final String PROPERTY_REF = PropertyAndOwnerAndManagerForOxfGb.REF;
-
-    public BankAccountAndFaFaForHelloWorldGb() {
+    public BankAccountAndFaFaForMiracleGb() {
         this(null, null);
     }
 
-    public BankAccountAndFaFaForHelloWorldGb(String friendlyName, String localName) {
+    public BankAccountAndFaFaForMiracleGb(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-
-        // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                PROPERTY_REF, // create FAFA
+                null, // no property = no FAFA
                 executionContext);
     }
 
