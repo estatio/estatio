@@ -32,6 +32,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -61,6 +62,9 @@ import org.estatio.module.base.platform.applib.Module;
 public abstract class IntegrationTestAbstract3<M extends Module>  {
 
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationTestAbstract3.class);
+
+    @Rule
+    public ExpectedException expectedExceptions = ExpectedException.none();
 
 
     protected final M module;

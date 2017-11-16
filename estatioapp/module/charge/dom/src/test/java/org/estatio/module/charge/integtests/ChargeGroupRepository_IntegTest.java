@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.charge;
+package org.estatio.module.charge.integtests;
 
 import javax.inject.Inject;
 
@@ -25,23 +25,16 @@ import org.junit.Test;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ChargeGroupRepository_IntegTest extends EstatioIntegrationTest {
+public class ChargeGroupRepository_IntegTest extends ChargeModuleIntegTestAbstract {
 
     @Inject
     ChargeGroupRepository chargeGroupRepository;
 
     public static class FindChargeGroup extends ChargeGroupRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
 
         @Test
         public void whenExists() throws Exception {
@@ -52,11 +45,6 @@ public class ChargeGroupRepository_IntegTest extends EstatioIntegrationTest {
     }
 
     public static class CreateChargeGroup extends ChargeGroupRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
 
         @Test
         public void happyCase() throws Exception {

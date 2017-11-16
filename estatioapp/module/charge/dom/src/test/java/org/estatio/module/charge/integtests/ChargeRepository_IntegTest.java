@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.charge;
+package org.estatio.module.charge.integtests;
 
 import java.util.List;
 
@@ -29,21 +29,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
-public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
+public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {
 
     public static class FindCharge extends ChargeRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new EstatioBaseLineFixture());
-        }
 
         @Inject
         private ChargeRepository chargeRepository;
@@ -61,10 +54,6 @@ public class ChargeRepository_IntegTest extends EstatioIntegrationTest {
 
         private List<Charge> gbCharges;
 
-        @Before
-        public void setupData() {
-            runScript(new EstatioBaseLineFixture());
-        }
 
         @Inject
         private ChargeRepository chargeRepository;
