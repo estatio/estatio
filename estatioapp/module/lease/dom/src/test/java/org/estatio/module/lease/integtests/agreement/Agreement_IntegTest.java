@@ -1,4 +1,4 @@
-package org.estatio.integtests.agreement;
+package org.estatio.module.lease.integtests.agreement;
 
 import javax.inject.Inject;
 
@@ -15,20 +15,19 @@ import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class Agreement_IntegTest extends EstatioIntegrationTest {
+public class Agreement_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     AgreementRepository agreementRepository;
@@ -51,10 +50,9 @@ public class Agreement_IntegTest extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new LeaseForKalPoison001Nl());
             }
         });

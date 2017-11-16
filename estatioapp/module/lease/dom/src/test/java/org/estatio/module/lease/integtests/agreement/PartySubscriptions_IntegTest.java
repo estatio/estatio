@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.agreement;
+package org.estatio.module.lease.integtests.agreement;
 
 import javax.inject.Inject;
 
@@ -38,20 +38,19 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.subscriptions.PartySubscriptions;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
+public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     PartyRepository partyRepository;
@@ -84,7 +83,6 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
@@ -142,10 +140,8 @@ public class PartySubscriptions_IntegTest extends EstatioIntegrationTest {
 
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.SUPERUSER.getRoleName()),
-                    new Runnable() {
-                        @Override public void run() {
-                            wrap(oldParty).delete(null);
-                        }
+                    () -> {
+                        wrap(oldParty).delete(null);
                     });
             // when
         }

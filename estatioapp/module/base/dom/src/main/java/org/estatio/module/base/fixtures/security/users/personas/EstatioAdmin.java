@@ -17,10 +17,12 @@
 package org.estatio.module.base.fixtures.security.users.personas;
 
 import java.util.Arrays;
+
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioAdminRoleAndPermissions;
+
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
+import org.estatio.module.base.fixtures.security.perms.personas.EstatioAdminRoleAndPermissions;
 
 public class EstatioAdmin extends AbstractUserAndRolesFixtureScript {
 

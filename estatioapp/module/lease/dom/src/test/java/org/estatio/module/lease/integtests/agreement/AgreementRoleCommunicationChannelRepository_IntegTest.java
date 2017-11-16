@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.agreement;
+package org.estatio.module.lease.integtests.agreement;
 
 import javax.inject.Inject;
 
@@ -25,20 +25,20 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+
+import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AgreementRoleCommunicationChannelRepository_IntegTest extends EstatioIntegrationTest {
+public class AgreementRoleCommunicationChannelRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class FindByCommunicationChannel extends AgreementRoleCommunicationChannelRepository_IntegTest {
 
@@ -47,8 +47,6 @@ public class AgreementRoleCommunicationChannelRepository_IntegTest extends Estat
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });

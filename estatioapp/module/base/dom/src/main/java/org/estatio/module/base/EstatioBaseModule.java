@@ -45,8 +45,15 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioAdminRoleAndPermissions;
+import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
+import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUser;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInFrance;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInGreatBritain;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInItaly;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInNetherlands;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInSweden;
 
 @XmlRootElement(name = "module")
 public final class EstatioBaseModule extends ModuleAbstract {
@@ -87,9 +94,21 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 executionContext.executeChild(this, new TickingClockFixture());
                 executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
 
-                // set up some standard user + roles personas
-                executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
+                // set up 3 estatio roles
+                executionContext.executeChild(this, new EstatioRolesAndPermissions());
+
+                // estatio-admin user with the estatio-admin role + superuser
                 executionContext.executeChild(this, new EstatioAdmin());
+                executionContext.executeChild(this, new EstatioAdmin_Has_EstatioSuperuserRole());
+
+                // bunch of users with estatio-user role
+                executionContext.executeChild(this, new EstatioUser());
+                executionContext.executeChild(this, new EstatioUserInFrance());
+                executionContext.executeChild(this, new EstatioUserInGreatBritain());
+                executionContext.executeChild(this, new EstatioUserInItaly());
+                executionContext.executeChild(this, new EstatioUserInNetherlands());
+                executionContext.executeChild(this, new EstatioUserInSweden());
+
             }
         };
     }

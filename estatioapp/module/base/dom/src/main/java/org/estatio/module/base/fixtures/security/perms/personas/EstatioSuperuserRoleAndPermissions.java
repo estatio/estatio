@@ -20,9 +20,11 @@ import org.isisaddons.module.security.dom.permission.ApplicationPermissionMode;
 import org.isisaddons.module.security.dom.permission.ApplicationPermissionRule;
 import org.isisaddons.module.security.seed.scripts.AbstractRoleAndPermissionsFixtureScript;
 
+import org.estatio.module.base.dom.EstatioRole;
+
 public class EstatioSuperuserRoleAndPermissions extends AbstractRoleAndPermissionsFixtureScript {
 
-    public static final String ROLE_NAME = "estatio-superuser";
+    public static final String ROLE_NAME = EstatioRole.SUPERUSER.getRoleName();
 
     public EstatioSuperuserRoleAndPermissions() {
         super(ROLE_NAME, "Estatio Superuser");

@@ -21,10 +21,6 @@ import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
 import org.isisaddons.module.togglz.glue.seed.TogglzModuleAdminRole;
 
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioAdminRoleAndPermissions;
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioSuperuserRoleAndPermissions;
-import org.estatio.module.base.fixtures.security.perms.personas.EstatioUserRoleAndPermissions;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFrOther;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
@@ -37,6 +33,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.personas.Application
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlOther;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSe;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSeOther;
+import org.estatio.module.base.fixtures.security.perms.personas.EstatioRolesAndPermissions;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioAdminRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_EstatioSuperuserRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioAdmin_Has_IsisSecurityModuleAdminRole;
@@ -45,7 +42,6 @@ import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUserIn
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUserInItaly_Has_IsisSecurityModuleRegularRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUserInNetherlands_Has_IsisSecurityModuleRegularRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUserInSweden_Has_IsisSecurityModuleRegularRole;
-import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUser_Has_EstatioPoweruserRole;
 import org.estatio.module.base.fixtures.security.userrole.personas.EstatioUser_Has_IsisSecurityModuleRegularRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioUser;
@@ -77,7 +73,9 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
         executionContext.executeChild(this, new ApplicationTenancyForGb());
         executionContext.executeChild(this, new ApplicationTenancyForGbOther());
 
+        // perms (role/features)
         executionContext.executeChild(this, new EstatioRolesAndPermissions());
+
         executionContext.executeChild(this, new EstatioAdmin());
         executionContext.executeChild(this, new EstatioUser());
         executionContext.executeChild(this, new EstatioUserInFrance());
@@ -88,23 +86,17 @@ public class EstatioSecurityModuleSeedFixture extends DiscoverableFixtureScript 
 
         executionContext.executeChild(this, new TogglzModuleAdminRole());
 
-        // perms (role/features)
-        executionContext.executeChild(this, new EstatioUserRoleAndPermissions());
-        executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
-        executionContext.executeChild(this, new EstatioSuperuserRoleAndPermissions());
-
         // user/role (users with global app tenancy)
         executionContext.executeChild(this, new EstatioAdmin_Has_EstatioAdminRole());
         executionContext.executeChild(this, new EstatioAdmin_Has_EstatioSuperuserRole());
-        executionContext.executeChild(this, new EstatioAdmin_Has_TogglzAdminRole());
         executionContext.executeChild(this, new EstatioAdmin_Has_IsisSecurityModuleAdminRole());
+        executionContext.executeChild(this, new EstatioAdmin_Has_TogglzAdminRole());
 
-        executionContext.executeChild(this, new EstatioUser_Has_EstatioPoweruserRole());
+
         executionContext.executeChild(this, new EstatioUser_Has_IsisSecurityModuleRegularRole());
 
         // user/roles (users with country-specific app tenancy)
         executionContext.executeChild(this, new EstatioUserInFrance_Has_IsisSecurityModuleRegularRole());
-        executionContext.executeChild(this, new EstatioUserInGreatBritain());
         executionContext.executeChild(this, new EstatioUserInItaly_Has_IsisSecurityModuleRegularRole());
         executionContext.executeChild(this, new EstatioUserInNetherlands_Has_IsisSecurityModuleRegularRole());
         executionContext.executeChild(this, new EstatioUserInSweden_Has_IsisSecurityModuleRegularRole());

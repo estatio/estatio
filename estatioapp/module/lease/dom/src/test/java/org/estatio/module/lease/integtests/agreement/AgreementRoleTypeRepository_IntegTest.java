@@ -1,4 +1,4 @@
-package org.estatio.integtests.agreement;
+package org.estatio.module.lease.integtests.agreement;
 
 import java.util.List;
 
@@ -17,17 +17,16 @@ import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTest {
+public class AgreementRoleTypeRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     PartyRepository partyRepository;
@@ -51,7 +50,6 @@ public class AgreementRoleTypeRepository_IntegTest extends EstatioIntegrationTes
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
