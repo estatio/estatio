@@ -16,18 +16,27 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.spiimpl.document.binders;
+package org.estatio.module.invoice.integtests;
 
-import org.estatio.module.invoice.dom.Invoice;
+import javax.inject.Inject;
 
-/**
- * for PrelimLetter or InvoiceNote
- */
-public class StringInterpolatorToSsrsUrlOfInvoice extends StringInterpolatorToSsrsUrlAbstract<Invoice> {
+import org.junit.Test;
 
-    public StringInterpolatorToSsrsUrlOfInvoice() {
-        super(Invoice.class);
+import org.apache.isis.applib.services.jaxb.JaxbService;
+
+import org.estatio.module.invoice.EstatioInvoiceModule;
+
+public class BootstrapInvoiceModuleIntegTest extends InvoiceModuleIntegTestAbstract {
+
+    @Test
+    public void serializes_module() throws Exception {
+
+        final EstatioInvoiceModule module = new EstatioInvoiceModule();
+
+        final String s = jaxbService.toXml(module);
+        System.out.println(s);
     }
 
-
+    @Inject
+    JaxbService jaxbService;
 }

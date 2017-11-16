@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.module.lease.integtests.invoicing.docs;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Percentage;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -60,15 +61,20 @@ import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
-import org.estatio.module.lease.dom.invoicing.comms.PaperclipRoleNames;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease_overrideSendTo;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_attachSupportingDocument;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_prepare;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_sendByEmail;
 import org.estatio.module.lease.dom.invoicing.comms.InvoiceForLease_sendByPost;
+import org.estatio.module.lease.dom.invoicing.comms.PaperclipRoleNames;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc_communication;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc_communicationState;
@@ -79,30 +85,23 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimL
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_communicationState;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_document;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_documentState;
-import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_invoiceDocs;
 import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_ForLease_preliminaryLetters;
-import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease_overrideSendTo;
+import org.estatio.module.lease.dom.invoicing.summary.comms.Invoice_invoiceDocs;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.application.seed.DocumentTypesAndTemplatesFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest {
+public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
@@ -298,7 +297,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(prelimLetterDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
 
             // is attached to only invoice
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -387,7 +386,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoiceDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
 
             // is attached to invoice and also the receipt
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
@@ -483,7 +482,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(prelimLetterDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
 
             // is attached to only invoice
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -561,7 +560,7 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
             assertThat(invoiceDoc).isSameAs(document);
             assertThat(document.getState()).isEqualTo(DocumentState.RENDERED);
 
-            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
 
             // is attached to invoice and also the receipt
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
@@ -914,13 +913,13 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
     void assertNoCommunicationFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {
-        assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
-        assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
     }
 
     void assertNoDocumentFor(final DocAndCommForPrelimLetter prelimLetterViewModel) {
-        assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
-        assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
     }
 
     void assertNoDocumentOrCommunicationsFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
@@ -929,13 +928,13 @@ public class Invoice_DocumentManagement_IntegTest extends EstatioIntegrationTest
     }
 
     void assertNoCommunicationFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
-        assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
-        assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
     }
 
     void assertNoDocumentFor(final DocAndCommForInvoiceDoc invoiceDocViewModel) {
-        assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
-        assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
+        Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
     }
 
     <T extends CommunicationChannel> T sendToFor(final Invoice invoice, final Class<T> communicationChannelClass)  {

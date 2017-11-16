@@ -43,8 +43,8 @@ import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 import org.isisaddons.module.fakedata.FakeDataModule;
 
 import org.estatio.app.EstatioAppManifest;
-import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
+import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 /**
  * Base class for integration tests.

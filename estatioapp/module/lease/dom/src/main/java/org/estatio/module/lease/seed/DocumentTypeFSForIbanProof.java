@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.seed;
+package org.estatio.module.lease.seed;
 
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
-public class DocumentTypeFSForIncoming extends DocumentTemplateFSAbstract {
+public class DocumentTypeFSForIbanProof extends DocumentTemplateFSAbstract {
 
 
     protected DocumentType upsertType(
@@ -35,9 +35,7 @@ public class DocumentTypeFSForIncoming extends DocumentTemplateFSAbstract {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
-        upsertType(DocumentTypeData.INCOMING, executionContext);
-        upsertType(DocumentTypeData.INCOMING_INVOICE, executionContext);
-        upsertType(DocumentTypeData.INCOMING_ORDER, executionContext);
+        upsertType(DocumentTypeData.IBAN_PROOF, executionContext);
     }
 
 

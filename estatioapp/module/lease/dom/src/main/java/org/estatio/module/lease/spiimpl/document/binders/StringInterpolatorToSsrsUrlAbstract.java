@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.spiimpl.document.binders;
+package org.estatio.module.lease.spiimpl.document.binders;
 
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 

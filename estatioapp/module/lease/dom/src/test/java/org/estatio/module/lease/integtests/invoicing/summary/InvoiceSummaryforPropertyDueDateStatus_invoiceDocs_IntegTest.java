@@ -16,13 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice.viewmodel;
+package org.estatio.module.lease.integtests.invoicing.summary;
 
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -45,6 +46,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc;
@@ -52,18 +54,16 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoice
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc_communicationState;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc_document;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForInvoiceDoc_documentState;
-import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_invoiceDocs;
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs;
+import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_invoiceDocs;
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_sendByEmailInvoiceDocs;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.application.seed.DocumentTypesAndTemplatesFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extends EstatioIntegrationTest {
+public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class ActionInvocationIntegTest extends
             InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest {
@@ -73,7 +73,6 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
@@ -94,10 +93,10 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             assertThat(invoiceDocViewModel.getSendTo()).isNotNull();
             assertThat(invoiceDocViewModel.getSendTo()).isInstanceOf(EmailAddress.class);
 
-            assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
 
             // when prepare
             mixin(InvoiceSummaryForPropertyDueDateStatus_backgroundPrepareInvoiceDocs.class, summary).$$();
@@ -126,10 +125,10 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             invoiceDoc = mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$();
             assertThat(invoiceDoc).isNotNull();
 
-            assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isEqualTo(DocumentState.NOT_RENDERED);
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isEqualTo(DocumentState.NOT_RENDERED);
 
-            assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isNull();
 
             // and also
             assertThat(invoiceDoc.getName()).isNotNull();
@@ -155,7 +154,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             invoiceDocViewModel = invoiceDocViewModelOf(summary);
 
             // then
-            assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isEqualTo(DocumentState.RENDERED);
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_documentState.class, invoiceDocViewModel).$$()).isEqualTo(DocumentState.RENDERED);
 
             invoiceDoc = mixin(DocAndCommForInvoiceDoc_document.class, invoiceDocViewModel).$$();
             assertThat(invoiceDoc.getState()).isEqualTo(DocumentState.RENDERED);
@@ -173,7 +172,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             // then
             final Communication invoiceDocComm = mixin(DocAndCommForInvoiceDoc_communication.class, invoiceDocViewModel).$$();
             assertThat(invoiceDocComm).isNotNull();
-            assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isEqualTo(CommunicationState.PENDING);
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isEqualTo(CommunicationState.PENDING);
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(invoiceDoc);
@@ -211,7 +210,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_invoiceDocs_IntegTest extend
             invoiceDocViewModel = invoiceDocViewModelOf(summary);
 
             // then
-            assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isEqualTo(CommunicationState.SENT);
+            Assertions.assertThat(mixin(DocAndCommForInvoiceDoc_communicationState.class, invoiceDocViewModel).$$()).isEqualTo(CommunicationState.SENT);
         }
 
     }

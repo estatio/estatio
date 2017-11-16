@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice.viewmodel;
+package org.estatio.module.lease.integtests.invoicing.summary;
 
 import java.util.List;
 
@@ -39,15 +39,14 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRu
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForInvoiceRunRepository;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceSummaryRepository_IntegTest extends EstatioIntegrationTest {
+public class InvoiceSummaryRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class FindInvoicesByStatus extends InvoiceSummaryRepository_IntegTest {
 
@@ -56,7 +55,6 @@ public class InvoiceSummaryRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
@@ -85,7 +83,6 @@ public class InvoiceSummaryRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseForKalPoison001Nl());
                 }
             });

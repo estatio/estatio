@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.module.lease.integtests.invoicing;
 
 import java.util.List;
 
@@ -35,10 +35,11 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.integtests.VT;
 
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.lease.app.LeaseMenu;
-import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
@@ -47,14 +48,12 @@ import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
@@ -64,16 +63,16 @@ import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class Invoice_IntegTest extends EstatioIntegrationTest {
+public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     InvoiceRepository invoiceRepository;
@@ -103,8 +102,6 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }
             });
@@ -156,8 +153,6 @@ public class Invoice_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
 
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());

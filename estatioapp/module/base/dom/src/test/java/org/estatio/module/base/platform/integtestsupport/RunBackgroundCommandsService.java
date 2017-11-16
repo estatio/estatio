@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests;
+package org.estatio.module.base.platform.integtestsupport;
 
 import java.util.List;
 

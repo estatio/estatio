@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.subscriptions;
+package org.estatio.module.lease.subscriptions;
 
 import java.util.List;
 

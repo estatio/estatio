@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.module.lease.integtests.invoicing;
 
 import java.util.List;
 
@@ -39,32 +39,31 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.invoice.subscriptions.CommunicationChannelSubscriptions;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.invoice.subscriptions.CommunicationChannelSubscriptions;
+import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -72,7 +71,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
-public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrationTest {
+public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     InvoiceRepository invoiceRepository;
@@ -109,7 +108,6 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
@@ -252,7 +250,6 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
@@ -297,7 +294,6 @@ public class CommunicationChannelSubscriptions_IntegTest extends EstatioIntegrat
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }

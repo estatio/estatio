@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.seed;
+package org.estatio.module.lease.seed;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,11 +40,11 @@ import org.incode.module.document.dom.impl.rendering.RenderingStrategyRepository
 import org.incode.module.document.dom.impl.types.DocumentType;
 import org.incode.module.document.fixture.DocumentTemplateFSAbstract;
 
-import org.estatio.module.application.spiimpl.document.binders.AttachToNone;
-import org.estatio.module.application.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
-import org.estatio.module.application.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
-import org.estatio.module.application.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice;
-import org.estatio.module.application.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
+import org.estatio.module.lease.spiimpl.document.binders.AttachToNone;
+import org.estatio.module.lease.spiimpl.document.binders.ForPrimaryDocOfInvoiceAttachToInvoiceAndAnyRelevantSupportingDocuments;
+import org.estatio.module.lease.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
+import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoice;
+import org.estatio.module.lease.spiimpl.document.binders.StringInterpolatorToSsrsUrlOfInvoiceSummary;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;

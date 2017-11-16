@@ -291,4 +291,7 @@ public abstract class IntegrationTestAbstract3 {
     protected TransactionService transactionService;
     @Inject
     protected SessionManagementService sessionManagementService;
+    @Inject
+    protected RunBackgroundCommandsService runBackgroundCommandsService;
+
 }

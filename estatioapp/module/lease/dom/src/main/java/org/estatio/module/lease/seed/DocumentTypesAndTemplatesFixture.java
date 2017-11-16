@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.seed;
+package org.estatio.module.lease.seed;
 
 import org.joda.time.LocalDate;
 

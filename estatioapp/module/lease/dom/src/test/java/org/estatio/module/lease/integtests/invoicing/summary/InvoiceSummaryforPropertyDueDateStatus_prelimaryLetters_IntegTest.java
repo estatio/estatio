@@ -16,13 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice.viewmodel;
+package org.estatio.module.lease.integtests.invoicing.summary;
 
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,17 +52,16 @@ import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimL
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_communicationState;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_document;
 import org.estatio.module.lease.dom.invoicing.summary.comms.DocAndCommForPrelimLetter_documentState;
-import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_preliminaryLetters;
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters;
+import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_preliminaryLetters;
 import org.estatio.module.lease.dom.invoicing.summary.comms.InvoiceSummaryForPropertyDueDateStatus_sendByEmailPreliminaryLetters;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.application.seed.DocumentTypesAndTemplatesFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest extends EstatioIntegrationTest {
+public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class ActionInvocationIntegTest extends
             InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest {
@@ -71,7 +71,6 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
                     executionContext.executeChild(this, new DocumentTypesAndTemplatesFixture());
@@ -92,10 +91,10 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             assertThat(prelimLetterViewModel.getSendTo()).isNotNull();
             assertThat(prelimLetterViewModel.getSendTo()).isInstanceOf(EmailAddress.class);
 
-            assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
 
             // when prepare
             mixin(InvoiceSummaryForPropertyDueDateStatus_backgroundPreparePreliminaryLetters.class, summary).$$();
@@ -107,10 +106,10 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             // then
             Document prelimLetterDoc = mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$();
             assertThat(prelimLetterDoc).isNotNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isEqualTo(DocumentState.NOT_RENDERED);
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isEqualTo(DocumentState.NOT_RENDERED);
 
-            assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$()).isNull();
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isNull();
 
             // and also
             assertThat(prelimLetterDoc.getName()).isNotNull();
@@ -136,7 +135,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             prelimLetterViewModel = prelimLetterViewModelOf(summary);
 
             // then
-            assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isEqualTo(DocumentState.RENDERED);
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_documentState.class, prelimLetterViewModel).$$()).isEqualTo(DocumentState.RENDERED);
 
             prelimLetterDoc = mixin(DocAndCommForPrelimLetter_document.class, prelimLetterViewModel).$$();
             assertThat(prelimLetterDoc.getState()).isEqualTo(DocumentState.RENDERED);
@@ -154,7 +153,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             // then
             final Communication prelimLetterComm = mixin(DocAndCommForPrelimLetter_communication.class, prelimLetterViewModel).$$();
             assertThat(prelimLetterComm).isNotNull();
-            assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isEqualTo(CommunicationState.PENDING);
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isEqualTo(CommunicationState.PENDING);
 
             // and PL doc now also attached to comm, invoice.buyer and invoice.seller (as well as invoice)
             paperclips = paperclipRepository.findByDocument(prelimLetterDoc);
@@ -193,7 +192,7 @@ public class InvoiceSummaryforPropertyDueDateStatus_prelimaryLetters_IntegTest e
             prelimLetterViewModel = prelimLetterViewModelOf(summary);
 
             // then
-            assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isEqualTo(CommunicationState.SENT);
+            Assertions.assertThat(mixin(DocAndCommForPrelimLetter_communicationState.class, prelimLetterViewModel).$$()).isEqualTo(CommunicationState.SENT);
         }
 
     }

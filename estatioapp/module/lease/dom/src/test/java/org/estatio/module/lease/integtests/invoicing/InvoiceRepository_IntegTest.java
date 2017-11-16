@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.module.lease.integtests.invoicing;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -42,38 +42,37 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.lease.app.NumeratorForCollectionMenu;
-import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.app.NumeratorForCollectionMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.imports.InvoiceImportLine;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -84,7 +83,7 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
+public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     InvoiceRepository invoiceRepository;
@@ -115,15 +114,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
 
     public static class CreateCollectionNumberNumerator extends InvoiceRepository_IntegTest {
 
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-                }
-            });
-        }
 
         @Test
         public void createThenFind() throws Exception {
@@ -152,8 +142,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
                 }
@@ -239,8 +227,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
@@ -270,8 +256,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 }
             });
@@ -319,8 +303,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
                 }
@@ -485,8 +467,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
                 }
@@ -530,8 +510,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }
             });
@@ -592,7 +570,6 @@ public class InvoiceRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }

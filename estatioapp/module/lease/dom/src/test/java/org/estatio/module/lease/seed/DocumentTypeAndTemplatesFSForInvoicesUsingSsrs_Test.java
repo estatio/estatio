@@ -1,4 +1,4 @@
-package org.estatio.module.application.seed;
+package org.estatio.module.lease.seed;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import org.incode.module.document.dom.impl.docs.DocumentTemplate;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.module.application.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.invoice.dom.DocumentTypeData;
@@ -32,6 +31,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.spiimpl.document.binders.FreemarkerModelOfPrelimLetterOrInvoiceDocForEmailCover;
 import org.estatio.module.party.dom.Organisation;
 
 public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs_Test {

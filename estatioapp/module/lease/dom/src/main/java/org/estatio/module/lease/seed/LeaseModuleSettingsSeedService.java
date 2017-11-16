@@ -45,9 +45,12 @@ public class LeaseModuleSettingsSeedService extends UdoDomainService<LeaseModule
     @PostConstruct
     public void init(final Map<String,String> props) {
 
-        if(System.getProperty("estatio.integTest") != null) {
-            return;
-        }
+        // unlike the other seed services, we really really need this (epoch date)
+        // TODO: however, what we ought to do is to refactor this stuff into a fixture script,
+        // and then call that fixture script from EstatioBaseModule
+//        if(System.getProperty("estatio.integTest") != null) {
+//            return;
+//        }
 
         super.init(props);
         installDefaultsIfRequired();
