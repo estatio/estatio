@@ -18,8 +18,10 @@
  */
 package org.estatio.module.lease;
 
+import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
@@ -49,6 +51,7 @@ import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.breaks.BreakOption;
+import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
@@ -133,7 +136,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
 
-                deleteFrom(BreakOption.class);
+                deleteFrom(BreakOption.class); // superclass handles the subclasses
                 deleteFrom(LeaseItemSource.class);
                 deleteFrom(LeaseTerm.class);
                 deleteFrom(LeaseItemSource.class);
@@ -148,7 +151,12 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(Lease.class);
                 deleteFrom(LeaseType.class);
             }
+
+            @Inject
+            BreakOptionRepository breakOptionRepository;
+
         };
+
     }
 
 

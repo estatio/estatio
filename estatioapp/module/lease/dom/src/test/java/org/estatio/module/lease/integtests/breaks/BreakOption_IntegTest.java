@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.breaks;
+package org.estatio.module.lease.integtests.breaks;
 
 import java.util.List;
 
@@ -28,22 +28,21 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.event.dom.EventRepository;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.app.LeaseMenu;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BreakOption_IntegTest extends EstatioIntegrationTest {
+public class BreakOption_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     LeaseMenu leaseMenu;
@@ -67,14 +66,14 @@ public class BreakOption_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 }
             });
 
             lease = leaseRepository.findLeaseByReference(LeaseBreakOptionsForOxfTopModel001.LEASE_REF);
 
-            assertThat(breakOptionRepository.allBreakOptions().size(), is(2));
+            final List<BreakOption> breakOptions = breakOptionRepository.allBreakOptions();
+            assertThat(breakOptions.size(), is(2));
             final List<BreakOption> breakOptionList = breakOptionRepository.findByLease(lease);
             assertThat(breakOptionList.size(), is(2));
             breakOption = breakOptionList.get(0);
@@ -107,7 +106,6 @@ public class BreakOption_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 }
             });
@@ -149,7 +147,6 @@ public class BreakOption_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 }
             });

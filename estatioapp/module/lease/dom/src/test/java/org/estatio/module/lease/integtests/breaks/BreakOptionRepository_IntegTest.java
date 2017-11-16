@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.breaks;
+package org.estatio.module.lease.integtests.breaks;
 
 import java.util.List;
 import java.util.Set;
@@ -33,6 +33,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.integtests.VT;
 
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.event.dom.Event;
 import org.estatio.module.event.dom.EventRepository;
 import org.estatio.module.lease.dom.Lease;
@@ -42,17 +43,15 @@ import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.dom.breaks.RollingBreakOption;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.LeaseBuilder;
+import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
+public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     BreakOptionRepository breakOptionRepository;
@@ -67,7 +66,6 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                 }
             });
@@ -96,11 +94,8 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
         @Inject
         EstatioFakeDataService fakeDataService;
 
-        LocalDate clockBefore;
-
         @Before
         public void setup() {
-            clockBefore = clockService.now();
 
             setFixtureClockDate(2014, 7, 1);
 
@@ -111,15 +106,10 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, fs);
                 }
             });
-        }
 
-        @Before
-        public void tearDown() {
-            setFixtureClockDate(clockBefore);
         }
 
         @Test
@@ -139,7 +129,7 @@ public class BreakOptionRepository_IntegTest extends EstatioIntegrationTest {
             final String description = fakeDataService.lorem().sentence();
 
             breakOptionRepository.newBreakOption(lease, breakDate, notificationPeriodStr, breakType, breakExerciseType, description);
-            nextTransaction();
+            transactionService.nextTransaction();
 
             // then
             Assertions.assertThat(lease.getBreakOptions()).hasSize(1);

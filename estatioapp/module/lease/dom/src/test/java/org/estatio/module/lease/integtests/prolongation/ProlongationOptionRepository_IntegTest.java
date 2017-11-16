@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease.breaks.prolongation;
+package org.estatio.module.lease.integtests.prolongation;
 
 import javax.inject.Inject;
 
@@ -29,14 +29,13 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOption;
 import org.estatio.module.lease.dom.breaks.prolongation.ProlongationOptionRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseProlongationOptionsForOxfTopModel001;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProlongationOptionRepository_IntegTest extends EstatioIntegrationTest {
+public class ProlongationOptionRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Inject
     ProlongationOptionRepository prolongationOptionRepository;
@@ -51,7 +50,6 @@ public class ProlongationOptionRepository_IntegTest extends EstatioIntegrationTe
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseProlongationOptionsForOxfTopModel001());
                 }
             });
