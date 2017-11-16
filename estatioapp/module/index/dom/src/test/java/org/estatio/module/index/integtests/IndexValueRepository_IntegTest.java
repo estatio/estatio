@@ -55,17 +55,6 @@ public class IndexValueRepository_IntegTest extends IndexModuleIntegTestAbstract
 
     public static class FindLastByIndex extends IndexValueRepository_IntegTest {
 
-//        @Before
-//        public void setupData() {
-//            runFixtureScript(
-//                    // tearing down because of a failure which suggests that one of the other tests is creating new index values...
-//                    // (not sure which one though :-( )
-//                    new EstatioOperationalTeardownFixture(),
-//                    new EstatioReferenceDataTeardownFixture(),
-//                    new EstatioBaseLineFixture()
-//            );
-//        }
-
         @Test
         public void happyCase() throws Exception {
             Index index = indexRepository.findByReference(IndexRefData.IT_REF);
