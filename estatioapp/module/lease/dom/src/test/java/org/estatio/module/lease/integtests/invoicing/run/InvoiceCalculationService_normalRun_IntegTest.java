@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.invoice.integtests.invoice;
+package org.estatio.module.lease.integtests.invoicing.run;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
