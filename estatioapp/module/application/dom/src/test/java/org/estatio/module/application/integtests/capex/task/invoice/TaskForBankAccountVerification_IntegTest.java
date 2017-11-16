@@ -47,6 +47,7 @@ import org.estatio.module.capex.dom.bankaccount.verification.triggers.BankAccoun
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.integtests.document.IncomingDocumentPresentationSubscriber_IntegTest;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -180,6 +181,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
+                    executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                     executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 }
