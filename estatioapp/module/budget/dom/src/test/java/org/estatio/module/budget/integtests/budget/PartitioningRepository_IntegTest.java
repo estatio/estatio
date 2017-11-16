@@ -1,4 +1,4 @@
-package org.estatio.integtests.budget;
+package org.estatio.module.budget.integtests.budget;
 
 import javax.inject.Inject;
 
@@ -12,19 +12,18 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.fixtures.BudgetsForOxf;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartitioningRepository_IntegTest extends EstatioIntegrationTest {
+public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
     @Inject
     PartitioningRepository partitioningRepository;
@@ -40,7 +39,6 @@ public class PartitioningRepository_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
             }
         });
@@ -80,6 +78,7 @@ public class PartitioningRepository_IntegTest extends EstatioIntegrationTest {
             Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate().plusDays(1), budget.getStartDate().plusDays(2), BudgetCalculationType.BUDGETED);
+            transactionService.flushTransaction();
             assertThat(budget.getPartitionings().size()).isEqualTo(1);
 
             // and expect

@@ -1,4 +1,4 @@
-package org.estatio.integtests.budget;
+package org.estatio.module.budget.integtests.budget;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,13 +20,12 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemValueRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.budget.fixtures.BudgetsForOxf;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BudgetItemValueRepository_IntegTest extends EstatioIntegrationTest {
+public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
     @Inject PropertyRepository propertyRepository;
 
@@ -39,7 +38,6 @@ public class BudgetItemValueRepository_IntegTest extends EstatioIntegrationTest 
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
             }
         });
@@ -111,7 +109,7 @@ public class BudgetItemValueRepository_IntegTest extends EstatioIntegrationTest 
     public void updateOrCreateTest_Create(){
 
         // given
-        LocalDate budgetStart = new LocalDate(2015, 01, 01);
+        LocalDate budgetStart = new LocalDate(2015, 1, 1);
         Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, budgetStart);
         BudgetItem budgetItem = budget.getItems().first();
@@ -122,6 +120,7 @@ public class BudgetItemValueRepository_IntegTest extends EstatioIntegrationTest 
 
         // when
         BudgetItemValue result = wrap(budgetItemValueRepository).updateOrCreateBudgetItemValue(new BigDecimal("33333.00"), budgetItem, budgetStart, BudgetCalculationType.ACTUAL);
+        transactionService.flushTransaction();
 
         // then
         assertThat(budgetItem.getValues().size()).isEqualTo(2);

@@ -1,4 +1,4 @@
-package org.estatio.integtests.budget;
+package org.estatio.module.budget.integtests.budget;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,16 +22,15 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
+public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstract {
 
     @Inject
     BudgetItemRepository budgetItemRepository;
@@ -50,7 +49,6 @@ public class BudgetItemRepository_IntegTest extends EstatioIntegrationTest {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new BudgetsForOxf());
             }
         });
