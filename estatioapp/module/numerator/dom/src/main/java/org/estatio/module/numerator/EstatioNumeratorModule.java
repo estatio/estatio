@@ -29,10 +29,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
-import org.estatio.module.base.platform.fixturesupport.DemoData2Persist;
-import org.estatio.module.base.platform.fixturesupport.DemoData2Teardown;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;

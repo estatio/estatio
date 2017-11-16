@@ -35,7 +35,7 @@ import org.incode.module.base.dom.utils.StringUtils;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(repositoryFor = Brand.class, nature = NatureOfService.DOMAIN)
 public class BrandRepository extends UdoDomainRepositoryAndFactory<Brand> {

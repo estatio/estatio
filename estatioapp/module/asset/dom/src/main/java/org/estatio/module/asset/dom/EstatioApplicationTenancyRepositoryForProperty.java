@@ -20,7 +20,7 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
 import org.estatio.module.base.dom.apptenancy.EstatioApplicationTenancyRepository;
-import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(
         nature = NatureOfService.DOMAIN

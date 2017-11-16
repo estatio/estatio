@@ -26,11 +26,9 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
-import org.estatio.module.base.platform.applib.ModuleAbstract;
 
 /**
  * This is a "proxy" for the corresponding module defined in the Incode Platform.
@@ -49,7 +47,9 @@ public final class IncodeSpiSecurityModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                deleteFrom(ApplicationTenancy.class);
+                // we've decided that we should preserve seeded data,
+                // never tear it down.  Thus, commented out
+                // deleteFrom(ApplicationTenancy.class);
             }
         };
     }

@@ -30,8 +30,8 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.paperclips.PaperclipForBankAccount;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.financial.EstatioFinancialModule;
 
 @XmlRootElement(name = "module")

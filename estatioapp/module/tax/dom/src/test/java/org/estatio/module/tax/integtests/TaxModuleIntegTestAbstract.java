@@ -24,7 +24,7 @@ import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract
 import org.estatio.module.tax.EstatioTaxModule;
 
 public abstract class TaxModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioTaxModule> {
+        extends IntegrationTestAbstract3 {
 
     public TaxModuleIntegTestAbstract() {
         super(new EstatioTaxModule(), FakeDataModule.class);

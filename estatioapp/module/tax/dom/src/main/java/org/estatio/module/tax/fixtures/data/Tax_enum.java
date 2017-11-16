@@ -8,7 +8,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.base.platform.fixturesupport.DemoData2;
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;

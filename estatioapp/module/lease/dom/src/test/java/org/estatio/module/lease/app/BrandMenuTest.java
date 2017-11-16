@@ -18,7 +18,7 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 

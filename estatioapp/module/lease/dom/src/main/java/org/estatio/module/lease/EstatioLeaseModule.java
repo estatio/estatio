@@ -26,10 +26,17 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
+
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
-import org.estatio.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
+import org.estatio.module.classification.IncodeDomClassificationModule;
+import org.estatio.module.communications.IncodeDomCommunicationsModule;
+import org.estatio.module.docfragment.IncodeDomDocFragmentModule;
+import org.estatio.module.docrendering.freemarker.IncodeLibFreemarkerDocRenderingModule;
+import org.estatio.module.docrendering.stringinterpolator.IncodeLibStringInterpolatorDocRenderingModule;
+import org.estatio.module.docrendering.xdocreport.IncodeLibXDocReportDocRenderingModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -65,7 +72,16 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new EstatioAssetFinancialModule(),
                 new EstatioIndexModule(),
                 new EstatioEventModule(),
-                new EstatioSettingsModule()
+                new EstatioSettingsModule(),
+
+                // stuff from incode platform, but which we're going to inline back into Estatio
+                new IncodeDomCommunicationsModule(),
+                new IncodeLibFreemarkerDocRenderingModule(),
+                new IncodeLibStringInterpolatorDocRenderingModule(),
+                new IncodeLibXDocReportDocRenderingModule(),
+                new IncodeDomDocFragmentModule(),
+                new IncodeDomClassificationModule()
+
                 );
     }
 

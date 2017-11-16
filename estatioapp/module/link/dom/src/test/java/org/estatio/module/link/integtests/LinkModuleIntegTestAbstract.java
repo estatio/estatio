@@ -25,7 +25,7 @@ import org.estatio.module.link.EstatioLinkModule;
  * Base class for integration tests.
  */
 public abstract class LinkModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioLinkModule> {
+        extends IntegrationTestAbstract3 {
 
     public LinkModuleIntegTestAbstract() {
         super(new EstatioLinkModule());

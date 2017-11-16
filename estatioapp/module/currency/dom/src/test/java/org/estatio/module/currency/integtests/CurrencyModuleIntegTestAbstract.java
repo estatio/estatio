@@ -22,7 +22,7 @@ import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract
 import org.estatio.module.currency.EstatioCurrencyModule;
 
 public abstract class CurrencyModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioCurrencyModule> {
+        extends IntegrationTestAbstract3 {
 
     public CurrencyModuleIntegTestAbstract() {
         super(new EstatioCurrencyModule());

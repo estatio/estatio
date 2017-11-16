@@ -18,7 +18,6 @@
  */
 package org.estatio.module.lease.integtests;
 
-import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.lease.EstatioLeaseModule;
 

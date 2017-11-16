@@ -8,10 +8,11 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
+
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
-import org.estatio.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.coda.CodaElement;
@@ -31,6 +32,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.document.IncodeDomDocumentModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
@@ -47,8 +49,12 @@ public class EstatioCapexModule extends ModuleAbstract {
         return Sets.newHashSet(
                 new EstatioInvoiceModule(),
                 new EstatioAssetFinancialModule(),
-                new EstatioBudgetModule()
-                );
+                new EstatioBudgetModule(),
+
+                // stuff from incode platform, but which we're going to inline back into Estatio
+                new IncodeDomDocumentModule()
+
+        );
     }
 
 

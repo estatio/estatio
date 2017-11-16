@@ -29,8 +29,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 

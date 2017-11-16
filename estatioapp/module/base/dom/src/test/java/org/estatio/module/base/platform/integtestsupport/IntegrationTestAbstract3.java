@@ -57,9 +57,9 @@ import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegT
 
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
-import org.estatio.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.Module;
 
-public abstract class IntegrationTestAbstract3<M extends Module>  {
+public abstract class IntegrationTestAbstract3 {
 
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationTestAbstract3.class);
 
@@ -67,10 +67,10 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
     public ExpectedException expectedExceptions = ExpectedException.none();
 
 
-    protected final M module;
+    protected final Module module;
     private final Class[] additionalModuleClasses;
 
-    public IntegrationTestAbstract3(final M module, final Class... additionalModuleClasses) {
+    public IntegrationTestAbstract3(final Module module, final Class... additionalModuleClasses) {
         this.module = module;
         this.additionalModuleClasses = additionalModuleClasses;
     }
@@ -247,6 +247,20 @@ public abstract class IntegrationTestAbstract3<M extends Module>  {
                 dependencies.stream().map(Module::getClass)
                 .collect(Collectors.toList());
         return dependenciesAsClasses.toArray(new Class[] {});
+    }
+
+    /**
+     * For convenience of subclasses, remove some boilerplate
+     */
+    protected <T> T wrap(final T obj) {
+        return wrapperFactory.wrap(obj);
+    }
+
+    /**
+     * For convenience of subclasses, remove some boilerplate
+     */
+    protected <T> T unwrap(final T obj) {
+        return wrapperFactory.unwrap(obj);
     }
 
     @Inject

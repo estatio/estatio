@@ -34,12 +34,12 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.paperclips.PaperclipForFixedAsset;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
 @XmlRootElement(name = "module")
-public final class EstatioAssetModule extends ModuleAbstract {
+public class EstatioAssetModule extends ModuleAbstract {
 
     public EstatioAssetModule(){}
 

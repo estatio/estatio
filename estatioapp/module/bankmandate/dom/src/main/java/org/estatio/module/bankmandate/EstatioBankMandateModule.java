@@ -31,8 +31,8 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.dom.BankMandate;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 
 @XmlRootElement(name = "module")
 public final class EstatioBankMandateModule extends ModuleAbstract {

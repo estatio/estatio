@@ -2,11 +2,12 @@ package org.estatio.module.country.fixtures.enums;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2;
+
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.platform.fixturesupport.DemoData2;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

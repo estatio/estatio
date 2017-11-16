@@ -25,7 +25,7 @@ import org.estatio.module.settings.EstatioSettingsModule;
  * Base class for integration tests.
  */
 public abstract class SettingsModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioSettingsModule> {
+        extends IntegrationTestAbstract3 {
 
     public SettingsModuleIntegTestAbstract() {
         super(new EstatioSettingsModule());

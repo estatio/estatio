@@ -26,6 +26,8 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.isisaddons.module.excel.IncodeLibExcelModule;
 import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
 import org.isisaddons.module.poly.IncodeLibPolyModule;
@@ -39,18 +41,12 @@ import org.isisaddons.wicket.fullcalendar2.IncodeWktFullCalendar2Module;
 import org.isisaddons.wicket.gmap3.IncodeWktGmap3Module;
 import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
 
-import org.incode.module.classification.IncodeDomClassificationModule;
-import org.incode.module.communications.IncodeDomCommunicationsModule;
-import org.incode.module.docfragment.IncodeDomDocFragmentModule;
-import org.incode.module.docrendering.freemarker.IncodeLibFreemarkerDocRenderingModule;
-import org.incode.module.docrendering.stringinterpolator.IncodeLibStringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.xdocreport.IncodeLibXDocReportDocRenderingModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.base.fixtures.security.perms.personas.EstatioAdminRoleAndPermissions;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 
 @XmlRootElement(name = "module")
 public final class EstatioBaseModule extends ModuleAbstract {
@@ -62,19 +58,11 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 // (nothing for incode-module-base-dom)
                 // (nothing for incode-module-fixturesupport-dom)
                 new IncodeLibExcelModule(),
-                new IncodeLibFreemarkerDocRenderingModule(),
-                new IncodeLibStringInterpolatorDocRenderingModule(),
-                new IncodeLibXDocReportDocRenderingModule(),
                 new IncodeLibPdfBoxModule(),
                 new IncodeLibPolyModule(),
                 new IncodeLibServletApiModule(),
                 new IncodeLibSettingsModule(),
                 new IncodeLibStringInterpolatorModule(),
-
-                // generic dom
-                new IncodeDomClassificationModule(),
-                new IncodeDomCommunicationsModule(),
-                new IncodeDomDocFragmentModule(),
 
                 // spi
                 new IncodeSpiSecurityModule(),
@@ -88,11 +76,8 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 // ext
                 new IncodeExtTogglzModule()
 
-
         );
     }
-
-
 
     @Override
     public FixtureScript getRefDataSetupFixture() {
@@ -101,6 +86,10 @@ public final class EstatioBaseModule extends ModuleAbstract {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, new TickingClockFixture());
                 executionContext.executeChild(this, new ApplicationTenancy_enum.PersistScript());
+
+                // set up some standard user + roles personas
+                executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
+                executionContext.executeChild(this, new EstatioAdmin());
             }
         };
     }

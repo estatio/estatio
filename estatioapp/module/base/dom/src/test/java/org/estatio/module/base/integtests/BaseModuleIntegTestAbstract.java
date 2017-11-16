@@ -26,7 +26,7 @@ import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
 public abstract class BaseModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioBaseModule> {
+        extends IntegrationTestAbstract3 {
 
     public BaseModuleIntegTestAbstract() {
         super(new EstatioBaseModule(), SecurityModule.class, CountryModule.class);

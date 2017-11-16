@@ -28,13 +28,13 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
 import org.estatio.module.charge.fixtures.ChargeRefData;
-import org.estatio.module.country.EstatioCountryModule;
+import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
 @XmlRootElement(name = "module")
@@ -44,7 +44,7 @@ public final class EstatioChargeModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioTaxModule(), new EstatioCountryModule());
+        return Sets.newHashSet(new EstatioTaxModule(), new EstatioCountryAppTenancyModule());
     }
 
     @Override

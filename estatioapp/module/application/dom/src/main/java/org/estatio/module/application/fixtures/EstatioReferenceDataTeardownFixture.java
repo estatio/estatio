@@ -24,7 +24,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.country.EstatioCountryModule;
+import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.link.EstatioLinkModule;
@@ -37,7 +37,7 @@ public class EstatioReferenceDataTeardownFixture extends FixtureScript {
 
         executionContext.executeChild(this, new EstatioCurrencyModule().getTeardownFixture());
 
-        executionContext.executeChild(this, new EstatioCountryModule().getTeardownFixture());
+        executionContext.executeChild(this, new EstatioCountryAppTenancyModule().getTeardownFixture());
 
         executionContext.executeChild(this, new EstatioChargeModule().getTeardownFixture());
 

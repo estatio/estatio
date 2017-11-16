@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.isisaddons.module.base.platform.applib.Module;
+
 import lombok.AllArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 

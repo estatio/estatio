@@ -26,12 +26,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
 
 @XmlRootElement(name = "module")
 public final class EstatioRegistrationModule extends ModuleAbstract {

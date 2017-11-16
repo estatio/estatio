@@ -29,19 +29,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.incode.module.docfragment.dom.api.DocFragmentService;
 
-import org.estatio.module.base.dom.UdoDomainService;
-
 import freemarker.template.TemplateException;
 
 /**
  * A simple wrapper around {@link DocFragmentService} that handles any checked exceptions.
  */
 @DomainService(nature = NatureOfService.DOMAIN)
-public class FragmentRenderService extends UdoDomainService<FragmentRenderService> {
-
-    public FragmentRenderService() {
-        super(FragmentRenderService.class);
-    }
+public class FragmentRenderService {
 
     @Programmatic
     public String render(final Object domainObject, final String fragmentName) {

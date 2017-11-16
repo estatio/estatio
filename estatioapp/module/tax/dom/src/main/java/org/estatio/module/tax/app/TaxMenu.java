@@ -38,8 +38,8 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.country.dom.CountryServiceForCurrentUser;
-import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 

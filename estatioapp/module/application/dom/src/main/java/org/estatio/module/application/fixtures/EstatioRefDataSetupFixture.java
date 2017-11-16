@@ -21,7 +21,7 @@ package org.estatio.module.application.fixtures;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.country.EstatioCountryModule;
+import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.EstatioLeaseModule;
@@ -37,7 +37,7 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "countries", new EstatioCountryModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "countries", new EstatioCountryAppTenancyModule().getRefDataSetupFixture());
         //executionContext.executeChild(this, "states", new StatesRefData());
         executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "taxes", new EstatioChargeModule().getRefDataSetupFixture());

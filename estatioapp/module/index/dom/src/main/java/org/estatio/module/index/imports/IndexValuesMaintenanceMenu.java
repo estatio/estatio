@@ -43,8 +43,8 @@ import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.country.dom.CountryServiceForCurrentUser;
-import org.estatio.module.country.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
+import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

@@ -24,7 +24,7 @@ import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
 public abstract class AgreementModuleIntegTestAbstract
-        extends IntegrationTestAbstract3<EstatioAgreementModule> {
+        extends IntegrationTestAbstract3 {
 
     public AgreementModuleIntegTestAbstract() {
         super(new EstatioAgreementModule(),

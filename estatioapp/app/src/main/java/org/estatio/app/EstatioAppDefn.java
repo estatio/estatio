@@ -13,7 +13,7 @@ import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.country.EstatioCountryModule;
+import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.financial.EstatioFinancialModule;
@@ -56,7 +56,7 @@ class EstatioAppDefn  {
                 EstatioLeaseModule.class,
                 EstatioLinkModule.class,
                 EstatioNumeratorModule.class,
-                EstatioCountryModule.class,
+                EstatioCountryAppTenancyModule.class,
                 EstatioPartyModule.class,
                 EstatioSettingsModule.class,
                 EstatioRegistrationModule.class,

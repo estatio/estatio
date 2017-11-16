@@ -8,10 +8,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.platform.applib.Module;
-import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.communications.IncodeDomCommunicationsModule;
+import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.numerator.EstatioNumeratorModule;
 import org.estatio.module.party.dom.CommunicationChannelOwnerLinkForParty;
 import org.estatio.module.party.dom.Organisation;
@@ -30,7 +33,11 @@ public final class EstatioPartyModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioNumeratorModule());
+        return Sets.newHashSet(
+                new EstatioNumeratorModule(),
+                new EstatioCountryAppTenancyModule(),
+                new IncodeDomCommunicationsModule()   // for communication channels
+        );
     }
 
 
