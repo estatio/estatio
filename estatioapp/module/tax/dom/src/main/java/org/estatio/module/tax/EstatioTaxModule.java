@@ -20,6 +20,8 @@ package org.estatio.module.tax;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -34,6 +36,7 @@ import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
+@XmlRootElement(name = "module")
 public final class EstatioTaxModule extends ModuleAbstract {
 
     public EstatioTaxModule(){}

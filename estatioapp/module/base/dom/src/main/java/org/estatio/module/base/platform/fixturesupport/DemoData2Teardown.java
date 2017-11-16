@@ -8,6 +8,7 @@ public class DemoData2Teardown<D extends DemoData2<D,T>, T> extends
     private final Class<D> demoDataClass;
     public DemoData2Teardown(final Class<D> demoDataClass) {
         this.demoDataClass = demoDataClass;
+        setLocalName(demoDataClass.getCanonicalName());
     }
 
     @Override

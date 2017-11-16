@@ -2,6 +2,8 @@ package org.estatio.module.party;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -21,6 +23,7 @@ import org.estatio.module.party.dom.paperclips.PaperclipForParty;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.role.PartyRole;
 
+@XmlRootElement(name = "module")
 public final class EstatioPartyModule extends ModuleAbstract {
 
     public EstatioPartyModule(){}

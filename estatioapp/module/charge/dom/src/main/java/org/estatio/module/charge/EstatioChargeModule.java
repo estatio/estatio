@@ -20,6 +20,8 @@ package org.estatio.module.charge;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -35,6 +37,7 @@ import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.country.EstatioCountryModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioChargeModule extends ModuleAbstract {
 
     public EstatioChargeModule(){}

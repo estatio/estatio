@@ -20,6 +20,8 @@ package org.estatio.module.guarantee;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -31,6 +33,7 @@ import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.lease.EstatioLeaseModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioGuaranteeModule extends ModuleAbstract {
 
     public EstatioGuaranteeModule(){}

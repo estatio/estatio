@@ -20,6 +20,8 @@ package org.estatio.module.bankaccount;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -32,6 +34,7 @@ import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.financial.EstatioFinancialModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioBankAccountModule extends ModuleAbstract {
 
     public EstatioBankAccountModule(){}

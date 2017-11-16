@@ -20,6 +20,8 @@ package org.estatio.module.link;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -31,6 +33,7 @@ import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.link.dom.Link;
 import org.estatio.module.settings.EstatioSettingsModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioLinkModule extends ModuleAbstract {
 
     public EstatioLinkModule(){}

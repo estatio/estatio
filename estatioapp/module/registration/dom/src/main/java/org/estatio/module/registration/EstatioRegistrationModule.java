@@ -20,6 +20,8 @@ package org.estatio.module.registration;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -31,6 +33,7 @@ import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 
+@XmlRootElement(name = "module")
 public final class EstatioRegistrationModule extends ModuleAbstract {
 
     public EstatioRegistrationModule(){}

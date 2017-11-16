@@ -20,6 +20,8 @@ package org.estatio.module.budget;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -39,6 +41,7 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.EstatioChargeModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioBudgetModule extends ModuleAbstract {
 
     public EstatioBudgetModule(){}

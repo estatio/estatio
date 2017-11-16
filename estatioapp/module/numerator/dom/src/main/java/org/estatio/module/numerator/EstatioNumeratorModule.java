@@ -20,6 +20,8 @@ package org.estatio.module.numerator;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -35,6 +37,7 @@ import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 
+@XmlRootElement(name = "module")
 public class EstatioNumeratorModule extends ModuleAbstract {
 
 

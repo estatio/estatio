@@ -32,6 +32,7 @@ import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 
+@XmlRootElement(name = "module")
 public final class EstatioCurrencyModule extends ModuleAbstract {
 
     public EstatioCurrencyModule(){}

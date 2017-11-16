@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.integtests;
+package org.estatio.module.charge.integtests;
 
 import javax.inject.Inject;
 
@@ -24,19 +24,14 @@ import org.junit.Test;
 
 import org.apache.isis.applib.services.jaxb.JaxbService;
 
-import org.estatio.module.application.EstatioApplicationModule;
+import org.estatio.module.charge.EstatioChargeModule;
 
-public class BootstrapIntegTest extends ApplicationModuleIntegTestAbstract {
-
-    @Test
-    public void bootstraps_ok() throws Exception {
-
-    }
+public class BootstrapChargeModuleIntegTest extends ChargeModuleIntegTestAbstract {
 
     @Test
     public void serializes_module() throws Exception {
 
-        final EstatioApplicationModule module = new EstatioApplicationModule();
+        final EstatioChargeModule module = new EstatioChargeModule();
 
         final String s = jaxbService.toXml(module);
         System.out.println(s);

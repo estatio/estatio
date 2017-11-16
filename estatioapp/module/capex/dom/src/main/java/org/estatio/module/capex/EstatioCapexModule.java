@@ -2,15 +2,16 @@ package org.estatio.module.capex;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.coda.CodaElement;
@@ -31,9 +32,12 @@ import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.EstatioInvoiceModule;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 
+@XmlRootElement(name = "module")
 public class EstatioCapexModule extends ModuleAbstract {
 
     public EstatioCapexModule() {}
@@ -59,16 +63,60 @@ public class EstatioCapexModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
-        return new TeardownFixtureAbstract() {
+        return new TeardownFixtureAbstract2() {
+
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+
+                String schema;
+                String sql;
+                String table;
 
                 deleteFrom(CodaMapping.class);
                 deleteFrom(CodaElement.class);
 
-                // TODO: convert to appropriate SQL
-                deleteFrom(InvoiceAttribute.class);    // for this module's subtype
-                deleteFrom(PaperclipForInvoice.class); // for this module's subtype
+                // OrderItemInvoiceItemLink
+                schema = schemaOf(OrderItemInvoiceItemLink.class);
+                table = tableOf(OrderItemInvoiceItemLink.class);
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
+                        schema, table, "invoiceItemId",
+                        schemaOf(InvoiceItem.class), tableOf(InvoiceItem.class), // supertype of IncomingInvoiceItem
+                        discriminatorColumnOf(InvoiceItem.class),
+                        discriminatorValueOf(IncomingInvoiceItem.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
+                // InvoiceAttribute
+                schema = schemaOf(InvoiceAttribute.class);
+                table = tableOf(InvoiceAttribute.class);
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
+                        schema, table, "invoiceId",
+                        schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
+                        discriminatorColumnOf(Invoice.class),
+                        discriminatorValueOf(IncomingInvoice.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
+                // PaperclipForInvoice
+                schema = schemaOf(PaperclipForInvoice.class);
+                table = tableOf(PaperclipForInvoice.class);
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
+                        schema, table, "invoiceId",
+                        schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
+                        discriminatorColumnOf(Invoice.class),
+                        discriminatorValueOf(IncomingInvoice.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
                 deleteFrom(IncomingInvoiceItem.class);
                 deleteFrom(IncomingInvoice.class);
 
@@ -81,7 +129,6 @@ public class EstatioCapexModule extends ModuleAbstract {
 
                 deleteFrom(PaymentBatch.class);
 
-                deleteFrom(OrderItemInvoiceItemLink.class);
 
                 deleteFrom(PaperclipForOrder.class);
                 deleteFrom(OrderItem.class);

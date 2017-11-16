@@ -71,7 +71,6 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
         executionContext.executeChild(this, new EstatioRegistrationModule().getTeardownFixture());
         executionContext.executeChild(this, new EstatioAssetModule().getTeardownFixture());
         executionContext.executeChild(this, new EstatioPartyModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioPartyModule().getTeardownFixture());
         executionContext.executeChild(this, new EstatioNumeratorModule().getTeardownFixture());
         executionContext.executeChild(this, new EstatioBaseModule().getTeardownFixture());
 

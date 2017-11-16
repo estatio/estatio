@@ -20,101 +20,78 @@ package org.estatio.module.base;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.command.dom.CommandJdo;
-import org.isisaddons.module.excel.ExcelModule;
-import org.isisaddons.module.pdfbox.dom.PdfBoxModule;
-import org.isisaddons.module.poly.PolyModule;
-import org.isisaddons.module.security.SecurityModule;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-import org.isisaddons.module.servletapi.ServletApiModule;
-import org.isisaddons.module.settings.SettingsModule;
-import org.isisaddons.module.stringinterpolator.StringInterpolatorModule;
-import org.isisaddons.module.togglz.TogglzModule;
-import org.isisaddons.wicket.excel.cpt.ui.ExcelUiModule;
-import org.isisaddons.wicket.fullcalendar2.cpt.applib.FullCalendar2ApplibModule;
-import org.isisaddons.wicket.fullcalendar2.cpt.ui.FullCalendar2UiModule;
-import org.isisaddons.wicket.gmap3.cpt.applib.Gmap3ApplibModule;
-import org.isisaddons.wicket.gmap3.cpt.service.Gmap3ServiceModule;
-import org.isisaddons.wicket.gmap3.cpt.ui.Gmap3UiModule;
-import org.isisaddons.wicket.pdfjs.cpt.PdfjsCptModule;
+import org.isisaddons.module.excel.IncodeLibExcelModule;
+import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
+import org.isisaddons.module.poly.IncodeLibPolyModule;
+import org.isisaddons.module.security.IncodeSpiSecurityModule;
+import org.isisaddons.module.servletapi.IncodeLibServletApiModule;
+import org.isisaddons.module.settings.IncodeLibSettingsModule;
+import org.isisaddons.module.stringinterpolator.IncodeLibStringInterpolatorModule;
+import org.isisaddons.module.togglz.IncodeExtTogglzModule;
+import org.isisaddons.wicket.excel.IncodeWktExcelModule;
+import org.isisaddons.wicket.fullcalendar2.IncodeWktFullCalendar2Module;
+import org.isisaddons.wicket.gmap3.IncodeWktGmap3Module;
+import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
 
-import org.incode.module.classification.dom.ClassificationModule;
-import org.incode.module.communications.dom.CommunicationsModule;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwnerLink;
-import org.incode.module.communications.dom.impl.comms.CommChannelRole;
-import org.incode.module.communications.dom.impl.comms.Communication;
-import org.incode.module.communications.dom.impl.paperclips.PaperclipForCommunication;
-import org.incode.module.country.dom.CountryModule;
-import org.incode.module.docfragment.dom.DocFragmentModuleDomModule;
-import org.incode.module.docrendering.freemarker.dom.FreemarkerDocRenderingModule;
-import org.incode.module.docrendering.stringinterpolator.dom.StringInterpolatorDocRenderingModule;
-import org.incode.module.docrendering.xdocreport.dom.XDocReportDocRenderingModule;
-import org.incode.module.document.dom.DocumentModule;
-import org.incode.module.document.dom.impl.docs.Document;
-import org.incode.module.document.dom.impl.docs.paperclips.PaperclipForDocument;
-import org.incode.module.document.dom.impl.paperclips.Paperclip;
+import org.incode.module.classification.IncodeDomClassificationModule;
+import org.incode.module.communications.IncodeDomCommunicationsModule;
+import org.incode.module.docfragment.IncodeDomDocFragmentModule;
+import org.incode.module.docrendering.freemarker.IncodeLibFreemarkerDocRenderingModule;
+import org.incode.module.docrendering.stringinterpolator.IncodeLibStringInterpolatorDocRenderingModule;
+import org.incode.module.docrendering.xdocreport.IncodeLibXDocReportDocRenderingModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 
+@XmlRootElement(name = "module")
 public final class EstatioBaseModule extends ModuleAbstract {
 
-    /**
-     * For now, we'll reference all of the incode platform that we need.
-     * Later on, we might introduce proxies (see EstatioCountryModule as proxy
-     * for CountryModule).
-     * @return
-     */
-    @Override
-    public Set<Class<?>> getDependenciesAsClass() {
+    @Override public Set<Module> getDependencies() {
         return Sets.newHashSet(
 
                 // lib
                 // (nothing for incode-module-base-dom)
                 // (nothing for incode-module-fixturesupport-dom)
-                ExcelModule.class,
-                FreemarkerDocRenderingModule.class,
-                StringInterpolatorDocRenderingModule.class,
-                XDocReportDocRenderingModule.class,
-                PdfBoxModule.class,
-                PolyModule.class,
-                ServletApiModule.class,
-                SettingsModule.class,
-                StringInterpolatorModule.class,
-
+                new IncodeLibExcelModule(),
+                new IncodeLibFreemarkerDocRenderingModule(),
+                new IncodeLibStringInterpolatorDocRenderingModule(),
+                new IncodeLibXDocReportDocRenderingModule(),
+                new IncodeLibPdfBoxModule(),
+                new IncodeLibPolyModule(),
+                new IncodeLibServletApiModule(),
+                new IncodeLibSettingsModule(),
+                new IncodeLibStringInterpolatorModule(),
 
                 // generic dom
-                ClassificationModule.class,
-                CommunicationsModule.class,
-                CountryModule.class,
-                DocFragmentModuleDomModule.class,
-                DocumentModule.class,
-
+                new IncodeDomClassificationModule(),
+                new IncodeDomCommunicationsModule(),
+                new IncodeDomDocFragmentModule(),
 
                 // spi
-                SecurityModule.class,
+                new IncodeSpiSecurityModule(),
 
                 // wkt
-                ExcelUiModule.class,
-                FullCalendar2ApplibModule.class,
-                FullCalendar2UiModule.class,
-                Gmap3ApplibModule.class,
-                Gmap3UiModule.class,
-                Gmap3ServiceModule.class,
-                PdfjsCptModule.class,
+                new IncodeWktExcelModule(),
+                new IncodeWktFullCalendar2Module(),
+                new IncodeWktGmap3Module(),
+                new IncodeWktPdfJsModule(),
 
                 // ext
-                TogglzModule.class
+                new IncodeExtTogglzModule()
 
-                );
+
+        );
     }
+
 
 
     @Override
@@ -133,21 +110,8 @@ public final class EstatioBaseModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-
-                deleteFrom(PaperclipForCommunication.class);
-                deleteFrom(CommChannelRole.class); // ie communication correspondent
-                deleteFrom(Communication.class);
-
-                deleteFrom(CommunicationChannelOwnerLink.class);
-                deleteFrom(CommunicationChannel.class);
-
-                deleteFrom(PaperclipForDocument.class);
-                deleteFrom(Paperclip.class);
-                deleteFrom(Document.class);
-
-                deleteFrom(CommandJdo.class);
-
-                deleteFrom(ApplicationTenancy.class);
+                // TODO: REVIEW, we're currently not bootstrapping audit or command or sessionlogger, only security
+                // deleteFrom(CommandJdo.class);
             }
         };
     }

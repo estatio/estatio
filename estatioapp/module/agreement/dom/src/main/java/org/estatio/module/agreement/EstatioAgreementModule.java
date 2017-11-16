@@ -20,6 +20,8 @@ package org.estatio.module.agreement;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -33,6 +35,7 @@ import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioAgreementModule extends ModuleAbstract {
 
 

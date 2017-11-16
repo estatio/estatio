@@ -20,18 +20,20 @@ package org.estatio.module.lease;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.base.platform.fixturesupport.TeardownFixtureAbstract2;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
+import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttribute;
 import org.estatio.module.invoice.dom.paperclips.PaperclipForInvoice;
 import org.estatio.module.lease.dom.Lease;
@@ -51,6 +53,7 @@ import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.settings.EstatioSettingsModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioLeaseModule extends ModuleAbstract {
 
     public EstatioLeaseModule(){}
@@ -73,15 +76,44 @@ public final class EstatioLeaseModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
-        return new TeardownFixtureAbstract() {
+        return new TeardownFixtureAbstract2() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
+                String schema;
+                String sql;
+                String table;
+
                 deleteFrom(EventSourceLinkForBreakOption.class);
 
-                // TODO: convert to appropriate SQL
-                deleteFrom(InvoiceAttribute.class);    // for this module's subtype
-                deleteFrom(PaperclipForInvoice.class); // for this module's subtype
+                // InvoiceAttribute
+                schema = schemaOf(InvoiceAttribute.class);
+                table = tableOf(InvoiceAttribute.class);
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
+                        schema, table, "invoiceId",
+                        schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
+                        discriminatorColumnOf(Invoice.class),
+                        discriminatorValueOf(InvoiceForLease.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
+                // PaperclipForInvoice
+                schema = schemaOf(PaperclipForInvoice.class);
+                table = tableOf(PaperclipForInvoice.class);
+                sql = String.format(
+                        "DELETE FROM \"%s\".\"%s\" "
+                                + "WHERE \"%s\" IN "
+                                + "(SELECT \"id\" FROM \"%s\".\"%s\" WHERE \"%s\" = '%s') ",
+                        schema, table, "invoiceId",
+                        schemaOf(Invoice.class), tableOf(Invoice.class), // supertype of IncomingInvoice
+                        discriminatorColumnOf(Invoice.class),
+                        discriminatorValueOf(InvoiceForLease.class)
+                );
+                this.isisJdoSupport.executeUpdate(sql);
+
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
 

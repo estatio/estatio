@@ -20,6 +20,8 @@ package org.estatio.module.invoice;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -32,6 +34,7 @@ import org.estatio.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.charge.EstatioChargeModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 
+@XmlRootElement(name = "module")
 public final class EstatioInvoiceModule extends ModuleAbstract {
 
     public EstatioInvoiceModule(){}

@@ -20,6 +20,8 @@ package org.estatio.module.index;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -34,6 +36,7 @@ import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
 import org.estatio.module.index.fixtures.IndexRefData;
 
+@XmlRootElement(name = "module")
 public final class EstatioIndexModule extends ModuleAbstract {
 
     public EstatioIndexModule(){}
