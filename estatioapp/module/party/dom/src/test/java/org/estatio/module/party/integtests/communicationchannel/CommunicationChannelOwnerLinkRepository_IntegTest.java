@@ -17,12 +17,13 @@
  *  under the License.
  */
 
-package org.estatio.integtests.communicationchannel;
+package org.estatio.module.party.integtests.communicationchannel;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,21 +37,17 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddressReposi
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class CommunicationChannelOwnerLinkRepository_IntegTest extends EstatioIntegrationTest {
+public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModuleIntegTestAbstract {
 
     @Before
     public void setupData() throws Exception {
         runFixtureScript(new FixtureScript() {
             @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
             }
         });
@@ -69,7 +66,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends EstatioIn
             final CommunicationChannelOwnerLink communicationChannelOwnerLink = communicationChannelOwnerLinkRepository.findByCommunicationChannel(postalAddress);
 
             // then
-            assertThat(communicationChannelOwnerLink.getOwnerObjectType()).isEqualToIgnoringCase("org.estatio.dom.party.Organisation");
+            Assertions.assertThat(communicationChannelOwnerLink.getOwnerObjectType()).isEqualToIgnoringCase("org.estatio.dom.party.Organisation");
         }
     }
 
@@ -84,7 +81,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends EstatioIn
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwner(party);
 
             // then
-            assertThat(communicationChannelOwnerLinks.size()).isEqualTo(5);
+            Assertions.assertThat(communicationChannelOwnerLinks.size()).isEqualTo(5);
         }
     }
 
@@ -100,8 +97,8 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends EstatioIn
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(party, CommunicationChannelType.PHONE_NUMBER);
 
             // then
-            assertThat(communicationChannelOwnerLinks.size()).isEqualTo(1);
-            assertThat(communicationChannelOwnerLinks.get(0).getCommunicationChannel().getType()).isEqualTo(CommunicationChannelType.PHONE_NUMBER);
+            Assertions.assertThat(communicationChannelOwnerLinks.size()).isEqualTo(1);
+            Assertions.assertThat(communicationChannelOwnerLinks.get(0).getCommunicationChannel().getType()).isEqualTo(CommunicationChannelType.PHONE_NUMBER);
         }
     }
 

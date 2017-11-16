@@ -16,29 +16,32 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.communicationchannel;
+package org.estatio.module.lease.integtests.communicationchannel;
 
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
 
-public class CommunicationChannel_IntegTest extends EstatioIntegrationTest {
+public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class Remove extends CommunicationChannel_IntegTest {
 
@@ -47,7 +50,6 @@ public class CommunicationChannel_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 }
             });
@@ -69,10 +71,10 @@ public class CommunicationChannel_IntegTest extends EstatioIntegrationTest {
         public void setUp() throws Exception {
             party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
-            assertThat(postalAddresses.size(), is(2));
+            Assert.assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();
             communicationChannelReplacement = postalAddresses.last();
-            assertNotEquals(communicationChannel, communicationChannelReplacement);
+            Assert.assertNotEquals(communicationChannel, communicationChannelReplacement);
         }
 
         @org.junit.Rule
@@ -88,8 +90,8 @@ public class CommunicationChannel_IntegTest extends EstatioIntegrationTest {
         public void withReplacement() throws Exception {
             wrap(communicationChannel).remove(communicationChannelReplacement);
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
-            assertThat(postalAddresses.size(), is(1));
-            assertThat(postalAddresses.first(), is(communicationChannelReplacement));
+            Assert.assertThat(postalAddresses.size(), is(1));
+            Assert.assertThat(postalAddresses.first(), is(communicationChannelReplacement));
         }
 
     }

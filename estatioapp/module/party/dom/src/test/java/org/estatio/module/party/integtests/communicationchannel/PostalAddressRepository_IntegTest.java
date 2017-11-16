@@ -16,13 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.communicationchannel;
+package org.estatio.module.party.integtests.communicationchannel;
 
 import java.util.Iterator;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,32 +32,30 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
-import org.incode.module.communications.dom.impl.commchannel.EmailAddressRepository;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
+import org.incode.module.communications.dom.impl.commchannel.PostalAddressRepository;
+
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
-public class EmailAddressRepository_IntegTest extends EstatioIntegrationTest {
+public class PostalAddressRepository_IntegTest extends PartyModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
             }
         });
     }
 
     @Inject
-    EmailAddressRepository emailAddressRepository;
+    PostalAddressRepository postalAddressRepository;
 
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
@@ -68,7 +67,7 @@ public class EmailAddressRepository_IntegTest extends EstatioIntegrationTest {
 
     CommunicationChannel communicationChannel;
 
-    EmailAddress emailAddress;
+    PostalAddress postalAddress;
 
     @Before
     public void setUp() throws Exception {
@@ -77,23 +76,28 @@ public class EmailAddressRepository_IntegTest extends EstatioIntegrationTest {
         Iterator<CommunicationChannel> it = results.iterator();
         while (it.hasNext()) {
             CommunicationChannel next = it.next();
-            if (next.getType() == CommunicationChannelType.EMAIL_ADDRESS) {
-                emailAddress = (EmailAddress) next;
+            if (next.getType() == CommunicationChannelType.POSTAL_ADDRESS) {
+                postalAddress = (PostalAddress) next;
             }
         }
 
-        assertThat(emailAddress.getEmailAddress(), is("info@topmodel.example.com"));
+        Assert.assertThat(postalAddress.getAddress1(), is("1 Circle Square"));
+        Assert.assertThat(postalAddress.getPostalCode(), is("W2AXXX"));
     }
 
-    public static class FindByEmailAddress extends EmailAddressRepository_IntegTest {
+    public static class FindByAddress extends PostalAddressRepository_IntegTest {
 
         @Test
         public void happyCase() throws Exception {
             // when
-            EmailAddress email = emailAddressRepository.findByEmailAddress(party, emailAddress.getEmailAddress());
+            PostalAddress result = postalAddressRepository.findByAddress(party,
+                    postalAddress.getAddress1(),
+                    postalAddress.getPostalCode(),
+                    postalAddress.getCity(),
+                    postalAddress.getCountry());
 
             // then
-            assertThat(email, is(emailAddress));
+            Assert.assertThat(result, is(postalAddress));
         }
     }
 }
