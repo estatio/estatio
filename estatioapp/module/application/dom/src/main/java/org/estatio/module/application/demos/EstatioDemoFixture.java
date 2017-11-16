@@ -21,7 +21,6 @@ package org.estatio.module.application.demos;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
@@ -47,6 +46,7 @@ import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccou
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForMediaXGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForMiracleGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPretGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.BudgetsForOxf;
 import org.estatio.module.budget.fixtures.KeyTablesForOxf;
@@ -59,7 +59,7 @@ import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
@@ -75,6 +75,8 @@ import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
+import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
+import org.estatio.module.lease.seed.DocFragmentSeedFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
@@ -95,6 +97,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     private void doExecute(final ExecutionContext executionContext) {
         executionContext.executeChild(this, new EstatioBaseLineFixture());
+        executionContext.executeChild(this, new DocFragmentDemoFixture());
+        executionContext.executeChild(this, new DocFragmentSeedFixture());
         executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
         executionContext.executeChild(this, new BankAccountAndFaFaForAcmeNl());
         executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());

@@ -26,10 +26,11 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.lease.EstatioLeaseModule;
 
@@ -48,16 +49,6 @@ public final class EstatioGuaranteeModule extends ModuleAbstract {
 
 
 
-    @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-            }
-        };
-    }
-
-    @Override
     public FixtureScript getTeardownFixture() {
         return new TeardownFixtureAbstract() {
             @Override

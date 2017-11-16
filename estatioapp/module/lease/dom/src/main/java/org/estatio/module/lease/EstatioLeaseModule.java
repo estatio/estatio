@@ -18,7 +18,6 @@
  */
 package org.estatio.module.lease;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -60,7 +59,6 @@ import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
-import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 @XmlRootElement(name = "module")
@@ -86,11 +84,6 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new IncodeDomClassificationModule()
 
                 );
-    }
-
-    @Override
-    public FixtureScript getRefDataSetupFixture(){
-        return new DocFragmentDemoFixture();
     }
 
     @Override

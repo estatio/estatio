@@ -18,6 +18,12 @@
  */
 package org.estatio.module.application.fixtures;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import org.isisaddons.module.base.platform.applib.Module;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.agreement.EstatioAgreementModule;
@@ -26,7 +32,6 @@ import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
-import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
 import org.estatio.module.capex.EstatioCapexModule;
@@ -56,23 +61,28 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
 
     protected void deleteAllDirect(final ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new EstatioBudgetAssignmentModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioBudgetModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioCapexModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioGuaranteeModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioLeaseModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioInvoiceModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioEventModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioBankMandateModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioAssetFinancialModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioBankAccountModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioFinancialModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioAgreementModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioRegistrationModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioAssetModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioPartyModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioNumeratorModule().getTeardownFixture());
-        executionContext.executeChild(this, new EstatioBaseModule().getTeardownFixture());
+        final List<Module> modules = Lists.newArrayList(
+                new EstatioBudgetAssignmentModule(),
+                new EstatioBudgetModule(),
+                new EstatioCapexModule(),
+                new EstatioGuaranteeModule(),
+                new EstatioLeaseModule(),
+                new EstatioInvoiceModule(),
+                new EstatioEventModule(),
+                new EstatioBankMandateModule(),
+                new EstatioAssetFinancialModule(),
+                new EstatioBankAccountModule(),
+                new EstatioFinancialModule(),
+                new EstatioAgreementModule(),
+                new EstatioRegistrationModule(),
+                new EstatioAssetModule(),
+                new EstatioPartyModule(),
+                new EstatioNumeratorModule()
+                //new EstatioBaseModule()
+        );
+        for (final Module module : modules) {
+            executionContext.executeChild(this, module.getTeardownFixture());
+        }
 
     }
 

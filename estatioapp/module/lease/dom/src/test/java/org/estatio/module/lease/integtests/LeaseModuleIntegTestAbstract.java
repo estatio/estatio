@@ -18,18 +18,19 @@
  */
 package org.estatio.module.lease.integtests;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.clock.Clock;
-import org.apache.isis.applib.fixtures.FixtureClock;
-
-import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.lease.EstatioLeaseModule;
+import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 
 public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public LeaseModuleIntegTestAbstract() {
         super(new EstatioLeaseModule());
+    }
+
+    @Override
+    public void bootstrapAndSetupIfRequired() {
+        super.bootstrapAndSetupIfRequired();
+        runFixtureScript(new DocFragmentDemoFixture());
     }
 }

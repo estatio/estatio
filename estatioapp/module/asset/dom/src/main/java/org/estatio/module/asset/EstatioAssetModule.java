@@ -26,6 +26,9 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.dom.CommunicationChannelOwnerLinkForFixedAsset;
@@ -33,9 +36,8 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.paperclips.PaperclipForFixedAsset;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
 @XmlRootElement(name = "module")
@@ -49,21 +51,12 @@ public class EstatioAssetModule extends ModuleAbstract {
     }
 
 
-
-    @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-            }
-        };
-    }
-
     @Override
     public FixtureScript getTeardownFixture() {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(FixedAssetRegistration.class);
                 deleteFrom(CommunicationChannelOwnerLinkForFixedAsset.class);
                 deleteFrom(PaperclipForFixedAsset.class);
                 deleteFrom(Unit.class);

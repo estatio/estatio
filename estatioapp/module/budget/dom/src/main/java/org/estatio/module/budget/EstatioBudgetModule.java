@@ -52,16 +52,6 @@ public final class EstatioBudgetModule extends ModuleAbstract {
     }
 
 
-
-    @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-            }
-        };
-    }
-
     @Override
     public FixtureScript getTeardownFixture() {
         return new TeardownFixtureAbstract() {

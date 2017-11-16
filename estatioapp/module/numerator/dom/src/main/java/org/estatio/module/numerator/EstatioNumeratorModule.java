@@ -26,15 +26,14 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 
 @XmlRootElement(name = "module")
@@ -48,11 +47,6 @@ public class EstatioNumeratorModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioBaseModule());
     }
 
-
-    @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new DemoData2Persist<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {};
-    }
 
     @Override
     public FixtureScript getTeardownFixture(){

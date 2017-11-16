@@ -115,17 +115,6 @@ public final class EstatioBaseModule extends ModuleAbstract {
         };
     }
 
-    @Override
-    public FixtureScript getTeardownFixture() {
-        return new TeardownFixtureAbstract() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-                // TODO: REVIEW, we're currently not bootstrapping audit or command or sessionlogger, only security
-                // deleteFrom(CommandJdo.class);
-            }
-        };
-    }
-
 
 
     public abstract static class ActionDomainEvent<S>

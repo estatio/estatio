@@ -26,10 +26,11 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.fixtures.ChargeGroupRefData;
@@ -76,6 +77,5 @@ public final class EstatioChargeModule extends ModuleAbstract {
 
     public abstract static class PropertyDomainEvent<S,T>
             extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
-
 
 }

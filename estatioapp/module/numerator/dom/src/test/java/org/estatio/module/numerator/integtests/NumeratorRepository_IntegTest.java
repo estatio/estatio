@@ -25,14 +25,15 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
-import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject;
+import org.estatio.module.numerator.fixtures.data.NumeratorExampleObject_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
@@ -53,6 +54,9 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Before
     public void setUp() throws Exception {
+        runFixtureScript(new DemoData2Persist<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {});
+
+
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);
         applicationTenancyOxf = ApplicationTenancy_enum.GbOxf.findUsing(serviceRegistry);
 

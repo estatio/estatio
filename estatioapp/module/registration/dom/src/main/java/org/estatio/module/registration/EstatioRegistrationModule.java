@@ -32,7 +32,7 @@ import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.EstatioAssetModule;
-import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
+import org.estatio.module.registration.dom.LandRegister;
 
 @XmlRootElement(name = "module")
 public final class EstatioRegistrationModule extends ModuleAbstract {
@@ -45,21 +45,13 @@ public final class EstatioRegistrationModule extends ModuleAbstract {
     }
 
 
-    @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-            }
-        };
-    }
 
     @Override
     public FixtureScript getTeardownFixture() {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                deleteFrom(FixedAssetRegistration.class);
+                deleteFrom(LandRegister.class);
             }
         };
     }

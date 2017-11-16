@@ -21,10 +21,9 @@ package org.estatio.module.application.fixtures;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import org.estatio.module.charge.EstatioChargeModule;
-import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
+import org.estatio.module.country.IncodeDomCountryModule;
 import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.EstatioIndexModule;
-import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
@@ -36,14 +35,13 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        executionContext.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "countries", new EstatioCountryAppTenancyModule().getRefDataSetupFixture());
+        //executionContext.executeChild(this, "countries", new EstatioCountryAppTenancyModule().getRefDataSetupFixture());
         //executionContext.executeChild(this, "states", new StatesRefData());
         executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "taxes", new EstatioChargeModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "docFrags", new EstatioLeaseModule().getRefDataSetupFixture());
 
     }
 }

@@ -45,15 +45,6 @@ public final class EstatioAgreementModule extends ModuleAbstract {
     }
 
     @Override
-    public FixtureScript getRefDataSetupFixture() {
-        return new FixtureScript() {
-            @Override
-            protected void execute(final ExecutionContext executionContext) {
-            }
-        };
-    }
-
-    @Override
     public FixtureScript getTeardownFixture() {
         return new TeardownFixtureAbstract() {
             @Override
