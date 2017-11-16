@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.financial;
+package org.estatio.module.lease.integtests.financial;
 
 import java.util.List;
 
@@ -28,24 +28,23 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
+import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
+public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class FindBankMandateRepositoryFor extends BankMandateRepository_IntegTest {
 
@@ -54,7 +53,6 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                     executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
                     executionContext.executeChild(this, new LeaseForKalPoison001Nl());

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.financial;
+package org.estatio.module.lease.integtests.financial;
 
 import java.util.List;
 
@@ -27,16 +27,15 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class BankAccountRepository_IntegTest extends EstatioIntegrationTest {
+public class BankAccountRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class FindBankMandateRepositoryFor extends BankAccountRepository_IntegTest {
 
@@ -45,7 +44,6 @@ public class BankAccountRepository_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                     executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
                 }
