@@ -259,6 +259,14 @@ public abstract class IntegrationTestAbstract3 {
     /**
      * For convenience of subclasses, remove some boilerplate
      */
+    protected <T> T mixin(final Class<T> mixinClass, final Object mixedIn) {
+        return factoryService.mixin(mixinClass, mixedIn);
+    }
+
+
+    /**
+     * For convenience of subclasses, remove some boilerplate
+     */
     protected <T> T unwrap(final T obj) {
         return wrapperFactory.unwrap(obj);
     }

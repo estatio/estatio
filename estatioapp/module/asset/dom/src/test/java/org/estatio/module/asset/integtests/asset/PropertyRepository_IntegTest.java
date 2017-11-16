@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.assets;
+package org.estatio.module.asset.integtests.asset;
 
 import java.util.List;
 
@@ -32,27 +32,25 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class PropertyRepository_IntegTest extends EstatioIntegrationTest {
+public class PropertyRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());

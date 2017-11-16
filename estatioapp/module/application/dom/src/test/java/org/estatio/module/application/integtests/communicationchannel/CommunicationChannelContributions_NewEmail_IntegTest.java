@@ -1,4 +1,4 @@
-package org.estatio.module.asset.integtests.communicationchannel;
+package org.estatio.module.application.integtests.communicationchannel;
 
 import java.util.SortedSet;
 
@@ -15,12 +15,12 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
+import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
-public class CommunicationChannelContributions_NewEmail_IntegTest extends AssetModuleIntegTestAbstract {
+public class CommunicationChannelContributions_NewEmail_IntegTest extends ApplicationModuleIntegTestAbstract {
 
     @Inject
     CommunicationChannelOwner_newChannelContributions communicationChannelContributions;

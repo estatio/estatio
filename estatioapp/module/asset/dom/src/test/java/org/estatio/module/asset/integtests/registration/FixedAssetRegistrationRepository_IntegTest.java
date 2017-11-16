@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.estatio.integtests.assets.registration;
+package org.estatio.module.asset.integtests.registration;
 
 import java.util.List;
 
@@ -33,21 +33,19 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class FixedAssetRegistrationRepository_IntegTest extends EstatioIntegrationTest {
+public class FixedAssetRegistrationRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
             }

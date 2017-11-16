@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.lease.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;

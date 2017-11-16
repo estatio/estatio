@@ -34,6 +34,9 @@ import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
+/**
+ * TODO: this could move to budgetassignment, and be a regular derived collection rather than a mixin
+ */
 @DomainService(
         nature = NatureOfService.VIEW_CONTRIBUTIONS_ONLY
 )

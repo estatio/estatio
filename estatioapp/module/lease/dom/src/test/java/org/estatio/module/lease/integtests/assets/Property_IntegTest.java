@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.assets;
+package org.estatio.module.lease.integtests.assets;
 
 import java.util.List;
 import java.util.Set;
@@ -36,26 +36,24 @@ import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.fixtures.PropertyBuilder;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.base.platform.fake.EstatioFakeDataService;
+import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
-import org.estatio.module.lease.contributions.Property_vacantUnits;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.asset.fixtures.PropertyBuilder;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Property_IntegTest extends EstatioIntegrationTest {
+public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
@@ -118,7 +116,6 @@ public class Property_IntegTest extends EstatioIntegrationTest {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     executionContext.executeChild(this, fs);
                 }
             });

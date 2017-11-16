@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.estatio.integtests.assets.financial;
+package org.estatio.module.assetfinancial.integtests.assets;
 
 import java.util.List;
 
@@ -37,29 +37,27 @@ import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForOxford;
+import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndFaFaForOxford;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
-import org.estatio.integtests.EstatioIntegrationTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class FixedAssetFinancialAccountRepository_IntegTest extends EstatioIntegrationTest {
+public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinancialModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
                 executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForOxford());
             }

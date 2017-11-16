@@ -18,13 +18,25 @@
  */
 package org.estatio.module.assetfinancial.integtests;
 
+import javax.inject.Inject;
+
+import org.junit.Test;
+
+import org.apache.isis.applib.services.jaxb.JaxbService;
+
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 
-public abstract class AssetFinancialModuleIntegTestAbstract extends IntegrationTestAbstract3 {
+public class BootstrapAssetFinancialModuleIntegTest extends AssetFinancialModuleIntegTestAbstract {
 
-    public AssetFinancialModuleIntegTestAbstract() {
-        super(new EstatioAssetFinancialModule());
+    @Test
+    public void serializes_module() throws Exception {
+
+        final EstatioAssetFinancialModule module = new EstatioAssetFinancialModule();
+
+        final String s = jaxbService.toXml(module);
+        System.out.println(s);
     }
 
+    @Inject
+    JaxbService jaxbService;
 }
