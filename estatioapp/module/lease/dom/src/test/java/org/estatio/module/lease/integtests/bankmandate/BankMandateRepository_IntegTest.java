@@ -16,10 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.bankmandate;
+package org.estatio.module.lease.integtests.bankmandate;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,32 +28,27 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
-import org.estatio.integtests.EstatioIntegrationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
+public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
-
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
             }
@@ -102,15 +98,15 @@ public class BankMandateRepository_IntegTest extends EstatioIntegrationTest {
             transactionService.flushTransaction();
 
             // Then
-            assertThat(bankMandate.getReference()).isEqualTo(reference);
-            assertThat(bankMandate.getName()).isEqualTo(name);
-            assertThat(bankMandate.getStartDate()).isEqualTo(startDate);
-            assertThat(bankMandate.getEndDate()).isEqualTo(endDate);
-            assertThat(bankMandate.getPrimaryParty()).isEqualTo(creditor);
-            assertThat(bankMandate.getSecondaryParty()).isEqualTo(debtor);
-            assertThat(bankMandate.getSequenceType()).isEqualTo(sequenceType);
-            assertThat(bankMandate.getScheme()).isEqualTo(scheme);
-            assertThat(bankMandate.getSignatureDate()).isEqualTo(signatureDate);
+            Assertions.assertThat(bankMandate.getReference()).isEqualTo(reference);
+            Assertions.assertThat(bankMandate.getName()).isEqualTo(name);
+            Assertions.assertThat(bankMandate.getStartDate()).isEqualTo(startDate);
+            Assertions.assertThat(bankMandate.getEndDate()).isEqualTo(endDate);
+            Assertions.assertThat(bankMandate.getPrimaryParty()).isEqualTo(creditor);
+            Assertions.assertThat(bankMandate.getSecondaryParty()).isEqualTo(debtor);
+            Assertions.assertThat(bankMandate.getSequenceType()).isEqualTo(sequenceType);
+            Assertions.assertThat(bankMandate.getScheme()).isEqualTo(scheme);
+            Assertions.assertThat(bankMandate.getSignatureDate()).isEqualTo(signatureDate);
 
         }
 
