@@ -36,6 +36,7 @@ import org.incode.module.country.IncodeDomCountryModule;
 import org.incode.module.document.IncodeDomDocumentModule;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
+import org.estatio.module.base.platform.applib.Module;
 import org.estatio.module.base.platform.applib.ModuleAbstract;
 
 /**
@@ -44,12 +45,14 @@ import org.estatio.module.base.platform.applib.ModuleAbstract;
 @XmlRootElement(name = "module")
 public final class IncodeDomCommunicationsModule extends ModuleAbstract {
 
-    @Override public Set<ModuleAbstract> getModuleDependencies() {
+    @Override
+    public Set<Module> getDependencies() {
         return Sets.newHashSet(
                 new IncodeDomCountryModule(),
                 new IncodeDomDocumentModule()
         );
     }
+
 
     @Override
     public Set<Class<?>> getDependenciesAsClass() {

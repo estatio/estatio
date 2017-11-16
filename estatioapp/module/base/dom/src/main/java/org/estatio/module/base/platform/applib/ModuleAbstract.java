@@ -24,9 +24,8 @@ public abstract class ModuleAbstract implements Module {
         return Module.super.getDependencies();
     }
 
-    // @XmlElementWrapper
     @XmlElement(name = "module", required = true)
-    public Set<ModuleAbstract> getModuleDependencies() {
+    private Set<ModuleAbstract> getModuleDependencies() {
         return (Set) getDependencies();
     }
 

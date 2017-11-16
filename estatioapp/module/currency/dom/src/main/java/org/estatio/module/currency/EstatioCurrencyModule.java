@@ -20,6 +20,8 @@ package org.estatio.module.currency;
 
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
