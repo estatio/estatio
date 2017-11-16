@@ -18,11 +18,13 @@
  */
 package org.estatio.module.capex.integtests;
 
+import org.isisaddons.module.fakedata.FakeDataModule;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.capex.EstatioCapexModule;
 
 public abstract class CapexModuleIntegTestAbstract extends IntegrationTestAbstract3 {
     public CapexModuleIntegTestAbstract() {
-        super(new EstatioCapexModule());
+        super(new EstatioCapexModule(), FakeDataModule.class);
     }
 }

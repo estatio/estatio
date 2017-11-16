@@ -43,7 +43,7 @@ import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 import org.isisaddons.module.fakedata.FakeDataModule;
 
 import org.estatio.app.EstatioAppManifest;
-import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
+import org.estatio.module.fake.EstatioFakeModule;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
 /**
@@ -67,7 +67,7 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
                     .with(new EstatioAppManifest(
                             Collections.emptyList(),
                             null,
-                            Arrays.asList(EstatioIntegTestFakeServicesModule.class, FakeDataModule.class)
+                            Arrays.asList(EstatioFakeModule.class, FakeDataModule.class)
                     ) {
                         @Override
                         public Map<String, String> getConfigurationProperties() {
@@ -137,9 +137,6 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract2 {
     protected FixtureClock getFixtureClock() {
         return super.getFixtureClock();
     }
-
-    @Inject
-    protected RunBackgroundCommandsService runBackgroundCommandsService;
 
     @Inject
     protected BackgroundCommandServiceJdoRepository backgroundCommandRepository;

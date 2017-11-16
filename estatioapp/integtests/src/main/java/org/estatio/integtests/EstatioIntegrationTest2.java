@@ -31,7 +31,7 @@ import org.isisaddons.module.command.dom.BackgroundCommandServiceJdoRepository;
 
 import org.estatio.app.EstatioAppManifest2;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
-import org.estatio.integtests.fakes.EstatioIntegTestFakeServicesModule;
+import org.estatio.module.fake.EstatioFakeModule;
 
 /**
  * Base class for integration tests.
@@ -45,7 +45,7 @@ public abstract class EstatioIntegrationTest2 extends IntegrationTestAbstract2 {
 
         // TODO: almost the same as EstatioIntegrationTest, but doesn't run fixtures as 'estatio-admin' (use sudo service?)
         bootstrapUsing(EstatioAppManifest2.BUILDER
-                .withAdditionalServices(EstatioIntegTestFakeServicesModule.class)
+                .withAdditionalServices(EstatioFakeModule.class)
         );
 
         TickingFixtureClock.replaceExisting();
@@ -53,8 +53,6 @@ public abstract class EstatioIntegrationTest2 extends IntegrationTestAbstract2 {
     }
 
 
-    @Inject
-    protected RunBackgroundCommandsService runBackgroundCommandsService;
 
     @Inject
     protected BackgroundCommandServiceJdoRepository backgroundCommandRepository;
