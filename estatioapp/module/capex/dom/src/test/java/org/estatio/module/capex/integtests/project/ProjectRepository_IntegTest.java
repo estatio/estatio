@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.projects;
+package org.estatio.module.capex.integtests.project;
 
 import java.util.List;
 
@@ -29,23 +29,21 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class ProjectRepository_IntegTest extends EstatioIntegrationTest {
+public class ProjectRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
-        runScript(new FixtureScript() {
+        runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
                 //                executionContext.executeChild(this, new OrganisationForTopModel());
                 executionContext.executeChild(this, new ProjectsForKal());
