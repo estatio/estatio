@@ -6,7 +6,6 @@ import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.application.EstatioApplicationModule;
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.budget.EstatioBudgetModule;
@@ -48,7 +47,6 @@ class EstatioAppDefn  {
                 EstatioCapexModule.class,
                 EstatioCurrencyModule.class,
                 EstatioEventModule.class,
-                EstatioBankAccountModule.class,
                 EstatioFinancialModule.class,
                 EstatioGuaranteeModule.class,
                 EstatioIndexModule.class,

@@ -26,10 +26,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.paperclips.PaperclipForBankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountTransaction;
 import org.estatio.module.party.EstatioPartyModule;
@@ -50,6 +53,10 @@ public final class EstatioFinancialModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+
+                deleteFrom(PaperclipForBankAccount.class);
+                deleteFrom(BankAccount.class);
+
                 deleteFrom(FinancialAccountTransaction.class);
                 deleteFrom(FinancialAccount.class);
             }

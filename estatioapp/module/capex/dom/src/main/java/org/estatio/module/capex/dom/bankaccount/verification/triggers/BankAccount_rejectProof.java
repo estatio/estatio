@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
 
 /**

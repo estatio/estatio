@@ -15,8 +15,8 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.paperclips.PaperclipForBankAccount;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.paperclips.PaperclipForBankAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

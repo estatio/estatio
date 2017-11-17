@@ -15,7 +15,7 @@ import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransitionType;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine

@@ -76,7 +76,7 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;

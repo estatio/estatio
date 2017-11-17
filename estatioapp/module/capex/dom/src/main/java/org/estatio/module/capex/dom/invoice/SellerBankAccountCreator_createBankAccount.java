@@ -5,9 +5,9 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
-import org.estatio.module.bankaccount.dom.utils.IBANValidator;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.utils.IBANValidator;
 
 /**
  * This interface cannot be inlined, because SellerBankAccountCreator is an interface.

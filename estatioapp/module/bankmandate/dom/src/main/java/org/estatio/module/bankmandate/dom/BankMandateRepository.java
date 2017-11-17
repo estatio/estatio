@@ -32,7 +32,7 @@ import org.estatio.module.agreement.dom.AgreementRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(

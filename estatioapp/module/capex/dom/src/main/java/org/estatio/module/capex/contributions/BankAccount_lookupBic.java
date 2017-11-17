@@ -9,7 +9,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.Titled;
 
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 /**
  * REVIEW: this could be inlined as a mixin (but domain layer -> app layer?)

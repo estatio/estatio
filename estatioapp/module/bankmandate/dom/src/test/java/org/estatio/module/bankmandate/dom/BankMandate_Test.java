@@ -2,7 +2,7 @@ package org.estatio.module.bankmandate.dom;
 
 import org.junit.Test;
 
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

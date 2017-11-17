@@ -41,7 +41,7 @@ import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepositor
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;

@@ -3,7 +3,7 @@ package org.estatio.module.capex.dom.bankaccount.verification;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.module.capex.dom.dobj.DomainObject_currentStateAbstract;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 /**
  * This cannot be inlined (needs to be a mixin) because BankAccount does not know abouts its verification state machine

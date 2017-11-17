@@ -19,7 +19,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.currency.dom.Currency;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 

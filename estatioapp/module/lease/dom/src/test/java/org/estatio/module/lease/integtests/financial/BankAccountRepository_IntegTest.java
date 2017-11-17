@@ -28,8 +28,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 

@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
@@ -38,6 +38,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -72,7 +73,8 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         @Test
         public void forAccount() {
             // when
-            FinancialAccount account = financialAccountRepository.findByOwnerAndReference(party, BankAccountAndMandateForTopModelGb.REF);
+            FinancialAccount account = financialAccountRepository
+                    .findByOwnerAndReference(party, BankAccountAndMandateForTopModelGb.REF);
 
             // then
             assertThat(account, is(notNullValue()));
@@ -101,7 +103,8 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         @Test
         public void findAccountsByTypeOwner() throws Exception {
             // when
-            List<FinancialAccount> accounts = financialAccountRepository.findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
+            List<FinancialAccount> accounts = financialAccountRepository
+                    .findAccountsByTypeOwner(FinancialAccountType.BANK_ACCOUNT, party);
             assertThat(accounts.size(), is(1));
 
             // then
@@ -128,6 +131,5 @@ public class FinancialAccountRepository_IntegTest extends LeaseModuleIntegTestAb
         }
 
     }
-
 
 }

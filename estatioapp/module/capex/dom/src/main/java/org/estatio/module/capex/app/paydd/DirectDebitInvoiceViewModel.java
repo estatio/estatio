@@ -17,7 +17,7 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;

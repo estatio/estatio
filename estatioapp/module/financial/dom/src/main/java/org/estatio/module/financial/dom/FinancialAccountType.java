@@ -24,7 +24,6 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.incode.module.base.dom.utils.StringUtils;
 
 import org.incode.module.base.dom.PowerType;
-import org.estatio.module.bankaccount.dom.BankAccount;
 
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 

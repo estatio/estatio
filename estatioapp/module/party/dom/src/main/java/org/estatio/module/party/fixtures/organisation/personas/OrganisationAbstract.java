@@ -39,11 +39,16 @@ import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PersonRepository;
 
+import lombok.Getter;
+
 /**
  * Sets up the {@link Organisation} and also a number of
  * {@link CommunicationChannel}s.
  */
 public abstract class OrganisationAbstract extends FixtureScript {
+
+    @Getter
+    private Party party;
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
@@ -69,6 +74,7 @@ public abstract class OrganisationAbstract extends FixtureScript {
 
         createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 
+        this.party = party;
         return executionContext.addResult(this, party.getReference(), party);
     }
 

@@ -25,8 +25,8 @@ import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
-import org.estatio.module.bankaccount.dom.BankAccount;
-import org.estatio.module.bankaccount.canonical.v1.BankAccountDtoFactory;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.canonical.v1.BankAccountDtoFactory;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(

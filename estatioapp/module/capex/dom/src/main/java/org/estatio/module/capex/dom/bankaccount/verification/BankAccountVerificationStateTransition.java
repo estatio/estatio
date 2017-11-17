@@ -19,7 +19,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.module.capex.dom.state.StateTransitionAbstract;
 import org.estatio.module.capex.dom.state.StateTransitionRepositoryAbstract;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 import lombok.Getter;
 import lombok.Setter;

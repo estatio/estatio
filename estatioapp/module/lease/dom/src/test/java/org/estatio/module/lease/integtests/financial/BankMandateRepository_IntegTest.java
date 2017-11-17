@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPoisonNl;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.financial.dom.FinancialAccount;

@@ -30,12 +30,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -46,13 +43,11 @@ import org.apache.isis.applib.annotation.Where;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.with.WithNameGetter;
 import org.incode.module.base.dom.with.WithReferenceGetter;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyCountry;
-import org.estatio.module.bankaccount.dom.BankAccount;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.base.dom.EstatioRole;
 

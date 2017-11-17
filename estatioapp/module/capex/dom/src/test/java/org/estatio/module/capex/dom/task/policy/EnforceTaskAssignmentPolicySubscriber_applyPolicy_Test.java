@@ -20,7 +20,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRole;

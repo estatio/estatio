@@ -20,7 +20,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.state.StateTransitionEvent;
 import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
 public class BankAccountVerificationStateSubscriber extends AbstractSubscriber {

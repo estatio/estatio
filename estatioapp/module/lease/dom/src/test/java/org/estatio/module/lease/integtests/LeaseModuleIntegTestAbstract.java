@@ -18,6 +18,8 @@
  */
 package org.estatio.module.lease.integtests;
 
+import org.isisaddons.module.fakedata.FakeDataModule;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
 import org.estatio.module.lease.EstatioLeaseModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
@@ -25,7 +27,7 @@ import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 public abstract class LeaseModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public LeaseModuleIntegTestAbstract() {
-        super(new EstatioLeaseModule());
+        super(new EstatioLeaseModule(), FakeDataModule.class);
     }
 
     @Override

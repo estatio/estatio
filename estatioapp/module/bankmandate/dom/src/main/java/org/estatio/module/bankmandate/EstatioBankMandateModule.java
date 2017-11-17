@@ -26,13 +26,14 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.agreement.EstatioAgreementModule;
-import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.dom.BankMandate;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.estatio.module.financial.EstatioFinancialModule;
 
 @XmlRootElement(name = "module")
 public final class EstatioBankMandateModule extends ModuleAbstract {
@@ -42,7 +43,7 @@ public final class EstatioBankMandateModule extends ModuleAbstract {
     @Override
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
-                new EstatioBankAccountModule(),
+                new EstatioFinancialModule(),
                 new EstatioAgreementModule());
     }
 

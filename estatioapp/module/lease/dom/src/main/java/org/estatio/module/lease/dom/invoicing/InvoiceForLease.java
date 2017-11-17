@@ -64,7 +64,7 @@ import org.estatio.module.base.platform.docfragment.FragmentRenderService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceAttributeName;
 import org.estatio.module.invoice.dom.InvoiceItem;

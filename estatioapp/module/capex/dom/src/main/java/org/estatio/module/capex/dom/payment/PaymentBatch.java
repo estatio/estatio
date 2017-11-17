@@ -76,7 +76,7 @@ import org.incode.module.communications.dom.mixins.DocumentConstants;
 
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;

@@ -14,7 +14,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.dom.Importable;
-import org.estatio.module.bankaccount.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;

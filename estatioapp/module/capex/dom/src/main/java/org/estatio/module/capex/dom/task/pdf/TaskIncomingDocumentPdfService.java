@@ -24,7 +24,7 @@ import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class TaskIncomingDocumentPdfService {

@@ -25,7 +25,7 @@ import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.tax.dom.Tax;

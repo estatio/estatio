@@ -13,7 +13,7 @@ import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerifica
 import org.estatio.module.capex.dom.order.approval.triggers.Task_mixinOrderAbstract;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
-import org.estatio.module.bankaccount.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccount;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Task does not know about the domain object it refers to.

@@ -30,7 +30,6 @@ import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
-import org.estatio.module.bankaccount.EstatioBankAccountModule;
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
@@ -71,7 +70,6 @@ public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
                 new EstatioEventModule(),
                 new EstatioBankMandateModule(),
                 new EstatioAssetFinancialModule(),
-                new EstatioBankAccountModule(),
                 new EstatioFinancialModule(),
                 new EstatioAgreementModule(),
                 new EstatioRegistrationModule(),
