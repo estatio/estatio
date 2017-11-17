@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 
+import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.state.State;
 import org.estatio.module.capex.dom.state.StateTransition;
 import org.estatio.module.capex.dom.state.StateTransitionService;
@@ -23,12 +24,10 @@ import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.Task_mixinActAbstract;
 import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
-import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
-import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout(menuOrder = "1")
@@ -81,7 +80,7 @@ public class EnforceTaskAssignmentPolicySubscriber extends org.apache.isis.appli
     private void applyPolicy(
             final Class stateTransitionClass,
             final Object domainObject,
-            final EstatioCapexModule.ActionDomainEvent<?> evv) {
+            final org.apache.isis.applib.services.eventbus.ActionDomainEvent<?> evv) {
         Optional<String> reasonIfAny = applyPolicy(stateTransitionClass, domainObject);
         reasonIfAny.ifPresent(evv::disable);
     }

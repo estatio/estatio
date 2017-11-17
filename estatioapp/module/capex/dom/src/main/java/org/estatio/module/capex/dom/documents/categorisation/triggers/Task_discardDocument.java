@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.capex.app.contributions.categorise.Task_categoriseDocumentAsOrder;
 import org.estatio.module.capex.dom.task.Task;
 
 /**

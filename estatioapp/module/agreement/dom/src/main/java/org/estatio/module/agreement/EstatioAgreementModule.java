@@ -26,13 +26,14 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.agreement.dom.AgreementRole;
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannel;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.party.EstatioPartyModule;
 
 @XmlRootElement(name = "module")
@@ -58,15 +59,6 @@ public final class EstatioAgreementModule extends ModuleAbstract {
             }
         };
     }
-
-    public abstract static class ActionDomainEvent<S>
-            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> { }
-
-    public abstract static class CollectionDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> { }
-
-    public abstract static class PropertyDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> { }
 
 
 }

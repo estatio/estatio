@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.invoice.approval.triggers;
+package org.estatio.module.capex.app.contributions.approval;
 
 import javax.inject.Inject;
 
@@ -8,6 +8,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_previous;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
+import org.estatio.module.capex.app.SwitchViewService;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case

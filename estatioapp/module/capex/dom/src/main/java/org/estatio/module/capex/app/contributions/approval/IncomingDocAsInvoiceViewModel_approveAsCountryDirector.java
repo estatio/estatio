@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.invoice.approval.triggers;
+package org.estatio.module.capex.app.contributions.approval;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
+import org.estatio.module.capex.app.SwitchViewService;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -27,7 +30,8 @@ public class IncomingDocAsInvoiceViewModel_approveAsCountryDirector
     }
 
     public static class ActionDomainEvent
-            extends IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingDocAsInvoiceViewModel_approveAsCountryDirector> {}
+            extends
+            IncomingInvoice_triggerAbstract.ActionDomainEvent<IncomingDocAsInvoiceViewModel_approveAsCountryDirector> {}
 
     @Action(
             domainEvent = ActionDomainEvent.class,

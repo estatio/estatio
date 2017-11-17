@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.documents.categorisation.triggers;
+package org.estatio.module.capex.app.contributions.categorise;
 
 import java.util.List;
 
@@ -11,6 +11,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOtherInvoice;
+import org.estatio.module.capex.dom.documents.categorisation.triggers.Task_mixinDocumentAbstract;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.task.Task;
 

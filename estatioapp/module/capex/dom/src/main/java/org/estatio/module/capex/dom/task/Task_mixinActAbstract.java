@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import com.google.common.base.Strings;
 
-import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
@@ -16,7 +15,7 @@ import org.estatio.module.party.dom.PersonRepository;
 public abstract class Task_mixinActAbstract<MIXIN, DO> extends Task_mixinAbstract<MIXIN,DO> {
 
     public static abstract class ActionDomainEvent<MIXIN>
-            extends EstatioCapexModule.ActionDomainEvent<MIXIN>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<MIXIN>
             implements EnforceTaskAssignmentPolicySubscriber.WithStateTransitionClass {
     }
 

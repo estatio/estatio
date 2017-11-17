@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.invoice.approval.triggers;
+package org.estatio.module.capex.app.contributions.approval;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -10,6 +10,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_triggerAbstract;
+import org.estatio.module.capex.app.SwitchViewService;
 import org.estatio.module.party.dom.Person;
 
 /**

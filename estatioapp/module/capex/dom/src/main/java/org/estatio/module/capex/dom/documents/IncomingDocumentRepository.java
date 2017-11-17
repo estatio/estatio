@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -137,6 +138,8 @@ public class IncomingDocumentRepository extends DocumentRepository {
         }
         return result;
     }
+
+    public static class UploadDomainEvent extends ActionDomainEvent<Object> {}
 
     @Programmatic
     public Document upsertAndArchive(final DocumentType type, final String atPath, final String name, final Blob blob){

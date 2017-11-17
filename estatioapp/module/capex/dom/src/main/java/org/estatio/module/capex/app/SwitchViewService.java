@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.invoice.approval.triggers;
+package org.estatio.module.capex.app;
 
 import javax.inject.Inject;
 

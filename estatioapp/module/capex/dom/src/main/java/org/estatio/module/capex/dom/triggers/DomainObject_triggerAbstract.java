@@ -15,7 +15,6 @@ import org.estatio.module.capex.dom.state.StateTransitionType;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.dom.task.TaskRepository;
 import org.estatio.module.capex.dom.task.policy.EnforceTaskAssignmentPolicySubscriber;
-import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
@@ -36,7 +35,7 @@ public abstract class DomainObject_triggerAbstract<
     protected final STT requiredTransitionType;
 
     public static abstract class ActionDomainEvent<MIXIN>
-            extends EstatioCapexModule.ActionDomainEvent<MIXIN>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<MIXIN>
             implements EnforceTaskAssignmentPolicySubscriber.WithStateTransitionClass {
 
     }

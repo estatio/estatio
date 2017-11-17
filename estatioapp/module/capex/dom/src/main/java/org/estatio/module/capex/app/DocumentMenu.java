@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.security.app.user.MeService;
@@ -86,12 +85,7 @@ public class DocumentMenu extends UdoDomainService<DocumentMenu> {
         return incomingDocumentRepository.matchAllIncomingDocumentsByName(nameOrBarcode);
     }
 
-
-
-
-    public static class UploadDomainEvent extends ActionDomainEvent<DocumentMenu> {}
-
-    @Action(domainEvent = UploadDomainEvent.class)
+    @Action(domainEvent = IncomingDocumentRepository.UploadDomainEvent.class)
     @MemberOrder(sequence = "3")
     public Document upload(final Blob blob) {
         final String name = blob.getName();
