@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application;
+package org.isisaddons.module.audit;
 
 import java.util.Set;
 
@@ -24,31 +24,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
-import org.isisaddons.module.base.platform.applib.Module;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.isisaddons.module.audit.dom.AuditEntry;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
-import org.estatio.module.capex.EstatioCapexModule;
-import org.estatio.module.guarantee.EstatioGuaranteeModule;
-import org.estatio.module.link.EstatioLinkModule;
-import org.estatio.module.registration.EstatioRegistrationModule;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 /**
- * A "global" module for the entire app (=big ball of mud, stuff to decouple)
+ * This is a "proxy" for the corresponding module defined in the Incode Platform.
  */
 @XmlRootElement(name = "module")
-public final class EstatioApplicationModule extends ModuleAbstract {
-
-    public EstatioApplicationModule(){}
+public final class IncodeSpiAuditModule extends ModuleAbstract {
 
     @Override
-    public Set<Module> getDependencies(){
-        return Sets.newHashSet(
-                new EstatioGuaranteeModule(),
-                new EstatioBudgetAssignmentModule(),
-                new EstatioCapexModule(),
-                new EstatioRegistrationModule(),
-                new EstatioLinkModule()
-        );
+    public Set<Class<?>> getDependenciesAsClass() {
+        return Sets.newHashSet(org.isisaddons.module.audit.AuditModule.class);
     }
+
+
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(AuditEntry.class);
+            }
+        };
+    }
+
 
 }

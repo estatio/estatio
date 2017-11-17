@@ -72,12 +72,14 @@ language governing permissions and limitations under the License.
         -->
         <incode-platform.version>1.15.1.1</incode-platform.version>
 
+        <isis-module-audit.version>${incode-platform.version}</isis-module-audit.version>
         <isis-module-command.version>${incode-platform.version}</isis-module-command.version>
         <isis-module-excel.version>${incode-platform.version}</isis-module-excel.version>
         <isis-module-fakedata.version>${incode-platform.version}</isis-module-fakedata.version>
         <isis-module-freemarker.version>${incode-platform.version}</isis-module-freemarker.version>
         <isis-module-pdfbox.version>${incode-platform.version}</isis-module-pdfbox.version>
         <isis-module-poly.version>${incode-platform.version}</isis-module-poly.version>
+        <isis-module-publishmq.version>${incode-platform.version}</isis-module-publishmq.version>
         <isis-module-security.version>${incode-platform.version}</isis-module-security.version>
         <isis-module-sessionlogger.version>${incode-platform.version}</isis-module-sessionlogger.version>
         <isis-module-servletapi.version>${incode-platform.version}</isis-module-servletapi.version>
@@ -85,6 +87,7 @@ language governing permissions and limitations under the License.
         <isis-module-stringinterpolator.version>${incode-platform.version}</isis-module-stringinterpolator.version>
         <isis-module-togglz.version>${incode-platform.version}</isis-module-togglz.version>
         <isis-module-xdocreport.version>${incode-platform.version}</isis-module-xdocreport.version>
+
 
         <isis-metamodel-paraname8.version>${incode-platform.version}</isis-metamodel-paraname8.version>
 
@@ -175,6 +178,26 @@ language governing permissions and limitations under the License.
                 <artifactId>isis-module-security-dom</artifactId>
                 <version>${isis-module-security.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom</artifactId>
+                <version>${isis-module-publishmq.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.audit</groupId>
+                <artifactId>isis-module-audit-dom</artifactId>
+                <version>${isis-module-audit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${isis-module-command.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.isisaddons.module.sessionlogger</groupId>
                 <artifactId>isis-module-sessionlogger-dom</artifactId>

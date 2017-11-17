@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.settings;
+package org.isisaddons.module.sessionlogger;
 
 import java.util.Set;
 
@@ -24,20 +24,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.collect.Sets;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.command.dom.CommandJdo;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 /**
  * This is a "proxy" for the corresponding module defined in the Incode Platform.
  */
 @XmlRootElement(name = "module")
-public final class IncodeLibSettingsModule extends ModuleAbstract {
+public final class IncodeSpiSessionLoggerModule extends ModuleAbstract {
 
     @Override
     public Set<Class<?>> getDependenciesAsClass() {
-        return Sets.newHashSet(SettingsModule.class);
+        return Sets.newHashSet(SessionLoggerModule.class);
     }
 
-
-
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(CommandJdo.class);
+            }
+        };
+    }
 
 }

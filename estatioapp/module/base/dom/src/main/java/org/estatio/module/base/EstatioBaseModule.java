@@ -26,23 +26,27 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.audit.IncodeSpiAuditModule;
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.isisaddons.module.command.IncodeSpiCommandModule;
 import org.isisaddons.module.excel.IncodeLibExcelModule;
+import org.isisaddons.module.freemarker.IncodeLibFreeMarkerModule;
 import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
 import org.isisaddons.module.poly.IncodeLibPolyModule;
+import org.isisaddons.module.publishmq.IncodeSpiPublishMqModule;
 import org.isisaddons.module.security.IncodeSpiSecurityModule;
 import org.isisaddons.module.servletapi.IncodeLibServletApiModule;
-import org.isisaddons.module.settings.IncodeLibSettingsModule;
+import org.isisaddons.module.sessionlogger.IncodeSpiSessionLoggerModule;
 import org.isisaddons.module.stringinterpolator.IncodeLibStringInterpolatorModule;
 import org.isisaddons.module.togglz.IncodeExtTogglzModule;
+import org.isisaddons.module.xdocreport.IncodeLibXDocReportModule;
 import org.isisaddons.wicket.excel.IncodeWktExcelModule;
 import org.isisaddons.wicket.fullcalendar2.IncodeWktFullCalendar2Module;
 import org.isisaddons.wicket.gmap3.IncodeWktGmap3Module;
 import org.isisaddons.wicket.pdfjs.IncodeWktPdfJsModule;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+import org.incode.module.base.services.BaseServicesModule;
 
 import org.estatio.module.base.fixtures.clock.TickingClockFixture;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -59,22 +63,28 @@ import org.estatio.module.base.fixtures.security.users.personas.EstatioUserInSwe
 @XmlRootElement(name = "module")
 public final class EstatioBaseModule extends ModuleAbstract {
 
-    @Override public Set<Module> getDependencies() {
+    @Override
+    public Set<Module> getDependencies() {
         return Sets.newHashSet(
 
                 // lib
                 // (nothing for incode-module-base-dom)
                 // (nothing for incode-module-fixturesupport-dom)
+                // don't include the settings module, instead we use EstatioSettingsModule
                 new IncodeLibExcelModule(),
                 new IncodeLibPdfBoxModule(),
                 new IncodeLibPolyModule(),
                 new IncodeLibServletApiModule(),
-                new IncodeLibSettingsModule(),
                 new IncodeLibStringInterpolatorModule(),
+                new IncodeLibFreeMarkerModule(),
+                new IncodeLibXDocReportModule(),
 
                 // spi
-                new IncodeSpiSecurityModule(),
+                new IncodeSpiAuditModule(),
                 new IncodeSpiCommandModule(),
+                new IncodeSpiPublishMqModule(),
+                new IncodeSpiSecurityModule(),
+                new IncodeSpiSessionLoggerModule(),
 
                 // wkt
                 new IncodeWktExcelModule(),
@@ -84,7 +94,19 @@ public final class EstatioBaseModule extends ModuleAbstract {
 
                 // ext
                 new IncodeExtTogglzModule()
+        );
+    }
 
+    @Override
+    public Set<Class<?>> getDependenciesAsClass() {
+        return Sets.newHashSet(BaseServicesModule.class);
+    }
+
+    @Override
+    public Set<Class<?>> getAdditionalServices() {
+        return Sets.newHashSet(
+                org.isisaddons.module.security.dom.password.PasswordEncryptionServiceUsingJBcrypt.class,
+                org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAllowBeatsVeto.class
         );
     }
 
@@ -114,9 +136,5 @@ public final class EstatioBaseModule extends ModuleAbstract {
             }
         };
     }
-
-
-
-
 
 }

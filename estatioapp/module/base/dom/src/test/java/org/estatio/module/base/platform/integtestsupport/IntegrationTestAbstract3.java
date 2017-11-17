@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
@@ -90,23 +89,20 @@ public abstract class IntegrationTestAbstract3 {
         beginTransaction();
 
         setupModuleRefData();
-
     }
 
     private void bootstrapIfRequired() {
         final List<Module> transitiveDependencies = module.getTransitiveDependencies();
         final Class[] moduleTransitiveDependencies = asClasses(transitiveDependencies);
 
-        final List<Class<?>> furtherDependencies = Lists.newArrayList();
-        for (Module transitiveDependency : transitiveDependencies) {
-            furtherDependencies.addAll(transitiveDependency.getDependenciesAsClass());
-        }
+        final List<Class<?>> additionalModules = module.getTransitiveDependenciesAsClass();
+        final List<Class<?>> additionalServices = module.getTransitiveAdditionalServices();
 
         final AppManifestAbstract.Builder builder =
                 AppManifestAbstract.Builder
                     .forModules(moduleTransitiveDependencies)
-                    .withAdditionalModules(furtherDependencies)
-                    .withAdditionalModules(additionalModuleClasses)                ;
+                    .withAdditionalModules(additionalModules)
+                    .withAdditionalServices(additionalServices);
         final AppManifest appManifest = builder.build();
 
         bootstrapUsing(appManifest);
@@ -219,6 +215,11 @@ public abstract class IntegrationTestAbstract3 {
 
     @After
     public void tearDownAllModules() {
+        final boolean testHealthy = transactionService != null;
+        if(!testHealthy) {
+            return;
+        }
+
         transactionService.nextTransaction();
 
         final List<Module> dependencies = module.getTransitiveDependencies();

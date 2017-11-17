@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 /**
  * have moved this to isisaddons only so that S101 gives us a nice picture.
@@ -45,15 +44,63 @@ public interface Module {
         return null;
     }
 
+    default Set<Class<?>> getAdditionalServices() {
+        return Collections.emptySet();
+    }
+
     /**
      * Recursively obtain the transitive dependencies.
+     *
+     * <p>
+     *     The dependencies are returned in order, with this (the top-most) module last.
+     * </p>
      */
     default List<Module> getTransitiveDependencies() {
         final List<Module> ordered = Lists.newArrayList();
         final List<Module> visited = Lists.newArrayList();
         appendDependenciesTo(ordered, this, visited);
-        final LinkedHashSet<Module> orderedSet = Sets.newLinkedHashSet(ordered);
-        return Lists.newArrayList(orderedSet);
+        final LinkedHashSet<Module> sequencedSet = Sets.newLinkedHashSet(ordered);
+        return Lists.newArrayList(sequencedSet);
+    }
+
+    /**
+     * Obtain the {@link #getDependenciesAsClass()} of this module and all its
+     * {@link #getTransitiveDependencies() transitive dependencies}.
+     *
+     * <p>
+     *     No guarantees are made as to the order of these additional module classes.
+     * </p>
+     */
+    default List<Class<?>> getTransitiveDependenciesAsClass() {
+        final Set<Class<?>> modules = Sets.newHashSet();
+        final List<Module> transitiveDependencies = getTransitiveDependencies();
+        for (Module transitiveDependency : transitiveDependencies) {
+            final Set<Class<?>> additionalModules = transitiveDependency.getDependenciesAsClass();
+            if(additionalModules != null && !additionalModules.isEmpty()) {
+                modules.addAll(additionalModules);
+            }
+        }
+        return Lists.newArrayList(modules);
+    }
+
+    /**
+     * Obtain the {@link #getAdditionalServices()} of this module and all its
+     * {@link #getTransitiveDependencies() transitive dependencies}.
+     *
+     * <p>
+     *     No guarantees are made as to the order of these additional service classes.
+     * </p>
+     */
+    default List<Class<?>> getTransitiveAdditionalServices() {
+        final Set<Class<?>> services = Sets.newHashSet();
+        final List<Module> transitiveDependencies = getTransitiveDependencies();
+        for (Module transitiveDependency : transitiveDependencies) {
+            final Set<Class<?>> additionalServices = transitiveDependency.getAdditionalServices();
+            if(additionalServices != null && !additionalServices.isEmpty()) {
+                services.addAll(additionalServices);
+            }
+        }
+        return Lists.newArrayList(services);
     }
 
     default void appendDependenciesTo(
