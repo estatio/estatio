@@ -58,6 +58,7 @@ import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
@@ -77,6 +78,7 @@ import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForKa
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragmentSeedFixture;
+import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
@@ -159,6 +161,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new IncomingChargeFixture());
         executionContext.executeChild(this, new OrderInvoiceFixture());
 
+        executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
+        executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
         executionContext.executeChild(this, new IncomingPdfFixture().setRunAs("estatio-user-fr"));
 
         executionContext.executeChild(this, new OrderFixture());

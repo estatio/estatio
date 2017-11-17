@@ -77,13 +77,6 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-integtests</artifactId>
-            <!-- TODO: not sure why need this, the parent pom has a dependencyManagement entry -->
-            <!--<version>1.2.0-SNAPSHOT</version>-->
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>estatio-migration</artifactId>
         </dependency>
 
@@ -185,12 +178,6 @@ language governing permissions and limitations under the License.
             <groupId>net.masterthought</groupId>
             <artifactId>maven-cucumber-reporting</artifactId>
             <version>0.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.estatio</groupId>
-            <artifactId>estatio-integtests</artifactId>
-            <version>${estatio.version}</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -707,12 +707,6 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-integtests</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-webapp</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -806,7 +800,6 @@ language governing permissions and limitations under the License.
         <module>estatioapp/module/settings/dom</module>
         <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
-        <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>
     </modules>
 
