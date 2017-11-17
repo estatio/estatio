@@ -1,4 +1,4 @@
-package org.estatio.module.numerator.fixtures.data;
+package org.estatio.module.numerator.integtests.dom;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 

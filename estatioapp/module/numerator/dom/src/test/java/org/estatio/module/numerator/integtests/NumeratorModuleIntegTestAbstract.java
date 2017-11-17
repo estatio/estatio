@@ -19,7 +19,7 @@
 package org.estatio.module.numerator.integtests;
 
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
-import org.estatio.module.numerator.EstatioNumeratorModule;
+import org.estatio.module.numerator.integtests.dom.EstatioNumeratorExampleModule;
 
 /**
  * Base class for integration tests.
@@ -27,7 +27,7 @@ import org.estatio.module.numerator.EstatioNumeratorModule;
 public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public NumeratorModuleIntegTestAbstract() {
-        super(new EstatioNumeratorModule());
+        super(new EstatioNumeratorExampleModule());
     }
 
 }

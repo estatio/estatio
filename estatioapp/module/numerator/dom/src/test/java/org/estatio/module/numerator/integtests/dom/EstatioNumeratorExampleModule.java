@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.numerator;
+package org.estatio.module.numerator.integtests.dom;
 
 import java.util.Set;
 
@@ -32,18 +32,17 @@ import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
-import org.estatio.module.base.EstatioBaseModule;
-import org.estatio.module.numerator.dom.Numerator;
+import org.estatio.module.numerator.EstatioNumeratorModule;
 
 @XmlRootElement(name = "module")
-public class EstatioNumeratorModule extends ModuleAbstract {
+public class EstatioNumeratorExampleModule extends ModuleAbstract {
 
 
-    public EstatioNumeratorModule() {}
+    public EstatioNumeratorExampleModule() {}
 
     @Override
     public Set<Module> getDependencies() {
-        return Sets.newHashSet(new EstatioBaseModule());
+        return Sets.newHashSet(new EstatioNumeratorModule());
     }
 
 
@@ -51,8 +50,8 @@ public class EstatioNumeratorModule extends ModuleAbstract {
     public FixtureScript getTeardownFixture(){
         return new TeardownFixtureAbstract() {
             @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                deleteFrom(Numerator.class);
+            protected void execute(final ExecutionContext executionContext) {
+                executionContext.executeChild(this, new DemoData2Teardown<>(NumeratorExampleObject_enum.class));
             }
         };
     }
