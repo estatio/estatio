@@ -44,7 +44,7 @@ import org.estatio.module.party.EstatioPartyModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
 import org.estatio.module.registration.dom.LandRegister;
 
-public class EstatioOperationalTeardownFixture extends TeardownFixtureAbstract {
+public class EstatioOperationalTeardownFixtureUNUSED extends TeardownFixtureAbstract {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

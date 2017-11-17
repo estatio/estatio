@@ -28,7 +28,7 @@ import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 
 /**
- * Will reset to a fixed baseline of the {@link EstatioRefDataSetupFixture reference data}
+ * Will reset to a fixed baseline of the {@link EstatioRefDataSetupFixtureUNUSED reference data}
  * but no transactional data.
  * <p/>
  * <p>
@@ -36,15 +36,15 @@ import org.estatio.module.currency.dom.CurrencyRepository;
  * it the first time (an idempotent operation).
  * </p>
  */
-public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
+public class EstatioBaseLineFixtureUNUSED extends DiscoverableFixtureScript {
 
-    private EstatioOperationalTeardownFixture teardownFixtureScript;
+    private EstatioOperationalTeardownFixtureUNUSED teardownFixtureScript;
 
-    public EstatioBaseLineFixture() {
-        this(new EstatioOperationalTeardownFixture());
+    public EstatioBaseLineFixtureUNUSED() {
+        this(new EstatioOperationalTeardownFixtureUNUSED());
     }
 
-    public EstatioBaseLineFixture(final EstatioOperationalTeardownFixture teardownFixtureScript) {
+    public EstatioBaseLineFixtureUNUSED(final EstatioOperationalTeardownFixtureUNUSED teardownFixtureScript) {
         super(null, "baseline");
         this.teardownFixtureScript = teardownFixtureScript;
     }
@@ -60,7 +60,7 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
         if (isRefDataPresent()) {
             return;
         }
-        executionContext.executeChild(this, new EstatioRefDataSetupFixture());
+        executionContext.executeChild(this, new EstatioRefDataSetupFixtureUNUSED());
         executionContext.executeChild(this, new EstatioSecurityModuleDemoFixture());
     }
 
@@ -70,7 +70,7 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
 
     /**
      * Use the presence of any persisted {@link Currency} as the indicator as to whether
-     * any reference data has previously been {@link EstatioRefDataSetupFixture setup}.
+     * any reference data has previously been {@link EstatioRefDataSetupFixtureUNUSED setup}.
      */
     private boolean isRefDataPresent() {
         final List<Currency> currencyList = currencyRepository.allCurrencies();

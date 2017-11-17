@@ -29,7 +29,7 @@ import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
-public class EstatioReferenceDataTeardownFixture extends FixtureScript {
+public class EstatioReferenceDataTeardownFixtureUNUSED extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

@@ -20,7 +20,6 @@ package org.estatio.module.application.demos;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-import org.estatio.module.application.fixtures.EstatioBaseLineFixture;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
@@ -98,7 +97,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
     }
 
     private void doExecute(final ExecutionContext executionContext) {
-        executionContext.executeChild(this, new EstatioBaseLineFixture());
+        //executionContext.executeChild(this, new EstatioBaseLineFixtureUNUSED());
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
         executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());

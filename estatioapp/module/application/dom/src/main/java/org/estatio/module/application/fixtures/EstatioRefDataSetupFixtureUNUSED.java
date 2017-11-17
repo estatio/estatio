@@ -26,9 +26,9 @@ import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
-public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
+public class EstatioRefDataSetupFixtureUNUSED extends DiscoverableFixtureScript {
 
-    public EstatioRefDataSetupFixture() {
+    public EstatioRefDataSetupFixtureUNUSED() {
         super(null, "ref-data");
     }
 
