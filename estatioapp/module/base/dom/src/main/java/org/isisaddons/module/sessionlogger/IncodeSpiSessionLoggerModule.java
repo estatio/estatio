@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.sessionlogger.dom.SessionLogEntry;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -47,7 +47,7 @@ public final class IncodeSpiSessionLoggerModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(CommandJdo.class);
+                deleteFrom(SessionLogEntry.class);
             }
         };
     }

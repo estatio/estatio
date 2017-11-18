@@ -47,6 +47,7 @@ public final class IncodeSpiCommandModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
+                // can't delete from CommandJdo, is searched for during teardown (IsisSession#close)
                 //deleteFrom(CommandJdo.class);
             }
         };
