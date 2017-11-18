@@ -102,9 +102,10 @@ public class Invoice_DocumentManagement_IntegTest extends LeaseModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
+
                 executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
 
-                executionContext.executeChild(this, new DocumentTypesAndTemplatesForLeaseFixture());
             }
         });
     }

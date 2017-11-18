@@ -20,7 +20,6 @@ public class Module_getTransitiveDependencies_Test {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-
     @AllArgsConstructor
     public class ModuleImpl implements Module {
         private final String name;
@@ -29,8 +28,24 @@ public class Module_getTransitiveDependencies_Test {
         }
     }
 
-    final Module moduleF = new ModuleImpl("F") {};
-    final Module moduleE = new ModuleImpl("E") {};
+    static class ModuleP {}
+    static class ModuleQ {}
+    static class ModuleR {}
+
+    static class ServiceX {}
+    static class ServiceY {}
+    static class ServiceZ {}
+
+    final Module moduleF = new ModuleImpl("F");
+    final Module moduleE = new ModuleImpl("E") {
+        @Override public Set<Class<?>> getAdditionalServices() {
+            return Sets.newHashSet(ServiceX.class);
+        }
+        @Override
+        public Set<Class<?>> getDependenciesAsClass() {
+            return Sets.newHashSet(ModuleP.class);
+        }
+    };
     final Module moduleD = new ModuleImpl("D") {
         @Override public Set<Module> getDependencies() {
             return Sets.newHashSet(moduleE);
@@ -40,6 +55,14 @@ public class Module_getTransitiveDependencies_Test {
     final Module moduleC = new ModuleImpl("C") {
         @Override public Set<Module> getDependencies() {
             return Sets.newHashSet(moduleE, moduleD);
+        }
+        @Override
+        public Set<Class<?>> getDependenciesAsClass() {
+            return Sets.newHashSet(ModuleQ.class, ModuleR.class);
+        }
+        @Override
+        public Set<Class<?>> getAdditionalServices() {
+            return Sets.newHashSet(ServiceY.class, ServiceZ.class);
         }
     };
     final Module moduleB = new ModuleImpl("B") {
@@ -74,12 +97,54 @@ public class Module_getTransitiveDependencies_Test {
     @Test
     public void no_cyclic_dependencies() throws Exception {
 
-        assertTransitiveDependencies(moduleF, Lists.newArrayList(moduleF));
-        assertTransitiveDependencies(moduleE, Lists.newArrayList(moduleE));
-        assertTransitiveDependencies(moduleD, Lists.newArrayList(moduleE, moduleD));
-        assertTransitiveDependencies(moduleC, Lists.newArrayList(moduleE, moduleD, moduleC));
-        assertTransitiveDependencies(moduleB, Lists.newArrayList(moduleE, moduleD, moduleC, moduleF, moduleB));
-        assertTransitiveDependencies(moduleA, Lists.newArrayList(moduleE, moduleD, moduleC, moduleA));
+        // moduleF
+        // moduleE [P; X]
+        // moduleD            -> moduleE
+        // moduleC [Q,R; Y,Z] -> moduleE, moduleD
+        // moduleB            -> moduleF, moduleC
+        // moduleA            -> moduleE, moduleC
+
+        assertTransitiveDependencies(
+                moduleF, Lists.newArrayList(moduleF));
+        assertTransitiveDependenciesAsClass(
+                moduleF, Lists.newArrayList());
+        assertTransitiveServices(
+                moduleF, Lists.newArrayList());
+
+        assertTransitiveDependencies(
+                moduleE, Lists.newArrayList(moduleE));
+        assertTransitiveDependenciesAsClass(
+                moduleE, Lists.newArrayList(ModuleP.class));
+        assertTransitiveServices(
+                moduleE, Lists.newArrayList(ServiceX.class));
+
+        assertTransitiveDependencies(
+                moduleD, Lists.newArrayList(moduleE, moduleD));
+        assertTransitiveDependenciesAsClass(
+                moduleD, Lists.newArrayList(ModuleP.class));
+        assertTransitiveServices(
+                moduleD, Lists.newArrayList(ServiceX.class));
+
+        assertTransitiveDependencies(
+                moduleC, Lists.newArrayList(moduleE, moduleD, moduleC));
+        assertTransitiveDependenciesAsClass(
+                moduleC, Lists.newArrayList(ModuleP.class, ModuleQ.class, ModuleR.class));
+        assertTransitiveServices(
+                moduleC, Lists.newArrayList(ServiceX.class, ServiceY.class, ServiceZ.class));
+
+        assertTransitiveDependencies(
+                moduleB, Lists.newArrayList(moduleE, moduleD, moduleC, moduleF, moduleB));
+        assertTransitiveDependenciesAsClass(
+                moduleB, Lists.newArrayList(ModuleP.class, ModuleQ.class, ModuleR.class));
+        assertTransitiveServices(
+                moduleB, Lists.newArrayList(ServiceX.class, ServiceY.class, ServiceZ.class));
+
+        assertTransitiveDependencies(
+                moduleA, Lists.newArrayList(moduleE, moduleD, moduleC, moduleA));
+        assertTransitiveDependenciesAsClass(
+                moduleA, Lists.newArrayList(ModuleP.class, ModuleQ.class, ModuleR.class));
+        assertTransitiveServices(
+                moduleA, Lists.newArrayList(ServiceX.class, ServiceY.class, ServiceZ.class));
 
     }
 
@@ -93,8 +158,23 @@ public class Module_getTransitiveDependencies_Test {
 
     void assertTransitiveDependencies(
             final Module module, final List<Module> expected) {
-        final List<Module> transitiveDependencies = module.getTransitiveDependencies();
-        assertThat(transitiveDependencies).containsAll(expected);
+        final List<Module> dependencies = module.getTransitiveDependencies();
+        assertThat(dependencies).containsAll(expected);
+        assertThat(expected).containsAll(dependencies);
+    }
+
+    void assertTransitiveServices(
+            final Module module, final List<Class<?>> expected) {
+        final List<Class<?>> services = module.getTransitiveAdditionalServices();
+        assertThat(services).containsAll(expected);
+        assertThat(expected).containsAll(services);
+    }
+
+    void assertTransitiveDependenciesAsClass(
+            final Module module, final List<Class<?>> expected) {
+        final List<Class<?>> dependenciesAsClass = module.getTransitiveDependenciesAsClass();
+        assertThat(dependenciesAsClass).containsAll(expected);
+        assertThat(expected).containsAll(dependenciesAsClass);
     }
 
 }

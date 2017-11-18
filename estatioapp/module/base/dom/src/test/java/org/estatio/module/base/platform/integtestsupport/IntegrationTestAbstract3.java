@@ -49,6 +49,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.sessmgmt.SessionManagementService;
@@ -70,6 +71,12 @@ public abstract class IntegrationTestAbstract3 {
     @Rule
     public ExpectedException expectedExceptions = ExpectedException.none();
 
+    /**
+     * this is asymmetric - handles only the teardown of the transaction afterwards, not the initial set up
+     * (which is done instead by the @Before, so that can also bootstrap system the very first time)
+     */
+    @Rule
+    public IntegrationTestAbstract3.IsisTransactionRule isisTransactionRule = new IntegrationTestAbstract3.IsisTransactionRule();
 
     protected final Module module;
     private final Class[] additionalModuleClasses;
@@ -101,6 +108,7 @@ public abstract class IntegrationTestAbstract3 {
         final AppManifestAbstract.Builder builder =
                 AppManifestAbstract.Builder
                     .forModules(moduleTransitiveDependencies)
+                    .withAdditionalModules(additionalModuleClasses) // eg fake module, as passed into test's constructor
                     .withAdditionalModules(additionalModules)
                     .withAdditionalServices(additionalServices);
         final AppManifest appManifest = builder.build();
@@ -152,13 +160,6 @@ public abstract class IntegrationTestAbstract3 {
         return m1Modules.containsAll(m2Modules) && m2Modules.containsAll(m1Modules);
     }
 
-    /**
-     * this is asymmetric - handles only the teardown of the transaction afterwards, not the initial set up
-     * (which is done instead by the @Before, so that can also bootstrap system the very first time)
-     */
-    @Rule
-    public IntegrationTestAbstract3.IsisTransactionRule isisTransactionRule = new IntegrationTestAbstract3.IsisTransactionRule();
-
     private static class IsisTransactionRule implements MethodRule {
 
         @Override
@@ -175,22 +176,75 @@ public abstract class IntegrationTestAbstract3 {
                         final IsisSystemForTest isft = IsisSystemForTest.get();
                         isft.endTran();
                     } catch(final Throwable e) {
-                        final IsisSystemForTest isft = IsisSystemForTest.getElseNull();
-                        if(isft != null) {
-                            isft.closeSession();
-                            isft.openSession();
-                        }
-                        final List<Throwable> causalChain = Throwables.getCausalChain(e);
-                        // if underlying cause is an applib-defined exception,
-                        // throw that rather than Isis' wrapper exception
-                        for (final Throwable cause : causalChain) {
-                            if(cause instanceof RecoverableException ||
-                                    cause instanceof NonRecoverableException) {
-                                throw cause;
+                        // determine if underlying cause is an applib-defined exception,
+                        final RecoverableException recoverableException =
+                                determineIfRecoverableException(e);
+                        final NonRecoverableException nonRecoverableException =
+                                determineIfNonRecoverableException(e);
+
+                        if(recoverableException != null) {
+                            try {
+                                final IsisSystemForTest isft = IsisSystemForTest.get();
+                                isft.getContainer().flush(); // don't care if npe
+                                isft.getService(IsisJdoSupport.class).getJdoPersistenceManager().flush();
+                            } catch (Exception ignore) {
+                                // ignore
                             }
                         }
+                        // attempt to close this
+                        try {
+                            final IsisSystemForTest isft = IsisSystemForTest.getElseNull();
+                            isft.closeSession(); // don't care if npe
+                        } catch(Exception ignore) {
+                            // ignore
+                        }
+
+                        // attempt to start another
+                        try {
+                            final IsisSystemForTest isft = IsisSystemForTest.getElseNull();
+                            isft.openSession(); // don't care if npe
+                        } catch(Exception ignore) {
+                            // ignore
+                        }
+
+
+                        // if underlying cause is an applib-defined, then
+                        // throw that rather than Isis' wrapper exception
+                        if(recoverableException != null) {
+                            throw recoverableException;
+                        }
+                        if(nonRecoverableException != null) {
+                            throw nonRecoverableException;
+                        }
+
+                        // report on the error that caused
+                        // a problem for *this* test
                         throw e;
                     }
+                }
+
+                public NonRecoverableException determineIfNonRecoverableException(final Throwable e) {
+                    NonRecoverableException nonRecoverableException = null;
+                    final List<Throwable> causalChain2 = Throwables.getCausalChain(e);
+                    for (final Throwable cause : causalChain2) {
+                        if(cause instanceof NonRecoverableException) {
+                            nonRecoverableException = (NonRecoverableException) cause;
+                            break;
+                        }
+                    }
+                    return nonRecoverableException;
+                }
+
+                public RecoverableException determineIfRecoverableException(final Throwable e) {
+                    RecoverableException recoverableException = null;
+                    final List<Throwable> causalChain = Throwables.getCausalChain(e);
+                    for (final Throwable cause : causalChain) {
+                        if(cause instanceof RecoverableException) {
+                            recoverableException = (RecoverableException) cause;
+                            break;
+                        }
+                    }
+                    return recoverableException;
                 }
             };
         }
@@ -215,10 +269,11 @@ public abstract class IntegrationTestAbstract3 {
 
     @After
     public void tearDownAllModules() {
-        final boolean testHealthy = transactionService != null;
-        if(!testHealthy) {
-            return;
-        }
+//        final boolean testHealthy = transactionService != null;
+//        if(!testHealthy) {
+//            // avoid throwing an NPE here if something unexpected has occurred...
+//            return;
+//        }
 
         transactionService.nextTransaction();
 
