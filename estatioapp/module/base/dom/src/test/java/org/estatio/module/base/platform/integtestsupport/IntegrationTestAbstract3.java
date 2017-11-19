@@ -20,6 +20,7 @@ package org.estatio.module.base.platform.integtestsupport;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -57,6 +58,8 @@ import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.runtime.system.context.IsisContext;
+import org.apache.isis.core.runtime.system.session.IsisSessionFactory;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
 import org.isisaddons.module.base.platform.applib.Module;
@@ -124,32 +127,63 @@ public abstract class IntegrationTestAbstract3 {
     protected static void bootstrapUsing(AppManifest appManifest) {
         PropertyConfigurator.configure("logging-integtest.properties");
 
-        if (needToBootstrap(appManifest)) {
-            final IsisSystemForTest.Builder isftBuilder =
-                    new IsisSystemForTest.Builder()
-                            .withLoggingAt(Level.INFO)
-                            .with(appManifest)
-                            .with(new IsisConfigurationForJdoIntegTests());
+        final SystemState systemState = determineSystemState(appManifest);
+        switch (systemState) {
 
-            IsisSystemForTest isft = isftBuilder.build();
-            isft.setUpSystem();
-
-            // save both the system and the manifest
-            // used to bootstrap the system onto thread-loca
-            IsisSystemForTest.set(isft);
-            isftAppManifest.set(appManifest);
-
+        case BOOTSTRAPPED_SAME_MODULES:
+            // nothing to do
+            break;
+        case BOOTSTRAPPED_DIFFERENT_MODULES:
+            // TODO: this doesn't work correctly yet;
+            teardownSystem();
+            setupSystem(appManifest);
+            break;
+        case NOT_BOOTSTRAPPED:
+            setupSystem(appManifest);
             TickingFixtureClock.replaceExisting();
+            break;
         }
     }
 
-    private static boolean needToBootstrap(final AppManifest appManifest) {
+    private static void teardownSystem() {
+        final IsisSessionFactory isisSessionFactory = IsisSystemForTest.get().getService(IsisSessionFactory.class);
+        isisSessionFactory.destroyServicesAndShutdown();
+        IsisContext.testReset();
+    }
+
+    private static void setupSystem(final AppManifest appManifest) {
+        final IsisConfigurationForJdoIntegTests configuration = new IsisConfigurationForJdoIntegTests();
+        configuration.putDataNucleusProperty("javax.jdo.option.ConnectionURL","jdbc:hsqldb:mem:test-" + UUID.randomUUID().toString());
+        final IsisSystemForTest.Builder isftBuilder =
+                new IsisSystemForTest.Builder()
+                        .withLoggingAt(Level.INFO)
+                        .with(appManifest)
+                        .with(configuration);
+
+        IsisSystemForTest isft = isftBuilder.build();
+        isft.setUpSystem();
+
+        // save both the system and the manifest
+        // used to bootstrap the system onto thread-loca
+        IsisSystemForTest.set(isft);
+        isftAppManifest.set(appManifest);
+    }
+
+    enum SystemState {
+        NOT_BOOTSTRAPPED,
+        BOOTSTRAPPED_SAME_MODULES,
+        BOOTSTRAPPED_DIFFERENT_MODULES
+    }
+
+    private static SystemState determineSystemState(final AppManifest appManifest) {
         IsisSystemForTest isft = IsisSystemForTest.getElseNull();
         if (isft == null)
-            return true;
+            return SystemState.NOT_BOOTSTRAPPED;
 
         final AppManifest appManifestFromPreviously = isftAppManifest.get();
-        return ! haveSameModules(appManifest, appManifestFromPreviously);
+        return haveSameModules(appManifest, appManifestFromPreviously)
+                ? SystemState.BOOTSTRAPPED_SAME_MODULES
+                : SystemState.BOOTSTRAPPED_DIFFERENT_MODULES;
     }
 
     static boolean haveSameModules(
@@ -269,11 +303,11 @@ public abstract class IntegrationTestAbstract3 {
 
     @After
     public void tearDownAllModules() {
-//        final boolean testHealthy = transactionService != null;
-//        if(!testHealthy) {
-//            // avoid throwing an NPE here if something unexpected has occurred...
-//            return;
-//        }
+        final boolean testHealthy = transactionService != null;
+        if(!testHealthy) {
+            // avoid throwing an NPE here if something unexpected has occurred...
+            return;
+        }
 
         transactionService.nextTransaction();
 

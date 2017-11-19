@@ -87,7 +87,6 @@
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\application\dom\src\main\java" />
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\financial\dom\src\main\java" />
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\capex\dom\src\main\java" />
-    <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\integtests\src\main\java" />
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\charge\dom\src\main\java" />
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\invoice\dom\src\main\java" />
     <pathentry type="file" path="C:\github\estatio\estatio\estatioapp\module\index\dom\src\main\java" />
@@ -258,7 +257,7 @@
                     <cell name="webapp" pattern="org.estatio.webapp.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
                   </row>
                   <row>
-                    <cell name="module" pattern="org.estatio.module.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                    <cell name="module" pattern="org.estatio.module.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                       <grid>
                         <row>
                           <cell name="application" pattern="org.estatio.module.application.*" vexpanded="false" illegal="false" visibility="public" drill="true">
@@ -321,7 +320,7 @@
                           </cell>
                         </row>
                         <row>
-                          <cell name="capex" pattern="org.estatio.module.capex.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="capex" pattern="org.estatio.module.capex.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.capex.integtests.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -341,7 +340,7 @@
                                 <cell name="capex" pattern="org.estatio.module.capex.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
                               </row>
                               <row>
-                                <cell name="dom" pattern="org.estatio.module.capex.dom.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                                <cell name="dom" pattern="org.estatio.module.capex.dom.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                                   <grid>
                                     <row>
                                       <cell name="orderinvoice" pattern="org.estatio.module.capex.dom.orderinvoice.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -681,7 +680,7 @@
                           </cell>
                         </row>
                         <row>
-                          <cell name="countryapptenancy" pattern="org.estatio.module.countryapptenancy.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="countryapptenancy" pattern="org.estatio.module.countryapptenancy.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="countryapptenancy" pattern="org.estatio.module.countryapptenancy.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -689,7 +688,7 @@
                               </row>
                             </grid>
                           </cell>
-                          <cell name="link" pattern="org.estatio.module.link.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="link" pattern="org.estatio.module.link.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.link.integtests.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -706,7 +705,7 @@
                           </cell>
                         </row>
                         <row>
-                          <cell name="country" pattern="org.estatio.module.country.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="country" pattern="org.estatio.module.country.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="country" pattern="org.estatio.module.country.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -716,7 +715,7 @@
                               </row>
                             </grid>
                           </cell>
-                          <cell name="currency" pattern="org.estatio.module.currency.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="currency" pattern="org.estatio.module.currency.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.currency.integtests.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -733,7 +732,7 @@
                               </row>
                             </grid>
                           </cell>
-                          <cell name="event" pattern="org.estatio.module.event.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="event" pattern="org.estatio.module.event.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.event.integtests.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -746,7 +745,7 @@
                               </row>
                             </grid>
                           </cell>
-                          <cell name="numerator" pattern="org.estatio.module.numerator.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="numerator" pattern="org.estatio.module.numerator.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.numerator.integtests.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -761,7 +760,7 @@
                               </row>
                             </grid>
                           </cell>
-                          <cell name="settings" pattern="org.estatio.module.settings.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                          <cell name="settings" pattern="org.estatio.module.settings.*" vexpanded="false" illegal="false" visibility="public" drill="true">
                             <grid>
                               <row>
                                 <cell name="integtests" pattern="org.estatio.module.settings.integtests.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
@@ -841,7 +840,50 @@
                   </row>
                 </grid>
               </cell>
-              <cell name="isisaddons" pattern="org.isisaddons.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+              <cell name="isisaddons" pattern="org.isisaddons.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                <grid>
+                  <row>
+                    <cell name="wicket" pattern="org.isisaddons.wicket.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                      <grid>
+                        <row>
+                          <cell name="excel" pattern="org.isisaddons.wicket.excel.?" vexpanded="false" illegal="false" visibility="public" drill="true">
+                            <grid>
+                              <row>
+                                <cell name="IncodeWktExcelModule" pattern="org.isisaddons.wicket.excel.IncodeWktExcelModule" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                              </row>
+                            </grid>
+                          </cell>
+                          <cell name="fullcalendar2" pattern="org.isisaddons.wicket.fullcalendar2.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="gmap3" pattern="org.isisaddons.wicket.gmap3.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="pdfjs" pattern="org.isisaddons.wicket.pdfjs.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                        </row>
+                      </grid>
+                    </cell>
+                  </row>
+                  <row>
+                    <cell name="module" pattern="org.isisaddons.module.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                      <grid>
+                        <row>
+                          <cell name="command" pattern="org.isisaddons.module.command.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="excel" pattern="org.isisaddons.module.excel.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="freemarker" pattern="org.isisaddons.module.freemarker.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="pdfbox" pattern="org.isisaddons.module.pdfbox.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="poly" pattern="org.isisaddons.module.poly.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="security" pattern="org.isisaddons.module.security.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="servletapi" pattern="org.isisaddons.module.servletapi.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="settings" pattern="org.isisaddons.module.settings.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="stringinterpolator" pattern="org.isisaddons.module.stringinterpolator.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="togglz" pattern="org.isisaddons.module.togglz.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="xdocreport" pattern="org.isisaddons.module.xdocreport.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                        </row>
+                        <row>
+                          <cell name="base" pattern="org.isisaddons.module.base.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                        </row>
+                      </grid>
+                    </cell>
+                  </row>
+                </grid>
+              </cell>
             </row>
           </grid>
         </cell>
