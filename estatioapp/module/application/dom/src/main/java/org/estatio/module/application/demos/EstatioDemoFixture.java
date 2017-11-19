@@ -58,7 +58,11 @@ import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.charge.EstatioChargeModule;
+import org.estatio.module.country.IncodeDomCountryModule;
+import org.estatio.module.currency.EstatioCurrencyModule;
 import org.estatio.module.guarantee.fixtures.personas.GuaranteeForOxfTopModel001Gb;
+import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.lease.fixtures.DocFragmentDemoFixture;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForPoisonNl;
 import org.estatio.module.lease.fixtures.bankaccount.personas.BankAccountAndMandateForTopModelGb;
@@ -79,6 +83,7 @@ import org.estatio.module.lease.migrations.CreateInvoiceNumerators;
 import org.estatio.module.lease.seed.DocFragmentSeedFixture;
 import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
+import org.estatio.module.tax.EstatioTaxModule;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -97,7 +102,13 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
     }
 
     private void doExecute(final ExecutionContext executionContext) {
-        //executionContext.executeChild(this, new EstatioBaseLineFixtureUNUSED());
+
+        executionContext.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
+
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
         executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
