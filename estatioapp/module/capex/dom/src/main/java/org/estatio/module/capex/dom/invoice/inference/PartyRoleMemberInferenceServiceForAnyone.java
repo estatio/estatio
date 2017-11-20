@@ -28,7 +28,15 @@ public class PartyRoleMemberInferenceServiceForAnyone implements PartyRoleMember
         final List<Person> people = personRepository.findWithUsername();
         return people.stream()
                 .filter(x -> Objects.equals(x.getApplicationTenancyPath(), myPath))
+                .filter(x-> hasRoleType(x,partyRoleType))
                 .collect(Collectors.toList());
+    }
+
+    private boolean hasRoleType(final Person person, final IPartyRoleType partyRoleType){
+        if (partyRoleType==null){
+            return true;
+        }
+        return personRepository.findByRoleType(partyRoleType).contains(person);
     }
 
     @Override

@@ -31,7 +31,7 @@ import org.estatio.module.party.dom.PersonGenderType;
  */
 public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
 
-    public static final String REF = "JRICE";
+    public static final String REF = "FBEAUTIFUL";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
@@ -42,9 +42,9 @@ public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
         getContainer().injectServicesInto(new PersonAndRolesBuilder())
                     .setAtPath(AT_PATH)
                     .setReference(REF)
-                    .setFirstName("Jonathan")
-                    .setLastName("Rice")
-                    .setPersonGenderType(PersonGenderType.MALE)
+                    .setFirstName("Floella")
+                    .setLastName("Beautiful")
+                    .setPersonGenderType(PersonGenderType.FEMALE)
                     .addFixedAssetRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, PropertyAndOwnerAndManagerForOxfGb.REF)
                     .setSecurityUsername(REF.toLowerCase())
                 .execute(executionContext);
