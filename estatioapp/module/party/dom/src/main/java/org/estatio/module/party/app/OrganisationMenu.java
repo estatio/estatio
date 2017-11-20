@@ -28,19 +28,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Dflt;
-import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyConstants;
@@ -49,7 +47,6 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.module.numerator.dom.NumeratorRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -65,55 +62,40 @@ public class OrganisationMenu {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Organisation newOrganisation(
-            @Parameter(
-                    regexPattern = ReferenceType.Meta.REGEX,
-                    regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION,
-                    optionality = Optionality.OPTIONAL
-            ) final String reference,
-            final boolean useNumereratorForReference,
             final String name,
             final Country country,
             final List<IPartyRoleType> partyRoleTypes) {
         final Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumereratorForReference, name, country);
+                .newOrganisation(null, true, name, country);
         for (IPartyRoleType partyRoleType : partyRoleTypes) {
             partyRoleRepository.findOrCreate(organisation, partyRoleType);
         }
         return organisation;
     }
 
-    public List<Country> choices3NewOrganisation() {
+    public List<Country> choices1NewOrganisation() {
         return countryServiceForCurrentUser.countriesForCurrentUser();
     }
 
-    public List<PartyRoleType> choices4NewOrganisation() {
+    public List<PartyRoleType> choices2NewOrganisation() {
         return partyRoleTypeRepository.listAll();
     }
 
-    public Country default3NewOrganisation() {
-        return Dflt.of(choices3NewOrganisation());
+    public Country default1NewOrganisation() {
+        return Dflt.of(choices1NewOrganisation());
     }
 
     public String validateNewOrganisation(
-            final String reference,
-            final boolean useNumeratorForReference,
             final String name,
             final Country country,
             final List<IPartyRoleType> partyRoleTypes
     ) {
-        if (useNumeratorForReference) {
-            final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
-            if (numeratorRepository
-                    .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
-                return "No numerator found";
-            }
-            return null;
-        } else {
-            if (reference == null) {
-                return "Please provide a reference";
-            }
+        final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
+        if (numeratorRepository
+                .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
+            return "No numerator found";
         }
-        return partyRepository.validateNewParty(reference);
+        return null;
     }
 
     // //////////////////////////////////////

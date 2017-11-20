@@ -38,7 +38,6 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.MinLength;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -50,17 +49,14 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.financial.dom.BankAccountRepository;
-import org.estatio.module.financial.dom.utils.IBANValidator;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
@@ -74,6 +70,8 @@ import org.estatio.module.capex.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
@@ -374,16 +372,12 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
             semantics = SemanticsOf.IDEMPOTENT
     )
     public Order createSeller(
-            @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION)
-            @Nullable
-            final String reference,
-            final boolean useNumeratorForReference,
             final String name,
             final Country country,
             @Nullable
             final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumeratorForReference, name, country);
+                .newOrganisation(null, true, name, country);
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
@@ -393,8 +387,6 @@ public class Order extends UdoDomainObject2<Order> implements Stateful {
     }
 
     public String validateCreateSeller(
-            final String reference,
-            final boolean useNumeratorForReference,
             final String name,
             final Country country,
             final String ibanNumber){

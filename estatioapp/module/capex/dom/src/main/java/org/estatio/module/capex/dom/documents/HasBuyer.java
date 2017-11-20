@@ -7,12 +7,9 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.party.dom.Organisation;
@@ -83,12 +80,10 @@ public interface HasBuyer {
         )
         @MemberOrder(name = "buyer", sequence = "2")
         public HasBuyer act(
-                final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
-                final boolean useNumereratorForReference,
                 final String name,
                 final Country country) {
             Organisation organisation = organisationRepository
-                    .newOrganisation(reference, useNumereratorForReference, name, country);
+                    .newOrganisation(null, true, name, country);
             hasBuyer.setBuyer(organisation);
             return hasBuyer;
         }

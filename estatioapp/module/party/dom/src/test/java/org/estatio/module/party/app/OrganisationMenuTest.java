@@ -26,25 +26,6 @@ public class OrganisationMenuTest {
 
     public static class ValidateNewOrganisation extends OrganisationMenuTest {
 
-
-//        public String validateNewOrganisation(
-//                final String reference,
-//                final boolean useNumeratorForReference,
-//                final String name,
-//                final Country country
-//        ) {
-//            if (useNumeratorForReference) {
-//
-//                final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
-//                if (numeratorRepository
-//                        .findGlobalNumerator(PartyConstants.ORGANISATION_REFERENCE_NUMERATOR_NAME, applicationTenancy) == null) {
-//                    return "No numerator found";
-//                }
-//                return null;
-//            }
-//            return partyRepository.validateNewParty(reference);
-//        }
-
         @Rule
         public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
@@ -98,7 +79,7 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
+            String reason = organisationMenu.validateNewOrganisation(name, country, Collections.emptyList());
 
             // then
             assertThat(reason).isEqualTo("No numerator found");
@@ -118,28 +99,10 @@ public class OrganisationMenuTest {
             }});
 
             // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
+            String reason = organisationMenu.validateNewOrganisation(name, country, Collections.emptyList());
 
             // then
             assertThat(reason).isNull();
-        }
-
-        @Test
-        public void when_no_using_numerator_for_reference() throws Exception {
-
-            // given
-            boolean useNumeratorForReference = false;
-
-            context.checking(new Expectations() {{
-                oneOf(mockPartyRepository).validateNewParty(reference);
-                will(returnValue("some validation message"));
-            }});
-
-            // when
-            String reason = organisationMenu.validateNewOrganisation(reference, useNumeratorForReference, name, country, Collections.emptyList());
-
-            // then
-            assertThat(reason).isEqualTo("some validation message");
         }
 
     }
