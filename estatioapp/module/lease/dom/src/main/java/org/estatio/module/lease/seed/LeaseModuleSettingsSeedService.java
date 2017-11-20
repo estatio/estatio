@@ -48,7 +48,7 @@ public class LeaseModuleSettingsSeedService extends UdoDomainService<LeaseModule
         // unlike the other seed services, we really really need this (epoch date)
         // TODO: however, what we ought to do is to refactor this stuff into a fixture script,
         // and then call that fixture script from EstatioBaseModule
-//        if(System.getProperty("estatio.integTest") != null) {
+//        if(System.getProperty("isis.integTest") != null) {
 //            return;
 //        }
 

@@ -33,7 +33,7 @@ public class DocFragmentSeedService {
 
     @PostConstruct
     public void init() {
-        if(System.getProperty("estatio.integTest") != null) {
+        if(System.getProperty("isis.integTest") != null) {
             return;
         }
 

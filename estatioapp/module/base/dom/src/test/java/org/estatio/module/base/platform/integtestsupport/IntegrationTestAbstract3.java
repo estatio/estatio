@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.PersistenceManagerFactory;
 
 import com.google.common.base.Throwables;
 
@@ -57,6 +58,7 @@ import org.apache.isis.applib.services.sessmgmt.SessionManagementService;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.services.xactn.TransactionService;
+import org.apache.isis.core.commons.factory.InstanceUtil;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.runtime.system.context.IsisContext;
 import org.apache.isis.core.runtime.system.session.IsisSessionFactory;
@@ -85,14 +87,19 @@ public abstract class IntegrationTestAbstract3 {
     private final Class[] additionalModuleClasses;
 
     public IntegrationTestAbstract3(final Module module, final Class... additionalModuleClasses) {
-        this.module = module;
+        final String moduleFqcn = System.getProperty("isis.integTest.module");
+        if(moduleFqcn != null) {
+            this.module = InstanceUtil.createInstance(moduleFqcn, Module.class);
+        } else {
+            this.module = module;
+        }
         this.additionalModuleClasses = additionalModuleClasses;
     }
 
     @Before
     public void bootstrapAndSetupIfRequired() {
 
-        System.setProperty("estatio.integTest", "true");
+        System.setProperty("isis.integTest", "true");
 
         bootstrapIfRequired();
 
@@ -118,7 +125,6 @@ public abstract class IntegrationTestAbstract3 {
     private static ThreadLocal<AppManifest> isftAppManifest = new ThreadLocal<>();
 
     protected static void bootstrapUsing(AppManifest appManifest) {
-        PropertyConfigurator.configure("logging-integtest.properties");
 
         final SystemState systemState = determineSystemState(appManifest);
         switch (systemState) {
@@ -140,11 +146,21 @@ public abstract class IntegrationTestAbstract3 {
 
     private static void teardownSystem() {
         final IsisSessionFactory isisSessionFactory = IsisSystemForTest.get().getService(IsisSessionFactory.class);
+
+        // TODO: this ought to be part of isisSessionFactory's responsibilities
+        final IsisJdoSupport isisJdoSupport = isisSessionFactory.getServicesInjector()
+                .lookupService(IsisJdoSupport.class);
+        final PersistenceManagerFactory pmf =
+                isisJdoSupport.getJdoPersistenceManager().getPersistenceManagerFactory();
         isisSessionFactory.destroyServicesAndShutdown();
+        pmf.close();
+
         IsisContext.testReset();
     }
 
     private static void setupSystem(final AppManifest appManifest) {
+        PropertyConfigurator.configure("logging-integtest.properties");
+
         final IsisConfigurationForJdoIntegTests configuration = new IsisConfigurationForJdoIntegTests();
         configuration.putDataNucleusProperty("javax.jdo.option.ConnectionURL","jdbc:hsqldb:mem:test-" + UUID.randomUUID().toString());
         final IsisSystemForTest.Builder isftBuilder =
