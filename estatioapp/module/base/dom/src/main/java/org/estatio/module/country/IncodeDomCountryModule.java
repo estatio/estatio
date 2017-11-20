@@ -68,7 +68,7 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
                 deleteFrom(State.class);
             }
         };
-        return Utils.allOf(teardownState, new DemoData2Teardown<>(Country_enum.class));
+        return Util.allOf(teardownState, new DemoData2Teardown<>(Country_enum.class));
     }
 
 

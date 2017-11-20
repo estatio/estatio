@@ -11,17 +11,18 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 
 import lombok.AllArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Module_getTransitiveDependencies_Test {
+public class Module_Util_transitiveDependenciesOf_Test {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @AllArgsConstructor
-    public class ModuleImpl implements Module {
+    public class ModuleImpl extends ModuleAbstract {
         private final String name;
         @Override public String toString() {
             return name;
@@ -153,26 +154,26 @@ public class Module_getTransitiveDependencies_Test {
 
         expectedException.expect(IllegalStateException.class);
 
-        moduleG.getTransitiveDependencies();
+        Module.Util.transitiveDependenciesOf(moduleG);
     }
 
     void assertTransitiveDependencies(
             final Module module, final List<Module> expected) {
-        final List<Module> dependencies = module.getTransitiveDependencies();
+        final List<Module> dependencies = Module.Util.transitiveDependenciesOf(module);
         assertThat(dependencies).containsAll(expected);
         assertThat(expected).containsAll(dependencies);
     }
 
     void assertTransitiveServices(
             final Module module, final List<Class<?>> expected) {
-        final List<Class<?>> services = module.getTransitiveAdditionalServices();
+        final List<Class<?>> services = Module.Util.transitiveAdditionalServicesOf(module);
         assertThat(services).containsAll(expected);
         assertThat(expected).containsAll(services);
     }
 
     void assertTransitiveDependenciesAsClass(
             final Module module, final List<Class<?>> expected) {
-        final List<Class<?>> dependenciesAsClass = module.getTransitiveDependenciesAsClass();
+        final List<Class<?>> dependenciesAsClass = Module.Util.transitiveDependenciesAsClassOf(module);
         assertThat(dependenciesAsClass).containsAll(expected);
         assertThat(expected).containsAll(dependenciesAsClass);
     }

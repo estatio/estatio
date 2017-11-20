@@ -102,18 +102,11 @@ public abstract class IntegrationTestAbstract3 {
     }
 
     private void bootstrapIfRequired() {
-        final List<Module> transitiveDependencies = module.getTransitiveDependencies();
-        final Class[] moduleTransitiveDependencies = asClasses(transitiveDependencies);
-
-        final List<Class<?>> additionalModules = module.getTransitiveDependenciesAsClass();
-        final List<Class<?>> additionalServices = module.getTransitiveAdditionalServices();
 
         final AppManifestAbstract.Builder builder =
-                AppManifestAbstract.Builder
-                    .forModules(moduleTransitiveDependencies)
-                    .withAdditionalModules(additionalModuleClasses) // eg fake module, as passed into test's constructor
-                    .withAdditionalModules(additionalModules)
-                    .withAdditionalServices(additionalServices);
+                Module.Util.builderFor(module)
+                      .withAdditionalModules(additionalModuleClasses); // eg fake module, as passed into constructor
+
         final AppManifest appManifest = builder.build();
 
         bootstrapUsing(appManifest);
@@ -292,7 +285,7 @@ public abstract class IntegrationTestAbstract3 {
     }
 
     private void setupModuleRefData() {
-        final List<Module> dependencies = module.getTransitiveDependencies();
+        final List<Module> dependencies = Module.Util.transitiveDependenciesOf(module);
         for (Module dependency : dependencies) {
             final FixtureScript fixture = dependency.getRefDataSetupFixture();
             if(fixture != null) {
@@ -311,7 +304,7 @@ public abstract class IntegrationTestAbstract3 {
 
         transactionService.nextTransaction();
 
-        final List<Module> dependencies = module.getTransitiveDependencies();
+        final List<Module> dependencies = Module.Util.transitiveDependenciesOf(module);
         Collections.reverse(dependencies);
 
         for (Module dependency : dependencies) {
