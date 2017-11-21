@@ -36,20 +36,12 @@ import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.wicket.pdfjs.cpt.applib.PdfJsViewer;
 
-import org.incode.module.base.dom.types.ReferenceType;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.module.capex.dom.documents.BudgetItemChooser;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
-import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.task.policy.ViewModelWrapper;
-import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.OwnershipType;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -61,6 +53,13 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
+import org.estatio.module.capex.dom.documents.BudgetItemChooser;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
+import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.task.policy.ViewModelWrapper;
+import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -201,14 +200,12 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     @ActionLayout(named = "Create Supplier")
     public IncomingDocViewModel createSeller(
-            final @Parameter(regexPattern = ReferenceType.Meta.REGEX, regexPatternReplacement = ReferenceType.Meta.REGEX_DESCRIPTION, optionality = Optionality.OPTIONAL) String reference,
-            final boolean useNumeratorForReference,
             final String name,
             final Country country,
             @Parameter(optionality = Optionality.OPTIONAL)
             final String ibanNumber) {
         Organisation organisation = organisationRepository
-                .newOrganisation(reference, useNumeratorForReference, name, country);
+                .newOrganisation(null, true, name, country);
         setSeller(organisation);
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
@@ -217,8 +214,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     }
 
     public String validateCreateSeller(
-            final String reference,
-            final boolean useNumeratorForReference,
             final String name,
             final Country country,
             final String ibanNumber){
