@@ -1231,6 +1231,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .validateForPaymentMethod(this)
                 .validateForIncomingInvoiceType(this)
                 .validateForAmounts(this)
+                .validateForBankAccountOwner(this)
                 .getResult();
 
         return mergeReasonItemsIncomplete(invoiceValidatorResult);
@@ -1322,6 +1323,19 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                     || !incomingInvoice.getTotalGrossAmount().setScale(2).equals(incomingInvoice.getGrossAmount().setScale(2))
                     || !incomingInvoice.getTotalVatAmount().setScale(2).equals(incomingInvoice.getVatAmount().setScale(2))){
                 message = "total amount on items equal to amount on the invoice";
+                setResult(result==null ? message : result.concat(", ").concat(message));
+            }
+            return this;
+        }
+
+        IncomingInvoice.Validator validateForBankAccountOwner(IncomingInvoice incomingInvoice){
+            if (incomingInvoice.getBankAccount()==null || incomingInvoice.getSeller()==null){
+                // only validate when bankaccount and seller are set on the invoice
+                return this;
+            }
+            String message;
+            if (!incomingInvoice.getBankAccount().getOwner().equals(incomingInvoice.getSeller())){
+                message = "match of owner bankaccount and seller";
                 setResult(result==null ? message : result.concat(", ").concat(message));
             }
             return this;

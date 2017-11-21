@@ -20,10 +20,10 @@ import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -71,7 +71,8 @@ public class IncomingInvoice_Test {
 
             // given
             invoice.setPaymentMethod(PaymentMethod.MANUAL_PROCESS);
-            invoice.setBankAccount(new BankAccount());
+            BankAccount bankAccount = new BankAccount();
+            invoice.setBankAccount(bankAccount);
 
             IncomingInvoiceItem item1 = new IncomingInvoiceItem();
             item1.setSequence(BigInteger.ONE);
@@ -103,8 +104,10 @@ public class IncomingInvoice_Test {
             // and when conditions for invoice satisfied
             item1.setIncomingInvoiceType(IncomingInvoiceType.CAPEX);
             invoice.setBuyer(new Organisation());
-            invoice.setSeller(new Organisation());
-            invoice.setBankAccount(new BankAccount());
+            Organisation seller = new Organisation();
+            invoice.setSeller(seller);
+            bankAccount.setOwner(seller);
+            invoice.setBankAccount(bankAccount);
             invoice.setDateReceived(new LocalDate());
             invoice.setDueDate(new LocalDate());
             invoice.setGrossAmount(BigDecimal.ZERO);
@@ -322,6 +325,40 @@ public class IncomingInvoice_Test {
             // when
             validator = new IncomingInvoice.Validator();
             result = validator.validateForAmounts(invoice).getResult();
+            // then
+            Assertions.assertThat(result).isNull();
+
+        }
+
+        @Test
+        public void validateForBankAccountOwner() throws Exception {
+
+            String result;
+            IncomingInvoice.Validator validator;
+
+            // given
+            validator = new IncomingInvoice.Validator();
+            invoice = new IncomingInvoice();
+            Organisation seller = new Organisation();
+            invoice.setSeller(seller);
+            Organisation bankAccountOwner = new Organisation();
+            BankAccount bankAccount = new BankAccount();
+            bankAccount.setOwner(bankAccountOwner);
+            invoice.setBankAccount(bankAccount);
+
+            // when
+            result = validator.validateForBankAccountOwner(invoice).getResult();
+
+            // then
+            Assertions.assertThat(invoice.getSeller()).isNotEqualTo(invoice.getBankAccount().getOwner());
+            Assertions.assertThat(result).isEqualTo("match of owner bankaccount and seller required");
+
+            // and given
+            bankAccount.setOwner(seller);
+
+            // when
+            validator = new IncomingInvoice.Validator();
+            result = validator.validateForBankAccountOwner(invoice).getResult();
             // then
             Assertions.assertThat(result).isNull();
 
