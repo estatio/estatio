@@ -54,10 +54,9 @@ public final class EstatioFinancialModule extends ModuleAbstract {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                deleteFrom(FinancialAccountTransaction.class);
                 deleteFrom(PaperclipForBankAccount.class);
-
                 deleteFrom(BankAccount.class);
+                deleteFrom(FinancialAccountTransaction.class);
                 deleteFrom(FinancialAccount.class);
 
             }

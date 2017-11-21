@@ -65,6 +65,7 @@ import org.apache.isis.core.runtime.system.session.IsisSessionFactory;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 
 import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.fakedata.FakeDataModule;
 import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
@@ -90,10 +91,18 @@ public abstract class IntegrationTestAbstract3 {
         final String moduleFqcn = System.getProperty("isis.integTest.module");
         if(moduleFqcn != null) {
             this.module = InstanceUtil.createInstance(moduleFqcn, Module.class);
+            this.additionalModuleClasses = new Class<?>[] { FakeDataModule.class };
         } else {
             this.module = module;
+            this.additionalModuleClasses = additionalModuleClasses;
         }
-        this.additionalModuleClasses = additionalModuleClasses;
+
+        System.out.println("***************************************************************");
+        System.out.println("*");
+        System.out.println("* module: " + module);
+        System.out.println("* additionalModuleClasses: " + additionalModuleClasses);
+        System.out.println("*");
+        System.out.println("***************************************************************");
     }
 
     @Before
