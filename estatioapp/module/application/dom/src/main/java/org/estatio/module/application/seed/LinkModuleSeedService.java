@@ -30,8 +30,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatus;
@@ -97,20 +96,26 @@ public class LinkModuleSeedService {
         }
 
         public void upsertUsing(final ServiceRegistry2 serviceRegistry2) {
-            final ApplicationTenancyRepository atRepository =
-                    serviceRegistry2.lookupService(ApplicationTenancyRepository.class);
+            final RepositoryService repositoryService =
+                    serviceRegistry2.lookupService(RepositoryService.class);
             final LinkRepository linkRepository =
                     serviceRegistry2.lookupService(LinkRepository.class);
 
             final List<Link> links = linkRepository.allLinks().stream()
                                         .filter(this::matches)
                                         .collect(Collectors.toList());
+            final Link link;
             switch (links.size()) {
             case 0:
-                linkRepository.newLink(atRepository.findByPath(atPath), clazz, name, urlTemplate);
+                link = new Link();
+                link.setName(name);
+                link.setUrlTemplate(urlTemplate);
+                link.setClassName(clazz.getName());
+                link.setApplicationTenancyPath(atPath);
+                repositoryService.persist(link);
                 break;
             case 1:
-                final Link link = links.get(0);
+                link = links.get(0);
                 link.setUrlTemplate(getUrlTemplate());
                 link.setClassName(getClazz().getName());
                 break;
