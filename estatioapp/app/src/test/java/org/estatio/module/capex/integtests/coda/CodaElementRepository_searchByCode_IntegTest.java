@@ -13,7 +13,7 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CodaElementRepository_integTest extends CapexModuleIntegTestAbstract {
+public class CodaElementRepository_searchByCode_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Before
     public void setUp() throws Exception {
