@@ -808,29 +808,6 @@ language governing permissions and limitations under the License.
 
     <modules>
         <module>iso20022</module>
-        <module>estatioapp/module/application/dom</module>
-        <module>estatioapp/module/base/dom</module>
-        <module>estatioapp/module/capex/dom</module>
-        <module>estatioapp/module/agreement/dom</module>
-        <module>estatioapp/module/asset/dom</module>
-        <module>estatioapp/module/assetfinancial/dom</module>
-        <module>estatioapp/module/bankmandate/dom</module>
-        <module>estatioapp/module/budget/dom</module>
-        <module>estatioapp/module/budgetassignment/dom</module>
-        <module>estatioapp/module/charge/dom</module>
-        <module>estatioapp/module/currency/dom</module>
-        <module>estatioapp/module/event/dom</module>
-        <module>estatioapp/module/financial/dom</module>
-        <module>estatioapp/module/guarantee/dom</module>
-        <module>estatioapp/module/index/dom</module>
-        <module>estatioapp/module/invoice/dom</module>
-        <module>estatioapp/module/lease/dom</module>
-        <module>estatioapp/module/link/dom</module>
-        <module>estatioapp/module/party/dom</module>
-        <module>estatioapp/module/numerator/dom</module>
-        <module>estatioapp/module/registration/dom</module>
-        <module>estatioapp/module/settings/dom</module>
-        <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
         <module>estatioapp/webapp</module>
     </modules>
