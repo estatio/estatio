@@ -21,7 +21,7 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.14.0</version>
+        <version>1.15.1.1</version>
     </parent>
 
     <groupId>org.estatio</groupId>
@@ -70,7 +70,11 @@ language governing permissions and limitations under the License.
         <isis.version>1.15.0.20170914-1238</isis.version>
         <isis.version>1.16.0-SNAPSHOT</isis.version>
         -->
+
         <incode-platform.version>1.15.1.1</incode-platform.version>
+
+        <!-- this is a temporary override, see ECP-431 to remove -->
+        <mavenmixin-surefire.version>0.0.5</mavenmixin-surefire.version>
 
         <isis-module-audit.version>${incode-platform.version}</isis-module-audit.version>
         <isis-module-command.version>${incode-platform.version}</isis-module-command.version>

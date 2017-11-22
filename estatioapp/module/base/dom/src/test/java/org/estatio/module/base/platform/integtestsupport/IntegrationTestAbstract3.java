@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.jdo.PersistenceManagerFactory;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 
 import org.apache.log4j.Level;
@@ -89,7 +90,8 @@ public abstract class IntegrationTestAbstract3 {
 
     public IntegrationTestAbstract3(final Module module, final Class... additionalModuleClasses) {
         final String moduleFqcn = System.getProperty("isis.integTest.module");
-        if(moduleFqcn != null) {
+
+        if(!Strings.isNullOrEmpty(moduleFqcn)) {
             this.module = InstanceUtil.createInstance(moduleFqcn, Module.class);
             this.additionalModuleClasses = new Class<?>[] { FakeDataModule.class };
         } else {
@@ -97,12 +99,9 @@ public abstract class IntegrationTestAbstract3 {
             this.additionalModuleClasses = additionalModuleClasses;
         }
 
-        System.out.println("***************************************************************");
-        System.out.println("*");
-        System.out.println("* module: " + module);
-        System.out.println("* additionalModuleClasses: " + additionalModuleClasses);
-        System.out.println("*");
-        System.out.println("***************************************************************");
+        LOG.debug("***************************************************************");
+        LOG.debug("* module: " + this.module);
+        LOG.debug("***************************************************************");
     }
 
     @Before

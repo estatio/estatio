@@ -79,6 +79,12 @@ language governing permissions and limitations under the License.
         </plugins>
     </build>
 
+    <properties>
+        <isis.integTest.module>
+            org.estatio.module.application.EstatioApplicationModule
+        </isis.integTest.module>
+    </properties>
+
     <dependencies>
 
         <dependency>
