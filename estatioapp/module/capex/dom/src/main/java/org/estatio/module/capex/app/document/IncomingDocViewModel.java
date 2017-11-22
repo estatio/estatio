@@ -210,6 +210,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
         if (ibanNumber != null) {
             bankAccountRepository.newBankAccount(organisation, ibanNumber, null);
         }
+        onCreateSeller(organisation);
         return this;
     }
 
@@ -221,6 +222,9 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
             return String.format("%s is not a valid iban number", ibanNumber);
         }
         return null;
+    }
+
+    protected void onCreateSeller(final Party seller){
     }
 
     @XmlElement(required = false) @Nullable
@@ -571,7 +575,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Inject
     @XmlTransient
-    OrganisationRepository organisationRepository;
+    public OrganisationRepository organisationRepository;
 
     @Inject
     @XmlTransient
@@ -603,7 +607,7 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
 
     @Inject
     @XmlTransient
-    protected BankAccountRepository bankAccountRepository;
+    public BankAccountRepository bankAccountRepository;
 
     @Inject
     @XmlTransient
