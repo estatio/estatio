@@ -20,6 +20,7 @@ package org.estatio.module.lease.seed;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
@@ -31,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Clob;
 
+import org.incode.module.document.dom.impl.applicability.Applicability;
 import org.incode.module.document.dom.impl.applicability.AttachmentAdvisor;
 import org.incode.module.document.dom.impl.applicability.RendererModelFactory;
 import org.incode.module.document.dom.impl.docs.Document;
@@ -397,7 +399,24 @@ public class DocumentTypeAndTemplatesFSForInvoicesUsingSsrs extends DocumentTemp
 
         mixin(DocumentTemplate._applicable.class, documentTemplate).applicable(domainClass, rendererModelFactoryClass, attachmentAdvisorClass);
 
+        // TODO: push down to incode document; for now this is a work-around that the 'DocumentTemplate#applicable' mixin isn't a full 'upsert'
+        final Applicability applicability = existingApplicability(documentTemplate, domainClass.getName());
+        applicability.setRendererModelFactoryClassName(rendererModelFactoryClass.getName());
+        applicability.setAttachmentAdvisorClassName(attachmentAdvisorClass.getName());
+
         executionContext.addResult(this, documentTemplate);
+    }
+
+    private Applicability existingApplicability(
+            final DocumentTemplate documentTemplate,
+            final String domainClassName) {
+        SortedSet<Applicability> applicabilities = documentTemplate.getAppliesTo();
+        for (Applicability applicability : applicabilities) {
+            if (applicability.getDomainClassName().equals(domainClassName)) {
+                return applicability;
+            }
+        }
+        return null;
     }
 
     private static String buildTemplateName(

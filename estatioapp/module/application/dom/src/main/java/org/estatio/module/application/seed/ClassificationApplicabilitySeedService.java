@@ -17,7 +17,10 @@
  */
 package org.estatio.module.application.seed;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -26,6 +29,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.classification.dom.impl.applicability.Applicability;
@@ -68,21 +72,34 @@ public class ClassificationApplicabilitySeedService {
             return Objects.equals(applicability.getTaxonomy().getReference(), taxonomyReference) &&
                    Objects.equals(applicability.getAtPath(), atPath);
         }
-    }
 
-    static class SeedApplicabilityDomainType extends FixtureScript {
+        public void upsertUsing(final ServiceRegistry2 serviceRegistry2) {
+            final RepositoryService repositoryService =
+                    serviceRegistry2.lookupService(RepositoryService.class);
 
-        @Override
-        protected void execute(final ExecutionContext executionContext) {
-            for (Applicability_data datum : Applicability_data.values()) {
-                repositoryService.allInstances(Applicability.class).stream()
-                        .filter(datum::matches)
-                        .forEach(applicability -> applicability.setDomainType(datum.appliesTo.getName()));
+            final List<Applicability> types = repositoryService.allInstances(Applicability.class).stream()
+                    .filter(this::matches)
+                    .collect(Collectors.toList());
+            switch (types.size()) {
+            case 0:
+                throw new IllegalArgumentException("Could not find any domain object matching " + this);
+            case 1:
+                final Applicability applicability = types.get(0);
+                applicability.setDomainType(appliesTo.getName());
+                break;
+            default:
+                throw new IllegalArgumentException("Found " + types.size() + " matching " + this);
             }
         }
 
-        @Inject
-        RepositoryService repositoryService;
+    }
+
+    static class SeedApplicabilityDomainType extends FixtureScript {
+        @Override
+        protected void execute(final ExecutionContext executionContext) {
+            Arrays.stream(Applicability_data.values())
+                    .forEach(datum -> datum.upsertUsing(serviceRegistry));
+        }
     }
 }
 

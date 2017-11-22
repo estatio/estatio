@@ -17,7 +17,10 @@
  */
 package org.estatio.module.registration.seed;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -26,9 +29,12 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationType;
+import org.estatio.module.asset.dom.registration.FixedAssetRegistrationTypeRepository;
 import org.estatio.module.registration.dom.LandRegister;
 
 import lombok.AllArgsConstructor;
@@ -56,26 +62,43 @@ public class RegistrationModuleSeedService {
         LAND_REGISTER("LandRegister", LandRegister.class);
 
         private final String title;
-        private final Class<?> implementationClass;
+        private final Class<? extends FixedAssetRegistration> implementationClass;
 
         public boolean matches(final FixedAssetRegistrationType fixedAssetRegistrationType) {
             return Objects.equals(fixedAssetRegistrationType.getTitle(), title);
         }
+
+        public void upsertUsing(final ServiceRegistry2 serviceRegistry2) {
+            final FixedAssetRegistrationTypeRepository repository =
+                    serviceRegistry2.lookupService(FixedAssetRegistrationTypeRepository.class);
+            final RepositoryService  repositoryService =
+                    serviceRegistry2.lookupService(RepositoryService.class);
+
+            final List<FixedAssetRegistrationType> types = repositoryService.allInstances(FixedAssetRegistrationType.class).stream()
+                    .filter(this::matches)
+                    .collect(Collectors.toList());
+            switch (types.size()) {
+            case 0:
+                repository.create(title, implementationClass);
+                break;
+            case 1:
+                final FixedAssetRegistrationType fart = types.get(0);
+                fart.setFullyQualifiedClassName(implementationClass.getName());
+                break;
+            default:
+                throw new IllegalArgumentException("Found " + types.size() + " matching " + this);
+            }
+        }
+
     }
 
     static class SeedFixedAssetRegistrationType extends FixtureScript {
 
         @Override
         protected void execute(final ExecutionContext executionContext) {
-            for (FixedAssetRegistrationType_data datum : FixedAssetRegistrationType_data.values()) {
-                repositoryService.allInstances(FixedAssetRegistrationType.class).stream()
-                        .filter(datum::matches)
-                        .forEach(fart -> fart.setFullyQualifiedClassName(datum.implementationClass.getName()));
-            }
+            Arrays.stream(FixedAssetRegistrationType_data.values()).forEach(datum -> datum.upsertUsing(serviceRegistry));
         }
 
-        @Inject
-        RepositoryService repository;
     }
 }
 
