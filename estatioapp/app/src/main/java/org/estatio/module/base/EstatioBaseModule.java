@@ -26,7 +26,6 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.audit.IncodeSpiAuditModule;
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.isisaddons.module.command.IncodeSpiCommandModule;
@@ -34,10 +33,8 @@ import org.isisaddons.module.excel.IncodeLibExcelModule;
 import org.isisaddons.module.freemarker.IncodeLibFreeMarkerModule;
 import org.isisaddons.module.pdfbox.IncodeLibPdfBoxModule;
 import org.isisaddons.module.poly.IncodeLibPolyModule;
-import org.isisaddons.module.publishmq.IncodeSpiPublishMqModule;
 import org.isisaddons.module.security.IncodeSpiSecurityModule;
 import org.isisaddons.module.servletapi.IncodeLibServletApiModule;
-import org.isisaddons.module.sessionlogger.IncodeSpiSessionLoggerModule;
 import org.isisaddons.module.stringinterpolator.IncodeLibStringInterpolatorModule;
 import org.isisaddons.module.togglz.IncodeExtTogglzModule;
 import org.isisaddons.module.xdocreport.IncodeLibXDocReportModule;
@@ -81,6 +78,7 @@ public final class EstatioBaseModule extends ModuleAbstract {
 
                 // spi (remaining part of ECP's app module)
                 new IncodeSpiSecurityModule(),
+                new IncodeSpiCommandModule(), // for comms!
 
                 // wkt
                 new IncodeWktExcelModule(),
