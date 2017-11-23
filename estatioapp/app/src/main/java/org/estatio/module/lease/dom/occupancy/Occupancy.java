@@ -40,18 +40,18 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
-import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.util.TitleBuffer;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.country.dom.impl.Country;
 
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
@@ -62,7 +62,6 @@ import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSizeRepository;
-import org.estatio.module.base.dom.EstatioRole;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -137,11 +136,11 @@ public class Occupancy
     public static class RemoveEvent extends ActionDomainEvent<Occupancy> {}
 
     public String title() {
-        return new TitleBuffer()
-                .append(titleService.titleOf(getBrand()))
-                .append(titleService.titleOf(getLease()))
-                .append(titleService.titleOf(getUnit()))
-                .append(getStartDate().toString("dd-MMM-yyyy"))
+        return TitleBuilder.start()
+                .withName(getBrand())
+                .withName(getLease())
+                .withName(getUnit())
+                .withName(getStartDate())
                 .toString();
     }
 
@@ -382,9 +381,6 @@ public class Occupancy
         return this;
     }
 
-
-
-
     @RequiredArgsConstructor
     public enum OccupancyReportingType {
 
@@ -415,10 +411,6 @@ public class Occupancy
             setEndDate(lease.getTenancyEndDate());
         }
     }
-
-
-    @Inject
-    TitleService titleService;
 
     @Inject
     BrandRepository brandRepository;
