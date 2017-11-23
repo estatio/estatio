@@ -79,12 +79,8 @@ public final class EstatioBaseModule extends ModuleAbstract {
                 new IncodeLibFreeMarkerModule(),
                 new IncodeLibXDocReportModule(),
 
-                // spi
-                new IncodeSpiAuditModule(),
-                new IncodeSpiCommandModule(),
-                new IncodeSpiPublishMqModule(),
+                // spi (remaining part of ECP's app module)
                 new IncodeSpiSecurityModule(),
-                new IncodeSpiSessionLoggerModule(),
 
                 // wkt
                 new IncodeWktExcelModule(),
