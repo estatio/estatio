@@ -1,4 +1,4 @@
-package org.estatio.module.application.contributions;
+package org.estatio.module.application.contributions.apptenancy;
 
 import javax.inject.Inject;
 

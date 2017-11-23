@@ -1,4 +1,4 @@
-package org.estatio.module.lease.app;
+package org.estatio.module.lease.app.tags;
 
 import java.util.Collections;
 

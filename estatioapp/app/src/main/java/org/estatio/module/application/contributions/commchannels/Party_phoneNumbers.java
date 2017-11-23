@@ -1,4 +1,4 @@
-package org.estatio.module.application.contributions;
+package org.estatio.module.application.contributions.commchannels;
 
 import org.apache.isis.applib.annotation.Mixin;
 

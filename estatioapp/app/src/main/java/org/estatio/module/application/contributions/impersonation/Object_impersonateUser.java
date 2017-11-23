@@ -1,4 +1,4 @@
-package org.estatio.module.application.contributions;
+package org.estatio.module.application.contributions.impersonation;
 
 import java.util.List;
 

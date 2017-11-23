@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.module.application.contributions;
+package org.estatio.module.application.contributions.occupancy;
 
 import java.util.List;
 
