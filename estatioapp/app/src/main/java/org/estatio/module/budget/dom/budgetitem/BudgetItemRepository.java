@@ -21,6 +21,8 @@ package org.estatio.module.budget.dom.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
@@ -29,6 +31,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.Property;
@@ -64,13 +67,11 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     public BudgetItem newBudgetItem(
             final Budget budget,
             final Charge charge) {
-        BudgetItem budgetItem = newTransientInstance();
-        budgetItem.setBudget(budget);
-        budgetItem.setCharge(charge);
-        persistIfNotAlready(budgetItem);
-
-        return budgetItem;
+        return repositoryService.persistAndFlush(new BudgetItem(budget, charge));
     }
+
+    @Inject
+    RepositoryService repositoryService;
 
     public String validateNewBudgetItem(
             final Budget budget,

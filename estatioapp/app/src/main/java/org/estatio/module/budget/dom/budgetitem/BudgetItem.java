@@ -114,6 +114,12 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
         super("budget, charge");
     }
 
+    public BudgetItem(final Budget budget, final Charge charge) {
+        this();
+        setBudget(budget);
+        setCharge(charge);
+    }
+
     public String title() {
         return TitleBuilder.start()
                 .withParent(getBudget())
