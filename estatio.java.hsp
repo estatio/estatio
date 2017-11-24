@@ -111,7 +111,16 @@
                           <cell name="link" pattern="org.estatio.module.link.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
                         </row>
                         <row>
-                          <cell name="country" pattern="org.estatio.module.country.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                          <cell name="country" pattern="org.estatio.module.country.*" vexpanded="true" illegal="false" visibility="public" drill="true">
+                            <grid>
+                              <row>
+                                <cell name="country" pattern="org.estatio.module.country.?" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                              </row>
+                              <row>
+                                <cell name="fixtures" pattern="org.estatio.module.country.fixtures.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
+                              </row>
+                            </grid>
+                          </cell>
                           <cell name="currency" pattern="org.estatio.module.currency.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
                           <cell name="docrendering" pattern="org.estatio.module.docrendering.*" vexpanded="false" illegal="false" visibility="public" drill="true" />
                           <cell name="event" pattern="org.estatio.module.event.*" vexpanded="false" illegal="false" visibility="public" drill="true" />

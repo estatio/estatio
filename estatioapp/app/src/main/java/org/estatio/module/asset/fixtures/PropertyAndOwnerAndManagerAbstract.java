@@ -18,16 +18,24 @@
  */
 package org.estatio.module.asset.fixtures;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 
@@ -96,21 +104,21 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
 //        return unitTypes[n % unitTypes.length];
 //    }
 //
-//    // //////////////////////////////////////
-//
-//    @Inject
-//    protected StateRepository stateRepository;
-//
-//    @Inject
-//    protected CountryRepository countryRepository;
-//
-//    @Inject
-//    protected PropertyRepository propertyRepository;
-//
-//    @Inject
-//    protected PartyRepository partyRepository;
-//
-//    @Inject
-//    protected ApplicationTenancyRepository applicationTenancyRepository;
+    // //////////////////////////////////////
+
+    @Inject
+    protected StateRepository stateRepository;
+
+    @Inject
+    protected CountryRepository countryRepository;
+
+    @Inject
+    protected PropertyRepository propertyRepository;
+
+    @Inject
+    protected PartyRepository partyRepository;
+
+    @Inject
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 }

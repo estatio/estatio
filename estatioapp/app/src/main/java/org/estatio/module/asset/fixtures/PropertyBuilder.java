@@ -108,15 +108,15 @@ public class PropertyBuilder extends BuilderScriptAbstract<PropertyBuilder> {
             property.setLocation(Location.fromString(locationStr));
         }
 
-        property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
-        property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, null, null);
 
-//        if(getOwner() != null) {
+        if(owner != null) {
+            property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
-//        }
-//        if(getManager() != null) {
+        }
+        if(manager != null) {
+            property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, null, null);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, getManager(), getAcquireDate(), null);
-//        }
+        }
 
         for (int i = 0; i < getNumberOfUnits(); i++) {
             int unitNumber = i + 1;
