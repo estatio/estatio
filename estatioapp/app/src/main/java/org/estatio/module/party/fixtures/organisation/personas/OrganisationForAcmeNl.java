@@ -18,7 +18,6 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
@@ -27,8 +26,10 @@ import lombok.Getter;
 
 public class OrganisationForAcmeNl extends PersonaScriptAbstract {
 
-    public static final String REF = "ACME_NL";
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
+    public static final Organisation_enum data = Organisation_enum.AcmeNl;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     @Getter
     private Organisation organisation;
@@ -40,7 +41,7 @@ public class OrganisationForAcmeNl extends PersonaScriptAbstract {
 
         this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("ACME Properties International")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1("Herengracht 100")
                     .setAddress2(null)

@@ -18,7 +18,6 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
@@ -27,8 +26,10 @@ import lombok.Getter;
 
 public class OrganisationForPerdantFr extends PersonaScriptAbstract {
 
-    public static final String REF = "PERDANT";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final Organisation_enum data = Organisation_enum.PerdantFr;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     @Getter
     private Organisation organisation;
@@ -40,7 +41,7 @@ public class OrganisationForPerdantFr extends PersonaScriptAbstract {
 
         this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("Perdant Clothing")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1(null)
                     .setAddress2(null)

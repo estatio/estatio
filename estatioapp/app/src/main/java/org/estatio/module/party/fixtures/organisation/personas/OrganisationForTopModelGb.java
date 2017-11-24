@@ -18,30 +18,30 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationCommsBuilder;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 
 public class OrganisationForTopModelGb extends PersonaScriptAbstract {
 
-    public static final String REF = "TOPMODEL";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
-    @Getter @Setter(AccessLevel.PROTECTED)
+    public static final Organisation_enum data = Organisation_enum.TopModelGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
     private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-        Organisation organisation1 = organisationAndCommsBuilder
+        this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("Topmodel Fashion")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1("2 Top Road")
                     .setAddress2(null)
@@ -55,10 +55,6 @@ public class OrganisationForTopModelGb extends PersonaScriptAbstract {
                     .build(this, executionContext)
                     .getOrganisation();
 
-        setOrganisation(organisation1);
-
-        Organisation organisation = organisation1;
-
         final OrganisationCommsBuilder organisationCommsBuilder =
                 new OrganisationCommsBuilder();
         organisationCommsBuilder
@@ -68,18 +64,5 @@ public class OrganisationForTopModelGb extends PersonaScriptAbstract {
                 .setCity("London")
                 .setCountryReference("GBR")
                 .build(this, executionContext);
-
-//        createCommunicationChannels(
-//                organisation,
-//                "1 Circle Square",
-//                null,
-//                "W2AXXX",
-//                "London",
-//                null,
-//                "GBR",
-//                null,
-//                null,
-//                null,
-//                executionContext);
     }
 }

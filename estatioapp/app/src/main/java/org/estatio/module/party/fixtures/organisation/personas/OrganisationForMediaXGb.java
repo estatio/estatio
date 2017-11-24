@@ -18,20 +18,20 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 
 public class OrganisationForMediaXGb extends PersonaScriptAbstract {
 
-    public static final String REF = "MEDIAX_GB";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
-    @Getter @Setter(AccessLevel.PROTECTED)
+    public static final Organisation_enum data = Organisation_enum.MediaXGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
     private Organisation organisation;
 
     @Override
@@ -39,9 +39,9 @@ public class OrganisationForMediaXGb extends PersonaScriptAbstract {
 
         final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
 
-        Organisation organisation = organisationAndCommsBuilder
+        this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("Media Electronics (GB)")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1("85 High St")
                     .setAddress2(null)
@@ -54,9 +54,6 @@ public class OrganisationForMediaXGb extends PersonaScriptAbstract {
                     .setEmailAddress("info@mediax.example.com")
                     .build(this, executionContext)
                     .getOrganisation();
-
-        setOrganisation(organisation);
-
     }
 
 }

@@ -18,7 +18,6 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
@@ -27,8 +26,11 @@ import lombok.Getter;
 
 public class OrganisationForMiracleGb extends PersonaScriptAbstract {
 
-    public static final String REF = "MIRACLE_GB";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    public static final Organisation_enum data = Organisation_enum.MiracleGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
 
     @Getter
     private Organisation organisation;
@@ -40,7 +42,7 @@ public class OrganisationForMiracleGb extends PersonaScriptAbstract {
 
         this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("Miracle Shoes")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1(null)
                     .setAddress2(null)

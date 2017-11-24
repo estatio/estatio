@@ -18,30 +18,30 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationCommsBuilder;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 
 public class OrganisationForHelloWorldGb extends PersonaScriptAbstract {
 
-    public static final String REF = "HELLOWORLD_GB";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
-    @Getter @Setter(AccessLevel.PROTECTED)
+    public static final Organisation_enum data = Organisation_enum.HelloWorldGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
     private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-        Organisation organisation = organisationAndCommsBuilder
+        this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName("Hello World Properties")
+                    .setPartyName(data.name)
                     .setPartyReference(REF)
                     .setAddress1("5 Covent Garden")
                     .setAddress2(null)
@@ -55,31 +55,16 @@ public class OrganisationForHelloWorldGb extends PersonaScriptAbstract {
                     .build(this, executionContext)
                     .getOrganisation();
 
-        setOrganisation(organisation);
-
-        Organisation party = organisation;
 
         final OrganisationCommsBuilder organisationCommsBuilder =
                 new OrganisationCommsBuilder();
         organisationCommsBuilder
-                .setOrganisation(party)
+                .setOrganisation(organisation)
                 .setAddress1("1 Circle Square")
                 .setPostalCode("W2AXXX")
                 .setCity("London")
                 .setCountryReference("GBR")
                 .build(this, executionContext);
-//        createCommunicationChannels(
-//                party,
-//                "1 Circle Square",
-//                null,
-//                "W2AXXX",
-//                "London",
-//                null,
-//                "GBR",
-//                null,
-//                null,
-//                null,
-//                executionContext);
     }
 
 }
