@@ -36,7 +36,7 @@ import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.asset.fixtures.PropertyBuilder;
+import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
@@ -107,11 +107,11 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class Dispose extends Property_IntegTest {
 
-        private PropertyBuilder fs;
+        private PropertyAndUnitsAndOwnerAndManagerBuilder fs;
 
         @Before
         public void setupData() {
-            fs = new PropertyBuilder();
+            fs = new PropertyAndUnitsAndOwnerAndManagerBuilder();
 
             runFixtureScript(new FixtureScript() {
                 @Override

@@ -32,9 +32,6 @@ import lombok.experimental.Accessors;
 public class PersonAndApplicationUserBuilder
         extends BuilderScriptAbstract<PersonAndApplicationUserBuilder> {
 
-    PersonBuilder personBuilder = new PersonBuilder() {};
-    ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder() {};
-
     @Getter @Setter
     private String atPath;
 
@@ -61,6 +58,9 @@ public class PersonAndApplicationUserBuilder
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        PersonBuilder personBuilder = new PersonBuilder();
+        ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
 
         // person
         person = personBuilder.setAtPath(atPath)

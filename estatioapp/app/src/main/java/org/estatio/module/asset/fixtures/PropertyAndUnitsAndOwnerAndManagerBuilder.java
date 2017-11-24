@@ -49,7 +49,8 @@ import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.ld;
 
 @Accessors(chain = true)
-public class PropertyBuilder extends BuilderScriptAbstract<PropertyBuilder> {
+public class PropertyAndUnitsAndOwnerAndManagerBuilder
+        extends BuilderScriptAbstract<PropertyAndUnitsAndOwnerAndManagerBuilder> {
 
     @Getter @Setter
     private String reference;

@@ -43,13 +43,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesBuilder> {
 
-    PersonBuilder personBuilder = new PersonBuilder() {};
-    ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder() {};
-    PersonCommsBuilder personCommsBuilder = new PersonCommsBuilder() {};
-    PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder() {};
-
-    PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder() {};
-    PersonFixedAssetRolesBuilder fixedAssetRolesBuilder = new PersonFixedAssetRolesBuilder() {};
 
     @Getter @Setter
     private String atPath;
@@ -120,6 +113,14 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
 
     @Override
     public void execute(ExecutionContext executionContext) {
+
+        PersonBuilder personBuilder = new PersonBuilder();
+        ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
+        PersonCommsBuilder personCommsBuilder = new PersonCommsBuilder();
+        PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder();
+
+        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
+        PersonFixedAssetRolesBuilder fixedAssetRolesBuilder = new PersonFixedAssetRolesBuilder();
 
         person = personBuilder
                 .setAtPath(atPath)

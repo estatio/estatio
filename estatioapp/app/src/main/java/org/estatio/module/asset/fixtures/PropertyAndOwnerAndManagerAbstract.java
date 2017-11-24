@@ -45,8 +45,6 @@ import lombok.Getter;
  */
 public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
 
-    private PropertyBuilder propertyBuilder = new PropertyBuilder();
-
     @Getter
     public Property property;
 
@@ -65,7 +63,9 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
             final String locationStr,
             final ExecutionContext executionContext) {
 
-        property = propertyBuilder
+        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder = new PropertyAndUnitsAndOwnerAndManagerBuilder();
+
+        property = propertyAndUnitsAndOwnerAndManagerBuilder
                 .setReference(reference)
                 .setName(name)
                 .setCity(city)

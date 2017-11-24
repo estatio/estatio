@@ -45,7 +45,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<PersonFixedAssetRolesBuilder> {
 
-    PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder() {};
 
     @Getter @Setter
     private Person person;
@@ -84,6 +83,7 @@ public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<PersonFi
         checkParam("person", executionContext, Person.class);
 
         // party roles
+        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
         partyRoles = personPartyRolesBuilder
                 .setPerson(person)
                 .addPartyRoleTypes(fixedAssetRoleSpecs.stream().map(x -> x.roleType).collect(Collectors.toList()))
