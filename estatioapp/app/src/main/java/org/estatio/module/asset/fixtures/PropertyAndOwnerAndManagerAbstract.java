@@ -18,38 +18,26 @@
  */
 package org.estatio.module.asset.fixtures;
 
-import java.math.BigDecimal;
-
-import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.wicket.gmap3.cpt.applib.Location;
-
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.asset.dom.UnitType;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
-import static org.incode.module.base.integtests.VT.ld;
 
 /**
  * Sets up the {@link Property} and also a number of
  * {@link Unit}s.
  */
 public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
+
+    private PropertyBuilder propertyBuilder = new PropertyBuilder();
 
     @Getter
     public Property property;
@@ -67,8 +55,24 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
             final Party owner,
             final Party manager,
             final String locationStr,
-            final ExecutionContext fixtureResults) {
+            final ExecutionContext executionContext) {
 
+        property = propertyBuilder
+                .setReference(reference)
+                .setName(name)
+                .setCity(city)
+                .setCountry(country)
+                .setPropertyType(type)
+                .setNumberOfUnits(numberOfUnits)
+                .setOpeningDate(openingDate)
+                .setAcquireDate(acquireDate)
+                .setOwner(owner)
+                .setManager(manager)
+                .setLocationStr(locationStr)
+                .build(this, executionContext)
+                .getProperty();
+
+        /*
         Property property = propertyRepository.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
         property.setLocation(Location.fromString(locationStr));
@@ -81,29 +85,32 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
 
         this.property = property;
 
-        return fixtureResults.addResult(this, property.getReference(), property);
+        return executionContext.addResult(this, property.getReference(), property);
+        */
+
+        return property;
     }
 
-    private UnitType unitType(int n) {
-        final UnitType[] unitTypes = UnitType.values();
-        return unitTypes[n % unitTypes.length];
-    }
-
-    // //////////////////////////////////////
-
-    @Inject
-    protected StateRepository stateRepository;
-
-    @Inject
-    protected CountryRepository countryRepository;
-
-    @Inject
-    protected PropertyRepository propertyRepository;
-
-    @Inject
-    protected PartyRepository partyRepository;
-
-    @Inject
-    protected ApplicationTenancyRepository applicationTenancyRepository;
+//    private UnitType unitType(int n) {
+//        final UnitType[] unitTypes = UnitType.values();
+//        return unitTypes[n % unitTypes.length];
+//    }
+//
+//    // //////////////////////////////////////
+//
+//    @Inject
+//    protected StateRepository stateRepository;
+//
+//    @Inject
+//    protected CountryRepository countryRepository;
+//
+//    @Inject
+//    protected PropertyRepository propertyRepository;
+//
+//    @Inject
+//    protected PartyRepository partyRepository;
+//
+//    @Inject
+//    protected ApplicationTenancyRepository applicationTenancyRepository;
 
 }

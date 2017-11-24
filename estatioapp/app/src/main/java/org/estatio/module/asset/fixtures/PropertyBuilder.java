@@ -24,8 +24,6 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
@@ -41,14 +39,17 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
+import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.ld;
 
-public class PropertyBuilder extends FixtureScript {
+@Accessors(chain = true)
+public class PropertyBuilder extends BuilderScriptAbstract<PropertyBuilder> {
 
     @Getter @Setter
     private String reference;
