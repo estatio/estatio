@@ -19,29 +19,43 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-public class OrganisationForMediaXGb extends OrganisationAbstract {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+public class OrganisationForMediaXGb extends PersonaScriptAbstract {
 
     public static final String REF = "MEDIAX_GB";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    @Getter @Setter(AccessLevel.PROTECTED)
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Media Electronics (GB)",
-                "85 High St",
-                null,
-                "EN11 8TL",
-                "Hoddesdon",
-                null,
-                "GBR",
-                "+442079897676",
-                "+442079897677",
-                "info@mediax.example.com",
-                executionContext);
 
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+
+        Organisation organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("Media Electronics (GB)")
+                    .setPartyReference(REF)
+                    .setAddress1("85 High St")
+                    .setAddress2(null)
+                    .setPostalCode("EN11 8TL")
+                    .setCity("Hoddesdon")
+                    .setStateReference(null)
+                    .setCountryReference("GBR")
+                    .setPhone("+442079897676")
+                    .setFax("+442079897677")
+                    .setEmailAddress("info@mediax.example.com")
+                    .build(this, executionContext)
+                    .getOrganisation();
+
+        setOrganisation(organisation);
 
     }
 

@@ -19,27 +19,39 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-public class OrganisationForPastaPapaIt extends OrganisationAbstract {
+import lombok.Getter;
+
+public class OrganisationForPastaPapaIt extends PersonaScriptAbstract {
 
     public static final String REF = "PASTAPAPA";
     public static final String AT_PATH = ApplicationTenancyForIt.PATH;
 
+    @Getter
+    private Organisation organisation;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Pasta Papa Food",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
 
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+
+        this.organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("Pasta Papa Food")
+                    .setPartyReference(REF)
+                    .setAddress1(null)
+                    .setAddress2(null)
+                    .setPostalCode(null)
+                    .setCity(null)
+                    .setStateReference(null)
+                    .setCountryReference(null)
+                    .setPhone(null)
+                    .setFax(null)
+                    .setEmailAddress(null)
+                    .build(this, executionContext)
+                    .getOrganisation();
     }
 }

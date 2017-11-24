@@ -19,28 +19,45 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForSe;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-public class OrganisationForHelloWorldSe extends OrganisationAbstract {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+public class OrganisationForHelloWorldSe extends PersonaScriptAbstract {
 
     public static final String REF = "HELLOWORLD_SE";
     public static final String AT_PATH = ApplicationTenancyForSe.PATH;
+    @Getter @Setter(AccessLevel.PROTECTED)
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party party = createOrganisation(
-                AT_PATH,
-                REF,
-                "Hello World Properties (Sweden)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
+
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+        Organisation organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("Hello World Properties (Sweden)")
+                    .setPartyReference(REF)
+                    .setAddress1(null)
+                    .setAddress2(null)
+                    .setPostalCode(null)
+                    .setCity(null)
+                    .setStateReference(null)
+                    .setCountryReference(null)
+                    .setPhone(null)
+                    .setFax(null)
+                    .setEmailAddress(null)
+                    .build(this, executionContext)
+                    .getOrganisation();
+
+        setOrganisation(organisation);
+
+        Party party = organisation;
     }
 
 }

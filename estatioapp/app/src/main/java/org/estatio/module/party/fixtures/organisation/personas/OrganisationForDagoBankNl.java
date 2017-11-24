@@ -18,27 +18,42 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class OrganisationForDagoBankNl extends OrganisationAbstract {
+import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
+
+import lombok.Getter;
+
+public class OrganisationForDagoBankNl extends PersonaScriptAbstract {
 
     public static final String REF = "DAGOBANK_NL";
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
 
+    @Getter
+    private Organisation organisation;
+
     @Override
-    protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "DagoBank (NL)",
-                "Herengracht 333",
-                null,
-                "1016 BA",
-                "Amsterdam",
-                null,
-                "NLD",
-                "+31202211333",
-                "+312022211399",
-                "amsterdam.office@dagobank.example.com", executionContext);
+    protected void execute(FixtureScript.ExecutionContext executionContext) {
+
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+
+        this.organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("DagoBank (NL)")
+                    .setPartyReference(REF)
+                    .setAddress1("Herengracht 333")
+                    .setAddress2(null)
+                    .setPostalCode("1016 BA")
+                    .setCity("Amsterdam")
+                    .setStateReference(null)
+                    .setCountryReference("NLD")
+                    .setPhone("+31202211333")
+                    .setFax("+312022211399")
+                    .setEmailAddress("amsterdam.office@dagobank.example.com")
+                    .build(this, executionContext)
+                    .getOrganisation();
     }
 }

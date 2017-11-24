@@ -19,26 +19,39 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-public class OrganisationForNlBankNl extends OrganisationAbstract {
+import lombok.Getter;
+
+public class OrganisationForNlBankNl extends PersonaScriptAbstract {
 
     public static final String REF = "NLBANK_NL";
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
 
+    @Getter
+    private Organisation organisation;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "NlBank (NL)",
-                "Single 2222",
-                null,
-                "1016 BA",
-                "Amsterdam",
-                null,
-                "NLD",
-                "+31202211333",
-                "+312022211399",
-                "amsterdam.office@nlbank.example.com", executionContext);
+
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+
+        this.organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("NlBank (NL)")
+                    .setPartyReference(REF)
+                    .setAddress1("Single 2222")
+                    .setAddress2(null)
+                    .setPostalCode("1016 BA")
+                    .setCity("Amsterdam")
+                    .setStateReference(null)
+                    .setCountryReference("NLD")
+                    .setPhone("+31202211333")
+                    .setFax("+312022211399")
+                    .setEmailAddress("amsterdam.office@nlbank.example.com")
+                    .build(this, executionContext)
+                    .getOrganisation();
     }
 }

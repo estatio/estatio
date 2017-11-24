@@ -19,27 +19,40 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
-public class OrganisationForMiracleNl extends OrganisationAbstract {
+import lombok.Getter;
+
+public class OrganisationForMiracleNl extends PersonaScriptAbstract {
 
     public static final String REF = "MIRACLE_NL";
     public static final String AT_PATH = ApplicationTenancyForNl.PATH;
 
+    @Getter
+    private Organisation organisation;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Miracle Shoes (NL)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
+
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+
+        this.organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("Miracle Shoes (NL)")
+                    .setPartyReference(REF)
+                    .setAddress1(null)
+                    .setAddress2(null)
+                    .setPostalCode(null)
+                    .setCity(null)
+                    .setStateReference(null)
+                    .setCountryReference(null)
+                    .setPhone(null)
+                    .setFax(null)
+                    .setEmailAddress(null)
+                    .build(this, executionContext)
+                    .getOrganisation();
     }
 
 }

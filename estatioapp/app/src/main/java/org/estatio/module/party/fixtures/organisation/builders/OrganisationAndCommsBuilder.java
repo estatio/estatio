@@ -89,7 +89,6 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
     @Getter
     private EmailAddress emailAddressObj;
 
-
     @Override
     protected void execute(ExecutionContext executionContext) {
 
@@ -122,89 +121,7 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
         this.phoneObj = organisationCommsBuilder.getPhoneObj();
         this.faxObj = organisationCommsBuilder.getFaxObj();
 
-        /*
-        checkParam("atPath", executionContext, String.class);
-        checkParam("partyReference", executionContext, String.class);
-        checkParam("partyName", executionContext, String.class);
-
-        defaultParam("useNumeratorForReference", executionContext, false);
-
-        // if postal address
-        defaultParam("legalAddress", executionContext, true);
-
-
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-
-        this.party = organisationRepository.newOrganisation(partyReference, useNumeratorForReference, partyName, applicationTenancy);
-
-        if (address1 != null) {
-            final Country country = countryRepository.findCountry(countryReference);
-            final State state = stateRepository.findState(stateReference);
-            final PostalAddress postalAddress = communicationChannelRepository.newPostal(
-                    party,
-                    CommunicationChannelType.POSTAL_ADDRESS,
-                    address1,
-                    address2,
-                    null,
-                    postalCode,
-                    city,
-                    state,
-                    country);
-            postalAddress.setLegal(legalAddress);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, party.getReference() + "/postalAddress", postalAddress);
-        }
-        if (phone != null) {
-            final PhoneOrFaxNumber phoneDO = communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.PHONE_NUMBER,
-                    phone);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, party.getReference() + "/phone", phoneDO);
-        }
-        if (fax != null) {
-            final PhoneOrFaxNumber faxDO = communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.FAX_NUMBER,
-                    this.fax);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, party.getReference() + "/fax", faxDO);
-        }
-        if (emailAddress != null) {
-            final EmailAddress emailAddressDO = communicationChannelRepository.newEmail(
-                    party,
-                    CommunicationChannelType.EMAIL_ADDRESS,
-                    this.emailAddress);
-            transactionService.flushTransaction();
-            executionContext.addResult(this, party.getReference() + "/email", emailAddressDO);
-        }
-
-        executionContext.addResult(this, party.getReference(), party);
-         */
     }
 
-//    protected boolean defined(String[] values, int i) {
-//        return values.length > i && !values[i].isEmpty();
-//    }
-//
-//    // //////////////////////////////////////
-//
-//    @Inject
-//    protected CountryRepository countryRepository;
-//
-//    @Inject
-//    protected StateRepository stateRepository;
-//
-//    @Inject
-//    protected OrganisationRepository organisationRepository;
-//
-//    @Inject
-//    protected PersonRepository personRepository;
-//
-//    @Inject
-//    protected CommunicationChannelRepository communicationChannelRepository;
-//
-//    @Inject
-//    protected ApplicationTenancies applicationTenancies;
 
 }

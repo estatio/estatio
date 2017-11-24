@@ -19,29 +19,45 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationCommsBuilder;
 
-public class OrganisationForHelloWorldGb extends OrganisationAbstract {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
+public class OrganisationForHelloWorldGb extends PersonaScriptAbstract {
 
     public static final String REF = "HELLOWORLD_GB";
     public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    @Getter @Setter(AccessLevel.PROTECTED)
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Organisation party = createOrganisation(
-                AT_PATH,
-                REF,
-                "Hello World Properties",
-                "5 Covent Garden",
-                null,
-                "W1A1AA",
-                "London",
-                null,
-                "GBR",
-                "+44202211333",
-                "+442022211399",
-                "info@hello.example.com", executionContext);
+
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+        Organisation organisation = organisationAndCommsBuilder
+                    .setAtPath(AT_PATH)
+                    .setPartyName("Hello World Properties")
+                    .setPartyReference(REF)
+                    .setAddress1("5 Covent Garden")
+                    .setAddress2(null)
+                    .setPostalCode("W1A1AA")
+                    .setCity("London")
+                    .setStateReference(null)
+                    .setCountryReference("GBR")
+                    .setPhone("+44202211333")
+                    .setFax("+442022211399")
+                    .setEmailAddress("info@hello.example.com")
+                    .build(this, executionContext)
+                    .getOrganisation();
+
+        setOrganisation(organisation);
+
+        Organisation party = organisation;
 
         final OrganisationCommsBuilder organisationCommsBuilder =
                 new OrganisationCommsBuilder();
