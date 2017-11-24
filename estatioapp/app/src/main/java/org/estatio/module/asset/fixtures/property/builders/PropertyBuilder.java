@@ -32,10 +32,12 @@ import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PropertyBuilder
         extends BuilderScriptAbstract<PropertyBuilder> {

@@ -16,24 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.application.spiimpl.fixturescripts;
+package org.estatio.module.base.spiimpl.fixturescripts;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecification;
+import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider;
 
-import org.estatio.module.application.demos.EstatioDemoFixture;
-import org.estatio.module.base.spiimpl.fixturescripts.BaseFixtureScriptsSpecificationProvider;
-
-@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
-public class EstatioFixtureScriptsSpecificationProvider extends BaseFixtureScriptsSpecificationProvider {
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "200")
+public class BaseFixtureScriptsSpecificationProvider implements FixtureScriptsSpecificationProvider {
 
     @Override
     public FixtureScriptsSpecification getSpecification() {
-        return builder()
-                .withRunScriptDefault(EstatioDemoFixture.class)
-                .build();
+        return builder().build();
     }
 
+    protected FixtureScriptsSpecification.Builder builder() {
+        return FixtureScriptsSpecification.builder(BaseFixtureScriptsSpecificationProvider.class)
+                .withRunScriptDropDown(FixtureScriptsSpecification.DropDownPolicy.CHOICES)
+                .with(FixtureScripts.MultipleExecutionStrategy.EXECUTE_ONCE_BY_VALUE);
+    }
 
 }

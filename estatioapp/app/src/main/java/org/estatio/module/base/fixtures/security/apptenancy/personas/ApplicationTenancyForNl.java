@@ -16,12 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.AbstractApplicationTenancyFixtureScript;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 
 public class ApplicationTenancyForNl extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = "/NLD";
-    public static final String NAME = "NLD";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.Nl;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

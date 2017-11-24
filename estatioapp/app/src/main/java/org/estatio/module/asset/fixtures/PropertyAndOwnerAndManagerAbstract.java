@@ -28,7 +28,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -80,34 +79,8 @@ public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
                 .build(this, executionContext)
                 .getProperty();
 
-        /*
-        Property property = propertyRepository.newProperty(reference, name, type, city, country, acquireDate);
-        property.setOpeningDate(openingDate);
-        property.setLocation(Location.fromString(locationStr));
-        property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
-        property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, null, null);
-        for (int i = 0; i < numberOfUnits; i++) {
-            int unitNumber = i + 1;
-            property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
-        }
-
-        this.property = property;
-
-        return executionContext.addResult(this, property.getReference(), property);
-        */
-
         return property;
     }
-
-//    private UnitType unitType(int n) {
-//        final UnitType[] unitTypes = UnitType.values();
-//        return unitTypes[n % unitTypes.length];
-//    }
-//
-    // //////////////////////////////////////
-
-    @Inject
-    protected StateRepository stateRepository;
 
     @Inject
     protected CountryRepository countryRepository;

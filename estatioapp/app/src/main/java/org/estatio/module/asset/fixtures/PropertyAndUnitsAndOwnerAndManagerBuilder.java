@@ -43,11 +43,13 @@ import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.ld;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PropertyAndUnitsAndOwnerAndManagerBuilder
         extends BuilderScriptAbstract<PropertyAndUnitsAndOwnerAndManagerBuilder> {

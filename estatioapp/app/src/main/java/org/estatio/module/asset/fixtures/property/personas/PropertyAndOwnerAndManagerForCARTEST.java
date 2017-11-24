@@ -23,6 +23,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLucianoPavarottiIt;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
@@ -31,6 +32,8 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHe
 import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyAndOwnerAndManagerForCARTEST extends PropertyAndOwnerAndManagerAbstract {
+
+    public static final Property_enum data = Property_enum.CARTEST;
 
     public static final String REF = "CAR";
     public static final String PARTY_REF_OWNER = OrganisationForHelloWorldIt.REF;

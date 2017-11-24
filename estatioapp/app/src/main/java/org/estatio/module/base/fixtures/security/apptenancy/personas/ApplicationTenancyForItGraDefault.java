@@ -16,13 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.AbstractApplicationTenancyFixtureScript;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 
 public class ApplicationTenancyForItGraDefault extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = ApplicationTenancyForIt.PATH+"/GRA/_";
-    public static final String NAME = "Grande (Italy) only";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.ItGraDefault;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

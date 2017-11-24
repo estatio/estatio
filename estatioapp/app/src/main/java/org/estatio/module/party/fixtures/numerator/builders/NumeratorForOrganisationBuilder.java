@@ -11,10 +11,12 @@ import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyReposit
 import org.estatio.module.numerator.dom.Numerator;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"name", "format", "country"})
 @Accessors(chain = true)
 public class NumeratorForOrganisationBuilder
         extends BuilderScriptAbstract<NumeratorForOrganisationBuilder> {

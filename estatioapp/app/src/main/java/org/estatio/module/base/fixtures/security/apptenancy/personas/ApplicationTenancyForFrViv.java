@@ -16,10 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+
 public class ApplicationTenancyForFrViv extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = ApplicationTenancyForFr.PATH+"/VIV";
-    public static final String NAME = "Vive (France)";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.FrViv;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

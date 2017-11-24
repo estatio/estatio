@@ -16,10 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+
 public class ApplicationTenancyForSeHanTa extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = ApplicationTenancyForSe.PATH+"/HAN/ta";
-    public static final String NAME = "Handla (Sweden) Tenants Association";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.SeHanTa;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

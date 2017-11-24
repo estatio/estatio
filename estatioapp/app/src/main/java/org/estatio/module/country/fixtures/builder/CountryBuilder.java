@@ -5,10 +5,12 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"data"})
 @Accessors(chain = true)
 public class CountryBuilder extends BuilderScriptAbstract<CountryBuilder> {
 

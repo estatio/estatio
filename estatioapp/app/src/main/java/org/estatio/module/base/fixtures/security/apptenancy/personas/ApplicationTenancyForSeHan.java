@@ -16,10 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+
 public class ApplicationTenancyForSeHan extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = ApplicationTenancyForSe.PATH+"/HAN";
-    public static final String NAME = "Handla (Sweden)";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.SeHan;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

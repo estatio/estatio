@@ -31,10 +31,12 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"person"})
 @Accessors(chain = true)
 public class PersonCommsBuilder
         extends BuilderScriptAbstract<PersonCommsBuilder> {

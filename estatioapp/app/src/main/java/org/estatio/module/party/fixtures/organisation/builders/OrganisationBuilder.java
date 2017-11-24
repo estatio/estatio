@@ -27,10 +27,12 @@ import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"partyReference"})
 @Accessors(chain = true)
 public class OrganisationBuilder extends BuilderScriptAbstract<OrganisationBuilder> {
 

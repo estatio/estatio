@@ -20,17 +20,20 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPastaPapaIt;
+import org.estatio.module.party.fixtures.organisation.personas.Organisation_enum;
 
 public class PersonAndRolesForLucianoPavarottiIt extends FixtureScript {
 
-    public static final String REF = "LPAVAROTTI";
-    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
-    public static final String PARTY_REF_FROM = OrganisationForPastaPapaIt.REF;
+    public static final Person_enum data = Person_enum.LucianoPavarottiIt;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+    public static final String PARTY_REF_FROM = Organisation_enum.PastaPapaItNl.getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

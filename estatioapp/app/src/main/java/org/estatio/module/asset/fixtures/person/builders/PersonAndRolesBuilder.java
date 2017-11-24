@@ -36,10 +36,12 @@ import org.estatio.module.party.fixtures.person.builders.ApplicationUserBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonPartyRolesBuilder;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesBuilder> {
 

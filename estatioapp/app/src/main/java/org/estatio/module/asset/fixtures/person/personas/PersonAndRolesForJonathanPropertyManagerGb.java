@@ -22,8 +22,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.party.dom.PersonGenderType;
 
 /**
@@ -31,9 +31,12 @@ import org.estatio.module.party.dom.PersonGenderType;
  */
 public class PersonAndRolesForJonathanPropertyManagerGb extends FixtureScript {
 
-    public static final String REF = "JRICE";
+    public static final Person_enum data = Person_enum.JonathanPropertyManagerGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
     public static final String SECURITY_USERNAME = REF.toLowerCase();
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
 
     @Override
     protected void execute(ExecutionContext executionContext) {

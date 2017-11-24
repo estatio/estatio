@@ -25,10 +25,12 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"property", "owner"})
 @Accessors(chain = true)
 public class PropertyOwnerBuilder
         extends BuilderScriptAbstract<PropertyOwnerBuilder> {

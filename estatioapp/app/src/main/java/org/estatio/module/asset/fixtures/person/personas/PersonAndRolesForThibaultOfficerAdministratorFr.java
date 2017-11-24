@@ -20,16 +20,18 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
 
 public class PersonAndRolesForThibaultOfficerAdministratorFr extends FixtureScript {
 
-    public static final String REF = "TJOSUE";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final Person_enum data = Person_enum.ThibaultOfficerAdministratorFr;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

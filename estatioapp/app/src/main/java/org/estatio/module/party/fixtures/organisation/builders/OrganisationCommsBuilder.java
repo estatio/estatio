@@ -37,10 +37,12 @@ import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PersonRepository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"organisation"})
 @Accessors(chain = true)
 public class OrganisationCommsBuilder extends BuilderScriptAbstract<OrganisationCommsBuilder> {
 

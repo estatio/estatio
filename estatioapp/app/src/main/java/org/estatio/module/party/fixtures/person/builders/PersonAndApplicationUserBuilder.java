@@ -24,10 +24,12 @@ import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PersonAndApplicationUserBuilder
         extends BuilderScriptAbstract<PersonAndApplicationUserBuilder> {

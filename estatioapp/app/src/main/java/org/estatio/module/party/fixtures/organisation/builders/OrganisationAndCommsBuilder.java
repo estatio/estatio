@@ -25,10 +25,12 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"partyReference", "address1", "phone", "fax", "emailAddress"})
 @Accessors(chain = true)
 public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<OrganisationAndCommsBuilder> {
 

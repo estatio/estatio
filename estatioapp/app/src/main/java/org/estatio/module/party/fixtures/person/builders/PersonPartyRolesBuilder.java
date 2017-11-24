@@ -31,10 +31,12 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"person"})
 @Accessors(chain = true)
 public class PersonPartyRolesBuilder
         extends BuilderScriptAbstract<PersonPartyRolesBuilder> {
