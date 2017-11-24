@@ -62,6 +62,14 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
         final TeardownFixtureAbstract teardownState = new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -70,7 +78,5 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
         };
         return Util.allOf(teardownState, new DemoData2Teardown<>(Country_enum.class));
     }
-
-
 
 }

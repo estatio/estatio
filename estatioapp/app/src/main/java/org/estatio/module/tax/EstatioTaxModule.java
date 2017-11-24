@@ -26,12 +26,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
-
-import org.estatio.module.base.EstatioBaseModule;
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
+
+import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
+
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
@@ -52,7 +53,16 @@ public final class EstatioTaxModule extends ModuleAbstract {
         return new DemoData2Persist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
     }
 
-    @Override public FixtureScript getTeardownFixture() {
+    @Override
+    public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -61,9 +71,5 @@ public final class EstatioTaxModule extends ModuleAbstract {
             }
         };
     }
-
-
-
-
 
 }

@@ -59,7 +59,16 @@ public final class EstatioChargeModule extends ModuleAbstract {
         };
     }
 
-    @Override public FixtureScript getTeardownFixture() {
+    @Override
+    public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -68,6 +77,5 @@ public final class EstatioChargeModule extends ModuleAbstract {
             }
         };
     }
-
 
 }

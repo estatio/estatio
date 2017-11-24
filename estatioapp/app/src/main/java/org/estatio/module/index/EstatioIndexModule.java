@@ -26,11 +26,12 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexBase;
 import org.estatio.module.index.dom.IndexValue;
@@ -58,15 +59,22 @@ public final class EstatioIndexModule extends ModuleAbstract {
 
     @Override
     public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
         return new TeardownFixtureAbstract() {
             @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
+            protected void execute(final ExecutionContext executionContext) {
                 deleteFrom(IndexValue.class);
                 deleteFrom(IndexBase.class);
                 deleteFrom(Index.class);
             }
         };
     }
-
 
 }
