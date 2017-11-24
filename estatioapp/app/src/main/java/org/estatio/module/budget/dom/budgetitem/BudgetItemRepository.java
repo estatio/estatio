@@ -70,9 +70,6 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
         return repositoryService.persistAndFlush(new BudgetItem(budget, charge));
     }
 
-    @Inject
-    RepositoryService repositoryService;
-
     public String validateNewBudgetItem(
             final Budget budget,
             final Charge charge) {
@@ -112,5 +109,10 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
     public List<BudgetItem> findByProperty(final Property property) {
         return allMatches("findByProperty", "property", property);
     }
+
+
+    @Inject
+    RepositoryService repositoryService;
+
 
 }

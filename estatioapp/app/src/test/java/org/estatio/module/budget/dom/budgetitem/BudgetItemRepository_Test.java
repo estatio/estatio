@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
@@ -99,6 +100,9 @@ public class BudgetItemRepository_Test {
         @Mock
         private DomainObjectContainer mockContainer;
 
+        @Mock
+        private RepositoryService mockRepositoryService;
+
         BudgetItemRepository budgetItemRepository1;
 
         @Before
@@ -110,6 +114,7 @@ public class BudgetItemRepository_Test {
                 }
             };
             budgetItemRepository1.setContainer(mockContainer);
+            budgetItemRepository1.repositoryService = mockRepositoryService;
         }
 
         @Test
@@ -117,16 +122,13 @@ public class BudgetItemRepository_Test {
 
             final Budget budget = new Budget();
             final Charge charge = new Charge();
-            final BudgetItem budgetItem = new BudgetItem();
 
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(BudgetItem.class);
-                    will(returnValue(budgetItem));
-                    oneOf(mockContainer).persistIfNotAlready(budgetItem);
+                    oneOf(mockRepositoryService).persistAndFlush(with(any(BudgetItem.class)));
+                    will(returnValue(new BudgetItem(budget, charge)));
                 }
-
             });
 
             // when
