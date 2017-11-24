@@ -55,14 +55,14 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
         return Sets.newHashSet(CountryModule.class);
     }
 
-    private boolean refData = false;
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
     @Override
     public FixtureScript getRefDataSetupFixture() {
-        if(refData) {
+        if(refData.get()) {
             return null;
         }
         // else
-        refData = true;
+        refData.set(true);
         return new DemoData2Persist<>(Country_enum.class);
     }
 
@@ -76,7 +76,7 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
      * Provided for any integration tests that need to fine-tune
      */
     public FixtureScript getRefDataTeardown() {
-        refData = false; // reset
+        refData.set(false); // reset
         final TeardownFixtureAbstract teardownState = new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
