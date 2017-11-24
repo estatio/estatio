@@ -1,0 +1,81 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.estatio.module.party.fixtures.organisation.builders;
+
+import javax.inject.Inject;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.OrganisationRepository;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+@Accessors(chain = true)
+public class OrganisationBuilder extends BuilderScriptAbstract<OrganisationBuilder> {
+
+    @Getter @Setter
+    private String atPath;
+
+    @Getter @Setter
+    private String partyReference;
+
+    @Getter @Setter
+    private String partyName;
+
+    @Getter @Setter
+    private Boolean useNumeratorForReference;
+
+
+    @Getter
+    private Organisation organisation;
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+
+        checkParam("atPath", executionContext, String.class);
+        checkParam("partyReference", executionContext, String.class);
+        checkParam("partyName", executionContext, String.class);
+
+        defaultParam("useNumeratorForReference", executionContext, false);
+
+        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+
+        this.organisation = organisationRepository.newOrganisation(partyReference, useNumeratorForReference, partyName, applicationTenancy);
+
+        executionContext.addResult(this, organisation.getReference(), organisation);
+    }
+
+    protected boolean defined(String[] values, int i) {
+        return values.length > i && !values[i].isEmpty();
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
+    OrganisationRepository organisationRepository;
+
+    @Inject
+    ApplicationTenancies applicationTenancies;
+
+}

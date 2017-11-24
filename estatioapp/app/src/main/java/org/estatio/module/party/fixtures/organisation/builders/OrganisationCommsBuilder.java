@@ -16,15 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.party.fixtures.organisation.personas;
+package org.estatio.module.party.fixtures.organisation.builders;
 
 import javax.inject.Inject;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
+import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -41,19 +42,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
-public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<OrganisationAndCommsBuilder> {
+public class OrganisationCommsBuilder extends BuilderScriptAbstract<OrganisationCommsBuilder> {
 
     @Getter @Setter
-    private String atPath;
-
-    @Getter @Setter
-    private String partyReference;
-
-    @Getter @Setter
-    private String partyName;
-
-    @Getter @Setter
-    private Boolean useNumeratorForReference;
+    private Organisation organisation;
 
     @Getter @Setter
     private String address1;
@@ -74,6 +66,9 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
     private String countryReference;
 
     @Getter @Setter
+    private Boolean legalAddress;
+
+    @Getter @Setter
     private String phone;
 
     @Getter @Setter
@@ -83,76 +78,30 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
     private String emailAddress;
 
     @Getter
-    private Organisation party;
+    private PostalAddress postalAddress;
+
+    @Getter
+    private PhoneOrFaxNumber phoneObj;
+
+    @Getter
+    private PhoneOrFaxNumber faxObj;
+
+    @Getter
+    private EmailAddress emailAddressObj;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        checkParam("atPath", executionContext, String.class);
-        checkParam("partyReference", executionContext, String.class);
-        checkParam("partyName", executionContext, String.class);
-
-        defaultParam("useNumeratorForReference", executionContext, false);
-
-        /*
-
-    @Getter @Setter
-    private String address1;
-
-    @Getter @Setter
-    private String address2;
-
-    @Getter @Setter
-    private String postalCode;
-
-    @Getter @Setter
-    private String city;
-
-    @Getter @Setter
-    private String stateReference;
-
-    @Getter @Setter
-    private String countryReference;
-
-    @Getter @Setter
-    private String phone;
-
-    @Getter @Setter
-    private String fax;
-
-    @Getter @Setter
-    private String emailAddress;
-
-    @Getter
-    private Organisation party;
-
-    }
-
-    protected Party createOrganisation(
-            String atPath,
-            String partyReference,
-            String partyName,
-            String address1,
-            String address2,
-            String postalCode,
-            String city,
-            String stateReference,
-            String countryReference,
-            String phone,
-            String fax,
-            String emailAddress,
-            ExecutionContext executionContext) {
-         */
-
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
-
-        this.party = organisationRepository.newOrganisation(partyReference, false, partyName, applicationTenancy);
+        checkParam("organisation", executionContext, Organisation.class);
 
         if (address1 != null) {
+
+            defaultParam("legalAddress", executionContext, true);
+
             final Country country = countryRepository.findCountry(countryReference);
             final State state = stateRepository.findState(stateReference);
-            final PostalAddress postalAddress = communicationChannelRepository.newPostal(
-                    party,
+            this.postalAddress = communicationChannelRepository.newPostal(
+                    organisation,
                     CommunicationChannelType.POSTAL_ADDRESS,
                     address1,
                     address2,
@@ -161,40 +110,43 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
                     city,
                     state,
                     country);
-            // We make this the legal address too...
-            postalAddress.setLegal(true);
-            getContainer().flush();
-        }
-        if (phone != null) {
-            communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.PHONE_NUMBER,
-                    phone);
-            getContainer().flush();
-        }
-        if (fax != null) {
-            communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.FAX_NUMBER,
-                    fax);
-            getContainer().flush();
-        }
-        if (emailAddress != null) {
-            communicationChannelRepository.newEmail(
-                    party,
-                    CommunicationChannelType.EMAIL_ADDRESS,
-                    emailAddress);
-            getContainer().flush();
+            postalAddress.setLegal(legalAddress);
+            transactionService.flushTransaction();
+            executionContext.addResult(this, organisation.getReference() + "/postalAddress", postalAddress);
         }
 
-        executionContext.addResult(this, party.getReference(), party);
+        if (phone != null) {
+            this.phoneObj = communicationChannelRepository.newPhoneOrFax(
+                    organisation,
+                    CommunicationChannelType.PHONE_NUMBER,
+                    phone);
+            transactionService.flushTransaction();
+            executionContext.addResult(this, organisation.getReference() + "/phone", phoneObj);
+        }
+        if (fax != null) {
+            this.faxObj = communicationChannelRepository.newPhoneOrFax(
+                    organisation,
+                    CommunicationChannelType.FAX_NUMBER,
+                    this.fax);
+            transactionService.flushTransaction();
+            executionContext.addResult(this, organisation.getReference() + "/fax", faxObj);
+        }
+        if (emailAddress != null) {
+            this.emailAddressObj = communicationChannelRepository.newEmail(
+                    organisation,
+                    CommunicationChannelType.EMAIL_ADDRESS,
+                    this.emailAddress);
+            transactionService.flushTransaction();
+            executionContext.addResult(this, organisation.getReference() + "/email", emailAddressObj);
+        }
+
+        executionContext.addResult(this, organisation.getReference(), organisation);
     }
 
     protected boolean defined(String[] values, int i) {
         return values.length > i && !values[i].isEmpty();
     }
 
-    // //////////////////////////////////////
 
     @Inject
     protected CountryRepository countryRepository;

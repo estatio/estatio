@@ -19,7 +19,8 @@
 package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationCommsBuilder;
 
 public class OrganisationForTopModelGb extends OrganisationAbstract {
 
@@ -28,7 +29,7 @@ public class OrganisationForTopModelGb extends OrganisationAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party party = createOrganisation(
+        Organisation organisation = createOrganisation(
                 AT_PATH,
                 REF,
                 "Topmodel Fashion",
@@ -41,17 +42,28 @@ public class OrganisationForTopModelGb extends OrganisationAbstract {
                 "+31202211333",
                 "+312022211399",
                 "info@topmodel.example.com", executionContext);
-        createCommunicationChannels(
-                party,
-                "1 Circle Square",
-                null,
-                "W2AXXX",
-                "London",
-                null,
-                "GBR",
-                null,
-                null,
-                null,
-                executionContext);
+
+        final OrganisationCommsBuilder organisationCommsBuilder =
+                new OrganisationCommsBuilder();
+        organisationCommsBuilder
+                .setOrganisation(organisation)
+                .setAddress1("1 Circle Square")
+                .setPostalCode("W2AXXX")
+                .setCity("London")
+                .setCountryReference("GBR")
+                .build(this, executionContext);
+
+//        createCommunicationChannels(
+//                organisation,
+//                "1 Circle Square",
+//                null,
+//                "W2AXXX",
+//                "London",
+//                null,
+//                "GBR",
+//                null,
+//                null,
+//                null,
+//                executionContext);
     }
 }

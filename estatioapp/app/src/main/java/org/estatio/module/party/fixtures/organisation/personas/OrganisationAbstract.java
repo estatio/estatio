@@ -18,26 +18,12 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
-import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
-import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
-import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
-import org.incode.module.country.dom.impl.State;
-import org.incode.module.country.dom.impl.StateRepository;
 
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.OrganisationRepository;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 
 import lombok.Getter;
 
@@ -48,12 +34,12 @@ import lombok.Getter;
 public abstract class OrganisationAbstract extends FixtureScript {
 
     @Getter
-    private Party party;
+    private Organisation organisation;
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
 
-    protected Party createOrganisation(
+    protected Organisation createOrganisation(
             String atPath,
             String partyReference,
             String partyName,
@@ -68,93 +54,112 @@ public abstract class OrganisationAbstract extends FixtureScript {
             String emailAddress,
             ExecutionContext executionContext) {
 
-        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
+        this.organisation = organisationAndCommsBuilder
+                    .setAtPath(atPath)
+                    .setPartyName(partyName)
+                    .setPartyReference(partyReference)
+                    .setAddress1(address1)
+                    .setAddress2(address2)
+                    .setPostalCode(postalCode)
+                    .setCity(city)
+                    .setStateReference(stateReference)
+                    .setCountryReference(countryReference)
+                    .setPhone(phone)
+                    .setFax(fax)
+                    .setEmailAddress(emailAddress)
+                    .build(this, executionContext)
+                    .getOrganisation();
 
-        Party party = organisationRepository.newOrganisation(partyReference, false, partyName, applicationTenancy);
+//        ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
+//
+//        Party party = organisationRepository.newOrganisation(partyReference, false, partyName, applicationTenancy);
+//
+//        createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
+//
+//        this.party = party;
+//        return executionContext.addResult(this, party.getReference(), party);
 
-        createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
-
-        this.party = party;
-        return executionContext.addResult(this, party.getReference(), party);
+        return organisation;
     }
 
-    protected Party createCommunicationChannels(
-            Party party,
-            String address1,
-            String address2,
-            String postalCode,
-            String city,
-            String stateReference,
-            String countryReference,
-            String phone,
-            String fax,
-            String emailAddress,
-            ExecutionContext executionContext) {
+//    protected Party createCommunicationChannels(
+//            Party party,
+//            String address1,
+//            String address2,
+//            String postalCode,
+//            String city,
+//            String stateReference,
+//            String countryReference,
+//            String phone,
+//            String fax,
+//            String emailAddress,
+//            ExecutionContext executionContext) {
+//
+//        if (address1 != null) {
+//            final Country country = countryRepository.findCountry(countryReference);
+//            final State state = stateRepository.findState(stateReference);
+//            final PostalAddress postalAddress = communicationChannelRepository.newPostal(
+//                    party,
+//                    CommunicationChannelType.POSTAL_ADDRESS,
+//                    address1,
+//                    address2,
+//                    null,
+//                    postalCode,
+//                    city,
+//                    state,
+//                    country);
+//            // We make this the legal address too...
+//            postalAddress.setLegal(true);
+//            getContainer().flush();
+//        }
+//        if (phone != null) {
+//            communicationChannelRepository.newPhoneOrFax(
+//                    party,
+//                    CommunicationChannelType.PHONE_NUMBER,
+//                    phone);
+//            getContainer().flush();
+//        }
+//        if (fax != null) {
+//            communicationChannelRepository.newPhoneOrFax(
+//                    party,
+//                    CommunicationChannelType.FAX_NUMBER,
+//                    fax);
+//            getContainer().flush();
+//        }
+//        if (emailAddress != null) {
+//            communicationChannelRepository.newEmail(
+//                    party,
+//                    CommunicationChannelType.EMAIL_ADDRESS,
+//                    emailAddress);
+//            getContainer().flush();
+//        }
+//
+//        return executionContext.addResult(this, party.getReference(), party);
+//    }
+//
+//    protected boolean defined(String[] values, int i) {
+//        return values.length > i && !values[i].isEmpty();
+//    }
 
-        if (address1 != null) {
-            final Country country = countryRepository.findCountry(countryReference);
-            final State state = stateRepository.findState(stateReference);
-            final PostalAddress postalAddress = communicationChannelRepository.newPostal(
-                    party,
-                    CommunicationChannelType.POSTAL_ADDRESS,
-                    address1,
-                    address2,
-                    null,
-                    postalCode,
-                    city,
-                    state,
-                    country);
-            // We make this the legal address too...
-            postalAddress.setLegal(true);
-            getContainer().flush();
-        }
-        if (phone != null) {
-            communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.PHONE_NUMBER,
-                    phone);
-            getContainer().flush();
-        }
-        if (fax != null) {
-            communicationChannelRepository.newPhoneOrFax(
-                    party,
-                    CommunicationChannelType.FAX_NUMBER,
-                    fax);
-            getContainer().flush();
-        }
-        if (emailAddress != null) {
-            communicationChannelRepository.newEmail(
-                    party,
-                    CommunicationChannelType.EMAIL_ADDRESS,
-                    emailAddress);
-            getContainer().flush();
-        }
-
-        return executionContext.addResult(this, party.getReference(), party);
-    }
-
-    protected boolean defined(String[] values, int i) {
-        return values.length > i && !values[i].isEmpty();
-    }
-
-    // //////////////////////////////////////
-
-    @Inject
-    protected CountryRepository countryRepository;
-
-    @Inject
-    protected StateRepository stateRepository;
-
-    @Inject
-    protected OrganisationRepository organisationRepository;
-
-    @Inject
-    protected PersonRepository personRepository;
-
-    @Inject
-    protected CommunicationChannelRepository communicationChannelRepository;
-
-    @Inject
-    protected ApplicationTenancies applicationTenancies;
+//    // //////////////////////////////////////
+//
+//    @Inject
+//    protected CountryRepository countryRepository;
+//
+//    @Inject
+//    protected StateRepository stateRepository;
+//
+//    @Inject
+//    protected OrganisationRepository organisationRepository;
+//
+//    @Inject
+//    protected PersonRepository personRepository;
+//
+//    @Inject
+//    protected CommunicationChannelRepository communicationChannelRepository;
+//
+//    @Inject
+//    protected ApplicationTenancies applicationTenancies;
 
 }
