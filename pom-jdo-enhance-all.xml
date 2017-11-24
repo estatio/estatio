@@ -19,8 +19,8 @@
         <relativePath />
     </parent>
 
-    <groupId>org.incode</groupId>
-    <artifactId>incode-estatio-enhance-all</artifactId>
+    <groupId>org.estatio</groupId>
+    <artifactId>estatio-enhance-all</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     
     <packaging>pom</packaging>
@@ -33,7 +33,14 @@
     </description>
 
     <properties>
-        <datanucleus-maven-plugin.version>4.0.1</datanucleus-maven-plugin.version>
+        <datanucleus-maven-plugin.version>4.0.2</datanucleus-maven-plugin.version>
+
+        <jdo-api.version>3.1</jdo-api.version>
+        <datanucleus-core.version>4.1.7</datanucleus-core.version>
+        <datanucleus-api-jdo.version>4.1.1</datanucleus-api-jdo.version>
+        <datanucleus-jdo-query.version>4.0.5</datanucleus-jdo-query.version>
+        <datanucleus-rdbms.version>4.1.9</datanucleus-rdbms.version>
+
     </properties>
 
     <build>
@@ -81,6 +88,33 @@
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.jdo</groupId>
+                        <artifactId>jdo-api</artifactId>
+                        <version>${jdo-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-core</artifactId>
+                        <version>${datanucleus-core.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-api-jdo</artifactId>
+                        <version>${datanucleus-api-jdo.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-jdo-query</artifactId>
+                        <version>${datanucleus-jdo-query.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-rdbms</artifactId>
+                        <version>${datanucleus-rdbms.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -89,31 +123,14 @@
         <profile>
             <id>core</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skip.core</name>
+                </property>
             </activation>
             <modules>
-                <module>../../../github/estatio/estatio/estatioapp/module/agreement/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/asset/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/assetfinancial/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/bankmandate/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/budget/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/budgetassignment/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/capex/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/charge/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/currency/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/document/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/event/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/financial/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/guarantee/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/index/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/invoice/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/lease/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/link/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/party/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/project/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/numerator/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/settings/dom</module>
-                <module>../../../github/estatio/estatio/estatioapp/module/tax/dom</module>
+
+			<module>estatioapp/app</module>
+
             </modules>
         </profile>
     </profiles>
