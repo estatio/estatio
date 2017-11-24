@@ -58,6 +58,18 @@ public class BudgetItemValue extends UdoDomainObject2<BudgetItemValue>{
         super("budgetItem, date, type");
     }
 
+    public BudgetItemValue(
+            final BudgetItem budgetItem,
+            final LocalDate date,
+            final BudgetCalculationType type,
+            final BigDecimal value) {
+        this();
+        setBudgetItem(budgetItem);
+        setValue(value);
+        setDate(date);
+        setType(type);
+    }
+
     public String title() {
         return TitleBuilder.start()
                 .withParent(getBudgetItem())

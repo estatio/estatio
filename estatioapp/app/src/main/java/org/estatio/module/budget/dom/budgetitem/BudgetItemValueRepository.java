@@ -21,11 +21,14 @@ package org.estatio.module.budget.dom.budgetitem;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -43,15 +46,7 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
             final BigDecimal value,
             final LocalDate date,
             final BudgetCalculationType type) {
-        BudgetItemValue budgetItemValue = newTransientInstance();
-        budgetItemValue.setBudgetItem(budgetItem);
-        budgetItemValue.setValue(value);
-        budgetItemValue.setDate(date);
-        budgetItemValue.setType(type);
-
-        persistIfNotAlready(budgetItemValue);
-
-        return budgetItemValue;
+        return repositoryService.persistAndFlush(new BudgetItemValue(budgetItem, date, type, value));
     }
 
     public String validateNewBudgetItemValue(
@@ -93,4 +88,6 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         return itemValue;
     }
 
+    @Inject
+    RepositoryService repositoryService;
 }

@@ -29,6 +29,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -44,6 +45,8 @@ public class BudgetItemValueRepository_Test {
 
         @Mock
         private DomainObjectContainer mockContainer;
+        @Mock
+        private RepositoryService mockRepositoryService;
 
         BudgetItemValueRepository budgetItemValueRepository;
 
@@ -51,23 +54,24 @@ public class BudgetItemValueRepository_Test {
         public void setup() {
             budgetItemValueRepository = new BudgetItemValueRepository();
             budgetItemValueRepository.setContainer(mockContainer);
+            budgetItemValueRepository.repositoryService = mockRepositoryService;
         }
 
         @Test
         public void newBudgetItemValue() throws Exception {
 
-            final BudgetItemValue budgetItemValue = new BudgetItemValue();
             final BudgetItem budgetItem = new BudgetItem();
             final BigDecimal value = new BigDecimal("10000.00");
             final LocalDate date = new LocalDate(2016,01,01);
             final BudgetCalculationType type = BudgetCalculationType.BUDGETED;
 
+            final BudgetItemValue budgetItemValue = new BudgetItemValue(budgetItem, date, type, value);
+
             // expect
             context.checking(new Expectations() {
                 {
-                    oneOf(mockContainer).newTransientInstance(BudgetItemValue.class);
+                    oneOf(mockRepositoryService).persistAndFlush(with(any(BudgetItemValue.class)));
                     will(returnValue(budgetItemValue));
-                    oneOf(mockContainer).persistIfNotAlready(budgetItemValue);
                 }
 
             });
