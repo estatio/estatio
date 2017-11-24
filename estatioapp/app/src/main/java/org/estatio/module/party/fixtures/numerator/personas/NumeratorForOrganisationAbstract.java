@@ -1,16 +1,11 @@
 package org.estatio.module.party.fixtures.numerator.personas;
 
-import java.math.BigInteger;
-
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
 import org.estatio.module.numerator.dom.Numerator;
-import org.estatio.module.numerator.dom.NumeratorRepository;
+import org.estatio.module.party.fixtures.numerator.builders.NumeratorForOrganisationBuilder;
 
 public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
 
@@ -23,15 +18,25 @@ public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
             Country country,
             ExecutionContext executionContext) {
 
-        Numerator numerator = numeratorRepository
-                .createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
-        return executionContext.addResult(this, numerator);
+        final NumeratorForOrganisationBuilder numeratorForOrganisationBuilder = new NumeratorForOrganisationBuilder();
+        final Numerator numerator = numeratorForOrganisationBuilder
+                .setName(name)
+                .setFormat(format)
+                .setCountry(country)
+                .build(this, executionContext)
+                .getNumerator();
+
+//        Numerator numerator = numeratorRepository
+//                .createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
+//        return executionContext.addResult(this, numerator);
+
+        return numerator;
     }
 
-    @Inject
-    protected NumeratorRepository numeratorRepository;
-
-    @Inject
-    protected EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
+//    @Inject
+//    protected NumeratorRepository numeratorRepository;
+//
+//    @Inject
+//    protected EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }
