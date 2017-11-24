@@ -36,7 +36,7 @@ import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 /**
- * TODO: inline this mixin
+ * TODO: inline this mixin (then Task_recategorizeIncomingInvoice has to be refactored as well....)
  */
 @Mixin(method = "act")
 public class IncomingInvoice_recategorize {
@@ -73,6 +73,9 @@ public class IncomingInvoice_recategorize {
         }
         if(incomingInvoice.getApprovalState() != IncomingInvoiceApprovalState.NEW) {
             return "Only NEW invoices can be recategorized";
+        }
+        if (incomingInvoice.isReported()){
+            return "This invoice is reported and cannot be recategorized";
         }
         return null;
     }

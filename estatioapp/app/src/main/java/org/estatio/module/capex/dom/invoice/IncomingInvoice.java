@@ -1358,6 +1358,17 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return buffer.length() == 0 ? null : buffer.toString();
     }
 
+    @Programmatic
+    public boolean isReported() {
+        for (InvoiceItem item : getItems()){
+            IncomingInvoiceItem incomingInvoiceItem = (IncomingInvoiceItem) item;
+            if (((IncomingInvoiceItem) item).getReportedDate()!=null){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * has final modifier so cannot be mocked out.
      */

@@ -3,6 +3,7 @@ package org.estatio.module.capex.dom.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
@@ -806,6 +807,31 @@ public class IncomingInvoice_Test {
             item.setNetAmount(new BigDecimal("10.00"));
             // then still
             assertThat(invoice.amountsCoveredByAmountsItems()).isTrue();
+
+        }
+
+    }
+
+    public static class IsReported extends IncomingInvoice_Test {
+
+        @Test
+        public void is_reported_works() throws Exception{
+
+            // given
+            IncomingInvoiceItem unreportedItem = new IncomingInvoiceItem();
+            invoice.getItems().add(unreportedItem);
+
+            // when then
+            assertThat(invoice.isReported()).isFalse();
+
+            // and when
+            IncomingInvoiceItem reportedItem = new IncomingInvoiceItem();
+            reportedItem.setUuid(UUID.randomUUID().toString()); // set for compare in sorted set invoice#getItems()
+            reportedItem.setReportedDate(new LocalDate(2017,1,1));
+            invoice.getItems().add(reportedItem);
+
+            // then
+            assertThat(invoice.isReported()).isTrue();
 
         }
 
