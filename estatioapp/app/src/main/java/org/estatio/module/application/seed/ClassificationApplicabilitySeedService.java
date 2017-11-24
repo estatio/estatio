@@ -31,8 +31,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.Enums;
 
 import org.incode.module.classification.dom.impl.applicability.Applicability;
+import org.incode.module.classification.dom.impl.category.CategoryRepository;
+import org.incode.module.classification.dom.impl.category.taxonomy.Taxonomy;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -80,11 +83,25 @@ public class ClassificationApplicabilitySeedService {
             final List<Applicability> types = repositoryService.allInstances(Applicability.class).stream()
                     .filter(this::matches)
                     .collect(Collectors.toList());
+
+            final Applicability applicability;
             switch (types.size()) {
             case 0:
-                throw new IllegalArgumentException("Could not find any domain object matching " + this);
+                final CategoryRepository categoryRepository =
+                        serviceRegistry2.lookupService(CategoryRepository.class);
+
+                Taxonomy taxonomy = (Taxonomy) categoryRepository.findByReference(taxonomyReference);
+                if(taxonomy == null) {
+                    final String taxonomyName =
+                            Enums.getFriendlyNameOf(this.taxonomyReference);
+                    taxonomy = categoryRepository.createTaxonomy(taxonomyName);
+                    taxonomy.setReference(this.taxonomyReference);
+                }
+                applicability = new Applicability(taxonomy, atPath, appliesTo.getName());
+                repositoryService.persistAndFlush(applicability);
+                break;
             case 1:
-                final Applicability applicability = types.get(0);
+                applicability = types.get(0);
                 applicability.setDomainType(appliesTo.getName());
                 break;
             default:
