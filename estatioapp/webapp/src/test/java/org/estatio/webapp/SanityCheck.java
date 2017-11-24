@@ -20,7 +20,7 @@ package org.estatio.webapp;
 
 import javax.jdo.spi.PersistenceCapable;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.module.lease.dom.Lease;
 
 public class SanityCheck {
 

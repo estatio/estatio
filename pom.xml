@@ -21,12 +21,12 @@ language governing permissions and limitations under the License.
     <parent>
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
-        <version>1.14.0</version>
+        <version>1.15.1.1</version>
     </parent>
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
-    <version>1.20.0-SNAPSHOT</version>
+    <version>1.20.0-ISIS-1103-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Estatio (Open Source)</name>
@@ -64,51 +64,59 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.15.0.20170915-1224</isis.version>
+        <isis.version>1.15.1.20171115-1405</isis.version>
         <!--
+        <isis.version>1.15.0.20170915-1224</isis.version>
         <isis.version>1.15.0.20170914-1238</isis.version>
-        <isis.version>1.15.0.20170908-1513</isis.version>
         <isis.version>1.16.0-SNAPSHOT</isis.version>
         -->
 
-        <isis-module-command.version>1.14.0</isis-module-command.version>
-        <isis-module-excel.version>1.14.2</isis-module-excel.version>
-        <isis-module-fakedata.version>1.14.0</isis-module-fakedata.version>
-        <isis-module-freemarker.version>1.14.0</isis-module-freemarker.version>
-        <isis-module-pdfbox.version>1.14.0</isis-module-pdfbox.version>
-        <isis-module-poly.version>1.14.0</isis-module-poly.version>
-        <isis-module-security.version>1.14.0</isis-module-security.version>
-        <isis-module-sessionlogger.version>1.14.0</isis-module-sessionlogger.version>
-        <isis-module-servletapi.version>1.14.0</isis-module-servletapi.version>
-        <isis-module-settings.version>1.14.0</isis-module-settings.version>
-        <isis-module-stringinterpolator.version>1.14.0</isis-module-stringinterpolator.version>
-        <isis-module-togglz.version>1.14.0</isis-module-togglz.version>
-        <isis-module-xdocreport.version>1.14.0</isis-module-xdocreport.version>
+        <incode-platform.version>1.15.1.1</incode-platform.version>
 
-        <isis-metamodel-paraname8.version>1.14.0</isis-metamodel-paraname8.version>
+        <!-- this is a temporary override, see ECP-431 to remove -->
+        <mavenmixin-surefire.version>0.0.5</mavenmixin-surefire.version>
 
-        <isis-wicket-excel.version>1.14.0.20170518-0807</isis-wicket-excel.version>
-        <isis-wicket-fullcalendar2.version>1.14.0.20170518-0806</isis-wicket-fullcalendar2.version>
-        <isis-wicket-gmap3.version>1.14.0.20170518-0804</isis-wicket-gmap3.version>
-        <isis-wicket-pdfjs.version>1.14.0.20170724-1448</isis-wicket-pdfjs.version>
+        <isis-module-audit.version>${incode-platform.version}</isis-module-audit.version>
+        <isis-module-command.version>${incode-platform.version}</isis-module-command.version>
+        <isis-module-excel.version>${incode-platform.version}</isis-module-excel.version>
+        <isis-module-fakedata.version>${incode-platform.version}</isis-module-fakedata.version>
+        <isis-module-freemarker.version>${incode-platform.version}</isis-module-freemarker.version>
+        <isis-module-pdfbox.version>${incode-platform.version}</isis-module-pdfbox.version>
+        <isis-module-poly.version>${incode-platform.version}</isis-module-poly.version>
+        <isis-module-publishmq.version>${incode-platform.version}</isis-module-publishmq.version>
+        <isis-module-security.version>${incode-platform.version}</isis-module-security.version>
+        <isis-module-sessionlogger.version>${incode-platform.version}</isis-module-sessionlogger.version>
+        <isis-module-servletapi.version>${incode-platform.version}</isis-module-servletapi.version>
+        <isis-module-settings.version>${incode-platform.version}</isis-module-settings.version>
+        <isis-module-stringinterpolator.version>${incode-platform.version}</isis-module-stringinterpolator.version>
+        <isis-module-togglz.version>${incode-platform.version}</isis-module-togglz.version>
+        <isis-module-xdocreport.version>${incode-platform.version}</isis-module-xdocreport.version>
+
+
+        <isis-metamodel-paraname8.version>${incode-platform.version}</isis-metamodel-paraname8.version>
+
+        <isis-wicket-excel.version>${incode-platform.version}</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>${incode-platform.version}</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>${incode-platform.version}</isis-wicket-gmap3.version>
+        <isis-wicket-pdfjs.version>${incode-platform.version}</isis-wicket-pdfjs.version>
 
         <wicketstuff.version>7.9.0</wicketstuff.version>
 
-        <incode-module-base.version>1.14.0</incode-module-base.version>
-        <incode-module-classification.version>1.14.0</incode-module-classification.version>
+        <incode-module-base.version>${incode-platform.version}</incode-module-base.version>
+        <incode-module-classification.version>${incode-platform.version}</incode-module-classification.version>
 
-        <incode-module-communications.version>1.14.7.20170509-1506</incode-module-communications.version>
-        <incode-module-country.version>1.14.1</incode-module-country.version>
+        <incode-module-communications.version>${incode-platform.version}</incode-module-communications.version>
+        <incode-module-country.version>${incode-platform.version}</incode-module-country.version>
 
-        <incode-module-docfragment.version>1.14.0</incode-module-docfragment.version>
-        <incode-module-document.version>1.14.10</incode-module-document.version>
-        <incode-module-docrendering-freemarker.version>1.14.0</incode-module-docrendering-freemarker.version>
-        <incode-module-docrendering-stringinterpolator.version>1.14.0</incode-module-docrendering-stringinterpolator.version>
-        <incode-module-docrendering-xdocreport.version>1.14.0</incode-module-docrendering-xdocreport.version>
+        <incode-module-docfragment.version>${incode-platform.version}</incode-module-docfragment.version>
+        <incode-module-document.version>${incode-platform.version}</incode-module-document.version>
+        <incode-module-docrendering-freemarker.version>${incode-platform.version}</incode-module-docrendering-freemarker.version>
+        <incode-module-docrendering-stringinterpolator.version>${incode-platform.version}</incode-module-docrendering-stringinterpolator.version>
+        <incode-module-docrendering-xdocreport.version>${incode-platform.version}</incode-module-docrendering-xdocreport.version>
 
-        <incode-module-unittestsupport.version>1.14.0</incode-module-unittestsupport.version>
-        <incode-module-integtestsupport.version>1.14.0</incode-module-integtestsupport.version>
-        <incode-module-fixturesupport.version>1.14.0</incode-module-fixturesupport.version>
+        <incode-module-unittestsupport.version>${incode-platform.version}</incode-module-unittestsupport.version>
+        <incode-module-integtestsupport.version>${incode-platform.version}</incode-module-integtestsupport.version>
+        <incode-module-fixturesupport.version>${incode-platform.version}</incode-module-fixturesupport.version>
 
         <estatio-canonical.version>1.1.0</estatio-canonical.version>
 
@@ -174,6 +182,26 @@ language governing permissions and limitations under the License.
                 <artifactId>isis-module-security-dom</artifactId>
                 <version>${isis-module-security.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.publishmq</groupId>
+                <artifactId>isis-module-publishmq-dom</artifactId>
+                <version>${isis-module-publishmq.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.isisaddons.module.audit</groupId>
+                <artifactId>isis-module-audit-dom</artifactId>
+                <version>${isis-module-audit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${isis-module-command.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.isisaddons.module.sessionlogger</groupId>
                 <artifactId>isis-module-sessionlogger-dom</artifactId>
@@ -509,12 +537,12 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
+                <artifactId>estatio-module-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-document</artifactId>
+                <artifactId>estatio-module-application</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -645,19 +673,6 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-party</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-project</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-dom-project</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
                 <type>test-jar</type>
@@ -717,34 +732,9 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-impmgr</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-impmgr</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
                 <groupId>org.incode.estatio</groupId>
                 <artifactId>estatio-canonical</artifactId>
                 <version>${estatio-canonical.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-fixture</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-integtests</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -818,36 +808,8 @@ language governing permissions and limitations under the License.
 
     <modules>
         <module>iso20022</module>
-        <module>estatioapp/module/base/dom</module>
-        <module>estatioapp/module/capex/dom</module>
-        <module>estatioapp/module/agreement/dom</module>
-        <module>estatioapp/module/asset/dom</module>
-        <module>estatioapp/module/assetfinancial/dom</module>
-        <module>estatioapp/module/bankmandate/dom</module>
-        <module>estatioapp/module/budget/dom</module>
-        <module>estatioapp/module/budgetassignment/dom</module>
-        <module>estatioapp/module/charge/dom</module>
-        <module>estatioapp/module/currency/dom</module>
-        <module>estatioapp/module/document/dom</module>
-        <module>estatioapp/module/event/dom</module>
-        <module>estatioapp/module/financial/dom</module>
-        <module>estatioapp/module/guarantee/dom</module>
-        <module>estatioapp/module/index/dom</module>
-        <module>estatioapp/module/invoice/dom</module>
-        <module>estatioapp/module/lease/dom</module>
-        <module>estatioapp/module/link/dom</module>
-        <module>estatioapp/module/party/dom</module>
-        <module>estatioapp/module/project/dom</module>
-        <module>estatioapp/module/numerator/dom</module>
-        <module>estatioapp/module/registration/dom</module>
-        <module>estatioapp/module/settings/dom</module>
-        <module>estatioapp/module/tax/dom</module>
         <module>estatioapp/app</module>
-        <module>estatioapp/impmgr</module>
-        <module>estatioapp/fixture</module>
-        <module>estatioapp/integtests</module>
         <module>estatioapp/webapp</module>
     </modules>
-
 
 </project>

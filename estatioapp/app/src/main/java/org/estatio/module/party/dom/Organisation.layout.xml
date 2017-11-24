@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="newProgramRole"/>
+            <cpt:action id="newProjectRole"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="3">
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Name" id="name">
+                                <cpt:action id="remove" position="PANEL"/>
+                                <cpt:action id="removeAndReplace" position="PANEL"/>
+                                <cpt:property id="reference"/>
+                                <cpt:property id="name">
+                                    <cpt:action id="changeName">
+                                        <cpt:named>Change</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" id="other" unreferencedProperties="true">
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application Level">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Level" id="applicationLevel">
+                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="applicationTenancyPath"/>
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata" id="metadata">
+                                <cpt:action id="sync" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="fix" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="id"/>
+                                <cpt:property id="versionSequence"/>
+                                <cpt:property id="datanucleusId"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="Registrations">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Registrations" id="registrations">
+                                <cpt:property id="vatCode"/>
+                                <cpt:property id="fiscalCode"/>
+                                <cpt:property id="chamberOfCommerceCode">
+                                    <cpt:action id="change" position="BELOW"/>
+                                </cpt:property>
+                                <!-- these are hidden in object form -->
+                                <cpt:property id="phoneNumbers"/>
+                                <cpt:property id="emailAddresses"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="9">
+            <bs3:row>
+                <bs3:col span="6">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Communication Channels">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="communicationChannels"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Relationships">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="relationships" defaultView="table">
+                                        <cpt:action id="newRelationship"/>
+                                        <cpt:action id="newRelatedPerson"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Previous Names">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="previousNames"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+                <bs3:col span="6">
+                    <bs3:tabGroup>
+                        <bs3:tab name="(Country-level) Roles">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:collection id="roles" defaultView="table">
+                                        <cpt:named>(Country-level) Roles</cpt:named>
+                                        <cpt:action id="addRole"/>
+                                    </cpt:collection>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="dummy">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet id="dummy">
+                                        <cpt:property id="dummy"/>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Documents">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="documents"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Recent Communications">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="recentCommunications" defaultView="table">
+                                <cpt:action id="findCommunications"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Current Leases">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="currentLeases" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Invoices To">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="invoicesTo" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="12">
+            <bs3:tabGroup>
+                <bs3:tab name="Orders">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="orders">
+                                <cpt:action id="findOrdersByProperty">
+                                    <cpt:named>Find by Property</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Invoices From">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="invoicesFrom" defaultView="table">
+                                <cpt:action id="findIncomingInvoicesByProperty">
+                                    <cpt:named>Find by Property</cpt:named>
+                                </cpt:action>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <bs3:tabGroup>
+                <bs3:tab name="Financial Accounts">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="financialAccounts" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Bank Mandates">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="bankMandates" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

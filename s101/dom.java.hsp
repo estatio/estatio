@@ -67,7 +67,7 @@
                           <cell name="asset" pattern="org.estatio.dom.asset.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="communications" pattern="org.estatio.dom.communications.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="EstatioDomainModule" pattern="org.estatio.dom.EstatioDomainModule" vexpanded="false" visibility="public" drill="false" />
-                          <cell name="Importable" pattern="org.estatio.dom.Importable" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="Importable" pattern="org.estatio.module.base.dom.Importable" vexpanded="false" visibility="public" drill="false" />
                           <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="types" pattern="org.estatio.dom.types.?" vexpanded="false" visibility="public" drill="true" />
                         </row>
@@ -124,7 +124,7 @@
                           <cell name="communications" pattern="org.estatio.dom.communications.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="EstatioDomainModule" pattern="org.estatio.dom.EstatioDomainModule" vexpanded="false" visibility="public" drill="false" />
                           <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="true" />
-                          <cell name="Importable" pattern="org.estatio.dom.Importable" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="Importable" pattern="org.estatio.module.base.dom.Importable" vexpanded="false" visibility="public" drill="false" />
                           <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="types" pattern="org.estatio.dom.types.?" vexpanded="false" visibility="public" drill="true" />
                         </row>
@@ -179,7 +179,7 @@
                           <cell name="communications" pattern="org.estatio.dom.communications.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="EstatioDomainModule" pattern="org.estatio.dom.EstatioDomainModule" vexpanded="false" visibility="public" drill="false" />
                           <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="true" />
-                          <cell name="Importable" pattern="org.estatio.dom.Importable" vexpanded="false" visibility="public" drill="false" />
+                          <cell name="Importable" pattern="org.estatio.module.base.dom.Importable" vexpanded="false" visibility="public" drill="false" />
                           <cell name="party" pattern="org.estatio.dom.party.*" vexpanded="false" visibility="public" drill="true" />
                           <cell name="types" pattern="org.estatio.dom.types.?" vexpanded="false" visibility="public" drill="true" />
                         </row>
