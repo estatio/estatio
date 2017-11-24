@@ -19,15 +19,26 @@
 package org.estatio.module.base.platform.fixturesupport;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.core.runtime.system.context.IsisContext;
 
-public abstract class BuilderScriptAbstract<T extends BuilderScriptAbstract> extends FixtureScript {
+public abstract class BuilderScriptAbstract<T extends BuilderScriptAbstract>
+        extends FixtureScript {
 
     public T build(
             final FixtureScript parentFixtureScript,
             ExecutionContext executionContext) {
+
         executionContext.executeChild(parentFixtureScript, this);
         return (T)this;
+    }
+
+    public T build(ExecutionContext executionContext) {
+
+        final FixtureScript anonymousParent = new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) { }
+        };
+
+        return build(anonymousParent, executionContext);
     }
 
 }
