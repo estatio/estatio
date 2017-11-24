@@ -55,8 +55,14 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
         return Sets.newHashSet(CountryModule.class);
     }
 
+    private boolean refData = false;
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData) {
+            return null;
+        }
+        // else
+        refData = true;
         return new DemoData2Persist<>(Country_enum.class);
     }
 
@@ -70,6 +76,7 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
      * Provided for any integration tests that need to fine-tune
      */
     public FixtureScript getRefDataTeardown() {
+        refData = false; // reset
         final TeardownFixtureAbstract teardownState = new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {

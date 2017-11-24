@@ -45,8 +45,14 @@ public final class EstatioCurrencyModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioBaseModule());
     }
 
+    private boolean refData = false;
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData) {
+            return null;
+        }
+        // else
+        refData = true;
         return new CurrenciesRefData();
     }
 
@@ -60,6 +66,7 @@ public final class EstatioCurrencyModule extends ModuleAbstract {
      * Provided for any integration tests that need to fine-tune
      */
     public FixtureScript getRefDataTeardown() {
+        refData = false; // reset
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {

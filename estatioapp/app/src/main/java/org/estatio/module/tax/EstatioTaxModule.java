@@ -48,8 +48,14 @@ public final class EstatioTaxModule extends ModuleAbstract {
     }
 
 
+    private boolean refData = false;
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData) {
+            return null;
+        }
+        // else
+        refData = true;
         return new DemoData2Persist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
     }
 
@@ -63,6 +69,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
      * Provided for any integration tests that need to fine-tune
      */
     public FixtureScript getRefDataTeardown() {
+        refData = false; // reset
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {

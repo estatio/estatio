@@ -104,8 +104,14 @@ public final class EstatioBaseModule extends ModuleAbstract {
         );
     }
 
+    private boolean refData = false;
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData) {
+            return null;
+        }
+        // else
+        refData = true;
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {

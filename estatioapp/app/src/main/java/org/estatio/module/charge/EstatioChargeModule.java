@@ -48,8 +48,14 @@ public final class EstatioChargeModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioTaxModule(), new EstatioCountryAppTenancyModule());
     }
 
+    private boolean refData = false;
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData) {
+            return null;
+        }
+        // else
+        refData = true;
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -69,6 +75,7 @@ public final class EstatioChargeModule extends ModuleAbstract {
      * Provided for any integration tests that need to fine-tune
      */
     public FixtureScript getRefDataTeardown() {
+        refData = false; // reset
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
