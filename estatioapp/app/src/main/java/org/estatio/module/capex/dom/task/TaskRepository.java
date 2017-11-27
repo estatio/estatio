@@ -75,6 +75,46 @@ public class TaskRepository {
     }
 
     /**
+     * Incomplete, assigned explicitly to me, AND ALSO any tasks not assigned to anyone but for which
+     * I have the (party) roles to perform them (so should be part of "my tasks") after {@param createdOn}
+     * @param createdOn
+     * @return
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMeAndCreatedOnAfter(final LocalDateTime createdOn){
+        final Person meAsPerson = meAsPerson();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+
+        final List<Task> tasks = findIncompleteForAndCreatedOnAfter(meAsPerson, createdOn);
+        final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassignedAndCreatedOnAfter(createdOn);
+        tasks.addAll(myRolesTasksUnassigned);
+        tasks.sort(Ordering.natural().nullsLast().onResultOf(Task::getCreatedOn));
+        return tasks;
+    }
+
+    /**
+     * Incomplete, assigned explicitly to me, AND ALSO any tasks not assigned to anyone but for which
+     * I have the (party) roles to perform them (so should be part of "my tasks") before {@param createdOn}
+     * @param createdOn
+     * @return
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMeAndCreatedOnBefore(final LocalDateTime createdOn){
+        final Person meAsPerson = meAsPerson();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+
+        final List<Task> tasks = findIncompleteForAndCreatedOnBefore(meAsPerson, createdOn);
+        final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassignedAndCreatedOnBefore(createdOn);
+        tasks.addAll(myRolesTasksUnassigned);
+        tasks.sort(Ordering.natural().nullsLast().reverse().onResultOf(Task::getCreatedOn));
+        return tasks;
+    }
+
+    /**
      * Those tasks which are assigned to no-one, but for which I have the (party) roles to perform.
      */
     @Programmatic
@@ -87,6 +127,39 @@ public class TaskRepository {
 
         return findIncompleteByUnassignedForRoles(myRoleTypes);
     }
+
+    /**
+     * Those tasks which are assigned to no-one, but for which I have the (party) roles to perform after {@param createdOn}
+     * @param createdOn
+     * @return
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMyRolesAndUnassignedAndCreatedOnAfter(final LocalDateTime createdOn) {
+        final Person meAsPerson = meAsPerson();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+        final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
+
+        return findIncompleteByUnassignedForRolesAndCreatedOnAfter(myRoleTypes, createdOn);
+    }
+
+    /**
+     * Those tasks which are assigned to no-one, but for which I have the (party) roles to perform before {@param createdOn}
+     * @param createdOn
+     * @return
+     */
+    @Programmatic
+    public List<Task> findIncompleteForMyRolesAndUnassignedAndCreatedOnBefore(final LocalDateTime createdOn) {
+        final Person meAsPerson = meAsPerson();
+        if(meAsPerson == null) {
+            return Lists.newArrayList();
+        }
+        final List<PartyRoleType> myRoleTypes = partyRoleTypesFor(meAsPerson);
+
+        return findIncompleteByUnassignedForRolesAndCreatedOnBefore(myRoleTypes, createdOn);
+    }
+
 
     @Programmatic
     public List<Task> findIncompleteByRole(final PartyRoleType roleType) {
@@ -102,6 +175,41 @@ public class TaskRepository {
                         Task.class,
                         "findIncompleteByRole",
                         "roleType", roleType));
+    }
+
+
+    @Programmatic
+    public List<Task> findIncompleteByUnassignedForRolesAndCreatedOnAfter(final List<PartyRoleType> roleTypes, final LocalDateTime createdOn) {
+        return queryResultsCache.execute(() -> doFindIncompleteByUnassignedForRolesAndCreatedOnAfter(roleTypes, createdOn),
+                getClass(),
+                "findIncompleteByUnassignedForRolesAndCreatedOnAfter",
+                roleTypes, createdOn);
+    }
+
+    private List<Task> doFindIncompleteByUnassignedForRolesAndCreatedOnAfter(final List<PartyRoleType> roleTypes, final LocalDateTime createdOn) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByUnassignedForRolesAndCreatedOnAfter",
+                        "roleTypes", roleTypes,
+                        "createdOn", createdOn));
+    }
+
+    @Programmatic
+    public List<Task> findIncompleteByUnassignedForRolesAndCreatedOnBefore(final List<PartyRoleType> roleTypes, final LocalDateTime createdOn) {
+        return queryResultsCache.execute(() -> doFindIncompleteByUnassignedForRolesAndCreatedOnBefore(roleTypes, createdOn),
+                getClass(),
+                "findIncompleteByUnassignedForRolesAndCreatedOnBefore",
+                roleTypes, createdOn);
+    }
+
+    private List<Task> doFindIncompleteByUnassignedForRolesAndCreatedOnBefore(final List<PartyRoleType> roleTypes, final LocalDateTime createdOn) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Task.class,
+                        "findIncompleteByUnassignedForRolesAndCreatedOnBefore",
+                        "roleTypes", roleTypes,
+                        "createdOn", createdOn));
     }
 
     @Programmatic
@@ -197,12 +305,9 @@ public class TaskRepository {
     @Programmatic
     public Task previousTaskBefore(final Task previousTask) {
 
-        final Person previousAssignedTo = previousTask.getPersonAssignedTo();
         final LocalDateTime previousCreatedOn = previousTask.getCreatedOn();
-        final List<Task> tasksIncompleteForAndCreatedOnBefore = findIncompleteForAndCreatedOnBefore(
-                previousAssignedTo, previousCreatedOn);
         final Optional<Task> firstTaskIfAny =
-                tasksIncompleteForAndCreatedOnBefore
+                findIncompleteForMeAndCreatedOnBefore(previousCreatedOn)
                         .stream()
                         .findFirst();
 
@@ -212,10 +317,9 @@ public class TaskRepository {
     @Programmatic
     public Task nextTaskAfter(final Task previousTask) {
 
-        final Person previousAssignedTo = previousTask.getPersonAssignedTo();
         final LocalDateTime previousCreatedOn = previousTask.getCreatedOn();
         final Optional<Task> firstTaskIfAny =
-                findIncompleteForAndCreatedOnAfter(previousAssignedTo, previousCreatedOn)
+                findIncompleteForMeAndCreatedOnAfter(previousCreatedOn)
                         .stream()
                         .findFirst();
 

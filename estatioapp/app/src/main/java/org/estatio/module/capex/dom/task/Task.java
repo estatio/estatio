@@ -106,6 +106,24 @@ import lombok.Setter;
                         + "   && :roleTypes.contains(assignedTo) "
                         + "ORDER BY createdOn DESC "),
         @Query(
+                name = "findIncompleteByUnassignedForRolesAndCreatedOnAfter", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == null "
+                        + "   && :roleTypes.contains(assignedTo) "
+                        + "   && createdOn        >  :createdOn "
+                        + "ORDER BY createdOn ASC "),
+        @Query(
+                name = "findIncompleteByUnassignedForRolesAndCreatedOnBefore", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.task.Task "
+                        + "WHERE completedBy      == null "
+                        + "   && personAssignedTo == null "
+                        + "   && :roleTypes.contains(assignedTo) "
+                        + "   && createdOn        <  :createdOn "
+                        + "ORDER BY createdOn DESC "),
+        @Query(
                 name = "findIncompleteByRole", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.task.Task "
