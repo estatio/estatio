@@ -23,7 +23,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFleuretteRenaudFr;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;
@@ -32,7 +32,7 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class PropertyAndUnitsAndOwnerAndManagerForMnsFr extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final Property_enum data = Property_enum.MnsFr;
+    public static final PropertyAndOwnerAndManager_enum data = PropertyAndOwnerAndManager_enum.MnsFr;
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
