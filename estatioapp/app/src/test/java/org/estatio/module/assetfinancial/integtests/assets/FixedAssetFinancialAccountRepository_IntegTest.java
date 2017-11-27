@@ -109,7 +109,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF));
+            final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner,
+                    BankAccountAndFaFaForOxford.REF));
 
             // then
             assertThat(results.size(), is(1));
@@ -126,7 +127,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
             assertThat(fixedAsset.size(), is(1));
 
             // when
-            final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF));
+            final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner,
+                    BankAccountAndFaFaForOxford.REF));
 
             // then
             assertNotNull(result);
@@ -143,7 +145,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
         @Before
         public void setUp() throws Exception {
-            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.BANK_ACCOUNT_REF);
+            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.REF);
             newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
         }
 

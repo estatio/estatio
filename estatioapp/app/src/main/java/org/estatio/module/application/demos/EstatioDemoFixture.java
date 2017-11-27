@@ -47,9 +47,9 @@ import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccou
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPretGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.KeyTablesForOxf;
-import org.estatio.module.budget.fixtures.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
+import org.estatio.module.budget.fixtures.partioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;

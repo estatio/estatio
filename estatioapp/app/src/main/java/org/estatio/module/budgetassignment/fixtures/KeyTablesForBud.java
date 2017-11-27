@@ -24,7 +24,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
-import org.estatio.module.budget.fixtures.KeyTableAbstract;
+import org.estatio.module.budget.fixtures.keytables.KeyTableAbstract;
 
 public class KeyTablesForBud extends KeyTableAbstract {
 

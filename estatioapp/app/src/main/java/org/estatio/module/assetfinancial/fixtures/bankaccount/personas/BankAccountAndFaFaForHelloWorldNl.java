@@ -20,14 +20,17 @@ package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 
 public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstract {
 
-    public static final String REF = "NL31ABNA0580744434";
+    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.HelloWorldNl;
 
-    public static final String PARTY_REF = OrganisationForHelloWorldNl.REF;
-    public static final String PROPERTY_REF = PropertyAndUnitsAndOwnerAndManagerForKalNl.REF;
+    public static final String REF = data.getRef();
+
+    public static final String PARTY_REF = data.getParty().getRef();
+    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     public BankAccountAndFaFaForHelloWorldNl() {
         this(null, null);

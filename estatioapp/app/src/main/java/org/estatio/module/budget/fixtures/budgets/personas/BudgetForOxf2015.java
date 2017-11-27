@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budget.fixtures;
+package org.estatio.module.budget.fixtures.budgets.personas;
 
 import java.math.BigDecimal;
 
@@ -32,14 +32,17 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 
-public class BudgetsForOxf extends FixtureScript {
+public class BudgetForOxf2015 extends FixtureScript {
 
-    public static final LocalDate BUDGET_2015_START_DATE = new LocalDate(2015, 01, 01);
-    public static final LocalDate BUDGET_2016_START_DATE = new LocalDate(2016, 01, 01);
+    public static final Budget_enum data = Budget_enum.OxfBudget2015;
+
+    public static final LocalDate START_DATE = data.getStartDate();
+    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -48,12 +51,11 @@ public class BudgetsForOxf extends FixtureScript {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PROPERTY_REF);
         Charge charge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
         Charge charge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);
 
-        createBudget(property, BUDGET_2015_START_DATE, charge1, new BigDecimal("30000.55"), charge2, new BigDecimal("40000.35"), executionContext);
-        createBudget(property, BUDGET_2016_START_DATE, charge1, new BigDecimal("30500.99"), charge2, new BigDecimal("40600.01"), executionContext);
+        createBudget(property, START_DATE, charge1, new BigDecimal("30000.55"), charge2, new BigDecimal("40000.35"), executionContext);
 
     }
     

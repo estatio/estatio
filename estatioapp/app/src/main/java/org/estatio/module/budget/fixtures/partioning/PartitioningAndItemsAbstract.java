@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budget.fixtures;
+package org.estatio.module.budget.fixtures.partioning;
 
 import java.math.BigDecimal;
 

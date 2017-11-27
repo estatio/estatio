@@ -20,12 +20,16 @@ package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-
 
 public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
-    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744432";
+    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.Oxford;
+
+    public static final String REF = data.getRef();
+    public static final String PARTY_REF = data.getParty().getRef();
+    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     public BankAccountAndFaFaForOxford() {
         this(null, null);
@@ -43,7 +47,8 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
         executionContext.executeChild(this, new OrganisationForHelloWorldGb());
 
         // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(OrganisationForHelloWorldGb.REF, BANK_ACCOUNT_REF, PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF, executionContext);
+        createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
+                PROPERTY_REF, executionContext);
         
     }
 
