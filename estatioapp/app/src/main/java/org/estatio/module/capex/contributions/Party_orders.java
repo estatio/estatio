@@ -1,6 +1,7 @@
 package org.estatio.module.capex.contributions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -12,6 +13,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.party.dom.Party;
 
 /**
@@ -29,7 +31,11 @@ public class Party_orders {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Order> $$() {
-        return orderRepository.findBySellerParty(party);
+        return orderRepository
+                .findBySellerParty(party)
+                .stream()
+                .filter(x->x.getApprovalState()==null || x.getApprovalState()!= OrderApprovalState.DISCARDED)
+                .collect(Collectors.toList());
     }
 
     @Inject
