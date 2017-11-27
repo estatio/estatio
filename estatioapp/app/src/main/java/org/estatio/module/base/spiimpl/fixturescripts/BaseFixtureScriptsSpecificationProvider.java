@@ -35,7 +35,7 @@ public class BaseFixtureScriptsSpecificationProvider implements FixtureScriptsSp
     protected FixtureScriptsSpecification.Builder builder() {
         return FixtureScriptsSpecification.builder(BaseFixtureScriptsSpecificationProvider.class)
                 .withRunScriptDropDown(FixtureScriptsSpecification.DropDownPolicy.CHOICES)
-                .with(FixtureScripts.MultipleExecutionStrategy.EXECUTE_ONCE_BY_VALUE);
+                .with(FixtureScripts.MultipleExecutionStrategy.EXECUTE);
     }
 
 }
