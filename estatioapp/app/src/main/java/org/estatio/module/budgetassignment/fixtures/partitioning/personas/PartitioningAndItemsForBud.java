@@ -31,7 +31,7 @@ import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstr
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.keytables.personas.KeyTablesForBud;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstract {
 

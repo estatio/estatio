@@ -28,7 +28,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -55,7 +55,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
         }
         // else
         refData.set(true);
-        return new DemoData2Persist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
+        return new DataEnumPersist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
     }
 
     @Override

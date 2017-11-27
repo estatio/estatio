@@ -5,13 +5,16 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
+import org.estatio.module.tax.dom.TaxRepository;
 
 import static java.util.Arrays.asList;
 import lombok.AllArgsConstructor;
@@ -24,7 +27,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
+public enum Tax_enum implements DataEnum<Tax> {
 
     GB_VATSTD(Country_enum.GBR, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
     NL_VATSTD(Country_enum.NLD, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
@@ -32,7 +35,7 @@ public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
     SW_VATSTD(Country_enum.SWE, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
     IT_VATSTD(Country_enum.ITA, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21))));
 
-    private final Country_enum countryData;
+    private final Country_enum country;
     private final String referenceSuffix;
     private final List<RateData> rates;
 
@@ -41,7 +44,7 @@ public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
     }
 
     public String getReference() {
-        return countryData.getRef3() + "-" + referenceSuffix;
+        return country.getRef3() + "-" + referenceSuffix;
     }
 
     @Data
@@ -50,14 +53,24 @@ public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
         private final BigDecimal rateValue;
     }
 
+
     @Override
-    public Tax asDomainObject(final ServiceRegistry2 serviceRegistry2) {
-        final Tax tax = Tax.builder()
-                .applicationTenancyPath(countryData.getAtPath())
-                .reference(getReference())
-                .name("Value Added Tax (Standard, " + countryData.getRef3() + ")")
-                .build();
-        serviceRegistry2.injectServicesInto(tax);
+    public Tax findUsing(final ServiceRegistry2 serviceRegistry) {
+        final TaxRepository taxRepository = serviceRegistry.lookupService(TaxRepository.class);
+        return taxRepository.findByReference(getReference());
+    }
+
+    @Override
+    public Tax upsertUsing(final ServiceRegistry2 serviceRegistry) {
+        Tax tax = findUsing(serviceRegistry);
+        if(tax != null) {
+            return tax;
+        }
+        final TaxRepository taxRepository = serviceRegistry.lookupService(TaxRepository.class);
+
+        final String name = "Value Added Tax (Standard, " + country.getRef3() + ")";
+        final ApplicationTenancy applicationTenancy = country.getApplicationTenancy().findUsing(serviceRegistry);
+        tax = taxRepository.newTax(getReference(), name, applicationTenancy);
         for (RateData rate : rates) {
             final TaxRate taxRate = tax.newRate(rate.date, rate.rateValue);
             tax.getRates().add(taxRate);
@@ -66,15 +79,13 @@ public enum Tax_enum implements DemoData2<Tax_enum, Tax> {
     }
 
     @Override
-    public Tax upsertUsing(final ServiceRegistry2 serviceRegistry2) {
-        Tax tax = findUsing(serviceRegistry2);
-        if(tax != null) {
-            return tax;
-        }
-        final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
-        tax = asDomainObject(serviceRegistry2);
-        repositoryService.persist(tax);
-        return tax;
+    public FixtureScript toFixtureScript() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                executionContext.addResult(this, upsertUsing(serviceRegistry));
+            }
+        };
     }
 
 }

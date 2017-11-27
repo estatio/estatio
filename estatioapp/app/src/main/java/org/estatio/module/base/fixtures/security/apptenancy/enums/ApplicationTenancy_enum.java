@@ -1,13 +1,12 @@
 package org.estatio.module.base.fixtures.security.apptenancy.enums;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum ApplicationTenancy_enum implements DemoData2<ApplicationTenancy_enum, ApplicationTenancy> {
+public enum ApplicationTenancy_enum implements DataEnum<ApplicationTenancy> {
 
     Global      ("/",           "Global"),
     GlobalOnly  ("/_",          "Global only"),
@@ -55,21 +54,39 @@ public enum ApplicationTenancy_enum implements DemoData2<ApplicationTenancy_enum
     private final String path;
     private final String name;
 
-    @Override
-    public ApplicationTenancy asDomainObject(final ServiceRegistry2 serviceRegistry2) {
-        final ApplicationTenancy applicationTenancy = new ApplicationTenancy();
-        applicationTenancy.setPath(path);
-        applicationTenancy.setName(name);
 
-        if(path.length() > 1) {
-            applicationTenancy.setParent(findByPath(serviceRegistry2, getParentPath()));
+
+    @Override
+    public ApplicationTenancy upsertUsing(final ServiceRegistry2 serviceRegistry) {
+        final ApplicationTenancyRepository repository =
+                serviceRegistry.lookupService(ApplicationTenancyRepository.class);
+        ApplicationTenancy applicationTenancy = repository.findByPath(path);
+        if(applicationTenancy == null) {
+            final ApplicationTenancy parent =
+                    path.length() > 1
+                            ? repository.findByPath(getParentPath())
+                            : null;
+            applicationTenancy = repository.newTenancy(name, path, parent);
         }
         return applicationTenancy;
     }
 
     @Override
     public ApplicationTenancy findUsing(final ServiceRegistry2 serviceRegistry) {
-        return findByPath(serviceRegistry, this.path);
+        final ApplicationTenancyRepository repository =
+                serviceRegistry.lookupService(ApplicationTenancyRepository.class);
+        return repository.findByPath(this.path);
+    }
+
+    @Override
+    public FixtureScript toFixtureScript() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                final ApplicationTenancy applicationTenancy = upsertUsing(serviceRegistry);
+                executionContext.addResult(this, applicationTenancy);
+            }
+        };
     }
 
     private static ApplicationTenancy findByPath(final ServiceRegistry2 serviceRegistry2, final String path) {
@@ -86,17 +103,11 @@ public enum ApplicationTenancy_enum implements DemoData2<ApplicationTenancy_enum
     }
 
     public static class PersistScript
-            extends DemoData2Persist<ApplicationTenancy_enum, ApplicationTenancy> {
+            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy> {
         public PersistScript() {
             super(ApplicationTenancy_enum.class);
         }
     }
 
-    public static class DeleteScript
-            extends DemoData2Teardown<ApplicationTenancy_enum, ApplicationTenancy> {
-        public DeleteScript() {
-            super(ApplicationTenancy_enum.class);
-        }
-    }
 
 }

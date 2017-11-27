@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,9 +48,11 @@ import lombok.Setter;
         publishing = Publishing.ENABLED
 )
 @EqualsAndHashCode(of = "name")
-@Builder
 public class NumeratorExampleObject implements Comparable<NumeratorExampleObject> {
 
+    public NumeratorExampleObject(final String name) {
+        this.name = name;
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
     @Getter @Setter
@@ -60,7 +61,7 @@ public class NumeratorExampleObject implements Comparable<NumeratorExampleObject
 
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, "name");
+        return getName();
     }
 
     @Override

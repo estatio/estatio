@@ -35,7 +35,7 @@ import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 public class BudgetForOxf2016 extends FixtureScript {
 

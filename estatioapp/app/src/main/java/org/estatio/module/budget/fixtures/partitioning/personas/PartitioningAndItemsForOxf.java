@@ -32,7 +32,7 @@ import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
 import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
 

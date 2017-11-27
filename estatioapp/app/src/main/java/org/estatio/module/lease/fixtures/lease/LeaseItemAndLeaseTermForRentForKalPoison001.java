@@ -22,11 +22,10 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlKalDefault;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
-import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 
 import static org.incode.module.base.integtests.VT.bd;
 

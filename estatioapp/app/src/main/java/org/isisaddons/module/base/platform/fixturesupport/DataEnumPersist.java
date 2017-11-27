@@ -9,12 +9,12 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-public class DemoData2Persist<D extends DemoData2<D,T>, T> extends FixtureScript {
+public class DataEnumPersist<E extends DataEnum<T>, T> extends FixtureScript {
 
-    private final Class<D> demoDataClass;
+    private final Class<E> dataEnumClass;
 
-    public DemoData2Persist(final Class<D> demoDataClass) {
-        this.demoDataClass = demoDataClass;
+    public DataEnumPersist(final Class<E> demoDataClass) {
+        this.dataEnumClass = demoDataClass;
     }
 
     /**
@@ -36,7 +36,7 @@ public class DemoData2Persist<D extends DemoData2<D,T>, T> extends FixtureScript
     @Override
     protected void execute(final FixtureScript.ExecutionContext ec) {
 
-        final D[] enumConstants = demoDataClass.getEnumConstants();
+        final E[] enumConstants = dataEnumClass.getEnumConstants();
         final int max = enumConstants.length;
 
         // defaults

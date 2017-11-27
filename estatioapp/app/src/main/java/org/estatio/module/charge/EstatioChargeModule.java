@@ -33,8 +33,8 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
-import org.estatio.module.charge.fixtures.ChargeGroupRefData;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.chargegroups.refdata.ChargeGroupRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.tax.EstatioTaxModule;
 

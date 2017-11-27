@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -11,29 +12,34 @@ import org.apache.isis.applib.services.repository.RepositoryService;
  * have moved this to isisaddons only so that S101 gives us a nice picture.
  * Eventually gonna move to org.apache.isis.core.fixturesupport
  */
-public interface DemoData2<D extends DemoData2<D, T>, T> {
+public interface DataEnum2<T> extends DataEnum<T> {
 
     T asDomainObject(final ServiceRegistry2 serviceRegistry2);
-    default T upsertUsing(final ServiceRegistry2 serviceRegistry2) {
-        return Util.upsert(this, serviceRegistry2);
+    @Override
+    default T upsertUsing(final ServiceRegistry2 serviceRegistry) {
+        return Util.upsert(this, serviceRegistry);
     }
+    @Override
     default T findUsing(final ServiceRegistry2 serviceRegistry) {
         return Util.firstMatch(this, serviceRegistry);
     }
-    default Class<T> toDomainClass() {
-        final Type[] genericInterfaces = this.getClass().getGenericInterfaces();
-        final ParameterizedType genericSuperclass = (ParameterizedType) genericInterfaces[0];
-        final Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
-        final Type type = actualTypeArguments[1];
-        return (Class<T>) type;
+    @Override
+    default FixtureScript toFixtureScript() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                final T t = upsertUsing(serviceRegistry);
+                executionContext.addResult(this, t);
+            }
+        };
     }
 
     class Util {
 
         private Util(){}
 
-        public static <D extends DemoData2<D, T>, T> T upsert(
-                final DemoData2<D, T> data,
+        public static <T> T upsert(
+                final DataEnum2<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             T domainObject = data.findUsing(serviceRegistry2);
             if(domainObject != null) {
@@ -45,8 +51,8 @@ public interface DemoData2<D extends DemoData2<D, T>, T> {
             return domainObject;
         }
 
-        public static <D extends DemoData2<D, T>, T> T uniqueMatch(
-                final DemoData2<D, T> data,
+        public static <T> T uniqueMatch(
+                final DataEnum2<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
             final T domainObject = data.asDomainObject(serviceRegistry2);
@@ -54,8 +60,8 @@ public interface DemoData2<D extends DemoData2<D, T>, T> {
             return repositoryService.uniqueMatch(domainClass, x -> Objects.equals(x, domainObject));
         }
 
-        public static <D extends DemoData2<D, T>, T> T firstMatch(
-                final DemoData2<D, T> data,
+        public static <T> T firstMatch(
+                final DataEnum2<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
             final T domainObject = data.asDomainObject(serviceRegistry2);
@@ -63,24 +69,19 @@ public interface DemoData2<D extends DemoData2<D, T>, T> {
             return repositoryService.firstMatch(domainClass, x -> Objects.equals(x, domainObject));
         }
 
-
-        public static <D extends DemoData2<D, T>, T> Class<T> demoDataClassOf(final DemoData2<D, T> data) {
-            return genericType(data, 0, "demoDataClass");
+        private static <T> Class<T> domainClassOf(final DataEnum2<T> data) {
+            return genericType(data, 0, "domainClass");
         }
 
-        public static <D extends DemoData2<D, T>, T> Class<T> domainClassOf(final DemoData2<D, T> data) {
-            return genericType(data, 1, "domainClass");
-        }
-
-        private static <D extends DemoData2<D, T>, T> Class<T> genericType(
-                final DemoData2<D, T> data,
+        private static <T> Class<T> genericType(
+                final DataEnum2<T> data,
                 final int i,
                 final String genericTypeName) {
-            final Class<? extends DemoData2> aClass = data.getClass();
+            final Class<? extends DataEnum2> aClass = data.getClass();
             final Type[] genericInterfaces = aClass.getGenericInterfaces();
             for (Type genericInterface : genericInterfaces) {
                 final String typeName = genericInterface.getTypeName();
-                if(typeName.startsWith(DemoData2.class.getName() + "<")) {
+                if(typeName.startsWith(DataEnum2.class.getName() + "<")) {
                     ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
                     final Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                     return (Class) actualTypeArguments[i];

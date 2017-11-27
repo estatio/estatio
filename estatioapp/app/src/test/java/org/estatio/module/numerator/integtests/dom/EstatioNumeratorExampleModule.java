@@ -28,7 +28,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -51,7 +50,7 @@ public class EstatioNumeratorExampleModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new DemoData2Teardown<>(NumeratorExampleObject_enum.class));
+                deleteFrom(NumeratorExampleObject.class);
             }
         };
     }

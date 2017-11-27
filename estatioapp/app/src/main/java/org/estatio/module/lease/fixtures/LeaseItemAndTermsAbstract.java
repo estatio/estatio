@@ -54,7 +54,7 @@ import org.estatio.module.lease.dom.LeaseTermForTurnoverRent;
 import org.estatio.module.lease.dom.LeaseTermFrequency;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 

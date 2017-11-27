@@ -1,8 +1,9 @@
 package org.estatio.module.country.fixtures.enums;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Country_enum implements DemoData2<Country_enum, Country> {
+public enum Country_enum implements DataEnum<Country> {
 
     GBR("GBR", "GB", "United Kingdom",   ApplicationTenancy_enum.Gb),
     NLD("NLD", "NL", "The Netherlands", ApplicationTenancy_enum.Nl),
@@ -27,24 +28,35 @@ public enum Country_enum implements DemoData2<Country_enum, Country> {
     private final String ref3;
     private final String ref2;
     private final String name;
-    private final ApplicationTenancy_enum appTenancyData;
-
-    @Override
-    public Country asDomainObject(final ServiceRegistry2 serviceRegistry2) {
-        return new Country(this.ref3, this.ref2, this.name);
-    }
+    private final ApplicationTenancy_enum applicationTenancy;
 
     public String getAtPath(){
-        return appTenancyData.getPath();
+        return applicationTenancy.getPath();
+    }
+
+    @Override
+    public Country upsertUsing(final ServiceRegistry2 serviceRegistry) {
+        final CountryRepository countryRepository =
+                serviceRegistry.lookupService(CountryRepository.class);
+        return countryRepository.createCountry(this.ref3, this.ref2, this.name);
     }
 
     @Override
     public Country findUsing(final ServiceRegistry2 serviceRegistry) {
-        return findByPath(serviceRegistry, this.ref3);
+        final CountryRepository countryRepository =
+                serviceRegistry.lookupService(CountryRepository.class);
+        return countryRepository.findCountry(this.ref3);
     }
 
-    private static Country findByPath(final ServiceRegistry2 serviceRegistry2, final String reference) {
-        return serviceRegistry2.lookupService(CountryRepository.class).findCountry(reference);
+    @Override
+    public FixtureScript toFixtureScript() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                final Country country = upsertUsing(serviceRegistry);
+                executionContext.addResult(this, country);
+            }
+        };
     }
 
 }

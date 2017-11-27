@@ -20,12 +20,11 @@ package org.estatio.module.charge.integtests;
 
 import javax.inject.Inject;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
-import org.estatio.module.charge.fixtures.ChargeGroupRefData;
+import org.estatio.module.charge.fixtures.chargegroups.refdata.ChargeGroupRefData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
