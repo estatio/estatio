@@ -17,8 +17,8 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -60,7 +60,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyBud = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
+            propertyBud = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
             budgetsForBud = budgetRepository.findByProperty(propertyBud);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyBud, BudgetForBud.BUDGET_2015_START_DATE);
         }
@@ -121,7 +121,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
         }

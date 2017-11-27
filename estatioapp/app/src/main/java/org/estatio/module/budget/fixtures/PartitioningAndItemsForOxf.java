@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
@@ -36,11 +36,11 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
         executionContext.executeChild(this, new KeyTablesForOxf());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         LocalDate startDate = BudgetsForOxf.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);

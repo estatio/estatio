@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
@@ -40,7 +40,7 @@ public class PartitioningAndItemsForBud extends PartitioningAndItemsAbstract {
         executionContext.executeChild(this, new KeyTablesForBud());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
         LocalDate startDate = BudgetForBud.BUDGET_2015_START_DATE;
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.NL_INCOMING_CHARGE_1);

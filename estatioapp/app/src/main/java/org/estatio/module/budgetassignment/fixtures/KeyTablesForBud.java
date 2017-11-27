@@ -23,7 +23,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.budget.fixtures.KeyTableAbstract;
 
 public class KeyTablesForBud extends KeyTableAbstract {
@@ -43,7 +43,7 @@ public class KeyTablesForBud extends KeyTableAbstract {
         executionContext.executeChild(this, new BudgetForBud());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, START_DATE);
 
         createKeyTable(budget, NAME_BY_AREA, BUDGET_FOUNDATION_VALUE_TYPE, BUDGET_KEY_VALUE_METHOD, NUMBER_OF_DIGITS, executionContext);

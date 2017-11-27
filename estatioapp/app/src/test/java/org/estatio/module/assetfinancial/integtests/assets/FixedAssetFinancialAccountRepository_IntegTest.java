@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForOxford;
@@ -58,11 +58,11 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForOxford());
             }
         });
-        owner = partyRepository.findPartyByReference(PropertyAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
+        owner = partyRepository.findPartyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);
     }
 
     @Inject
@@ -88,7 +88,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void findByFixedAsset() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndOwnerAndManagerForOxfGb.REF);
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -105,7 +105,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void findByFinancialAccount() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndOwnerAndManagerForOxfGb.REF);
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when
@@ -122,7 +122,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         public void find() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndOwnerAndManagerForOxfGb.REF);
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             assertThat(fixedAsset.size(), is(1));
 
             // when

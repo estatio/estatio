@@ -13,7 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -47,7 +47,7 @@ public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAb
     public void findByBudgetItemAndType() {
 
         // given
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
         BudgetItem budgetItem = budget.getItems().first();
 
@@ -65,7 +65,7 @@ public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAb
     public void findUniqueTest(){
 
         // given
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, new LocalDate(2015, 01, 01));
         BudgetItem budgetItem = budget.getItems().first();
 
@@ -88,7 +88,7 @@ public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAb
 
         // given
         LocalDate budgetStart = new LocalDate(2015, 01, 01);
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, budgetStart);
         BudgetItem budgetItem = budget.getItems().first();
 
@@ -110,7 +110,7 @@ public class BudgetItemValueRepository_IntegTest extends BudgetModuleIntegTestAb
 
         // given
         LocalDate budgetStart = new LocalDate(2015, 1, 1);
-        Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, budgetStart);
         BudgetItem budgetItem = budget.getItems().first();
 

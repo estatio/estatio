@@ -30,7 +30,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
@@ -79,7 +79,7 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
         public void changeKeyTableTest() throws Exception {
 
             //given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             keyTable = budget.createKeyTable("Some name", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             wrap(keyTable.generateItems());
@@ -109,7 +109,7 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
         public void whenSetUp() throws Exception {
 
             //given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             keyTableByArea = budget.createKeyTable("Some name", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             keyTableByArea.setPrecision(3);
@@ -128,7 +128,7 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
         public void whenSetUpWithNullValues() throws Exception {
 
             //given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             keyTableByArea = budget.createKeyTable("Some name", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             keyTableByArea.setPrecision(3);
@@ -155,7 +155,7 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
         public void whenSetUpWithUnitsNotInKeyTablePeriod() throws Exception {
 
             //given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             keyTableByArea = budget.createKeyTable("Some name", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
             keyTableByArea.setPrecision(3);

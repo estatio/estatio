@@ -33,6 +33,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -42,7 +43,7 @@ import lombok.Getter;
  * Sets up the {@link Property} and also a number of
  * {@link Unit}s.
  */
-public abstract class PropertyAndOwnerAndManagerAbstract extends FixtureScript {
+public abstract class PropertyAndUnitsAndOwnerAndManagerAbstract extends FixtureScript {
 
     @Getter
     public Property property;

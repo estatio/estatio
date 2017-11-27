@@ -21,18 +21,18 @@ package org.estatio.module.asset.fixtures.property.personas;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJeanneDarcFr;
+import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForAgnethaFaltskogSe;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldSe;
 
 import static org.incode.module.base.integtests.VT.ld;
 
-public class PropertyAndOwnerAndManagerForVivFr extends PropertyAndOwnerAndManagerAbstract {
+public class PropertyAndUnitsAndOwnerAndManagerForHanSe extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final Property_enum data = Property_enum.VivFr;
+    public static final Property_enum data = Property_enum.HanSe;
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
@@ -47,20 +47,20 @@ public class PropertyAndOwnerAndManagerForVivFr extends PropertyAndOwnerAndManag
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldFr());
-        executionContext.executeChild(this, new PersonAndRolesForJeanneDarcFr());
+        executionContext.executeChild(this, new OrganisationForHelloWorldSe());
+        executionContext.executeChild(this, new PersonAndRolesForAgnethaFaltskogSe());
 
         // exec
         Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
         Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country france = Country_enum.FRA.findUsing(serviceRegistry);
+        final Country sweden = Country_enum.SWE.findUsing(serviceRegistry);
 
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
-                REF, "Vive les shops", "Paris", france, PropertyType.SHOPPING_CENTER,
+                REF, "Handla Center", "Malmo", sweden, PropertyType.SHOPPING_CENTER,
                 5, ld(2004, 5, 6), ld(2008, 6, 1), owner, manager,
-                "48.8740002697085;2.326230019708498", executionContext);
+                "56.4916209;13.0074661", executionContext);
     }
 
 }

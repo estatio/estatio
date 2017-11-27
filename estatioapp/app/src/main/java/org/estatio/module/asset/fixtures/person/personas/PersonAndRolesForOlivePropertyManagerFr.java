@@ -23,7 +23,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMacFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
@@ -42,7 +42,7 @@ public class PersonAndRolesForOlivePropertyManagerFr extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMacFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
         person = personAndRolesBuilder
@@ -51,7 +51,7 @@ public class PersonAndRolesForOlivePropertyManagerFr extends FixtureScript {
                     .setFirstName("Olive")
                     .setLastName("Beusoleil")
                     .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForMacFr.REF)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndUnitsAndOwnerAndManagerForMacFr.REF)
                     .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied 
                     .setSecurityUsername(REF.toLowerCase())
                 .build(this, executionContext)

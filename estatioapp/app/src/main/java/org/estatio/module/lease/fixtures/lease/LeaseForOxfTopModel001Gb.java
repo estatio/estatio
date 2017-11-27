@@ -19,7 +19,7 @@
 package org.estatio.module.lease.fixtures.lease;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -34,7 +34,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-TOPMODEL-001";
 
-    public static final String UNIT_REF = PropertyAndOwnerAndManagerForOxfGb.unitReference("001");
+    public static final String UNIT_REF = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("001");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
     public static final String PARTY_REF_TENANT = OrganisationForTopModelGb.REF;
 
@@ -50,7 +50,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
         executionContext.executeChild(this, new OrganisationForHelloWorldGb());
         executionContext.executeChild(this, new OrganisationForTopModelGb());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
         Party manager = partyRepository.findPartyByReference(PersonAndRolesForGinoVannelliGb.REF);

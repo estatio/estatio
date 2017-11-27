@@ -16,7 +16,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -47,7 +47,7 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
             }
         });
     }
@@ -57,8 +57,8 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         party = partyRepository.findPartyByReferenceOrNull(OrganisationForAcmeNl.REF);
         assertNotNull(party);
 
-        property = properties.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
-        assertThat(property.getReference(), is(PropertyAndOwnerAndManagerForKalNl.REF));
+        property = properties.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF);
+        assertThat(property.getReference(), is(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
 
         List<FixedAssetRole> allFixedAssetRoles = fixedAssetRoles.findAllForProperty(property);
         assertThat(allFixedAssetRoles.size(), is(2));

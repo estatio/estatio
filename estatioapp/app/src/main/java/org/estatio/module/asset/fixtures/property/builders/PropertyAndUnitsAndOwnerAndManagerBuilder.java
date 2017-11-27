@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.asset.fixtures;
+package org.estatio.module.asset.fixtures.property.builders;
 
 import java.math.BigDecimal;
 

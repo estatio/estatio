@@ -23,8 +23,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
@@ -43,8 +43,8 @@ public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMnsFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
         person = personAndRolesBuilder
@@ -53,8 +53,8 @@ public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
                     .setFirstName("Fifine")
                     .setLastName("Lacroix")
                     .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForVivFr.REF)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForMnsFr.REF)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndUnitsAndOwnerAndManagerForVivFr.REF)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndUnitsAndOwnerAndManagerForMnsFr.REF)
                     .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied at the country level
                     .setSecurityUsername(REF.toLowerCase())
                 .build(this, executionContext)

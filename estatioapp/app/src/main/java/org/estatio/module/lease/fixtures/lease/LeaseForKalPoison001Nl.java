@@ -21,7 +21,7 @@ package org.estatio.module.lease.fixtures.lease;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -36,7 +36,7 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
 
     public static final String REF = "KAL-POISON-001";
 
-    public static final String UNIT_REF = PropertyAndOwnerAndManagerForKalNl.unitReference("001");
+    public static final String UNIT_REF = PropertyAndUnitsAndOwnerAndManagerForKalNl.unitReference("001");
     public static final String PARTY_REF_LANDLORD = OrganisationForAcmeNl.REF;
     public static final String PARTY_REF_TENANT = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_MANAGER = PersonAndRolesForJohnDoeNl.REF;
@@ -52,7 +52,7 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
         executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
         executionContext.executeChild(this, new OrganisationForAcmeNl());
         executionContext.executeChild(this, new OrganisationForPoisonNl());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

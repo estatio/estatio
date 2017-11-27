@@ -36,7 +36,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
@@ -218,7 +218,8 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             // when
             final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
@@ -281,7 +282,8 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             System.out.println(property);
             // when
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);

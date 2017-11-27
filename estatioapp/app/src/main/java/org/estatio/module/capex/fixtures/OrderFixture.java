@@ -16,7 +16,7 @@ import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.order.Order;
@@ -58,7 +58,8 @@ public class OrderFixture extends FixtureScript {
         fakeOrder2Doc.setAtPath("/GBR");
 
         // given we categorise for a property
-        final Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        final Property propertyForOxf = propertyRepository.findPropertyByReference(
+                PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(PersonAndRolesForDylanOfficeAdministratorGb.SECURITY_USERNAME, () -> {

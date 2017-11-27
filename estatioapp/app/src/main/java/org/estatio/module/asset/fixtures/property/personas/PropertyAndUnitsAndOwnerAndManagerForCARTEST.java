@@ -21,46 +21,46 @@ package org.estatio.module.asset.fixtures.property.personas;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJeanneDarcFr;
+import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLucianoPavarottiIt;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldIt;
 
 import static org.incode.module.base.integtests.VT.ld;
 
-public class PropertyAndOwnerAndManagerForMacFr extends PropertyAndOwnerAndManagerAbstract {
+public class PropertyAndUnitsAndOwnerAndManagerForCARTEST extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final Property_enum data = Property_enum.MacFr;
+    public static final Property_enum data = Property_enum.CARTEST;
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
     public static final String PARTY_REF_MANAGER = data.getManager().getRef();
     public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
 
-    public static String unitReference(String suffix) {
+    public static String unitReference(final String suffix) {
         return REF + "-" + suffix;
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldFr());
-        executionContext.executeChild(this, new PersonAndRolesForJeanneDarcFr());
+        executionContext.executeChild(this, new OrganisationForHelloWorldIt());
+        executionContext.executeChild(this, new PersonAndRolesForLucianoPavarottiIt());
 
         // exec
-        Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
-        Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
+        final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
+        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country france = Country_enum.FRA.findUsing(serviceRegistry);
+        final Country italy = Country_enum.ITA.findUsing(serviceRegistry);
 
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
-                REF, "Macro", "Paris", france, PropertyType.SHOPPING_CENTER,
-                5, ld(2009, 9, 9), ld(2009, 12, 9), owner, manager,
-                "48.745649;2.37957", executionContext);
+                REF, "Centro Carosello test", "Milano", italy, PropertyType.SHOPPING_CENTER,
+                0, ld(2004, 5, 6), ld(2008, 6, 1), owner, manager,
+                "45.5399865;9.3263305", executionContext);
     }
 
 }

@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.app.OrderInvoiceImportMenu;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -61,7 +61,7 @@ public class OrderInvoiceImport_IntegTest extends CapexModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 }
             });
 

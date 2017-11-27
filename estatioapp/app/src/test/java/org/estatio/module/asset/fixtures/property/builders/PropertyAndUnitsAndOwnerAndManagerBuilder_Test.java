@@ -1,4 +1,4 @@
-package org.estatio.module.asset.fixtures;
+package org.estatio.module.asset.fixtures.property.builders;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

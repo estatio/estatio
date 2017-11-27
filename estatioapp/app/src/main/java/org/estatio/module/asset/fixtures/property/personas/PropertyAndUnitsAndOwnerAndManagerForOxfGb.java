@@ -21,18 +21,19 @@ package org.estatio.module.asset.fixtures.property.personas;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
-public class PropertyAndOwnerAndManagerForBudNl extends PropertyAndOwnerAndManagerAbstract {
+public class PropertyAndUnitsAndOwnerAndManagerForOxfGb extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final Property_enum data = Property_enum.BudNl;
+    public static final Property_enum data = Property_enum.OxfGb;
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
@@ -44,22 +45,24 @@ public class PropertyAndOwnerAndManagerForBudNl extends PropertyAndOwnerAndManag
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+        executionContext.executeChild(this, new OrganisationForTopModelGb());
+        executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
 
         // exec
         final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
 
-        final Country netherlands = Country_enum.NLD.findUsing(serviceRegistry);
+        final Country greatBritain = Country_enum.GBR.findUsing(serviceRegistry);
+
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
-                REF, "BudgetToren", "Amsterdam", netherlands, PropertyType.SHOPPING_CENTER,
-                7, ld(2003, 12, 1), ld(2003, 12, 1), owner, manager,
-                "52.37597;4.90814", executionContext);
+                REF, "Oxford Super Mall", "Oxford", greatBritain, PropertyType.SHOPPING_CENTER,
+                25, ld(1999, 1, 1), ld(2008, 6, 1), owner, manager,
+                "51.74579;-1.24334", executionContext);
     }
 
 }

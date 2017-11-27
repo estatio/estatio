@@ -28,8 +28,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.FixedAssetRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 
 public class FixedAssetRepository_IntegTest extends AssetModuleIntegTestAbstract {
@@ -39,8 +39,8 @@ public class FixedAssetRepository_IntegTest extends AssetModuleIntegTestAbstract
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
             }
         });
     }

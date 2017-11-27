@@ -23,7 +23,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
@@ -45,7 +45,7 @@ public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
         person = personAndRolesBuilder
@@ -54,7 +54,7 @@ public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
                     .setFirstName("Floella")
                     .setLastName("Beautiful")
                     .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, PropertyAndOwnerAndManagerForOxfGb.REF)
+                    .addFixedAssetRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF)
                     .setSecurityUsername(REF.toLowerCase())
                 .build(this, executionContext)
                 .getPerson();

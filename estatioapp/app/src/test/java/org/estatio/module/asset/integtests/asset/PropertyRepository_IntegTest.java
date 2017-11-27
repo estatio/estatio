@@ -35,8 +35,8 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
@@ -52,8 +52,8 @@ public class PropertyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
             }
         });
     }
@@ -111,10 +111,11 @@ public class PropertyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         public void withReference() throws Exception {
 
             // when
-            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
             // then
-            Assertions.assertThat(property.getReference()).isEqualTo(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Assertions.assertThat(property.getReference()).isEqualTo(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         }
     }
 

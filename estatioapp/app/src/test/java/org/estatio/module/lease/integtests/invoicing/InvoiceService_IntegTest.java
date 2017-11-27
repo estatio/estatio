@@ -32,8 +32,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.index.dom.Index;
 import org.estatio.module.index.dom.IndexRepository;
 import org.estatio.module.invoice.dom.Invoice;
@@ -114,8 +114,8 @@ public class InvoiceService_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());

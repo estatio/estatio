@@ -21,8 +21,8 @@ package org.estatio.module.asset.fixtures.property.personas;
 import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.asset.dom.PropertyType;
-import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFleuretteRenaudFr;
+import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
+import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJeanneDarcFr;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
@@ -30,9 +30,9 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHe
 
 import static org.incode.module.base.integtests.VT.ld;
 
-public class PropertyAndOwnerAndManagerForMnsFr extends PropertyAndOwnerAndManagerAbstract {
+public class PropertyAndUnitsAndOwnerAndManagerForMacFr extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
-    public static final Property_enum data = Property_enum.MnsFr;
+    public static final Property_enum data = Property_enum.MacFr;
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
@@ -48,7 +48,7 @@ public class PropertyAndOwnerAndManagerForMnsFr extends PropertyAndOwnerAndManag
 
         // prereqs
         executionContext.executeChild(this, new OrganisationForHelloWorldFr());
-        executionContext.executeChild(this, new PersonAndRolesForFleuretteRenaudFr());
+        executionContext.executeChild(this, new PersonAndRolesForJeanneDarcFr());
 
         // exec
         Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
@@ -58,9 +58,9 @@ public class PropertyAndOwnerAndManagerForMnsFr extends PropertyAndOwnerAndManag
 
         createPropertyAndUnits(
                 AT_PATH_COUNTRY,
-                REF, "Minishop", "Paris", france, PropertyType.SHOPPING_CENTER,
-                5, ld(2013, 5, 5), ld(2013, 6, 5), owner, manager,
-                "48.923148;2.409439", executionContext);
+                REF, "Macro", "Paris", france, PropertyType.SHOPPING_CENTER,
+                5, ld(2009, 9, 9), ld(2009, 12, 9), owner, manager,
+                "48.745649;2.37957", executionContext);
     }
 
 }
