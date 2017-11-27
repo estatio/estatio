@@ -24,7 +24,6 @@ import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFleuretteRenaudFr;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;
@@ -35,10 +34,10 @@ public class PropertyAndOwnerAndManagerForMnsFr extends PropertyAndOwnerAndManag
 
     public static final Property_enum data = Property_enum.MnsFr;
 
-    public static final String REF = "MNS";
-    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldFr.REF;
-    public static final String PARTY_REF_MANAGER = PersonAndRolesForFleuretteRenaudFr.REF;
-    public static final String AT_PATH_COUNTRY = ApplicationTenancyForFr.PATH;
+    public static final String REF = data.getRef();
+    public static final String PARTY_REF_OWNER = data.getOwner().getRef();
+    public static final String PARTY_REF_MANAGER = data.getManager().getRef();
+    public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
 
     public static String unitReference(String suffix) {
         return REF + "-" + suffix;

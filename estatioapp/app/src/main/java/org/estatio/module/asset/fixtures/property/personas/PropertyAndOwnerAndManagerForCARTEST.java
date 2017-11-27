@@ -24,7 +24,6 @@ import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLucianoPavarottiIt;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldIt;
@@ -35,10 +34,10 @@ public class PropertyAndOwnerAndManagerForCARTEST extends PropertyAndOwnerAndMan
 
     public static final Property_enum data = Property_enum.CARTEST;
 
-    public static final String REF = "CAR";
-    public static final String PARTY_REF_OWNER = OrganisationForHelloWorldIt.REF;
-    public static final String PARTY_REF_MANAGER = PersonAndRolesForLucianoPavarottiIt.REF;
-    public static final String AT_PATH_COUNTRY = ApplicationTenancyForIt.PATH;
+    public static final String REF = data.getRef();
+    public static final String PARTY_REF_OWNER = data.getOwner().getRef();
+    public static final String PARTY_REF_MANAGER = data.getManager().getRef();
+    public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
 
     public static String unitReference(final String suffix) {
         return REF + "-" + suffix;
