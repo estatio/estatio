@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.capex.fixtures.project.personas;
+package org.estatio.module.capex.fixtures.project;
 
 import java.math.BigDecimal;
 

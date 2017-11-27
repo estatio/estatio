@@ -49,13 +49,13 @@ import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccou
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
-import org.estatio.module.budget.fixtures.partioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
-import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
+import org.estatio.module.capex.fixtures.project.personas.ProjectForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -157,7 +157,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
 
         executionContext.executeChild(this, new ProjectsForKal());
-        executionContext.executeChild(this, new ProjectsForGra());
+        executionContext.executeChild(this, new ProjectForGra());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());

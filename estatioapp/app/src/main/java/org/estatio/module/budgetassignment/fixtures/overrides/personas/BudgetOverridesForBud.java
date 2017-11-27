@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures;
+package org.estatio.module.budgetassignment.fixtures.overrides.personas;
 
 import java.math.BigDecimal;
 
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgetassignment.fixtures.BudgetOverrideAbstact;
+import org.estatio.module.budgetassignment.fixtures.overrides.BudgetOverrideAbstact;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;

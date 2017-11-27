@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures;
+package org.estatio.module.budgetassignment.fixtures.keytables.personas;
 
 import org.joda.time.LocalDate;
 
@@ -25,6 +25,7 @@ import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.budget.fixtures.keytables.KeyTableAbstract;
+import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 
 public class KeyTablesForBud extends KeyTableAbstract {
 

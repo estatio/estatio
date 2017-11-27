@@ -25,9 +25,9 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.partioning.personas.PartitioningAndItemsForOxf;
-import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
+import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
+import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBud;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 

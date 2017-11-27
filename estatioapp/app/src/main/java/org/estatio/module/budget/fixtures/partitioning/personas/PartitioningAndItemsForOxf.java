@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budget.fixtures.partioning.personas;
+package org.estatio.module.budget.fixtures.partitioning.personas;
 
 import java.math.BigDecimal;
 
@@ -30,7 +30,7 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
-import org.estatio.module.budget.fixtures.partioning.PartitioningAndItemsAbstract;
+import org.estatio.module.budget.fixtures.partitioning.PartitioningAndItemsAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 

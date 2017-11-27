@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.estatio.module.budgetassignment.fixtures;
+package org.estatio.module.budgetassignment.fixtures.budget.personas;
 
 import java.math.BigDecimal;
 
@@ -27,6 +27,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.fixtures.budgets.BudgetAbstract;
+import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.charge.fixtures.ChargeRefData;
 import org.estatio.module.lease.fixtures.lease.LeasesForBudNl;
 

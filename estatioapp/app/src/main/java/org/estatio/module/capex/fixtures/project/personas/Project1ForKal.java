@@ -19,14 +19,20 @@
 package org.estatio.module.capex.fixtures.project.personas;
 
 import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
-public class ProjectsForKal extends ProjectAbstract {
+public class Project1ForKal extends ProjectAbstract {
+
+    public static final Project_enum data = Project_enum.KalProject1;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new Project1ForKal());
-        executionContext.executeChild(this, new Project2ForKal());
+        // exec
+        createProject(
+                data.getRef(), data.getName(), data.getStartDate(), data.getEndDate(), null,
+                data.getApplicationTenancy().getPath(), null, executionContext);
+        
     }
 
 }

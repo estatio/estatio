@@ -18,21 +18,20 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.personas.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
-import static org.incode.module.base.integtests.VT.ld;
+public class ProjectForGra extends ProjectAbstract {
 
-public class ProjectsForGra extends ProjectAbstract {
-
-    public static final String PROJECT_REFERENCE = "PR3";
+    public static final Project_enum data = Project_enum.GraProject;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // exec
         createProject(
-                PROJECT_REFERENCE, "Place commercial signs", ld(1999, 1, 1), ld(1999, 7, 1), null,
-                "/NLD", null, executionContext);
+                data.getRef(), data.getName(), data.getStartDate(), data.getEndDate(), null,
+                data.getApplicationTenancy().getPath(), null, executionContext);
     }
 
 }
