@@ -27,7 +27,6 @@ public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract 
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF = data.getParty().getRef();
-    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     public BankAccountAndFaFaForTopModelGb() {
         this(null, null);
@@ -44,7 +43,7 @@ public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract 
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                PROPERTY_REF, // no property = no FAFA
+                data.getProperty(), // no property = no FAFA
                 executionContext);
     }
 

@@ -22,12 +22,13 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.Partitioning;
-import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
 import org.estatio.module.budget.fixtures.partioning.PartitioningAndItemsAbstract;
 import org.estatio.module.charge.dom.Charge;
@@ -43,8 +44,9 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
         executionContext.executeChild(this, new KeyTablesForOxf());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
-        LocalDate startDate = BudgetsForOxf.BUDGET_2015_START_DATE;
+        Property property = propertyRepository.findPropertyByReference(
+                Property_enum.OxfGb.getRef());
+        LocalDate startDate = Budget_enum.OxfBudget2015.getStartDate();
         Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
         Charge incomingCharge1 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
         Charge incomingCharge2 = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_2);

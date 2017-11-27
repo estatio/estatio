@@ -30,7 +30,6 @@ public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstrac
     public static final String REF = data.getRef();
 
     public static final String PARTY_REF = data.getParty().getRef();
-    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     public BankAccountAndFaFaForHelloWorldNl() {
         this(null, null);
@@ -51,7 +50,7 @@ public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstrac
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                PROPERTY_REF, // create FAFA
+                data.getProperty(), // create FAFA
                 executionContext);
     }
 

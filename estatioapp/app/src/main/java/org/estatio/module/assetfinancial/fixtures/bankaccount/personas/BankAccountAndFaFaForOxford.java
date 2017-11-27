@@ -29,7 +29,6 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF = data.getParty().getRef();
-    public static final String PROPERTY_REF = data.getProperty().getRef();
 
     public BankAccountAndFaFaForOxford() {
         this(null, null);
@@ -48,7 +47,7 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
-                PROPERTY_REF, executionContext);
+                data.getProperty(), executionContext);
         
     }
 
