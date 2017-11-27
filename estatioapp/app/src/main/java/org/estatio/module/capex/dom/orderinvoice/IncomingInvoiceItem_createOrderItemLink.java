@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.orderinvoice;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.Digits;
 
@@ -10,11 +11,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 /**
  * @see OrderItem_createInvoiceItemLink
@@ -54,8 +56,12 @@ public class IncomingInvoiceItem_createOrderItemLink extends IncomingInvoiceItem
             orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
         }
 
-        return orderItems;
+        return orderItems
+                .stream()
+                .filter(x->x.getOrdr().getApprovalState()==null || x.getOrdr().getApprovalState()!= OrderApprovalState.DISCARDED)
+                .collect(Collectors.toList());
     }
+
     public String disableAct(){
         ReasonBuffer2 buf = ReasonBuffer2.forSingle();
 

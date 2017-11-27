@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -55,8 +56,10 @@ import org.apache.isis.schema.utils.jaxbadapters.JodaLocalDateStringAdapter;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.capex.dom.documents.BuyerFinder;
+import org.estatio.module.base.platform.applib.ReasonBuffer2;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.app.document.IncomingDocViewModel;
+import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -69,18 +72,17 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.order.OrderRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.base.platform.applib.ReasonBuffer2;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -248,7 +250,10 @@ public class IncomingDocAsInvoiceViewModel
         if(getOrderItem() != null && !orderItems.contains(getOrderItem())) {
             orderItems.add(getOrderItem());
         }
-        return orderItems;
+        return orderItems
+                .stream()
+                .filter(x->x.getOrdr().getApprovalState()==null || x.getOrdr().getApprovalState()!= OrderApprovalState.DISCARDED)
+                .collect(Collectors.toList());
     }
 
     private void autoFillIn(){

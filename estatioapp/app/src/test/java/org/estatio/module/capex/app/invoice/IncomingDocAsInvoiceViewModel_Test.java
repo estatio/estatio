@@ -1,5 +1,8 @@
 package org.estatio.module.capex.app.invoice;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -12,6 +15,10 @@ import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Organisation;
@@ -106,6 +113,50 @@ public class IncomingDocAsInvoiceViewModel_Test {
         // then
         Assertions.assertThat(viewModel.getSeller()).isEqualTo(seller);
         Assertions.assertThat(viewModel.getBankAccount()).isEqualTo(bankAccount);
+
+    }
+
+    @Mock OrderItemRepository mockOrderItemRepo;
+
+    @Test
+    public void choices_orderItem_filters_discarded(){
+
+        // given
+        IncomingDocAsInvoiceViewModel viewModel = new IncomingDocAsInvoiceViewModel();
+        viewModel.orderItemRepository = mockOrderItemRepo;
+        Organisation seller = new Organisation();
+        viewModel.setSeller(seller);
+
+        Order order = new Order();
+        order.setApprovalState(OrderApprovalState.DISCARDED);
+        OrderItem item = new OrderItem();
+        item.setOrdr(order);
+
+        // expect
+        context.checking(new Expectations(){{
+
+            allowing(mockOrderItemRepo).findBySeller(seller);
+            will(returnValue(Arrays.asList(item)));
+
+        }});
+
+        // when discarded
+        List<OrderItem> orderItemChoices = viewModel.choicesOrderItem();
+        // then
+        Assertions.assertThat(orderItemChoices).isEmpty();
+
+        // and when not discarded
+        order.setApprovalState(OrderApprovalState.APPROVED);
+        orderItemChoices = viewModel.choicesOrderItem();
+        // then
+        Assertions.assertThat(orderItemChoices).contains(item);
+
+        // and when order has no approval state
+        order.setApprovalState(null);
+        orderItemChoices = viewModel.choicesOrderItem();
+        // then
+        Assertions.assertThat(orderItemChoices).contains(item);
+
 
     }
 
