@@ -24,6 +24,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
@@ -34,6 +35,10 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.invoice.dom.DocumentTypeData;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 /**
  * TODO: inline this mixin (then Task_recategorizeIncomingInvoice has to be refactored as well....)
@@ -77,6 +82,17 @@ public class IncomingInvoice_recategorize {
         if (incomingInvoice.isReported()){
             return "This invoice is reported and cannot be recategorized";
         }
+        final Person meAsPerson = personRepository.me();
+        if (meAsPerson==null) return "Your login is not linked to a person in Estatio";
+        if (
+                !(
+                    meAsPerson.hasPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository))
+                    ||
+                    meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR.findUsing(partyRoleTypeRepository))
+                )
+                ){
+            return String.format("You need role %s or %s to recategorize", FixedAssetRoleTypeEnum.PROPERTY_MANAGER.getKey(), PartyRoleTypeEnum.OFFICE_ADMINISTRATOR);
+        }
         return null;
     }
 
@@ -100,6 +116,12 @@ public class IncomingInvoice_recategorize {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
 
     /////////////////////////////////////////////////////////////////
 
