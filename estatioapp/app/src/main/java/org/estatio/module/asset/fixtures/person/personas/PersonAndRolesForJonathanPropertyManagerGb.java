@@ -24,7 +24,10 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
+
+import lombok.Getter;
 
 /**
  * Property manager for OXF
@@ -38,12 +41,16 @@ public class PersonAndRolesForJonathanPropertyManagerGb extends FixtureScript {
 
     public static final String SECURITY_USERNAME = REF.toLowerCase();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setFirstName("Jonathan")
@@ -52,7 +59,9 @@ public class PersonAndRolesForJonathanPropertyManagerGb extends FixtureScript {
                     .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForOxfGb.REF)
                     .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied
                     .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+                .build(this, executionContext)
+                .getPerson();
+
     }
 
 }

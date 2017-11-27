@@ -22,7 +22,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
+
+import lombok.Getter;
 
 public class PersonAndRolesForJohnDoeNl extends FixtureScript {
 
@@ -31,17 +34,23 @@ public class PersonAndRolesForJohnDoeNl extends FixtureScript {
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(FixtureScript.ExecutionContext executionContext) {
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setInitials("J")
                     .setFirstName("John")
                     .setLastName("Doe")
                     .setPersonGenderType(PersonGenderType.MALE)
-                .execute(executionContext);
+                .build(this, executionContext)
+                .getPerson();
+
 
     }
 }

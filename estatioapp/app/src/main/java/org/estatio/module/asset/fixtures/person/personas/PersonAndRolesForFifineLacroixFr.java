@@ -25,7 +25,10 @@ import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
+
+import lombok.Getter;
 
 public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
 
@@ -34,13 +37,17 @@ public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new PropertyAndOwnerAndManagerForVivFr());
         executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMnsFr());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setFirstName("Fifine")
@@ -50,7 +57,9 @@ public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
                     .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForMnsFr.REF)
                     .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied at the country level
                     .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+                .build(this, executionContext)
+                .getPerson();
+
     }
 
 }

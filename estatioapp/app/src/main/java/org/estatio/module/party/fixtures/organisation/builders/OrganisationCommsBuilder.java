@@ -32,7 +32,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
 
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PersonRepository;
@@ -42,7 +42,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"organisation"})
+@EqualsAndHashCode(of={"organisation", "address1", "phone", "email", "fax"})
 @Accessors(chain = true)
 public class OrganisationCommsBuilder extends BuilderScriptAbstract<OrganisationCommsBuilder> {
 

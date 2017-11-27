@@ -18,16 +18,20 @@
  */
 package org.estatio.module.tax.integtests;
 
+import org.slf4j.event.Level;
+
 import org.isisaddons.module.fakedata.FakeDataModule;
 
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.tax.EstatioTaxModule;
 
 public abstract class TaxModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public TaxModuleIntegTestAbstract() {
-        super(new EstatioTaxModule(), FakeDataModule.class);
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioTaxModule(), FakeDataModule.class);
     }
 
 }

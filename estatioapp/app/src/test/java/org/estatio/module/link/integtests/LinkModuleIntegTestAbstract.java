@@ -18,7 +18,10 @@
  */
 package org.estatio.module.link.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.link.EstatioLinkModule;
 
 /**
@@ -28,7 +31,8 @@ public abstract class LinkModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public LinkModuleIntegTestAbstract() {
-        super(new EstatioLinkModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioLinkModule());
     }
 
 }

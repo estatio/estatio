@@ -22,9 +22,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
+
+import lombok.Getter;
 
 public class PersonAndRolesForThibaultOfficerAdministratorFr extends FixtureScript {
 
@@ -33,12 +36,16 @@ public class PersonAndRolesForThibaultOfficerAdministratorFr extends FixtureScri
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new OrganisationForYoukeaSe());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setFirstName("Thibault")
@@ -46,7 +53,9 @@ public class PersonAndRolesForThibaultOfficerAdministratorFr extends FixtureScri
                     .setPersonGenderType(PersonGenderType.MALE)
                     .addPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR)
                     .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+                .build(this, executionContext)
+                .getPerson();
+
     }
 
 }

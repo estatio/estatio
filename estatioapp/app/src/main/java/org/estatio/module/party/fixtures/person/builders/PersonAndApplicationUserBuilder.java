@@ -20,7 +20,7 @@ package org.estatio.module.party.fixtures.person.builders;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 

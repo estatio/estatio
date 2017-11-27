@@ -26,7 +26,7 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
@@ -34,7 +34,9 @@ import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.fixtures.person.builders.ApplicationUserBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonBuilder;
+import org.estatio.module.party.fixtures.person.builders.PersonCommsBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonPartyRolesBuilder;
+import org.estatio.module.party.fixtures.person.builders.PersonRelationshipBuilder;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

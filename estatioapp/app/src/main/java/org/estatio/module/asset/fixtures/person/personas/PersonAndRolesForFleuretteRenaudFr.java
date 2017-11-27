@@ -22,8 +22,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPerdantFr;
+
+import lombok.Getter;
 
 public class PersonAndRolesForFleuretteRenaudFr extends FixtureScript {
 
@@ -32,19 +35,25 @@ public class PersonAndRolesForFleuretteRenaudFr extends FixtureScript {
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
         executionContext.executeChild(this, new OrganisationForPerdantFr());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setFirstName("Fleurette")
                     .setLastName("Renaud")
                     .setPersonGenderType(PersonGenderType.FEMALE)
-                .execute(executionContext);
+                .build(this, executionContext)
+                .getPerson();
+
 
     }
 }

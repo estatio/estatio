@@ -39,7 +39,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 

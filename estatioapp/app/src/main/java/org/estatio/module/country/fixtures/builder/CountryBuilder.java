@@ -2,7 +2,7 @@ package org.estatio.module.country.fixtures.builder;
 
 import org.incode.module.country.dom.impl.Country;
 
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 import lombok.EqualsAndHashCode;

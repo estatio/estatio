@@ -22,9 +22,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
+
+import lombok.Getter;
 
 public class PersonAndRolesForAgnethaFaltskogSe extends FixtureScript {
 
@@ -34,12 +37,16 @@ public class PersonAndRolesForAgnethaFaltskogSe extends FixtureScript {
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
     public static final String PARTY_REF_FROM = data.getPartyFrom().getRef();
 
+    @Getter
+    Person person;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new OrganisationForYoukeaSe());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        person = personAndRolesBuilder
                     .setAtPath(AT_PATH)
                     .setReference(REF)
                     .setInitials("A")
@@ -48,7 +55,8 @@ public class PersonAndRolesForAgnethaFaltskogSe extends FixtureScript {
                     .setPersonGenderType(PersonGenderType.FEMALE)
                     .setFromPartyStr(PARTY_REF_FROM)
                     .setRelationshipType(PartyRelationshipTypeEnum.CONTACT.fromTitle())
-                .execute(executionContext);
+                    .build(this, executionContext)
+                    .getPerson();
 
     }
 

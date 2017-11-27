@@ -18,7 +18,10 @@
  */
 package org.estatio.module.registration.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.registration.EstatioRegistrationModule;
 
 /**
@@ -27,7 +30,8 @@ import org.estatio.module.registration.EstatioRegistrationModule;
 public abstract class RegistrationModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public RegistrationModuleIntegTestAbstract() {
-        super(new EstatioRegistrationModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioRegistrationModule());
     }
 }
 

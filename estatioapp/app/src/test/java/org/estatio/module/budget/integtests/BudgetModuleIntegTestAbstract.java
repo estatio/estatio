@@ -18,12 +18,16 @@
  */
 package org.estatio.module.budget.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.budget.EstatioBudgetModule;
 
 public abstract class BudgetModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public BudgetModuleIntegTestAbstract() {
-        super(new EstatioBudgetModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioBudgetModule());
     }
 }

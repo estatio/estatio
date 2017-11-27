@@ -18,13 +18,17 @@
  */
 package org.estatio.module.asset.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.asset.EstatioAssetModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 
 public abstract class AssetModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public AssetModuleIntegTestAbstract() {
-        super(new EstatioAssetModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioAssetModule());
     }
 
 }
