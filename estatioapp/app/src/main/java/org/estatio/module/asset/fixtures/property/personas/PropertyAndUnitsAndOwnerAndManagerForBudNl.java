@@ -20,13 +20,9 @@ package org.estatio.module.asset.fixtures.property.personas;
 
 import javax.inject.Inject;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
@@ -50,14 +46,18 @@ public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnits
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
-        final Party owner = data.getOwner().upsertUsing(serviceRegistry);
-        final Party manager = data.getManager().upsertUsing(serviceRegistry);
+        // prereqs
+        executionContext.executeChild(this, data.getOwner().toFixtureScript());
+        executionContext.executeChild(this, data.getManager().toFixtureScript());
+
+        // exec
+        final Party owner = partyRepository.findPartyByReference(data.getOwner().getRef());
+        final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
         final Country country = data.getCountry().upsertUsing(serviceRegistry);
 
-        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder =
-                new PropertyAndUnitsAndOwnerAndManagerBuilder();
+        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder = new PropertyAndUnitsAndOwnerAndManagerBuilder();
 
         property = propertyAndUnitsAndOwnerAndManagerBuilder
                 .setReference(data.getRef())
@@ -80,13 +80,6 @@ public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnits
     }
 
     @Inject
-    protected CountryRepository countryRepository;
-    @Inject
-    protected PropertyRepository propertyRepository;
-    @Inject
     protected PartyRepository partyRepository;
-    @Inject
-    protected ApplicationTenancyRepository applicationTenancyRepository;
-
 
 }

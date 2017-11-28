@@ -20,16 +20,11 @@ package org.estatio.module.asset.fixtures.property.personas;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
-
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.country.dom.impl.Country;
-import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
@@ -44,23 +39,15 @@ public class PropertyAndUnitsAndOwnerAndManagerForVivFr extends PropertyAndUnits
 
     public static final String REF = data.getRef();
     public static final String PARTY_REF_MANAGER = data.getManager().getRef();
+
     @Getter
     public Property property;
-    @Inject
-    protected CountryRepository countryRepository;
-    @Inject
-    protected PropertyRepository propertyRepository;
-    @Inject
-    protected PartyRepository partyRepository;
-    @Inject
-    protected ApplicationTenancyRepository applicationTenancyRepository;
-
     public static String unitReference(String suffix) {
         return REF + "-" + suffix;
     }
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
         executionContext.executeChild(this, data.getOwner().toFixtureScript());
@@ -71,48 +58,31 @@ public class PropertyAndUnitsAndOwnerAndManagerForVivFr extends PropertyAndUnits
         final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
         final Country country = data.getCountry().upsertUsing(serviceRegistry);
 
-        createPropertyAndUnits(
-                data.getApplicationTenancy().getPath(),
-                data.getRef(), data.getName(), data.getCity(), country, data.getShoppingCenter(),
-                data.getNumberOfUnits(), data.getOpeningDate(), data.getAcquireDate(), owner, manager,
-                data.getLocationStr(),
-                executionContext);
-    }
-
-    protected Property createPropertyAndUnits(
-            final String atPath,
-            final String reference,
-            final String name,
-            final String city,
-            final Country country,
-            final PropertyType type,
-            final int numberOfUnits,
-            final LocalDate openingDate,
-            final LocalDate acquireDate,
-            final Party owner,
-            final Party manager,
-            final String locationStr,
-            final ExecutionContext executionContext) {
-
         PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder = new PropertyAndUnitsAndOwnerAndManagerBuilder();
 
         property = propertyAndUnitsAndOwnerAndManagerBuilder
-                .setReference(reference)
-                .setName(name)
-                .setCity(city)
+                .setReference(data.getRef())
+                .setName(data.getName())
+                .setCity(data.getCity())
                 .setCountry(country)
-                .setPropertyType(type)
-                .setNumberOfUnits(numberOfUnits)
-                .setOpeningDate(openingDate)
-                .setAcquireDate(acquireDate)
+                .setPropertyType(data.getShoppingCenter())
+                .setNumberOfUnits(data.getNumberOfUnits())
+                .setOpeningDate(data.getOpeningDate())
+                .setAcquireDate(data.getAcquireDate())
                 .setOwner(owner)
+                .setOwnerStartDate(data.getOwnerStartDate())
+                .setOwnerEndDate(data.getOwnerEndDate())
                 .setManager(manager)
-                .setLocationStr(locationStr)
+                .setManagerStartDate(data.getManagerStartDate())
+                .setManagerEndDate(data.getManagerEndDate())
+                .setLocationStr(data.getLocationStr())
                 .build(this, executionContext)
                 .getProperty();
-
-        return property;
     }
+
+    @Inject
+    protected PartyRepository partyRepository;
+
 
     public Property getProperty() {
         return this.property;

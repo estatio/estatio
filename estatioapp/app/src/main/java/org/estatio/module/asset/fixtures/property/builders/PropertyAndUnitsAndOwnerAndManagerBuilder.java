@@ -48,7 +48,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import static org.incode.module.base.integtests.VT.ld;
 
 @EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
@@ -126,8 +125,8 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
         if(owner != null) {
             //final PropertyOwnerBuilder propertyOwnerBuilder = new PropertyOwnerBuilder();
 
-            defaultParam("ownerStartDate", executionContext, ld(1999, 1, 1));
-            defaultParam("ownerEndDate", executionContext, ld(2000, 1, 1));
+//            defaultParam("ownerStartDate", executionContext, ld(1999, 1, 1));
+//            defaultParam("ownerEndDate", executionContext, ld(2000, 1, 1));
 
             property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ownerStartDate, ownerEndDate);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);

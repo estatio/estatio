@@ -60,11 +60,11 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         List<FixedAssetRole> allFixedAssetRoles = fixedAssetRoles.findAllForProperty(property);
         assertThat(allFixedAssetRoles.size(), is(2));
 
-        assertNull(allFixedAssetRoles.get(0).getStartDate());
-        assertNull(allFixedAssetRoles.get(0).getEndDate());
+        assertThat(allFixedAssetRoles.get(0).getStartDate(), is(ld(1999,1,1)));
+        assertThat(allFixedAssetRoles.get(0).getEndDate(), is(ld(2000,1,1)));
         assertThat(allFixedAssetRoles.get(0).getType(), is(FixedAssetRoleTypeEnum.PROPERTY_OWNER) );
 
-        assertThat(allFixedAssetRoles.get(1).getStartDate(), is(ld(2003,12,1)));
+        assertNull(allFixedAssetRoles.get(1).getStartDate());
         assertNull(allFixedAssetRoles.get(1).getEndDate());
         assertThat(allFixedAssetRoles.get(1).getType(), is(FixedAssetRoleTypeEnum.ASSET_MANAGER) );
     }
@@ -82,19 +82,25 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         }
 
         @Test
-        public void when_comes_after() throws Exception {
+        public void when_comes_directly_after() throws Exception {
 
-            // given
+            // when
             wrap(property).newRole(
-                    FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2014, 1, 1), ld(2014, 12, 31));
+                    FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2000,1,1).plusDays(1), null);
+
+            // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(3));
+        }
+
+        @Test
+        public void when_comes_sometime_after() throws Exception {
 
             // when
             wrap(property).newRole(
                     FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2015, 1, 1), null);
 
             // then
-            assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(4));
+            assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(3));
         }
 
         @Test
@@ -106,9 +112,7 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
 
             // when
             wrap(property).newRole(
-                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, ld(2014, 1, 1), ld(2014, 12, 31));
-            wrap(property).newRole(
-                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, ld(2014, 12, 31), null);
+                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, ld(2000,1,1), ld(2014, 12, 31));
 
             // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(2));
