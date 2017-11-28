@@ -12,7 +12,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
@@ -21,12 +21,12 @@ import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,7 +63,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         public void doublePartitionItem() throws Exception {
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
 
@@ -86,7 +86,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItem budgetItem = budget.getItems().last();
             // when
@@ -103,7 +103,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItem budgetItem = budget.getItems().first();
@@ -129,7 +129,7 @@ public class PartitionItemRepository_IntegTest extends BudgetModuleIntegTestAbst
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             BudgetItem budgetItem = budget.getItems().first();

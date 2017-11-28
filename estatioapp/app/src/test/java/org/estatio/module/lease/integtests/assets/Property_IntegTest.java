@@ -36,8 +36,8 @@ import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.asset.fixtures.PropertyBuilder;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -55,7 +55,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
@@ -73,7 +73,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -85,7 +85,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void occupiedUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
             Set<Unit> allUnits = property.getUnits();
             Set<Unit> occupiedUnits = occupancyRepository.findByProperty(property)
@@ -107,11 +107,11 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
 
     public static class Dispose extends Property_IntegTest {
 
-        private PropertyBuilder fs;
+        private PropertyAndUnitsAndOwnerAndManagerBuilder fs;
 
         @Before
         public void setupData() {
-            fs = new PropertyBuilder();
+            fs = new PropertyAndUnitsAndOwnerAndManagerBuilder();
 
             runFixtureScript(new FixtureScript() {
                 @Override

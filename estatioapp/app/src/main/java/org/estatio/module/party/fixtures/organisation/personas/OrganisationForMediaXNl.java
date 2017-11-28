@@ -18,30 +18,26 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForMediaXNl extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "MEDIAX_NL";
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
+public class OrganisationForMediaXNl extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.MediaXNl;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Mediax Electronics (NL)",
-                "Herengracht 100",
-                null,
-                "1010 AA",
-                "Amsterdam",
-                null,
-                "GBR",
-                "+31202211333",
-                "+312022211399",
-                "info@mediax.example.com", executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
-
 
 }

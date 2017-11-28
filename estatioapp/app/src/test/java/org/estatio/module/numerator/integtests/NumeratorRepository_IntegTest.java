@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
@@ -54,7 +54,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Before
     public void setUp() throws Exception {
-        runFixtureScript(new DemoData2Persist<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {});
+        runFixtureScript(new DataEnumPersist<>(NumeratorExampleObject_enum.class));
 
 
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);

@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 public class ChargeRepository_IntegTest extends ChargeModuleIntegTestAbstract {

@@ -18,34 +18,28 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
 
-public class PersonAndRolesForDylanOfficeAdministratorGb extends FixtureScript {
+import lombok.Getter;
 
-    public static final String REF = "DCLAYTON";
+public class PersonAndRolesForDylanOfficeAdministratorGb extends PersonAndRolesAbstract {
+
+    public static final Person_enum data = Person_enum.DylanOfficeAdministratorGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
     public static final String SECURITY_USERNAME = REF.toLowerCase();
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+
+    public PersonAndRolesForDylanOfficeAdministratorGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
-
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Dylan")
-                    .setLastName("Clayton")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR)
-                    .setSecurityUsername(SECURITY_USERNAME)
-                .execute(executionContext);
+        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 }

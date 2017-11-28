@@ -21,7 +21,7 @@ package org.estatio.module.lease.fixtures.lease;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -35,7 +35,7 @@ import static org.incode.module.base.integtests.VT.ld;
 public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-POISON-003";
-    public static final String UNIT_REFERENCE = PropertyAndOwnerAndManagerForOxfGb.unitReference("003");
+    public static final String UNIT_REFERENCE = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("003");
     public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
 
     public static final String BRAND = "Poison";
@@ -52,7 +52,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
         executionContext.executeChild(this, new OrganisationForHelloWorldGb());
         executionContext.executeChild(this, new OrganisationForPoisonGb());
         executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

@@ -19,7 +19,7 @@
 package org.estatio.module.lease.fixtures.lease;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
@@ -44,13 +44,13 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String REF5 = "BUD-HYPER-005";
     public static final String REF6 = "BUD-HELLO-006";
 
-    public static final String UNIT_REF1 = PropertyAndOwnerAndManagerForBudNl.unitReference("001");
-    public static final String UNIT_REF2 = PropertyAndOwnerAndManagerForBudNl.unitReference("002");
-    public static final String UNIT_REF3 = PropertyAndOwnerAndManagerForBudNl.unitReference("003");
-    public static final String UNIT_REF4 = PropertyAndOwnerAndManagerForBudNl.unitReference("004");
-    public static final String UNIT_REF5 = PropertyAndOwnerAndManagerForBudNl.unitReference("005");
-    public static final String UNIT_REF6 = PropertyAndOwnerAndManagerForBudNl.unitReference("006");
-    public static final String UNIT_REF7 = PropertyAndOwnerAndManagerForBudNl.unitReference("007");
+    public static final String UNIT_REF1 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("001");
+    public static final String UNIT_REF2 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("002");
+    public static final String UNIT_REF3 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("003");
+    public static final String UNIT_REF4 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("004");
+    public static final String UNIT_REF5 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("005");
+    public static final String UNIT_REF6 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("006");
+    public static final String UNIT_REF7 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("007");
 
     public static final String PARTY_REF_TENANT1 = OrganisationForPoisonNl.REF;
     public static final String PARTY_REF_TENANT2 = OrganisationForMiracleNl.REF;
@@ -84,7 +84,7 @@ public class LeasesForBudNl extends LeaseAbstract {
         executionContext.executeChild(this, new OrganisationForDagoBankNl());
         executionContext.executeChild(this, new OrganisationForNlBankNl());
         executionContext.executeChild(this, new OrganisationForHyperNl());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForBudNl());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForBudNl());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

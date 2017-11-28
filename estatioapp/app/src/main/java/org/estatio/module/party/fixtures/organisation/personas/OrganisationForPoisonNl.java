@@ -18,29 +18,25 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForPoisonNl extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "POISON_NL";
-    public static final String AT_PATH = ApplicationTenancyForNl.PATH;
+public class OrganisationForPoisonNl extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.PoisonNl;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Poison Perfumeries B.V.",
-                "Herengracht 100",
-                null,
-                "1010 AA",
-                "Amsterdam",
-                null,
-                "GBR",
-                "+31202211333",
-                "+312022211399",
-                "info@poison.example.com",
-                executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
-
 }

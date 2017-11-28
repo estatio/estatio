@@ -13,7 +13,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -46,7 +46,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new OrganisationForTopModelGb());
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-                executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
             }
         });
     }
@@ -101,7 +101,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
     private IncomingInvoice createIncomingInvoiceAndTwoItemsWithSameCharge(){
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-        property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);
         dueDate = invoiceDate.minusMonths(1);

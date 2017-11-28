@@ -18,14 +18,18 @@
  */
 package org.estatio.module.currency.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.currency.EstatioCurrencyModule;
 
 public abstract class CurrencyModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public CurrencyModuleIntegTestAbstract() {
-        super(new EstatioCurrencyModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioCurrencyModule());
     }
 
 }

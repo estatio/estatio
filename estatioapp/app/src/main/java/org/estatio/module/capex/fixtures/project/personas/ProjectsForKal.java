@@ -18,26 +18,15 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.personas.ProjectAbstract;
-
-import static org.incode.module.base.integtests.VT.ld;
+import org.estatio.module.capex.fixtures.project.ProjectAbstract;
 
 public class ProjectsForKal extends ProjectAbstract {
-
-    public static final String PROJECT_REFERENCE = "PR1";
-    public static final String PROJECT_REFERENCE2 = "PR2";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // exec
-        createProject(
-        		PROJECT_REFERENCE, "Augment parkingplace", ld(1999, 1, 1), ld(1999, 7, 1), null,
-                "/NLD", null, executionContext);
-        
-        createProject(
-        		PROJECT_REFERENCE2, "Broaden entrance", ld(1999, 4, 1), ld(1999, 5, 1), null,
-                "/NLD", null, executionContext);
+        executionContext.executeChild(this, new Project1ForKal());
+        executionContext.executeChild(this, new Project2ForKal());
     }
 
 }

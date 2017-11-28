@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -68,7 +68,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             }
         });
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-        unit = unitRepository.findUnitByReference(PropertyAndOwnerAndManagerForOxfGb.unitReference("001"));
+        unit = unitRepository.findUnitByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("001"));
     }
 
     @Inject

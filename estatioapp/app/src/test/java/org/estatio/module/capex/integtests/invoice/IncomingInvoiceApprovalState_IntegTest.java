@@ -22,7 +22,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
@@ -89,7 +89,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
     @Before
     public void setUp() {
-        propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
         buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
         seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);

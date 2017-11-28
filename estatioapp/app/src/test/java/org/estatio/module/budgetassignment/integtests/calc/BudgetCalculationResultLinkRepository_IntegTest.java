@@ -9,12 +9,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLinkRepository;
@@ -23,7 +23,7 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -72,7 +72,7 @@ public class BudgetCalculationResultLinkRepository_IntegTest extends BudgetAssig
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
-        propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
         charge = chargeRepository.findByReference(ChargeRefData.GB_SERVICE_CHARGE);
         leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);

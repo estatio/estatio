@@ -18,33 +18,24 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 
-import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
+public class PersonAndRolesForEmmaTreasurerGb extends PersonAndRolesAbstract {
 
-public class PersonAndRolesForEmmaTreasurerGb extends FixtureScript {
+    public static final Person_enum data = Person_enum.EmmaTreasurerGb;
 
-    public static final String REF = "EFARMER";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForEmmaTreasurerGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
-
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("E")
-                    .setLastName("Farmer")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addPartyRoleType(PartyRoleTypeEnum.TREASURER)
-                    .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 
 }

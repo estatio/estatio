@@ -18,36 +18,34 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.party.dom.Person;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.party.dom.PersonGenderType;
+import lombok.Getter;
 
 /**
  * Property manager for OXF
  */
-public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
+public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstract {
 
-    public static final String REF = "FBEAUTIFUL";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+    public static final Person_enum data = Person_enum.FloellaAssetManagerGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForFloellaAssetManagerGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Floella")
-                    .setLastName("Beautiful")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, PropertyAndOwnerAndManagerForOxfGb.REF)
-                    .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+        super.execute(executionContext);
+
     }
 
 }

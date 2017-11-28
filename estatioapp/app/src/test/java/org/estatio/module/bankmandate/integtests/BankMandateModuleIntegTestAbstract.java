@@ -18,12 +18,16 @@
  */
 package org.estatio.module.bankmandate.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.bankmandate.EstatioBankMandateModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 
 public abstract class BankMandateModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public BankMandateModuleIntegTestAbstract() {
-        super(new EstatioBankMandateModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioBankMandateModule());
     }
 }

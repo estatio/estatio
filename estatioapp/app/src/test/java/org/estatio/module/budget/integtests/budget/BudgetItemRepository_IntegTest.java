@@ -16,17 +16,17 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
 import org.estatio.module.budget.integtests.BudgetModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +59,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             // when
             final List<BudgetItem> budgetItemList = budgetItemRepository.findByProperty(property);
             // then
@@ -75,7 +75,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         @Test
         public void happyCase() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);
@@ -99,7 +99,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             BigDecimal budgetedValue;
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_3);
@@ -128,7 +128,7 @@ public class BudgetItemRepository_IntegTest extends BudgetModuleIntegTestAbstrac
             BigDecimal budgetedValue;
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             LocalDate startDate = BudgetsForOxf.BUDGET_2016_START_DATE;
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, startDate);
             Charge charge = chargeRepository.findByReference(ChargeRefData.GB_INCOMING_CHARGE_1);

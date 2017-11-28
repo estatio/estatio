@@ -11,12 +11,12 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRun;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationRunRepository;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
@@ -53,7 +53,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
             }
         });
-        propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
         budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
     }

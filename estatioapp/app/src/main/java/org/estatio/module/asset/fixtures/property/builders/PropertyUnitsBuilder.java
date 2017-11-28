@@ -29,12 +29,14 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"property"})
 @Accessors(chain = true)
 public class PropertyUnitsBuilder
         extends BuilderScriptAbstract<PropertyUnitsBuilder> {

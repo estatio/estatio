@@ -29,12 +29,13 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.fixtures.person.builders.PersonPartyRolesBuilder;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -42,10 +43,9 @@ import lombok.experimental.Accessors;
 /**
  * A superset of {@link PersonPartyRolesBuilder}, adding a {@link FixedAssetRole} and a corresponding {@link PartyRole}.
  */
+@EqualsAndHashCode(of={"person"})
 @Accessors(chain = true)
 public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<PersonFixedAssetRolesBuilder> {
-
-    PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder() {};
 
     @Getter @Setter
     private Person person;
@@ -84,6 +84,7 @@ public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<PersonFi
         checkParam("person", executionContext, Person.class);
 
         // party roles
+        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
         partyRoles = personPartyRolesBuilder
                 .setPerson(person)
                 .addPartyRoleTypes(fixedAssetRoleSpecs.stream().map(x -> x.roleType).collect(Collectors.toList()))

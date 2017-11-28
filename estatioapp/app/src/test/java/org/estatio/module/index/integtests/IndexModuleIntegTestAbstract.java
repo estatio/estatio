@@ -18,13 +18,17 @@
  */
 package org.estatio.module.index.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.index.EstatioIndexModule;
 
 public abstract class IndexModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public IndexModuleIntegTestAbstract() {
-        super(new EstatioIndexModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioIndexModule());
     }
 
 }

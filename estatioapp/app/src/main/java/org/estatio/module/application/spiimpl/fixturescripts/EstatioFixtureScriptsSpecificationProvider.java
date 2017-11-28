@@ -21,17 +21,16 @@ package org.estatio.module.application.spiimpl.fixturescripts;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecification;
-import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider;
 
 import org.estatio.module.application.demos.EstatioDemoFixture;
+import org.estatio.module.base.spiimpl.fixturescripts.BaseFixtureScriptsSpecificationProvider;
 
-@DomainService(nature = NatureOfService.DOMAIN)
-public class EstatioFixtureScriptsSpecificationProvider implements FixtureScriptsSpecificationProvider {
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "100")
+public class EstatioFixtureScriptsSpecificationProvider extends BaseFixtureScriptsSpecificationProvider {
 
     @Override
     public FixtureScriptsSpecification getSpecification() {
-        return FixtureScriptsSpecification.builder(EstatioFixtureScriptsSpecificationProvider.class)
-                .withRunScriptDropDown(FixtureScriptsSpecification.DropDownPolicy.CHOICES)
+        return builder()
                 .withRunScriptDefault(EstatioDemoFixture.class)
                 .build();
     }

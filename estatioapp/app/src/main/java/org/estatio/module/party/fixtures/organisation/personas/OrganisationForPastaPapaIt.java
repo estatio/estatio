@@ -18,28 +18,25 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForPastaPapaIt extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "PASTAPAPA";
-    public static final String AT_PATH = ApplicationTenancyForIt.PATH;
+public class OrganisationForPastaPapaIt extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.PastaPapaItNl;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                AT_PATH,
-                REF,
-                "Pasta Papa Food",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
-
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 }

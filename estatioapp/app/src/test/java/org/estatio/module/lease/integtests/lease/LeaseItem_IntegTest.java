@@ -39,7 +39,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;

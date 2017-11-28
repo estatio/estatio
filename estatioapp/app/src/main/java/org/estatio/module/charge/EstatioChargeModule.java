@@ -33,8 +33,8 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeGroup;
-import org.estatio.module.charge.fixtures.ChargeGroupRefData;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.chargegroups.refdata.ChargeGroupRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.countryapptenancy.EstatioCountryAppTenancyModule;
 import org.estatio.module.tax.EstatioTaxModule;
 
@@ -48,8 +48,14 @@ public final class EstatioChargeModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioTaxModule(), new EstatioCountryAppTenancyModule());
     }
 
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData.get()) {
+            return null;
+        }
+        // else
+        refData.set(true);
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -59,7 +65,17 @@ public final class EstatioChargeModule extends ModuleAbstract {
         };
     }
 
-    @Override public FixtureScript getTeardownFixture() {
+    @Override
+    public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
+        refData.set(false); // reset
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -68,6 +84,5 @@ public final class EstatioChargeModule extends ModuleAbstract {
             }
         };
     }
-
 
 }

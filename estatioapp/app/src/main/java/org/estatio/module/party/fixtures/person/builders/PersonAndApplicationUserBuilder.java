@@ -20,20 +20,19 @@ package org.estatio.module.party.fixtures.person.builders;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PersonAndApplicationUserBuilder
         extends BuilderScriptAbstract<PersonAndApplicationUserBuilder> {
-
-    PersonBuilder personBuilder = new PersonBuilder() {};
-    ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder() {};
 
     @Getter @Setter
     private String atPath;
@@ -61,6 +60,9 @@ public class PersonAndApplicationUserBuilder
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        PersonBuilder personBuilder = new PersonBuilder();
+        ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
 
         // person
         person = personBuilder.setAtPath(atPath)

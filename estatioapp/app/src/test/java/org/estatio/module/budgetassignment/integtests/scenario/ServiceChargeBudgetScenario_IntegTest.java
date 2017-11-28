@@ -15,7 +15,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
@@ -39,12 +39,12 @@ import org.estatio.module.budgetassignment.dom.override.BudgetOverrideValueRepos
 import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.service.CalculationResultViewModel;
 import org.estatio.module.budgetassignment.dom.service.DetailedCalculationResultViewmodel;
-import org.estatio.module.budgetassignment.fixtures.BudgetForBud;
-import org.estatio.module.budgetassignment.fixtures.PartitioningAndItemsForBud;
+import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
+import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBud;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -134,7 +134,7 @@ ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModuleIntegTestAbs
         @Before
         public void setup() {
             // given
-            property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForBudNl.REF);
+            property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
             budget = budgetRepository.findByPropertyAndStartDate(property, BudgetForBud.BUDGET_2015_START_DATE);
             //**IMPORTANT!** truncate keytable
             KeyTable key2 = budget.getKeyTables().last();

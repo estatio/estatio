@@ -26,12 +26,13 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.isisaddons.module.base.platform.applib.Module;
+import org.isisaddons.module.base.platform.applib.ModuleAbstract;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
+
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.base.EstatioBaseModule;
-import org.isisaddons.module.base.platform.applib.Module;
-import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRate;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
@@ -46,13 +47,28 @@ public final class EstatioTaxModule extends ModuleAbstract {
         return Sets.newHashSet(new EstatioBaseModule());
     }
 
-
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
     @Override
     public FixtureScript getRefDataSetupFixture() {
-        return new DemoData2Persist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
+        if(refData.get()) {
+            return null;
+        }
+        // else
+        refData.set(true);
+        return new DataEnumPersist<Tax_enum, Tax, FixtureScript>(Tax_enum.class) {};
     }
 
-    @Override public FixtureScript getTeardownFixture() {
+    @Override
+    public FixtureScript getTeardownFixture() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
+        refData.set(false); // reset
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
@@ -61,9 +77,5 @@ public final class EstatioTaxModule extends ModuleAbstract {
             }
         };
     }
-
-
-
-
 
 }

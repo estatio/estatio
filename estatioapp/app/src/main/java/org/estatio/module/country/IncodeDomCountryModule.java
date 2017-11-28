@@ -28,10 +28,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Persist;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 
 import org.incode.module.country.dom.CountryModule;
+import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
@@ -55,22 +55,35 @@ public final class IncodeDomCountryModule extends ModuleAbstract {
         return Sets.newHashSet(CountryModule.class);
     }
 
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
     @Override
     public FixtureScript getRefDataSetupFixture() {
-        return new DemoData2Persist<>(Country_enum.class);
+        if(refData.get()) {
+            return null;
+        }
+        // else
+        refData.set(true);
+        return new DataEnumPersist<>(Country_enum.class);
     }
 
     @Override
     public FixtureScript getTeardownFixture() {
-        final TeardownFixtureAbstract teardownState = new TeardownFixtureAbstract() {
+        // leave reference data alone
+        return null;
+    }
+
+    /**
+     * Provided for any integration tests that need to fine-tune
+     */
+    public FixtureScript getRefDataTeardown() {
+        refData.set(false); // reset
+        return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
                 deleteFrom(State.class);
+                deleteFrom(Country.class);
             }
         };
-        return Util.allOf(teardownState, new DemoData2Teardown<>(Country_enum.class));
     }
-
-
 
 }

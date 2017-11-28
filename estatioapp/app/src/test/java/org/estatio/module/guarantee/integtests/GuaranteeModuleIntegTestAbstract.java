@@ -18,13 +18,17 @@
  */
 package org.estatio.module.guarantee.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
 
 public abstract class GuaranteeModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public GuaranteeModuleIntegTestAbstract() {
-        super(new EstatioGuaranteeModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioGuaranteeModule());
     }
 
 }

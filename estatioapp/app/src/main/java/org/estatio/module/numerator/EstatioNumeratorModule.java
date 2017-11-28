@@ -28,7 +28,6 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.isisaddons.module.base.platform.applib.Module;
 import org.isisaddons.module.base.platform.applib.ModuleAbstract;
-import org.isisaddons.module.base.platform.fixturesupport.DemoData2Teardown;
 
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 

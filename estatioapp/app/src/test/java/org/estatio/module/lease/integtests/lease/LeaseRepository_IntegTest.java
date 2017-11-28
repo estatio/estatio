@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
 
 import org.incode.module.base.integtests.VT;
 
@@ -35,7 +36,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
@@ -162,19 +163,31 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenWildcard() {
             // Given
-            final List<Lease> matchingLeases = leaseRepository.matchByReferenceOrName("OXF*", false);
-            assertThat(matchingLeases.size()).isEqualTo(5);
+            final List<Lease> allLeasesBefore = leaseRepository.matchByReferenceOrName("OXF*", true);
+            final List<Lease> unterminatedLeasesBefore = leaseRepository.matchByReferenceOrName("OXF*", false);
+            assertThat(unterminatedLeasesBefore.size()).isGreaterThan(0);
 
-            // When
-            // terminate one lease...
-            Lease oxfTop = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            oxfTop.terminate(new LocalDate(2014, 1, 1));
+            // When terminate one lease...
+            final LocalDate yesterday = clockService.now().plusDays(-1);
+            final Lease leaseBeingTerminated = fakeDataService.collections().anyOf(unterminatedLeasesBefore);
+
+            wrap(leaseBeingTerminated).terminate(yesterday);
 
             // Then
-            assertThat(oxfTop.getTenancyEndDate()).isEqualTo(new LocalDate(2014, 1, 1));
-            assertThat(leaseRepository.matchByReferenceOrName("OXF*", false).size()).isEqualTo(4);
-            assertThat(leaseRepository.matchByReferenceOrName("OXF*", true).size()).isEqualTo(5);
+            assertThat(leaseBeingTerminated.getTenancyEndDate()).isEqualTo(yesterday);
+
+            final List<Lease> allLeasesAfter =
+                    leaseRepository.matchByReferenceOrName("OXF*", true);
+            assertThat(allLeasesAfter.size()).isEqualTo(allLeasesBefore.size());
+
+            final List<Lease> unterminatedLeases =
+                    leaseRepository.matchByReferenceOrName("OXF*", false);
+            assertThat(unterminatedLeases.size()).isEqualTo(unterminatedLeasesBefore.size() - 1);
         }
+
+        @Inject
+        ClockService clockService;
+
 
     }
 
@@ -205,7 +218,8 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             // when
             final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
@@ -268,7 +282,8 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            final Property property = propertyRepository.findPropertyByReference(
+                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             System.out.println(property);
             // when
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);

@@ -64,11 +64,12 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.15.1.20171115-1405</isis.version>
+        <isis.version>1.15.1.20171128-1626</isis.version>
         <!--
-        <isis.version>1.15.0.20170915-1224</isis.version>
-        <isis.version>1.15.0.20170914-1238</isis.version>
         <isis.version>1.16.0-SNAPSHOT</isis.version>
+        <isis.version>1.15.1.20171127-1521</isis.version>
+        <isis.version>1.15.1.20171115-1405</isis.version>
+        <isis.version>1.15.0.20170915-1224</isis.version>
         -->
 
         <incode-platform.version>1.15.1.1</incode-platform.version>

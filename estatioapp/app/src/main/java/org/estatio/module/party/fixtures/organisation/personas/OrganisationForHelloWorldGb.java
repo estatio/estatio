@@ -18,41 +18,26 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForHelloWorldGb extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "HELLOWORLD_GB";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+public class OrganisationForHelloWorldGb extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.HelloWorldGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party party = createOrganisation(
-                AT_PATH,
-                REF,
-                "Hello World Properties",
-                "5 Covent Garden",
-                null,
-                "W1A1AA",
-                "London",
-                null,
-                "GBR",
-                "+44202211333",
-                "+442022211399",
-                "info@hello.example.com", executionContext);
-        createCommunicationChannels(
-                party,
-                "1 Circle Square",
-                null,
-                "W2AXXX",
-                "London",
-                null,
-                "GBR",
-                null,
-                null,
-                null,
-                executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 
 }

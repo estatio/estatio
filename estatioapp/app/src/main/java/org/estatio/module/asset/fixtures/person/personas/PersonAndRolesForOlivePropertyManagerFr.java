@@ -18,34 +18,27 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMacFr;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.party.dom.PersonGenderType;
+public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstract {
 
-public class PersonAndRolesForOlivePropertyManagerFr extends FixtureScript {
+    public static final Person_enum data = Person_enum.OlivePropertyManagerFr;
 
-    public static final String REF = "OBEAUSOLIEL";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForOlivePropertyManagerFr() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMacFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Olive")
-                    .setLastName("Beusoleil")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForMacFr.REF)
-                    .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied 
-                    .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+        super.execute(executionContext);
     }
 
 }

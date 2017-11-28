@@ -29,7 +29,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
+import org.estatio.module.capex.fixtures.project.personas.ProjectForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 
@@ -47,7 +47,7 @@ public class ProjectRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
                 //                executionContext.executeChild(this, new OrganisationForTopModel());
                 executionContext.executeChild(this, new ProjectsForKal());
-                executionContext.executeChild(this, new ProjectsForGra());
+                executionContext.executeChild(this, new ProjectForGra());
 
             }
         });

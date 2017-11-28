@@ -18,36 +18,22 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPerdantFr;
+public class PersonAndRolesForJeanneDarcFr extends PersonAndRolesAbstract {
 
-public class PersonAndRolesForJeanneDarcFr extends FixtureScript {
+    public static final Person_enum data = Person_enum.JeanneDarcFr;
 
-    public static final String REF = "JDARC";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
-    public static final String PARTY_REF_FROM = OrganisationForPerdantFr.REF;
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForJeanneDarcFr() {
+        super(data);
+    }
 
     @Override
-    protected void execute(FixtureScript.ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForPerdantFr());
-
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setInitials("J")
-                    .setFirstName("Jeanne")
-                    .setLastName("D'Arc")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                    .setFromPartyStr(PARTY_REF_FROM)
-                    .setRelationshipType(PartyRelationshipTypeEnum.CONTACT.fromTitle())
-                .execute(executionContext);
-
+    protected void execute(ExecutionContext executionContext) {
+        executionContext.executeChild(this, data.toFixtureScript());
     }
 }

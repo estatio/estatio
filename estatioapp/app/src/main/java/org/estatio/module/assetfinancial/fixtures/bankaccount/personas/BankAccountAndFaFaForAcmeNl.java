@@ -18,15 +18,17 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 public class BankAccountAndFaFaForAcmeNl extends BankAccountAndFaFaAbstract {
 
-    public static final String REF = "NL31ABNA0580744433";
-    public static final String PARTY_REF = OrganisationForAcmeNl.REF;
-    public static final String PROPERTY_REF = PropertyAndOwnerAndManagerForKalNl.REF;
+    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.AcmeNl;
+
+    public static final String REF = data.getRef();
+    public static final String PARTY_REF = data.getParty().getRef();
 
     public BankAccountAndFaFaForAcmeNl() {
         this(null, null);
@@ -41,13 +43,13 @@ public class BankAccountAndFaFaForAcmeNl extends BankAccountAndFaFaAbstract {
 
         // prereqs
         executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                PROPERTY_REF, // create FAFA
+                data.getProperty(), // create FAFA
                 executionContext);
     }
 }

@@ -21,12 +21,14 @@ package org.estatio.module.base.fixtures.clock;
 import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScriptWithExecutionStrategy;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 
 import org.incode.module.fixturesupport.dom.scripts.ClockFixture;
 
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
 
-public class TickingClockFixture extends FixtureScript {
+public class TickingClockFixture extends FixtureScript implements FixtureScriptWithExecutionStrategy {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -44,4 +46,8 @@ public class TickingClockFixture extends FixtureScript {
         }
     }
 
+    @Override
+    public FixtureScripts.MultipleExecutionStrategy getMultipleExecutionStrategy() {
+        return FixtureScripts.MultipleExecutionStrategy.EXECUTE_ONCE_BY_CLASS;
+    }
 }

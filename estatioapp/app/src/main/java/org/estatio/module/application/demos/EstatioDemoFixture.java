@@ -18,7 +18,12 @@
  */
 package org.estatio.module.application.demos;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
+import org.isisaddons.module.security.dom.user.AccountType;
+import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
@@ -33,12 +38,12 @@ import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOliveP
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForCARTEST;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForGraIt;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForHanSe;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMacFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForCARTEST;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForGraIt;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForHanSe;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForAcmeNl;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
@@ -47,15 +52,15 @@ import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccou
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForPretGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
-import org.estatio.module.budget.fixtures.BudgetsForOxf;
-import org.estatio.module.budget.fixtures.KeyTablesForOxf;
-import org.estatio.module.budget.fixtures.PartitioningAndItemsForOxf;
+import org.estatio.module.budget.fixtures.budgets.personas.BudgetsForOxf;
+import org.estatio.module.budget.fixtures.keytables.personas.KeyTablesForOxf;
+import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndItemsForOxf;
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixture;
+import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
-import org.estatio.module.capex.fixtures.project.personas.ProjectsForGra;
+import org.estatio.module.capex.fixtures.project.personas.ProjectForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.EstatioChargeModule;
@@ -85,6 +90,8 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 import org.estatio.module.tax.EstatioTaxModule;
 
+import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
+
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {
@@ -103,11 +110,18 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     private void doExecute(final ExecutionContext executionContext) {
 
+        final AbstractUserAndRolesFixtureScript initialisationUser =
+                new AbstractUserAndRolesFixtureScript(
+                        "initialisation", "pass", null,
+                        Global.getPath(), AccountType.LOCAL,
+                        Lists.newArrayList("estatio-admin")) {
+                };
+        executionContext.executeChild(this, "'initialisation' user", initialisationUser);
         executionContext.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
 
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
@@ -137,11 +151,11 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForGraIt());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForHanSe());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMnsFr());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMacFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForGraIt());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForHanSe());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
         executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
         executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
@@ -157,13 +171,13 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PersonAndRolesForBrunoTreasurerFr()); // fr treasurer
 
         executionContext.executeChild(this, new ProjectsForKal());
-        executionContext.executeChild(this, new ProjectsForGra());
+        executionContext.executeChild(this, new ProjectForGra());
 
         executionContext.executeChild(this, new BudgetsForOxf());
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningAndItemsForOxf());
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForCARTEST());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForCARTEST());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());

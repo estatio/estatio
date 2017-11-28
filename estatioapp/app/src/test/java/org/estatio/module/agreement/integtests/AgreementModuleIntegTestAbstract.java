@@ -18,16 +18,20 @@
  */
 package org.estatio.module.agreement.integtests;
 
+import org.slf4j.event.Level;
+
 import org.isisaddons.module.fakedata.FakeDataModule;
 
 import org.estatio.module.agreement.EstatioAgreementModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 
 public abstract class AgreementModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public AgreementModuleIntegTestAbstract() {
-        super(new EstatioAgreementModule(),
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioAgreementModule(),
                 FakeDataModule.class);
     }
 

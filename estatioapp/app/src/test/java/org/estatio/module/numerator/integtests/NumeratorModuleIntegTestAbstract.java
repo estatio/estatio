@@ -18,7 +18,10 @@
  */
 package org.estatio.module.numerator.integtests;
 
+import org.slf4j.event.Level;
+
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 import org.estatio.module.numerator.integtests.dom.EstatioNumeratorExampleModule;
 
 /**
@@ -27,7 +30,8 @@ import org.estatio.module.numerator.integtests.dom.EstatioNumeratorExampleModule
 public abstract class NumeratorModuleIntegTestAbstract extends IntegrationTestAbstract3 {
 
     public NumeratorModuleIntegTestAbstract() {
-        super(new EstatioNumeratorExampleModule());
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+              new EstatioNumeratorExampleModule());
     }
 
 }

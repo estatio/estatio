@@ -35,7 +35,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldGb;
@@ -148,7 +148,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             fixedAssetFinancialAccount = results.get(0);
 
             Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(
-                    PropertyAndOwnerAndManagerForKalNl.REF));
+                    PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
 
             // When
             sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()), new Runnable() {

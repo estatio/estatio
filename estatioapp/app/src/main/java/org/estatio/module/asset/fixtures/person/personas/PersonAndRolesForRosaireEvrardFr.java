@@ -18,31 +18,24 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
+public class PersonAndRolesForRosaireEvrardFr extends PersonAndRolesAbstract {
 
-public class PersonAndRolesForRosaireEvrardFr extends FixtureScript {
+    public static final Person_enum data = Person_enum.RosaireEvrardFr;
 
-    public static final String REF = "REVRARD";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForRosaireEvrardFr() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
-
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Rosaire")
-                    .setLastName("Evrard")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 
 }

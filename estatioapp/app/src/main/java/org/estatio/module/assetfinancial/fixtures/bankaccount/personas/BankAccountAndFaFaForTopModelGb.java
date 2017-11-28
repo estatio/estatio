@@ -19,12 +19,14 @@
 package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
 
 import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
 
 public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract {
 
-    public static final String REF = "NL31ABNA0580744435";
-    public static final String PARTY_REF = OrganisationForTopModelGb.REF;
+    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.TopModelGb;
+
+    public static final String REF = data.getRef();
+    public static final String PARTY_REF = data.getParty().getRef();
 
     public BankAccountAndFaFaForTopModelGb() {
         this(null, null);
@@ -41,7 +43,7 @@ public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract 
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                null, // no property = no FAFA
+                data.getProperty(), // no property = no FAFA
                 executionContext);
     }
 

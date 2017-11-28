@@ -20,15 +20,18 @@ package org.estatio.module.asset.fixtures.property.builders;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"property", "manager"})
 @Accessors(chain = true)
 public class PropertyManagerBuilder
         extends BuilderScriptAbstract<PropertyManagerBuilder> {
@@ -51,9 +54,11 @@ public class PropertyManagerBuilder
         checkParam("property", executionContext, Property.class);
         checkParam("manager", executionContext, Party.class);
 
-        defaultParam("startDate", executionContext, property.getAcquireDate());
+        //defaultParam("startDate", executionContext, property.getAcquireDate());
 
-        wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, manager, startDate, endDate);
+        //wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, manager, startDate, endDate);
+        property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, startDate, endDate);
+
     }
 
 }

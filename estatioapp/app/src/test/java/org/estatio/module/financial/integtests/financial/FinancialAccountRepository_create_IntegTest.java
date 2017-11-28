@@ -23,7 +23,7 @@ public class FinancialAccountRepository_create_IntegTest extends FinancialModule
     public void setUp() throws Exception {
         final OrganisationForHelloWorldGb fs = new OrganisationForHelloWorldGb();
         runFixtureScript(fs);
-        this.party = fs.getParty();
+        this.party = fs.getOrganisation();
     }
 
     private Party party;

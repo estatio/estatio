@@ -104,8 +104,14 @@ public final class EstatioBaseModule extends ModuleAbstract {
         );
     }
 
+    private static final ThreadLocal<Boolean> refData = ThreadLocal.withInitial(() -> false);
     @Override
     public FixtureScript getRefDataSetupFixture() {
+        if(refData.get()) {
+            return null;
+        }
+        // else
+        refData.set(true);
         return new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {

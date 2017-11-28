@@ -18,40 +18,25 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForTopModelGb extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "TOPMODEL";
-    public static final String AT_PATH = ApplicationTenancyForGb.PATH;
+public class OrganisationForTopModelGb extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.TopModelGb;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party party = createOrganisation(
-                AT_PATH,
-                REF,
-                "Topmodel Fashion",
-                "2 Top Road",
-                null,
-                "W2AXXX",
-                "London",
-                null,
-                "GBR",
-                "+31202211333",
-                "+312022211399",
-                "info@topmodel.example.com", executionContext);
-        createCommunicationChannels(
-                party,
-                "1 Circle Square",
-                null,
-                "W2AXXX",
-                "London",
-                null,
-                "GBR",
-                null,
-                null,
-                null,
-                executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 }

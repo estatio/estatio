@@ -44,11 +44,11 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
@@ -142,8 +142,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForKalNl());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
                 }
             });
         }
@@ -155,8 +155,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
-            propertyKal = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF);
 
             propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
         }
@@ -227,7 +227,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 }
             });
         }
@@ -236,7 +236,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         }
 
         @Test
@@ -256,7 +256,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 }
             });
         }
@@ -272,7 +272,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void setUp() throws Exception {
             applicationTenancyForOxf = applicationTenancyRepository.newTenancy(OXFTENANCYPATH, OXFTENANCYPATH, null);
             applicationTenancyWithWildCard = applicationTenancyRepository.newTenancy(WILCARDTENANCYPATH, WILCARDTENANCYPATH, null);
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
             propertyOxf.setApplicationTenancyPath(OXFTENANCYPATH);
             numeratorForOxfUsingWildCard = numeratorRepository.createScopedNumerator(
                     Constants.NumeratorName.INVOICE_NUMBER,
@@ -328,7 +328,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
-            propertyKal = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForKalNl.REF);
+            propertyKal = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF);
 
             InvoiceForLease invoiceForLease = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
@@ -570,7 +570,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                     executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
                 }
             });

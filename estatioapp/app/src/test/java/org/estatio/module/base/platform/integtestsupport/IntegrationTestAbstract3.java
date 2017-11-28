@@ -18,6 +18,7 @@
  */
 package org.estatio.module.base.platform.integtestsupport;
 
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,6 @@ import javax.jdo.PersistenceManagerFactory;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -41,6 +41,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.AppManifestAbstract;
@@ -74,6 +75,14 @@ import org.estatio.module.base.platform.applib.TickingFixtureClock;
 public abstract class IntegrationTestAbstract3 {
 
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationTestAbstract3.class);
+    private final LogConfig logConfig;
+
+    protected static PrintStream logPrintStream() {
+        return logPrintStream(Level.DEBUG);
+    }
+    protected static PrintStream logPrintStream(Level level) {
+        return LogStream.logPrintStream(LOG, level);
+    }
 
     @Rule
     public ExpectedException expectedExceptions = ExpectedException.none();
@@ -85,10 +94,28 @@ public abstract class IntegrationTestAbstract3 {
     @Rule
     public IntegrationTestAbstract3.IsisTransactionRule isisTransactionRule = new IntegrationTestAbstract3.IsisTransactionRule();
 
+    private final static ThreadLocal<Boolean> setupLogging = ThreadLocal.withInitial(() -> false);
+
     protected final Module module;
     private final Class[] additionalModuleClasses;
 
     public IntegrationTestAbstract3(final Module module, final Class... additionalModuleClasses) {
+        this(new LogConfig(Level.INFO), module, additionalModuleClasses);
+    }
+
+    private Long t0;
+    public IntegrationTestAbstract3(
+            final LogConfig logConfig,
+            final Module module, final Class... additionalModuleClasses) {
+        this.logConfig = logConfig;
+        final boolean firstTime = !setupLogging.get();
+        if(firstTime) {
+            PropertyConfigurator.configure(logConfig.getLoggingPropertyFile());
+            System.setOut(logConfig.getFixtureTracing());
+            setupLogging.set(true);
+            t0 = System.currentTimeMillis();
+        }
+
         final String moduleFqcn = System.getProperty("isis.integTest.module");
 
         if(!Strings.isNullOrEmpty(moduleFqcn)) {
@@ -98,11 +125,29 @@ public abstract class IntegrationTestAbstract3 {
             this.module = module;
             this.additionalModuleClasses = additionalModuleClasses;
         }
-
-        LOG.debug("***************************************************************");
-        LOG.debug("* module: " + this.module);
-        LOG.debug("***************************************************************");
     }
+
+    private void log(final String message) {
+        switch (logConfig.getTestLoggingLevel()) {
+        case ERROR:
+            LOG.error(message);
+            break;
+        case WARN:
+            LOG.warn(message);
+            break;
+        case INFO:
+            LOG.info(message);
+            break;
+        case DEBUG:
+            LOG.debug(message);
+            break;
+        case TRACE:
+            LOG.trace(message);
+            break;
+        }
+    }
+
+    private LocalDate timeBeforeTest;
 
     @Before
     public void bootstrapAndSetupIfRequired() {
@@ -111,7 +156,17 @@ public abstract class IntegrationTestAbstract3 {
 
         bootstrapIfRequired();
 
+        if(t0 != null) {
+            long t1 = System.currentTimeMillis();
+            log("##########################################################################");
+            log("# Bootstrapped in " + (t1-t0.longValue()) + " millis");
+            log("##########################################################################");
+        }
+        log("### TEST: " + this.getClass().getCanonicalName());
+
         beginTransaction();
+
+        timeBeforeTest = Clock.getTimeAsLocalDate();
 
         setupModuleRefData();
     }
@@ -132,7 +187,7 @@ public abstract class IntegrationTestAbstract3 {
      */
     private static ThreadLocal<AppManifest> isftAppManifest = new ThreadLocal<>();
 
-    protected static void bootstrapUsing(AppManifest appManifest) {
+    private void bootstrapUsing(AppManifest appManifest) {
 
         final SystemState systemState = determineSystemState(appManifest);
         switch (systemState) {
@@ -167,13 +222,12 @@ public abstract class IntegrationTestAbstract3 {
     }
 
     private static void setupSystem(final AppManifest appManifest) {
-        PropertyConfigurator.configure("logging-integtest.properties");
 
         final IsisConfigurationForJdoIntegTests configuration = new IsisConfigurationForJdoIntegTests();
         configuration.putDataNucleusProperty("javax.jdo.option.ConnectionURL","jdbc:hsqldb:mem:test-" + UUID.randomUUID().toString());
         final IsisSystemForTest.Builder isftBuilder =
                 new IsisSystemForTest.Builder()
-                        .withLoggingAt(Level.INFO)
+                        .withLoggingAt(org.apache.log4j.Level.INFO)
                         .with(appManifest)
                         .with(configuration);
 
@@ -308,7 +362,7 @@ public abstract class IntegrationTestAbstract3 {
         isft.beginTran();
     }
 
-    private void setupModuleRefData() {
+    protected void setupModuleRefData() {
         final List<Module> dependencies = Module.Util.transitiveDependenciesOf(module);
         for (Module dependency : dependencies) {
             final FixtureScript fixture = dependency.getRefDataSetupFixture();
@@ -320,6 +374,7 @@ public abstract class IntegrationTestAbstract3 {
 
     @After
     public void tearDownAllModules() {
+
         final boolean testHealthy = transactionService != null;
         if(!testHealthy) {
             // avoid throwing an NPE here if something unexpected has occurred...
@@ -337,6 +392,10 @@ public abstract class IntegrationTestAbstract3 {
                 runFixtureScript(fixture);
             }
         }
+
+        // reinstate clock
+        setFixtureClockDate(timeBeforeTest);
+
     }
 
 

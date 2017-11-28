@@ -24,30 +24,39 @@ import javax.inject.Inject;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.ProjectBuilder;
+import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
-import static org.incode.module.base.integtests.VT.ld;
-
 public class ProjectForOxf extends ProjectAbstract {
 
-    public static final String PROJECT_REFERENCE = "OXF-02";
+    public static final Project_enum data = Project_enum.OxfProject;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Project projectOxf2 = createProject(
-        		PROJECT_REFERENCE, "New extension", ld(2016, 1, 1), ld(2019, 7, 1), null,
-                "/GBR", null, executionContext);
+
+        final ProjectBuilder projectBuilder = new ProjectBuilder();
+        Project projectOxf2 = projectBuilder.setReference(data.getRef())
+                .setName(data.getName())
+                .setStartDate(data.getStartDate())
+                .setEndDate(data.getEndDate())
+                .setEstimatedCost(null)
+                .setAtPath(data.getApplicationTenancy().getPath())
+                .setParent(null)
+                .build(this, executionContext)
+                .getProject();
 
         Charge charge = chargeRepository.findByReference("WORKS");
-        Property Oxf = propertyRepository.findPropertyByReference(PropertyAndOwnerAndManagerForOxfGb.REF);
+        Property Oxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         projectOxf2.addItem(charge, "works", new BigDecimal("40000.00"), null, null,Oxf,null );
 
     }

@@ -18,18 +18,23 @@
  */
 package org.estatio.module.base.integtests;
 
+import org.slf4j.event.Level;
+
 import org.isisaddons.module.security.SecurityModule;
 
 import org.incode.module.country.dom.CountryModule;
 
 import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.base.platform.integtestsupport.IntegrationTestAbstract3;
+import org.estatio.module.base.platform.integtestsupport.LogConfig;
 
 public abstract class BaseModuleIntegTestAbstract
         extends IntegrationTestAbstract3 {
 
     public BaseModuleIntegTestAbstract() {
-        super(new EstatioBaseModule(), SecurityModule.class, CountryModule.class);
+        super(new LogConfig(Level.INFO, logPrintStream(Level.DEBUG)),
+                new EstatioBaseModule(),
+                SecurityModule.class, CountryModule.class);
     }
 
 }

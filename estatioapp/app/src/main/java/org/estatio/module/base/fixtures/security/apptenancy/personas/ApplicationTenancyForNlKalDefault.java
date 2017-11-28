@@ -16,13 +16,14 @@
  */
 package org.estatio.module.base.fixtures.security.apptenancy.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.AbstractApplicationTenancyFixtureScript;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForIt;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 
 public class ApplicationTenancyForNlKalDefault extends AbstractApplicationTenancyFixtureScript {
 
-    public static final String PATH = ApplicationTenancyForIt.PATH+"/KAL/_";
-    public static final String NAME = "Kalvertoren (NL) only";
+    public static final ApplicationTenancy_enum data = ApplicationTenancy_enum.NlKalDefault;
+
+    public static final String PATH = data.getPath();
+    public static final String NAME = data.getName();
 
     @Override
     protected void execute(ExecutionContext executionContext) {

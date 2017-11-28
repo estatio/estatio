@@ -18,29 +18,25 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.party.dom.Party;
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class OrganisationForHelloWorldFr extends OrganisationAbstract {
+import lombok.Getter;
 
-    public static final String REF = "HELLOWORLD_FR";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+public class OrganisationForHelloWorldFr extends PersonaScriptAbstract {
+
+    public static final Organisation_enum data = Organisation_enum.HelloWorldFr;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    @Getter
+    private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party party = createOrganisation(
-                AT_PATH,
-                REF,
-                "Hello World Properties (France)",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null, executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
-
 }

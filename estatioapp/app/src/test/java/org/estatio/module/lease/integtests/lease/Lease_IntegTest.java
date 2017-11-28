@@ -45,8 +45,7 @@ import org.incode.module.base.integtests.VT;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.fixtures.ChargeRefData;
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -236,23 +235,16 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
 
-        @Inject
-        private ChargeRepository chargeRepository;
-        @Inject
-        private WrapperFactory wrapperFactory;
-
         @Test
         public void happyCase() throws Exception {
 
             // given
-            final String chargeRf = ChargeRefData.GB_DISCOUNT;
-            final Charge charge = chargeRepository.findByReference(chargeRf);
-            final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
-            final ApplicationTenancy firstChildAppTenancy = leaseAppTenancy.getChildren().first();
+            final Charge charge = Charge_enum.GbDiscount.findUsing(serviceRegistry);
 
             // when
             final LeaseItem leaseItem = wrap(leasePoison).newItem(
-                    LeaseItemType.RENT_DISCOUNT_FIXED, LeaseAgreementRoleTypeEnum.LANDLORD, charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED, LeaseAgreementRoleTypeEnum.LANDLORD,
+                    charge, InvoicingFrequency.FIXED_IN_ADVANCE, PaymentMethod.DIRECT_DEBIT,
                     leasePoison.getStartDate());
 
             // then
@@ -262,15 +254,14 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseItem.getPaymentMethod()).isEqualTo(PaymentMethod.DIRECT_DEBIT);
             assertThat(leaseItem.getStartDate()).isEqualTo(leasePoison.getStartDate());
             assertThat(leaseItem.getSequence()).isEqualTo(VT.bi(1));
-            assertThat(leaseItem.getApplicationTenancy()).isEqualTo(firstChildAppTenancy);
+            assertThat(leaseItem.getApplicationTenancy().getPath()).isEqualTo("/GBR/OXF/HELLOWORLD_GB");
         }
 
         @Test
         public void invalidCharge() throws Exception {
 
             // given
-            final Charge charge = chargeRepository.findByReference(ChargeRefData.IT_DISCOUNT);
-            final ApplicationTenancy leaseAppTenancy = leasePoison.getApplicationTenancy();
+            final Charge charge = Charge_enum.ItDiscount.findUsing(serviceRegistry);
 
             expectedExceptions.expect(InvalidException.class);
             expectedExceptions.expectMessage(containsString("not valid for this lease"));

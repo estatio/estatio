@@ -26,16 +26,18 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"reference"})
 @Accessors(chain = true)
 public class PersonBuilder
         extends BuilderScriptAbstract<PersonBuilder> {

@@ -18,37 +18,33 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
+import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
+import org.estatio.module.party.dom.Person;
 
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndOwnerAndManagerForVivFr;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
-import org.estatio.module.party.dom.PersonGenderType;
+import lombok.Getter;
 
-public class PersonAndRolesForFifineLacroixFr extends FixtureScript {
+public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
 
-    public static final String REF = "FLACROIX";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final Person_enum data = Person_enum.FifineLacroixFr;
+
+    public static final String REF = data.getRef();
+    public static final String AT_PATH = data.getApplicationTenancy().getPath();
+
+    public PersonAndRolesForFifineLacroixFr() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndOwnerAndManagerForMnsFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
+        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
 
-        getContainer().injectServicesInto(new PersonAndRolesBuilder())
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Fifine")
-                    .setLastName("Lacroix")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForVivFr.REF)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndOwnerAndManagerForMnsFr.REF)
-                    .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied at the country level
-                    .setSecurityUsername(REF.toLowerCase())
-                .execute(executionContext);
+        super.execute(executionContext);
+
     }
 
 }

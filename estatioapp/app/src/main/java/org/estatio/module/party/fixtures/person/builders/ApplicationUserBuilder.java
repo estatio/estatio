@@ -25,25 +25,27 @@ import org.apache.isis.applib.value.Password;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 
-import org.estatio.module.base.platform.fixturesupport.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(of={"person"})
 @Accessors(chain = true)
 public class ApplicationUserBuilder
         extends BuilderScriptAbstract<ApplicationUserBuilder> {
+
+    @Getter @Setter
+    private Person person;
 
     @Getter @Setter
     private String securityUsername;
 
     @Getter @Setter
     private String securityUserAccountCloneFrom;
-
-    @Getter @Setter
-    private Person person;
 
     @Getter
     ApplicationUser applicationUser;
