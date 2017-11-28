@@ -39,7 +39,6 @@ import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -97,10 +96,12 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
 
     @Getter
     private Property property;
-
-
     @Getter
     private List<Unit> units;
+    @Getter
+    private Party ownerObj;
+    @Getter
+    private Party managerObj;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -123,17 +124,29 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
 
 
         if(owner != null) {
-            //final PropertyOwnerBuilder propertyOwnerBuilder = new PropertyOwnerBuilder();
+            final PropertyOwnerBuilder propertyOwnerBuilder = new PropertyOwnerBuilder();
+            ownerObj = propertyOwnerBuilder
+                    .setProperty(property)
+                    .setOwner(owner)
+                    .setStartDate(ownerStartDate)
+                    .setEndDate(ownerEndDate)
+                    .build(this, executionContext)
+                    .getOwner();
 
-//            defaultParam("ownerStartDate", executionContext, ld(1999, 1, 1));
-//            defaultParam("ownerEndDate", executionContext, ld(2000, 1, 1));
-
-            property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ownerStartDate, ownerEndDate);
+//            property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ownerStartDate, ownerEndDate);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
         }
         if(manager != null) {
-            //final PropertyManagerBuilder propertyManagerBuilder = new PropertyManagerBuilder();
-            property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, managerStartDate, managerEndDate);
+            final PropertyManagerBuilder propertyManagerBuilder = new PropertyManagerBuilder();
+            managerObj = propertyManagerBuilder
+                    .setProperty(property)
+                    .setManager(manager)
+                    .setStartDate(managerStartDate)
+                    .setEndDate(managerEndDate)
+                    .build(this, executionContext)
+                    .getManager();
+
+//            property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, managerStartDate, managerEndDate);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, getManager(), getAcquireDate(), null);
         }
 
