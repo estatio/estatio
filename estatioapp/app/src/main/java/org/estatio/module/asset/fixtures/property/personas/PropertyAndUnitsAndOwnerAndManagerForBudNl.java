@@ -51,8 +51,8 @@ public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnits
         executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
 
         // exec
-        final Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
-        final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
+        final Party owner = partyRepository.findPartyByReference(data.getOwner().getRef());
+        final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
 
         final Country netherlands = Country_enum.NLD.findUsing(serviceRegistry);
         createPropertyAndUnits(
