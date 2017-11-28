@@ -8,7 +8,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -27,7 +28,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Tax_enum implements DataEnum2<Tax, FixtureScript> {
+public enum Tax_enum implements EnumWithUpsert<Tax>, EnumWithFixtureScript<Tax, FixtureScript> {
 
     GB_VATSTD(Country_enum.GBR, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),
     NL_VATSTD(Country_enum.NLD, "VATSTD", asList(rate(ld(1980, 1, 1), bd(19)), rate(ld(2011, 9, 17), bd(21)))),

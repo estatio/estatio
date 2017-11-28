@@ -11,7 +11,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-public class DataEnumPersist<E extends DataEnum2<T, F>, T, F extends FixtureScript>
+public class DataEnumPersist<E extends EnumWithUpsert<T>, T, F extends FixtureScript>
         extends FixtureScript
         implements FixtureScriptWithExecutionStrategy {
 

@@ -1,13 +1,20 @@
 package org.estatio.module.asset.fixtures.person.enums;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
+import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
@@ -31,7 +38,9 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 
 @Getter
 @Accessors(chain = true)
-public enum Person_enum implements DataEnum<Person, PersonAndRolesBuilder> {
+public enum Person_enum
+        implements EnumWithUpsert<Person>,
+                   EnumWithFixtureScript<Person, PersonAndRolesBuilder> {
 
     AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se,
             CONTACT, YoukeaSe,
@@ -189,6 +198,27 @@ public enum Person_enum implements DataEnum<Person, PersonAndRolesBuilder> {
         this.partyRoleTypes = partyRoleTypes;
         this.fixedAssetRoles = fixedAssetRoles;
     }
+
+    @Override
+    public Person upsertUsing(final ServiceRegistry2 serviceRegistry) {
+        final PersonRepository personRepository = serviceRegistry
+                .lookupService(PersonRepository.class);
+        Person person = findUsing(serviceRegistry);
+        if(person == null) {
+            final ApplicationTenancy applicationTenancy = getApplicationTenancy().findUsing(serviceRegistry);
+            person = personRepository.newPerson(ref, initials, firstName, lastName, personGenderType, applicationTenancy);
+        }
+        return person;
+    }
+
+    @Override
+    public Person findUsing(final ServiceRegistry2 serviceRegistry) {
+        final PartyRepository partyRepository = serviceRegistry
+                .lookupService(PartyRepository.class);
+        final Party party = partyRepository.findPartyByReference(ref);
+        return (Person) party;
+    }
+
 
     @Override
     public PersonAndRolesBuilder toFixtureScript() {

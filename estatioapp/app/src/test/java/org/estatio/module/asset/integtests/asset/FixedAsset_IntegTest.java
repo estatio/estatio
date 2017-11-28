@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +15,15 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.incode.module.base.integtests.VT.ld;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -54,40 +54,75 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
 
     @Before
     public void setUp() {
-        party = partyRepository.findPartyByReferenceOrNull(OrganisationForAcmeNl.REF);
-        assertNotNull(party);
-
-        property = properties.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF);
-        assertThat(property.getReference(), is(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
+        party = Organisation_enum.AcmeNl.findUsing(serviceRegistry);
+        property = Property_enum.KalNl.findUsing(serviceRegistry);
 
         List<FixedAssetRole> allFixedAssetRoles = fixedAssetRoles.findAllForProperty(property);
         assertThat(allFixedAssetRoles.size(), is(2));
-        assertThat(allFixedAssetRoles.get(0).getStartDate(), is(new LocalDate(1999, 1, 1)));
-        assertNull(allFixedAssetRoles.get(1).getStartDate());
+
+        assertNull(allFixedAssetRoles.get(0).getStartDate());
+        assertNull(allFixedAssetRoles.get(0).getEndDate());
+        assertThat(allFixedAssetRoles.get(0).getType(), is(FixedAssetRoleTypeEnum.PROPERTY_OWNER) );
+
+        assertThat(allFixedAssetRoles.get(1).getStartDate(), is(ld(2003,12,1)));
+        assertNull(allFixedAssetRoles.get(1).getEndDate());
+        assertThat(allFixedAssetRoles.get(1).getType(), is(FixedAssetRoleTypeEnum.ASSET_MANAGER) );
     }
 
     public static class NewRole extends FixedAsset_IntegTest {
 
         @Test
-        public void happyCase() throws Exception {
+        public void new_type_of_role() throws Exception {
             // when
             wrap(property).newRole(
-                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2015, 1, 1), null);
+                    FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2014, 1, 1), ld(2014, 12, 31));
+
+            // then
+            assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(3));
+        }
+
+        @Test
+        public void when_comes_after() throws Exception {
+
+            // given
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2014, 1, 1), ld(2014, 12, 31));
+            assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(3));
+
+            // when
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.PROPERTY_CONTACT, party, ld(2015, 1, 1), null);
 
             // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(4));
         }
 
-        @Test(expected = InvalidException.class)
-        public void sadCase() throws Exception {
+        @Test
+        public void when_overlaps() throws Exception {
+
+            // expect
+            expectedExceptions.expect(InvalidException.class);
+            expectedExceptions.expectMessage("The provided dates overlap with a current role of this type and party.");
+
             // when
             wrap(property).newRole(
-                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 1, 1), new LocalDate(2014, 12, 31));
-            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, new LocalDate(2014, 12, 31), null);
+                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, ld(2014, 1, 1), ld(2014, 12, 31));
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.PROPERTY_OWNER, party, ld(2014, 12, 31), null);
 
             // then
             assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(2));
+        }
+
+        @Test
+        public void when_finishes_before() throws Exception {
+
+            // when
+            wrap(property).newRole(
+                    FixedAssetRoleTypeEnum.ASSET_MANAGER, party, null, ld(2003,12,1));
+
+            // then
+            assertThat(fixedAssetRoles.findAllForProperty(property).size(), is(3));
         }
     }
 }

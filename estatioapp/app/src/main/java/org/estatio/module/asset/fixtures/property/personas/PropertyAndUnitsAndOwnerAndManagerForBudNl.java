@@ -18,26 +18,32 @@
  */
 package org.estatio.module.asset.fixtures.property.personas;
 
+import javax.inject.Inject;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.module.asset.dom.PropertyType;
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
-import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
+import org.estatio.module.party.dom.PartyRepository;
 
-import static org.incode.module.base.integtests.VT.ld;
+import lombok.Getter;
 
 public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
     public static final PropertyAndOwnerAndManager_enum data = PropertyAndOwnerAndManager_enum.BudNl;
 
     public static final String REF = data.getRef();
-    public static final String PARTY_REF_OWNER = data.getOwner().getRef();
     public static final String PARTY_REF_MANAGER = data.getManager().getRef();
-    public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
+
+    @Getter
+    public Property property;
 
     public static String unitReference(String suffix) {
         return REF + "-" + suffix;
@@ -46,20 +52,41 @@ public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnits
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
+        final Party owner = data.getOwner().upsertUsing(serviceRegistry);
+        final Party manager = data.getManager().upsertUsing(serviceRegistry);
+        final Country country = data.getCountry().upsertUsing(serviceRegistry);
 
-        // exec
-        final Party owner = partyRepository.findPartyByReference(data.getOwner().getRef());
-        final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
+        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder =
+                new PropertyAndUnitsAndOwnerAndManagerBuilder();
 
-        final Country netherlands = Country_enum.NLD.findUsing(serviceRegistry);
-        createPropertyAndUnits(
-                AT_PATH_COUNTRY,
-                REF, "BudgetToren", "Amsterdam", netherlands, PropertyType.SHOPPING_CENTER,
-                7, ld(2003, 12, 1), ld(2003, 12, 1), owner, manager,
-                "52.37597;4.90814", executionContext);
+        property = propertyAndUnitsAndOwnerAndManagerBuilder
+                .setReference(data.getRef())
+                .setName(data.getName())
+                .setCity(data.getCity())
+                .setCountry(country)
+                .setPropertyType(data.getShoppingCenter())
+                .setNumberOfUnits(data.getNumberOfUnits())
+                .setOpeningDate(data.getOpeningDate())
+                .setAcquireDate(data.getAcquireDate())
+                .setOwner(owner)
+                .setOwnerStartDate(data.getOwnerStartDate())
+                .setOwnerEndDate(data.getOwnerEndDate())
+                .setManager(manager)
+                .setManagerStartDate(data.getManagerStartDate())
+                .setManagerEndDate(data.getManagerEndDate())
+                .setLocationStr(data.getLocationStr())
+                .build(this, executionContext)
+                .getProperty();
     }
+
+    @Inject
+    protected CountryRepository countryRepository;
+    @Inject
+    protected PropertyRepository propertyRepository;
+    @Inject
+    protected PartyRepository partyRepository;
+    @Inject
+    protected ApplicationTenancyRepository applicationTenancyRepository;
+
 
 }

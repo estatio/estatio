@@ -3,7 +3,8 @@ package org.estatio.module.base.fixtures.security.apptenancy.enums;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
 import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -15,7 +16,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum ApplicationTenancy_enum implements DataEnum2<ApplicationTenancy, FixtureScript> {
+public enum ApplicationTenancy_enum
+        implements EnumWithUpsert<ApplicationTenancy>,
+                   EnumWithFixtureScript<ApplicationTenancy, FixtureScript> {
 
     Global      ("/",           "Global"),
     GlobalOnly  ("/_",          "Global only"),

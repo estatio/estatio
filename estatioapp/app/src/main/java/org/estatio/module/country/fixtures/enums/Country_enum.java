@@ -3,7 +3,8 @@ package org.estatio.module.country.fixtures.enums;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Country_enum implements DataEnum2<Country, FixtureScript> {
+public enum Country_enum implements EnumWithUpsert<Country>, EnumWithFixtureScript<Country, FixtureScript> {
 
     GBR("GBR", "GB", "United Kingdom",   ApplicationTenancy_enum.Gb),
     NLD("NLD", "NL", "The Netherlands", ApplicationTenancy_enum.Nl),

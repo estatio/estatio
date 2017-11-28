@@ -18,17 +18,25 @@
  */
 package org.estatio.module.asset.fixtures.property.personas;
 
-import org.incode.module.country.dom.impl.Country;
+import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
+import org.incode.module.country.dom.impl.Country;
+import org.incode.module.country.dom.impl.CountryRepository;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.asset.fixtures.PropertyAndUnitsAndOwnerAndManagerAbstract;
-import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFleuretteRenaudFr;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndOwnerAndManager_enum;
-import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldFr;
+import org.estatio.module.party.dom.PartyRepository;
 
-import static org.incode.module.base.integtests.VT.ld;
+import lombok.Getter;
 
 public class PropertyAndUnitsAndOwnerAndManagerForMnsFr extends PropertyAndUnitsAndOwnerAndManagerAbstract {
 
@@ -38,6 +46,16 @@ public class PropertyAndUnitsAndOwnerAndManagerForMnsFr extends PropertyAndUnits
     public static final String PARTY_REF_OWNER = data.getOwner().getRef();
     public static final String PARTY_REF_MANAGER = data.getManager().getRef();
     public static final String AT_PATH_COUNTRY = data.getApplicationTenancy().getPath();
+    @Getter
+    public Property property;
+    @Inject
+    protected CountryRepository countryRepository;
+    @Inject
+    protected PropertyRepository propertyRepository;
+    @Inject
+    protected PartyRepository partyRepository;
+    @Inject
+    protected ApplicationTenancyRepository applicationTenancyRepository;
 
     public static String unitReference(String suffix) {
         return REF + "-" + suffix;
@@ -47,20 +65,58 @@ public class PropertyAndUnitsAndOwnerAndManagerForMnsFr extends PropertyAndUnits
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldFr());
-        executionContext.executeChild(this, new PersonAndRolesForFleuretteRenaudFr());
+        executionContext.executeChild(this, data.getOwner().toFixtureScript());
+        executionContext.executeChild(this, data.getManager().toFixtureScript());
 
         // exec
-        Party owner = partyRepository.findPartyByReference(PARTY_REF_OWNER);
-        Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);
-
-        final Country france = Country_enum.FRA.findUsing(serviceRegistry);
+        final Party owner = partyRepository.findPartyByReference(data.getOwner().getRef());
+        final Party manager = partyRepository.findPartyByReference(data.getManager().getRef());
+        final Country country = data.getCountry().upsertUsing(serviceRegistry);
 
         createPropertyAndUnits(
-                AT_PATH_COUNTRY,
-                REF, "Minishop", "Paris", france, PropertyType.SHOPPING_CENTER,
-                5, ld(2013, 5, 5), ld(2013, 6, 5), owner, manager,
-                "48.923148;2.409439", executionContext);
+                data.getApplicationTenancy().getPath(),
+                data.getRef(), data.getName(), data.getCity(), country, data.getShoppingCenter(),
+                data.getNumberOfUnits(), data.getOpeningDate(), data.getAcquireDate(), owner, manager,
+                data.getLocationStr(),
+                executionContext);
     }
 
+    protected Property createPropertyAndUnits(
+            final String atPath,
+            final String reference,
+            final String name,
+            final String city,
+            final Country country,
+            final PropertyType type,
+            final int numberOfUnits,
+            final LocalDate openingDate,
+            final LocalDate acquireDate,
+            final Party owner,
+            final Party manager,
+            final String locationStr,
+            final ExecutionContext executionContext) {
+
+        PropertyAndUnitsAndOwnerAndManagerBuilder propertyAndUnitsAndOwnerAndManagerBuilder = new PropertyAndUnitsAndOwnerAndManagerBuilder();
+
+        property = propertyAndUnitsAndOwnerAndManagerBuilder
+                .setReference(reference)
+                .setName(name)
+                .setCity(city)
+                .setCountry(country)
+                .setPropertyType(type)
+                .setNumberOfUnits(numberOfUnits)
+                .setOpeningDate(openingDate)
+                .setAcquireDate(acquireDate)
+                .setOwner(owner)
+                .setManager(manager)
+                .setLocationStr(locationStr)
+                .build(this, executionContext)
+                .getProperty();
+
+        return property;
+    }
+
+    public Property getProperty() {
+        return this.property;
+    }
 }

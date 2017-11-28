@@ -12,7 +12,8 @@ import org.apache.isis.applib.services.repository.RepositoryService;
  * have moved this to isisaddons only so that S101 gives us a nice picture.
  * Eventually gonna move to org.apache.isis.core.fixturesupport
  */
-public interface DataEnum3<T> extends DataEnum2<T,FixtureScript> {
+public interface EnumAuto<T>
+        extends EnumWithUpsert<T>, EnumWithFixtureScript<T,FixtureScript> {
 
     T asDomainObject(final ServiceRegistry2 serviceRegistry2);
     @Override
@@ -39,7 +40,7 @@ public interface DataEnum3<T> extends DataEnum2<T,FixtureScript> {
         private Util(){}
 
         public static <T> T upsert(
-                final DataEnum3<T> data,
+                final EnumAuto<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             T domainObject = data.findUsing(serviceRegistry2);
             if(domainObject != null) {
@@ -52,7 +53,7 @@ public interface DataEnum3<T> extends DataEnum2<T,FixtureScript> {
         }
 
         public static <T> T uniqueMatch(
-                final DataEnum3<T> data,
+                final EnumAuto<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
             final T domainObject = data.asDomainObject(serviceRegistry2);
@@ -61,7 +62,7 @@ public interface DataEnum3<T> extends DataEnum2<T,FixtureScript> {
         }
 
         public static <T> T firstMatch(
-                final DataEnum3<T> data,
+                final EnumAuto<T> data,
                 final ServiceRegistry2 serviceRegistry2) {
             final RepositoryService repositoryService = serviceRegistry2.lookupService(RepositoryService.class);
             final T domainObject = data.asDomainObject(serviceRegistry2);
@@ -69,19 +70,19 @@ public interface DataEnum3<T> extends DataEnum2<T,FixtureScript> {
             return repositoryService.firstMatch(domainClass, x -> Objects.equals(x, domainObject));
         }
 
-        private static <T> Class<T> domainClassOf(final DataEnum3<T> data) {
+        private static <T> Class<T> domainClassOf(final EnumAuto<T> data) {
             return genericType(data, 0, "domainClass");
         }
 
         private static <T> Class<T> genericType(
-                final DataEnum3<T> data,
+                final EnumAuto<T> data,
                 final int i,
                 final String genericTypeName) {
-            final Class<? extends DataEnum3> aClass = data.getClass();
+            final Class<? extends EnumAuto> aClass = data.getClass();
             final Type[] genericInterfaces = aClass.getGenericInterfaces();
             for (Type genericInterface : genericInterfaces) {
                 final String typeName = genericInterface.getTypeName();
-                if(typeName.startsWith(DataEnum3.class.getName() + "<")) {
+                if(typeName.startsWith(EnumAuto.class.getName() + "<")) {
                     ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
                     final Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                     return (Class) actualTypeArguments[i];

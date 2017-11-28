@@ -21,7 +21,7 @@ package org.estatio.module.charge.fixtures.chargegroups.enums;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
 
 import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeGroupRepository;
@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum ChargeGroup_enum implements DataEnum2<ChargeGroup, FixtureScript> {
+public enum ChargeGroup_enum implements EnumWithUpsert<ChargeGroup> {
 
     Rent                    ("RENT", "Rent"),
     ServiceCharge           ("SERVICE_CHARGE", "Service Charge"),
