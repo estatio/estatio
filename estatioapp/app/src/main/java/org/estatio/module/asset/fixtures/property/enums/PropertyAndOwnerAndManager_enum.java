@@ -13,7 +13,7 @@ import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHe
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldIt;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldSe;
-import org.estatio.module.party.fixtures.organisation.personas.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;

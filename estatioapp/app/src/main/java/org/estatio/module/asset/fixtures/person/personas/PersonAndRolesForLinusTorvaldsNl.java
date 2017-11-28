@@ -18,38 +18,27 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonGenderType;
 
 import lombok.Getter;
 
-public class PersonAndRolesForLinusTorvaldsNl extends FixtureScript {
+public class PersonAndRolesForLinusTorvaldsNl extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.LinusTorvaldsNl;
 
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
-    @Getter
-    Person person;
+    public PersonAndRolesForLinusTorvaldsNl() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        person = personAndRolesBuilder
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setInitials("L")
-                    .setFirstName("Linus")
-                    .setLastName("Torvalds")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                .build(this, executionContext)
-                .getPerson();
+        super.execute(executionContext);
 
 
     }

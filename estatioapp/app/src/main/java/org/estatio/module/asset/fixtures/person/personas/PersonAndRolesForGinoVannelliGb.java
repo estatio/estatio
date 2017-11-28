@@ -20,43 +20,30 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonGenderType;
-import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import lombok.Getter;
 
-public class PersonAndRolesForGinoVannelliGb extends FixtureScript {
+public class PersonAndRolesForGinoVannelliGb extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.GinoVannelliGb;
 
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
-    public static final String PARTY_REF_FROM = data.getPartyFrom().getRef();
 
-    @Getter
-    Person person;
+    public PersonAndRolesForGinoVannelliGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(FixtureScript.ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new OrganisationForTopModelGb());
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        person = personAndRolesBuilder
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setInitials("G")
-                    .setFirstName("Gino")
-                    .setLastName("Vannelli")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                    .setFromPartyStr(PARTY_REF_FROM)
-                    .setRelationshipType(PartyRelationshipTypeEnum.CONTACT.fromTitle())
-                .build(this, executionContext)
-                .getPerson();
+        super.execute(executionContext);
 
     }
 }

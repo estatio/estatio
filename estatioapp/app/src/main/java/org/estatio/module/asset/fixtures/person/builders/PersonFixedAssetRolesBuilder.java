@@ -47,7 +47,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<PersonFixedAssetRolesBuilder> {
 
-
     @Getter @Setter
     private Person person;
 

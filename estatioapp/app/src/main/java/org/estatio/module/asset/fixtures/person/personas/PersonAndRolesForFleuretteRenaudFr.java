@@ -18,25 +18,23 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPerdantFr;
 
 import lombok.Getter;
 
-public class PersonAndRolesForFleuretteRenaudFr extends FixtureScript {
+public class PersonAndRolesForFleuretteRenaudFr extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.FleuretteRenaudFr;
 
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
-    @Getter
-    Person person;
+    public PersonAndRolesForFleuretteRenaudFr() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -44,15 +42,7 @@ public class PersonAndRolesForFleuretteRenaudFr extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new OrganisationForPerdantFr());
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        person = personAndRolesBuilder
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Fleurette")
-                    .setLastName("Renaud")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                .build(this, executionContext)
-                .getPerson();
+        super.execute(executionContext);
 
 
     }

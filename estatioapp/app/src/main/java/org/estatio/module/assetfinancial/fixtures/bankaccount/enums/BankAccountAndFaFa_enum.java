@@ -19,7 +19,7 @@
 package org.estatio.module.assetfinancial.fixtures.bankaccount.enums;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.party.fixtures.organisation.personas.Organisation_enum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

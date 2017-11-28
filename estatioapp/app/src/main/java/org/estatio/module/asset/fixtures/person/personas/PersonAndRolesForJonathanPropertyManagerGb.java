@@ -18,21 +18,17 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonGenderType;
 
 import lombok.Getter;
 
 /**
  * Property manager for OXF
  */
-public class PersonAndRolesForJonathanPropertyManagerGb extends FixtureScript {
+public class PersonAndRolesForJonathanPropertyManagerGb extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.JonathanPropertyManagerGb;
 
@@ -41,26 +37,16 @@ public class PersonAndRolesForJonathanPropertyManagerGb extends FixtureScript {
 
     public static final String SECURITY_USERNAME = REF.toLowerCase();
 
-    @Getter
-    Person person;
+    public PersonAndRolesForJonathanPropertyManagerGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        person = personAndRolesBuilder
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Jonathan")
-                    .setLastName("Rice")
-                    .setPersonGenderType(PersonGenderType.MALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF)
-                    .addPartyRoleType(FixedAssetRoleTypeEnum.PROPERTY_MANAGER) // implied
-                    .setSecurityUsername(REF.toLowerCase())
-                .build(this, executionContext)
-                .getPerson();
+        super.execute(executionContext);
 
     }
 

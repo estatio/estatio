@@ -22,16 +22,19 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
+import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.person.builders.ApplicationUserBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonCommsBuilder;
@@ -73,10 +76,10 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
     private String emailAddress;
 
     @Getter @Setter
-    private String fromPartyStr;
+    private PartyRelationshipTypeEnum relationshipType;
 
     @Getter @Setter
-    private String relationshipType;
+    private Organisation_enum fromParty;
 
     @Getter @Setter
     private String securityUsername;
@@ -119,13 +122,6 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
     public void execute(ExecutionContext executionContext) {
 
         PersonBuilder personBuilder = new PersonBuilder();
-        ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
-        PersonCommsBuilder personCommsBuilder = new PersonCommsBuilder();
-        PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder();
-
-        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
-        PersonFixedAssetRolesBuilder fixedAssetRolesBuilder = new PersonFixedAssetRolesBuilder();
-
         person = personBuilder
                 .setAtPath(atPath)
                 .setFirstName(firstName)
@@ -137,6 +133,7 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
                 .getPerson();
 
         if(securityUsername != null) {
+            ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
             applicationUser = applicationUserBuilder
                     .setPerson(person)
                     .setSecurityUsername(securityUsername)
@@ -145,8 +142,8 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
                     .getApplicationUser();
         }
 
-
         if(emailAddress != null || phoneNumber != null) {
+            PersonCommsBuilder personCommsBuilder = new PersonCommsBuilder();
             personCommsBuilder
                     .setPerson(person)
                     .setEmailAddress(emailAddress)
@@ -154,25 +151,29 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
                     .build(this, executionContext);
         }
 
-        if(relationshipType != null) {
+        if(relationshipType != null && fromParty != null) {
+            PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder();
             partyRelationship = personRelationshipBuilder
                     .setPerson(person)
-                    .setFromPartyStr(fromPartyStr)
-                    .setRelationshipType(relationshipType)
+                    .setRelationshipType(relationshipType.fromTitle())
+                    .setFromPartyStr(fromParty.getRef())
                     .build(this, executionContext)
                     .getPartyRelationship();
         }
 
+        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
         partyRoles = personPartyRolesBuilder
                 .setPerson(person)
                 .addPartyRoleTypes(partyRoleTypes)
                 .build(this, executionContext)
                 .getPartyRoles();
 
-        fixedAssetRolesBuilder
+        PersonFixedAssetRolesBuilder fixedAssetRolesBuilder = new PersonFixedAssetRolesBuilder();
+        fixedAssetRoles = fixedAssetRolesBuilder
                 .setPerson(person)
                 .addFixedAssetRoles(fixedAssetRoleSpecs)
-                .build(this, executionContext);
+                .build(this, executionContext)
+                .getFixedAssetRoles();
     }
 }
 

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.party.fixtures.organisation.personas;
+package org.estatio.module.party.fixtures.organisation.enums;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 
@@ -58,7 +58,7 @@ public enum Organisation_enum  {
     ;
 
     String ref;
-    String name;
+    private String name;
     ApplicationTenancy_enum applicationTenancy;
 
 }

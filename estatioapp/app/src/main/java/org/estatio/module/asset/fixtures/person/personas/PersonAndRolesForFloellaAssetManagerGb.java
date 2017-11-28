@@ -18,46 +18,33 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
-import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
+import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonGenderType;
 
 import lombok.Getter;
 
 /**
  * Property manager for OXF
  */
-public class PersonAndRolesForFloellaAssetManagerGb extends FixtureScript {
+public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.FloellaAssetManagerGb;
 
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
-    @Getter
-    Person person;
+    public PersonAndRolesForFloellaAssetManagerGb() {
+        super(data);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        person = personAndRolesBuilder
-                    .setAtPath(AT_PATH)
-                    .setReference(REF)
-                    .setFirstName("Floella")
-                    .setLastName("Beautiful")
-                    .setPersonGenderType(PersonGenderType.FEMALE)
-                    .addFixedAssetRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF)
-                    .setSecurityUsername(REF.toLowerCase())
-                .build(this, executionContext)
-                .getPerson();
+        super.execute(executionContext);
 
     }
 

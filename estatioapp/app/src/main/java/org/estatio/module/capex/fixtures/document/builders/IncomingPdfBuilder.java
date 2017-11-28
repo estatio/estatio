@@ -38,7 +38,11 @@ public class IncomingPdfBuilder
 
         checkParam("contextClass", executionContext, Class.class);
         checkParam("resourceName", executionContext, String.class);
-        defaultParam("runAs", executionContext, executionContext.getParameter("runAs"));
+        final String runAsParam = executionContext.getParameter("runAs");
+
+        String runAs = runAsParam != null
+                        ? runAsParam
+                        : this.runAs;   // could still be null; that's ok
 
         final URL url = Resources.getResource(contextClass, resourceName);
         byte[] bytes;
@@ -49,8 +53,8 @@ public class IncomingPdfBuilder
         }
 
         final Blob blob = new Blob(resourceName, "application/pdf", bytes);
-        document = this.runAs != null
-                        ? sudoService.sudo(this.runAs, () -> upload(blob))
+        document = runAs != null
+                        ? sudoService.sudo(runAs, () -> upload(blob))
                         : upload(blob);
 
     }

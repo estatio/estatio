@@ -21,6 +21,7 @@ package org.estatio.module.party.fixtures.organisation.personas;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
 
@@ -40,9 +41,9 @@ public class OrganisationForYoukeaSe extends PersonaScriptAbstract {
         final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
 
         this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.name)
-                    .setPartyReference(REF)
+                    .setAtPath(data.getApplicationTenancy().getPath())
+                    .setPartyName(data.getName())
+                    .setPartyReference(data.getRef())
                     .setAddress1(null)
                     .setAddress2(null)
                     .setPostalCode(null)

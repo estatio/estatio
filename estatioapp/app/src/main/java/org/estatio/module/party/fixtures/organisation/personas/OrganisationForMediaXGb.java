@@ -21,6 +21,7 @@ package org.estatio.module.party.fixtures.organisation.personas;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
 
@@ -41,7 +42,7 @@ public class OrganisationForMediaXGb extends PersonaScriptAbstract {
 
         this.organisation = organisationAndCommsBuilder
                     .setAtPath(AT_PATH)
-                    .setPartyName(data.name)
+                    .setPartyName(data.getName())
                     .setPartyReference(REF)
                     .setAddress1("85 High St")
                     .setAddress2(null)
