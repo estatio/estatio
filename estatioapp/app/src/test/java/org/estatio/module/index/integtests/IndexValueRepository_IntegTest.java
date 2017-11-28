@@ -18,6 +18,9 @@
  */
 package org.estatio.module.index.integtests;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.junit.Test;
@@ -57,9 +60,22 @@ public class IndexValueRepository_IntegTest extends IndexModuleIntegTestAbstract
 
         @Test
         public void happyCase() throws Exception {
+
+            // given
+            final List<IndexValue> all = indexValueRepository.all();
             Index index = indexRepository.findByReference(IndexRefData.IT_REF);
+            final List<IndexValue> indexReverseSortedValues =
+                    all.stream()
+                        .filter(value -> value.getIndexBase().getIndex() == index)
+                        .sorted((o1, o2) -> o2.getStartDate().compareTo(o1.getStartDate()))
+                        .collect(Collectors.toList());
+            final IndexValue lastIndex = indexReverseSortedValues.get(0);
+
+            // when
             final IndexValue indexValue = indexValueRepository.findLastByIndex(index);
-            assertThat(indexValue.getStartDate(), is(VT.ld(2013, 12, 01)));
+
+            // then
+            assertThat(indexValue, is(lastIndex));
         }
 
     }

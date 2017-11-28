@@ -41,17 +41,6 @@ public interface Module {
 
     class Util {
         private Util(){}
-        public static FixtureScript allOf(
-                final FixtureScript... fixtureScriptArray) {
-            return new FixtureScript() {
-                @Override
-                protected void execute(final ExecutionContext executionContext) {
-                    for (FixtureScript fixtureScript : fixtureScriptArray) {
-                        executionContext.executeChild(this, fixtureScript);
-                    }
-                }
-            };
-        }
 
         /**
          * Recursively obtain the transitive dependencies.

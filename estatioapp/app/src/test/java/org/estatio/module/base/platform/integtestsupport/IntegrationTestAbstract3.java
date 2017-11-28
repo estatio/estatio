@@ -362,7 +362,7 @@ public abstract class IntegrationTestAbstract3 {
         isft.beginTran();
     }
 
-    private void setupModuleRefData() {
+    protected void setupModuleRefData() {
         final List<Module> dependencies = Module.Util.transitiveDependenciesOf(module);
         for (Module dependency : dependencies) {
             final FixtureScript fixture = dependency.getRefDataSetupFixture();
