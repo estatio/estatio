@@ -81,15 +81,24 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
 
     @Getter @Setter
     private Party owner;
+    @Getter @Setter
+    private LocalDate ownerStartDate;
+    @Getter @Setter
+    private LocalDate ownerEndDate;
 
     @Getter @Setter
     private Party manager;
+    @Getter @Setter
+    private LocalDate managerStartDate;
+    @Getter @Setter
+    private LocalDate managerEndDate;
 
     @Getter @Setter
     private Integer numberOfUnits;
 
     @Getter
     private Property property;
+
 
     @Getter
     private List<Unit> units;
@@ -113,18 +122,25 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
                 .getProperty();
 
 
+
         if(owner != null) {
-            property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
+            //final PropertyOwnerBuilder propertyOwnerBuilder = new PropertyOwnerBuilder();
+
+            defaultParam("ownerStartDate", executionContext, ld(1999, 1, 1));
+            defaultParam("ownerEndDate", executionContext, ld(2000, 1, 1));
+
+            property.addRoleIfDoesNotExist(owner, FixedAssetRoleTypeEnum.PROPERTY_OWNER, ownerStartDate, ownerEndDate);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.PROPERTY_OWNER, getOwner(), getAcquireDate(), null);
         }
         if(manager != null) {
-            property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, null, null);
+            //final PropertyManagerBuilder propertyManagerBuilder = new PropertyManagerBuilder();
+            property.addRoleIfDoesNotExist(manager, FixedAssetRoleTypeEnum.ASSET_MANAGER, managerStartDate, managerEndDate);
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, getManager(), getAcquireDate(), null);
         }
 
         for (int i = 0; i < getNumberOfUnits(); i++) {
             int unitNumber = i + 1;
-            wrap(property).newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
+            wrap(property).newUnit(String.format("%s-%03d", property.getReference(), unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
 
 //            final String unitRef = buildUnitReference(property.getReference(), i);
 //            final UnitType unitType = fakeDataService.collections().anEnum(UnitType.class);
