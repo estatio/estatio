@@ -19,14 +19,15 @@
 package org.estatio.module.asset.fixtures.property.builders;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
-import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
@@ -35,11 +36,11 @@ import org.incode.module.country.dom.impl.StateRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -87,29 +88,29 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
     @Getter @Setter
     private Integer numberOfUnits;
 
-    @Getter @Setter
+    @Getter
     private Property property;
+
+    @Getter
+    private List<Unit> units;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        defaultParam("reference", executionContext, fakeDataService.values().code(3).toUpperCase());
-        defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
-        defaultParam("propertyType", executionContext, fakeDataService.collections().anEnum(PropertyType.class));
-        defaultParam("city", executionContext, fakeDataService.address().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.address().citySuffix());
-        defaultParam("country", executionContext, fakeDataService.collections().aBounded(Country.class));
-        defaultParam("acquireDate", executionContext, fakeDataService.dates().before(fakeDataService.periods().days(100, 200)));
-
         defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
 
-        final ApplicationTenancy countryApplicationTenancy = applicationTenancyRepository.findByPath("/" + getCountry().getReference());
-
-        this.property = propertyRepository
-                .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());
-        property.setOpeningDate(openingDate);
-        if(locationStr != null) {
-            property.setLocation(Location.fromString(locationStr));
-        }
+        final PropertyBuilder propertyBuilder = new PropertyBuilder();
+        property = propertyBuilder
+                .setReference(reference)
+                .setName(name)
+                .setCity(city)
+                .setCountry(country)
+                .setPropertyType(propertyType)
+                .setAcquireDate(acquireDate)
+                .setOpeningDate(openingDate)
+                .setLocationStr(locationStr)
+                .build(this, executionContext)
+                .getProperty();
 
 
         if(owner != null) {
