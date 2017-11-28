@@ -20,7 +20,10 @@ package org.estatio.module.capex.fixtures.project.enums;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,4 +48,16 @@ public enum Project_enum {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final ApplicationTenancy_enum applicationTenancy;
+
+    public <T extends FixtureScript> FixtureScript toFixtureScript() {
+        final ProjectBuilder projectBuilder = new ProjectBuilder();
+        return projectBuilder.setReference(ref)
+                .setName(name)
+                .setStartDate(startDate)
+                .setEndDate(endDate)
+                .setEstimatedCost(null)
+                .setAtPath(applicationTenancy.getPath())
+                .setParent(null);
+
+    }
 }

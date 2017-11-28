@@ -31,7 +31,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixtureForInvoice;
+import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeInvoice2;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
@@ -47,10 +47,11 @@ public class IncomingInvoiceFixture extends FixtureScript {
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
         executionContext.executeChild(this, new OrderFixture());
-        executionContext.executeChild(this, new IncomingPdfFixtureForInvoice().setRunAs("estatio-user-gb"));
+        executionContext.executeChild(this, new IncomingPdfForFakeInvoice2().setRunAs("estatio-user-gb"));
         executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
 
-        Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForInvoice.resourceName).get(0);
+        Document fakeInvoice2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(
+                IncomingPdfForFakeInvoice2.resourceName).get(0);
         fakeInvoice2Doc.setCreatedAt(new DateTime(2014,5,22,11,10));
         fakeInvoice2Doc.setAtPath("/GBR");
         Property propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);

@@ -20,15 +20,11 @@ package org.estatio.module.capex.fixtures.project;
 
 import java.math.BigDecimal;
 
-import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.project.ProjectRepository;
 
 public abstract class ProjectAbstract extends FixtureScript {
 
@@ -39,17 +35,18 @@ public abstract class ProjectAbstract extends FixtureScript {
             final LocalDate endDate,
             final BigDecimal estimatedCost,
             final String atPath,
-            final Project parent, final ExecutionContext fixtureResults) {
-        Project project = projectRepository.create(reference, name, startDate, endDate, atPath, parent);
-        return fixtureResults.addResult(this, project.getReference(), project);
+            final Project parent, final ExecutionContext executionContext) {
+
+        final ProjectBuilder projectBuilder = new ProjectBuilder();
+        return projectBuilder.setReference(reference)
+                .setName(name)
+                .setStartDate(startDate)
+                .setEndDate(endDate)
+                .setEstimatedCost(estimatedCost)
+                .setAtPath(atPath)
+                .setParent(parent)
+                .build(this, executionContext)
+                .getProject();
     }
 
-    // //////////////////////////////////////
-
-  @Inject
-    protected ProjectRepository projectRepository;
-  
-  @Inject
-  	protected PartyRepository partyRepository;
-  
 }

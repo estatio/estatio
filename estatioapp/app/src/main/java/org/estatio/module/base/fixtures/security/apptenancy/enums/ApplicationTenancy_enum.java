@@ -3,7 +3,7 @@ package org.estatio.module.base.fixtures.security.apptenancy.enums;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
 import org.isisaddons.module.base.platform.fixturesupport.DataEnumPersist;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum ApplicationTenancy_enum implements DataEnum<ApplicationTenancy> {
+public enum ApplicationTenancy_enum implements DataEnum2<ApplicationTenancy, FixtureScript> {
 
     Global      ("/",           "Global"),
     GlobalOnly  ("/_",          "Global only"),
@@ -89,10 +89,6 @@ public enum ApplicationTenancy_enum implements DataEnum<ApplicationTenancy> {
         };
     }
 
-    private static ApplicationTenancy findByPath(final ServiceRegistry2 serviceRegistry2, final String path) {
-        return serviceRegistry2.lookupService(ApplicationTenancyRepository.class).findByPath(path);
-    }
-
     private String getParentPath() {
         final int lastSlash = path.lastIndexOf("/");
         String parentPath = path.substring(0, lastSlash);
@@ -103,7 +99,7 @@ public enum ApplicationTenancy_enum implements DataEnum<ApplicationTenancy> {
     }
 
     public static class PersistScript
-            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy> {
+            extends DataEnumPersist<ApplicationTenancy_enum, ApplicationTenancy, FixtureScript> {
         public PersistScript() {
             super(ApplicationTenancy_enum.class);
         }

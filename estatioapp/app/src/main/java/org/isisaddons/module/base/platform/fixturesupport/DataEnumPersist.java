@@ -5,11 +5,15 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScriptWithExecutionStrategy;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import lombok.Getter;
 
-public class DataEnumPersist<E extends DataEnum<T>, T> extends FixtureScript {
+public class DataEnumPersist<E extends DataEnum2<T, F>, T, F extends FixtureScript>
+        extends FixtureScript
+        implements FixtureScriptWithExecutionStrategy {
 
     private final Class<E> dataEnumClass;
 
@@ -52,6 +56,11 @@ public class DataEnumPersist<E extends DataEnum<T>, T> extends FixtureScript {
             ec.addResult(this, domainObject);
             objects.add(domainObject);
         }
+    }
+
+    @Override
+    public FixtureScripts.MultipleExecutionStrategy getMultipleExecutionStrategy() {
+        return FixtureScripts.MultipleExecutionStrategy.EXECUTE_ONCE_BY_VALUE;
     }
 
     @javax.inject.Inject

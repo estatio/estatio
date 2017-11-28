@@ -32,7 +32,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixtureForOrder;
+import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder2;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
@@ -49,11 +49,11 @@ public class OrderFixture extends FixtureScript {
 
         // prereqs
         executionContext.executeChild(this, new ProjectForOxf());
-        executionContext.executeChild(this, new IncomingPdfFixtureForOrder().setRunAs("estatio-user-gb"));
+        executionContext.executeChild(this, new IncomingPdfForFakeOrder2().setRunAs("estatio-user-gb"));
         executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb());
 
         // given a document has been scanned and uploaded
-        Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfFixtureForOrder.resourceName).get(0);
+        Document fakeOrder2Doc = incomingDocumentRepository.matchAllIncomingDocumentsByName(IncomingPdfForFakeOrder2.resourceName).get(0);
         fakeOrder2Doc.setCreatedAt(new DateTime(2014,3,5,10,0));
         fakeOrder2Doc.setAtPath("/GBR");
 

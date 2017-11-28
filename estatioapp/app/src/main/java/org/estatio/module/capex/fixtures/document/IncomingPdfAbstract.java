@@ -1,4 +1,4 @@
-package org.estatio.module.capex.fixtures.document.personas;
+package org.estatio.module.capex.fixtures.document;
 
 import java.io.IOException;
 import java.net.URL;

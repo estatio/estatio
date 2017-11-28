@@ -53,7 +53,7 @@ import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndI
 import org.estatio.module.capex.fixtures.IncomingInvoiceFixture;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfFixture;
+import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.fixtures.project.personas.ProjectForGra;
 import org.estatio.module.capex.fixtures.project.personas.ProjectsForKal;

@@ -54,7 +54,7 @@ public class NumeratorRepository_IntegTest extends NumeratorModuleIntegTestAbstr
 
     @Before
     public void setUp() throws Exception {
-        runFixtureScript(new DataEnumPersist<NumeratorExampleObject_enum, NumeratorExampleObject>(NumeratorExampleObject_enum.class) {});
+        runFixtureScript(new DataEnumPersist<>(NumeratorExampleObject_enum.class));
 
 
         applicationTenancyKal = ApplicationTenancy_enum.NlKal.findUsing(serviceRegistry);

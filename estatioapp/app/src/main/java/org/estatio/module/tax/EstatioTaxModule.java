@@ -55,7 +55,7 @@ public final class EstatioTaxModule extends ModuleAbstract {
         }
         // else
         refData.set(true);
-        return new DataEnumPersist<Tax_enum, Tax>(Tax_enum.class) {}; // must be a subclass
+        return new DataEnumPersist<Tax_enum, Tax, FixtureScript>(Tax_enum.class) {};
     }
 
     @Override

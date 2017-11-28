@@ -19,6 +19,7 @@
 package org.estatio.module.capex.fixtures.project.personas;
 
 import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
 public class Project1ForKal extends ProjectAbstract {
@@ -28,11 +29,16 @@ public class Project1ForKal extends ProjectAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        // exec
-        createProject(
-                data.getRef(), data.getName(), data.getStartDate(), data.getEndDate(), null,
-                data.getApplicationTenancy().getPath(), null, executionContext);
-        
+        final ProjectBuilder projectBuilder = new ProjectBuilder();
+        projectBuilder.setReference(data.getRef())
+                .setName(data.getName())
+                .setStartDate(data.getStartDate())
+                .setEndDate(data.getEndDate())
+                .setEstimatedCost(null)
+                .setAtPath(data.getApplicationTenancy().getPath())
+                .setParent(null)
+                .build(this, executionContext);
+
     }
 
 }

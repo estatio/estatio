@@ -21,7 +21,7 @@ package org.estatio.module.charge.fixtures.charges.enums;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum2;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
@@ -39,7 +39,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(chain = true)
-public enum Charge_enum implements DataEnum<Charge> {
+public enum Charge_enum implements DataEnum2<Charge, FixtureScript> {
 
     ItRent ( Country_enum.ITA, ChargeNoCountry_enum.Rent, Tax_enum.IT_VATSTD),
     ItServiceCharge ( Country_enum.ITA, ChargeNoCountry_enum.ServiceCharge, Tax_enum.IT_VATSTD),

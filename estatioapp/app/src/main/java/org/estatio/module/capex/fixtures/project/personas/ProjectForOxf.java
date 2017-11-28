@@ -27,6 +27,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -42,9 +43,17 @@ public class ProjectForOxf extends ProjectAbstract {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Project projectOxf2 = createProject(
-                data.getRef(), data.getName(), data.getStartDate(), data.getEndDate(), null,
-                data.getApplicationTenancy().getPath(), null, executionContext);
+
+        final ProjectBuilder projectBuilder = new ProjectBuilder();
+        Project projectOxf2 = projectBuilder.setReference(data.getRef())
+                .setName(data.getName())
+                .setStartDate(data.getStartDate())
+                .setEndDate(data.getEndDate())
+                .setEstimatedCost(null)
+                .setAtPath(data.getApplicationTenancy().getPath())
+                .setParent(null)
+                .build(this, executionContext)
+                .getProject();
 
         Charge charge = chargeRepository.findByReference("WORKS");
         Property Oxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
