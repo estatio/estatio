@@ -38,7 +38,7 @@ public enum Country_enum implements DataEnum2<Country, FixtureScript> {
     public Country upsertUsing(final ServiceRegistry2 serviceRegistry) {
         final CountryRepository countryRepository =
                 serviceRegistry.lookupService(CountryRepository.class);
-        return countryRepository.createCountry(this.ref3, this.ref2, this.name);
+        return countryRepository.findOrCreateCountry(this.ref3, this.ref2, this.name);
     }
 
     @Override
