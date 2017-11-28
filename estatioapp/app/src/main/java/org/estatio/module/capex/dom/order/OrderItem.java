@@ -2,6 +2,7 @@ package org.estatio.module.capex.dom.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -246,14 +247,25 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
     }
 
     public List<Charge> autoComplete0EditCharge(@MinLength(3) String search){
-        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING);
+        return chargeRepository.findByApplicabilityAndMatchOnReferenceOrName(search, Applicability.INCOMING)
+                .stream()
+                .filter(x->chargeNotUsedOnOrder(x))
+                .collect(Collectors.toList());
     }
 
     public String disableEditCharge(){
         return itemImmutableReasonIfIsImmutable();
     }
 
-
+    @Programmatic
+    boolean chargeNotUsedOnOrder(final Charge charge){
+        for (OrderItem item : this.getOrdr().getItems()){
+            if (item.getCharge()==charge){
+                return false;
+            }
+        }
+        return true;
+    }
 
 
     @Column(allowsNull = "true", length = 255)

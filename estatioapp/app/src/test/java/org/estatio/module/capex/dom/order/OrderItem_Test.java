@@ -16,6 +16,7 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.charge.dom.Charge;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -211,6 +212,24 @@ public class OrderItem_Test {
         // when, then
         assertThat(item.netAmountOutstanding()).isEqualTo(new BigDecimal("-90.00"));
 
+    }
+
+    @Test
+    public void chargeNotUsedOnOrder_works() throws Exception {
+        // given
+        Order order = new Order();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrdr(order);
+        order.getItems().add(orderItem);
+
+        Charge chargeOnItem = new Charge();
+        orderItem.setCharge(chargeOnItem);
+
+        Charge someOtherCharge = new Charge();
+
+        // when, then
+        assertThat(orderItem.chargeNotUsedOnOrder(someOtherCharge)).isTrue();
+        assertThat(orderItem.chargeNotUsedOnOrder(chargeOnItem)).isFalse();
     }
 
 
