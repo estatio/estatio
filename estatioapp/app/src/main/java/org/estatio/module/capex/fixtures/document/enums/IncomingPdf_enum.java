@@ -15,7 +15,7 @@ import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.capex.app.DocumentMenu;
-import org.estatio.module.capex.fixtures.document.IncomingPdfBuilder;
+import org.estatio.module.capex.fixtures.document.builders.IncomingPdfBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package org.estatio.module.capex.fixtures.document;
+package org.estatio.module.capex.fixtures.document.builders;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,12 +49,14 @@ public class IncomingPdfBuilder
         }
 
         final Blob blob = new Blob(resourceName, "application/pdf", bytes);
-        if(this.runAs != null) {
-            document = sudoService.sudo(this.runAs, () -> wrap(documentMenu).upload(blob));
-        } else {
-            document = wrap(documentMenu).upload(blob);
-        }
+        document = this.runAs != null
+                        ? sudoService.sudo(this.runAs, () -> upload(blob))
+                        : upload(blob);
 
+    }
+
+    private Document upload(final Blob blob) {
+        return wrap(documentMenu).upload(blob);
     }
 
     @Inject

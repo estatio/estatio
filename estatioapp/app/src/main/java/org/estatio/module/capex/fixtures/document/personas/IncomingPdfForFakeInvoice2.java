@@ -1,8 +1,7 @@
 package org.estatio.module.capex.fixtures.document.personas;
 
-import org.incode.module.document.dom.impl.docs.Document;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.capex.fixtures.document.IncomingPdfAbstract;
 import org.estatio.module.capex.fixtures.document.enums.IncomingPdf_enum;
 
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
-public class IncomingPdfForFakeInvoice2 extends IncomingPdfAbstract {
+public class IncomingPdfForFakeInvoice2 extends FixtureScript {
 
     public final static IncomingPdf_enum data = IncomingPdf_enum.FakeInvoice2;
 
@@ -20,10 +19,10 @@ public class IncomingPdfForFakeInvoice2 extends IncomingPdfAbstract {
     public static String resourceName = data.getResourceName();
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-        final Document document = data.uploadUsing(serviceRegistry, getRunAs(), executionContext);
-        executionContext.addResult(this,data.getResourceName(), document );
+        executionContext.setParameter("runAs", runAs);
+        executionContext.executeChild(this, data.toFixtureScript());
 
     }
 
