@@ -20,7 +20,6 @@ package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -37,23 +36,8 @@ public class OrganisationForHelloWorldIt extends PersonaScriptAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1(null)
-                    .setAddress2(null)
-                    .setPostalCode(null)
-                    .setCity(null)
-                    .setStateReference(null)
-                    .setCountryReference(null)
-                    .setPhone(null)
-                    .setFax(null)
-                    .setEmailAddress(null)
-                    .build(this, executionContext)
-                    .getOrganisation();
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 
 }

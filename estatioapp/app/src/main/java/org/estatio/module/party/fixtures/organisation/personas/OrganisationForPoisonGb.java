@@ -20,7 +20,6 @@ package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -37,25 +36,7 @@ public class OrganisationForPoisonGb extends PersonaScriptAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1("46 Brewster Street")
-                    .setAddress2(null)
-                    .setPostalCode("W2D1PQ")
-                    .setCity("London")
-                    .setStateReference(null)
-                    .setCountryReference("GBR")
-                    .setPhone("+44202218888")
-                    .setFax("+44202218899")
-                    .setEmailAddress("info@poison-perfumeries.com")
-                    .build(this, executionContext)
-                    .getOrganisation();
-
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
-
 }

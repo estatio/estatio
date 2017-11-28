@@ -18,12 +18,14 @@
  */
 package org.estatio.module.party.fixtures.organisation.builders;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PostalAddress;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.fixtures.organisation.enums.OrganisationComms_enum;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -47,34 +49,7 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
     private Boolean useNumeratorForReference;
 
     @Getter @Setter
-    private String address1;
-
-    @Getter @Setter
-    private String address2;
-
-    @Getter @Setter
-    private String postalCode;
-
-    @Getter @Setter
-    private String city;
-
-    @Getter @Setter
-    private String stateReference;
-
-    @Getter @Setter
-    private String countryReference;
-
-    @Getter @Setter
-    private Boolean legalAddress;
-
-    @Getter @Setter
-    private String phone;
-
-    @Getter @Setter
-    private String fax;
-
-    @Getter @Setter
-    private String emailAddress;
+    private OrganisationComms_enum[] comms;
 
     @Getter
     private Organisation organisation;
@@ -103,27 +78,34 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
                 .build(this, executionContext)
                 .getOrganisation();
 
-        final OrganisationCommsBuilder organisationCommsBuilder = new OrganisationCommsBuilder();
-        organisationCommsBuilder
-                .setOrganisation(organisation)
-                .setAddress1(address1)
-                .setAddress2(address2)
-                .setCity(city)
-                .setCountryReference(countryReference)
-                .setStateReference(stateReference)
-                .setPostalCode(postalCode)
-                .setLegalAddress(legalAddress)
-                .setPhone(phone)
-                .setFax(fax)
-                .setEmailAddress(emailAddress)
-                .build(this, executionContext);
+        for (final OrganisationComms_enum comms : this.comms) {
+            final OrganisationCommsBuilder organisationCommsBuilder = new OrganisationCommsBuilder();
+            organisationCommsBuilder
+                    .setOrganisation(organisation)
+                    .setAddress1(comms.getAddress1())
+                    .setAddress2(comms.getAddress2())
+                    .setCity(comms.getCity())
+                    .setPostalCode(comms.getPostalCode())
+                    .setStateReference(comms.getStateReference())
+                    .setCountryReference(comms.getCountryReference())
+                    .setLegalAddress(comms.getLegalAddress())
+                    .setPhone(comms.getPhone())
+                    .setFax(comms.getFax())
+                    .setEmailAddress(comms.getEmailAddress())
+                    .build(this, executionContext);
 
-        this.postalAddress = organisationCommsBuilder.getPostalAddress();
-        this.emailAddressObj = organisationCommsBuilder.getEmailAddressObj();
-        this.phoneObj = organisationCommsBuilder.getPhoneObj();
-        this.faxObj = organisationCommsBuilder.getFaxObj();
-
+            if(this.postalAddress == null) {
+                this.postalAddress = organisationCommsBuilder.getPostalAddress();
+            }
+            if(this.emailAddressObj == null) {
+                this.emailAddressObj = organisationCommsBuilder.getEmailAddressObj();
+            }
+            if(this.phoneObj == null) {
+                this.phoneObj = organisationCommsBuilder.getPhoneObj();
+            }
+            if(this.faxObj == null) {
+                this.faxObj = organisationCommsBuilder.getFaxObj();
+            }
+        }
     }
-
-
 }

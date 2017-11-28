@@ -20,7 +20,6 @@ package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -32,30 +31,12 @@ public class OrganisationForPoisonNl extends PersonaScriptAbstract {
     public static final String REF = data.getRef();
     public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
-
     @Getter
     private Organisation organisation;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1("Herengracht 100")
-                    .setAddress2(null)
-                    .setPostalCode("1010 AA")
-                    .setCity("Amsterdam")
-                    .setStateReference(null)
-                    .setCountryReference("GBR")
-                    .setPhone("+31202211333")
-                    .setFax("+312022211399")
-                    .setEmailAddress("info@poison.example.com")
-                    .build(this, executionContext)
-                    .getOrganisation();
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
-
 }

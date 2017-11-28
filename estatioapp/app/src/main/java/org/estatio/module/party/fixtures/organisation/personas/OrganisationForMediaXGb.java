@@ -37,24 +37,8 @@ public class OrganisationForMediaXGb extends PersonaScriptAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1("85 High St")
-                    .setAddress2(null)
-                    .setPostalCode("EN11 8TL")
-                    .setCity("Hoddesdon")
-                    .setStateReference(null)
-                    .setCountryReference("GBR")
-                    .setPhone("+442079897676")
-                    .setFax("+442079897677")
-                    .setEmailAddress("info@mediax.example.com")
-                    .build(this, executionContext)
-                    .getOrganisation();
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 
 }

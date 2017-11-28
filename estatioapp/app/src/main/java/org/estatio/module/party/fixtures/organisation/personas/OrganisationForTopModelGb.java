@@ -20,8 +20,6 @@ package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -38,32 +36,7 @@ public class OrganisationForTopModelGb extends PersonaScriptAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1("2 Top Road")
-                    .setAddress2(null)
-                    .setPostalCode("W2AXXX")
-                    .setCity("London")
-                    .setStateReference(null)
-                    .setCountryReference("GBR")
-                    .setPhone("+31202211333")
-                    .setFax("+312022211399")
-                    .setEmailAddress("info@topmodel.example.com")
-                    .build(this, executionContext)
-                    .getOrganisation();
-
-        final OrganisationCommsBuilder organisationCommsBuilder =
-                new OrganisationCommsBuilder();
-        organisationCommsBuilder
-                .setOrganisation(organisation)
-                .setAddress1("1 Circle Square")
-                .setPostalCode("W2AXXX")
-                .setCity("London")
-                .setCountryReference("GBR")
-                .build(this, executionContext);
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 }

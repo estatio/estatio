@@ -18,11 +18,8 @@
  */
 package org.estatio.module.party.fixtures.organisation.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -38,23 +35,8 @@ public class OrganisationForDagoBankNl extends PersonaScriptAbstract {
     private Organisation organisation;
 
     @Override
-    protected void execute(FixtureScript.ExecutionContext executionContext) {
-
-        final OrganisationAndCommsBuilder organisationAndCommsBuilder = new OrganisationAndCommsBuilder();
-        this.organisation = organisationAndCommsBuilder
-                    .setAtPath(AT_PATH)
-                    .setPartyName(data.getName())
-                    .setPartyReference(REF)
-                    .setAddress1("Herengracht 333")
-                    .setAddress2(null)
-                    .setPostalCode("1016 BA")
-                    .setCity("Amsterdam")
-                    .setStateReference(null)
-                    .setCountryReference("NLD")
-                    .setPhone("+31202211333")
-                    .setFax("+312022211399")
-                    .setEmailAddress("amsterdam.office@dagobank.example.com")
-                    .build(this, executionContext)
-                    .getOrganisation();
+    protected void execute(ExecutionContext executionContext) {
+        organisation = executionContext.executeChildT(
+                this, data.toFixtureScript()).getOrganisation();
     }
 }
