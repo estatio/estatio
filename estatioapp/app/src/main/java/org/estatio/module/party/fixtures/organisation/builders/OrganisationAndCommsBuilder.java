@@ -87,7 +87,7 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
                     .setCity(comms.getCity())
                     .setPostalCode(comms.getPostalCode())
                     .setStateReference(comms.getStateReference())
-                    .setCountryReference(comms.getCountryReference())
+                    .setCountry(comms.getCountry())
                     .setLegalAddress(comms.getLegalAddress())
                     .setPhone(comms.getPhone())
                     .setFax(comms.getFax())

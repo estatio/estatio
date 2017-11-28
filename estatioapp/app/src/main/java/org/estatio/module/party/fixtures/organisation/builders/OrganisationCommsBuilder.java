@@ -20,6 +20,8 @@ package org.estatio.module.party.fixtures.organisation.builders;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -32,7 +34,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 import org.incode.module.country.dom.impl.State;
 import org.incode.module.country.dom.impl.StateRepository;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PersonRepository;
@@ -65,7 +67,7 @@ public class OrganisationCommsBuilder extends BuilderScriptAbstract<Organisation
     private String stateReference;
 
     @Getter @Setter
-    private String countryReference;
+    private Country_enum country;
 
     @Getter @Setter
     private Boolean legalAddress;
@@ -100,7 +102,8 @@ public class OrganisationCommsBuilder extends BuilderScriptAbstract<Organisation
 
             defaultParam("legalAddress", executionContext, true);
 
-            final Country country = countryRepository.findCountry(countryReference);
+            final Country country = this.country.upsertUsing(serviceRegistry);
+
             final State state = stateRepository.findState(stateReference);
             this.postalAddress = communicationChannelRepository.newPostal(
                     organisation,
