@@ -18,7 +18,6 @@
  */
 package org.estatio.module.asset.fixtures.property.builders;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -138,15 +137,20 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
 //            wrap(property).newRole(FixedAssetRoleTypeEnum.ASSET_MANAGER, getManager(), getAcquireDate(), null);
         }
 
-        for (int i = 0; i < getNumberOfUnits(); i++) {
-            int unitNumber = i + 1;
-            wrap(property).newUnit(String.format("%s-%03d", property.getReference(), unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
-
-//            final String unitRef = buildUnitReference(property.getReference(), i);
-//            final UnitType unitType = fakeDataService.collections().anEnum(UnitType.class);
-//            final String unitName = fakeDataService.name().firstName();
-//            wrap(property).newUnit(unitRef, unitName, unitType);
-        }
+        final PropertyUnitsBuilder propertyUnitsBuilder = new PropertyUnitsBuilder();
+        units = propertyUnitsBuilder.setProperty(property)
+                .setNumberOfUnits(numberOfUnits)
+                .build(this, executionContext)
+                .getUnits();
+//        for (int i = 0; i < getNumberOfUnits(); i++) {
+//            int unitNumber = i + 1;
+//            wrap(property).newUnit(String.format("%s-%03d", property.getReference(), unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
+//
+////            final String unitRef = buildUnitReference(property.getReference(), i);
+////            final UnitType unitType = fakeDataService.collections().anEnum(UnitType.class);
+////            final String unitName = fakeDataService.name().firstName();
+////            wrap(property).newUnit(unitRef, unitName, unitType);
+//        }
     }
 
     private UnitType unitType(int n) {
