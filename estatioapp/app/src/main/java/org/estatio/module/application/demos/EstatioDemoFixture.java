@@ -18,7 +18,12 @@
  */
 package org.estatio.module.application.demos;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
+import org.isisaddons.module.security.dom.user.AccountType;
+import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForBrunoTreasurerFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
@@ -85,6 +90,8 @@ import org.estatio.module.lease.seed.DocumentTypesAndTemplatesForLeaseFixture;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
 import org.estatio.module.tax.EstatioTaxModule;
 
+import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Global;
+
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {
@@ -103,11 +110,18 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     private void doExecute(final ExecutionContext executionContext) {
 
+        final AbstractUserAndRolesFixtureScript initialisationUser =
+                new AbstractUserAndRolesFixtureScript(
+                        "initialisation", "pass", null,
+                        Global.getPath(), AccountType.LOCAL,
+                        Lists.newArrayList("estatio-admin")) {
+                };
+        executionContext.executeChild(this, "'initialisation' user", initialisationUser);
         executionContext.executeChild(this, "countries", new IncodeDomCountryModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "currencies", new EstatioCurrencyModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "taxes", new EstatioTaxModule().getRefDataSetupFixture());
         executionContext.executeChild(this, "incomingCharges", new EstatioChargeModule().getRefDataSetupFixture());
-        executionContext.executeChild(this, "indexs", new EstatioIndexModule().getRefDataSetupFixture());
+        executionContext.executeChild(this, "indices", new EstatioIndexModule().getRefDataSetupFixture());
 
         executionContext.executeChild(this, new DocFragmentDemoFixture());
         executionContext.executeChild(this, new DocFragmentSeedFixture());
