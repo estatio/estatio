@@ -1,8 +1,12 @@
 package org.estatio.module.asset.fixtures.person.enums;
 
+import org.isisaddons.module.base.platform.fixturesupport.DataEnum;
+
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
@@ -27,7 +31,7 @@ import static org.estatio.module.party.fixtures.organisation.enums.Organisation_
 
 @Getter
 @Accessors(chain = true)
-public enum Person_enum {
+public enum Person_enum implements DataEnum<Person, PersonAndRolesBuilder> {
 
     AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se,
             CONTACT, YoukeaSe,
@@ -184,5 +188,28 @@ public enum Person_enum {
 
         this.partyRoleTypes = partyRoleTypes;
         this.fixedAssetRoles = fixedAssetRoles;
+    }
+
+    @Override
+    public PersonAndRolesBuilder toFixtureScript() {
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+        personAndRolesBuilder
+                .setReference(getRef())
+                .setFirstName(getFirstName())
+                .setLastName(getLastName())
+                .setInitials(getInitials())
+                .setSecurityUsername(getSecurityUserName())
+                .setPersonGenderType(getPersonGenderType())
+                .setAtPath(getApplicationTenancy().getPath())
+                .setRelationshipType(getPartyRelationshipType())
+                .setFromParty(getPartyFrom());
+
+        for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {
+            personAndRolesBuilder.addPartyRoleType(partyRoleType);
+        }
+        for (final Person_enum.FixedAssetRoleSpec roleSpec : getFixedAssetRoles()) {
+            personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty().getRef());
+        }
+        return personAndRolesBuilder;
     }
 }

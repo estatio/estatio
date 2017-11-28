@@ -18,13 +18,8 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.party.dom.Person;
-
-import lombok.Getter;
 
 public class PersonAndRolesForJohnDoeNl extends PersonAndRolesAbstract {
 
@@ -38,9 +33,8 @@ public class PersonAndRolesForJohnDoeNl extends PersonAndRolesAbstract {
     }
 
     @Override
-    protected void execute(FixtureScript.ExecutionContext executionContext) {
-
-        super.execute(executionContext);
-
+    protected void execute(ExecutionContext executionContext) {
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 }

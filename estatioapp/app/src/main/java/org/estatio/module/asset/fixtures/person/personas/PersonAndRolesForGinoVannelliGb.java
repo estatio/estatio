@@ -18,14 +18,8 @@
  */
 package org.estatio.module.asset.fixtures.person.personas;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
-
-import lombok.Getter;
 
 public class PersonAndRolesForGinoVannelliGb extends PersonAndRolesAbstract {
 
@@ -39,11 +33,8 @@ public class PersonAndRolesForGinoVannelliGb extends PersonAndRolesAbstract {
     }
 
     @Override
-    protected void execute(FixtureScript.ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForTopModelGb());
-
-        super.execute(executionContext);
-
+    protected void execute(ExecutionContext executionContext) {
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 }

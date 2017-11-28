@@ -39,11 +39,7 @@ public class PersonAndRolesForDylanOfficeAdministratorGb extends PersonAndRolesA
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
-
-        super.execute(executionContext);
-
+        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 }

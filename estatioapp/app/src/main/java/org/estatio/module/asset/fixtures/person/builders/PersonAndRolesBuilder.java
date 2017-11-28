@@ -152,6 +152,9 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
         }
 
         if(relationshipType != null && fromParty != null) {
+
+            executionContext.executeChild(this, fromParty.toFixtureScript());
+
             PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder();
             partyRelationship = personRelationshipBuilder
                     .setPerson(person)

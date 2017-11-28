@@ -24,7 +24,6 @@ import org.estatio.module.asset.fixtures.person.builders.PersonAndRolesBuilder;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
 
 import lombok.Getter;
 
@@ -41,8 +40,6 @@ public abstract class PersonAndRolesAbstract extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
 
         final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
         personAndRolesBuilder

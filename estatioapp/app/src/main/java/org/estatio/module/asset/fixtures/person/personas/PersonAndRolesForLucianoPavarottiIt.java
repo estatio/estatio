@@ -20,7 +20,6 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPastaPapaIt;
 
 public class PersonAndRolesForLucianoPavarottiIt extends PersonAndRolesAbstract {
 
@@ -35,11 +34,7 @@ public class PersonAndRolesForLucianoPavarottiIt extends PersonAndRolesAbstract 
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForPastaPapaIt());
-
-        super.execute(executionContext);
-
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 }

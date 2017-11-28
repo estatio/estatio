@@ -20,10 +20,6 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
-
-import lombok.Getter;
 
 public class PersonAndRolesForFaithConwayGb extends PersonAndRolesAbstract {
 
@@ -38,11 +34,8 @@ public class PersonAndRolesForFaithConwayGb extends PersonAndRolesAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        executionContext.executeChild(this, new OrganisationForYoukeaSe());
-
-        super.execute(executionContext);
-
+        executionContext.executeChild(this, data.toFixtureScript());
     }
+
 
 }
