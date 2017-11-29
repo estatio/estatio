@@ -36,15 +36,10 @@ public enum BankAccountFaFa_enum
     AcmeNl          (BankAccount_enum.AcmeNl, Property_enum.KalNl),
     HelloWorldGb    (BankAccount_enum.HelloWorldGb, Property_enum.OxfGb),
     HelloWorldNl    (BankAccount_enum.HelloWorldNl, Property_enum.KalNl),
-    MediaXGb        (BankAccount_enum.MediaXGb, null),
-    MiracleGb       (BankAccount_enum.MiracleGb, null),
 
     // nb: this is misnamed, is actually second bank account for HelloWorldGb party
     Oxford          (BankAccount_enum.Oxford, Property_enum.OxfGb),
 
-    PoisonNl        (BankAccount_enum.PoisonNl, null),
-    PretGb          (BankAccount_enum.PretGb, null),
-    TopModelGb      (BankAccount_enum.TopModelGb, null)
     ;
 
     private final BankAccount_enum bankAccount_d;
@@ -60,8 +55,8 @@ public enum BankAccountFaFa_enum
     @Override
     public BankAccountFaFaBuilder toFixtureScript() {
         return new BankAccountFaFaBuilder()
-                .set((f,ec) -> f.setBankAccount(f.objectFor(bankAccount_d, ec)))
-                .set((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));
+                .setPrereq((f,ec) -> f.setBankAccount(f.objectFor(bankAccount_d, ec)))
+                .setPrereq((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));
     }
 
 

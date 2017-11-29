@@ -52,7 +52,7 @@ public final class PropertyUnitsBuilder
     private List<Unit> object = Lists.newArrayList();
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("property", executionContext, Property.class);
 

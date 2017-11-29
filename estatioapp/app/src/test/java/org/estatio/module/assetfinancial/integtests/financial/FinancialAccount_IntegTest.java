@@ -39,7 +39,7 @@ import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOw
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.BankAccount;
@@ -60,7 +60,8 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldGb());
+                    executionContext.executeChild(this, BankAccount_enum.HelloWorldGb.toFixtureScript());
+                    executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldGb.toFixtureScript());
                 }
             });
         }

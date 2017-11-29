@@ -36,7 +36,7 @@ public final class IncomingPdfBuilder
     private Document object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("contextClass", executionContext, Class.class);
         checkParam("resourceName", executionContext, String.class);

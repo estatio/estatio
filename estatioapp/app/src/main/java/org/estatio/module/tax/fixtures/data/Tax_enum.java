@@ -56,8 +56,8 @@ public enum Tax_enum implements EnumWithBuilderScript<Tax, TaxBuilder>, EnumWith
     public TaxBuilder toFixtureScript() {
 
         return new TaxBuilder()
-                .set((f,ec) -> f.setCountry(f.objectFor(country_d, ec)))
-                .set((f,ec) -> f.setApplicationTenancy(f.objectFor(country_d.getApplicationTenancy_d(), ec)))
+                .setPrereq((f,ec) -> f.setCountry(f.objectFor(country_d, ec)))
+                .setPrereq((f,ec) -> f.setApplicationTenancy(f.objectFor(country_d.getApplicationTenancy_d(), ec)))
                 .setRef(Tax_enum.this.getReference())
                 .setRates(rates);
 

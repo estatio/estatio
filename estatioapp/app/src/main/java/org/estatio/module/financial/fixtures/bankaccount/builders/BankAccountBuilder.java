@@ -29,9 +29,11 @@ import org.estatio.module.party.dom.Party;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"party", "iban"}, callSuper = false)
+@ToString(of={"party", "iban"})
 @Accessors(chain = true)
 public final class BankAccountBuilder extends BuilderScriptAbstract<BankAccount, BankAccountBuilder> {
 
@@ -52,7 +54,7 @@ public final class BankAccountBuilder extends BuilderScriptAbstract<BankAccount,
     BankAccount object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("party", executionContext, Party.class);
         checkParam("iban", executionContext, Party.class);

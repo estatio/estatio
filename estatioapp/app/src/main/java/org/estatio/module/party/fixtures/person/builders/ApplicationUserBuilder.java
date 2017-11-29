@@ -51,7 +51,7 @@ public final class ApplicationUserBuilder
     ApplicationUser object;
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
         checkParam("securityUsername", executionContext, String.class);

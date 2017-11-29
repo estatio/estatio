@@ -27,7 +27,7 @@ public final class CountryBuilder extends BuilderScriptAbstract<Country, Country
     private Country object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("ref3", executionContext, String.class);
         checkParam("ref2", executionContext, String.class);

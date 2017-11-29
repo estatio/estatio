@@ -60,7 +60,7 @@ public final class PersonPartyRolesBuilder
     private List<PartyRole> object = Lists.newArrayList();
 
     @Override
-    public void doExecute(ExecutionContext executionContext) {
+    public void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
 

@@ -107,7 +107,7 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
     private FixedAssetRole managerrole;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
 

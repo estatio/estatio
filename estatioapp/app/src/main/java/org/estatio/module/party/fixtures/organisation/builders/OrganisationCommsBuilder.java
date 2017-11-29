@@ -93,7 +93,7 @@ public final class OrganisationCommsBuilder
     private EmailAddress emailAddressObj;
 
     @Override
-    protected void doExecute(ExecutionContext ec) {
+    protected void execute(ExecutionContext ec) {
 
         checkParam("organisation", ec, Organisation.class);
 

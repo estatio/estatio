@@ -72,7 +72,7 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderSc
                 .setOpeningDate(openingDate)
                 .setAcquireDate(acquireDate)
                 .setLocationStr(locationStr)
-                .set((f, ec) -> f.setCountry(f.objectFor(country_d, ec)));
+                .setPrereq((f, ec) -> f.setCountry(f.objectFor(country_d, ec)));
     }
 
 }

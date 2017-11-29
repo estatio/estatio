@@ -38,12 +38,12 @@ import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOw
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForOxford;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
@@ -60,7 +60,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForOxford());
+                executionContext.executeChild(this, BankAccount_enum.Oxford.toFixtureScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.Oxford.toFixtureScript());
             }
         });
         owner = partyRepository.findPartyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.PARTY_REF_OWNER);

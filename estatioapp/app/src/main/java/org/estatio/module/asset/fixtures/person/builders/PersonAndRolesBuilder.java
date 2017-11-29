@@ -119,7 +119,7 @@ public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, P
     private List<PartyRole> partyRoles;
 
     @Override
-    public void doExecute(ExecutionContext executionContext) {
+    public void execute(ExecutionContext executionContext) {
 
         object = new PersonBuilder()
                 .setReference(reference)

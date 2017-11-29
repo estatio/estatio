@@ -50,7 +50,7 @@ public final class PersonRelationshipBuilder
     PartyRelationship object;
 
     @Override
-    public void doExecute(ExecutionContext executionContext) {
+    public void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
         checkParam("fromParty", executionContext, String.class);

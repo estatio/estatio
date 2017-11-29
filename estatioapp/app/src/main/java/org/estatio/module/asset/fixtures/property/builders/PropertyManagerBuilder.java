@@ -53,7 +53,7 @@ public final class PropertyManagerBuilder
     private FixedAssetRole object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("property", executionContext, Property.class);
         checkParam("manager", executionContext, Party.class);

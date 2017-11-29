@@ -11,7 +11,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -42,7 +43,8 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
                 executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
+                executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
+                executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
             }
         });
     }

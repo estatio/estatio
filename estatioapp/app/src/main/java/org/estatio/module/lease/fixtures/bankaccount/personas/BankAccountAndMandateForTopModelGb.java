@@ -18,15 +18,14 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
+import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 
 public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbstract {
 
-    public static final String REF = BankAccountFaFa_enum.TopModelGb.getBankAccount_d().getIban();
+    public static final String REF = BankAccount_enum.TopModelGb.getIban();
     public static final int SEQUENCE = 1;
     public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
     public static final Scheme SCHEME = Scheme.CORE;
@@ -44,7 +43,7 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
 
         // prereqs
         executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-        executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+        executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
 
         // exec
         createBankMandate(

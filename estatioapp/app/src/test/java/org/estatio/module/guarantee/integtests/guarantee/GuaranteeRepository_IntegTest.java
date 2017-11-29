@@ -32,7 +32,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccountType;
@@ -59,7 +59,7 @@ public class GuaranteeRepository_IntegTest extends GuaranteeModuleIntegTestAbstr
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new GuaranteeForOxfTopModel001Gb());
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
             }
         });
 

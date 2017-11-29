@@ -18,15 +18,14 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForPoisonNl;
-import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
+import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
-    public static final String BANK_ACCOUNT_REF = BankAccountFaFa_enum.PoisonNl.getBankAccount_d().getIban();
+    public static final String BANK_ACCOUNT_REF = BankAccount_enum.PoisonNl.getIban();
     public static final int SEQUENCE = 2;
     public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
     public static final Scheme SCHEME = Scheme.CORE;
@@ -44,7 +43,7 @@ public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstr
 
         // prereqs
         executionContext.executeChild(this, new LeaseForKalPoison001Nl());
-        executionContext.executeChild(this, new BankAccountAndFaFaForPoisonNl());
+        executionContext.executeChild(this, BankAccount_enum.PoisonNl.toFixtureScript());
 
         // exec
         createBankMandate(LeaseForKalPoison001Nl.PARTY_REF_TENANT, BANK_ACCOUNT_REF, SEQUENCE, SEQUENCE_TYPE, SCHEME, executionContext);

@@ -28,20 +28,20 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -51,7 +51,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
             }
         });
 
@@ -81,9 +81,8 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         public void happy_case() throws Exception {
 
             // Given
-            Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
-            BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountFaFa_enum.TopModelGb.getBankAccount_d().getIban());
+            Party owner = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            BankAccount bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
 
             final String reference = "REF";
             final String name = "NAME";

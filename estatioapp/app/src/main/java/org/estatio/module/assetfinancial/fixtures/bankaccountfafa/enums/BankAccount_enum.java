@@ -60,7 +60,7 @@ public enum BankAccount_enum
     public BankAccountBuilder toFixtureScript() {
         return new BankAccountBuilder()
                 .setIban(iban)
-                .set((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));
+                .setPrereq((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));
     }
 
     @Override

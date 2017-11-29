@@ -79,7 +79,7 @@ public final class PersonFixedAssetRolesBuilder
     private List<PartyRole> partyRoles = Lists.newArrayList();
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
 

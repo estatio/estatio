@@ -54,7 +54,7 @@ public final class OrganisationBuilder
     private Organisation object;
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         checkParam("atPath", executionContext, String.class);
         checkParam("reference", executionContext, String.class);

@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
@@ -45,7 +45,7 @@ public class BankAccountRepository_IntegTest extends LeaseModuleIntegTestAbstrac
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
-                    executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                    executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
                 }
             });
         }

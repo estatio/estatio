@@ -25,7 +25,6 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -80,7 +79,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                 executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture());
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, new IncomingInvoiceFixture());
-                executionContext.executeChild(this, new BankAccountAndFaFaForTopModelGb());
+                executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, new PersonAndRolesForEmmaTreasurerGb());
             }
         });

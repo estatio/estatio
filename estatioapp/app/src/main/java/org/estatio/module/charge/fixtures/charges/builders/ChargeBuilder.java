@@ -59,7 +59,7 @@ public final class ChargeBuilder extends BuilderScriptAbstract<Charge, ChargeBui
     Charge object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("ref", executionContext, String.class);
         checkParam("name", executionContext, String.class);

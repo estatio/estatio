@@ -59,7 +59,7 @@ public final class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankA
     FixedAssetFinancialAccount fixedAssetFinancialAccount;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         object = new BankAccountBuilder()
                 .setParty(party)

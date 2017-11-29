@@ -68,7 +68,7 @@ public final class OrganisationAndCommsBuilder
     private EmailAddress emailAddressObj;
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         final OrganisationBuilder organisationBuilder = new OrganisationBuilder();
         this.object = organisationBuilder

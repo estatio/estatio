@@ -57,7 +57,7 @@ public final class ProjectBuilder extends BuilderScriptAbstract<Project, Project
     private Project object;
 
     @Override
-    protected void doExecute(final ExecutionContext ec) {
+    protected void execute(final ExecutionContext ec) {
 
         checkParam("reference", ec, String.class);
         checkParam("name", ec, String.class);

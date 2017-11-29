@@ -62,7 +62,7 @@ public final class PersonBuilder
     private Person object;
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         defaultParam("atPath", executionContext, ApplicationTenancyForGlobal.PATH);
         defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(6));

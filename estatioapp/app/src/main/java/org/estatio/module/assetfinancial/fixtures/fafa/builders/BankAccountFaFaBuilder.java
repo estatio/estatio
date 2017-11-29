@@ -47,7 +47,7 @@ public final class BankAccountFaFaBuilder
     FixedAssetFinancialAccount object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("bankAccount", executionContext, BankAccount.class);
         checkParam("property", executionContext, Property.class);

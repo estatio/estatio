@@ -51,7 +51,7 @@ public enum NumeratorExampleObject_enum
         NumeratorExampleObject object;
 
         @Override
-        protected void doExecute(final ExecutionContext executionContext) {
+        protected void execute(final ExecutionContext executionContext) {
             checkParam("name", executionContext, String.class);
             NumeratorExampleObject numeratorExampleObject =
                     repositoryService.firstMatch(NumeratorExampleObject.class, c -> Objects.equal(c.getName(), name));

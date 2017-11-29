@@ -50,7 +50,7 @@ public final class PersonCommsBuilder
     private Person object;
 
     @Override
-    public void doExecute(ExecutionContext executionContext) {
+    public void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
 

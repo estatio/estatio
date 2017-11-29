@@ -35,7 +35,7 @@ public final class NumeratorForOrganisationBuilder
     Numerator object;
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         checkParam("name", executionContext, String.class);
         checkParam("format", executionContext, String.class);

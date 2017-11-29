@@ -216,8 +216,8 @@ public enum Person_enum
                 .setPersonGenderType(getPersonGenderType())
                 .setAtPath(getApplicationTenancy_d().getPath())
                 .setRelationshipType(getPartyRelationshipType())
-                .set((f,ec) -> f.setFromParty(f.objectFor(getPartyFrom_d(), ec)))
-                .set((f,ec) -> {
+                .setPrereq((f,ec) -> f.setFromParty(f.objectFor(getPartyFrom_d(), ec)))
+                .setPrereq((f,ec) -> {
                     for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
                         f.addFixedAssetRole(
                                 roleSpec.getFixedAssetRole(),

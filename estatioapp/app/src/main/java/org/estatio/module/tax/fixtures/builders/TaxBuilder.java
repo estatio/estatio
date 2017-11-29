@@ -69,7 +69,7 @@ public final class TaxBuilder extends BuilderScriptAbstract<Tax, TaxBuilder> {
     Tax object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("ref", executionContext, String.class);
         checkParam("country", executionContext, Country.class);

@@ -28,7 +28,7 @@ public final class ApplicationTenancyBuilder
     private ApplicationTenancy object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         checkParam("path", executionContext, String.class);
         checkParam("name", executionContext, String.class);

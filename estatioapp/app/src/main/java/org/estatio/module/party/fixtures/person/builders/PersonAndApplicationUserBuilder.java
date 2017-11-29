@@ -67,7 +67,7 @@ public final class PersonAndApplicationUserBuilder
 
 
     @Override
-    protected void doExecute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext executionContext) {
 
         object = new PersonBuilder()
                 .setAtPath(atPath)

@@ -71,7 +71,7 @@ public final class PropertyBuilder
     private Property object;
 
     @Override
-    protected void doExecute(final ExecutionContext executionContext) {
+    protected void execute(final ExecutionContext executionContext) {
 
         defaultParam("reference", executionContext, fakeDataService.values().code(3).toUpperCase());
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");
