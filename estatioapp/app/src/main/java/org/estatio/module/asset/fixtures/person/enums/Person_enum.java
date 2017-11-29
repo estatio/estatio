@@ -151,7 +151,7 @@ public enum Person_enum
     @Data
     public static class FixedAssetRoleSpec {
         private final FixedAssetRoleTypeEnum fixedAssetRole;
-        private final Property_enum property;
+        private final Property_enum property_d;
     }
 
     private final String ref;
@@ -160,10 +160,10 @@ public enum Person_enum
     private final String initials;
     private final String securityUserName;
     private final PersonGenderType personGenderType;
-    private final ApplicationTenancy_enum applicationTenancy;
+    private final ApplicationTenancy_enum applicationTenancy_d;
 
     private final PartyRelationshipTypeEnum partyRelationshipType;
-    private final Organisation_enum partyFrom;
+    private final Organisation_enum partyFrom_d;
 
     private final IPartyRoleType[] partyRoleTypes;
     private final FixedAssetRoleSpec[] fixedAssetRoles;
@@ -175,9 +175,9 @@ public enum Person_enum
             final String initials,
             final boolean setupSecurityUser,
             final PersonGenderType personGenderType,
-            final ApplicationTenancy_enum applicationTenancy,
+            final ApplicationTenancy_enum applicationTenancy_d,
             final PartyRelationshipTypeEnum partyRelationshipType,
-            final Organisation_enum partyFrom,
+            final Organisation_enum partyFrom_d,
             final IPartyRoleType[] partyRoleTypes,
             final FixedAssetRoleSpec[] fixedAssetRoles) {
         this.ref = ref;
@@ -186,9 +186,9 @@ public enum Person_enum
         this.initials = initials;
         this.securityUserName = setupSecurityUser ? ref.toLowerCase() : null;
         this.personGenderType = personGenderType;
-        this.applicationTenancy = applicationTenancy;
+        this.applicationTenancy_d = applicationTenancy_d;
 
-        this.partyFrom = partyFrom;
+        this.partyFrom_d = partyFrom_d;
         this.partyRelationshipType = partyRelationshipType;
 
         this.partyRoleTypes = partyRoleTypes;
@@ -206,23 +206,26 @@ public enum Person_enum
 
     @Override
     public PersonAndRolesBuilder toFixtureScript() {
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        personAndRolesBuilder
-                .setReference(getRef())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder() {
+            @Override
+            public void execute(final ExecutionContext ec) {
+                setFromParty(objectFor(getPartyFrom_d(), ec));
+                super.execute(ec);
+            }
+        }       .setReference(getRef())
                 .setFirstName(getFirstName())
                 .setLastName(getLastName())
                 .setInitials(getInitials())
                 .setSecurityUsername(getSecurityUserName())
                 .setPersonGenderType(getPersonGenderType())
-                .setAtPath(getApplicationTenancy().getPath())
-                .setRelationshipType(getPartyRelationshipType())
-                .setFromParty(getPartyFrom());
+                .setAtPath(getApplicationTenancy_d().getPath())
+                .setRelationshipType(getPartyRelationshipType());
 
         for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {
             personAndRolesBuilder.addPartyRoleType(partyRoleType);
         }
         for (final Person_enum.FixedAssetRoleSpec roleSpec : getFixedAssetRoles()) {
-            personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty().getRef());
+            personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty_d().getRef());
         }
         return personAndRolesBuilder;
     }

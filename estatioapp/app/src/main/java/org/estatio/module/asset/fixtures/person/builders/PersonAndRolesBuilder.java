@@ -28,13 +28,13 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
-import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.person.builders.ApplicationUserBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonBuilder;
 import org.estatio.module.party.fixtures.person.builders.PersonCommsBuilder;
@@ -78,7 +78,7 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonA
     private PartyRelationshipTypeEnum relationshipType;
 
     @Getter @Setter
-    private Organisation_enum fromParty;
+    private Organisation fromParty;
 
     @Getter @Setter
     private String securityUsername;
@@ -149,12 +149,10 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonA
 
         if(relationshipType != null && fromParty != null) {
 
-            executionContext.executeChild(this, fromParty.toFixtureScript());
-
             partyRelationship = new PersonRelationshipBuilder()
                     .setPerson(object)
                     .setRelationshipType(relationshipType.fromTitle())
-                    .setFromPartyStr(fromParty.getRef())
+                    .setFromParty(fromParty)
                     .build(this, executionContext)
                     .getObject();
         }

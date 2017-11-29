@@ -41,7 +41,7 @@ public class PersonRelationshipBuilder
     private Person person;
 
     @Getter @Setter
-    private String fromPartyStr;
+    private Party fromParty;
 
     @Getter @Setter
     private String relationshipType;
@@ -57,15 +57,11 @@ public class PersonRelationshipBuilder
         checkParam("relationshipType", executionContext, String.class);
 
         // associate person
-        Party from = partyRepository.findPartyByReference(fromPartyStr);
         object = partyRelationshipRepository
-                .newRelationship(from, person, relationshipType, null);
+                .newRelationship(fromParty, person, relationshipType, null);
 
         executionContext.addResult(this, relationshipType, object);
     }
-
-    @Inject
-    PartyRepository partyRepository;
 
     @Inject
     PartyRelationshipRepository partyRelationshipRepository;
