@@ -37,8 +37,10 @@ import org.incode.module.communications.dom.impl.commchannel.PostalAddressReposi
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.country.dom.impl.CountryRepository;
 
+import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
@@ -58,8 +60,8 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            final Country country = countryRepository.findCountry("GBR");
+            final Party party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Country country = Country_enum.GBR.findUsing(serviceRegistry);
             final PostalAddress postalAddress = postalAddressRepository.findByAddress(party, "1 Circle Square", "W2AXXX", "London", country);
 
             // when
@@ -75,7 +77,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwner(party);
@@ -91,7 +93,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
 
             // when
             final List<CommunicationChannelOwnerLink> communicationChannelOwnerLinks = communicationChannelOwnerLinkRepository.findByOwnerAndCommunicationChannelType(party, CommunicationChannelType.PHONE_NUMBER);

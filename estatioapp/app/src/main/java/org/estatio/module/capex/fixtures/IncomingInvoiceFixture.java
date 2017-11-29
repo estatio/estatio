@@ -33,8 +33,7 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeInvoice2;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
@@ -64,8 +63,8 @@ public class IncomingInvoiceFixture extends FixtureScript {
 
         IncomingInvoice fakeInvoice = incomingInvoiceRepository.findIncomingInvoiceByDocumentName("fakeInvoice2.pdf").get(0);
         fakeInvoice.setDateReceived(new LocalDate(2014,5,15));
-        fakeInvoice.setSeller(partyRepository.findPartyByReference(OrganisationForTopModelGb.REF));
-        fakeInvoice.setBuyer(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF));
+        fakeInvoice.setSeller(partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef()));
+        fakeInvoice.setBuyer(partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef()));
         fakeInvoice.setType(IncomingInvoiceType.CAPEX);
         fakeInvoice.setDueDate(new LocalDate(2014,6,15));
         fakeInvoice.setInvoiceNumber("65432");

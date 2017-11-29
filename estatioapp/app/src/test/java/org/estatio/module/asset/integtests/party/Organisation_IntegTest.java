@@ -46,6 +46,7 @@ import org.estatio.module.party.dom.OrganisationPreviousName;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.numerator.personas.NumeratorForOrganisationFra;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +83,7 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
                 }
             });
 
-            organisation = (Organisation) partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            organisation = (Organisation) partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
         }
 
         @Test

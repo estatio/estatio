@@ -32,6 +32,7 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -46,8 +47,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -88,10 +88,10 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
         @Test
         public void happy_case() throws Exception {
 
-            final Party buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-            final Party seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            final Party buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+            final Party seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
             final Property property = propertyRepository.findPropertyByReference(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+                    Property_enum.OxfGb.getRef());
 
             final IncomingInvoice invoice = incomingInvoiceRepository.create(IncomingInvoiceType.CAPEX,
                     "TEST", property, "/", buyer, seller, new LocalDate(2016, 1, 1), new LocalDate(2016, 2, 1), PaymentMethod.BANK_TRANSFER, InvoiceStatus.NEW, null, null,

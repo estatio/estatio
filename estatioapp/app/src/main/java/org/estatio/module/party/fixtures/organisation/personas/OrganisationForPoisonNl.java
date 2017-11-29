@@ -28,9 +28,6 @@ public class OrganisationForPoisonNl extends PersonaScriptAbstract {
 
     public static final Organisation_enum data = Organisation_enum.PoisonNl;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     @Getter
     private Organisation organisation;
 

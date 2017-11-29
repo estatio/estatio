@@ -31,6 +31,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
@@ -54,7 +55,7 @@ public class CommunicationChannelContributions_IntegTest extends PartyModuleInte
                 executionContext.executeChild(this, new OrganisationForHelloWorldGb());
             }
         });
-        party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+        party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
     }
 
     @Ignore // TODO: reinstate

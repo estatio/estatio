@@ -28,9 +28,6 @@ public class OrganisationForMiracleGb extends PersonaScriptAbstract {
 
     public static final Organisation_enum data = Organisation_enum.MiracleGb;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
 
     @Getter
     private Organisation organisation;

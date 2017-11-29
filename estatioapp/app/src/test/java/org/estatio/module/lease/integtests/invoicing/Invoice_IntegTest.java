@@ -66,8 +66,7 @@ import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003G
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -114,8 +113,8 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
-            seller = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-            buyer = partyRepository.findPartyByReference(OrganisationForPoisonGb.REF);
+            seller = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+            buyer = partyRepository.findPartyByReference(Organisation_enum.PoisonGb.getRef());
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
             charge = chargeRepository.listAll().get(0);

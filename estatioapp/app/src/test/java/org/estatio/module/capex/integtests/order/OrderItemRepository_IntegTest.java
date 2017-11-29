@@ -11,6 +11,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
@@ -19,7 +20,7 @@ import org.estatio.module.capex.fixtures.orderinvoice.OrderInvoiceFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForYoukeaSe;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,11 +32,11 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
     public void setupData() {
         runFixtureScript(new FixtureScript() {
             @Override
-            protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new IncomingChargeFixture());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new OrganisationForYoukeaSe());
-                executionContext.executeChild(this, new OrderInvoiceFixture());
+            protected void execute(final ExecutionContext ec) {
+                ec.executeChild(this, new IncomingChargeFixture());
+                ec.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                ec.executeChild(this, Organisation_enum.YoukeaSe.toFixtureScript());
+                ec.executeChild(this, new OrderInvoiceFixture());
             }
         });
     }
@@ -57,7 +58,7 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
         @Test
         public void when_seller_is_not_null() {
             // given
-            Party seller = partyRepository.findPartyByReference(OrganisationForYoukeaSe.REF);
+            Party seller = Organisation_enum.YoukeaSe.findUsing(serviceRegistry);
 
             // when
             List<OrderItem> orderItems = orderItemRepository.findBySeller(seller);
@@ -74,8 +75,8 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
         @Test
         public void find_by_seller_and_property_works() {
             // given
-            Party seller = partyRepository.findPartyByReference(OrganisationForYoukeaSe.REF);
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Party seller = Organisation_enum.YoukeaSe.findUsing(serviceRegistry);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
             // when
             List<OrderItem> orderItems = orderItemRepository.findBySellerAndProperty(seller, property);
@@ -87,7 +88,4 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
 
     }
 
-    @Inject PartyRepository partyRepository;
-
-    @Inject PropertyRepository propertyRepository;
 }

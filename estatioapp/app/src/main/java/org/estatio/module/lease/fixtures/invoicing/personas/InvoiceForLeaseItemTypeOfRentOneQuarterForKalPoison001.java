@@ -24,6 +24,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -32,20 +33,19 @@ import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNlKal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = OrganisationForAcmeNl.REF;
-    public static final String PARTY_REF_BUYER = OrganisationForPoisonNl.REF;
+    public static final String PARTY_REF_SELLER = Organisation_enum.AcmeNl.getRef();
+    public static final String PARTY_REF_BUYER = Organisation_enum.PoisonNl.getRef();
     public static final String LEASE_REF = LeaseForKalPoison001Nl.REF;
 
-    public static final String AT_PATH = ApplicationTenancyForNlKal.PATH;
+    public static final String AT_PATH = ApplicationTenancy_enum.NlKal.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(Lease lease) {

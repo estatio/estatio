@@ -34,8 +34,7 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder2;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
@@ -71,8 +70,9 @@ public class OrderFixture extends FixtureScript {
             final Project projectForOxf = projectRepository.findByReference("OXF-02");
             final Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
 
-            final Party orgTopModelGb = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            final Party orgHelloWorldGb = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            final Party orgTopModelGb = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party orgHelloWorldGb = partyRepository.findPartyByReference(
+                    Organisation_enum.HelloWorldGb.getRef());
             final Charge chargeWorks = chargeRepository.findByReference("WORKS");
 
             Order fakeOrder = orderRepository.findOrderByDocumentName("fakeOrder2.pdf").get(0);

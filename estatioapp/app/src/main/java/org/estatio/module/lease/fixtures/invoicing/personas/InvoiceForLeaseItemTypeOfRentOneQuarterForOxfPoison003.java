@@ -24,6 +24,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -32,22 +33,20 @@ import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxf;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_BUYER = OrganisationForPoisonGb.REF;
+    public static final String PARTY_REF_SELLER = Organisation_enum.HelloWorldGb.getRef();
+    public static final String PARTY_REF_BUYER = Organisation_enum.PoisonGb.getRef();
 
     public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
 
-    public static final String AT_PATH = ApplicationTenancyForGbOxf.PATH;
+    public static final String AT_PATH = ApplicationTenancy_enum.GbOxf.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(final Lease lease) {

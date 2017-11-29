@@ -28,9 +28,6 @@ public class OrganisationForNlBankNl extends PersonaScriptAbstract {
 
     public static final Organisation_enum data = Organisation_enum.NlBankNl;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     @Getter
     private Organisation organisation;
 

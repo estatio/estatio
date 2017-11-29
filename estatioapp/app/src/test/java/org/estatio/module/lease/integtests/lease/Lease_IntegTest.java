@@ -38,8 +38,6 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
-
 import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.base.dom.EstatioRole;
@@ -64,7 +62,7 @@ import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel00
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -136,7 +134,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             // given
             final String newReference = "OXF-MEDIA-001";
             final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            final Party newParty = partyRepository.findPartyByReference(OrganisationForMediaXGb.REF);
+            final Party newParty = partyRepository.findPartyByReference(Organisation_enum.MediaXGb.getRef());
             final LocalDate newStartDate = VT.ld(2014, 1, 1);
 
             // when

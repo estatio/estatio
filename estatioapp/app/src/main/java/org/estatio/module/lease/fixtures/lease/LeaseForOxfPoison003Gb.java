@@ -38,7 +38,7 @@ public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
     public static final String REF = "OXF-POISON-003";
     public static final String UNIT_REFERENCE = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("003");
-    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
+    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
 
     public static final String BRAND = "Poison";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.INTERNATIONAL;

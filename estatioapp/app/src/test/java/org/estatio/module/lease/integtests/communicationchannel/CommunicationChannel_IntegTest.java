@@ -37,7 +37,7 @@ import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -56,10 +56,10 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
         }
 
         @Inject
-        private PartyRepository partyRepository;
+        PartyRepository partyRepository;
 
         @Inject
-        private CommunicationChannelRepository communicationChannelRepository;
+        CommunicationChannelRepository communicationChannelRepository;
 
         private Party party;
 
@@ -69,7 +69,7 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             Assert.assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();

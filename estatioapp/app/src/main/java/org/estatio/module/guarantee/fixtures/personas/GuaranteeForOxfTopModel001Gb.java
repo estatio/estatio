@@ -29,6 +29,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForDagoBankGb;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -38,7 +39,7 @@ public class GuaranteeForOxfTopModel001Gb extends GuaranteeAbstract {
 
     public static final String LEASE_REFERENCE = LeaseForOxfTopModel001Gb.REF;
     public static final String REFERENCE = LEASE_REFERENCE + "-D";
-    public static final String PARTY_REF_BANK = OrganisationForDagoBankGb.REF;
+    public static final String PARTY_REF_BANK = Organisation_enum.DagoBankGb.getRef();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {

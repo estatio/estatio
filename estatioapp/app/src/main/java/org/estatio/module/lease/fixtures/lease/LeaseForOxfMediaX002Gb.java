@@ -26,6 +26,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
 
@@ -36,8 +37,8 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
     public static final String REF = "OXF-MEDIAX-002";
 
     public static final String UNIT_REF = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("002");
-    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_TENANT = OrganisationForMediaXGb.REF;
+    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
+    public static final String PARTY_REF_TENANT = Organisation_enum.MediaXGb.getRef();
 
     public static final String BRAND = "Mediax";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;

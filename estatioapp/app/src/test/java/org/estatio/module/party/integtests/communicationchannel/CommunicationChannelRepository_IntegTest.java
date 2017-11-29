@@ -32,7 +32,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -44,7 +44,7 @@ public class CommunicationChannelRepository_IntegTest extends PartyModuleIntegTe
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
             }
         });
     }
@@ -59,7 +59,7 @@ public class CommunicationChannelRepository_IntegTest extends PartyModuleIntegTe
 
     @Before
     public void setUp() throws Exception {
-        party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+        party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
     }
 
     public static class FindByOwner extends CommunicationChannelRepository_IntegTest {

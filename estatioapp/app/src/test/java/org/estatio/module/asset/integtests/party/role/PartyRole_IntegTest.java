@@ -34,6 +34,7 @@ import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +69,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
         public void add_role() {
             // Given
             PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(PartyRoleTypeEnum.TREASURER);
-            Party party = partyRepository.findPartyByReference(OrganisationForAcmeNl.REF);
+            Party party = partyRepository.findPartyByReference(Organisation_enum.AcmeNl.getRef());
             int roleChoices = party.choices0AddRole().size();
 
             // When

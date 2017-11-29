@@ -23,8 +23,8 @@ import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,7 +92,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
 
         // when
         String updatedAtPath = "/NLD";
-        Party updatedBuyer = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+        Party updatedBuyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
         LocalDate updatedDueDate = dueDate.minusWeeks(1);
         PaymentMethod updatedPaymentMethod = PaymentMethod.DIRECT_DEBIT;
         InvoiceStatus updatedStatus = InvoiceStatus.INVOICED;
@@ -120,8 +120,8 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
     }
 
     private IncomingInvoice createIncomingInvoice(){
-        seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-        buyer = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+        seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+        buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
         property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);

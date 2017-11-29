@@ -62,8 +62,7 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -309,8 +308,8 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
-            seller = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
-            buyer = partyRepository.findPartyByReference(OrganisationForPoisonGb.REF);
+            seller = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+            buyer = partyRepository.findPartyByReference(Organisation_enum.PoisonGb.getRef());
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }

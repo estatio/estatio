@@ -48,7 +48,6 @@ import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -75,7 +74,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF);
+            party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
         }
 
         // this test really just makes an assertion about the fixture.

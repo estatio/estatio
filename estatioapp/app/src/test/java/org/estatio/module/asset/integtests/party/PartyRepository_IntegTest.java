@@ -33,6 +33,7 @@ import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
@@ -98,7 +99,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            Party party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
             assertThat(party).isNotNull();
 
             //When
@@ -127,7 +128,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
+            Party party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
 
             //When
             party.addRole(PartyRoleTypeEnum.TREASURER);
@@ -157,7 +158,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
         @Test
         public void happyCase() throws Exception {
-            Party party = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            Party party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
             assertThat(party).isNotNull();
         }
 
@@ -183,7 +184,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
         @Test
         public void happyCase() throws Exception {
-            Assert.assertNotNull(partyRepository.matchPartyByReferenceOrName(OrganisationForHelloWorldNl.REF));
+            Assert.assertNotNull(partyRepository.matchPartyByReferenceOrName(Organisation_enum.HelloWorldNl.getRef()));
         }
 
         @Test

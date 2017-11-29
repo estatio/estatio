@@ -46,7 +46,7 @@ import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -98,7 +98,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
 
 
-            oldParty = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            oldParty = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
             newParty = organisationRepository.newOrganisation("TEST", false, "Test", applicationTenancy);
