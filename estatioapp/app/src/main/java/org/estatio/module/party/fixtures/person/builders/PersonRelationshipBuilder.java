@@ -21,8 +21,8 @@ package org.estatio.module.party.fixtures.person.builders;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
@@ -32,7 +32,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person", "fromPartyStr", "relationshipType"}, callSuper = false)
+@EqualsAndHashCode(of={"person", "fromParty", "relationshipType"}, callSuper = false)
 @Accessors(chain = true)
 public class PersonRelationshipBuilder
         extends BuilderScriptAbstract<PartyRelationship, PersonRelationshipBuilder> {
@@ -53,7 +53,7 @@ public class PersonRelationshipBuilder
     public void execute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
-        checkParam("fromPartyStr", executionContext, String.class);
+        checkParam("fromParty", executionContext, String.class);
         checkParam("relationshipType", executionContext, String.class);
 
         // associate person
