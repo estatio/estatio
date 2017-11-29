@@ -22,10 +22,9 @@ import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.builders.BankAccountAndFaFaBuilder;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.fixtures.bankaccount.builders.BankAccountBuilder;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
@@ -36,34 +35,32 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum BankAccountAndFaFa_enum
-        implements EnumWithBuilderScript<BankAccount, BankAccountAndFaFaBuilder>, EnumWithFinder<BankAccount> {
+public enum BankAccount_enum
+        implements EnumWithBuilderScript<BankAccount, BankAccountBuilder>, EnumWithFinder<BankAccount> {
 
-    AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433", Property_enum.KalNl),
-    HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434", Property_enum.OxfGb),
-    HelloWorldNl    (Organisation_enum.HelloWorldNl, "NL31ABNA0580744434", Property_enum.KalNl),
-    MediaXGb        (Organisation_enum.MediaXGb,     "NL31ABNA0580744436", null),
-    MiracleGb       (Organisation_enum.MiracleGb,    "NL31ABNA0580744439", null),
+    AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433"),
+    HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434"),
+    HelloWorldNl    (Organisation_enum.HelloWorldNl, "NL31ABNA0580744434"),
+    MediaXGb        (Organisation_enum.MediaXGb,     "NL31ABNA0580744436"),
+    MiracleGb       (Organisation_enum.MiracleGb,    "NL31ABNA0580744439"),
 
     // nb: this is misnamed, is actually second bank account for HelloWorldGb party
-    Oxford          (Organisation_enum.HelloWorldGb, "NL31ABNA0580744432", Property_enum.OxfGb),
+    Oxford          (Organisation_enum.HelloWorldGb, "NL31ABNA0580744432"),
 
-    PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437", null),
-    PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438", null),
-    TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435", null)
+    PoisonNl        (Organisation_enum.PoisonNl,     "NL31ABNA0580744437"),
+    PretGb          (Organisation_enum.PretGb,       "NL31ABNA0580744438"),
+    TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435")
     ;
 
     private final Organisation_enum organisation_d;
     private final String iban;
-    private final Property_enum property_d;
+
 
     @Override
-    public BankAccountAndFaFaBuilder toFixtureScript() {
-
-        return new BankAccountAndFaFaBuilder()
+    public BankAccountBuilder toFixtureScript() {
+        return new BankAccountBuilder()
                 .setIban(iban)
-                .set((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)))
-                .set((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));
+                .set((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)));
     }
 
     @Override

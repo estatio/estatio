@@ -34,10 +34,8 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
@@ -49,6 +47,8 @@ import org.estatio.module.capex.dom.state.StateTransitionService;
 import org.estatio.module.capex.dom.task.Task;
 import org.estatio.module.capex.integtests.document.IncomingDocumentPresentationSubscriber_IntegTest;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -129,7 +129,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             });
 
             // given
-            seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
+            seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
         }
 
         @Test
@@ -137,7 +137,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
 
             // when
             BankAccount bankAccount = bankAccountRepository.newBankAccount(seller,
-                    BankAccountAndFaFa_enum.TopModelGb.getIban(), "12345");
+                    BankAccount_enum.TopModelGb.getIban(), "12345");
 
             // then
             assertState(bankAccount, NOT_VERIFIED);
@@ -193,7 +193,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             // given
             seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
             bankAccount = bankAccountRepository.findBankAccountByReference(seller,
-                    BankAccountAndFaFa_enum.TopModelGb.getIban());
+                    BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 

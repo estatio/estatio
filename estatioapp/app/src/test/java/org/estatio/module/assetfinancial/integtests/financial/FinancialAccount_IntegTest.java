@@ -38,7 +38,7 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldGb;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
@@ -122,11 +122,11 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
         public void setUp() throws Exception {
 
             runFixtureScript(
-                    BankAccountAndFaFa_enum.HelloWorldNl.toFixtureScript(),
+                    BankAccountFaFa_enum.HelloWorldNl.toFixtureScript(),
                     Organisation_enum.HelloWorldNl.toFixtureScript()
             );
 
-            bankAccount = BankAccountAndFaFa_enum.HelloWorldNl.findUsing(serviceRegistry);
+            bankAccount = BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().findUsing(serviceRegistry);
             owner = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
         }
 
@@ -153,7 +153,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFa_enum.HelloWorldNl.getIban()));
+            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountFaFa_enum.HelloWorldNl.getBankAccount_d().getIban()));
 
         }
     }

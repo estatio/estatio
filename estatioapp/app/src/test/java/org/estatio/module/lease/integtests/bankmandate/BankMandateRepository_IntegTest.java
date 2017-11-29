@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
@@ -83,7 +83,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
             // Given
             Party owner = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
             BankAccount bankAccount = bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFa_enum.TopModelGb.getIban());
+                    BankAccountFaFa_enum.TopModelGb.getBankAccount_d().getIban());
 
             final String reference = "REF";
             final String name = "NAME";

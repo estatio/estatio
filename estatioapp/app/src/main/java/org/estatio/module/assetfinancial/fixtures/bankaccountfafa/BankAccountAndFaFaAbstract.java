@@ -18,21 +18,15 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
-import org.estatio.module.financial.dom.BankAccountRepository;
-import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 
 public abstract class BankAccountAndFaFaAbstract extends FixtureScript {
 
-    private final BankAccountAndFaFa_enum data;
+    private final BankAccountFaFa_enum data;
 
-    protected BankAccountAndFaFaAbstract(BankAccountAndFaFa_enum data) {
+    protected BankAccountAndFaFaAbstract(BankAccountFaFa_enum data) {
         this.data = data;
     }
 

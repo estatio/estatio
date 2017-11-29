@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.bankmandate.dom.BankMandate;
 import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.financial.dom.BankAccount;
@@ -70,7 +70,7 @@ public class BankMandateRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         public void forAccountWithMandate() {
 
             // given
-            FinancialAccount account = BankAccountAndFaFa_enum.PoisonNl.findUsing(serviceRegistry);
+            FinancialAccount account = BankAccountFaFa_enum.PoisonNl.getBankAccount_d().findUsing(serviceRegistry);
             final BankAccount bankAccount = (BankAccount) account;
 
             // when

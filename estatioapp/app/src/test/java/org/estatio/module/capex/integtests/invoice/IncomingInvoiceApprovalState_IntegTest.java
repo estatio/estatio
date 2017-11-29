@@ -24,10 +24,8 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccount_verificationState;
@@ -45,6 +43,8 @@ import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -101,7 +101,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         project = projectRepository.findByReference("OXF-02");
 
-        bankAccount = BankAccountAndFaFa_enum.TopModelGb.findUsing(serviceRegistry);
+        bankAccount = BankAccount_enum.TopModelGb.findUsing(serviceRegistry);
 
         incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
         incomingInvoice.setBankAccount(bankAccount);

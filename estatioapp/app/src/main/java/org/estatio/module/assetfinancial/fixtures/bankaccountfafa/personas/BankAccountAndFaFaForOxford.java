@@ -19,11 +19,11 @@
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 
 public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
-    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.Oxford;
+    public static final BankAccountFaFa_enum data = BankAccountFaFa_enum.Oxford;
 
     public BankAccountAndFaFaForOxford() {
         super(data);

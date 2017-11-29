@@ -37,7 +37,7 @@ import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForOxford;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
@@ -111,7 +111,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // when
             final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFa_enum.Oxford.getIban()));
+                    BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban()));
 
             // then
             assertThat(results.size(), is(1));
@@ -129,7 +129,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // when
             final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFa_enum.Oxford.getIban()));
+                    BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban()));
 
             // then
             assertNotNull(result);
@@ -146,7 +146,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
         @Before
         public void setUp() throws Exception {
-            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFa_enum.Oxford.getIban());
+            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountFaFa_enum.Oxford.getBankAccount_d().getIban());
             newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef()), "NEWBANKACCOUNT", null);
         }
 
@@ -169,11 +169,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
-                    new Runnable() {
-                        @Override public void run() {
-                            wrap(oldBankAccount).remove("Some reason");
-                        }
-                    });
+                    () -> wrap(oldBankAccount).remove("Some reason"));
         }
     }
 }
