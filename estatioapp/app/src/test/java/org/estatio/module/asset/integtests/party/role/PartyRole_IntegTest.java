@@ -35,7 +35,6 @@ import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +59,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForAcmeNl());
+                    executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
                 }
             });
         }

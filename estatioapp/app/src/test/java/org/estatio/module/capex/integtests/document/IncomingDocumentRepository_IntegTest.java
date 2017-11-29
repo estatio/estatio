@@ -17,8 +17,7 @@ import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +30,8 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
-                executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
 

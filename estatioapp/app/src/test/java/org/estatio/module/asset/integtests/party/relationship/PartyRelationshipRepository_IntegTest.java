@@ -47,7 +47,6 @@ import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -59,7 +58,7 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
                 executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
             }

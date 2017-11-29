@@ -12,20 +12,18 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldNl;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,8 +39,8 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
-                executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
                 executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
             }

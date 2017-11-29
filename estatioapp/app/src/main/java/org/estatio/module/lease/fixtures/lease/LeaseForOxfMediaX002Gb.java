@@ -27,8 +27,6 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForMediaXGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -48,8 +46,8 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-        executionContext.executeChild(this, new OrganisationForMediaXGb());
+        executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
+        executionContext.executeChild(this, Organisation_enum.MediaXGb.toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForJohnSmithGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 

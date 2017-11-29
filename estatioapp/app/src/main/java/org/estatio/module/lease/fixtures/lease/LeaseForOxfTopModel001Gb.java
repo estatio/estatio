@@ -27,8 +27,6 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -49,8 +47,8 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
 
         // prereqs
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-        executionContext.executeChild(this, new OrganisationForTopModelGb());
+        executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
+        executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 

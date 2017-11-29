@@ -34,8 +34,6 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -53,7 +51,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -91,7 +89,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -120,7 +118,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }
@@ -150,8 +148,8 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
                     executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 }
             });
         }
@@ -177,7 +175,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                    executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                 }
             });
         }

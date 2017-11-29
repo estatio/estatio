@@ -29,8 +29,6 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPoisonNl;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -52,8 +50,8 @@ public class LeaseForKalPoison001Nl extends LeaseAbstract {
 
         // prereqs
         executionContext.executeChild(this, new PersonAndRolesForJohnDoeNl());
-        executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new OrganisationForPoisonNl());
+        executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
+        executionContext.executeChild(this, Organisation_enum.PoisonNl.toFixtureScript());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
 
         // exec

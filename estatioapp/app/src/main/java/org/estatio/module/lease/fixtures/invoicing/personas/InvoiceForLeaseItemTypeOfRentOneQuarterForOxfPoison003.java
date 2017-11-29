@@ -25,16 +25,15 @@ import org.apache.isis.core.commons.ensure.Ensure;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
@@ -66,7 +65,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(final ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+        executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
         executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
 
         // exec

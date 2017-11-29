@@ -55,7 +55,6 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState.AWAITING_PROOF;
@@ -124,7 +123,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
                 @Override
                 protected void execute(final FixtureScript.ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new OrganisationForTopModelGb());
+                    executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                 }
             });
 

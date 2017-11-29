@@ -19,7 +19,6 @@ import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +33,7 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             protected void execute(final ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
             }
         });
     }

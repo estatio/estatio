@@ -41,7 +41,6 @@ import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModuleIntegTestAbstract {
@@ -50,7 +49,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
     public void setupData() throws Exception {
         runFixtureScript(new FixtureScript() {
             @Override protected void execute(final ExecutionContext executionContext) {
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
             }
         });
     }

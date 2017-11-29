@@ -36,9 +36,7 @@ import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumber;
 import org.incode.module.communications.dom.impl.commchannel.PhoneOrFaxNumberRepository;
 
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.party.integtests.PartyModuleIntegTestAbstract;
 
 import static org.hamcrest.Matchers.is;
@@ -50,7 +48,7 @@ public class PhoneOrFaxNumberRepository_IntegTest extends PartyModuleIntegTestAb
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
             }
         });
     }

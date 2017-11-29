@@ -25,16 +25,15 @@ import org.apache.isis.core.commons.ensure.Ensure;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
+import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
-import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.incode.module.base.integtests.VT.ldix;
@@ -65,7 +64,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForAcmeNl());
+        executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
         // exec

@@ -30,8 +30,6 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 
@@ -46,8 +44,8 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
             protected void execute(final ExecutionContext executionContext) {
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
-                executionContext.executeChild(this, new OrganisationForTopModelGb());
-                executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+                executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
+                executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
                 executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
             }
         });

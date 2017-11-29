@@ -29,8 +29,6 @@ import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPretGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.incode.module.base.integtests.VT.ld;
 
@@ -49,8 +47,8 @@ public class LeaseForOxfPret004Gb extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new OrganisationForPretGb());
-        executionContext.executeChild(this, new OrganisationForTopModelGb());
+        executionContext.executeChild(this, Organisation_enum.PretGb.toFixtureScript());
+        executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 

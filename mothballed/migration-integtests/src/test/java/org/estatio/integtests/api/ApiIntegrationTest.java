@@ -121,35 +121,35 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                         executionContext.executeChild(this, new PersonForLinusTorvaldsNl());
 
 
-                        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+                        executionContext.executeChild(this, Organisation_enum.HelloWorldNl.toFixtureScript());
                         executionContext.executeChild(this, new PropertyForOxfGb());
                         executionContext.executeChild(this, new BankAccountForHelloWorldGb());
 
-                        executionContext.executeChild(this, new OrganisationForAcmeNl());
+                        executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
                         executionContext.executeChild(this, new PropertyForKalNl());
                         executionContext.executeChild(this, new BankAccountForAcmeNl());
 
 
-                        executionContext.executeChild(this, new OrganisationForTopModelGb());
+                        executionContext.executeChild(this, Organisation_enum.TopModelGb.toFixtureScript());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
                         executionContext.executeChild(this, new BankAccountAndMandateForTopModelGb());
 
-                        executionContext.executeChild(this, new OrganisationForMediaXGb());
+                        executionContext.executeChild(this, Organisation_enum.MediaXGb.toFixtureScript());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002Gb());
                         executionContext.executeChild(this, new BankAccountForMediaXGb());
 
-                        executionContext.executeChild(this, new OrganisationForPoisonNl());
+                        executionContext.executeChild(this, Organisation_enum.PoisonNl.toFixtureScript());
                         executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003Gb());
                         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
                         executionContext.executeChild(this, new BankAccountAndMandateForPoisonNl());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                         executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                        executionContext.executeChild(this, new OrganisationForPretGb());
+                        executionContext.executeChild(this, Organisation_enum.PretGb.toFixtureScript());
                         executionContext.executeChild(this, new LeaseForOxfPret004Gb());
                         executionContext.executeChild(this, new BankAccountForPretGb());
 
-                        executionContext.executeChild(this, new OrganisationForMiracleGb());
+                        executionContext.executeChild(this, Organisation_enum.MiracleGb.toFixtureScript());
                         executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
                         executionContext.executeChild(this, new BankAccountForMiracleGb());
                     }
