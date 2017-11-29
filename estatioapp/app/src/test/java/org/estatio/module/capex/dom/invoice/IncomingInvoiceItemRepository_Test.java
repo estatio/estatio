@@ -2,6 +2,8 @@ package org.estatio.module.capex.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -15,10 +17,11 @@ import org.junit.Test;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.tax.dom.Tax;
 
@@ -161,6 +164,42 @@ public class IncomingInvoiceItemRepository_Test {
         {@link IncomingInvoiceItem#addAmounts(BigDecimal, BigDecimal, BigDecimal)} separately tested
          */
         Assertions.assertThat(targetItem.getNetAmount()).isEqualTo(new BigDecimal("20.10"));
+
+    }
+
+    @Mock
+    IncomingInvoiceRepository mockIncomingInvoiceRepository;
+
+    @Test
+    public void filterByCompletedOrLaterInvoices_filters_ok() throws Exception {
+
+        // given
+        IncomingInvoiceItemRepository incomingInvoiceItemRepository = new IncomingInvoiceItemRepository();
+        incomingInvoiceItemRepository.incomingInvoiceRepository = mockIncomingInvoiceRepository;
+        final LocalDate reportedDate = new LocalDate();
+
+        final IncomingInvoice invoice = new IncomingInvoice();
+        invoice.setApprovalState(IncomingInvoiceApprovalState.DISCARDED);
+        final IncomingInvoiceItem itemNotToBefilteredOut = new IncomingInvoiceItem();
+        itemNotToBefilteredOut.setInvoice(invoice);
+        itemNotToBefilteredOut.setReversalOf(new IncomingInvoiceItem());
+        final IncomingInvoiceItem itemToBefilteredOut = new IncomingInvoiceItem();
+        itemToBefilteredOut.setInvoice(invoice);
+        itemToBefilteredOut.setReversalOf(null);
+        List<IncomingInvoiceItem> items = Arrays.asList(itemNotToBefilteredOut, itemToBefilteredOut);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockIncomingInvoiceRepository).findCompletedOrLaterWithItemsByReportedDate(reportedDate);
+            will(returnValue(Arrays.asList(invoice)));
+        }});
+
+        // when
+        List<IncomingInvoiceItem> result = incomingInvoiceItemRepository.filterByCompletedOrLaterInvoices(items, reportedDate);
+        // then
+        Assertions.assertThat(result.size()).isEqualTo(1);
+        Assertions.assertThat(result).contains(itemNotToBefilteredOut);
+        Assertions.assertThat(result).doesNotContain(itemToBefilteredOut);
 
     }
     

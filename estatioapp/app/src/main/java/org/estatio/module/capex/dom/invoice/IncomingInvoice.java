@@ -388,6 +388,19 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         return this;
     }
 
+    @Programmatic
+    public void reverseReportedItemsNoCorrection() {
+        List<IncomingInvoiceItem> itemsToReverse = Lists.newArrayList(getItems()).stream().
+                filter(IncomingInvoiceItem.class::isInstance)
+                .map(IncomingInvoiceItem.class::cast)
+                .filter(x -> x.getReportedDate() != null)
+                .filter(x -> x.getReversalOf() == null)
+                .collect(Collectors.toList());
+       for (IncomingInvoiceItem itemToReverse : itemsToReverse){
+           copyWithLinks(itemToReverse, Sort.REVERSAL);
+       }
+    }
+
     enum Sort {
         REVERSAL {
             @Override BigDecimal adjust(final BigDecimal amount) {

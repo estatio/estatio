@@ -21,6 +21,7 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -289,7 +290,7 @@ public class IncomingInvoiceItemRepository {
         return filterByCompletedOrLaterInvoices(items, reportedDate);
     }
 
-    private List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
+    List<IncomingInvoiceItem> filterByCompletedOrLaterInvoices(
             final List<IncomingInvoiceItem> items,
             final LocalDate reportedDate) {
 
@@ -304,6 +305,8 @@ public class IncomingInvoiceItemRepository {
                     final Invoice<?> invoice = x.getInvoice();
                     return incomingInvoices.contains(invoice);
                 })
+                // EST-1731: filter items of discarded invoices that are not a reversal
+                .filter(x->!(x.getReversalOf()==null && x.getIncomingInvoice().getApprovalState()== IncomingInvoiceApprovalState.DISCARDED))
                 .collect(Collectors.toList());
     }
 

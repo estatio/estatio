@@ -175,7 +175,8 @@ public class IncomingInvoiceRepository {
                 ii.items.contains(iii)
             .and(iii.reportedDate.eq(reportedDate))
             .and(ii.approvalState.ne(IncomingInvoiceApprovalState.NEW))
-            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.DISCARDED)));
+//            .and(ii.approvalState.ne(IncomingInvoiceApprovalState.DISCARDED))  EST-1731: brings this filtering up to consuming method IncomingInvoiceItemRepository#filterByCompletedOrLaterInvoices
+        );
         final List<IncomingInvoice> incomingInvoices = Lists.newArrayList(q.executeList());
         q.closeAll();
         return incomingInvoices;
