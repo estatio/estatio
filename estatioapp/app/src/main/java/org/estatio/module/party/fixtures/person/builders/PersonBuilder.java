@@ -20,27 +20,25 @@ package org.estatio.module.party.fixtures.person.builders;
 
 import javax.inject.Inject;
 
-import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.dom.role.PartyRoleTypeService;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
 public class PersonBuilder
-        extends BuilderScriptAbstract<PersonBuilder> {
+        extends BuilderScriptAbstract<Person, PersonBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -61,7 +59,7 @@ public class PersonBuilder
     private PersonGenderType personGenderType;
 
     @Getter
-    private Person person;
+    private Person object;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -73,20 +71,14 @@ public class PersonBuilder
         defaultParam("personGenderType", executionContext, fakeDataService.collections().anEnum(PersonGenderType.class));
         defaultParam("initials", executionContext, firstName.substring(0,1));
 
-        person = personRepository.newPerson(getReference(), getInitials(), getFirstName(), getLastName(),
+        object = personRepository.newPerson(getReference(), getInitials(), getFirstName(), getLastName(),
                 getPersonGenderType(), getAtPath());
 
-        executionContext.addResult(this, person.getReference(), person);
+        executionContext.addResult(this, object.getReference(), object);
     }
 
     @Inject
     EstatioFakeDataService fakeDataService;
-
-    @Inject
-    PartyRoleTypeService partyRoleTypeService;
-
-    @Inject
-    ApplicationUserRepository applicationUserRepository;
 
     @Inject
     protected CountryRepository countryRepository;

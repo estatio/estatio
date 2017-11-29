@@ -20,26 +20,22 @@ package org.estatio.module.party.fixtures.person.builders;
 
 import javax.inject.Inject;
 
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner_newChannelContributions;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
-import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
-import org.estatio.module.party.dom.PersonRepository;
-import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"})
+@EqualsAndHashCode(of={"person"}, callSuper = false)
 @Accessors(chain = true)
 public class PersonCommsBuilder
-        extends BuilderScriptAbstract<PersonCommsBuilder> {
+        extends BuilderScriptAbstract<Person, PersonCommsBuilder> {
 
     @Getter @Setter
     private Person person;
@@ -49,6 +45,9 @@ public class PersonCommsBuilder
 
     @Getter @Setter
     private String emailAddress;
+
+    @Getter
+    private Person object;
 
     @Override
     public void execute(ExecutionContext executionContext) {
@@ -64,22 +63,11 @@ public class PersonCommsBuilder
                     .newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }
 
+        object = person;
     }
 
     @Inject
-    protected PartyRepository partyRepository;
-
-    @Inject
-    protected PersonRepository personRepository;
-
-    @Inject
-    protected CommunicationChannelOwner_newChannelContributions communicationChannelContributedActions;
-
-    @Inject
-    protected PartyRelationshipRepository partyRelationshipRepository;
-
-    @Inject
-    protected ApplicationTenancies applicationTenancies;
+    CommunicationChannelOwner_newChannelContributions communicationChannelContributedActions;
 
 
 }

@@ -31,9 +31,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"party", "iban"})
+@EqualsAndHashCode(of={"party", "iban"}, callSuper = false)
 @Accessors(chain = true)
-public class BankAccountBuilder extends BuilderScriptAbstract<BankAccountBuilder> {
+public class BankAccountBuilder extends BuilderScriptAbstract<BankAccount, BankAccountBuilder> {
 
 
     @Getter @Setter
@@ -49,7 +49,7 @@ public class BankAccountBuilder extends BuilderScriptAbstract<BankAccountBuilder
     String bic;
 
     @Getter
-    BankAccount bankAccount;
+    BankAccount object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -57,8 +57,8 @@ public class BankAccountBuilder extends BuilderScriptAbstract<BankAccountBuilder
         checkParam("party", executionContext, Party.class);
         checkParam("iban", executionContext, Party.class);
 
-        this.bankAccount = bankAccountRepository.newBankAccount(party, iban, bic);
-        executionContext.addResult(this, bankAccount.getReference(), bankAccount);
+        this.object = bankAccountRepository.newBankAccount(party, iban, bic);
+        executionContext.addResult(this, object.getReference(), object);
     }
 
     @Inject

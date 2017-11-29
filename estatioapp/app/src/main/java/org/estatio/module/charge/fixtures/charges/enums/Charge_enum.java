@@ -18,20 +18,17 @@
  */
 package org.estatio.module.charge.fixtures.charges.enums;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
-
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithUpsert;
-import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeGroup;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.chargegroups.enums.ChargeGroup_enum;
+import org.estatio.module.charge.fixtures.charges.builders.ChargeBuilder;
 import org.estatio.module.country.fixtures.enums.Country_enum;
-import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
 import lombok.Getter;
@@ -39,7 +36,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(chain = true)
-public enum Charge_enum implements EnumWithUpsert<Charge> {
+public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>, EnumWithFinder<Charge> {
 
     ItRent ( Country_enum.ITA, ChargeNoCountry_enum.Rent, Tax_enum.IT_VATSTD),
     ItServiceCharge ( Country_enum.ITA, ChargeNoCountry_enum.ServiceCharge, Tax_enum.IT_VATSTD),
@@ -118,34 +115,34 @@ public enum Charge_enum implements EnumWithUpsert<Charge> {
 
     ;
 
-    private final Country_enum country;
-    private final ApplicationTenancy_enum applicationTenancy;
+    private final Country_enum country_d;
+    private final ApplicationTenancy_enum applicationTenancy_d;
 
     private final String chargeSuffix;
-    private final ChargeGroup_enum chargeGroup;
+    private final ChargeGroup_enum chargeGroup_d;
     private final String namePrefix;
     private final Applicability applicability;
-    private final Tax_enum tax;
+    private final Tax_enum tax_d;
 
     Charge_enum(
-            final Country_enum country,
+            final Country_enum country_d,
             final ChargeNoCountry_enum chargeNoCountry,
-            final Tax_enum tax) {
-        this.country = country;
-        applicationTenancy = country.getApplicationTenancy_d();
+            final Tax_enum tax_d) {
+        this.country_d = country_d;
+        applicationTenancy_d = country_d.getApplicationTenancy_d();
 
         chargeSuffix = chargeNoCountry.getChargeSuffix();
-        chargeGroup = chargeNoCountry.getChargeGroup();
+        chargeGroup_d = chargeNoCountry.getChargeGroup();
         namePrefix = chargeNoCountry.getDescriptionPrefix();
         applicability = chargeNoCountry.getApplicability();
 
-        this.tax = tax;
+        this.tax_d = tax_d;
     }
 
-    public String getRef() { return country.getRef3() + chargeSuffix; }
+    public String getRef() { return country_d.getRef3() + chargeSuffix; }
 
     public String getCountry2AlphaCode() {
-        return country.getApplicationTenancy_d().getPath().substring(1).toUpperCase();
+        return country_d.getApplicationTenancy_d().getPath().substring(1).toUpperCase();
     }
 
     public String getName() {
@@ -159,27 +156,19 @@ public enum Charge_enum implements EnumWithUpsert<Charge> {
         return repository.findByReference(getRef());
     }
 
-    @Override
-    public Charge upsertUsing(final ServiceRegistry2 serviceRegistry) {
 
-        final String description = getRef();
-        final ApplicationTenancy applicationTenancyObj = applicationTenancy.findUsing(serviceRegistry);
-        final Tax taxObj = tax.findUsing(serviceRegistry);
-        final ChargeGroup chargeGroupObj = chargeGroup.findUsing(serviceRegistry);
-
-        final ChargeRepository repository = serviceRegistry.lookupService(ChargeRepository.class);
-        return repository.upsert(
-                getRef(), getName(), description,
-                applicationTenancyObj, getApplicability(), taxObj, chargeGroupObj);
-    }
-
-
-    public FixtureScript toFixtureScript() {
-        return new FixtureScript() {
+    public ChargeBuilder toFixtureScript() {
+        return new ChargeBuilder() {
             @Override
-            protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                final Charge chargeGroup = upsertUsing(serviceRegistry);
-                executionContext.addResult(this, chargeGroup.getReference(), chargeGroup);
+            protected void execute(final ExecutionContext ec) {
+                setRef(Charge_enum.this.getRef());
+                setName(Charge_enum.this.getName());
+                setApplicability(applicability);
+                setChargeGroup(objectFor(chargeGroup_d, ec));
+                setApplicationTenancy(objectFor(applicationTenancy_d, ec));
+                setTax(objectFor(tax_d, ec));
+
+                super.execute(ec);
             }
         };
     }

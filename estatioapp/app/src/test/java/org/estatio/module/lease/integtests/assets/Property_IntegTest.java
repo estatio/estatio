@@ -134,7 +134,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             //
             // given
             //
-            final Property property = fs.getProperty();
+            final Property property = fs.getObject();
             assertThat(property.getDisposalDate()).isNull();
 
             //
@@ -155,7 +155,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
             //
             // given
             //
-            final Property property = fs.getProperty();
+            final Property property = fs.getObject();
 
             //
             // and given

@@ -4,8 +4,8 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithFinder;
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -27,7 +27,7 @@ import static org.incode.module.base.integtests.VT.ld;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum Property_enum implements EnumWithFinder<Property>, EnumWithFixtureScript<Property, PropertyBuilder> {
+public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderScript<Property, PropertyBuilder> {
 
     BudNl   ("BUD", "BudgetToren", "Amsterdam", NLD, SHOPPING_CENTER,
             ld(2003, 12, 1), ld(2003, 12, 1), "52.37597;4.90814"),
@@ -67,18 +67,18 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithFixtureSc
     public PropertyBuilder toFixtureScript() {
         return new PropertyBuilder() {
             @Override
-            protected void execute(final ExecutionContext executionContext) {
+            protected void execute(final ExecutionContext ec) {
 
                 setReference(ref);
                 setName(name);
                 setCity(city);
-                setCountry(executionContext.executeChildT(this, country_d.toFixtureScript()).getCountry());
+                setCountry(objectFor(country_d, ec));
                 setPropertyType(propertyType);
                 setOpeningDate(openingDate);
                 setAcquireDate(acquireDate);
                 setLocationStr(locationStr);
 
-                super.execute(executionContext);
+                super.execute(ec);
             }
         };
     }

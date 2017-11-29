@@ -32,10 +32,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"person"})
+@EqualsAndHashCode(of={"person", "fromPartyStr", "relationshipType"}, callSuper = false)
 @Accessors(chain = true)
 public class PersonRelationshipBuilder
-        extends BuilderScriptAbstract<PersonRelationshipBuilder> {
+        extends BuilderScriptAbstract<PartyRelationship, PersonRelationshipBuilder> {
 
     @Getter @Setter
     private Person person;
@@ -47,7 +47,7 @@ public class PersonRelationshipBuilder
     private String relationshipType;
 
     @Getter
-    PartyRelationship partyRelationship;
+    PartyRelationship object;
 
     @Override
     public void execute(ExecutionContext executionContext) {
@@ -58,10 +58,10 @@ public class PersonRelationshipBuilder
 
         // associate person
         Party from = partyRepository.findPartyByReference(fromPartyStr);
-        partyRelationship = partyRelationshipRepository
+        object = partyRelationshipRepository
                 .newRelationship(from, person, relationshipType, null);
 
-        executionContext.addResult(this, relationshipType, partyRelationship);
+        executionContext.addResult(this, relationshipType, object);
     }
 
     @Inject

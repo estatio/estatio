@@ -38,7 +38,7 @@ public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstr
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
-        super.execute(executionContext);
+        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 }

@@ -46,10 +46,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"reference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesBuilder> {
-
+public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonAndRolesBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -103,8 +102,8 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
         return this;
     }
 
-   @Getter
-    private Person person;
+    @Getter
+    private Person object;
 
     @Getter
     private ApplicationUser applicationUser;
@@ -121,8 +120,7 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
     @Override
     public void execute(ExecutionContext executionContext) {
 
-        PersonBuilder personBuilder = new PersonBuilder();
-        person = personBuilder
+        object = new PersonBuilder()
                 .setAtPath(atPath)
                 .setFirstName(firstName)
                 .setInitials(initials)
@@ -130,22 +128,20 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
                 .setPersonGenderType(personGenderType)
                 .setReference(reference)
                 .build(this, executionContext)
-                .getPerson();
+                .getObject();
 
         if(securityUsername != null) {
-            ApplicationUserBuilder applicationUserBuilder = new ApplicationUserBuilder();
-            applicationUser = applicationUserBuilder
-                    .setPerson(person)
+            applicationUser = new ApplicationUserBuilder()
+                    .setPerson(object)
                     .setSecurityUsername(securityUsername)
                     .setSecurityUserAccountCloneFrom(securityUserAccountCloneFrom)
                     .build(this, executionContext)
-                    .getApplicationUser();
+                    .getObject();
         }
 
         if(emailAddress != null || phoneNumber != null) {
-            PersonCommsBuilder personCommsBuilder = new PersonCommsBuilder();
-            personCommsBuilder
-                    .setPerson(person)
+            new PersonCommsBuilder()
+                    .setPerson(object)
                     .setEmailAddress(emailAddress)
                     .setPhoneNumber(phoneNumber)
                     .build(this, executionContext);
@@ -155,28 +151,25 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<PersonAndRolesB
 
             executionContext.executeChild(this, fromParty.toFixtureScript());
 
-            PersonRelationshipBuilder personRelationshipBuilder = new PersonRelationshipBuilder();
-            partyRelationship = personRelationshipBuilder
-                    .setPerson(person)
+            partyRelationship = new PersonRelationshipBuilder()
+                    .setPerson(object)
                     .setRelationshipType(relationshipType.fromTitle())
                     .setFromPartyStr(fromParty.getRef())
                     .build(this, executionContext)
-                    .getPartyRelationship();
+                    .getObject();
         }
 
-        PersonPartyRolesBuilder personPartyRolesBuilder = new PersonPartyRolesBuilder();
-        partyRoles = personPartyRolesBuilder
-                .setPerson(person)
+        partyRoles = new PersonPartyRolesBuilder()
+                .setPerson(object)
                 .addPartyRoleTypes(partyRoleTypes)
                 .build(this, executionContext)
-                .getPartyRoles();
+                .getObject();
 
-        PersonFixedAssetRolesBuilder fixedAssetRolesBuilder = new PersonFixedAssetRolesBuilder();
-        fixedAssetRoles = fixedAssetRolesBuilder
-                .setPerson(person)
+        fixedAssetRoles = new PersonFixedAssetRolesBuilder()
+                .setPerson(object)
                 .addFixedAssetRoles(fixedAssetRoleSpecs)
                 .build(this, executionContext)
-                .getFixedAssetRoles();
+                .getObject();
     }
 }
 

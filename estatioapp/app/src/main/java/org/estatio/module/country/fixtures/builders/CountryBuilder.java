@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"data"})
+@EqualsAndHashCode(of={"ref3"}, callSuper = false)
 @Accessors(chain = true)
-public class CountryBuilder extends BuilderScriptAbstract<CountryBuilder> {
+public class CountryBuilder extends BuilderScriptAbstract<Country, CountryBuilder> {
 
     @Getter @Setter
     String ref3;
@@ -24,7 +24,7 @@ public class CountryBuilder extends BuilderScriptAbstract<CountryBuilder> {
     String name;
 
     @Getter
-    private Country country;
+    private Country object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -33,9 +33,9 @@ public class CountryBuilder extends BuilderScriptAbstract<CountryBuilder> {
         checkParam("ref2", executionContext, String.class);
         checkParam("name", executionContext, String.class);
 
-        country = countryRepository.findOrCreateCountry(this.ref3, this.ref2, this.name);
+        object = countryRepository.findOrCreateCountry(this.ref3, this.ref2, this.name);
 
-        executionContext.addResult(this, ref3, country);
+        executionContext.addResult(this, ref3, object);
     }
 
     @Inject

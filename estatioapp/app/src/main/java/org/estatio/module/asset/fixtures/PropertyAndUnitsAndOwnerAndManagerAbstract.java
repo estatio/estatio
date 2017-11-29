@@ -50,12 +50,12 @@ public abstract class PropertyAndUnitsAndOwnerAndManagerAbstract extends Fixture
     @Override
     protected void execute(final ExecutionContext ec) {
 
-        final Party owner = ec.executeChildT(this, data.getOwner_d().toFixtureScript()).getOrganisation();
-        final Party manager = ec.executeChildT(this, data.getManager_d().toFixtureScript()).getPerson();
+        final Party owner = ec.executeChildT(this, data.getOwner_d().toFixtureScript()).getObject();
+        final Party manager = ec.executeChildT(this, data.getManager_d().toFixtureScript()).getObject();
 
         final Property_enum property_d = data.getProperty_d();
         final Country_enum country_d = property_d.getCountry_d();
-        final Country country = ec.executeChildT(this, country_d.toFixtureScript()).getCountry();
+        final Country country = ec.executeChildT(this, country_d.toFixtureScript()).getObject();
 
         property = new PropertyAndUnitsAndOwnerAndManagerBuilder()
                 .setReference(data.getRef())
@@ -79,7 +79,7 @@ public abstract class PropertyAndUnitsAndOwnerAndManagerAbstract extends Fixture
                 .setManagerEndDate(data.getManagerEndDate())
 
                 .build(this, ec)
-                .getProperty();
+                .getObject();
     }
 
 }

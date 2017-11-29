@@ -18,16 +18,18 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
-public class Project2ForKal extends ProjectAbstract {
+public class Project2ForKal extends PersonaScriptAbstract {
 
     public static final Project_enum data = Project_enum.KalProject2;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(FixtureScript.ExecutionContext executionContext) {
 
         final ProjectBuilder projectBuilder = new ProjectBuilder();
         projectBuilder.setReference(data.getRef())

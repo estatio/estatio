@@ -24,19 +24,10 @@ public abstract class NumeratorForOrganisationAbstract extends FixtureScript {
                 .setFormat(format)
                 .setCountry(country)
                 .build(this, executionContext)
-                .getNumerator();
-
-//        Numerator numerator = numeratorRepository
-//                .createGlobalNumerator(name, format, BigInteger.ZERO,  estatioApplicationTenancyRepository.findOrCreateTenancyFor(country));
-//        return executionContext.addResult(this, numerator);
+                .getObject();
 
         return numerator;
     }
 
-//    @Inject
-//    protected NumeratorRepository numeratorRepository;
-//
-//    @Inject
-//    protected EstatioApplicationTenancyRepositoryForCountry estatioApplicationTenancyRepository;
 
 }

@@ -32,6 +32,7 @@ import org.estatio.module.capex.dom.order.approval.triggers.Order_discard;
 import org.estatio.module.capex.fixtures.OrderFixture;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 
@@ -50,6 +51,10 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+
+                // taken from the DocumentTypesAndTemplatesSeedService (not run in integ tests by default)
+                final LocalDate templateDate = new LocalDate(2012,1,1);
+                executionContext.executeChild(this, new DocumentTypesAndTemplatesForCapexFixture(templateDate));
 
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, orderFixture);

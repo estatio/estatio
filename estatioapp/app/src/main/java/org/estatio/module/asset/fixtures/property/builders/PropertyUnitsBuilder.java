@@ -25,21 +25,22 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"property"})
+@EqualsAndHashCode(of={"property"}, callSuper = false)
 @Accessors(chain = true)
 public class PropertyUnitsBuilder
-        extends BuilderScriptAbstract<PropertyUnitsBuilder> {
+        extends BuilderScriptAbstract<List<Unit>, PropertyUnitsBuilder> {
 
     @Getter @Setter
     private Property property;
@@ -48,7 +49,7 @@ public class PropertyUnitsBuilder
     private Integer numberOfUnits;
 
     @Getter
-    private List<Unit> units = Lists.newArrayList();
+    private List<Unit> object = Lists.newArrayList();
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
@@ -66,7 +67,7 @@ public class PropertyUnitsBuilder
 
             unit.setArea(new BigDecimal(unitNum * 100));
 
-            units.add(unit);
+            object.add(unit);
             executionContext.addResult(this, unitRef, unit);
         }
     }

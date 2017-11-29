@@ -37,6 +37,6 @@ public class OrganisationForPretGb extends PersonaScriptAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
         organisation = executionContext.executeChildT(
-                this, data.toFixtureScript()).getOrganisation();
+                this, data.toFixtureScript()).getObject();
     }
 }

@@ -32,9 +32,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"party", "iban", "property"})
+@EqualsAndHashCode(of={"party", "iban", "property"}, callSuper = false)
 @Accessors(chain = true)
-public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccountAndFaFaBuilder>
+public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount, BankAccountAndFaFaBuilder>
 {
 
     @Getter @Setter
@@ -53,7 +53,7 @@ public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount
     Property property;
 
     @Getter
-    BankAccount bankAccount;
+    BankAccount object;
 
     @Getter
     FixedAssetFinancialAccount fixedAssetFinancialAccount;
@@ -61,19 +61,19 @@ public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        bankAccount = new BankAccountBuilder()
+        object = new BankAccountBuilder()
                 .setParty(party)
                 .setIban(iban)
                 .setBic(bic)
                 .build(this, executionContext)
-                .getBankAccount();
+                .getObject();
 
         if(property != null) {
             fixedAssetFinancialAccount = new BankAccountFaFaBuilder()
-                    .setBankAccount(bankAccount)
+                    .setBankAccount(object)
                     .setProperty(property)
                     .build(this, executionContext)
-                    .getFixedAssetFinancialAccount();
+                    .getObject();
         }
     }
 

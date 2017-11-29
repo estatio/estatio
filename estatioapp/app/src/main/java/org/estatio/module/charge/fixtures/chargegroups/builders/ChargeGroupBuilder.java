@@ -16,46 +16,43 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.fafa.builders;
+package org.estatio.module.charge.fixtures.chargegroups.builders;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
-import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.charge.dom.ChargeGroup;
+import org.estatio.module.charge.dom.ChargeGroupRepository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"bankAccount", "property"}, callSuper = false)
+@EqualsAndHashCode(of={"ref"},callSuper = false)
 @Accessors(chain = true)
-public class BankAccountFaFaBuilder
-        extends BuilderScriptAbstract<FixedAssetFinancialAccount, BankAccountFaFaBuilder> {
+public class ChargeGroupBuilder extends BuilderScriptAbstract<ChargeGroup, ChargeGroupBuilder> {
 
     @Getter @Setter
-    BankAccount bankAccount;
-
+    String ref;
     @Getter @Setter
-    Property property;
+    String description;
 
     @Getter
-    FixedAssetFinancialAccount object;
+    ChargeGroup object;
 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        checkParam("bankAccount", executionContext, BankAccount.class);
-        checkParam("property", executionContext, Property.class);
+        checkParam("ref", executionContext, String.class);
 
-        object = fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(property, bankAccount);
+        defaultParam("description", executionContext, getRef());
+
+        this.object = repository.upsert(getRef(), getDescription());
     }
 
     @Inject
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+    ChargeGroupRepository repository;
 
 }

@@ -1,6 +1,6 @@
 package org.estatio.module.capex.fixtures.document.enums;
 
-import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum IncomingPdf_enum implements EnumWithFixtureScript<Document, IncomingPdfBuilder> {
+public enum IncomingPdf_enum implements EnumWithBuilderScript<Document, IncomingPdfBuilder> {
 
     FakeInvoice1(IncomingPdf_enum.class, "fakeInvoice1.pdf"),
     FakeInvoice2(IncomingPdf_enum.class, "fakeInvoice2.pdf"),

@@ -20,7 +20,6 @@ package org.estatio.module.party.fixtures.organisation.personas;
 
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.fixtures.organisation.builders.OrganisationAndCommsBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Getter;
@@ -38,7 +37,7 @@ public class OrganisationForMediaXGb extends PersonaScriptAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
         organisation = executionContext.executeChildT(
-                this, data.toFixtureScript()).getOrganisation();
+                this, data.toFixtureScript()).getObject();
     }
 
 }

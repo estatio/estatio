@@ -20,10 +20,11 @@ package org.estatio.module.party.fixtures.organisation.builders;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 
@@ -32,40 +33,39 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"partyReference"})
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class OrganisationBuilder extends BuilderScriptAbstract<OrganisationBuilder> {
+public class OrganisationBuilder extends BuilderScriptAbstract<Organisation,OrganisationBuilder> {
 
     @Getter @Setter
     private String atPath;
 
     @Getter @Setter
-    private String partyReference;
+    private String reference;
 
     @Getter @Setter
-    private String partyName;
+    private String name;
 
     @Getter @Setter
     private Boolean useNumeratorForReference;
 
-
     @Getter
-    private Organisation organisation;
+    private Organisation object;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         checkParam("atPath", executionContext, String.class);
-        checkParam("partyReference", executionContext, String.class);
-        checkParam("partyName", executionContext, String.class);
+        checkParam("reference", executionContext, String.class);
+        checkParam("name", executionContext, String.class);
 
         defaultParam("useNumeratorForReference", executionContext, false);
 
         ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(atPath);
 
-        this.organisation = organisationRepository.newOrganisation(partyReference, useNumeratorForReference, partyName, applicationTenancy);
+        this.object = organisationRepository.newOrganisation(reference, useNumeratorForReference, name, applicationTenancy);
 
-        executionContext.addResult(this, organisation.getReference(), organisation);
+        executionContext.addResult(this, object.getReference(), object);
     }
 
     protected boolean defined(String[] values, int i) {

@@ -47,7 +47,7 @@ public class CommunicationChannelContributions_NewEmail_IntegTest extends Applic
     @Test
     public void happyCase() throws Exception {
 
-        final Party party = fs.getPerson();
+        final Party party = fs.getObject();
 
         // given
         final SortedSet<CommunicationChannel> before = communicationChannelContributions.communicationChannels(party);

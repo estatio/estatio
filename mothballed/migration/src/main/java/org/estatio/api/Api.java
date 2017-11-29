@@ -427,7 +427,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPartyCommunicationChannels(
-            @Named("partyReference") final String partyReference,
+            @Named("reference") final String partyReference,
             @Named("reference") @Optional final String reference,
             @Named("address1") @Optional final String address1,
             @Named("address2") @Optional final String address2,
@@ -486,7 +486,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPartyEmailAddress(
-            @Named("partyReference") final String partyReference,
+            @Named("reference") final String partyReference,
             @Named("emailAddress") final String emailAddress,
             @Named("legal") @Optional final Boolean legal
     ) {
@@ -504,7 +504,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPartyContact(
-            @Named("partyReference") final String partyReference,
+            @Named("reference") final String partyReference,
             @Named("sequence") final Integer sequence,
             @Named("name") final String name,
             @Named("type") final String type,
@@ -581,7 +581,7 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyActor(
             @Named("propertyReference") final String propertyReference,
-            @Named("partyReference") final String partyReference,
+            @Named("reference") final String partyReference,
             @Named("type") final String typeStr,
             @Named("startDate") @Optional final LocalDate startDate,
             @Named("endDate") @Optional final LocalDate endDate) {
@@ -723,7 +723,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeasePostalAddress(
-            @Named("partyReference") final String partyReference,
+            @Named("reference") final String partyReference,
             @Named("agreementRoleType") final String agreementRoleType,
             @Named("leaseReference") @Optional final String leaseReference,
             @Named("address1") @Optional final String address1,

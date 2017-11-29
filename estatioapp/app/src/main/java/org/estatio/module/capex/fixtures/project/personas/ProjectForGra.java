@@ -18,16 +18,18 @@
  */
 package org.estatio.module.capex.fixtures.project.personas;
 
-import org.estatio.module.capex.fixtures.project.ProjectAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.capex.fixtures.project.ProjectBuilder;
 import org.estatio.module.capex.fixtures.project.enums.Project_enum;
 
-public class ProjectForGra extends ProjectAbstract {
+public class ProjectForGra extends PersonaScriptAbstract {
 
     public static final Project_enum data = Project_enum.GraProject;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(FixtureScript.ExecutionContext executionContext) {
 
         // exec
 

@@ -41,27 +41,34 @@ public abstract class PersonAndRolesAbstract extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
-        personAndRolesBuilder
-                .setReference(data.getRef())
-                .setFirstName(data.getFirstName())
-                .setLastName(data.getLastName())
-                .setInitials(data.getInitials())
-                .setSecurityUsername(data.getSecurityUserName())
-                .setPersonGenderType(data.getPersonGenderType())
-                .setAtPath(data.getApplicationTenancy().getPath())
-                .setRelationshipType(data.getPartyRelationshipType())
-                .setFromParty(data.getPartyFrom());
+        if(false) {
+            // don't think this is ever called...
 
-        for (final IPartyRoleType partyRoleType : data.getPartyRoleTypes()) {
-            personAndRolesBuilder.addPartyRoleType(partyRoleType);
+            final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder();
+            personAndRolesBuilder
+                    .setReference(data.getRef())
+                    .setFirstName(data.getFirstName())
+                    .setLastName(data.getLastName())
+                    .setInitials(data.getInitials())
+                    .setSecurityUsername(data.getSecurityUserName())
+                    .setPersonGenderType(data.getPersonGenderType())
+                    .setAtPath(data.getApplicationTenancy().getPath())
+                    .setRelationshipType(data.getPartyRelationshipType())
+                    .setFromParty(data.getPartyFrom());
+
+            for (final IPartyRoleType partyRoleType : data.getPartyRoleTypes()) {
+                personAndRolesBuilder.addPartyRoleType(partyRoleType);
+            }
+            for (final Person_enum.FixedAssetRoleSpec roleSpec : data.getFixedAssetRoles()) {
+                personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty().getRef());
+            }
+            person = personAndRolesBuilder
+                    .build(this, executionContext)
+                    .getObject();
         }
-        for (final Person_enum.FixedAssetRoleSpec roleSpec : data.getFixedAssetRoles()) {
-            personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty().getRef());
-        }
-        person = personAndRolesBuilder
-                .build(this, executionContext)
-                .getPerson();
+
+        throw new RuntimeException("can probably removed; think that this method was overridden in all subtypes...");
+
 
     }
 
