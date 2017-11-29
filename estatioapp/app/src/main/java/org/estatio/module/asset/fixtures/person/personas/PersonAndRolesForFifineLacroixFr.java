@@ -20,8 +20,6 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
 
 public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
 
@@ -34,8 +32,8 @@ public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
 
         super.execute(executionContext);
 

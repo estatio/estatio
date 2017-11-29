@@ -54,22 +54,22 @@ public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<List<Fix
     @Data
     static class FixedAssetRoleSpec {
         final FixedAssetRoleTypeEnum roleType;
-        final String propertyRef;
+        final Property property;
     }
 
     private List<FixedAssetRoleSpec> fixedAssetRoleSpecs = Lists.newArrayList();
 
     public PersonFixedAssetRolesBuilder addFixedAssetRole(
             final FixedAssetRoleTypeEnum fixedAssetRoleType,
-            final String propertyRef) {
-        fixedAssetRoleSpecs.add(new FixedAssetRoleSpec(fixedAssetRoleType, propertyRef));
+            final Property property) {
+        fixedAssetRoleSpecs.add(new FixedAssetRoleSpec(fixedAssetRoleType, property));
         return this;
     }
 
     public PersonFixedAssetRolesBuilder addFixedAssetRoles(
             final List<FixedAssetRoleSpec> fixedAssetRoleTypes) {
         for (FixedAssetRoleSpec fixedAssetRoleType : fixedAssetRoleTypes) {
-            addFixedAssetRole(fixedAssetRoleType.roleType, fixedAssetRoleType.propertyRef);
+            addFixedAssetRole(fixedAssetRoleType.roleType, fixedAssetRoleType.property);
         }
         return this;
     }
@@ -95,16 +95,13 @@ public class PersonFixedAssetRolesBuilder extends BuilderScriptAbstract<List<Fix
 
         // fixed asset roles
         for (FixedAssetRoleSpec spec : fixedAssetRoleSpecs) {
-            final Property property =
-                    propertyRepository.findPropertyByReference(spec.getPropertyRef());
+            final Property property = spec.getProperty();
             final FixedAssetRole fixedAssetRole =
                     property.addRoleIfDoesNotExist(person, spec.roleType, null, null);
             object.add(fixedAssetRole);
         }
     }
 
-    @Inject
-    PropertyRepository propertyRepository;
 
 }
 

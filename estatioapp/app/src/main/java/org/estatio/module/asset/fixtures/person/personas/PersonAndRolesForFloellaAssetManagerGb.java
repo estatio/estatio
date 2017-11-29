@@ -20,7 +20,6 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 
 /**
  * Property manager for OXF
@@ -36,7 +35,7 @@ public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstra
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+        //executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         super.execute(executionContext);
 

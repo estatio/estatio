@@ -210,6 +210,14 @@ public enum Person_enum
             @Override
             public void execute(final ExecutionContext ec) {
                 setFromParty(objectFor(getPartyFrom_d(), ec));
+
+                for (final Person_enum.FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
+                    addFixedAssetRole(
+                            roleSpec.getFixedAssetRole(),
+                            objectFor(roleSpec.getProperty_d(), ec)
+                    );
+                }
+
                 super.execute(ec);
             }
         }       .setReference(getRef())
@@ -223,9 +231,6 @@ public enum Person_enum
 
         for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {
             personAndRolesBuilder.addPartyRoleType(partyRoleType);
-        }
-        for (final Person_enum.FixedAssetRoleSpec roleSpec : getFixedAssetRoles()) {
-            personAndRolesBuilder.addFixedAssetRole(roleSpec.getFixedAssetRole(), roleSpec.getProperty_d().getRef());
         }
         return personAndRolesBuilder;
     }

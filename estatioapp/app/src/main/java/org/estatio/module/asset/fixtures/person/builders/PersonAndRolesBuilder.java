@@ -26,6 +26,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.party.dom.Organisation;
@@ -97,8 +98,8 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonA
     private List<PersonFixedAssetRolesBuilder.FixedAssetRoleSpec> fixedAssetRoleSpecs = Lists.newArrayList();
     public PersonAndRolesBuilder addFixedAssetRole(
             final FixedAssetRoleTypeEnum fixedAssetRoleType,
-            final String propertyRef) {
-        fixedAssetRoleSpecs.add(new PersonFixedAssetRolesBuilder.FixedAssetRoleSpec(fixedAssetRoleType, propertyRef));
+            final Property property) {
+        fixedAssetRoleSpecs.add(new PersonFixedAssetRolesBuilder.FixedAssetRoleSpec(fixedAssetRoleType, property));
         return this;
     }
 
@@ -121,12 +122,12 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonA
     public void execute(ExecutionContext executionContext) {
 
         object = new PersonBuilder()
-                .setAtPath(atPath)
+                .setReference(reference)
                 .setFirstName(firstName)
                 .setInitials(initials)
                 .setLastName(lastName)
+                .setAtPath(atPath)
                 .setPersonGenderType(personGenderType)
-                .setReference(reference)
                 .build(this, executionContext)
                 .getObject();
 

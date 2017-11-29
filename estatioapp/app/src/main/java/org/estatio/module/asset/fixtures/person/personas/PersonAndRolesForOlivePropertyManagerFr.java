@@ -20,7 +20,6 @@ package org.estatio.module.asset.fixtures.person.personas;
 
 import org.estatio.module.asset.fixtures.person.PersonAndRolesAbstract;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
 
 public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstract {
 
@@ -33,7 +32,7 @@ public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstr
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
+        //executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
         super.execute(executionContext);
     }
