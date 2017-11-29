@@ -29,12 +29,4 @@ public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstr
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        //executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
-
-        super.execute(executionContext);
-    }
-
 }

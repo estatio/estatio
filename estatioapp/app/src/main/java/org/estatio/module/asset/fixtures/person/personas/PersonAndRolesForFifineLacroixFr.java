@@ -29,14 +29,4 @@ public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
-//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
-
-        super.execute(executionContext);
-
-    }
-
 }

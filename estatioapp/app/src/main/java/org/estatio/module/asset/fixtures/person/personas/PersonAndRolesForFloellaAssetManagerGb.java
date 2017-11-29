@@ -32,13 +32,4 @@ public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstra
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        //executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-
-        super.execute(executionContext);
-
-    }
-
 }
