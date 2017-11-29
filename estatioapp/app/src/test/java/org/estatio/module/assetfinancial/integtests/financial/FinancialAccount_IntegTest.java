@@ -40,7 +40,6 @@ import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.financial.dom.BankAccount;
@@ -145,17 +144,16 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
                     PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
 
             // When
-            sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()), new Runnable() {
-                @Override public void run() {
-                    wrap(fixedAssetFinancialAccount).remove();
-                    Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-                    wrap(bankAccount).remove("Some reason");
-                }
-            });
+            sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
+                    () -> {
+                        wrap(fixedAssetFinancialAccount).remove();
+                        Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
+                        wrap(bankAccount).remove("Some reason");
+                    });
 
             // Then
             Assert.assertThat(fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccount).size(), is(0));
-            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF));
+            Assert.assertNull(financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFa_enum.HelloWorldNl.getIban()));
 
         }
     }

@@ -25,27 +25,8 @@ public class BankAccountAndFaFaForAcmeNl extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.AcmeNl;
 
-    public static final String REF = data.getIban();
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForAcmeNl() {
         super(data);
     }
 
-//    @Override
-//    protected void execute(ExecutionContext executionContext) {
-//
-//        executionContext.executeChildT(this, data.toFixtureScript());
-//
-//        // prereqs
-//        executionContext.executeChild(this, new OrganisationForAcmeNl());
-//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
-//
-//        // exec
-//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-//                PARTY_REF,
-//                REF,
-//                data.getProperty_d(), // create FAFA
-//                executionContext);
-//    }
 }

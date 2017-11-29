@@ -36,42 +36,10 @@ public abstract class BankAccountAndFaFaAbstract extends FixtureScript {
         this.data = data;
     }
 
-//    protected BankAccount createBankAccountAndOptionallyFixedAssetFinancialAsset(
-//            final String partyStr,
-//            final String bankAccountRef,
-//            final Property_enum property_data,
-//            final ExecutionContext executionContext) {
-//
-//        final Party party = partyRepository.findPartyByReference(partyStr);
-//
-//        final BankAccount bankAccount = bankAccountRepository.newBankAccount(party, bankAccountRef, null);
-//        executionContext.addResult(this, bankAccount.getReference(), bankAccount);
-//
-//        if (property_data != null) {
-//            final String propertyRef = property_data.getRef();
-//            final Property property = propertyRepository.findPropertyByReference(propertyRef);
-//            fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(property, bankAccount);
-//        }
-//
-//        return bankAccount;
-//    }
-
     @Override
     protected void execute(ExecutionContext executionContext) {
         executionContext.executeChildT(this, data.toFixtureScript());
     }
 
-
-    @Inject
-    BankAccountRepository bankAccountRepository;
-
-    @Inject
-    PartyRepository partyRepository;
-
-    @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject
-    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
 }

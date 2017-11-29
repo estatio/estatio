@@ -25,26 +25,8 @@ public class BankAccountAndFaFaForHelloWorldGb extends BankAccountAndFaFaAbstrac
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.HelloWorldGb;
 
-    public static final String REF = data.getIban();
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForHelloWorldGb() {
         super(data);
     }
-
-//    @Override
-//    protected void execute(ExecutionContext executionContext) {
-//
-//        // prereqs
-//        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-//
-//        // exec
-//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-//                PARTY_REF,
-//                REF,
-//                data.getProperty_d(), // create FAFA
-//                executionContext);
-//    }
 
 }

@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForPoisonNl;
 import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
 import org.estatio.module.bankmandate.dom.Scheme;
@@ -25,7 +26,7 @@ import org.estatio.module.bankmandate.dom.SequenceType;
 
 public class BankAccountAndMandateForPoisonNl extends BankAccountAndMandateAbstract {
 
-    public static final String BANK_ACCOUNT_REF = BankAccountAndFaFaForPoisonNl.REF;
+    public static final String BANK_ACCOUNT_REF = BankAccountAndFaFa_enum.PoisonNl.getIban();
     public static final int SEQUENCE = 2;
     public static final SequenceType SEQUENCE_TYPE = SequenceType.FIRST;
     public static final Scheme SCHEME = Scheme.CORE;

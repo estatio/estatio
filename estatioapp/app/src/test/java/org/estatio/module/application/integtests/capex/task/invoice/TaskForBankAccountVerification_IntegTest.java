@@ -34,6 +34,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
@@ -53,6 +54,7 @@ import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -134,7 +136,8 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
         public void happy_case() throws Exception {
 
             // when
-            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller, BankAccountAndFaFaForTopModelGb.REF, "12345");
+            BankAccount bankAccount = bankAccountRepository.newBankAccount(seller,
+                    BankAccountAndFaFa_enum.TopModelGb.getIban(), "12345");
 
             // then
             assertState(bankAccount, NOT_VERIFIED);
@@ -188,8 +191,9 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             });
 
             // given
-            seller = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            bankAccount = bankAccountRepository.findBankAccountByReference(seller, BankAccountAndFaFaForTopModelGb.REF);
+            seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            bankAccount = bankAccountRepository.findBankAccountByReference(seller,
+                    BankAccountAndFaFa_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify
             bankAccount.setBic("123456789");
 

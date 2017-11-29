@@ -25,25 +25,8 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.Oxford;
 
-    public static final String REF = data.getIban();
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForOxford() {
         super(data);
     }
-
-
-//    @Override
-//    protected void execute(ExecutionContext executionContext) {
-//
-//        // prereqs
-//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-//        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-//
-//        // exec
-//        createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
-//                data.getProperty_d(), executionContext);
-//
-//    }
 
 }

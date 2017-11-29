@@ -111,7 +111,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // when
             final List<FixedAssetFinancialAccount> results = fixedAssetFinancialAccountRepository.findByFinancialAccount(bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFaForOxford.REF));
+                    BankAccountAndFaFa_enum.Oxford.getIban()));
 
             // then
             assertThat(results.size(), is(1));
@@ -129,7 +129,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
             // when
             final FixedAssetFinancialAccount result = fixedAssetFinancialAccountRepository.find(fixedAsset.get(0), bankAccountRepository.findBankAccountByReference(owner,
-                    BankAccountAndFaFaForOxford.REF));
+                    BankAccountAndFaFa_enum.Oxford.getIban()));
 
             // then
             assertNotNull(result);

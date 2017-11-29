@@ -25,23 +25,8 @@ public class BankAccountAndFaFaForMediaXGb extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.MediaXGb;
 
-    public static final String REF = data.getIban();
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForMediaXGb() {
         super(data);
     }
-
-
-//    @Override
-//    protected void execute(ExecutionContext executionContext) {
-//
-//        // exec
-//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-//                PARTY_REF,
-//                REF,
-//                data.getProperty_d(), // no property = no FAFA
-//                executionContext);
-//    }
 
 }

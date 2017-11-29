@@ -25,22 +25,8 @@ public class BankAccountAndFaFaForMiracleGb extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.MiracleGb;
 
-    public static final String REF = data.getIban();
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForMiracleGb() {
         super(data);
     }
-
-
-//    @Override
-//    protected void execute(ExecutionContext executionContext) {
-//
-//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-//                PARTY_REF,
-//                REF,
-//                data.getProperty_d(), // no property = no FAFA
-//                executionContext);
-//    }
 
 }
