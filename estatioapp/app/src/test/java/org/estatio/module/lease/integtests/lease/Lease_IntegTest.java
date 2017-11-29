@@ -56,9 +56,22 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.entryfee.personas.LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.marketing.personas.LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.tax.personas.LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -89,7 +102,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
+
                 }
             });
         }
@@ -124,7 +147,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
+
                 }
             });
         }
@@ -168,7 +201,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
+
                 }
             });
         }
@@ -200,7 +243,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
+
                 }
             });
         }
@@ -282,7 +335,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForMarketingForOxfTopModel001Gb());
+
                 }
             });
         }
@@ -333,8 +396,13 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
 
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfMediax002Gb());
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfMediax002Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb());
+
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
                 }
             });
         }

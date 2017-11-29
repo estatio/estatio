@@ -28,6 +28,7 @@ import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
@@ -35,7 +36,10 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfPoison003Gb extends LeaseAbstract {
 
-    public static final String REF = "OXF-POISON-003";
+    public static final Lease_enum data = Lease_enum.OxfPoison003Gb;
+
+    public static final String REF = data.getRef();
+
     public static final String UNIT_REFERENCE = Property_enum.OxfGb.unitRef("003");
     public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
 

@@ -31,7 +31,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
@@ -40,15 +40,20 @@ import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = Organisation_enum.HelloWorldGb.getRef();
-    public static final String PARTY_REF_BUYER = Organisation_enum.MiracleGb.getRef();
-    public static final String LEASE_REF = LeaseForOxfMiracl005Gb.REF;
+    private static final Lease_enum lease_d = Lease_enum.OxfMiracl005Gb;
+    private static final Organisation_enum seller_d = Organisation_enum.HelloWorldGb;
+    private static final Organisation_enum buyer_d = Organisation_enum.MiracleGb;
+    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.GbOxf;
 
-    public static final String AT_PATH = ApplicationTenancy_enum.GbOxf.getPath();
+    public static final String PARTY_REF_SELLER = seller_d.getRef();
+    public static final String PARTY_REF_BUYER = buyer_d.getRef();
+    public static final String LEASE_REF = lease_d.getRef();
+
+    public static final String AT_PATH = applicationTenancy_d.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(final Lease lease) {
-        Ensure.ensureThatArg(lease.getReference(), is(LEASE_REF));
+        Ensure.ensureThatArg(lease.getReference(), is(lease_d.getRef()));
         return lease.getStartDate().plusYears(1);
     }
 
@@ -68,8 +73,8 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
 
         // exec
-        final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final ApplicationTenancy applicationTenancy = applicationTenancy_d.findUsing(serviceRegistry);
+        final Lease lease = lease_d.findUsing(serviceRegistry);
         final LocalDate invoiceStartDate = startDateFor(lease);
 
         final InvoiceForLease invoice = createInvoiceAndNumerator(

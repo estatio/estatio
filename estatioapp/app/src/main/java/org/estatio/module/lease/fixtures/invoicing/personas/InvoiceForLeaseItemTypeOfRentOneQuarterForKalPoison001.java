@@ -31,7 +31,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.fixtures.invoice.InvoiceAbstract;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
@@ -40,11 +40,16 @@ import static org.incode.module.base.integtests.VT.ldix;
 
 public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
-    public static final String PARTY_REF_SELLER = Organisation_enum.AcmeNl.getRef();
-    public static final String PARTY_REF_BUYER = Organisation_enum.PoisonNl.getRef();
-    public static final String LEASE_REF = LeaseForKalPoison001Nl.REF;
+    private static final Organisation_enum seller_d = Organisation_enum.AcmeNl;
+    private static final Organisation_enum buyer_d = Organisation_enum.PoisonNl;
+    private static final Lease_enum lease_d = Lease_enum.KalPoison001Nl;
+    private static final ApplicationTenancy_enum applicationTenancy_d = ApplicationTenancy_enum.NlKal;
 
-    public static final String AT_PATH = ApplicationTenancy_enum.NlKal.getPath();
+    public static final String PARTY_REF_SELLER = seller_d.getRef();
+    public static final String PARTY_REF_BUYER = buyer_d.getRef();
+    public static final String LEASE_REF = lease_d.getRef();
+
+    public static final String AT_PATH = applicationTenancy_d.getPath();
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(Lease lease) {
@@ -64,12 +69,12 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, Organisation_enum.AcmeNl.toFixtureScript());
+        executionContext.executeChild(this, seller_d.toFixtureScript());
         executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
         // exec
         final ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath(AT_PATH);
-        final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);
+        final Lease lease = lease_d.findUsing(serviceRegistry);
 
         // simply within the lease's start/end date
         final LocalDate startDate = startDateFor(lease);

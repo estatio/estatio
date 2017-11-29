@@ -22,8 +22,10 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.breaks.BreakExerciseType;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.fixtures.LeaseBreakOptionsAbstract;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
 
 public class LeaseBreakOptionsForOxfPoison003Gb extends LeaseBreakOptionsAbstract {
 
@@ -33,7 +35,9 @@ public class LeaseBreakOptionsForOxfPoison003Gb extends LeaseBreakOptionsAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
 
         // exec
         final Lease lease = leaseRepository.findLeaseByReference(LEASE_REF);

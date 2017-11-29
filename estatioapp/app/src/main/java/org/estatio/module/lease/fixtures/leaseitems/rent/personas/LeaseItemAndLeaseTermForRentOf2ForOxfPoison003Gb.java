@@ -18,9 +18,9 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.rent.personas;
 
-import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.index.fixtures.IndexRefData;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 
@@ -30,7 +30,7 @@ import static org.incode.module.base.integtests.VT.ld;
 public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 
     public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
-    public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
+    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
     public static final String INDEX_REF_IT = IndexRefData.IT_REF;
 
     @Override

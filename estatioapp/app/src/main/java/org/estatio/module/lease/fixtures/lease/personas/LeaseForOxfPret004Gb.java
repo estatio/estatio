@@ -27,6 +27,7 @@ import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOw
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
@@ -35,7 +36,11 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseForOxfPret004Gb extends LeaseAbstract {
 
-    public static final String LEASE_REFERENCE = "OXF-PRET-004";
+    public static final Lease_enum data = Lease_enum.OxfPret004Gb;
+
+    public static final String REF = data.getRef();
+
+    public static final String LEASE_REFERENCE = REF;
     public static final String UNIT_REFERENCE = Property_enum.OxfGb.unitRef("004");
     public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
     public static final String PARTY_REF_TENANT = Organisation_enum.PretGb.getRef();

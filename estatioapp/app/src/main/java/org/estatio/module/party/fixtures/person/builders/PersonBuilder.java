@@ -24,7 +24,7 @@ import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.incode.module.country.dom.impl.CountryRepository;
 
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGlobal;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
@@ -64,7 +64,7 @@ public final class PersonBuilder
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        defaultParam("atPath", executionContext, ApplicationTenancyForGlobal.PATH);
+        defaultParam("atPath", executionContext, ApplicationTenancy_enum.Global.getPath());
         defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(6));
         defaultParam("firstName", executionContext, fakeDataService.name().firstName());
         defaultParam("lastName", executionContext, fakeDataService.name().fullName());

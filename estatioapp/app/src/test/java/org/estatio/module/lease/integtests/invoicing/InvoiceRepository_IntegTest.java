@@ -47,8 +47,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
 import org.estatio.module.currency.fixtures.CurrenciesRefData;
 import org.estatio.module.invoice.dom.Constants;
@@ -64,8 +63,10 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
 import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.Numerator;
@@ -323,7 +324,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForNl.PATH);
+            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Nl.getPath());
             seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_SELLER);
             buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
@@ -477,7 +478,8 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
+            final ApplicationTenancy applicationTenancy = applicationTenancyRepository.findByPath(
+                    ApplicationTenancy_enum.Gb.getPath());
             final Party seller = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_SELLER);
             final Party buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.PARTY_REF_BUYER);
             final Lease lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE_REF);
@@ -510,7 +512,9 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
                 }
             });
         }
@@ -523,7 +527,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
+            applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancy_enum.Gb.getPath());
             seller = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = Organisation_enum.PoisonGb.findUsing(serviceRegistry);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
@@ -571,7 +575,10 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
                 }
             });
 

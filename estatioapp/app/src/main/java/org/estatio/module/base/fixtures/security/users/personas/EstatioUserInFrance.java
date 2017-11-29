@@ -17,16 +17,18 @@
 package org.estatio.module.base.fixtures.security.users.personas;
 
 import java.util.Arrays;
+
 import org.isisaddons.module.security.dom.user.AccountType;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
+
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.base.fixtures.security.perms.personas.EstatioUserRoleAndPermissions;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForFr;
 
 public class EstatioUserInFrance extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-user-fr";
     public static final String PASSWORD = "pass";
-    public static final String AT_PATH = ApplicationTenancyForFr.PATH;
+    public static final String AT_PATH = ApplicationTenancy_enum.Fr.getPath();
     public static final String EMAIL_ADDRESS = null;
 
     public EstatioUserInFrance() {

@@ -39,7 +39,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
@@ -54,15 +54,22 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
-import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.percentage.personas.LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -101,7 +108,9 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003Gb());
                 }
             });
         }
@@ -112,7 +121,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
+            applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancy_enum.Gb.getPath());
             seller = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = Organisation_enum.PoisonGb.findUsing(serviceRegistry);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
@@ -167,7 +176,13 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
 
                     executionContext.executeChild(this, new LeaseForOxfPret004Gb());
 
-                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForPercentageForOxfMiracl005Gb());
+                    executionContext.executeChild(this, new LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb());
+
                 }
             });
         }

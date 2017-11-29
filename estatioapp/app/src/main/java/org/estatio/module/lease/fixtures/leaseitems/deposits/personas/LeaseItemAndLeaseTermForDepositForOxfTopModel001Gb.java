@@ -18,16 +18,17 @@
  */
 package org.estatio.module.lease.fixtures.leaseitems.deposits.personas;
 
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.Fraction;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGbOxfDefault;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 public class LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
-    public static final String AT_PATH = ApplicationTenancyForGbOxfDefault.PATH;
+    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
+    public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
     protected void execute(final ExecutionContext fixtureResults) {
