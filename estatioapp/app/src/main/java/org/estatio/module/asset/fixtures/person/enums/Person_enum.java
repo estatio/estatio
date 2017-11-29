@@ -18,6 +18,7 @@ import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Fr;
@@ -206,12 +207,14 @@ public enum Person_enum
 
     @Override
     public PersonAndRolesBuilder toFixtureScript() {
-        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder() {
+
+        @EqualsAndHashCode(of={"reference"}, callSuper = true)
+        class MyPersonAndRolesBuilder extends PersonAndRolesBuilder {
             @Override
             public void execute(final ExecutionContext ec) {
                 setFromParty(objectFor(getPartyFrom_d(), ec));
 
-                for (final Person_enum.FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
+                for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
                     addFixedAssetRole(
                             roleSpec.getFixedAssetRole(),
                             objectFor(roleSpec.getProperty_d(), ec)
@@ -220,7 +223,9 @@ public enum Person_enum
 
                 super.execute(ec);
             }
-        }       .setReference(getRef())
+        }
+
+        final PersonAndRolesBuilder personAndRolesBuilder = new MyPersonAndRolesBuilder().setReference(getRef())
                 .setFirstName(getFirstName())
                 .setLastName(getLastName())
                 .setInitials(getInitials())
@@ -234,4 +239,5 @@ public enum Person_enum
         }
         return personAndRolesBuilder;
     }
+
 }

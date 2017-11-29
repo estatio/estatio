@@ -26,6 +26,7 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -56,17 +57,19 @@ public enum BankAccountAndFaFa_enum
     @Override
     public BankAccountAndFaFaBuilder toFixtureScript() {
 
-        return new BankAccountAndFaFaBuilder() {
+        @EqualsAndHashCode(of={"party", "iban", "property"}, callSuper = true)
+        class MyBankAccountAndFaFaBuilder extends BankAccountAndFaFaBuilder {
             @Override
             protected void execute(final ExecutionContext ec) {
 
-                setIban(iban);
                 setParty(objectFor(organisation_d, ec));
                 setProperty(objectFor(property_d, ec));
 
                 super.execute(ec);
             }
-        };
+        }
+        return new MyBankAccountAndFaFaBuilder()
+                .setIban(iban);
     }
 
 }

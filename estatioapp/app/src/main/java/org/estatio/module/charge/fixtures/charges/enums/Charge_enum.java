@@ -31,6 +31,7 @@ import org.estatio.module.charge.fixtures.charges.builders.ChargeBuilder;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -158,19 +159,23 @@ public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>,
 
 
     public ChargeBuilder toFixtureScript() {
-        return new ChargeBuilder() {
+
+        @EqualsAndHashCode(of={"ref"}, callSuper = true)
+        class MyChargeBuilder extends ChargeBuilder {
             @Override
             protected void execute(final ExecutionContext ec) {
-                setRef(Charge_enum.this.getRef());
-                setName(Charge_enum.this.getName());
-                setApplicability(applicability);
                 setChargeGroup(objectFor(chargeGroup_d, ec));
                 setApplicationTenancy(objectFor(applicationTenancy_d, ec));
                 setTax(objectFor(tax_d, ec));
 
                 super.execute(ec);
             }
-        };
+        }
+
+        return new MyChargeBuilder()
+                .setRef(Charge_enum.this.getRef())
+                .setName(Charge_enum.this.getName())
+                .setApplicability(applicability);
     }
 
 }

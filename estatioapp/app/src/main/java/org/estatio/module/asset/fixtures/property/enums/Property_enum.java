@@ -2,10 +2,9 @@ package org.estatio.module.asset.fixtures.property.enums;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
-
-import org.apache.isis.applib.fixturescripts.EnumWithFinder;
 import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -14,6 +13,7 @@ import org.estatio.module.asset.fixtures.property.builders.PropertyBuilder;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.dom.PropertyType.SHOPPING_CENTER;
@@ -65,21 +65,24 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderSc
 
     @Override
     public PropertyBuilder toFixtureScript() {
-        return new PropertyBuilder() {
+
+        @EqualsAndHashCode(of={"reference"}, callSuper = true)
+        class MyPropertyBuilder extends PropertyBuilder {
             @Override
             protected void execute(final ExecutionContext ec) {
-
-                setReference(ref);
-                setName(name);
-                setCity(city);
                 setCountry(objectFor(country_d, ec));
-                setPropertyType(propertyType);
-                setOpeningDate(openingDate);
-                setAcquireDate(acquireDate);
-                setLocationStr(locationStr);
-
                 super.execute(ec);
             }
-        };
+        }
+
+        return new MyPropertyBuilder()
+                .setReference(ref)
+                .setName(name)
+                .setCity(city)
+                .setPropertyType(propertyType)
+                .setOpeningDate(openingDate)
+                .setAcquireDate(acquireDate)
+                .setLocationStr(locationStr);
     }
+
 }
