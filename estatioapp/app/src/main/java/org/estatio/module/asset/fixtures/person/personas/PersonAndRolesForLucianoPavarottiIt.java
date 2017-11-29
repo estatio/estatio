@@ -25,16 +25,10 @@ public class PersonAndRolesForLucianoPavarottiIt extends PersonAndRolesAbstract 
 
     public static final Person_enum data = Person_enum.LucianoPavarottiIt;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     public PersonAndRolesForLucianoPavarottiIt() {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
-    }
 
 }

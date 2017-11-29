@@ -25,15 +25,8 @@ public class PersonAndRolesForJeanneDarcFr extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.JeanneDarcFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForJeanneDarcFr() {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
-    }
 }

@@ -21,6 +21,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
@@ -125,7 +126,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
         // given
         Person personEmmaWithNoRoleAsPropertyManager = (Person) partyRepository.findPartyByReference(
-                PersonAndRolesForEmmaTreasurerGb.REF);
+                Person_enum.EmmaTreasurerGb.getRef());
         SortedSet<PartyRole> rolesforEmma = personEmmaWithNoRoleAsPropertyManager.getRoles();
         assertThat(rolesforEmma.size()).isEqualTo(1);
         assertThat(rolesforEmma.first().getRoleType()).isEqualTo(partyRoleTypeRepository.findByKey(PartyRoleTypeEnum.TREASURER.getKey()));
@@ -133,7 +134,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;
@@ -150,7 +151,8 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         Exception error = new Exception();
 
         // given
-        Person personEmma = (Person) partyRepository.findPartyByReference(PersonAndRolesForEmmaTreasurerGb.REF);
+        Person personEmma = (Person) partyRepository.findPartyByReference(
+                Person_enum.EmmaTreasurerGb.getRef());
         PartyRoleType roleAsPropertyManager = partyRoleTypeRepository.findByKey("PROPERTY_MANAGER");
         personEmma.addRole(roleAsPropertyManager);
         transactionService.nextTransaction();
@@ -161,7 +163,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         // when
         try {
             queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-            sudoService.sudo(PersonAndRolesForEmmaTreasurerGb.REF.toLowerCase(), (Runnable) () ->
+            sudoService.sudo(Person_enum.EmmaTreasurerGb.getRef().toLowerCase(), (Runnable) () ->
                     wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act("PROPERTY_MANAGER", null, null));
         } catch (DisabledException e){
             error = e;

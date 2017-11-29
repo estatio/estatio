@@ -26,9 +26,6 @@ public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstr
 
     public static final Person_enum data = Person_enum.OlivePropertyManagerFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForOlivePropertyManagerFr() {
         super(data);
     }
@@ -38,7 +35,7 @@ public class PersonAndRolesForOlivePropertyManagerFr extends PersonAndRolesAbstr
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
 
-        executionContext.executeChild(this, data.toFixtureScript());
+        super.execute(executionContext);
     }
 
 }

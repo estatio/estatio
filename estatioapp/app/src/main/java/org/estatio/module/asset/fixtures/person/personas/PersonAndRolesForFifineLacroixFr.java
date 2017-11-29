@@ -27,9 +27,6 @@ public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.FifineLacroixFr;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForFifineLacroixFr() {
         super(data);
     }
@@ -40,7 +37,7 @@ public class PersonAndRolesForFifineLacroixFr extends PersonAndRolesAbstract {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
 
-        executionContext.executeChild(this, data.toFixtureScript());
+        super.execute(executionContext);
 
     }
 

@@ -33,6 +33,7 @@ import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
@@ -45,6 +46,7 @@ import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationship;
 import org.estatio.module.party.dom.relationship.PartyRelationshipRepository;
 import org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnum;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -87,14 +89,14 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
     public static class FindByParty extends PartyRelationshipRepository_IntegTest {
         @Test
         public void findFrom() throws Exception {
-            final List<PartyRelationship> results = partyRelationshipRepository.findByParty(partyRepository.findPartyByReference(OrganisationForTopModelGb.REF));
+            final List<PartyRelationship> results = partyRelationshipRepository.findByParty(partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef()));
             assertThat(results.size(), is(1));
         }
 
         @Test
         public void findto() throws Exception {
             final List<PartyRelationship> results = partyRelationshipRepository.findByParty(partyRepository.findPartyByReference(
-                    PersonAndRolesForGinoVannelliGb.REF));
+                    Person_enum.GinoVannelliGb.getRef()));
             assertThat(results.size(), is(1));
         }
 
@@ -104,8 +106,8 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
 
         @Test
         public void happyCase() throws Exception {
-            final Party fromParty = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            final Party toParty = partyRepository.findPartyByReference(PersonAndRolesForLinusTorvaldsNl.REF);
+            final Party fromParty = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party toParty = partyRepository.findPartyByReference(Person_enum.LinusTorvaldsNl.getRef());
             PartyRelationship relationship = partyRelationshipRepository.newRelationship(
                     fromParty,
                     toParty,
@@ -126,7 +128,7 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
 
         @Test
         public void happyCase() throws Exception {
-            final Party husband = partyRepository.findPartyByReference(PersonAndRolesForGinoVannelliGb.REF);
+            final Party husband = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
             PartyRelationship relationship = partyRelationshipRepository.newRelatedPerson(husband, LOPEZ, J, JENNIFER, LOPEZ, PersonGenderType.FEMALE, PartyRelationshipTypeEnum.MARRIAGE.toTitle(), null, _555_12345, JLOPEZ_EXAMPLE_COM);
             Person wife = (Person) relationship.getTo();
             assertThat(wife.getReference(), is(LOPEZ));
@@ -144,8 +146,8 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-            final Party parent = partyRepository.findPartyByReference(OrganisationForTopModelGb.REF);
-            final Party currentChild = partyRepository.findPartyByReference(PersonAndRolesForGinoVannelliGb.REF);
+            final Party parent = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party currentChild = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
             final Party replacementChild = personRepository.newPerson("TEST", "JR", "JR", "Ewing", PersonGenderType.MALE, currentChild.getApplicationTenancy());
             DeleteEvent event = new DeleteEvent();
             event.setSource(currentChild);

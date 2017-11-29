@@ -20,6 +20,7 @@ package org.estatio.module.lease.fixtures.lease;
 
 import javax.inject.Inject;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -27,7 +28,7 @@ import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForPretGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
@@ -37,8 +38,8 @@ public class LeaseForOxfPret004Gb extends LeaseAbstract {
 
     public static final String LEASE_REFERENCE = "OXF-PRET-004";
     public static final String UNIT_REFERENCE = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("004");
-    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_TENANT = OrganisationForPretGb.REF;
+    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
+    public static final String PARTY_REF_TENANT = Organisation_enum.PretGb.getRef();
 
     public static final String BRAND = "Pret-a-Partir";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.REGIONAL;
@@ -54,7 +55,7 @@ public class LeaseForOxfPret004Gb extends LeaseAbstract {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Party manager = partyRepository.findPartyByReference(PersonAndRolesForGinoVannelliGb.REF);
+        Party manager = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
         createLease(
                 LEASE_REFERENCE,
                 "Pret-a-Partir lease",

@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -52,7 +53,7 @@ public class LeaseForOxfMediaX002Gb extends LeaseAbstract {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Party manager = partyRepository.findPartyByReference(PersonAndRolesForJohnSmithGb.REF);
+        Party manager = partyRepository.findPartyByReference(Person_enum.JohnSmithGb.getRef());
 
         final Lease lease = createLease(
                 REF,

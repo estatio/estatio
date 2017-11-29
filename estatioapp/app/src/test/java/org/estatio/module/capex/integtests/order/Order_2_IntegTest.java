@@ -18,6 +18,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJonathanPropertyManagerGb;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -87,7 +88,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         assertNotNull(order);
 
         // when
-        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, this.order);
+        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), this.order);
 
         // then
         assertThat(this.order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
@@ -105,7 +106,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -120,7 +121,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         assertNotNull(order);
-        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
+        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // expect
@@ -130,7 +131,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final Order_discard mixin = mixin(Order_discard.class, order);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act("Discarding junk");
         });
 
@@ -141,7 +142,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
 
         // given
         assertNotNull(order);
-        approve(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, order);
+        approve(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), order);
         assertThat(order.getApprovalState()).isEqualTo(OrderApprovalState.APPROVED);
 
         // when
@@ -152,7 +153,7 @@ public class Order_2_IntegTest extends CapexModuleIntegTestAbstract {
         final String comment = "some reason";
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
             wrap(mixin).act(role, person, comment);
         });
 

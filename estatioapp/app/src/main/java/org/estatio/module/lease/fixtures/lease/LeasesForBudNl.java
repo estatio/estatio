@@ -18,12 +18,14 @@
  */
 package org.estatio.module.lease.fixtures.lease;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForDagoBankNl;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
@@ -52,15 +54,15 @@ public class LeasesForBudNl extends LeaseAbstract {
     public static final String UNIT_REF6 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("006");
     public static final String UNIT_REF7 = PropertyAndUnitsAndOwnerAndManagerForBudNl.unitReference("007");
 
-    public static final String PARTY_REF_TENANT1 = OrganisationForPoisonNl.REF;
-    public static final String PARTY_REF_TENANT2 = OrganisationForMiracleNl.REF;
-    public static final String PARTY_REF_TENANT3 = OrganisationForHelloWorldNl.REF;
-    public static final String PARTY_REF_TENANT4 = OrganisationForDagoBankNl.REF;
-    public static final String PARTY_REF_TENANT4A = OrganisationForNlBankNl.REF;
-    public static final String PARTY_REF_TENANT5 = OrganisationForHyperNl.REF;
+    public static final String PARTY_REF_TENANT1 = Organisation_enum.PoisonNl.getRef();
+    public static final String PARTY_REF_TENANT2 = Organisation_enum.MiracleNl.getRef();
+    public static final String PARTY_REF_TENANT3 = Organisation_enum.HelloWorldNl.getRef();
+    public static final String PARTY_REF_TENANT4 = Organisation_enum.DagoBankNl.getRef();
+    public static final String PARTY_REF_TENANT4A = Organisation_enum.NlBankNl.getRef();
+    public static final String PARTY_REF_TENANT5 = Organisation_enum.HyperNl.getRef();
 
-    public static final String PARTY_REF_LANDLORD = OrganisationForAcmeNl.REF;
-    public static final String PARTY_REF_MANAGER = PersonAndRolesForJohnDoeNl.REF;
+    public static final String PARTY_REF_LANDLORD = Organisation_enum.AcmeNl.getRef();
+    public static final String PARTY_REF_MANAGER = Person_enum.JohnDoeNl.getRef();
 
     public static final String BRAND1 = "Poison";
     public static final String BRAND2 = "Miracle";

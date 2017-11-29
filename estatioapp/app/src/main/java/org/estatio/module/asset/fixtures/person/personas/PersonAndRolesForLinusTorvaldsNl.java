@@ -25,16 +25,9 @@ public class PersonAndRolesForLinusTorvaldsNl extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.LinusTorvaldsNl;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForLinusTorvaldsNl() {
         super(data);
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
-    }
 
 }

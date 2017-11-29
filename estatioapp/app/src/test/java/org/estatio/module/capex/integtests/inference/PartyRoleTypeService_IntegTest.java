@@ -28,6 +28,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForFloellaAssetManagerGb;
@@ -61,7 +62,7 @@ public class PartyRoleTypeService_IntegTest extends CapexModuleIntegTestAbstract
     @Test
     public void partyRoleTypeService_members_of_takes_role_into_account(){
 
-        sudoService.sudo(PersonAndRolesForJonathanPropertyManagerGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(Person_enum.JonathanPropertyManagerGb.getSecurityUserName(), () -> {
 
             Assertions.assertThat(partyRoleTypeService.membersOf(PartyRoleTypeEnum.OFFICE_ADMINISTRATOR).size()).isEqualTo(1);
             Assertions.assertThat(partyRoleTypeService.membersOf(PartyRoleTypeEnum.TREASURER).size()).isEqualTo(1);

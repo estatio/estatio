@@ -29,11 +29,6 @@ public class PersonAndRolesForJonathanPropertyManagerGb extends PersonAndRolesAb
 
     public static final Person_enum data = Person_enum.JonathanPropertyManagerGb;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
-    public static final String SECURITY_USERNAME = REF.toLowerCase();
-
     public PersonAndRolesForJonathanPropertyManagerGb() {
         super(data);
     }
@@ -43,7 +38,7 @@ public class PersonAndRolesForJonathanPropertyManagerGb extends PersonAndRolesAb
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        executionContext.executeChild(this, data.toFixtureScript());
+        super.execute(executionContext);
 
     }
 

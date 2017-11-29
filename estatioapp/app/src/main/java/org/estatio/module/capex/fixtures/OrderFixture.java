@@ -15,6 +15,7 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -62,7 +63,7 @@ public class OrderFixture extends FixtureScript {
                 PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
-        sudoService.sudo(PersonAndRolesForDylanOfficeAdministratorGb.SECURITY_USERNAME, () -> {
+        sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getSecurityUserName(), () -> {
 
             wrap(mixin(Document_categoriseAsOrder.class,fakeOrder2Doc)).act(propertyForOxf, "");
 

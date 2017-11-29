@@ -25,16 +25,8 @@ public class PersonAndRolesForAgnethaFaltskogSe extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.AgnethaFaltskogSe;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForAgnethaFaltskogSe() {
         super(data);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 

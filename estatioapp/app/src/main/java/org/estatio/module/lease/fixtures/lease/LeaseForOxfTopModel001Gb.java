@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.country.fixtures.enums.Country_enum;
@@ -25,6 +26,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 
@@ -35,8 +37,8 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
     public static final String REF = "OXF-TOPMODEL-001";
 
     public static final String UNIT_REF = PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("001");
-    public static final String PARTY_REF_LANDLORD = OrganisationForHelloWorldGb.REF;
-    public static final String PARTY_REF_TENANT = OrganisationForTopModelGb.REF;
+    public static final String PARTY_REF_LANDLORD = Organisation_enum.HelloWorldGb.getRef();
+    public static final String PARTY_REF_TENANT = Organisation_enum.TopModelGb.getRef();
 
     public static final String BRAND = "Topmodel";
     public static final BrandCoverage BRAND_COVERAGE = BrandCoverage.NATIONAL;
@@ -53,7 +55,7 @@ public class LeaseForOxfTopModel001Gb extends LeaseAbstract {
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
         // exec
-        Party manager = partyRepository.findPartyByReference(PersonAndRolesForGinoVannelliGb.REF);
+        Party manager = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
         Lease lease = createLease(
                 REF,
                 "Topmodel Lease",

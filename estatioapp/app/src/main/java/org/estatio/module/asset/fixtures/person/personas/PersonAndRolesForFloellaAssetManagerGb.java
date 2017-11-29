@@ -29,9 +29,6 @@ public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstra
 
     public static final Person_enum data = Person_enum.FloellaAssetManagerGb;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
-
     public PersonAndRolesForFloellaAssetManagerGb() {
         super(data);
     }
@@ -41,7 +38,7 @@ public class PersonAndRolesForFloellaAssetManagerGb extends PersonAndRolesAbstra
 
         executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
 
-        executionContext.executeChild(this, data.toFixtureScript());
+        super.execute(executionContext);
 
     }
 

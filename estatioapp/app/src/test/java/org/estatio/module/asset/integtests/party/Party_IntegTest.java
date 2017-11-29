@@ -30,6 +30,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForGinoVannelliGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
@@ -73,14 +74,14 @@ public class Party_IntegTest extends AssetModuleIntegTestAbstract {
 
         @Test
         public void happyCase() {
-            Party party = partyRepository.findPartyByReference(PersonAndRolesForJohnDoeNl.REF);
+            Party party = partyRepository.findPartyByReference(Person_enum.JohnDoeNl.getRef());
             // WHen
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.SUPERUSER.getRoleName()),
                     () -> {
                         wrap(party).delete(null);
                     });
 
-            assertNull(partyRepository.findPartyByReferenceOrNull(PersonAndRolesForJohnDoeNl.REF));
+            assertNull(partyRepository.findPartyByReferenceOrNull(Person_enum.JohnDoeNl.getRef()));
         }
 
     }

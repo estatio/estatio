@@ -25,16 +25,9 @@ public class PersonAndRolesForGinoVannelliGb extends PersonAndRolesAbstract {
 
     public static final Person_enum data = Person_enum.GinoVannelliGb;
 
-    public static final String REF = data.getRef();
-    public static final String AT_PATH = data.getApplicationTenancy().getPath();
 
     public PersonAndRolesForGinoVannelliGb() {
         super(data);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, data.toFixtureScript());
     }
 
 }
