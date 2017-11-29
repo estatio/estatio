@@ -524,7 +524,8 @@ public class OrderItem extends UdoDomainObject2<OrderItem> implements FinancialI
         return getOrdr().isImmutable() || isLinkedToInvoiceItem();
     }
 
-    boolean isLinkedToInvoiceItem(){
+    @Programmatic
+    public boolean isLinkedToInvoiceItem(){
         return ! orderItemInvoiceItemLinkRepository.findByOrderItem(this).isEmpty();
     }
 

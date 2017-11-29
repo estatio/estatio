@@ -27,6 +27,7 @@ import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
 import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
@@ -72,6 +73,12 @@ public class Order_recategorize {
         }
         if(order.getApprovalState() != OrderApprovalState.NEW) {
             return "Only NEW orders can be recategorized";
+        }
+        for (OrderItem item : order.getItems()){
+            if (item.isLinkedToInvoiceItem()){
+                return "This order item is linked to an invoice item";
+            }
+
         }
         return null;
     }
