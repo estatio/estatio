@@ -18,7 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.bankaccount.personas;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;

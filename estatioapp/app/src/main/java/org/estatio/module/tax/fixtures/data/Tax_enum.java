@@ -70,7 +70,7 @@ public enum Tax_enum implements EnumWithUpsert<Tax>, EnumWithFixtureScript<Tax, 
         final TaxRepository taxRepository = serviceRegistry.lookupService(TaxRepository.class);
 
         final String name = "Value Added Tax (Standard, " + country.getRef3() + ")";
-        final ApplicationTenancy applicationTenancy = country.getApplicationTenancy().findUsing(serviceRegistry);
+        final ApplicationTenancy applicationTenancy = country.getApplicationTenancy_d().findUsing(serviceRegistry);
         tax = taxRepository.newTax(getReference(), name, applicationTenancy);
         for (RateData rate : rates) {
             final TaxRate taxRate = tax.newRate(rate.date, rate.rateValue);

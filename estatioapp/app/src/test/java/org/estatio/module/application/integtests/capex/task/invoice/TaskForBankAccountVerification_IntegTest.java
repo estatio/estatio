@@ -34,7 +34,7 @@ import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.value.Blob;
 
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.capex.contributions.BankAccount_attachPdfAsIbanProof;

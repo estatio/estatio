@@ -37,7 +37,7 @@ import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForOxford;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForOxford;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;

@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+
 import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.incode.module.country.dom.impl.Country;
@@ -30,7 +32,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.PropertyType;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
-import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -78,7 +79,6 @@ public class PropertyBuilder
         defaultParam("city", executionContext, fakeDataService.address().cityPrefix() + " " + fakeDataService.name().lastName() + fakeDataService.address().citySuffix());
         defaultParam("country", executionContext, fakeDataService.collections().aBounded(Country.class));
         defaultParam("acquireDate", executionContext, fakeDataService.dates().before(fakeDataService.periods().days(100, 200)));
-
 
         this.property = propertyRepository
                 .newProperty(getReference(), getName(), getPropertyType(), getCity(), getCountry(), getAcquireDate());

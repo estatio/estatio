@@ -16,20 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
-import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 
 public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.HelloWorldNl;
 
-    public static final String REF = data.getRef();
+    public static final String REF = data.getIban();
 
-    public static final String PARTY_REF = data.getParty().getRef();
+    public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForHelloWorldNl() {
         this(null, null);
@@ -50,7 +50,7 @@ public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstrac
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                data.getProperty(), // create FAFA
+                data.getProperty_d(), // create FAFA
                 executionContext);
     }
 

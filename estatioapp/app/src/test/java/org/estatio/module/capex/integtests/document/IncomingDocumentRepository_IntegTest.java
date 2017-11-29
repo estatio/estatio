@@ -12,7 +12,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.document.dom.impl.docs.Document;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForHelloWorldNl;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.fixtures.document.IncomingPdfFixture;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;

@@ -16,19 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
-import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 
 public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
     public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.Oxford;
 
-    public static final String REF = data.getRef();
-    public static final String PARTY_REF = data.getParty().getRef();
+    public static final String REF = data.getIban();
+    public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForOxford() {
         this(null, null);
@@ -47,7 +47,7 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
         // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
-                data.getProperty(), executionContext);
+                data.getProperty_d(), executionContext);
         
     }
 

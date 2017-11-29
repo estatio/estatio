@@ -16,9 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.bankaccount.enums;
+package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums;
+
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import org.isisaddons.module.base.platform.fixturesupport.EnumWithFixtureScript;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.builders.BankAccountAndFaFaBuilder;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +35,8 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Getter
 @Accessors(chain = true)
-public enum BankAccountAndFaFa_enum  {
+public enum BankAccountAndFaFa_enum
+        implements EnumWithFixtureScript<BankAccount, BankAccountAndFaFaBuilder> {
 
     AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433", Property_enum.KalNl),
     HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434", Property_enum.OxfGb),
@@ -44,8 +52,30 @@ public enum BankAccountAndFaFa_enum  {
     TopModelGb      (Organisation_enum.TopModelGb,   "NL31ABNA0580744435", null)
     ;
 
-    private final Organisation_enum party;
-    private final String ref;
-    private final Property_enum property;
+    private final Organisation_enum organisation_d;
+    private final String iban;
+    private final Property_enum property_d;
+
+    @Override
+    public BankAccountAndFaFaBuilder toFixtureScript() {
+
+        return new BankAccountAndFaFaBuilder() {
+            @Override
+            protected void execute(final ExecutionContext ec) {
+
+                setParty(exec(organisation_d, ec).getOrganisation());
+                setIban(iban);
+                setProperty(property_d != null ? exec(property_d, ec).getProperty() : null);
+
+                super.execute(ec);
+            }
+
+            private <E extends EnumWithFixtureScript<T, F>, T, F extends BuilderScriptAbstract<F>> F exec(
+                    final E x,
+                    final FixtureScript.ExecutionContext ec) {
+                return ec.executeChildT(this, x.toFixtureScript());
+            }
+        };
+    }
 
 }

@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.module.assetfinancial.fixtures.bankaccount.personas.BankAccountAndFaFaForTopModelGb;
 import org.estatio.module.financial.fixtures.FinancialAccountTransactionAbstract;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForTopModelGb;
 

@@ -16,33 +16,34 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.assetfinancial.fixtures.bankaccount.personas;
+package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
-import org.estatio.module.assetfinancial.fixtures.BankAccountAndFaFaAbstract;
-import org.estatio.module.assetfinancial.fixtures.bankaccount.enums.BankAccountAndFaFa_enum;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 
-public class BankAccountAndFaFaForPoisonNl extends BankAccountAndFaFaAbstract {
+public class BankAccountAndFaFaForMediaXGb extends BankAccountAndFaFaAbstract {
 
-    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.PoisonNl;
+    public static final BankAccountAndFaFa_enum data = BankAccountAndFaFa_enum.MediaXGb;
 
-    public static final String REF = data.getRef();
-    public static final String PARTY_REF = data.getParty().getRef();
+    public static final String REF = data.getIban();
+    public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
-    public BankAccountAndFaFaForPoisonNl() {
+    public BankAccountAndFaFaForMediaXGb() {
         this(null, null);
     }
 
-    public BankAccountAndFaFaForPoisonNl(String friendlyName, String localName) {
+    public BankAccountAndFaFaForMediaXGb(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        // exec
         createBankAccountAndOptionallyFixedAssetFinancialAsset(
                 PARTY_REF,
                 REF,
-                data.getProperty(), // no property = no FAFA,
+                data.getProperty_d(), // no property = no FAFA
                 executionContext);
     }
 

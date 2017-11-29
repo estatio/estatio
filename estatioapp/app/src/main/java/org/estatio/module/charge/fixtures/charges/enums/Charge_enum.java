@@ -132,7 +132,7 @@ public enum Charge_enum implements EnumWithUpsert<Charge> {
             final ChargeNoCountry_enum chargeNoCountry,
             final Tax_enum tax) {
         this.country = country;
-        applicationTenancy = country.getApplicationTenancy();
+        applicationTenancy = country.getApplicationTenancy_d();
 
         chargeSuffix = chargeNoCountry.getChargeSuffix();
         chargeGroup = chargeNoCountry.getChargeGroup();
@@ -145,7 +145,7 @@ public enum Charge_enum implements EnumWithUpsert<Charge> {
     public String getRef() { return country.getRef3() + chargeSuffix; }
 
     public String getCountry2AlphaCode() {
-        return country.getApplicationTenancy().getPath().substring(1).toUpperCase();
+        return country.getApplicationTenancy_d().getPath().substring(1).toUpperCase();
     }
 
     public String getName() {

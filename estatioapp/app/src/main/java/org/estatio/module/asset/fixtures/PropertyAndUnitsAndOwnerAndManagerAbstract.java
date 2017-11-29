@@ -20,13 +20,66 @@ package org.estatio.module.asset.fixtures;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.incode.module.country.dom.impl.Country;
+
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.country.fixtures.enums.Country_enum;
+import org.estatio.module.party.dom.Party;
+
+import lombok.Getter;
 
 /**
  * Sets up the {@link Property} and also a number of
  * {@link Unit}s.
  */
 public abstract class PropertyAndUnitsAndOwnerAndManagerAbstract extends FixtureScript {
+
+    private final PropertyAndUnitsAndOwnerAndManager_enum data;
+
+    @Getter
+    public Property property;
+
+    protected PropertyAndUnitsAndOwnerAndManagerAbstract(final PropertyAndUnitsAndOwnerAndManager_enum data) {
+        this.data = data;
+    }
+
+    @Override
+    protected void execute(final ExecutionContext ec) {
+
+        final Party owner = ec.executeChildT(this, data.getOwner_d().toFixtureScript()).getOrganisation();
+        final Party manager = ec.executeChildT(this, data.getManager_d().toFixtureScript()).getPerson();
+
+        final Property_enum property_d = data.getProperty_d();
+        final Country_enum country_d = property_d.getCountry_d();
+        final Country country = ec.executeChildT(this, country_d.toFixtureScript()).getCountry();
+
+        property = new PropertyAndUnitsAndOwnerAndManagerBuilder()
+                .setReference(data.getRef())
+
+                .setName(property_d.getName())
+                .setCity(property_d.getCity())
+                .setCountry(country)
+                .setPropertyType(property_d.getPropertyType())
+                .setOpeningDate(property_d.getOpeningDate())
+                .setAcquireDate(property_d.getAcquireDate())
+                .setLocationStr(property_d.getLocationStr())
+
+                .setNumberOfUnits(data.getNumberOfUnits())
+
+                .setOwner(owner)
+                .setOwnerStartDate(data.getOwnerStartDate())
+                .setOwnerEndDate(data.getOwnerEndDate())
+
+                .setManager(manager)
+                .setManagerStartDate(data.getManagerStartDate())
+                .setManagerEndDate(data.getManagerEndDate())
+
+                .build(this, ec)
+                .getProperty();
+    }
 
 }
