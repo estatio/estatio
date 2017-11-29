@@ -88,8 +88,8 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
         @Test
         public void happy_case() throws Exception {
 
-            final Party buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
-            final Party seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            final Party seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final Property property = propertyRepository.findPropertyByReference(
                     Property_enum.OxfGb.getRef());
 

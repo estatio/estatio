@@ -83,7 +83,7 @@ public class FixedAssetRoleRepository_IntegTest extends AssetModuleIntegTestAbst
         public void withExistingPropertyPartyAndRoleType() throws Exception {
 
             // given
-            Party party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+            Party party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
             Property property = propertyRepository.findPropertyByReference("OXF");
             // TODO: get right dates (although the date params are not actually
             // used in the query..)

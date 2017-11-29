@@ -19,6 +19,9 @@
 package org.estatio.module.lease.fixtures.lease;
 
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
+import org.estatio.module.lease.fixtures.leaseitems.rent.personas.LeaseItemAndLeaseTermForRentForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.servicecharge.personas.LeaseItemAndLeaseTermForServiceChargeForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002Gb;
 
 public class LeaseItemAndTermsForOxfMediax002Gb extends LeaseItemAndTermsAbstract {
 

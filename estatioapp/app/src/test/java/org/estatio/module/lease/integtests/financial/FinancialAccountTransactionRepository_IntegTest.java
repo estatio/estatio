@@ -72,7 +72,7 @@ public class FinancialAccountTransactionRepository_IntegTest extends LeaseModule
 
     @Before
     public void setup() throws Exception {
-        party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+        party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         List<FinancialAccount> accounts = financialAccountRepository.findAccountsByOwner(party);
         assertThat(accounts.size(), is(1));
         financialAccount = accounts.get(0);

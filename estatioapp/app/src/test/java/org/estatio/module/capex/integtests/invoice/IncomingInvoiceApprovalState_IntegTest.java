@@ -23,7 +23,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForEmmaTreasurerGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationState;
@@ -89,10 +89,10 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
 
     @Before
     public void setUp() {
-        propertyForOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
 
-        buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
-        seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
 
         greatBritain = countryRepository.findCountry(Country_enum.GBR.getRef3());
         charge_for_works = chargeRepository.findByReference("WORKS");

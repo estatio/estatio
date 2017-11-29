@@ -75,4 +75,7 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderSc
                 .setPrereq((f, ec) -> f.setCountry(f.objectFor(country_d, ec)));
     }
 
+    public String unitRef(final String suffix) {
+        return getRef() + "-" + suffix;
+    }
 }

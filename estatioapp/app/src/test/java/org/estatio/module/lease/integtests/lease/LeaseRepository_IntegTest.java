@@ -36,17 +36,17 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForKalPoison001Nl;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -218,8 +218,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             // when
             final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
@@ -282,8 +281,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Property property = propertyRepository.findPropertyByReference(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             System.out.println(property);
             // when
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);

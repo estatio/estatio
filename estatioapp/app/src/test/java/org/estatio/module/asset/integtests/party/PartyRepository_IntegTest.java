@@ -97,7 +97,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
+            Party party = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
             assertThat(party).isNotNull();
 
             //When
@@ -126,7 +126,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
         @Test
         public void happyCase() throws Exception {
             //Given
-            Party party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
+            Party party = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
 
             //When
             party.addRole(PartyRoleTypeEnum.TREASURER);
@@ -156,7 +156,7 @@ public class PartyRepository_IntegTest extends AssetModuleIntegTestAbstract {
 
         @Test
         public void happyCase() throws Exception {
-            Party party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             assertThat(party).isNotNull();
         }
 

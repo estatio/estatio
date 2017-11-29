@@ -88,7 +88,7 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
     public static class FindByParty extends PartyRelationshipRepository_IntegTest {
         @Test
         public void findFrom() throws Exception {
-            final List<PartyRelationship> results = partyRelationshipRepository.findByParty(partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef()));
+            final List<PartyRelationship> results = partyRelationshipRepository.findByParty(Organisation_enum.TopModelGb.findUsing(serviceRegistry));
             assertThat(results.size(), is(1));
         }
 
@@ -105,7 +105,7 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
 
         @Test
         public void happyCase() throws Exception {
-            final Party fromParty = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party fromParty = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final Party toParty = partyRepository.findPartyByReference(Person_enum.LinusTorvaldsNl.getRef());
             PartyRelationship relationship = partyRelationshipRepository.newRelationship(
                     fromParty,
@@ -145,7 +145,7 @@ public class PartyRelationshipRepository_IntegTest extends AssetModuleIntegTestA
         @Test
         public void executingReplacesParty() throws Exception {
             // when
-            final Party parent = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party parent = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final Party currentChild = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
             final Party replacementChild = personRepository.newPerson("TEST", "JR", "JR", "Ewing", PersonGenderType.MALE, currentChild.getApplicationTenancy());
             DeleteEvent event = new DeleteEvent();

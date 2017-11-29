@@ -68,7 +68,7 @@ public class PartyRole_IntegTest extends AssetModuleIntegTestAbstract {
         public void add_role() {
             // Given
             PartyRoleType partyRoleType = partyRoleTypeRepository.findOrCreate(PartyRoleTypeEnum.TREASURER);
-            Party party = partyRepository.findPartyByReference(Organisation_enum.AcmeNl.getRef());
+            Party party = Organisation_enum.AcmeNl.findUsing(serviceRegistry);
             int roleChoices = party.choices0AddRole().size();
 
             // When

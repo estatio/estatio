@@ -48,7 +48,7 @@ import org.estatio.module.capex.integtests.document.IncomingDocumentPresentation
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
@@ -127,7 +127,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             });
 
             // given
-            seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test
@@ -189,7 +189,7 @@ public class TaskForBankAccountVerification_IntegTest extends ApplicationModuleI
             });
 
             // given
-            seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             bankAccount = bankAccountRepository.findBankAccountByReference(seller,
                     BankAccount_enum.TopModelGb.getIban());
             // bank accounts now need BICs so can verify

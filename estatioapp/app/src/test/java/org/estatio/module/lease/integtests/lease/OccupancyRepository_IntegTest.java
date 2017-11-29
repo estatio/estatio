@@ -36,7 +36,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -44,9 +44,9 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Brand.RemoveEvent;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -68,7 +68,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             }
         });
         lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-        unit = unitRepository.findUnitByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.unitReference("001"));
+        unit = unitRepository.findUnitByReference(Property_enum.OxfGb.unitRef("001"));
     }
 
     @Inject

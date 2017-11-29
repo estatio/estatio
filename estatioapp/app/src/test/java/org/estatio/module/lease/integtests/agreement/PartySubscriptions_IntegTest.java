@@ -40,7 +40,7 @@ import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.subscriptions.PartySubscriptions;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
@@ -98,7 +98,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
 
 
-            oldParty = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            oldParty = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             // EST-467: shouldn't be using global here.
             ApplicationTenancy applicationTenancy = applicationTenancies.findTenancyByPath("/");
             newParty = organisationRepository.newOrganisation("TEST", false, "Test", applicationTenancy);

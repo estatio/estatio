@@ -22,14 +22,14 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.fixtures.budgets.BudgetAbstract;
 import org.estatio.module.budgetassignment.fixtures.overrides.personas.BudgetOverridesForBud;
 import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
-import org.estatio.module.lease.fixtures.lease.LeasesForBudNl;
+import org.estatio.module.lease.fixtures.lease.personas2.LeasesForBudNl;
 
 public class BudgetForBud extends BudgetAbstract {
 
@@ -44,7 +44,7 @@ public class BudgetForBud extends BudgetAbstract {
         executionContext.executeChild(this, new BudgetOverridesForBud());
 
         // exec
-        Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
+        Property property = Property_enum.BudNl.findUsing(serviceRegistry);
 
         createBudget(executionContext, property, BigDecimal.valueOf(10000.00), BigDecimal.valueOf(20000.00), BigDecimal.valueOf(30000.00), BUDGET_2015_START_DATE);
     }

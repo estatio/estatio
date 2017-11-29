@@ -37,12 +37,13 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.platform.fake.EstatioFakeDataService;
 import org.estatio.module.lease.contributions.Property_vacantUnits;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +74,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
             // when
             Set<Unit> units = property.getUnits();
@@ -85,7 +86,7 @@ public class Property_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void occupiedUnits() throws Exception {
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
 
             Set<Unit> allUnits = property.getUnits();
             Set<Unit> occupiedUnits = occupancyRepository.findByProperty(property)

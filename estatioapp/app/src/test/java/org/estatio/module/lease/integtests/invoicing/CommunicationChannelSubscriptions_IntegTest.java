@@ -41,7 +41,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForGb;
 import org.estatio.module.base.fixtures.security.apptenancy.personas.ApplicationTenancyForNl;
 import org.estatio.module.invoice.dom.Invoice;
@@ -56,8 +56,8 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.numerator.dom.NumeratorRepository;
 import org.estatio.module.party.dom.Party;
@@ -133,7 +133,7 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
             buyer = partyRepository.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.PARTY_REF_BUYER);
             lease = leaseRepository.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.LEASE_REF);
 
-            propertyKal = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForKalNl.REF);
+            propertyKal = Property_enum.KalNl.findUsing(serviceRegistry);
 
             InvoiceForLease invoice = invoiceForLeaseRepository.findOrCreateMatchingInvoice(
                     applicationTenancy,
@@ -308,8 +308,8 @@ public class CommunicationChannelSubscriptions_IntegTest extends LeaseModuleInte
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancyRepository.findByPath(ApplicationTenancyForGb.PATH);
-            seller = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
-            buyer = partyRepository.findPartyByReference(Organisation_enum.PoisonGb.getRef());
+            seller = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            buyer = Organisation_enum.PoisonGb.findUsing(serviceRegistry);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
             invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
         }

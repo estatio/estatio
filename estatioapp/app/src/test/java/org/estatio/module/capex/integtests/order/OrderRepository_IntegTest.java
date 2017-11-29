@@ -12,6 +12,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
@@ -47,8 +48,8 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             LocalDate orderDate = new LocalDate(2017, 1, 1);
 
 
-            Party seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Party seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Order orderMade1 = orderRepository.create(property,"123", sellerOrderReference, orderDate.plusDays(4),orderDate, seller, null, "/GBR", null);
             Order orderMade2 = orderRepository.create(property,"456", sellerOrderReference, orderDate.plusDays(5),orderDate.plusDays(1), seller, null, "/GBR", null);
 

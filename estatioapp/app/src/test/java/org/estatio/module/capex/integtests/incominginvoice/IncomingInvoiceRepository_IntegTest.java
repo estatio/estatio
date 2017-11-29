@@ -10,6 +10,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
@@ -92,7 +93,7 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
 
         // when
         String updatedAtPath = "/NLD";
-        Party updatedBuyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldNl.getRef());
+        Party updatedBuyer = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
         LocalDate updatedDueDate = dueDate.minusWeeks(1);
         PaymentMethod updatedPaymentMethod = PaymentMethod.DIRECT_DEBIT;
         InvoiceStatus updatedStatus = InvoiceStatus.INVOICED;
@@ -120,9 +121,9 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
     }
 
     private IncomingInvoice createIncomingInvoice(){
-        seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
-        buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
-        property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+        property = Property_enum.OxfGb.findUsing(serviceRegistry);
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);
         dueDate = invoiceDate.minusMonths(1);

@@ -35,7 +35,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.sudo.SudoService;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
@@ -75,7 +75,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+            party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
         }
 
         // this test really just makes an assertion about the fixture.
@@ -141,7 +141,7 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
             fixedAssetFinancialAccount = results.get(0);
 
             Assert.assertThat(fixedAssetFinancialAccount.getFixedAsset().getReference(), is(
-                    PropertyAndUnitsAndOwnerAndManagerForKalNl.REF));
+                    Property_enum.KalNl.getRef()));
 
             // When
             sudoService.sudo("estatio-admin", Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),

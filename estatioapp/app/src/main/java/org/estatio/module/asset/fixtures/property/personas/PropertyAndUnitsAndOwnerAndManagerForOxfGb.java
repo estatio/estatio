@@ -25,15 +25,8 @@ public class PropertyAndUnitsAndOwnerAndManagerForOxfGb extends PropertyAndUnits
 
     public static final PropertyAndUnitsAndOwnerAndManager_enum data = PropertyAndUnitsAndOwnerAndManager_enum.OxfGb;
 
-    public static final String REF = data.getRef();
-    public static final String PARTY_REF_OWNER = data.getOwner_d().getRef();
-    public static final String PARTY_REF_MANAGER = data.getManager_d().getRef();
-
     public PropertyAndUnitsAndOwnerAndManagerForOxfGb() {
         super(data);
     }
 
-    public static String unitReference(String suffix) {
-        return data.getRef() + "-" + suffix;
-    }
 }

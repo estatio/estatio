@@ -25,14 +25,8 @@ public class PropertyAndUnitsAndOwnerAndManagerForBudNl extends PropertyAndUnits
 
     public static final PropertyAndUnitsAndOwnerAndManager_enum data = PropertyAndUnitsAndOwnerAndManager_enum.BudNl;
 
-    public static final String REF = data.getRef();
-    public static final String PARTY_REF_MANAGER = data.getManager_d().getRef();
-
     public PropertyAndUnitsAndOwnerAndManagerForBudNl() {
         super(data);
     }
 
-    public static String unitReference(String suffix) {
-        return data.getRef() + "-" + suffix;
-    }
 }

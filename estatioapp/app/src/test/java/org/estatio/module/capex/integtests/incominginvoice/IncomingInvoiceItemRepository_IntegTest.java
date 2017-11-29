@@ -99,8 +99,8 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
     }
 
     private IncomingInvoice createIncomingInvoiceAndTwoItemsWithSameCharge(){
-        seller = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
-        buyer = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+        seller = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+        buyer = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
         property = propertyRepository.findPropertyByReference(Property_enum.OxfGb.getRef());
         invoiceNumber = "123";
         invoiceDate = new LocalDate(2017,1,1);

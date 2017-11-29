@@ -50,7 +50,7 @@ public class PartyRelationshipViewService_IntegTest extends AssetModuleIntegTest
                 executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
             }
         });
-        org = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+        org = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         person = partyRepository.findPartyByReference(Person_enum.GinoVannelliGb.getRef());
     }
 

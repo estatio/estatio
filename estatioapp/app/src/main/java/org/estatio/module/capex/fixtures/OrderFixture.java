@@ -15,27 +15,27 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.incode.module.base.integtests.VT;
 import org.incode.module.document.dom.impl.docs.Document;
 
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForDylanOfficeAdministratorGb;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
+import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
-import org.estatio.module.capex.app.order.IncomingDocAsOrderViewModel;
-import org.estatio.module.capex.app.order.Order_switchView;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder2;
+import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.capex.fixtures.document.personas.IncomingPdfForFakeOrder2;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
-import org.estatio.module.capex.fixtures.project.personas.ProjectForOxf;
 import org.estatio.module.tax.dom.Tax;
 import org.estatio.module.tax.dom.TaxRepository;
 import org.estatio.module.tax.fixtures.data.Tax_enum;
@@ -58,8 +58,7 @@ public class OrderFixture extends FixtureScript {
         fakeOrder2Doc.setAtPath("/GBR");
 
         // given we categorise for a property
-        final Property propertyForOxf = propertyRepository.findPropertyByReference(
-                PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        final Property propertyForOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.DylanOfficeAdministratorGb.getSecurityUserName(), () -> {
@@ -70,7 +69,7 @@ public class OrderFixture extends FixtureScript {
             final Project projectForOxf = projectRepository.findByReference("OXF-02");
             final Tax taxForGbr = taxRepository.findByReference(Tax_enum.GB_VATSTD.getReference());
 
-            final Party orgTopModelGb = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party orgTopModelGb = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final Party orgHelloWorldGb = partyRepository.findPartyByReference(
                     Organisation_enum.HelloWorldGb.getRef());
             final Charge chargeWorks = chargeRepository.findByReference("WORKS");

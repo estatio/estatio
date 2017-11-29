@@ -33,6 +33,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistration;
 import org.estatio.module.asset.dom.registration.FixedAssetRegistrationRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 
@@ -68,7 +69,7 @@ public class FixedAssetRegistrationRepository_IntegTest extends AssetModuleInteg
         public void findBySubject() throws Exception {
             // given
             List<FixedAsset> fixedAsset = fixedAssetRepository.matchAssetsByReferenceOrName(
-                    PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+                    Property_enum.OxfGb.getRef());
             assertThat(fixedAsset.size(), is(1));
 
             // when

@@ -12,7 +12,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -53,7 +53,7 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
         public void newPartitioningTest() throws Exception{
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             assertThat(budget.getPartitionings().size()).isEqualTo(0);
 
@@ -75,7 +75,7 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
         public void validatePartitioningTest() throws Exception {
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate().plusDays(1), budget.getStartDate().plusDays(2), BudgetCalculationType.BUDGETED);
             transactionService.flushTransaction();
@@ -94,7 +94,7 @@ public class PartitioningRepository_IntegTest extends BudgetModuleIntegTestAbstr
         public void validatePartitioningTest2() throws Exception {
 
             // given
-            Property property = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = budgetRepository.findByPropertyAndStartDate(property, BudgetsForOxf.BUDGET_2015_START_DATE);
             wrap(partitioningRepository).newPartitioning(budget, budget.getStartDate(), budget.getEndDate(), BudgetCalculationType.ACTUAL);
 

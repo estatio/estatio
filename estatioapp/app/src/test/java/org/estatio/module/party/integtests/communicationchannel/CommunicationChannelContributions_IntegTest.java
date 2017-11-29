@@ -54,7 +54,7 @@ public class CommunicationChannelContributions_IntegTest extends PartyModuleInte
                 executionContext.executeChild(this, Organisation_enum.HelloWorldGb.toFixtureScript());
             }
         });
-        party = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
+        party = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
     }
 
     @Ignore // TODO: reinstate

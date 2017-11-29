@@ -59,7 +59,7 @@ public class CommunicationChannelOwnerLinkRepository_IntegTest extends PartyModu
         @Test
         public void happyCase() throws Exception {
             // given
-            final Party party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            final Party party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final Country country = Country_enum.GBR.findUsing(serviceRegistry);
             final PostalAddress postalAddress = postalAddressRepository.findByAddress(party, "1 Circle Square", "W2AXXX", "London", country);
 

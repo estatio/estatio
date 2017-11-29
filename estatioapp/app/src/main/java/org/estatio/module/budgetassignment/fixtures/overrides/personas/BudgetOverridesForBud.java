@@ -30,7 +30,7 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.charge.fixtures.charges.refdata.ChargeRefData;
-import org.estatio.module.lease.fixtures.lease.LeasesForBudNl;
+import org.estatio.module.lease.fixtures.lease.personas2.LeasesForBudNl;
 
 public class BudgetOverridesForBud extends BudgetOverrideAbstact {
 

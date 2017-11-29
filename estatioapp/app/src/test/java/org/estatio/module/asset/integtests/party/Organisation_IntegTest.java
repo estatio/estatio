@@ -82,7 +82,7 @@ public class Organisation_IntegTest extends AssetModuleIntegTestAbstract {
                 }
             });
 
-            organisation = (Organisation) partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            organisation = (Organisation) Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

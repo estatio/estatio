@@ -56,11 +56,11 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfMediax002Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPret004Gb;
+import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfMediax002Gb;
+import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -113,8 +113,8 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
         @Before
         public void setUp() throws Exception {
             applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancyForGb.PATH);
-            seller = partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef());
-            buyer = partyRepository.findPartyByReference(Organisation_enum.PoisonGb.getRef());
+            seller = Organisation_enum.HelloWorldGb.findUsing(serviceRegistry);
+            buyer = Organisation_enum.PoisonGb.findUsing(serviceRegistry);
             lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
 
             charge = chargeRepository.listAll().get(0);

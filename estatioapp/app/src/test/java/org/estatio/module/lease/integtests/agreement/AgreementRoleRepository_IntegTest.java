@@ -44,7 +44,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
@@ -133,7 +133,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         public void setUp() throws Exception {
             artTenant = agreementRoleTypeRepository.findByTitle(LeaseAgreementRoleTypeEnum.TENANT.getTitle());
             leaseOxfTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            partyTopModel = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            partyTopModel = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         }
 
         @Test

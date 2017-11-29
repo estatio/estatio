@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.base.platform.fixturesupport.PersonaScriptAbstract;
 import org.estatio.module.capex.dom.project.Project;
@@ -56,7 +57,7 @@ public class ProjectForOxf extends PersonaScriptAbstract {
                 .getObject();
 
         Charge charge = chargeRepository.findByReference("WORKS");
-        Property Oxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+        Property Oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
         projectOxf2.addItem(charge, "works", new BigDecimal("40000.00"), null, null,Oxf,null );
 
     }

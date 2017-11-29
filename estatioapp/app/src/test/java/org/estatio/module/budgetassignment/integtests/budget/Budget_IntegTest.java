@@ -17,8 +17,7 @@ import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -29,7 +28,7 @@ import org.estatio.module.budget.fixtures.partitioning.personas.PartitioningAndI
 import org.estatio.module.budgetassignment.fixtures.budget.personas.BudgetForBud;
 import org.estatio.module.budgetassignment.fixtures.partitioning.personas.PartitioningAndItemsForBud;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
-import org.estatio.module.lease.fixtures.lease.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.leaseitems.svcchgbudgeted.personas.LeaseItemForServiceChargeBudgetedForOxfTopModel001Gb;
 
 public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
@@ -60,7 +59,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyBud = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForBudNl.REF);
+            propertyBud = Property_enum.BudNl.findUsing(serviceRegistry);
             budgetsForBud = budgetRepository.findByProperty(propertyBud);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyBud, BudgetForBud.BUDGET_2015_START_DATE);
         }
@@ -121,7 +120,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
         @Before
         public void setUp() throws Exception {
-            propertyOxf = propertyRepository.findPropertyByReference(PropertyAndUnitsAndOwnerAndManagerForOxfGb.REF);
+            propertyOxf = Property_enum.OxfGb.findUsing(serviceRegistry);
             budgetsForOxf = budgetRepository.findByProperty(propertyOxf);
             budget2015 = budgetRepository.findByPropertyAndStartDate(propertyOxf, BudgetsForOxf.BUDGET_2015_START_DATE);
         }

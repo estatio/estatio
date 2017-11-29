@@ -59,7 +59,7 @@ public class CommunicationChannelRepository_IntegTest extends PartyModuleIntegTe
 
     @Before
     public void setUp() throws Exception {
-        party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+        party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
     }
 
     public static class FindByOwner extends CommunicationChannelRepository_IntegTest {

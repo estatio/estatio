@@ -33,7 +33,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -69,7 +69,7 @@ public class CommunicationChannel_IntegTest extends LeaseModuleIntegTestAbstract
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(Organisation_enum.TopModelGb.getRef());
+            party = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
             final SortedSet<CommunicationChannel> postalAddresses = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
             Assert.assertThat(postalAddresses.size(), is(2));
             communicationChannel = postalAddresses.first();

@@ -53,9 +53,9 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfMediaX002Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfPoison003Gb;
-import org.estatio.module.lease.fixtures.lease.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfMediax002Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfPoison003Gb;
 import org.estatio.module.lease.fixtures.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -134,7 +134,7 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             // given
             final String newReference = "OXF-MEDIA-001";
             final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            final Party newParty = partyRepository.findPartyByReference(Organisation_enum.MediaXGb.getRef());
+            final Party newParty = Organisation_enum.MediaXGb.findUsing(serviceRegistry);
             final LocalDate newStartDate = VT.ld(2014, 1, 1);
 
             // when
