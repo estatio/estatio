@@ -18,10 +18,8 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForAcmeNl;
 
 public class BankAccountAndFaFaForAcmeNl extends BankAccountAndFaFaAbstract {
 
@@ -31,25 +29,23 @@ public class BankAccountAndFaFaForAcmeNl extends BankAccountAndFaFaAbstract {
     public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForAcmeNl() {
-        this(null, null);
+        super(data);
     }
 
-    public BankAccountAndFaFaForAcmeNl(String friendlyName, String localName) {
-        super(friendlyName, localName);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForAcmeNl());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
-
-        // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-                PARTY_REF,
-                REF,
-                data.getProperty_d(), // create FAFA
-                executionContext);
-    }
+//    @Override
+//    protected void execute(ExecutionContext executionContext) {
+//
+//        executionContext.executeChildT(this, data.toFixtureScript());
+//
+//        // prereqs
+//        executionContext.executeChild(this, new OrganisationForAcmeNl());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+//
+//        // exec
+//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
+//                PARTY_REF,
+//                REF,
+//                data.getProperty_d(), // create FAFA
+//                executionContext);
+//    }
 }

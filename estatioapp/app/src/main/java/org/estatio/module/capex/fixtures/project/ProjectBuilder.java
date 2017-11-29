@@ -36,7 +36,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class ProjectBuilder extends BuilderScriptAbstract<Project, ProjectBuilder> {
+public final class ProjectBuilder extends BuilderScriptAbstract<Project, ProjectBuilder> {
 
     @Getter @Setter
     private String reference;
@@ -57,7 +57,7 @@ public class ProjectBuilder extends BuilderScriptAbstract<Project, ProjectBuilde
     private Project object;
 
     @Override
-    protected void execute(final ExecutionContext ec) {
+    protected void doExecute(final ExecutionContext ec) {
 
         checkParam("reference", ec, String.class);
         checkParam("name", ec, String.class);

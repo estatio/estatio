@@ -18,10 +18,8 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 
 public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstract {
 
@@ -29,29 +27,23 @@ public class BankAccountAndFaFaForHelloWorldNl extends BankAccountAndFaFaAbstrac
 
     public static final String REF = data.getIban();
 
-    public static final String PARTY_REF = data.getOrganisation_d().getRef();
-
     public BankAccountAndFaFaForHelloWorldNl() {
-        this(null, null);
+        super(data);
     }
 
-    public BankAccountAndFaFaForHelloWorldNl(String friendlyName, String localName) {
-        super(friendlyName, localName);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
-
-        // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-                PARTY_REF,
-                REF,
-                data.getProperty_d(), // create FAFA
-                executionContext);
-    }
+//    @Override
+//    protected void execute(ExecutionContext executionContext) {
+//
+//        // prereqs
+//        executionContext.executeChild(this, new OrganisationForHelloWorldNl());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+//
+//        // exec
+//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
+//                PARTY_REF,
+//                REF,
+//                data.getProperty_d(), // create FAFA
+//                executionContext);
+//    }
 
 }

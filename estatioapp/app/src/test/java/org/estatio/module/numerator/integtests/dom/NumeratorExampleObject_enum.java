@@ -42,7 +42,7 @@ public enum NumeratorExampleObject_enum
 
     @EqualsAndHashCode(of={"name"}, callSuper = false)
     @Accessors(chain = true)
-    public static class Builder extends BuilderScriptAbstract<NumeratorExampleObject, NumeratorExampleObject_enum.Builder> {
+    public final static class Builder extends BuilderScriptAbstract<NumeratorExampleObject, NumeratorExampleObject_enum.Builder> {
 
         @Getter @Setter
         String name;
@@ -51,7 +51,7 @@ public enum NumeratorExampleObject_enum
         NumeratorExampleObject object;
 
         @Override
-        protected void execute(final ExecutionContext executionContext) {
+        protected void doExecute(final ExecutionContext executionContext) {
             checkParam("name", executionContext, String.class);
             NumeratorExampleObject numeratorExampleObject =
                     repositoryService.firstMatch(NumeratorExampleObject.class, c -> Objects.equal(c.getName(), name));

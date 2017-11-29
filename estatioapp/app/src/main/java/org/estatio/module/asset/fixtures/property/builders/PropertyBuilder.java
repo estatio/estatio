@@ -40,7 +40,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PropertyBuilder
+public final class PropertyBuilder
         extends BuilderScriptAbstract<Property,PropertyBuilder> {
 
     @Getter @Setter
@@ -71,7 +71,7 @@ public class PropertyBuilder
     private Property object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         defaultParam("reference", executionContext, fakeDataService.values().code(3).toUpperCase());
         defaultParam("name", executionContext, fakeDataService.name().lastName() + " Mall");

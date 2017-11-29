@@ -49,7 +49,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonAndRolesBuilder> {
+public final class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonAndRolesBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -119,7 +119,7 @@ public class PersonAndRolesBuilder extends BuilderScriptAbstract<Person, PersonA
     private List<PartyRole> partyRoles;
 
     @Override
-    public void execute(ExecutionContext executionContext) {
+    public void doExecute(ExecutionContext executionContext) {
 
         object = new PersonBuilder()
                 .setReference(reference)

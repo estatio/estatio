@@ -49,6 +49,8 @@ import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
+import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.clock.ClockService;
@@ -397,7 +399,6 @@ public abstract class IntegrationTestAbstract3 {
         setFixtureClockDate(timeBeforeTest);
 
     }
-
 
     protected void runFixtureScript(final FixtureScript... fixtureScriptList) {
         if (fixtureScriptList.length == 1) {

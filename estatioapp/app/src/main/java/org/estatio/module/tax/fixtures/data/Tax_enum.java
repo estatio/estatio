@@ -16,7 +16,6 @@ import org.estatio.module.tax.fixtures.builders.TaxBuilder;
 
 import static java.util.Arrays.asList;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.bd;
@@ -56,16 +55,9 @@ public enum Tax_enum implements EnumWithBuilderScript<Tax, TaxBuilder>, EnumWith
     @Override
     public TaxBuilder toFixtureScript() {
 
-        @EqualsAndHashCode(of={"ref"}, callSuper = true)
-        class MyTaxBuilder extends TaxBuilder {
-            @Override
-            protected void execute(final ExecutionContext ec) {
-                setCountry(objectFor(country_d, ec));
-                setApplicationTenancy(objectFor(country_d.getApplicationTenancy_d(), ec));
-                super.execute(ec);
-            }
-        }
-        return new MyTaxBuilder()
+        return new TaxBuilder()
+                .set((f,ec) -> f.setCountry(f.objectFor(country_d, ec)))
+                .set((f,ec) -> f.setApplicationTenancy(f.objectFor(country_d.getApplicationTenancy_d(), ec)))
                 .setRef(Tax_enum.this.getReference())
                 .setRates(rates);
 

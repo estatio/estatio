@@ -18,10 +18,8 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 
 public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
 
@@ -31,24 +29,21 @@ public class BankAccountAndFaFaForOxford extends BankAccountAndFaFaAbstract {
     public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForOxford() {
-        this(null, null);
+        super(data);
     }
 
-    public BankAccountAndFaFaForOxford(String friendlyName, String localName) {
-        super(friendlyName, localName);
-    }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-
-        // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
-                data.getProperty_d(), executionContext);
-        
-    }
+//    @Override
+//    protected void execute(ExecutionContext executionContext) {
+//
+//        // prereqs
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+//        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+//
+//        // exec
+//        createBankAccountAndOptionallyFixedAssetFinancialAsset(PARTY_REF, REF,
+//                data.getProperty_d(), executionContext);
+//
+//    }
 
 }

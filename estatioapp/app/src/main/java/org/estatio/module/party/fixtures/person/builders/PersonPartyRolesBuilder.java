@@ -38,7 +38,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"person", "partyRoleTypes"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonPartyRolesBuilder
+public final class PersonPartyRolesBuilder
         extends BuilderScriptAbstract<List<PartyRole>,PersonPartyRolesBuilder> {
 
     @Getter @Setter
@@ -60,7 +60,7 @@ public class PersonPartyRolesBuilder
     private List<PartyRole> object = Lists.newArrayList();
 
     @Override
-    public void execute(ExecutionContext executionContext) {
+    public void doExecute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
 

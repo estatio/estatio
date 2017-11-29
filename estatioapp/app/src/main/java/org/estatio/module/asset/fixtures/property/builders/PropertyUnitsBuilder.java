@@ -39,7 +39,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"property"}, callSuper = false)
 @Accessors(chain = true)
-public class PropertyUnitsBuilder
+public final class PropertyUnitsBuilder
         extends BuilderScriptAbstract<List<Unit>, PropertyUnitsBuilder> {
 
     @Getter @Setter
@@ -52,7 +52,7 @@ public class PropertyUnitsBuilder
     private List<Unit> object = Lists.newArrayList();
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("property", executionContext, Property.class);
 

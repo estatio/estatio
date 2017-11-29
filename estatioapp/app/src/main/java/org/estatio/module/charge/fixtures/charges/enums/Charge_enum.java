@@ -159,23 +159,14 @@ public enum Charge_enum implements EnumWithBuilderScript<Charge, ChargeBuilder>,
 
 
     public ChargeBuilder toFixtureScript() {
-
-        @EqualsAndHashCode(of={"ref"}, callSuper = true)
-        class MyChargeBuilder extends ChargeBuilder {
-            @Override
-            protected void execute(final ExecutionContext ec) {
-                setChargeGroup(objectFor(chargeGroup_d, ec));
-                setApplicationTenancy(objectFor(applicationTenancy_d, ec));
-                setTax(objectFor(tax_d, ec));
-
-                super.execute(ec);
-            }
-        }
-
-        return new MyChargeBuilder()
+        return new ChargeBuilder()
                 .setRef(Charge_enum.this.getRef())
                 .setName(Charge_enum.this.getName())
-                .setApplicability(applicability);
+                .setApplicability(applicability)
+                .set((f,ec) -> f.setChargeGroup(f.objectFor(chargeGroup_d, ec)))
+                .set((f,ec) -> f.setApplicationTenancy(f.objectFor(applicationTenancy_d, ec)))
+                .set((f,ec) -> f.setTax(f.objectFor(tax_d, ec)))
+                ;
     }
 
 }

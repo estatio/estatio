@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"bankAccount", "property"}, callSuper = false)
 @Accessors(chain = true)
-public class BankAccountFaFaBuilder
+public final class BankAccountFaFaBuilder
         extends BuilderScriptAbstract<FixedAssetFinancialAccount, BankAccountFaFaBuilder> {
 
     @Getter @Setter
@@ -47,7 +47,7 @@ public class BankAccountFaFaBuilder
     FixedAssetFinancialAccount object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("bankAccount", executionContext, BankAccount.class);
         checkParam("property", executionContext, Property.class);

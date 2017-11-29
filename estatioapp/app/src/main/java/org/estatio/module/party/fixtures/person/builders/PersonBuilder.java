@@ -37,7 +37,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonBuilder
+public final class PersonBuilder
         extends BuilderScriptAbstract<Person, PersonBuilder> {
 
     @Getter @Setter
@@ -62,7 +62,7 @@ public class PersonBuilder
     private Person object;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         defaultParam("atPath", executionContext, ApplicationTenancyForGlobal.PATH);
         defaultParam("reference", executionContext, fakeDataService.lorem().fixedString(6));

@@ -29,22 +29,19 @@ public class BankAccountAndFaFaForTopModelGb extends BankAccountAndFaFaAbstract 
     public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForTopModelGb() {
-        this(null, null);
+        super(data);
     }
 
-    public BankAccountAndFaFaForTopModelGb(String friendlyName, String localName) {
-        super(friendlyName, localName);
-    }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-                PARTY_REF,
-                REF,
-                data.getProperty_d(), // no property = no FAFA
-                executionContext);
-    }
+//    @Override
+//    protected void execute(ExecutionContext executionContext) {
+//
+//
+//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
+//                PARTY_REF,
+//                REF,
+//                data.getProperty_d(), // no property = no FAFA
+//                executionContext);
+//    }
 
 }

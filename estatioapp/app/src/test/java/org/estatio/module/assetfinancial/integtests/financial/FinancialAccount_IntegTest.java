@@ -38,17 +38,18 @@ import org.apache.isis.applib.services.sudo.SudoService;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForHelloWorldNl;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
-import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.financial.dom.FinancialAccountRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldNl;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -100,16 +101,6 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
     public static class RemoveBankAccount extends FinancialAccount_IntegTest {
 
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-                    executionContext.executeChild(this, new BankAccountAndFaFaForHelloWorldNl());
-                }
-            });
-        }
-
         @Inject
         private FinancialAccountRepository financialAccountRepository;
 
@@ -130,11 +121,14 @@ public class FinancialAccount_IntegTest extends AssetFinancialModuleIntegTestAbs
 
         @Before
         public void setUp() throws Exception {
-            owner = partyRepository.findPartyByReference(OrganisationForHelloWorldNl.REF);
-            FinancialAccount financialAccount = financialAccountRepository.findByOwnerAndReference(owner, BankAccountAndFaFaForHelloWorldNl.REF);
 
-            Assert.assertTrue(financialAccount instanceof BankAccount);
-            bankAccount = (BankAccount) financialAccount;
+            runFixtureScript(
+                    BankAccountAndFaFa_enum.HelloWorldNl.toFixtureScript(),
+                    Organisation_enum.HelloWorldNl.toFixtureScript()
+            );
+
+            bankAccount = BankAccountAndFaFa_enum.HelloWorldNl.findUsing(serviceRegistry);
+            owner = Organisation_enum.HelloWorldNl.findUsing(serviceRegistry);
         }
 
         @Rule

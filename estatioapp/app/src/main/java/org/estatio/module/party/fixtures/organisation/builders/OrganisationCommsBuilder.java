@@ -39,9 +39,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"organisation", "address1", "phone", "email", "fax"}, callSuper = false)
+@EqualsAndHashCode(of={"organisation", "address1", "phone", "emailAddress", "fax"}, callSuper = false)
 @Accessors(chain = true)
-public class OrganisationCommsBuilder
+public final class OrganisationCommsBuilder
         extends BuilderScriptAbstract<Organisation, OrganisationCommsBuilder> {
 
     @Getter @Setter
@@ -93,7 +93,7 @@ public class OrganisationCommsBuilder
     private EmailAddress emailAddressObj;
 
     @Override
-    protected void execute(ExecutionContext ec) {
+    protected void doExecute(ExecutionContext ec) {
 
         checkParam("organisation", ec, Organisation.class);
 

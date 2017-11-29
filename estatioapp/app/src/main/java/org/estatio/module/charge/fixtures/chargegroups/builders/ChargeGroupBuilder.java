@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"ref"},callSuper = false)
 @Accessors(chain = true)
-public class ChargeGroupBuilder extends BuilderScriptAbstract<ChargeGroup, ChargeGroupBuilder> {
+public final class ChargeGroupBuilder extends BuilderScriptAbstract<ChargeGroup, ChargeGroupBuilder> {
 
     @Getter @Setter
     String ref;
@@ -43,7 +43,7 @@ public class ChargeGroupBuilder extends BuilderScriptAbstract<ChargeGroup, Charg
     ChargeGroup object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("ref", executionContext, String.class);
 

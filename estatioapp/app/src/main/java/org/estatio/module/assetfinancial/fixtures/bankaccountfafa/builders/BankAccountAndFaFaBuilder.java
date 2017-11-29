@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"party", "iban", "property"}, callSuper = false)
 @Accessors(chain = true)
-public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount, BankAccountAndFaFaBuilder>
+public final class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount, BankAccountAndFaFaBuilder>
 {
 
     @Getter @Setter
@@ -59,7 +59,7 @@ public class BankAccountAndFaFaBuilder extends BuilderScriptAbstract<BankAccount
     FixedAssetFinancialAccount fixedAssetFinancialAccount;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         object = new BankAccountBuilder()
                 .setParty(party)

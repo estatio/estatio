@@ -43,7 +43,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"ref"}, callSuper = false)
 @Accessors(chain = true)
-public class TaxBuilder extends BuilderScriptAbstract<Tax, TaxBuilder> {
+public final class TaxBuilder extends BuilderScriptAbstract<Tax, TaxBuilder> {
 
     @Getter @Setter
     String ref;
@@ -69,7 +69,7 @@ public class TaxBuilder extends BuilderScriptAbstract<Tax, TaxBuilder> {
     Tax object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("ref", executionContext, String.class);
         checkParam("country", executionContext, Country.class);

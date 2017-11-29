@@ -35,7 +35,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"person"}, callSuper = false)
 @Accessors(chain = true)
-public class ApplicationUserBuilder
+public final class ApplicationUserBuilder
         extends BuilderScriptAbstract<ApplicationUser, ApplicationUserBuilder> {
 
     @Getter @Setter
@@ -51,7 +51,7 @@ public class ApplicationUserBuilder
     ApplicationUser object;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
         checkParam("securityUsername", executionContext, String.class);

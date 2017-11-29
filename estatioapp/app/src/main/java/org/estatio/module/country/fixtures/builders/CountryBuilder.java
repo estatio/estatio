@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"ref3"}, callSuper = false)
 @Accessors(chain = true)
-public class CountryBuilder extends BuilderScriptAbstract<Country, CountryBuilder> {
+public final class CountryBuilder extends BuilderScriptAbstract<Country, CountryBuilder> {
 
     @Getter @Setter
     String ref3;
@@ -27,7 +27,7 @@ public class CountryBuilder extends BuilderScriptAbstract<Country, CountryBuilde
     private Country object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("ref3", executionContext, String.class);
         checkParam("ref2", executionContext, String.class);

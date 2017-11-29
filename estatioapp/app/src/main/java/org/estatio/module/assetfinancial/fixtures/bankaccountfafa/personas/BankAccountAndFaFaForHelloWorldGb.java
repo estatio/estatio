@@ -18,10 +18,8 @@
  */
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.BankAccountAndFaFaAbstract;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
 
 public class BankAccountAndFaFaForHelloWorldGb extends BankAccountAndFaFaAbstract {
 
@@ -31,26 +29,22 @@ public class BankAccountAndFaFaForHelloWorldGb extends BankAccountAndFaFaAbstrac
     public static final String PARTY_REF = data.getOrganisation_d().getRef();
 
     public BankAccountAndFaFaForHelloWorldGb() {
-        this(null, null);
+        super(data);
     }
 
-    public BankAccountAndFaFaForHelloWorldGb(String friendlyName, String localName) {
-        super(friendlyName, localName);
-    }
-
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        // prereqs
-        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-
-        // exec
-        createBankAccountAndOptionallyFixedAssetFinancialAsset(
-                PARTY_REF,
-                REF,
-                data.getProperty_d(), // create FAFA
-                executionContext);
-    }
+//    @Override
+//    protected void execute(ExecutionContext executionContext) {
+//
+//        // prereqs
+//        executionContext.executeChild(this, new OrganisationForHelloWorldGb());
+//        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+//
+//        // exec
+//        createBankAccountAndOptionallyFixedAssetFinancialAsset(
+//                PARTY_REF,
+//                REF,
+//                data.getProperty_d(), // create FAFA
+//                executionContext);
+//    }
 
 }

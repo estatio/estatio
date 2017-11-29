@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"party", "iban"}, callSuper = false)
 @Accessors(chain = true)
-public class BankAccountBuilder extends BuilderScriptAbstract<BankAccount, BankAccountBuilder> {
+public final class BankAccountBuilder extends BuilderScriptAbstract<BankAccount, BankAccountBuilder> {
 
 
     @Getter @Setter
@@ -52,7 +52,7 @@ public class BankAccountBuilder extends BuilderScriptAbstract<BankAccount, BankA
     BankAccount object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("party", executionContext, Party.class);
         checkParam("iban", executionContext, Party.class);

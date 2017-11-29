@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"person", "fromParty", "relationshipType"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonRelationshipBuilder
+public final class PersonRelationshipBuilder
         extends BuilderScriptAbstract<PartyRelationship, PersonRelationshipBuilder> {
 
     @Getter @Setter
@@ -50,7 +50,7 @@ public class PersonRelationshipBuilder
     PartyRelationship object;
 
     @Override
-    public void execute(ExecutionContext executionContext) {
+    public void doExecute(ExecutionContext executionContext) {
 
         checkParam("person", executionContext, Person.class);
         checkParam("fromParty", executionContext, String.class);

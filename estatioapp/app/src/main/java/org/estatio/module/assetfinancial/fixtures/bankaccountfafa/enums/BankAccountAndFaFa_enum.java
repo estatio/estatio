@@ -19,14 +19,17 @@
 package org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums;
 
 import org.apache.isis.applib.fixturescripts.EnumWithBuilderScript;
+import org.apache.isis.applib.fixturescripts.EnumWithFinder;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.builders.BankAccountAndFaFaBuilder;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -34,7 +37,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true)
 public enum BankAccountAndFaFa_enum
-        implements EnumWithBuilderScript<BankAccount, BankAccountAndFaFaBuilder> {
+        implements EnumWithBuilderScript<BankAccount, BankAccountAndFaFaBuilder>, EnumWithFinder<BankAccount> {
 
     AcmeNl          (Organisation_enum.AcmeNl,       "NL31ABNA0580744433", Property_enum.KalNl),
     HelloWorldGb    (Organisation_enum.HelloWorldGb, "GB31ABNA0580744434", Property_enum.OxfGb),
@@ -57,19 +60,17 @@ public enum BankAccountAndFaFa_enum
     @Override
     public BankAccountAndFaFaBuilder toFixtureScript() {
 
-        @EqualsAndHashCode(of={"party", "iban", "property"}, callSuper = true)
-        class MyBankAccountAndFaFaBuilder extends BankAccountAndFaFaBuilder {
-            @Override
-            protected void execute(final ExecutionContext ec) {
+        return new BankAccountAndFaFaBuilder()
+                .setIban(iban)
+                .set((f,ec) -> f.setParty(f.objectFor(organisation_d, ec)))
+                .set((f,ec) -> f.setProperty(f.objectFor(property_d, ec)));
+    }
 
-                setParty(objectFor(organisation_d, ec));
-                setProperty(objectFor(property_d, ec));
-
-                super.execute(ec);
-            }
-        }
-        return new MyBankAccountAndFaFaBuilder()
-                .setIban(iban);
+    @Override
+    public BankAccount findUsing(final ServiceRegistry2 serviceRegistry) {
+        final BankAccountRepository bankAccountRepository = serviceRegistry.lookupService(BankAccountRepository.class);
+        final Organisation owner = organisation_d.findUsing(serviceRegistry);
+        return bankAccountRepository.findBankAccountByReference(owner, iban);
     }
 
 }

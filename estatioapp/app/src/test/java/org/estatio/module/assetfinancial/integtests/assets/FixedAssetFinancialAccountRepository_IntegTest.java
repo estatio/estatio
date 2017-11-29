@@ -37,6 +37,7 @@ import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.personas.BankAccountAndFaFaForOxford;
 import org.estatio.module.assetfinancial.integtests.AssetFinancialModuleIntegTestAbstract;
 import org.estatio.module.financial.dom.BankAccount;
@@ -45,7 +46,7 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.fixtures.organisation.personas.OrganisationForHelloWorldGb;
+import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -145,8 +146,8 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
 
         @Before
         public void setUp() throws Exception {
-            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFaForOxford.REF);
-            newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(OrganisationForHelloWorldGb.REF), "NEWBANKACCOUNT", null);
+            oldBankAccount = bankAccountRepository.findBankAccountByReference(owner, BankAccountAndFaFa_enum.Oxford.getIban());
+            newBankAccount = bankAccountRepository.newBankAccount(partyRepository.findPartyByReference(Organisation_enum.HelloWorldGb.getRef()), "NEWBANKACCOUNT", null);
         }
 
         @Test

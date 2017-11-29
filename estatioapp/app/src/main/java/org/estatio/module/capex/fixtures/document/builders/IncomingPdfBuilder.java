@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"contextClass", "resourceName"}, callSuper = false)
 @Accessors(chain = true)
-public class IncomingPdfBuilder
+public final class IncomingPdfBuilder
         extends BuilderScriptAbstract<Document, IncomingPdfBuilder> {
 
     @Getter @Setter
@@ -36,7 +36,7 @@ public class IncomingPdfBuilder
     private Document object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("contextClass", executionContext, Class.class);
         checkParam("resourceName", executionContext, String.class);

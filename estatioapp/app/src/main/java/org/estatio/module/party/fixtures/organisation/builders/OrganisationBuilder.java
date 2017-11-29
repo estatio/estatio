@@ -35,7 +35,8 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class OrganisationBuilder extends BuilderScriptAbstract<Organisation,OrganisationBuilder> {
+public final class OrganisationBuilder
+        extends BuilderScriptAbstract<Organisation,OrganisationBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -53,7 +54,7 @@ public class OrganisationBuilder extends BuilderScriptAbstract<Organisation,Orga
     private Organisation object;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         checkParam("atPath", executionContext, String.class);
         checkParam("reference", executionContext, String.class);

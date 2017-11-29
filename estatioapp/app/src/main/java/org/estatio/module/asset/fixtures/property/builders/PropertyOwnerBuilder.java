@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"property", "owner"}, callSuper = false)
 @Accessors(chain = true)
-public class PropertyOwnerBuilder
+public final class PropertyOwnerBuilder
         extends BuilderScriptAbstract<FixedAssetRole, PropertyOwnerBuilder> {
 
     @Getter @Setter
@@ -53,7 +53,7 @@ public class PropertyOwnerBuilder
     private FixedAssetRole object;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         checkParam("property", executionContext, Property.class);
         checkParam("owner", executionContext, Party.class);

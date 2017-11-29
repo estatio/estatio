@@ -34,7 +34,8 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"partyReference", "comms"}, callSuper = false)
 @Accessors(chain = true)
-public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisation, OrganisationAndCommsBuilder> {
+public final class OrganisationAndCommsBuilder
+        extends BuilderScriptAbstract<Organisation, OrganisationAndCommsBuilder> {
 
     @Getter @Setter
     private String atPath;
@@ -67,7 +68,7 @@ public class OrganisationAndCommsBuilder extends BuilderScriptAbstract<Organisat
     private EmailAddress emailAddressObj;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         final OrganisationBuilder organisationBuilder = new OrganisationBuilder();
         this.object = organisationBuilder

@@ -53,7 +53,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PropertyAndUnitsAndOwnerAndManagerBuilder
+public final class PropertyAndUnitsAndOwnerAndManagerBuilder
         extends BuilderScriptAbstract<Property, PropertyAndUnitsAndOwnerAndManagerBuilder> {
 
     @Getter @Setter
@@ -107,7 +107,7 @@ public class PropertyAndUnitsAndOwnerAndManagerBuilder
     private FixedAssetRole managerrole;
 
     @Override
-    protected void execute(final ExecutionContext executionContext) {
+    protected void doExecute(final ExecutionContext executionContext) {
 
         defaultParam("numberOfUnits", executionContext, fakeDataService.values().anInt(10,20));
 

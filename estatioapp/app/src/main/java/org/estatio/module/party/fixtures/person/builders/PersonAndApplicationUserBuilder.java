@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"reference"}, callSuper = false)
 @Accessors(chain = true)
-public class PersonAndApplicationUserBuilder
+public final class PersonAndApplicationUserBuilder
         extends BuilderScriptAbstract<Person, PersonAndApplicationUserBuilder> {
 
     @Getter @Setter
@@ -67,7 +67,7 @@ public class PersonAndApplicationUserBuilder
 
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         object = new PersonBuilder()
                 .setAtPath(atPath)

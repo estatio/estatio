@@ -13,7 +13,6 @@ import org.estatio.module.asset.fixtures.property.builders.PropertyBuilder;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.dom.PropertyType.SHOPPING_CENTER;
@@ -65,24 +64,15 @@ public enum Property_enum implements EnumWithFinder<Property>, EnumWithBuilderSc
 
     @Override
     public PropertyBuilder toFixtureScript() {
-
-        @EqualsAndHashCode(of={"reference"}, callSuper = true)
-        class MyPropertyBuilder extends PropertyBuilder {
-            @Override
-            protected void execute(final ExecutionContext ec) {
-                setCountry(objectFor(country_d, ec));
-                super.execute(ec);
-            }
-        }
-
-        return new MyPropertyBuilder()
+        return new PropertyBuilder()
                 .setReference(ref)
                 .setName(name)
                 .setCity(city)
                 .setPropertyType(propertyType)
                 .setOpeningDate(openingDate)
                 .setAcquireDate(acquireDate)
-                .setLocationStr(locationStr);
+                .setLocationStr(locationStr)
+                .set((f, ec) -> f.setCountry(f.objectFor(country_d, ec)));
     }
 
 }

@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(of={"name", "format", "country"}, callSuper = false)
 @Accessors(chain = true)
-public class NumeratorForOrganisationBuilder
+public final class NumeratorForOrganisationBuilder
         extends BuilderScriptAbstract<Numerator, NumeratorForOrganisationBuilder> {
 
     @Getter @Setter
@@ -35,7 +35,7 @@ public class NumeratorForOrganisationBuilder
     Numerator object;
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void doExecute(ExecutionContext executionContext) {
 
         checkParam("name", executionContext, String.class);
         checkParam("format", executionContext, String.class);

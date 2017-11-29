@@ -22,51 +22,56 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
-import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountAndFaFa_enum;
 import org.estatio.module.financial.dom.BankAccountRepository;
-import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
 public abstract class BankAccountAndFaFaAbstract extends FixtureScript {
 
-    protected BankAccountAndFaFaAbstract(final String friendlyName, final String localName) {
-        super(friendlyName, localName);
+    private final BankAccountAndFaFa_enum data;
+
+    protected BankAccountAndFaFaAbstract(BankAccountAndFaFa_enum data) {
+        this.data = data;
     }
 
-    protected BankAccount createBankAccountAndOptionallyFixedAssetFinancialAsset(
-            final String partyStr,
-            final String bankAccountRef,
-            final Property_enum property_data,
-            final ExecutionContext executionContext) {
+//    protected BankAccount createBankAccountAndOptionallyFixedAssetFinancialAsset(
+//            final String partyStr,
+//            final String bankAccountRef,
+//            final Property_enum property_data,
+//            final ExecutionContext executionContext) {
+//
+//        final Party party = partyRepository.findPartyByReference(partyStr);
+//
+//        final BankAccount bankAccount = bankAccountRepository.newBankAccount(party, bankAccountRef, null);
+//        executionContext.addResult(this, bankAccount.getReference(), bankAccount);
+//
+//        if (property_data != null) {
+//            final String propertyRef = property_data.getRef();
+//            final Property property = propertyRepository.findPropertyByReference(propertyRef);
+//            fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(property, bankAccount);
+//        }
+//
+//        return bankAccount;
+//    }
 
-        final Party party = partyRepository.findPartyByReference(partyStr);
-
-        final BankAccount bankAccount = bankAccountRepository.newBankAccount(party, bankAccountRef, null);
-        executionContext.addResult(this, bankAccount.getReference(), bankAccount);
-
-        if (property_data != null) {
-            final String propertyRef = property_data.getRef();
-            final Property property = propertyRepository.findPropertyByReference(propertyRef);
-            fixedAssetFinancialAccountRepository.newFixedAssetFinancialAccount(property, bankAccount);
-        }
-
-        return bankAccount;
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        executionContext.executeChildT(this, data.toFixtureScript());
     }
 
-    @Inject
-    private BankAccountRepository bankAccountRepository;
 
     @Inject
-    private PartyRepository partyRepository;
+    BankAccountRepository bankAccountRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
     @Inject
     PropertyRepository propertyRepository;
 
     @Inject
-    private FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
+    FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository;
 
 }

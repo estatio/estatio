@@ -18,7 +18,6 @@ import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum.Fr;
@@ -208,31 +207,25 @@ public enum Person_enum
     @Override
     public PersonAndRolesBuilder toFixtureScript() {
 
-        @EqualsAndHashCode(of={"reference"}, callSuper = true)
-        class MyPersonAndRolesBuilder extends PersonAndRolesBuilder {
-            @Override
-            public void execute(final ExecutionContext ec) {
-                setFromParty(objectFor(getPartyFrom_d(), ec));
-
-                for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
-                    addFixedAssetRole(
-                            roleSpec.getFixedAssetRole(),
-                            objectFor(roleSpec.getProperty_d(), ec)
-                    );
-                }
-
-                super.execute(ec);
-            }
-        }
-
-        final PersonAndRolesBuilder personAndRolesBuilder = new MyPersonAndRolesBuilder().setReference(getRef())
+        final PersonAndRolesBuilder personAndRolesBuilder = new PersonAndRolesBuilder()
+                .setReference(getRef())
                 .setFirstName(getFirstName())
                 .setLastName(getLastName())
                 .setInitials(getInitials())
                 .setSecurityUsername(getSecurityUserName())
                 .setPersonGenderType(getPersonGenderType())
                 .setAtPath(getApplicationTenancy_d().getPath())
-                .setRelationshipType(getPartyRelationshipType());
+                .setRelationshipType(getPartyRelationshipType())
+                .set((f,ec) -> f.setFromParty(f.objectFor(getPartyFrom_d(), ec)))
+                .set((f,ec) -> {
+                    for (final FixedAssetRoleSpec roleSpec : Person_enum.this.getFixedAssetRoles()) {
+                        f.addFixedAssetRole(
+                                roleSpec.getFixedAssetRole(),
+                                f.objectFor(roleSpec.getProperty_d(), ec)
+                        );
+                    }
+                })
+                ;
 
         for (final IPartyRoleType partyRoleType : getPartyRoleTypes()) {
             personAndRolesBuilder.addPartyRoleType(partyRoleType);
