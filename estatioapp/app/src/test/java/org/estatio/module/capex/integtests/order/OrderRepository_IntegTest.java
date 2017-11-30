@@ -12,8 +12,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
@@ -33,7 +33,7 @@ public class OrderRepository_IntegTest extends CapexModuleIntegTestAbstract {
             @Override
             protected void execute(final ExecutionContext executionContext) {
 
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                 executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
             }
         });

@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
@@ -40,7 +40,7 @@ public class PartitioningAndItemsForOxf extends PartitioningAndItemsAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
         executionContext.executeChild(this, new KeyTablesForOxf());
 
         // exec

@@ -13,8 +13,8 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
@@ -46,7 +46,7 @@ public class IncomingInvoiceItemRepository_IntegTest extends CapexModuleIntegTes
                 executionContext.executeChild(this, new IncomingChargeFixture());
                 executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
             }
         });
     }

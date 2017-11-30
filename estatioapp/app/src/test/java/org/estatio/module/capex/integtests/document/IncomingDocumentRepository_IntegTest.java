@@ -11,7 +11,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.incode.module.document.dom.impl.docs.Document;
 
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
@@ -33,7 +33,7 @@ public class IncomingDocumentRepository_IntegTest extends CapexModuleIntegTestAb
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, OrganisationAndComms_enum.TopModelGb.toFixtureScript());
                 executionContext.executeChild(this, OrganisationAndComms_enum.HelloWorldGb.toFixtureScript());
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                 executionContext.executeChild(this, BankAccount_enum.HelloWorldNl.toFixtureScript());
                 executionContext.executeChild(this, BankAccountFaFa_enum.HelloWorldNl.toFixtureScript());
 

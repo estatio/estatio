@@ -32,8 +32,8 @@ import org.apache.isis.applib.util.Enums;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
@@ -62,7 +62,7 @@ public class TaskForIncomingInvoiceRepository_IntegTest extends CapexModuleInteg
                 @Override
                 protected void execute(final ExecutionContext executionContext) {
 
-                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                 }
             });
 

@@ -36,7 +36,6 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.FixedAssetRepository;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccount;
 import org.estatio.module.assetfinancial.dom.FixedAssetFinancialAccountRepository;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
@@ -62,7 +61,7 @@ public class FixedAssetFinancialAccountRepository_IntegTest extends AssetFinanci
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                 executionContext.executeChild(this, BankAccount_enum.Oxford.toFixtureScript());
                 executionContext.executeChild(this, BankAccountFaFa_enum.Oxford.toFixtureScript());
             }

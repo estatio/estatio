@@ -15,8 +15,8 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
 import org.estatio.module.asset.integtests.AssetModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -47,7 +47,7 @@ public class FixedAsset_IntegTest extends AssetModuleIntegTestAbstract {
         runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+                executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());
             }
         });
     }

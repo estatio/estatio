@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.fixtures.charge.IncomingChargeFixture;
@@ -32,7 +32,7 @@ public class OrderItemRepository_IntegTest extends CapexModuleIntegTestAbstract 
             @Override
             protected void execute(final ExecutionContext ec) {
                 ec.executeChild(this, new IncomingChargeFixture());
-                ec.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+                ec.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
                 ec.executeChild(this, OrganisationAndComms_enum.YoukeaSe.toFixtureScript());
                 ec.executeChild(this, new OrderInvoiceFixture());
             }

@@ -20,8 +20,8 @@ package org.estatio.module.lease.fixtures.lease.personas2;
 
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnDoeNl;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForBudNl;
 import org.estatio.module.country.fixtures.enums.Country_enum;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
@@ -80,7 +80,7 @@ public class LeasesForBudNl extends LeaseAbstract {
         executionContext.executeChild(this, OrganisationAndComms_enum.DagoBankNl.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.NlBankNl.toFixtureScript());
         executionContext.executeChild(this, OrganisationAndComms_enum.HyperNl.toFixtureScript());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForBudNl());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.BudNl.toFixtureScript());
 
         // exec
         final Party manager = partyRepository.findPartyByReference(PARTY_REF_MANAGER);

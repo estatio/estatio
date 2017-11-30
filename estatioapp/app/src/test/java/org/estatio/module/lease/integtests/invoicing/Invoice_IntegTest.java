@@ -37,8 +37,7 @@ import org.incode.module.base.integtests.VT;
 
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForLinusTorvaldsNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForKalNl;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
@@ -162,8 +161,8 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
                 protected void execute(ExecutionContext executionContext) {
                     executionContext.executeChild(this, new PersonAndRolesForLinusTorvaldsNl());
 
-                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
-                    executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForKalNl());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
+                    executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.KalNl.toFixtureScript());
 
                     executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 

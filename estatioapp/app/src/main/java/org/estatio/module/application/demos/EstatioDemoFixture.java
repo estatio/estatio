@@ -38,12 +38,7 @@ import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOliveP
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForOscarCountryDirectorGb;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForRosaireEvrardFr;
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForThibaultOfficerAdministratorFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForCARTEST;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForGraIt;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForHanSe;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMacFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForMnsFr;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForVivFr;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccountFaFa_enum;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.base.platform.applib.TickingFixtureClock;
@@ -160,11 +155,11 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, BankAccount_enum.TopModelGb.toFixtureScript());
         executionContext.executeChild(this, new PersonAndRolesForGinoVannelliGb());
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForGraIt());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForVivFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForHanSe());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMnsFr());
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForMacFr());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.GraIt.toFixtureScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.VivFr.toFixtureScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.HanSe.toFixtureScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MnsFr.toFixtureScript());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.MacFr.toFixtureScript());
 
         executionContext.executeChild(this, new PersonAndRolesForDylanOfficeAdministratorGb()); // gb mailroom
         executionContext.executeChild(this, new PersonAndRolesForJonathanPropertyManagerGb());  // gb property mgr for OXF
@@ -186,7 +181,7 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new KeyTablesForOxf());
         executionContext.executeChild(this, new PartitioningAndItemsForOxf());
 
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForCARTEST());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.CARTEST.toFixtureScript());
         executionContext.executeChild(this, new NumeratorForOrganisationFra());
 
         executionContext.executeChild(this, new CreateInvoiceNumerators());

@@ -29,7 +29,7 @@ import org.incode.module.country.dom.impl.CountryRepository;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
+import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
@@ -48,7 +48,7 @@ public class BudgetForOxf2015 extends FixtureScript {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executionContext.executeChild(this, new PropertyAndUnitsAndOwnerAndManagerForOxfGb());
+        executionContext.executeChild(this, PropertyAndUnitsAndOwnerAndManager_enum.OxfGb.toFixtureScript());
 
         // exec
         Property property = propertyRepository.findPropertyByReference(PROPERTY_REF);
