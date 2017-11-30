@@ -50,7 +50,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.base.dom.apptenancy.ApplicationTenancyConstants;
+import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.AgreementRoleCommunicationChannelTypeEnum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
@@ -75,13 +75,25 @@ import static org.incode.module.base.integtests.VT.ld;
 public final class LeaseBuilder
         extends BuilderScriptAbstract<Lease,LeaseBuilder> {
 
-
     @Getter @Setter
     String reference;
     @Getter @Setter
     String name;
     @Getter @Setter
     Unit unit;
+
+    @Getter @Setter
+    Party landlord;
+    @Getter @Setter
+    Party tenant;
+    @Getter @Setter
+    LocalDate startDate;
+    @Getter @Setter
+    LocalDate endDate;
+
+    @Getter @Setter
+    OccupancyCreationPolicy occupancyCreationPolicy;
+
     @Getter @Setter
     String brand;
     @Getter @Setter
@@ -92,20 +104,20 @@ public final class LeaseBuilder
     String sector;
     @Getter @Setter
     String activity;
+
     @Getter @Setter
-    Party landlord;
-    @Getter @Setter
-    Party tenant;
-    @Getter @Setter
-    LocalDate startDate;
-    @Getter @Setter
-    LocalDate endDate;
-    @Getter @Setter
-    Boolean createManagerRole;
-    @Getter @Setter
-    Boolean createLeaseUnitAndTags;
+    ManagerRoleCreationPolicy managerRoleCreationPolicy;
     @Getter @Setter
     Party manager;
+
+    public enum ManagerRoleCreationPolicy {
+        CREATE,
+        DONT_CREATE
+    }
+    public enum OccupancyCreationPolicy {
+        CREATE,
+        DONT_CREATE
+    }
 
     @Getter
     private Lease object;
@@ -113,12 +125,23 @@ public final class LeaseBuilder
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
+        checkParam("unit", executionContext, Unit.class);
+        checkParam("reference", executionContext, String.class);
+        checkParam("name", executionContext, String.class);
+        checkParam("landlord", executionContext, Party.class);
+        checkParam("tenant", executionContext, Party.class);
+        checkParam("startDate", executionContext, LocalDate.class);
+        checkParam("endDate", executionContext, LocalDate.class);
+
+        defaultParam("managerRoleCreationPolicy", executionContext, ManagerRoleCreationPolicy.CREATE);
+        defaultParam("occupancyCreationPolicy", executionContext, OccupancyCreationPolicy.CREATE);
+
         landlord.addRole(LeaseRoleTypeEnum.LANDLORD);
         tenant.addRole(LeaseRoleTypeEnum.TENANT);
 
-        final ApplicationTenancy atPath = applicationTenancyRepository.findByPathCached(ApplicationTenancyConstants.GLOBAL_PATH);
-        final LeaseType leaseType = leaseTypeRepository.findOrCreate(
-                "STD", "Standard", atPath);
+        final ApplicationTenancy atPath = ApplicationTenancy_enum.Global.findUsing(serviceRegistry);
+        final LeaseType leaseType = leaseTypeRepository.findOrCreate("STD", "Standard", atPath);
+
         Lease lease = leaseRepository.newLease(
                 unit.getApplicationTenancy(), reference,
                 name,
@@ -131,12 +154,20 @@ public final class LeaseBuilder
         );
         executionContext.addResult(this, lease.getReference(), lease);
 
-        if (createManagerRole) {
+        if (managerRoleCreationPolicy == ManagerRoleCreationPolicy.CREATE) {
+
+            checkParam("manager", executionContext, Party.class);
+
             final AgreementRole role = lease.createRole(agreementRoleTypeRepository.find(
                     LeaseAgreementRoleTypeEnum.MANAGER), manager, null, null);
             executionContext.addResult(this, role);
         }
-        if (createLeaseUnitAndTags) {
+        if (occupancyCreationPolicy == OccupancyCreationPolicy.CREATE) {
+
+            checkParam("brand", executionContext, String.class);
+            checkParam("sector", executionContext, String.class);
+            checkParam("activity", executionContext, String.class);
+
             Occupancy occupancy = occupancyRepository.newOccupancy(lease, unit, startDate);
             occupancy.setEndDate(null);
             occupancy.setBrandName(brand, brandCoverage, countryOfOrigin);

@@ -19,6 +19,7 @@ import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.*;
 import static org.incode.module.base.integtests.VT.ld;
 
 @AllArgsConstructor()
@@ -28,51 +29,51 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
 
     KalPoison001Nl  (
             "KAL-POISON-001", "Poison Amsterdam", Property_enum.KalNl, "001",
-            "Poison", BrandCoverage.INTERNATIONAL, "HEALT&BEAUTY", "PERFUMERIE", Country_enum.NLD,
             OrganisationAndComms_enum.AcmeNl, OrganisationAndComms_enum.PoisonNl,
             ld(2011, 1, 1), ld(2020, 12, 31),
-            true, true,
-            Person_enum.JohnDoeNl
+            OccupancyCreationPolicy.CREATE,
+            "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl
     ),
     OxfMediaX002Gb  (
             "OXF-MEDIAX-002", "Mediax Lease", Property_enum.OxfGb, "002",
-            "Mediax", BrandCoverage.NATIONAL, "ELECTRIC", "ELECTRIC", Country_enum.GBR,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MediaXGb,
             ld(2008, 1, 1), ld(2017, 12, 31),
-            true, true,
-            Person_enum.JohnSmithGb
+            OccupancyCreationPolicy.CREATE,
+            "Mediax", BrandCoverage.NATIONAL, Country_enum.GBR, "ELECTRIC", "ELECTRIC",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb
     ),
     OxfMiracl005Gb  (
             "OXF-MIRACL-005", "Miracle lease", Property_enum.OxfGb, "005",
-            "Miracle", BrandCoverage.NATIONAL, "FASHION", "ALL", Country_enum.GBR,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.MiracleGb,
             ld(2013, 11, 7), ld(2023, 11, 6),
-            false, true,
-            Person_enum.JohnSmithGb
+            OccupancyCreationPolicy.CREATE,
+            "Miracle", BrandCoverage.NATIONAL, Country_enum.GBR, "FASHION", "ALL",
+            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.JohnSmithGb
     ),
     OxfPoison003Gb  (
             "OXF-POISON-003", "Poison Lease", Property_enum.OxfGb, "003",
-            "Poison", BrandCoverage.INTERNATIONAL, "HEALT&BEAUTY", "PERFUMERIE", Country_enum.NLD,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PoisonGb,
             ld(2011, 1, 1), ld(2020, 12, 31),
-            true, true,
-            Person_enum.JohnSmithGb
+            OccupancyCreationPolicy.CREATE,
+            "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb
     ),
     OxfPret004Gb    (
             "OXF-PRET-004", "Pret-a-Partir lease", Property_enum.OxfGb, "004",
-            "Pret-a-Partir", BrandCoverage.REGIONAL, "FASHION", "ALL", Country_enum.FRA,
             OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.PretGb,
             ld(2011, 7, 1), ld(2014, 6, 30),
-            false, false,
-            Person_enum.GinoVannelliGb
+            OccupancyCreationPolicy.DONT_CREATE,
+            "Pret-a-Partir", BrandCoverage.REGIONAL, Country_enum.FRA,
+            "FASHION", "ALL",
+            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.GinoVannelliGb
     ),
     OxfTopModel001Gb(
             "OXF-TOPMODEL-001", "Topmodel Lease", Property_enum.OxfGb, "001",
-            "Topmodel", BrandCoverage.NATIONAL, "FASHION", "WOMEN", Country_enum.GBR,
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb,
-            ld(2010, 7, 15), ld(2022, 7, 14),
-            true, true,
-            Person_enum.GinoVannelliGb
+            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb, ld(2010, 7, 15),
+            ld(2022, 7, 14), LeaseBuilder.OccupancyCreationPolicy.CREATE, "Topmodel", BrandCoverage.NATIONAL,
+            Country_enum.GBR, "FASHION", "WOMEN",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.GinoVannelliGb
     ),
     ;
 
@@ -80,17 +81,19 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     private final String name;
     private final Property_enum property_d;
     private final String unitReferenceSuffix;
-    private final String brand;
-    private final BrandCoverage brandCoverage;
-    private final String sector;
-    private final String activity;
-    private final Country_enum countryOfOrigin_d;
     private final OrganisationAndComms_enum landlord_d;
     private final OrganisationAndComms_enum tenant_d;
     private final LocalDate startDate;
     private final LocalDate endDate;
-    private final boolean createManagerRole;
-    private final boolean createLeaseUnitAndTags;
+
+    private final LeaseBuilder.OccupancyCreationPolicy occupancyCreationPolicy;
+    private final String brand;
+    private final BrandCoverage brandCoverage;
+    private final Country_enum countryOfOrigin_d;
+    private final String sector;
+    private final String activity;
+
+    private final LeaseBuilder.ManagerRoleCreationPolicy managerRoleCreationPolicy;
     private final Person_enum manager_d;
 
 
@@ -122,8 +125,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
                 .setPrereq((f,ec) -> f.setTenant(f.objectFor(tenant_d, ec)))
                 .setStartDate(startDate)
                 .setEndDate(endDate)
-                .setCreateManagerRole(createManagerRole)
-                .setCreateLeaseUnitAndTags(createLeaseUnitAndTags)
+                .setManagerRoleCreationPolicy(managerRoleCreationPolicy)
+                .setOccupancyCreationPolicy(occupancyCreationPolicy)
                 .setPrereq((f,ec) -> f.setManager(f.objectFor(manager_d, ec)));
     }
 
