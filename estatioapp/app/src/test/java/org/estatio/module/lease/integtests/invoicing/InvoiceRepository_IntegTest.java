@@ -48,7 +48,7 @@ import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwner
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.invoice.dom.Constants;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -641,7 +641,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             Invoice<?> invoice = newInvoices.get(0);
             assertThat(invoice.getDueDate()).isEqualTo(dueDate);
             assertThat(invoice.getTotalNetAmount()).isEqualTo(netAmount);
-            assertThat(invoice.getCurrency().getReference()).isEqualTo(CurrenciesRefData.EUR);
+            assertThat(invoice.getCurrency().getReference()).isEqualTo(Currency_enum.EUR.getReference());
 
             InvoiceItem item = invoice.getItems().first();
             assertThat(item.getDescription()).isEqualTo(itemDescription);

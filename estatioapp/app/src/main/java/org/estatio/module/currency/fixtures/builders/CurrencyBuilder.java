@@ -16,16 +16,33 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.currency.fixtures;
+package org.estatio.module.currency.fixtures.builders;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.BuilderScriptAbstract;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.dom.CurrencyRepository;
 
-public class CurrenciesRefData extends FixtureScript {
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+
+@EqualsAndHashCode(of={"reference"}, callSuper = false)
+@ToString(of={"reference"})
+@Accessors(chain = true)
+public class CurrencyBuilder extends BuilderScriptAbstract<Currency, CurrencyBuilder> {
+
+    @Getter @Setter
+    private String reference;
+    @Getter @Setter
+    private String name;
+
+    @Getter
+    private Currency object;
 
     public static final String EUR = "EUR";
     public static final String SEK = "SEK";

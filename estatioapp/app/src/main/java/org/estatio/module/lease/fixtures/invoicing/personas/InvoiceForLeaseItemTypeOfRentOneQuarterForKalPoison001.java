@@ -25,7 +25,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
-import org.estatio.module.currency.fixtures.CurrenciesRefData;
+import org.estatio.module.currency.fixtures.enums.Currency_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItemType;
@@ -83,7 +83,7 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
                 applicationTenancy,
                 lease, PARTY_REF_SELLER,
                 PARTY_REF_BUYER, PaymentMethod.DIRECT_DEBIT,
-                CurrenciesRefData.EUR,
+                Currency_enum.EUR.getReference(),
                 startDate, executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(
