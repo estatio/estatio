@@ -30,6 +30,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -63,7 +64,7 @@ public class Occupancy_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             occupancy = leaseTopModel.primaryOccupancy().get();
         }
 

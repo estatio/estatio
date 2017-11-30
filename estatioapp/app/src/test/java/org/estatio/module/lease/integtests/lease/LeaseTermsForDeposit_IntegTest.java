@@ -51,6 +51,7 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationSelection;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
@@ -69,6 +70,7 @@ import org.estatio.module.lease.fixtures.leaseitems.turnoverrent.personas.LeaseI
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract {
 
@@ -118,8 +120,8 @@ public class LeaseTermsForDeposit_IntegTest extends LeaseModuleIntegTestAbstract
         public void invoiceScenarioTest() throws Exception {
 
             // given
-            startDate = new LocalDate(2010, 10, 1);
-            topmodelLease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            startDate = ld(2010, 10, 1);
+            topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             invoiceService.calculateLegacy(

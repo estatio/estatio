@@ -22,6 +22,7 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,7 +67,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             Lease leaseTopModel;
 
             // given
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(budgetCalculationRunRepository.allBudgetCalculationRuns().size()).isEqualTo(0);
 
             // when
@@ -104,7 +105,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
             Lease leaseTopModel;
 
             // given
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             assertThat(budgetCalculationRunRepository.findByLease(leaseTopModel).size()).isEqualTo(0);
 
             // when
@@ -123,7 +124,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
         public void findByBudget() {
 
             // given
-            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
@@ -141,7 +142,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
         public void findByBudgetAndType() {
 
             // given
-            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);
@@ -160,7 +161,7 @@ public class BudgetCalculationRunRepository_IntegTest extends BudgetAssignmentMo
         public void findByBudgetAndTypeStatus() {
 
             // given
-            Lease leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             wrap(budgetCalculationRunRepository).findOrCreateNewBudgetCalculationRun(leaseTopModel, budget2015, BudgetCalculationType.BUDGETED);

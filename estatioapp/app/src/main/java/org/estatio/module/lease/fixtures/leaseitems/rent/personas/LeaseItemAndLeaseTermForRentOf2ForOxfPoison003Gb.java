@@ -22,6 +22,7 @@ import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTen
 import org.estatio.module.index.fixtures.IndexRefData;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
 
 import static org.incode.module.base.integtests.VT.bd;
@@ -29,7 +30,8 @@ import static org.incode.module.base.integtests.VT.ld;
 
 public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfPoison003Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfPoison003Gb.getRef();
+
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
     public static final String INDEX_REF_IT = IndexRefData.IT_REF;
 

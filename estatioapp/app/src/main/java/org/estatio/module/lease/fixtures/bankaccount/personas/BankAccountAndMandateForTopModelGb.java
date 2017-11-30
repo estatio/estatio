@@ -21,6 +21,7 @@ package org.estatio.module.lease.fixtures.bankaccount.personas;
 import org.estatio.module.assetfinancial.fixtures.bankaccountfafa.enums.BankAccount_enum;
 import org.estatio.module.bankmandate.dom.Scheme;
 import org.estatio.module.bankmandate.dom.SequenceType;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbstract {
@@ -47,7 +48,7 @@ public class BankAccountAndMandateForTopModelGb extends BankAccountAndMandateAbs
 
         // exec
         createBankMandate(
-                LeaseForOxfTopModel001Gb.PARTY_REF_TENANT,
+                Lease_enum.OxfTopModel001Gb.getTenant_d().getRef(),
                 REF, SEQUENCE, SEQUENCE_TYPE, SCHEME,
                 executionContext);
     }

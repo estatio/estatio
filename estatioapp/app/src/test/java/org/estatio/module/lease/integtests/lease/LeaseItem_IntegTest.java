@@ -53,6 +53,7 @@ import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
@@ -109,7 +110,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setUp() throws Exception {
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     public static class FindTerm extends LeaseItem_IntegTest {
@@ -243,7 +244,7 @@ public class LeaseItem_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenStillHasInvoiceItems() throws Exception {
             // given
-            Lease leaseWithInvoiceItem = leaseRepository.findLeaseByReference(LeaseForKalPoison001Nl.REF);
+            Lease leaseWithInvoiceItem = Lease_enum.KalPoison001Nl.findUsing(serviceRegistry);
             LeaseItem leaseItem = leaseWithInvoiceItem.findFirstItemOfType(LeaseItemType.RENT);
             assertThat(leaseItem).isNotNull();
             final LeaseTerm term = leaseItem.getTerms().first();

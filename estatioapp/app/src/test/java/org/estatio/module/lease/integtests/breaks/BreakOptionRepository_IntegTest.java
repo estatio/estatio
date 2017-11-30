@@ -43,9 +43,9 @@ import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.BreakType;
 import org.estatio.module.lease.dom.breaks.RollingBreakOption;
-import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilderLEGACY;
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilderLEGACY;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -74,7 +74,7 @@ public class BreakOptionRepository_IntegTest extends LeaseModuleIntegTestAbstrac
         @Test
         public void findByLease() throws Exception {
             // given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
             // when
             List<BreakOption> result = breakOptionRepository.findByLease(lease);

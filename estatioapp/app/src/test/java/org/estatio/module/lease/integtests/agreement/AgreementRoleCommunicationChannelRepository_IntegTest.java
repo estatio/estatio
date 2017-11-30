@@ -30,6 +30,7 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 
 import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelRepository;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Party;
@@ -67,7 +68,7 @@ public class AgreementRoleCommunicationChannelRepository_IntegTest extends Lease
 
         @Before
         public void setUp() throws Exception {
-            party = partyRepository.findPartyByReference(LeaseForOxfTopModel001Gb.PARTY_REF_TENANT);
+            party = Lease_enum.OxfTopModel001Gb.getTenant_d().findUsing(serviceRegistry);
             communicationChannel = communicationChannelRepository.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS).first();
         }
 

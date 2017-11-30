@@ -59,7 +59,7 @@ import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptions
 import org.estatio.module.lease.fixtures.breakoptions.personas.LeaseBreakOptionsForOxfTopModel001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPret004Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfMiracl005Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
@@ -124,7 +124,7 @@ public class Invoice_IntegTest extends LeaseModuleIntegTestAbstract {
             applicationTenancy = applicationTenancies.findTenancyByPath(ApplicationTenancy_enum.Gb.getPath());
             seller = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
             buyer = OrganisationAndComms_enum.PoisonGb.findUsing(serviceRegistry);
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+            lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
 
             charge = chargeRepository.listAll().get(0);
             currency = currencyRepository.allCurrencies().get(0);

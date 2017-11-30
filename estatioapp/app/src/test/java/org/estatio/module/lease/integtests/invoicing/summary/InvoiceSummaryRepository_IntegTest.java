@@ -41,6 +41,7 @@ import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyD
 import org.estatio.module.lease.dom.invoicing.summary.InvoiceSummaryForPropertyDueDateStatusRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -91,7 +92,7 @@ public class InvoiceSummaryRepository_IntegTest extends LeaseModuleIntegTestAbst
         @Test
         public void find_is_successful() {
             // given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForKalPoison001Nl.REF);
+            Lease lease = Lease_enum.KalPoison001Nl.findUsing(serviceRegistry);
             final String interactionId = "12345678";
             final InvoiceForLease invoiceForLease = invoiceForLeaseRepository.newInvoice(
                     lease.getApplicationTenancy(),

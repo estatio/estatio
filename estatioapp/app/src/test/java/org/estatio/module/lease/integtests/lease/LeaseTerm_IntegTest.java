@@ -38,7 +38,6 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -51,8 +50,7 @@ import org.estatio.module.lease.dom.LeaseTermValueType;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLeaseRepository;
 import org.estatio.module.lease.fixtures.invoicing.personas.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfPoison003Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.discount.personas.LeaseItemAndLeaseTermForDiscountForOxfMiracl005Gb;
@@ -125,17 +123,14 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
             }
 
             @Inject
-            private InvoiceRepository invoiceRepository;
-
-            @Inject
-            private InvoiceForLeaseRepository invoiceForLeaseRepository;
+            InvoiceForLeaseRepository invoiceForLeaseRepository;
 
             private Lease lease;
             private LeaseItem leaseTopModelRentItem;
 
             @Before
             public void setup() {
-                lease = leaseRepository.findLeaseByReference(LeaseForOxfMiracl005Gb.REF);
+                lease = leaseRepository.findLeaseByReference(Lease_enum.OxfMiracl005Gb.getRef());
                 leaseTopModelRentItem = lease.getItems().first();
                 assertNotNull(leaseTopModelRentItem);
                 assertNotNull(leaseTopModelRentItem.getStartDate());
@@ -181,7 +176,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
 
                 // have to obtain again because runScript commits and so JDO
                 // clears out all enlisted objects.
-                lease = leaseRepository.findLeaseByReference(LeaseForOxfMiracl005Gb.REF);
+                lease = leaseRepository.findLeaseByReference(Lease_enum.OxfMiracl005Gb.getRef());
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.RENT_DISCOUNT_FIXED);
 
                 // and given
@@ -260,7 +255,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
             public void allowedIfLeaseHasInvoiceForNonFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                lease = leaseRepository.findLeaseByReference(LeaseForOxfPoison003Gb.REF);
+                lease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
                 final LeaseTerm leaseTerm = findFirstLeaseTerm(lease, LeaseItemType.TURNOVER_RENT);
 
                 // and given
@@ -320,7 +315,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
             assertNotNull(leaseTopModelRentItem);
         }
@@ -376,7 +371,7 @@ public class LeaseTerm_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Before
         public void setup() {
-            lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             Assert.assertThat(lease.getItems().size(), is(10));
         }
 

@@ -34,6 +34,7 @@ import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
@@ -64,7 +65,7 @@ public class AgreementRepository_IntegTest extends LeaseModuleIntegTestAbstract 
             }
         });
 
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
     }
 
     @Inject

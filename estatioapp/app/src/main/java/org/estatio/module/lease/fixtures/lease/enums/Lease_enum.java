@@ -19,7 +19,10 @@ import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.*;
+import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.AddressesCreationPolicy;
+import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.InvoiceAddressCreationPolicy;
+import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.ManagerRoleCreationPolicy;
+import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.OccupancyCreationPolicy;
 import static org.incode.module.base.integtests.VT.ld;
 
 @AllArgsConstructor()
@@ -33,7 +36,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             ld(2011, 1, 1), ld(2020, 12, 31),
             OccupancyCreationPolicy.CREATE,
             "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
-            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfMediaX002Gb  (
             "OXF-MEDIAX-002", "Mediax Lease", Property_enum.OxfGb, "002",
@@ -41,7 +45,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             ld(2008, 1, 1), ld(2017, 12, 31),
             OccupancyCreationPolicy.CREATE,
             "Mediax", BrandCoverage.NATIONAL, Country_enum.GBR, "ELECTRIC", "ELECTRIC",
-            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
     OxfMiracl005Gb  (
             "OXF-MIRACL-005", "Miracle lease", Property_enum.OxfGb, "005",
@@ -49,7 +54,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             ld(2013, 11, 7), ld(2023, 11, 6),
             OccupancyCreationPolicy.CREATE,
             "Miracle", BrandCoverage.NATIONAL, Country_enum.GBR, "FASHION", "ALL",
-            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.JohnSmithGb
+            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.JohnSmithGb,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPoison003Gb  (
             "OXF-POISON-003", "Poison Lease", Property_enum.OxfGb, "003",
@@ -57,7 +63,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             ld(2011, 1, 1), ld(2020, 12, 31),
             OccupancyCreationPolicy.CREATE,
             "Poison", BrandCoverage.INTERNATIONAL, Country_enum.NLD, "HEALT&BEAUTY", "PERFUMERIE",
-            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb
+            ManagerRoleCreationPolicy.CREATE, Person_enum.JohnSmithGb,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfPret004Gb    (
             "OXF-PRET-004", "Pret-a-Partir lease", Property_enum.OxfGb, "004",
@@ -66,14 +73,17 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
             OccupancyCreationPolicy.DONT_CREATE,
             "Pret-a-Partir", BrandCoverage.REGIONAL, Country_enum.FRA,
             "FASHION", "ALL",
-            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.GinoVannelliGb
+            ManagerRoleCreationPolicy.DONT_CREATE, Person_enum.GinoVannelliGb,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
     ),
     OxfTopModel001Gb(
             "OXF-TOPMODEL-001", "Topmodel Lease", Property_enum.OxfGb, "001",
-            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb, ld(2010, 7, 15),
-            ld(2022, 7, 14), LeaseBuilder.OccupancyCreationPolicy.CREATE, "Topmodel", BrandCoverage.NATIONAL,
-            Country_enum.GBR, "FASHION", "WOMEN",
-            ManagerRoleCreationPolicy.CREATE, Person_enum.GinoVannelliGb
+            OrganisationAndComms_enum.HelloWorldGb, OrganisationAndComms_enum.TopModelGb,
+            ld(2010, 7, 15), ld(2022, 7, 14),
+            OccupancyCreationPolicy.CREATE,
+            "Topmodel", BrandCoverage.NATIONAL, Country_enum.GBR, "FASHION", "WOMEN",
+            ManagerRoleCreationPolicy.CREATE, Person_enum.GinoVannelliGb,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
     ),
     ;
 
@@ -96,6 +106,8 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
     private final LeaseBuilder.ManagerRoleCreationPolicy managerRoleCreationPolicy;
     private final Person_enum manager_d;
 
+    private final InvoiceAddressCreationPolicy invoiceAddressCreationPolicy;
+    private final AddressesCreationPolicy addressesCreationPolicy;
 
     public String getUnitReference() {
         return property_d.unitRef(unitReferenceSuffix);
@@ -116,18 +128,23 @@ public enum Lease_enum implements EnumWithFinder<Lease> , EnumWithBuilderScript<
                     final Property property = f.objectFor(property_d, ec);
                     f.setUnit(property.findUnitByReference(getUnitReference()));
                 })
-                .setBrand(brand)
-                .setBrandCoverage(brandCoverage)
-                .setSector(sector)
-                .setActivity(activity)
-                .setPrereq((f,ec) -> f.setCountryOfOrigin(f.objectFor(countryOfOrigin_d, ec)))
                 .setPrereq((f,ec) -> f.setLandlord(f.objectFor(landlord_d, ec)))
                 .setPrereq((f,ec) -> f.setTenant(f.objectFor(tenant_d, ec)))
                 .setStartDate(startDate)
                 .setEndDate(endDate)
-                .setManagerRoleCreationPolicy(managerRoleCreationPolicy)
+
                 .setOccupancyCreationPolicy(occupancyCreationPolicy)
-                .setPrereq((f,ec) -> f.setManager(f.objectFor(manager_d, ec)));
+                .setBrand(brand)
+                .setBrandCoverage(brandCoverage)
+                .setPrereq((f,ec) -> f.setCountryOfOrigin(f.objectFor(countryOfOrigin_d, ec)))
+                .setSector(sector)
+                .setActivity(activity)
+
+                .setManagerRoleCreationPolicy(managerRoleCreationPolicy)
+                .setPrereq((f,ec) -> f.setManager(f.objectFor(manager_d, ec)))
+
+                .setInvoiceAddressCreationPolicy(invoiceAddressCreationPolicy)
+                .setAddressesCreationPolicy(addressesCreationPolicy);
     }
 
 

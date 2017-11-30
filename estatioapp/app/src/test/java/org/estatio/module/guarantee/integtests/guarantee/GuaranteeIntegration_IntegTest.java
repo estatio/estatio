@@ -45,7 +45,7 @@ import org.estatio.module.guarantee.integtests.GuaranteeModuleIntegTestAbstract;
 import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.party.dom.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,8 +95,8 @@ public class GuaranteeIntegration_IntegTest extends GuaranteeModuleIntegTestAbst
 
     @Before
     public void setUp() {
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-        guaranteeWithFinancialAccount = guaranteeRepository.findByReference(LeaseForOxfTopModel001Gb.REF + "-D");
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        guaranteeWithFinancialAccount = guaranteeRepository.findByReference(Lease_enum.OxfTopModel001Gb.getRef() + "-D");
         GuaranteeType guaranteeType = GuaranteeType.UNKNOWN;
         guaranteeWithoutFinancialAccount = guaranteeRepository.newGuarantee(
                 lease, guaranteeType.name(), guaranteeType.name(), guaranteeType, VT.ld(2012,1,1), null, "", VT.bd(1000), null);

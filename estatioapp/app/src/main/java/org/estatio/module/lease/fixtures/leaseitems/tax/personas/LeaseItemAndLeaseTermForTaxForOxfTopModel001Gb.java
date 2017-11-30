@@ -21,13 +21,14 @@ package org.estatio.module.lease.fixtures.leaseitems.tax.personas;
 import org.estatio.module.base.fixtures.security.apptenancy.enums.ApplicationTenancy_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.fixtures.LeaseItemAndTermsAbstract;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 
 import static org.incode.module.base.integtests.VT.bd;
 
 public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAndTermsAbstract {
 
-    public static final String LEASE_REF = LeaseForOxfTopModel001Gb.REF;
+    public static final String LEASE_REF = Lease_enum.OxfTopModel001Gb.getRef();
     public static final String AT_PATH = ApplicationTenancy_enum.GbOxfDefault.getPath();
 
     @Override
@@ -41,7 +42,7 @@ public class LeaseItemAndLeaseTermForTaxForOxfTopModel001Gb extends LeaseItemAnd
         executionContext.executeChild(this, new LeaseForOxfTopModel001Gb());
 
         // exec
-        final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         createLeaseTermForTax(
                 LEASE_REF,
                 AT_PATH, lease.getStartDate(), null,

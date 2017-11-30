@@ -41,6 +41,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForKalPoison001Nl;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMiracl005Gb;
@@ -104,8 +105,11 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
         @Test
         public void whenValidReference() {
-            final Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
-            assertThat(LeaseForOxfTopModel001Gb.REF).isEqualTo(lease.getReference());
+            // when
+            final Lease lease = leaseRepository.findLeaseByReference(Lease_enum.OxfTopModel001Gb.getRef());
+
+            // then
+            assertThat(Lease_enum.OxfTopModel001Gb.getRef()).isEqualTo(lease.getReference());
         }
 
     }
@@ -153,7 +157,7 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void match_external_reference() throws Exception {
             //Given
-            Lease lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             lease.setExternalReference("ExTrEf");
 
             // When Then
@@ -246,12 +250,12 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenValidProperty() {
             // given
-            final Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            final Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
             final List<Lease> matchingLeases = leaseRepository.findByBrand(brand, false);
             assertThat(matchingLeases.size()).isEqualTo(1);
 
             // when
-            Lease oxfTop = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            Lease oxfTop = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             oxfTop.terminate(new LocalDate(2014, 1, 1));
             final List<Lease> matchingLeases2 = leaseRepository.findByBrand(brand, false);
 

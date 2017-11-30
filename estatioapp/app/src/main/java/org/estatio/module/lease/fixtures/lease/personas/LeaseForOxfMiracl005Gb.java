@@ -19,21 +19,14 @@
 package org.estatio.module.lease.fixtures.lease.personas;
 
 import org.estatio.module.asset.fixtures.person.personas.PersonAndRolesForJohnSmithGb;
-import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.asset.fixtures.property.personas.PropertyAndUnitsAndOwnerAndManagerForOxfGb;
 import org.estatio.module.lease.fixtures.LeaseAbstract;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.party.fixtures.organisation.enums.OrganisationAndComms_enum;
 
 public class LeaseForOxfMiracl005Gb extends LeaseAbstract {
 
     public static final Lease_enum data = Lease_enum.OxfMiracl005Gb;
-    public static final Property_enum property_d = Property_enum.OxfGb;
-    public static final OrganisationAndComms_enum tenant_d = OrganisationAndComms_enum.MiracleGb;
 
-    public static final String REF = data.getRef();
-
-    public static final String PARTY_REF_TENANT = tenant_d.getRef();
 
 
     @Override

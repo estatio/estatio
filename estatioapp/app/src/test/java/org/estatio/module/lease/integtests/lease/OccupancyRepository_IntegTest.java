@@ -44,6 +44,7 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Brand.RemoveEvent;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfMediaX002Gb;
 import org.estatio.module.lease.fixtures.lease.personas.LeaseForOxfTopModel001Gb;
 import org.estatio.module.lease.fixtures.leaseitems.deposits.personas.LeaseItemAndLeaseTermForDepositForOxfTopModel001Gb;
@@ -86,7 +87,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
             }
         });
-        lease = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         unit = unitRepository.findUnitByReference(Property_enum.OxfGb.unitRef("001"));
     }
 
@@ -137,7 +138,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Test
         public void happyCase() throws Exception {
-            Brand brand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
+            Brand brand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
             assertNotNull(brand);
 
             assertThat(occupancyRepository.findByBrand(brand, false).size(), is(1));
@@ -178,8 +179,8 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Before
         public void setUp() throws Exception {
-            oldBrand = brandRepository.findByName(LeaseForOxfTopModel001Gb.BRAND);
-            newBrand = brandRepository.findByName(LeaseForOxfMediaX002Gb.BRAND);
+            oldBrand = brandRepository.findByName(Lease_enum.OxfTopModel001Gb.getBrand());
+            newBrand = brandRepository.findByName(Lease_enum.OxfMediaX002Gb.getBrand());
         }
 
         @Test
@@ -245,7 +246,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Before
         public void setup() {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             occupancy = leaseTopModel.primaryOccupancy().get();
         }
 
@@ -283,7 +284,7 @@ public class OccupancyRepository_IntegTest extends LeaseModuleIntegTestAbstract 
 
         @Before
         public void setup() {
-            leaseTopModel = leaseRepository.findLeaseByReference(LeaseForOxfTopModel001Gb.REF);
+            leaseTopModel = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             occupancy = leaseTopModel.primaryOccupancy().get();
         }
 
